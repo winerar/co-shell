@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+fun env(name: String): String = providers.environmentVariable(name).orNull.orEmpty()
+
 android {
     namespace = "app.coshell"
     compileSdk = 37
@@ -18,6 +20,10 @@ android {
         versionCode = providers.environmentVariable("BUILD_NUMBER").orNull?.toInt() ?: 1
         versionName = "0.1.0"
         buildConfigField("String", "UPDATE_BASE_URL", "\"\"")
+        // Feedback form → Firestore (docs/setup/feedback.md). Not secrets: the Web API key is public
+        // by design, access is limited by Firestore rules. Empty locally → the form says "not configured".
+        buildConfigField("String", "FIREBASE_PROJECT_ID", "\"${env("FIREBASE_PROJECT_ID")}\"")
+        buildConfigField("String", "FIREBASE_API_KEY", "\"${env("FIREBASE_API_KEY")}\"")
     }
 
     signingConfigs {

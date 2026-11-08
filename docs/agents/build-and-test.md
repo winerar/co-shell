@@ -34,6 +34,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).
 - Data — `core/data/src/jvmTest`, in-memory SQLite (подробности — `database.md`).
 - ViewModel — JUnit + `kotlinx-coroutines-test` в `app/src/test`.
+- Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` (есть шаг в CI).
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 
 ## Версии
@@ -46,6 +47,11 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
 `versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug подписан общим ключом
 `app/debug.keystore` из репозитория (не секрет), пакет `app.coshell.debug`, название «co-shell debug».
+
+## Обратная связь
+- CI передаёт сборке переменные репозитория `FIREBASE_PROJECT_ID`, `FIREBASE_API_KEY` (Variables, не
+  секреты) → `BuildConfig`; локально пусто → форма «не настроено». `feedback.yml` раз в 6 ч создаёт
+  issue из Firestore `feedback` (секрет `FIREBASE_SERVICE_ACCOUNT`). Настройка — `docs/setup/feedback.md`.
 
 ## Самообновление (release)
 - Включается, когда заданы секреты `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`,

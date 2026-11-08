@@ -16,15 +16,15 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Stateless menu tab: links to categories, backup and app update. No ViewModel needed yet.
+// Stateless menu tab: links to categories, backup, app update and feedback. No ViewModel needed yet.
 
 @Composable
-fun MoreRoute(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit) =
-    MoreScreen(onCategories, onBackup, onUpdate)
+fun MoreRoute(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit, onFeedback: () -> Unit) =
+    MoreScreen(onCategories, onBackup, onUpdate, onFeedback)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit) {
+fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit, onFeedback: () -> Unit) {
     Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.nav_more)) }) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
             item {
@@ -51,6 +51,15 @@ fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> U
                     opensScreen = true,
                 )
             }
+            item {
+                ActionRow(
+                    icon = DesignR.drawable.ic_feedback,
+                    title = stringResource(R.string.feedback_title),
+                    subtitle = stringResource(R.string.feedback_menu_hint),
+                    onClick = onFeedback,
+                    opensScreen = true,
+                )
+            }
         }
     }
 }
@@ -58,5 +67,5 @@ fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> U
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(onCategories = {}, onBackup = {}, onUpdate = {}) }
+    CoShellTheme { MoreScreen(onCategories = {}, onBackup = {}, onUpdate = {}, onFeedback = {}) }
 }

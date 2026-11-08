@@ -7,10 +7,11 @@ core/model/             KMP (jvm): Money, валюты, форматирован
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
 core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
 core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
-scripts/                служебные скрипты (check.sh, конвертация иконок, сайт обновлений)
+scripts/                служебные скрипты (check.sh, иконки, файлы обновлений, отзывы → issues) + test_*.py
+firebase/               firestore.rules (вставляются в консоль Firebase вручную)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
                         whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)
-.github/workflows/      CI (ci.yml), создание release-ключа (release-key.yml)
+.github/workflows/      CI (ci.yml), release-ключ (release-key.yml), отзывы → issues (feedback.yml)
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
 
@@ -49,7 +50,8 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | `<Name>Previews.kt` | `@Preview` в `CoShellTheme` |
 | `<Тема>.kt` (напр. `TransactionForm.kt`) | чистая логика экрана (валидация и т. п.) |
 | `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
-Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`, `update/`.
+Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`, `update/`,
+`feedback/` (+ `data/`: отправка в Firestore REST, сведения о телефоне; решения — `core:domain/feedback/`).
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
@@ -62,7 +64,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
 компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
 `NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
-`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строки меню — `ui/list/ActionRow`.
+`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

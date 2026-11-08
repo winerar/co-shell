@@ -17,7 +17,8 @@
     <string name="home_accounts">Счета</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
-    <string name="transactions_coming_soon">Список операций появится в следующей версии.</string>
+    <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
+    <string name="transactions_no_category">Без категории</string>
 
     <string name="accounts_title">Счета</string>
     <string name="accounts_add">Добавить счёт</string>

@@ -7,9 +7,11 @@ core/model/             KMP (jvm): Money, валюты, форматирован
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
 core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
 core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
-scripts/                служебные скрипты (конвертация иконок)
-docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, samples/ (тестовые файлы форматов)
-.github/workflows/      CI
+scripts/                служебные скрипты (check.sh, конвертация иконок, сайт обновлений)
+docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
+                        whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)
+.github/workflows/      CI (ci.yml), создание release-ключа (release-key.yml)
+firebase.json           Firebase Hosting для самообновления (папка update-site/ собирается в CI)
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
 
@@ -48,7 +50,9 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | `<Name>Previews.kt` | `@Preview` в `CoShellTheme` |
 | `<Тема>.kt` (напр. `TransactionForm.kt`) | чистая логика экрана (валидация и т. п.) |
 | `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
-Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`.
+Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`, `update/`.
+У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
+(диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
 
 Аргументы маршрута ViewModel читает из `SavedStateHandle` по имени свойства (не `toRoute()` — так

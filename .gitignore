@@ -21,3 +21,4 @@ secrets.properties
 # OS
 .DS_Store
 Thumbs.db
+update-site/

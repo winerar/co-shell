@@ -1,0 +1,39 @@
+name: Create release key
+
+# Run once by hand (Actions → Create release key → Run workflow). Produces a short-lived artifact
+# with the release keystore and the values for the four GitHub Secrets; see docs/setup/self-update.md.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate keystore
+        run: |
+          mkdir out
+          password=$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)
+          keytool -genkeypair -keystore out/co-shell-release.jks -storetype PKCS12 \
+            -storepass "$password" -keypass "$password" -alias co-shell \
+            -keyalg RSA -keysize 4096 -validity 36500 -dname "CN=co-shell"
+          base64 -w0 out/co-shell-release.jks > out/RELEASE_KEYSTORE_BASE64.txt
+          cat > out/README.txt <<TXT
+          Ключ подписи co-shell. Храните этот архив в надёжном месте (например, Google Диск):
+          без ключа приложение нельзя будет обновить — только переустановить с потерей данных.
+
+          Добавьте в GitHub: Settings → Secrets and variables → Actions → New repository secret
+            RELEASE_KEYSTORE_BASE64  = содержимое файла RELEASE_KEYSTORE_BASE64.txt
+            RELEASE_KEYSTORE_PASSWORD = $password
+            RELEASE_KEY_ALIAS        = co-shell
+            RELEASE_KEY_PASSWORD     = $password
+          TXT
+          keytool -list -keystore out/co-shell-release.jks -storepass "$password" | tail -2
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: co-shell-release-key
+          path: out/
+          retention-days: 1

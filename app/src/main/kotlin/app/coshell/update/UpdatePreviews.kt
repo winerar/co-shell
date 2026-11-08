@@ -8,7 +8,7 @@ import app.coshell.core.domain.update.AppRelease
 private val sample = AppRelease(
     versionCode = 43,
     versionName = "0.2.0",
-    apkUrl = "https://example.web.app/co-shell-43.apk",
+    apkUrl = "https://github.com/winerar/co-shell-releases/releases/download/build-43/co-shell-43.apk",
     sha256 = "0".repeat(64),
     sizeBytes = 6_300_000,
     notes = "• Обновления приходят сами\n• Фильтр по счёту в операциях",

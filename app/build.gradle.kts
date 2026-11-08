@@ -52,7 +52,7 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")
-            // Only release builds update themselves; the URL comes from CI (Firebase Hosting site).
+            // Only release builds update themselves; the URL comes from CI (public releases repo).
             val updateUrl = providers.environmentVariable("UPDATE_BASE_URL").orNull.orEmpty()
             buildConfigField("String", "UPDATE_BASE_URL", "\"$updateUrl\"")
         }

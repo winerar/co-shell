@@ -8,7 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Reads `version.json` from [baseUrl] (Firebase Hosting, set at build time).
+ * Reads `version.json` from [baseUrl] (latest release of the public releases repo, set at build time).
+ * GitHub answers with a redirect to its file storage; [HttpURLConnection] follows it (https → https).
  * A blank [baseUrl] means updates are not configured for this build.
  */
 class HttpReleaseSource(private val baseUrl: String) : ReleaseSource {

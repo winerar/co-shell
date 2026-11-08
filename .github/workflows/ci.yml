@@ -18,9 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      # Self-update turns on once the owner adds the release key secrets and the Firebase project
+      # Self-update turns on once the owner adds the release key and RELEASES_TOKEN secrets
       # (docs/setup/self-update.md). Until then only the debug APK is published.
-      SELF_UPDATE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && secrets.RELEASE_KEYSTORE_BASE64 != '' && vars.FIREBASE_PROJECT_ID != '' }}
+      SELF_UPDATE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && secrets.RELEASE_KEYSTORE_BASE64 != '' && secrets.RELEASES_TOKEN != '' }}
+      # Public repo with only APKs and version.json (the main repo is private).
+      RELEASES_REPO: ${{ github.repository_owner }}/co-shell-releases
     steps:
       - uses: actions/checkout@v7
 
@@ -54,26 +56,29 @@ jobs:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-          UPDATE_BASE_URL: https://${{ vars.FIREBASE_PROJECT_ID }}.web.app
         run: |
           export RELEASE_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
+          export UPDATE_BASE_URL="https://github.com/$RELEASES_REPO/releases/latest/download"
           echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
           ./gradlew assembleRelease
           rm "$RELEASE_KEYSTORE_FILE"
           version_name=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
-          python3 scripts/make-update-site.py app/build/outputs/apk/release/app-release.apk \
-            "${{ github.run_number }}" "$version_name" docs/whats-new.md update-site
+          python3 scripts/make-update-files.py app/build/outputs/apk/release/app-release.apk \
+            "${{ github.run_number }}" "$version_name" docs/whats-new.md \
+            "https://github.com/$RELEASES_REPO/releases/download/build-${{ github.run_number }}" update-files
           cp app/build/outputs/apk/release/app-release.apk co-shell.apk
 
-      # The app reads https://<project>.web.app/version.json and downloads the APK next to it.
-      - name: Deploy update to Firebase Hosting
+      # The app reads .../releases/latest/download/version.json from the public releases repo.
+      - name: Publish update
         if: env.SELF_UPDATE == 'true'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ github.token }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
-          channelId: live
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          gh release create "build-${{ github.run_number }}" update-files/* \
+            --repo "$RELEASES_REPO" \
+            --title "Сборка ${{ github.run_number }}" \
+            --notes-file <(python3 -c 'import json; print(json.load(open("update-files/version.json"))["notes"])') \
+            --latest
 
       # Every merge to main becomes a release with a fixed file name, so the newest APK is always at
       # https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk

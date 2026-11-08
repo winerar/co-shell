@@ -2,7 +2,7 @@ package app.coshell.core.domain.update
 
 import kotlin.time.Instant
 
-/** Where the latest release is announced (`version.json` on Firebase Hosting). */
+/** Where the latest release is announced (`version.json` in the public releases repo). */
 interface ReleaseSource {
     /** `null` when updates are not configured in this build. Throws on network or format errors. */
     suspend fun latestRelease(): AppRelease?

@@ -11,7 +11,6 @@ scripts/                служебные скрипты (check.sh, конве�
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
                         whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)
 .github/workflows/      CI (ci.yml), создание release-ключа (release-key.yml)
-firebase.json           Firebase Hosting для самообновления (папка update-site/ собирается в CI)
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
 

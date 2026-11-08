@@ -14,5 +14,5 @@ data class CategoriesUiState(
         val isFolder: Boolean get() = children.isNotEmpty()
     }
 
-    data class Item(val id: String, val name: String, val color: Long?)
+    data class Item(val id: String, val name: String, val color: Long?, val icon: String? = null)
 }

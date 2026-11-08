@@ -30,4 +30,4 @@ internal fun TransactionEditUiState.withCategoryOptions(all: List<Category>): Tr
     )
 }
 
-private fun Category.toItem() = CategoryItem(id, name)
+private fun Category.toItem() = CategoryItem(id, name, icon, color)

@@ -60,6 +60,8 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
 `NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
 `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строки меню — `ui/list/ActionRow`.
+Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
+`IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.
 
 ## Новый модуль

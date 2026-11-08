@@ -50,11 +50,14 @@ private fun Transaction.toRow(
     moneyFormat: MoneyFormat,
 ): Row {
     val accountName = accountsById[accountId]?.name ?: UNKNOWN
+    val category = categoryId?.let { categoriesById[it] }
     return when (type) {
         TransactionType.EXPENSE -> Row(
             id = id,
             kind = Kind.EXPENSE,
-            title = categoryId?.let { categoriesById[it]?.name },
+            title = category?.name,
+            icon = category?.icon,
+            color = category?.color,
             subtitle = accountName,
             note = note,
             amount = moneyFormat.format(-amount),
@@ -62,7 +65,9 @@ private fun Transaction.toRow(
         TransactionType.INCOME -> Row(
             id = id,
             kind = Kind.INCOME,
-            title = categoryId?.let { categoriesById[it]?.name },
+            title = category?.name,
+            icon = category?.icon,
+            color = category?.color,
             subtitle = accountName,
             note = note,
             amount = "+" + moneyFormat.format(amount),

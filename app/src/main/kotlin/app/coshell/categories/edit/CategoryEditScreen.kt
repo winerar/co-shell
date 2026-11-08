@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.edit.components.CategoryTypeSection
 import app.coshell.categories.edit.components.ChildrenSection
+import app.coshell.categories.edit.components.ColorSection
+import app.coshell.categories.edit.components.IconSection
 import app.coshell.categories.edit.components.FolderSection
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
@@ -29,7 +31,7 @@ import app.coshell.ui.form.EditFooter
 import app.coshell.ui.form.EditTopBar
 import app.coshell.ui.form.NameField
 
-/** Category editor layout: name, type, folder or subcategories, then save/archive/delete. */
+/** Category editor layout: name, type, icon, colour, folder or subcategories, then save/archive/delete. */
 @Composable
 fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions) {
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
@@ -62,6 +64,8 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
                 imeAction = ImeAction.Done,
             )
             CategoryTypeSection(state.type, state.typeLocked, actions.onTypeChange)
+            IconSection(state.icon, state.color, actions.onIconChange)
+            ColorSection(state.color, actions.onColorChange)
             if (state.canMoveToFolder && state.folders.isNotEmpty()) {
                 FolderSection(state.folders, state.parentId, actions.onParentChange)
             }

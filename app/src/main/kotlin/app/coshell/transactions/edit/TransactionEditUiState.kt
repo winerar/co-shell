@@ -36,7 +36,7 @@ data class TransactionEditUiState(
 ) {
     data class AccountOption(val id: String, val name: String, val currency: String, val currencySymbol: String)
 
-    data class CategoryItem(val id: String, val name: String)
+    data class CategoryItem(val id: String, val name: String, val icon: String? = null, val color: Long? = null)
 
     data class CategoryGroup(val item: CategoryItem, val children: List<CategoryItem>) {
         val isFolder: Boolean get() = children.isNotEmpty()

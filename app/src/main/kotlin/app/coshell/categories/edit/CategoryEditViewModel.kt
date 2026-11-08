@@ -58,6 +58,8 @@ class CategoryEditViewModel @Inject constructor(
                 isNew = false,
                 name = category.name,
                 type = category.type,
+                icon = category.icon,
+                color = category.color,
                 typeLocked = saveCategory.isTypeLocked(category.id),
                 parentId = category.parentId,
                 childIds = all.filter { it.parentId == id }.map { it.id }.toSet(),
@@ -74,6 +76,10 @@ class CategoryEditViewModel @Inject constructor(
         else withOptions(it.copy(type = type, parentId = null, childIds = emptySet(), saveError = null))
     }
 
+    fun onIconChange(icon: String) = _state.update { it.copy(icon = icon) }
+
+    fun onColorChange(color: Long) = _state.update { it.copy(color = color) }
+
     fun onParentChange(parentId: String?) = _state.update { withOptions(it.copy(parentId = parentId, saveError = null)) }
 
     fun onToggleChild(id: String) = _state.update {
@@ -89,7 +95,13 @@ class CategoryEditViewModel @Inject constructor(
             return
         }
         val base = existing ?: Category(id = ids.newId(), name = name, type = form.type)
-        val category = base.copy(name = name, type = form.type, parentId = form.parentId)
+        val category = base.copy(
+            name = name,
+            type = form.type,
+            icon = form.icon,
+            color = form.color,
+            parentId = form.parentId,
+        )
         viewModelScope.launch {
             val result = saveCategory(category)
             if (result is SaveCategoryUseCase.Result.Invalid) {

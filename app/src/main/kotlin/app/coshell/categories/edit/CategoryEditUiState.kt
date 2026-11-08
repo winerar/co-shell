@@ -10,6 +10,10 @@ data class CategoryEditUiState(
     val asFolder: Boolean = false,
     val name: String = "",
     val type: CategoryType = CategoryType.EXPENSE,
+    /** Icon key from `CategoryIcons`; `null` shows the generic icon. */
+    val icon: String? = null,
+    /** ARGB colour from `CategoryPalette` (or an imported one); `null` is neutral grey. */
+    val color: Long? = null,
     val typeLocked: Boolean = false,
     /** Folder this category is in, `null` for the top level. */
     val parentId: String? = null,

@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch: # Actions → CI → Run workflow (e.g. first deploy after adding secrets)
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -19,7 +20,7 @@ jobs:
     env:
       # Self-update turns on once the owner adds the release key secrets and the Firebase project
       # (docs/setup/self-update.md). Until then only the debug APK is published.
-      SELF_UPDATE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.RELEASE_KEYSTORE_BASE64 != '' && vars.FIREBASE_PROJECT_ID != '' }}
+      SELF_UPDATE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && secrets.RELEASE_KEYSTORE_BASE64 != '' && vars.FIREBASE_PROJECT_ID != '' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -77,7 +78,7 @@ jobs:
       # Every merge to main becomes a release with a fixed file name, so the newest APK is always at
       # https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk
       - name: Publish release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
           NOTES: ${{ github.event.head_commit.message }}

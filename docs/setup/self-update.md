@@ -27,7 +27,8 @@ APK, сверяет SHA-256 и ставит его через системное
 - Вкладка **Variables** → **New repository variable**: `FIREBASE_PROJECT_ID` = ID проекта из шага 1.1.
 
 ## 4. Проверка
-1. Слить любой PR в `main` (или Actions → CI → Run workflow на `main`). В логе CI должны пройти шаги
+1. Actions → **CI** → **Run workflow** → ветка `main` → Run workflow (или: открыть последний запуск CI
+   на `main` → **Re-run jobs** → Re-run all jobs). В логе CI должны пройти шаги
    «Build signed release APK» и «Deploy update to Firebase Hosting».
 2. На телефоне открыть `https://<ID проекта>.web.app/version.json` — должен показаться текст с
    `versionCode`. Это и есть проверка, что Firebase доступен из Аргентины.

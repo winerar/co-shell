@@ -27,7 +27,8 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 | `./gradlew assembleDebug` | debug APK → `app/build/outputs/apk/debug/` |
 | `./gradlew :app:testDebugUnitTest` | unit-тесты приложения |
 
-Перед коммитом обязательно: `./gradlew check assembleDebug`.
+Перед коммитом обязательно: `./gradlew check assembleDebug`. Агенту — через `scripts/check.sh`: то же самое,
+но печатает только ошибки, упавшие тесты и итог (`Tests: N`, `OK`/`FAILED`) — экономит токены.
 
 ## Тесты
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).

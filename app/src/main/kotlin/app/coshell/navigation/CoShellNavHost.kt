@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
+import app.coshell.backup.BackupRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.home.HomeRoute
@@ -113,7 +114,13 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                     AccountEditRoute(onDone = { navController.popBackStack() })
                 }
                 composable<MoreDestination> {
-                    MoreRoute(onCategories = { navController.navigate(CategoriesDestination) })
+                    MoreRoute(
+                        onCategories = { navController.navigate(CategoriesDestination) },
+                        onBackup = { navController.navigate(BackupDestination) },
+                    )
+                }
+                composable<BackupDestination> {
+                    BackupRoute(onBack = { navController.popBackStack() })
                 }
                 composable<CategoriesDestination> {
                     CategoriesRoute(

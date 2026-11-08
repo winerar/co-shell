@@ -16,6 +16,8 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.time.Clock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class JsonBackupRepository(
     private val database: CoShellDatabase,
@@ -29,7 +31,8 @@ class JsonBackupRepository(
         encodeDefaults = true
     }
 
-    override suspend fun exportJson(): String {
+    // Both directions run on Default: thousands of rows (Wallet import) must not block the UI thread.
+    override suspend fun exportJson(): String = withContext(Dispatchers.Default) {
         val file = BackupFile(
             exportedAt = clock.now().toString(),
             accounts = database.accountDao().getAll().map { it.toModel().toDto() },
@@ -37,10 +40,14 @@ class JsonBackupRepository(
             transactions = database.transactionDao().getAll().map { it.toModel().toDto() },
             budgets = database.budgetDao().getAll().map { it.toModel().toDto() },
         )
-        return json.encodeToString(BackupFile.serializer(), file)
+        json.encodeToString(BackupFile.serializer(), file)
     }
 
-    override suspend fun importJson(json: String): BackupImportResult {
+    override suspend fun importJson(json: String): BackupImportResult = withContext(Dispatchers.Default) {
+        importOnCaller(json)
+    }
+
+    private suspend fun importOnCaller(json: String): BackupImportResult {
         val header = runCatching { this.json.parseToJsonElement(json).jsonObject }.getOrNull()
             ?: return BackupImportResult.NotABackup
         if (header["format"]?.jsonPrimitive?.content != BackupFile.FORMAT) return BackupImportResult.NotABackup

@@ -49,10 +49,13 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 
 ## Самообновление (release)
 - Включается, когда заданы секреты `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`,
-  `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`, `FIREBASE_SERVICE_ACCOUNT` и переменная `FIREBASE_PROJECT_ID`
-  (шаги владельца — `docs/setup/self-update.md`). Без них шаги release пропускаются, CI зелёный.
-- CI: `assembleRelease` (ключ из секрета во временный файл, `UPDATE_BASE_URL=https://<id>.web.app`) →
-  `scripts/make-update-site.py` → `update-site/` → деплой в Firebase Hosting (`firebase.json`).
+  `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` и `RELEASES_TOKEN` (fine-grained PAT, Contents: write
+  только на `co-shell-releases`). Шаги владельца — `docs/setup/self-update.md`. Без них шаги release
+  пропускаются, CI зелёный.
+- CI: `assembleRelease` (ключ из секрета во временный файл,
+  `UPDATE_BASE_URL=https://github.com/<owner>/co-shell-releases/releases/latest/download`) →
+  `scripts/make-update-files.py` → `update-files/` → `gh release create` в **публичном** `co-shell-releases`.
+- Firebase Hosting не подходит: на Spark запрещены исполняемые файлы, в т.ч. `.apk`.
 - Локально release без ключа собирается неподписанным и с пустым `UPDATE_BASE_URL` (экран «не настроено»).
   Проверить R8/подпись: `keytool -genkeypair` во временный файл и те же переменные окружения.
-- Текст «Что нового» — верхний раздел `docs/whats-new.md`.
+- Текст «Что нового» — верхний раздел `docs/whats-new.md` (он публичен — без личных данных).

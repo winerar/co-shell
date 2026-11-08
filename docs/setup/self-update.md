@@ -1,47 +1,53 @@
 # Включить самообновление (делает владелец, один раз)
 
-Код уже готов: приложение раз в сутки читает `https://<проект>.web.app/version.json`, скачивает
-APK, сверяет SHA-256 и ставит его через системное окно Android. Не хватает трёх вещей, которые
-может сделать только владелец: проект Firebase, ключ подписи и секреты в GitHub. ~20 минут.
+Код готов: приложение раз в сутки читает `version.json` из последнего релиза **публичного**
+репозитория `winerar/co-shell-releases`, скачивает APK, сверяет SHA-256 и ставит его через окно
+Android. В этом репозитории только APK и `version.json` — ни кода, ни документов, ни данных семьи
+(данные живут только на телефонах). Основной репозиторий остаётся приватным.
 
-## 1. Проект Firebase (бесплатный тариф Spark)
-1. https://console.firebase.google.com → **Создать проект**. Название — `co-shell`.
-   Под названием показан **ID проекта** (например, `co-shell-4f2a1`) — запишите его.
-   Google Analytics — выключить. Тариф по умолчанию — Spark (бесплатный), карту не вводить.
-2. В меню слева **Hosting** → «Начать» → пролистать шаги кнопкой «Далее» (команды из них
-   выполнять не нужно — выкладывает GitHub).
-3. ⚙ **Настройки проекта** → **Сервисные аккаунты** → **Создать закрытый ключ** → скачается JSON-файл.
+## 1. Ключ подписи (если ещё не сделан)
+1. GitHub → `co-shell` → **Actions** → слева **Create release key** → **Run workflow**.
+2. Открыть запуск → внизу **Artifacts** → скачать `co-shell-release-key`.
+3. Сохранить архив на Google Диск. **Без него приложение нельзя будет обновить** — только
+   переустановить с потерей данных. В GitHub архив удалится сам через сутки.
+4. **Settings → Secrets and variables → Actions → Secrets → New repository secret**, четыре штуки
+   со значениями из `README.txt` архива: `RELEASE_KEYSTORE_BASE64` (содержимое
+   `RELEASE_KEYSTORE_BASE64.txt`), `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`.
 
-## 2. Ключ подписи
-1. GitHub → репозиторий → **Actions** → слева **Create release key** → **Run workflow**.
-2. Через минуту открыть запуск → внизу **Artifacts** → скачать `co-shell-release-key`.
-3. Сохранить архив на Google Диск (папка вроде «co-shell ключ»). **Без него приложение нельзя
-   будет обновить** — только переустановить с потерей данных. Архив в GitHub удалится сам через сутки.
+## 2. Публичный репозиторий для обновлений
+1. https://github.com/new → Repository name: **`co-shell-releases`** (точно так).
+2. Видимость — **Public**. Отметить **Add a README file**. **Create repository**.
 
-## 3. Секреты в GitHub
-Репозиторий → **Settings → Secrets and variables → Actions**.
-- Вкладка **Secrets** → **New repository secret**, пять штук:
-  - `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` —
-    значения в `README.txt` из архива ключа;
-  - `FIREBASE_SERVICE_ACCOUNT` — всё содержимое JSON-файла из шага 1.3.
-- Вкладка **Variables** → **New repository variable**: `FIREBASE_PROJECT_ID` = ID проекта из шага 1.1.
+## 3. Токен, которым CI выкладывает обновления
+1. https://github.com/settings/personal-access-tokens/new (Settings → Developer settings →
+   Personal access tokens → **Fine-grained tokens** → **Generate new token**).
+2. Token name: `co-shell releases`. Expiration — максимальный срок (запишите дату: после неё
+   обновления перестанут выкладываться, токен нужно будет перевыпустить).
+3. Repository access → **Only select repositories** → выбрать `co-shell-releases`.
+4. Permissions → Repository permissions → **Contents** → **Read and write**.
+5. **Generate token** → скопировать токен (показывается один раз).
+6. В репозитории `co-shell` → Settings → Secrets and variables → Actions → **New repository secret**:
+   Name `RELEASES_TOKEN`, Secret — скопированный токен.
 
 ## 4. Проверка
-1. Actions → **CI** → **Run workflow** → ветка `main` → Run workflow (или: открыть последний запуск CI
-   на `main` → **Re-run jobs** → Re-run all jobs). В логе CI должны пройти шаги
-   «Build signed release APK» и «Deploy update to Firebase Hosting».
-2. На телефоне открыть `https://<ID проекта>.web.app/version.json` — должен показаться текст с
-   `versionCode`. Это и есть проверка, что Firebase доступен из Аргентины.
-3. Если шаг Deploy упал с «permission denied»: Google Cloud Console → IAM → сервисному аккаунту
-   `firebase-adminsdk-…` добавить роль **Firebase Hosting Admin**.
+1. `co-shell` → Actions → **CI** → **Run workflow** → `main` → Run workflow. Через 5 минут должны
+   пройти шаги «Build signed release APK» и «Publish update».
+2. В `co-shell-releases` → **Releases** появится «Сборка N» с файлами `co-shell-N.apk` и `version.json`.
+3. На телефоне открыть
+   `https://github.com/winerar/co-shell-releases/releases/latest/download/version.json` —
+   скачается/покажется текст с `versionCode` (без входа в GitHub).
 
 ## 5. Переход на новую сборку (один раз на каждом телефоне)
 Release-сборка — отдельное приложение (другое имя пакета и ключ), поэтому данные переносим копией:
 1. В старом co-shell: **Ещё → Резервная копия → Сохранить копию** (на Google Диск).
-2. GitHub → **Releases** → последняя сборка → скачать **`co-shell.apk`** → установить.
+2. На телефоне открыть https://github.com/winerar/co-shell-releases/releases/latest → скачать
+   `co-shell-N.apk` → установить (разрешить установку из браузера/Файлов, если спросит).
 3. В новом co-shell: **Ещё → Резервная копия → Восстановить из копии**. Проверить счета и операции.
-4. Удалить старое приложение (в списке приложений их будет два с одинаковым названием;
-   старое — «co-shell» с пометкой версии `-debug` в «О приложении»).
-5. Новое при первой установке попросит разрешение «Установка из этого источника» — разрешить.
+4. Пройти по всем экранам; если что-то закрывается с ошибкой — сообщить, старое приложение не удалять.
+5. Если всё в порядке — удалить старое (в «Настройки → Приложения» у него версия с `-debug`).
 
-Дальше обновления приходят сами: при запуске раз в сутки появится «Доступна версия…».
+Дальше обновления приходят сами: при запуске раз в сутки появится «Доступна версия…». В первый раз
+Android попросит «Разрешить установку из этого источника» для co-shell — разрешить.
+
+Firebase-проект, созданный раньше, не удаляйте — он понадобится на этапе 4 (синхронизация).
+Секрет `FIREBASE_SERVICE_ACCOUNT` и переменная `FIREBASE_PROJECT_ID` сейчас не используются.

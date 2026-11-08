@@ -19,7 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlin.time.Clock
 
-/** Self-update: `version.json` on Firebase Hosting, download, PackageInstaller. */
+/** Self-update: `version.json` in GitHub Releases of `co-shell-releases`, download, PackageInstaller. */
 @Module
 @InstallIn(SingletonComponent::class)
 interface UpdateModule {

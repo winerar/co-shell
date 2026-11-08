@@ -11,7 +11,7 @@ import org.junit.Test
 
 class ReleaseManifestTest {
     private val hash = "AB".repeat(32)
-    private val url = "https://co-shell.web.app/version.json"
+    private val url = "https://github.com/winerar/co-shell-releases/releases/latest/download/version.json"
 
     private fun manifest(apk: String = "co-shell-42.apk", sha: String = hash, size: Long = 5_000_000) = """
         {"versionCode": 42, "versionName": "0.2.0", "apk": "$apk", "sha256": "$sha",
@@ -23,9 +23,15 @@ class ReleaseManifestTest {
         val release = parseReleaseManifest(manifest(), url)
         assertEquals(42, release.versionCode)
         assertEquals("0.2.0", release.versionName)
-        assertEquals("https://co-shell.web.app/co-shell-42.apk", release.apkUrl)
+        assertEquals("https://github.com/winerar/co-shell-releases/releases/latest/download/co-shell-42.apk", release.apkUrl)
         assertEquals("ab".repeat(32), release.sha256)
         assertEquals("• Новое", release.notes)
+    }
+
+    @Test
+    fun `absolute apk url is kept`() {
+        val apk = "https://github.com/winerar/co-shell-releases/releases/download/build-42/co-shell-42.apk"
+        assertEquals(apk, parseReleaseManifest(manifest(apk = apk), url).apkUrl)
     }
 
     @Test(expected = IllegalArgumentException::class)

@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 /**
- * `version.json` published next to the APK by CI (`scripts/make-version-json.sh`).
- * [apk] may be relative to the manifest's own URL, e.g. `co-shell-42.apk`.
+ * `version.json` published next to the APK by CI (`scripts/make-update-files.py`).
+ * [apk] is an absolute URL (CI) or relative to the manifest URL, e.g. `co-shell-42.apk`.
  */
 @Serializable
 internal data class ReleaseManifest(

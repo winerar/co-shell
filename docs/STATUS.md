@@ -22,7 +22,7 @@
 - Страна проживания (доступность Firebase, запасной источник курсов) — спросить до этапа 2.
 - Образец CSV-экспорта из Wallet (заголовок + 3–5 обезличенных строк) — нужен до этапа 5.
 - Автоввод из банков: кто каким банком пользуется, есть ли Bybit Card, образцы push и выписок —
-  список в `docs/research/auto-import-banks.md` §6. Не блокирует этап 1.
+  список в `docs/research/auto-import-banks.md` §7. Не блокирует этап 1.
 
 ## Окружение
 - Облачное окружение **co-shell**: разрешён `dl.google.com`, setup-скрипт ставит Android SDK
@@ -33,5 +33,5 @@
 - Версии: Gradle 9.9.0, AGP 9.5.1, Kotlin 2.4.21, KSP 2.3.13, Hilt 2.60.1, Compose BOM 2026.09.00.
 
 ## Последняя сессия
-2026-11-08: исследование автоввода из Ameriabank, Bybit, Т-Банка → `docs/research/auto-import-banks.md`
+2026-11-08: исследование автоввода из Ameriabank, Bybit, Т-Банка, Google Pay → `docs/research/auto-import-banks.md`
 (вывод: push-уведомления + Bybit API + выписки для сверки; решение не принято, идея в ROADMAP).

@@ -24,14 +24,33 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Android-специфичное в data (Context, позже Firestore) | `core:data/androidMain` |
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент | `core:designsystem` |
-| Экран | сейчас `app/.../<feature>/`; при росте — модуль `feature:<name>` |
+| Экран | `app/.../<feature>/<screen>/` (см. ниже); при росте — модуль `feature:<name>` |
 | Маршрут навигации | `app/.../navigation/Destinations.kt` (`@Serializable`), граф и нижняя панель — `CoShellNavHost.kt` |
 | Иконка | `core:designsystem` res/drawable, правила — `code-style.md` §«Иконки» |
 
-## Экран = 4 файла
-`<Name>Route` (достаёт ViewModel) · `<Name>Screen` (stateless, с `@Preview`) ·
-`<Name>ViewModel` (`StateFlow<UiState>`) · `<Name>UiState`. Аргументы маршрута ViewModel читает из
-`SavedStateHandle` по имени свойства (не `toRoute()` — так работает в unit-тестах без Android).
+## Файлы: маленькие и по одной теме
+Цель — чтобы человек или агент открыл **один короткий файл** и понял его целиком.
+- Один файл — один логический блок (экран, компонент, валидация, маппинг). Ориентир — **до ~200 строк**;
+  больше — дели. Имя файла = главная сущность в нём.
+- В начале файла/класса — KDoc на 1–3 строки: что это и где соседние части.
+- Чистая логика (валидация, расчёты, построение списков) — в отдельный файл функцией без Android,
+  чтобы тестировать без ViewModel.
+
+## Экран = пакет `<feature>/<screen>/`
+Образец — `transactions/edit/`:
+| Файл | Что внутри |
+|---|---|
+| `<Name>Route.kt` | достаёт ViewModel, `<Name>Actions` (все лямбды экрана) |
+| `<Name>Screen.kt` | stateless-раскладка блоков, диалоги; без деталей блоков |
+| `<Name>UiState.kt` | состояние с готовыми строками + вычисляемые свойства |
+| `<Name>ViewModel.kt` | загрузка, приём ввода, сохранение; логику делегирует |
+| `<Name>Previews.kt` | `@Preview` в `CoShellTheme` |
+| `<Тема>.kt` (напр. `TransactionForm.kt`) | чистая логика экрана (валидация и т. п.) |
+| `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
+Мелкий экран может держать Route+Screen+Previews в одном файле (`accounts/`, `categories/` — пока так).
+Аргументы маршрута ViewModel читает из `SavedStateHandle` по имени свойства (не `toRoute()` — так
+работает в unit-тестах без Android). Общее для нескольких экранов — на уровень `<feature>/`
+(напр. `transactions/AddTransactionFab.kt`) или в `core:designsystem`.
 
 ## Новый модуль
 1. `include(":path:name")` в `settings.gradle.kts`.

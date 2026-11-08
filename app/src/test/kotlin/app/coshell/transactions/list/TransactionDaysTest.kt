@@ -1,0 +1,87 @@
+package app.coshell.transactions.list
+
+import app.coshell.core.model.Account
+import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Money
+import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionType
+import app.coshell.transactions.list.TransactionsUiState.Kind
+import app.coshell.transactions.list.TransactionsUiState.RelativeDay
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Test
+
+class TransactionDaysTest {
+    private val zone = TimeZone.of("America/Argentina/Buenos_Aires")
+    private val today = LocalDate(2026, 11, 8)
+    private val ars = CurrencyCode("ARS")
+    private val usd = CurrencyCode("USD")
+    private val g = MoneyFormat.NARROW_NBSP
+    private val nbsp = MoneyFormat.NBSP
+    private val accounts = listOf(Account("card", "Карта", ars), Account("cash", "Наличные", usd)).associateBy { it.id }
+    private val categories = listOf(Category("cafe", "Кафе", CategoryType.EXPENSE)).associateBy { it.id }
+
+    private fun at(day: Int, hour: Int) = LocalDateTime(2026, 11, day, hour, 0).toInstant(zone)
+
+    private fun build(vararg items: Transaction) =
+        buildTransactionDays(items.toList(), accounts, categories, MoneyFormat.RU, zone, today)
+
+    @Test
+    fun `groups by local day newest first with relative labels`() {
+        val days = build(
+            Transaction("a", TransactionType.EXPENSE, "card", Money(100, ars), at(6, 10)),
+            Transaction("b", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 9)),
+            // 23:30 local on the 7th is already the 8th in UTC: must stay on the 7th.
+            Transaction("c", TransactionType.EXPENSE, "card", Money(100, ars), LocalDateTime(2026, 11, 7, 23, 30).toInstant(zone)),
+            Transaction("d", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 20)),
+        )
+        assertEquals(listOf(today, LocalDate(2026, 11, 7), LocalDate(2026, 11, 6)), days.map { it.date })
+        assertEquals(listOf(RelativeDay.TODAY, RelativeDay.YESTERDAY, RelativeDay.OTHER), days.map { it.relative })
+        assertEquals(listOf("d", "b"), days[0].rows.map { it.id })
+    }
+
+    @Test
+    fun `formats expense income and cross-currency transfer`() {
+        val rows = build(
+            Transaction("e", TransactionType.EXPENSE, "card", Money(1_500_00, ars), at(8, 12), categoryId = "cafe", note = "кофе"),
+            Transaction("i", TransactionType.INCOME, "card", Money(100_00, ars), at(8, 11), categoryId = "gone"),
+            Transaction(
+                "t", TransactionType.TRANSFER, "cash", Money(100_00, usd), at(8, 10),
+                toAccountId = "card", toAmount = Money(120_000_00, ars),
+            ),
+        ).single().rows
+
+        val (expense, income, transfer) = rows
+        assertEquals("Кафе", expense.title)
+        assertEquals("Карта", expense.subtitle)
+        assertEquals("кофе", expense.note)
+        assertEquals("-1${g}500,00${nbsp}ARS", expense.amount)
+
+        assertEquals(Kind.INCOME, income.kind)
+        assertNull(income.title) // deleted category
+        assertEquals("+100,00${nbsp}ARS", income.amount)
+
+        assertEquals(Kind.TRANSFER, transfer.kind)
+        assertEquals("Наличные → Карта", transfer.subtitle)
+        assertEquals("+120${g}000,00${nbsp}ARS", transfer.secondaryAmount)
+    }
+
+    @Test
+    fun `same-currency transfer has no second amount`() {
+        val row = build(
+            Transaction(
+                "t", TransactionType.TRANSFER, "card", Money(5_00, ars), at(8, 10),
+                toAccountId = "x", toAmount = Money(5_00, ars),
+            ),
+        ).single().rows.single()
+        assertNull(row.secondaryAmount)
+        assertEquals("Карта → ?", row.subtitle)
+    }
+}

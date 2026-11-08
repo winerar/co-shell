@@ -38,6 +38,14 @@ data class MoneyFormat(
         return if (negative) "-$body" else body
     }
 
+    /**
+     * The number for an input field: no symbol, zero fraction trimmed, grouped with narrow spaces
+     * so that [MoneyParser] reads it back unambiguously ("1 234,50", "1 200").
+     */
+    fun formatForEditing(money: Money): String =
+        copy(groupSeparator = NARROW_NBSP, trimZeroFraction = true)
+            .formatNumber(money.amountMinor, Currencies.info(money.currency).fractionDigits)
+
     companion object {
         const val NBSP = ' '
         const val NARROW_NBSP = ' '

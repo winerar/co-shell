@@ -17,7 +17,8 @@
     <string name="home_accounts">Счета</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
-    <string name="transactions_coming_soon">Список операций появится в следующей версии.</string>
+    <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
+    <string name="transactions_no_category">Без категории</string>
 
     <string name="accounts_title">Счета</string>
     <string name="accounts_add">Добавить счёт</string>
@@ -86,4 +87,35 @@
     <string name="category_delete_confirm_text">Категория без операций будет удалена. Если это папка, её подкатегории останутся без папки.</string>
     <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
     <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе операций она больше не появится.</string>
+    <string name="transaction_add">Добавить операцию</string>
+    <string name="transaction_edit_title_new">Новая операция</string>
+    <string name="transaction_edit_title">Операция</string>
+    <string name="transaction_type_expense">Расход</string>
+    <string name="transaction_type_income">Доход</string>
+    <string name="transaction_type_transfer">Перевод</string>
+    <string name="transaction_amount">Сумма</string>
+    <string name="transaction_to_amount">Сумма зачисления</string>
+    <string name="transaction_to_amount_hint">Сколько пришло на счёт «%1$s». Курс обмена считается из двух сумм.</string>
+    <string name="transaction_amount_required">Введите сумму</string>
+    <string name="transaction_amount_invalid">Не похоже на сумму</string>
+    <string name="transaction_amount_fraction">Слишком много знаков после запятой для этой валюты</string>
+    <string name="transaction_amount_not_positive">Сумма должна быть больше нуля</string>
+    <string name="transaction_account">Счёт</string>
+    <string name="transaction_from_account">Со счёта</string>
+    <string name="transaction_to_account">На счёт</string>
+    <string name="transaction_account_required">Выберите счёт</string>
+    <string name="transaction_to_account_same">Счета должны быть разными</string>
+    <string name="transaction_category">Категория</string>
+    <string name="transaction_category_required">Выберите категорию</string>
+    <string name="transaction_category_folder">В папке «%1$s»</string>
+    <string name="transaction_no_categories">Категорий этого типа нет. Добавьте их в разделе «Ещё → Категории».</string>
+    <string name="transaction_date">Дата</string>
+    <string name="transaction_date_today">Сегодня</string>
+    <string name="transaction_date_yesterday">Вчера</string>
+    <string name="transaction_date_other">Другая дата</string>
+    <string name="transaction_note">Заметка</string>
+    <string name="transaction_no_accounts">Чтобы записать операцию, сначала добавьте счёт.</string>
+    <string name="transaction_delete_confirm_title">Удалить операцию?</string>
+    <string name="transaction_delete_confirm_text">Баланс счёта пересчитается.</string>
+    <string name="action_ok">OK</string>
 </resources>

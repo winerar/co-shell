@@ -3,6 +3,7 @@ package app.coshell.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -82,8 +83,10 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
             }
         },
     ) { padding ->
-        // Inner screens have their own Scaffold; only the bottom bar inset is applied here.
-        Box(Modifier.padding(bottom = padding.calculateBottomPadding()).consumeWindowInsets(padding)) {
+        // Inner screens have their own Scaffold and handle the status bar themselves, so only the
+        // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
+        val bottomInset = PaddingValues(bottom = padding.calculateBottomPadding())
+        Box(Modifier.padding(bottomInset).consumeWindowInsets(bottomInset)) {
             NavHost(navController = navController, startDestination = HomeDestination) {
                 composable<HomeDestination> {
                     HomeRoute(

@@ -42,4 +42,10 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 
 ## CI
 `.github/workflows/ci.yml`: на push в `main` и на PR — `check`, `assembleDebug`,
-debug APK в артефактах сборки (14 дней). Release-сборка и самообновление — этап 2.
+debug APK в артефактах сборки (14 дней). На push в `main` — ещё и GitHub Release `build-<N>` с файлом
+`co-shell-debug.apk`; последняя версия всегда по ссылке
+`https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk` (репозиторий приватный —
+нужен вход в GitHub). Это ручная доставка, пока нет самообновления (этап 2).
+`versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug-сборки подписаны общим ключом
+`app/debug.keystore` из репозитория (не секрет) — APK ставятся поверх друг друга без потери данных.
+Release-сборка и самообновление — этап 2.

@@ -38,4 +38,16 @@ class MoneyFormatTest {
         val text = MoneyFormat.RU.formatNumber(Long.MIN_VALUE, 2)
         assertEquals('-', text.first())
     }
+
+    @Test
+    fun `editing format parses back to the same amount`() {
+        val usd = CurrencyCode("USD")
+        for (format in listOf(MoneyFormat.RU, MoneyFormat.EN)) {
+            for (minor in listOf(1L, 1_250_50L, 123_456_789_00L, 100L)) {
+                val money = Money(minor, usd)
+                assertEquals(money, MoneyParser.parseOrNull(format.formatForEditing(money), usd))
+            }
+        }
+        assertEquals("1${g}250,50", MoneyFormat.RU.formatForEditing(Money(1_250_50, usd)))
+    }
 }

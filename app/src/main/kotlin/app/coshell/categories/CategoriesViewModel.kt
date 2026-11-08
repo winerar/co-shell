@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
+import app.coshell.core.model.CATEGORY_ORDER
+import app.coshell.core.model.buildCategoryTree
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,27 +42,19 @@ class CategoriesViewModel @Inject constructor(categories: CategoryRepository) : 
     private fun buildState(all: List<Category>, ui: Ui): CategoriesUiState {
         val ofType = all.filter { it.type == ui.type }
         val (archived, active) = ofType.partition { it.archived }
-        val children = active.filter { it.parentId != null }.groupBy { it.parentId }
-        val activeIds = active.map { it.id }.toSet()
-        // A subcategory whose folder is gone (e.g. archived on another phone) is shown at the top level.
-        val topLevel = active.filter { it.parentId == null || it.parentId !in activeIds }
         return CategoriesUiState(
             type = ui.type,
-            groups = topLevel.sortedWith(ORDER).map { category ->
+            groups = buildCategoryTree(active).map { node ->
                 CategoriesUiState.Group(
-                    item = category.toItem(),
-                    children = children[category.id].orEmpty().sortedWith(ORDER).map { it.toItem() },
-                    expanded = category.id in ui.expanded,
+                    item = node.category.toItem(),
+                    children = node.children.map { it.toItem() },
+                    expanded = node.category.id in ui.expanded,
                 )
             },
-            archived = archived.sortedWith(ORDER).map { it.toItem() },
+            archived = archived.sortedWith(CATEGORY_ORDER).map { it.toItem() },
             showArchived = ui.showArchived,
         )
     }
 
     private fun Category.toItem() = CategoriesUiState.Item(id, name, color)
-
-    private companion object {
-        val ORDER = compareBy<Category>({ it.sortOrder }, { it.name })
-    }
 }

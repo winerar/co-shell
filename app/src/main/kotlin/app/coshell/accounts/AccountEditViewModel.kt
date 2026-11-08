@@ -10,7 +10,6 @@ import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
-import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
@@ -153,13 +152,8 @@ class AccountEditViewModel @Inject constructor(
         return base.copy(name = name, currency = currency, type = form.type, initialBalanceMinor = balanceMinor)
     }
 
-    /** "1234,5" style: no grouping ambiguity, parses back with [MoneyParser]. */
-    private fun formatForEditing(account: Account): String {
-        if (account.initialBalanceMinor == 0L) return ""
-        val digits = Currencies.info(account.currency).fractionDigits
-        return moneyFormat.copy(groupSeparator = MoneyFormat.NARROW_NBSP, trimZeroFraction = true)
-            .formatNumber(account.initialBalanceMinor, digits)
-    }
+    private fun formatForEditing(account: Account): String =
+        if (account.initialBalanceMinor == 0L) "" else moneyFormat.formatForEditing(account.initialBalance)
 
     companion object {
         /** The family lives in Argentina, earns in AMD and keeps RUB accounts (see docs/agents/owner.md). */

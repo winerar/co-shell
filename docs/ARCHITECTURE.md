@@ -1,94 +1,119 @@
-# Архитектура co-shell (черновик)
+# Архитектура co-shell
 
-## 1. Ключевые требования, определяющие архитектуру
-1. **Совместность** — несколько членов семьи видят и правят один бюджет с разных телефонов.
-2. **Offline-first** — трату в магазине без связи нужно записать сразу, синхронизировать потом.
-3. **Конфликты** — двое правят одно и то же офлайн → нужна предсказуемая стратегия слияния.
-4. **Деньги** — никаких `Double`: суммы хранятся в минимальных единицах (`Long` копеек) + код валюты.
-5. **Приватность** — финансовые данные семьи; доступ только участникам «семьи».
+## 1. Исходные условия
+- Приложение для одной семьи, **2 пользователя** (может стать больше, но не десятки).
+- **Бесплатно** — никаких платных тарифов и своих серверов.
+- **Надёжно** — данные не должны теряться, приложение работает без сети.
+- **Много валют** — счета в разных валютах, отчёты в выбранной валюте (или сразу в нескольких),
+  базовую валюту можно сменить в любой момент.
+- **Без публикации** — установка APK напрямую, Google Play не нужен.
 
 ## 2. Стек
-| Слой | Выбор | Почему |
-|---|---|---|
-| Язык | Kotlin 2.x | стандарт для Android |
-| UI | Jetpack Compose + Material 3 | декларативный UI, меньше кода |
-| Навигация | Navigation Compose (type-safe routes) | официальная |
-| DI | Hilt | стандарт, хорошо дружит с ViewModel/WorkManager |
-| Асинхронность | Coroutines + Flow | реактивные данные из БД в UI |
-| Локальная БД | Room (SQLite) | источник истины на устройстве |
-| Фоновая синхронизация | WorkManager | переживает перезапуски, учитывает сеть |
-| Бэкенд/синк | **открытый вопрос, см. §5** | |
-| Настройки | DataStore | |
-| Графики | Vico | Compose-нативные графики |
-| Тесты | JUnit5, Turbine, MockK, Room in-memory, Compose UI tests | |
-| Сборка | Gradle KTS + version catalog + convention plugins | |
-| CI | GitHub Actions: lint, detekt, unit-тесты, сборка APK | |
+| Слой | Выбор |
+|---|---|
+| Язык | Kotlin 2.x |
+| UI | Jetpack Compose + Material 3 |
+| Навигация | Navigation Compose (type-safe routes) |
+| DI | Hilt |
+| Асинхронность | Coroutines + Flow |
+| Локальная БД | Room (SQLite) — источник истины на устройстве |
+| Синхронизация | **Firebase Firestore (бесплатный план Spark)** |
+| Авторизация | Firebase Auth (email + пароль) |
+| Фоновые задачи | WorkManager (синк, обновление курсов, резервные копии) |
+| Курсы валют | бесплатный публичный API без ключа (см. §6) |
+| Настройки | DataStore |
+| Графики | Vico |
+| Тесты | JUnit5, Turbine, MockK, Room in-memory |
+| Сборка / CI | Gradle KTS + version catalog; GitHub Actions: lint, тесты, подписанный APK в GitHub Releases |
 
-minSdk 26, targetSdk — актуальный.
+minSdk 26.
 
-## 3. Архитектурный стиль
-**Clean Architecture (облегчённая) + MVVM с однонаправленным потоком данных (UDF).**
+## 3. Почему Firebase Firestore
+| Вариант | Бесплатно | Надёжность | Вердикт |
+|---|---|---|---|
+| **Firestore (Spark)** | да: 1 ГБ, 50k чтений / 20k записей в сутки — двоим хватит с запасом в сотни раз | инфраструктура Google, офлайн-кэш и realtime-обновления из коробки | ✅ выбран |
+| Supabase Free | да | проект **ставится на паузу** после 7 дней без активности | ❌ |
+| Свой сервер (Ktor/PocketBase) | нужен хостинг (или «вечно бесплатный» VPS без гарантий) | зависит от вас | ❌ |
+| P2P / файл в облаке | да | конфликты и слияние придётся писать самим | ❌ |
+
+Риски и как их закрываем:
+- **Привязка к одному поставщику (vendor lock-in)** — сеть спрятана за интерфейсом `RemoteDataSource`,
+  domain и UI про Firebase не знают. Room остаётся полноценной базой на устройстве.
+- **Нет бесплатных серверных бэкапов** — делаем **резервные копии сами**: WorkManager раз в неделю
+  выгружает JSON в выбранную папку (Google Drive / локально через Storage Access Framework),
+  плюс ручной экспорт/импорт.
+- **Доступность сервисов Google в регионе** — проверяем в начале этапа 2; если что-то не работает,
+  меняем только реализацию `RemoteDataSource`.
+
+**Безопасность:** в Firestore одна семья, правила доступа пускают только пользователей, чей uid
+есть в списке участников семьи. Регистрация чужих людей ничего им не даёт.
+
+## 4. Архитектурный стиль
+Упрощённая Clean Architecture + MVVM, данные идут в одну сторону (UDF).
 
 ```
-UI (Compose screen)
-   ↑ state (StateFlow<UiState>)     ↓ events (onAction)
-ViewModel
-   ↓
-UseCase (domain, чистый Kotlin, только там, где есть логика)
-   ↓
-Repository (interface в domain, реализация в data)
-   ↓                       ↓
-Room (источник истины)   SyncEngine ⇄ Remote API
+Compose screen ──events──▶ ViewModel ──▶ UseCase ──▶ Repository
+       ▲                       │                       │
+       └────── StateFlow ◀─────┘          Room (источник истины)
+                                                       ▲ ▼
+                                        SyncEngine ⇄ Firestore
+```
+- Экраны читают **только из Room**.
+- Запись: сначала в Room с флагом `pendingSync`, затем `SyncEngine` отправляет в Firestore;
+  изменения от второго пользователя приходят через Firestore listener / pull по `updatedAt` и пишутся в Room.
+- Конфликты: побеждает последняя запись (last-write-wins) по серверному времени; удаления — через
+  пометки-tombstones (`deleted = true`).
+- ID генерирует клиент (UUID) — записи можно создавать без сети.
+
+### Модули (стартуем компактно, дробим по мере роста)
+```
+:app                — точка входа, навигация, DI
+:core:model         — Money, Currency, доменные сущности (чистый Kotlin)
+:core:domain        — use cases, интерфейсы репозиториев, конвертация валют
+:core:data          — Room, репозитории, SyncEngine, Firestore, курсы валют
+:core:designsystem  — тема и общие компоненты
+:feature:*          — экраны (transactions, accounts, categories, budgets, reports, settings, auth)
 ```
 
-- UI читает **только из Room** через Flow. Сеть никогда не пишет в UI напрямую.
-- Запись: сначала в Room (с пометкой `pendingSync`), затем WorkManager отправляет на сервер.
-- Domain-слой не знает об Android — легко тестируется.
+## 5. Модель данных
+Служебные поля всех синхронизируемых сущностей: `id (UUID)`, `updatedAt`, `updatedBy`, `deleted`.
 
-### Модули
-```
-:app                      — точка входа, навигация, DI-граф
-:core:model               — доменные модели (Money, Transaction, Category…)
-:core:domain              — use cases, интерфейсы репозиториев
-:core:data                — реализации репозиториев
-:core:database            — Room: entities, DAO, миграции
-:core:sync                — SyncEngine, WorkManager workers
-:core:network             — клиент бэкенда
-:core:designsystem        — тема, общие Compose-компоненты
-:feature:auth             — вход, создание/присоединение к семье
-:feature:transactions     — список и ввод операций
-:feature:accounts         — счета/кошельки
-:feature:categories
-:feature:budgets          — лимиты по категориям на месяц
-:feature:reports          — аналитика, графики
-:feature:settings
-```
-Начинаем с меньшего числа модулей (`app`, `core:*` объединённые) и дробим по мере роста — не стоит переусложнять MVP.
+- **Family** — name, `reportCurrencies: List<CurrencyCode>` (первая — основная)
+- **Member** — uid, displayName
+- **Account** — name, **currency**, type (cash / card / deposit…), isShared, ownerMemberId?, initialBalanceMinor, archived
+- **Category** — name, icon, color, type (expense / income), parentId?
+- **Transaction**
+  - type: expense / income / transfer
+  - accountId, `amountMinor: Long` — **в валюте счёта**
+  - для transfer: `toAccountId`, `toAmountMinor` — сумма зачисления в валюте второго счёта
+    (обмен валюты = перевод между счетами в разных валютах, реальный курс сохраняется сам собой)
+  - categoryId, date, note, authorMemberId
+  - `originalAmountMinor?`, `originalCurrency?` — если платили в валюте, отличной от валюты счёта
+    (например, рублёвой картой в евро): что было в чеке и что списали
+- **Budget** — categoryId, month, `limitMinor`, **currency**
+- **ExchangeRate** (кэш, не синхронизируется) — date, base, quote, rate
+- **ManualRate** (синхронизируется) — date, from, to, rate — ручная правка курса, имеет приоритет
 
-## 4. Модель данных (ядро)
-- **Family** — id, name, baseCurrency
-- **Member** — userId, familyId, role (owner / member), displayName
-- **Account** — кошелёк/карта/наличные: id, familyId, name, currency, ownerMemberId?, isShared
-- **Category** — id, familyId, name, icon, color, type (expense/income), parentId?
-- **Transaction** — id (UUID, генерируется на клиенте), familyId, accountId, categoryId,
-  amountMinor: Long, currency, type (expense/income/transfer), date, note, authorMemberId,
-  transferAccountId?
-- **Budget** — familyId, categoryId, month, limitMinor
-- **RecurringRule** (позже) — шаблон регулярных платежей
+## 6. Мультивалютность
+**Принцип: факты храним в исходной валюте, конвертируем только при показе.**
 
-Служебные поля всех синхронизируемых сущностей: `updatedAt`, `updatedBy`, `deleted` (soft delete / tombstone), `version`.
+1. Каждая сумма хранится в своей валюте (валюта счёта / бюджета). Никакие данные не пересчитываются
+   при смене базовой валюты — поэтому сменить её можно в любой момент, мгновенно и без потерь.
+2. **Валюты отчётов** — список в настройках семьи. Главный экран и отчёты показывают итоги в основной
+   валюте, при желании — параллельно в остальных (например, «₽ 120 000 · € 1 250»).
+3. Конвертация — по курсу **на дату операции** (для трат и доходов) и по текущему курсу (для балансов
+   счетов). Порядок поиска курса: ручной курс → кэш на дату → ближайшая предыдущая дата → кросс-курс через USD.
+4. **Источник курсов:** бесплатный публичный API без ключа
+   (`fawazahmed0/exchange-api` через CDN: 150+ валют, включая RUB и крипту, есть история по датам);
+   резервный источник — ЦБ РФ (`cbr-xml-daily.ru`) или ECB. Источник спрятан за `RatesProvider`.
+   Курсы скачиваются раз в день через WorkManager и хранятся локально, поэтому отчёты работают офлайн.
+5. **Точность:**
+   - суммы — `Long` в минимальных единицах; число знаков после запятой берём из `java.util.Currency`
+     (JPY — 0, EUR — 2, KWD — 3), для валют вне ISO 4217 — своя таблица;
+   - курсы — `BigDecimal` (в БД хранятся строкой), округление по правилу банкира (HALF_EVEN), и только при показе.
+6. Бюджеты задаются в своей валюте; траты в других валютах пересчитываются в валюту бюджета по курсу на дату траты.
 
-**Конфликты:** last-write-wins на уровне записи по серверному времени — для бюджета этого достаточно (одну трату редко правят двое одновременно). Удаления — через tombstones, чтобы не «воскресали».
-
-## 5. Открытый вопрос: бэкенд синхронизации
-| Вариант | Плюсы | Минусы |
-|---|---|---|
-| **A. Firebase (Auth + Firestore)** | минимум своего бэкенда, офлайн-кэш и realtime из коробки, security rules | vendor lock-in; доступность сервисов Google зависит от региона |
-| **B. Supabase (Postgres + Auth + RLS)** | SQL, открытый код, можно self-host | синк офлайн придётся писать самим |
-| **C. Свой бэкенд (Ktor + Postgres)** | полный контроль, Kotlin везде | больше всего работы и инфраструктуры |
-| **D. Только локально + экспорт/импорт** | проще всего | нет совместности — противоречит идее |
-
-**Рекомендация:** Room — источник истины + свой тонкий `SyncEngine` за интерфейсом `RemoteDataSource`.
-Первая реализация — **Firebase** (быстрее всего до рабочей совместной версии). Благодаря
-интерфейсу бэкенд можно позже заменить на Supabase/свой без переписывания UI и domain.
-Если Google-сервисы в вашем регионе недоступны — сразу берём Supabase или свой Ktor.
+## 7. Распространение
+Без публикации: GitHub Actions собирает подписанный release-APK и выкладывает его в GitHub Releases
+приватного репозитория. Ключ подписи — в GitHub Secrets. Установка на два телефона вручную,
+обновления можно проверять внутри приложения (позже).

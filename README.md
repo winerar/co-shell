@@ -7,6 +7,13 @@ Android-приложение для совместного учёта семей
 одна «скорлупа» для денег всей семьи.
 
 ## Статус
-Стадия проектирования. См.:
+Этап 0 завершён: каркас проекта, модель денег, CI. См.:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — архитектура и стек
 - [docs/ROADMAP.md](docs/ROADMAP.md) — план разработки
+- [AGENTS.md](AGENTS.md) — правила для разработки (людям и ИИ-агентам)
+
+## Сборка
+```bash
+./gradlew check assembleDebug
+```
+Нужны JDK 21 и Android SDK (подробности — [docs/agents/build-and-test.md](docs/agents/build-and-test.md)).

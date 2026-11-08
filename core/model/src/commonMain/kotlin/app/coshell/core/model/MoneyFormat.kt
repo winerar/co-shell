@@ -1,0 +1,55 @@
+package app.coshell.core.model
+
+/**
+ * Locale-independent money formatter. Platform locale data is not used on purpose (KMP-ready);
+ * the UI layer picks a [MoneyFormat] preset that matches the user's locale.
+ */
+data class MoneyFormat(
+    val decimalSeparator: Char = ',',
+    val groupSeparator: Char = NARROW_NBSP,
+    val symbolPosition: SymbolPosition = SymbolPosition.AFTER,
+    /** Hide the fraction when it is zero: "1 200 ₽" instead of "1 200,00 ₽". */
+    val trimZeroFraction: Boolean = false,
+) {
+    enum class SymbolPosition { BEFORE, AFTER }
+
+    fun format(money: Money): String {
+        val info = Currencies.info(money.currency)
+        val number = formatNumber(money.amountMinor, info.fractionDigits)
+        val symbol = info.displaySymbol
+        return when (symbolPosition) {
+            SymbolPosition.AFTER -> "$number$NBSP$symbol"
+            SymbolPosition.BEFORE ->
+                if (number.startsWith('-')) "-$symbol${number.substring(1)}" else "$symbol$number"
+        }
+    }
+
+    /** Formats the bare number without a currency symbol. */
+    fun formatNumber(amountMinor: Long, fractionDigits: Int): String {
+        val negative = amountMinor < 0
+        // Work with the absolute value as a string to stay safe at Long.MIN_VALUE.
+        val digits = amountMinor.toString().removePrefix("-").padStart(fractionDigits + 1, '0')
+        val intPart = digits.dropLast(fractionDigits)
+        val fracPart = digits.takeLast(fractionDigits)
+
+        val grouped = intPart.reversed().chunked(3).joinToString(groupSeparator.toString()).reversed()
+        val showFraction = fractionDigits > 0 && !(trimZeroFraction && fracPart.all { it == '0' })
+        val body = if (showFraction) "$grouped$decimalSeparator$fracPart" else grouped
+        return if (negative) "-$body" else body
+    }
+
+    companion object {
+        const val NBSP = ' '
+        const val NARROW_NBSP = ' '
+
+        /** 1 234,56 ₽ */
+        val RU = MoneyFormat()
+
+        /** $1,234.56 */
+        val EN = MoneyFormat(
+            decimalSeparator = '.',
+            groupSeparator = ',',
+            symbolPosition = SymbolPosition.BEFORE,
+        )
+    }
+}

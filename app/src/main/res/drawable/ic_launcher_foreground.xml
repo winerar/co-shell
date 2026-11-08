@@ -1,0 +1,16 @@
+<!-- Placeholder icon: a stylised shell / wallet. Replace with a real icon later. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFDDB8"
+        android:pathData="M30,46 C30,36 38,32 54,32 C70,32 78,36 78,46 L78,70 C78,74 75,76 71,76 L37,76 C33,76 30,74 30,70 Z" />
+    <path
+        android:fillColor="#006A60"
+        android:pathData="M60,50 L78,50 L78,62 L60,62 C57,62 55,60 55,56 C55,52 57,50 60,50 Z" />
+    <path
+        android:fillColor="#FFDDB8"
+        android:pathData="M62,56 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0" />
+</vector>

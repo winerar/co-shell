@@ -3,10 +3,11 @@
 Каждый этап заканчивается рабочим APK, который можно поставить на телефон.
 
 ## Этап 0. Основа
-- [ ] Android-проект: Kotlin, Compose, Hilt, version catalog, модули из ARCHITECTURE §4
-- [ ] Design system: тема (светлая/тёмная), базовые компоненты
-- [ ] `Money` и `CurrencyInfo` (минимальные единицы, форматирование, парсинг ввода) + тесты
-- [ ] CI в GitHub Actions: lint, unit-тесты, debug APK как артефакт сборки
+- [x] Android-проект: Kotlin, Compose, Hilt, version catalog, модули `app`, `core:model` (KMP), `core:designsystem`
+- [x] Design system: тема (светлая/тёмная), цвета сумм, типографика
+- [x] `Money` и `CurrencyInfo` (минимальные единицы, форматирование, парсинг ввода) + тесты
+- [x] CI в GitHub Actions: lint, unit-тесты, debug APK как артефакт сборки
+- [x] `AGENTS.md` + тематические правила в `docs/agents/`
 
 ## Этап 1. Локальная версия (без сети)
 - [ ] Room: Account, Category, Transaction, Budget + стратегия миграций

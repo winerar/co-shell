@@ -72,6 +72,8 @@
 - [ ] Экспорт в CSV
 
 ## Идеи на потом
-- Импорт банковских выписок, чеки по QR
+- Автоввод операций (Т-Банк, Ameriabank, Google Wallet — по push-уведомлениям; Bybit — по API; выписки — для сверки),
+  см. `docs/research/auto-import-banks.md`. Кандидат на этап после синхронизации.
+- Чеки по QR
 - Цели накоплений
 - Kotlin Multiplatform для iOS (domain и model уже на чистом Kotlin)

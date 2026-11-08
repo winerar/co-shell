@@ -24,4 +24,6 @@ rootProject.name = "co-shell"
 
 include(":app")
 include(":core:model")
+include(":core:domain")
+include(":core:data")
 include(":core:designsystem")

@@ -41,6 +41,17 @@ fun HomeScreen(state: HomeUiState) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            if (state.isLoading) return@LazyColumn
+            if (state.accounts.isEmpty()) {
+                item {
+                    Text(
+                        text = stringResource(R.string.home_no_accounts),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                return@LazyColumn
+            }
             item { TotalCard(state.totals) }
             item {
                 Text(
@@ -49,14 +60,7 @@ fun HomeScreen(state: HomeUiState) {
                     modifier = Modifier.padding(top = 8.dp),
                 )
             }
-            items(state.accounts, key = { it.name }) { AccountItem(it) }
-            item {
-                Text(
-                    text = stringResource(R.string.home_preview_note),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            items(state.accounts, key = { it.id }) { AccountItem(it) }
         }
     }
 }
@@ -109,10 +113,16 @@ private fun HomeScreenPreview() {
             HomeUiState(
                 totals = listOf("110 300,50 ₽", "1 250,00 €"),
                 accounts = listOf(
-                    HomeUiState.AccountRow("Карта", "120 800,50 ₽", isNegative = false),
-                    HomeUiState.AccountRow("Кредитка", "-15 000,00 ₽", isNegative = true),
+                    HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
+                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true),
                 ),
             ),
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenEmptyPreview() {
+    CoShellTheme { HomeScreen(HomeUiState()) }
 }

@@ -1,6 +1,10 @@
 package app.coshell.core.data.backup
 
+import app.coshell.core.data.db.BudgetEntity
+import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.CoShellDatabase
+import app.coshell.core.data.db.TransactionEntity
+import app.coshell.core.data.repository.Stamp
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.data.repository.toEntity
 import app.coshell.core.data.repository.toModel
@@ -73,16 +77,65 @@ class JsonBackupRepository(
         }
 
         val stamp = stamper.stamp()
+        val local = mergeLocalDuplicates(models, stamp)
         database.backupDao().upsertAll(
             accounts = models.accounts.map { it.toEntity(stamp) },
-            categories = models.categories.map { it.toEntity(stamp) },
-            transactions = models.transactions.map { it.toEntity(stamp) },
-            budgets = models.budgets.map { it.toEntity(stamp) },
+            categories = local.categories + models.categories.map { it.toEntity(stamp) },
+            transactions = local.transactions + models.transactions.map { it.toEntity(stamp) },
+            budgets = local.budgets + models.budgets.map { it.toEntity(stamp) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,
         )
     }
+
+    /**
+     * Local rows to rewrite so that categories from the backup replace their local duplicates
+     * ([findDuplicateCategories]): duplicates are soft-deleted, and local operations, budgets and
+     * subcategories that pointed at them move to the backup's category. Rows the backup itself
+     * contains are left out — the backup overwrites them anyway.
+     */
+    private suspend fun mergeLocalDuplicates(models: Models, stamp: Stamp): LocalRows {
+        val localCategories = database.categoryDao().getAll()
+        val duplicates = findDuplicateCategories(localCategories.map { it.toModel() }, models.categories)
+        if (duplicates.isEmpty()) return LocalRows()
+        val incomingCategories = models.categories.map { it.id }.toSet()
+        val incomingTransactions = models.transactions.map { it.id }.toSet()
+        val incomingBudgets = models.budgets.map { it.id }.toSet()
+        fun replacement(categoryId: String?) = categoryId?.let(duplicates::get)
+
+        val categories = localCategories.mapNotNull { category ->
+            val newParent = replacement(category.parentId)
+            when {
+                category.id in duplicates -> category.copy(deleted = true).touched(stamp)
+                category.id !in incomingCategories && newParent != null ->
+                    category.copy(parentId = newParent).touched(stamp)
+                else -> null
+            }
+        }
+        val transactions = database.transactionDao().getAll()
+            .filter { it.id !in incomingTransactions && replacement(it.categoryId) != null }
+            .map { it.copy(categoryId = replacement(it.categoryId)).touched(stamp) }
+        val budgets = database.budgetDao().getAll()
+            .filter { it.id !in incomingBudgets && replacement(it.categoryId) != null }
+            .map { it.copy(categoryId = duplicates.getValue(it.categoryId)).touched(stamp) }
+        return LocalRows(categories, transactions, budgets)
+    }
+
+    private fun CategoryEntity.touched(stamp: Stamp) =
+        copy(updatedAt = stamp.now, updatedBy = stamp.by, pendingSync = true)
+
+    private fun TransactionEntity.touched(stamp: Stamp) =
+        copy(updatedAt = stamp.now, updatedBy = stamp.by, pendingSync = true)
+
+    private fun BudgetEntity.touched(stamp: Stamp) =
+        copy(updatedAt = stamp.now, updatedBy = stamp.by, pendingSync = true)
+
+    private data class LocalRows(
+        val categories: List<CategoryEntity> = emptyList(),
+        val transactions: List<TransactionEntity> = emptyList(),
+        val budgets: List<BudgetEntity> = emptyList(),
+    )
 
     private data class Models(
         val accounts: List<Account>,

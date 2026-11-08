@@ -41,7 +41,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 плагин `org.jetbrains.kotlin.android` **не** подключается; нужен только `kotlin.compose` для Compose.
 
 ## CI
-`.github/workflows/ci.yml`: на push в `main`, на PR и вручную (Actions → CI → Run workflow) — `check`, `assembleDebug`, debug APK в артефактах (14 дней).
+`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → CI → Run workflow) — `check`, `assembleDebug`, debug APK в артефактах (14 дней).
 На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено
 самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
 `versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug подписан общим ключом

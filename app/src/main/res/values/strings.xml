@@ -137,4 +137,26 @@
     <string name="backup_error_corrupted">Файл копии повреждён — ничего не изменено.</string>
     <string name="backup_error_write">Не удалось записать файл. Попробуйте другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
+    <string name="update_title">Обновление приложения</string>
+    <string name="update_installed">Установлена версия %1$s (сборка %2$d)</string>
+    <string name="update_checking">Проверяем, есть ли новая версия…</string>
+    <string name="update_up_to_date">У вас последняя версия.</string>
+    <string name="update_check_again">Проверить снова</string>
+    <string name="update_not_configured">В этой сборке обновления не настроены. Их получают сборки, выложенные из GitHub.</string>
+    <string name="update_available">Доступна версия %1$s (сборка %2$d)</string>
+    <string name="update_available_no_notes">Вышла новая версия co-shell.</string>
+    <string name="update_download">Скачать и установить · %1$s МБ</string>
+    <string name="update_downloading">Скачиваем… %1$d%%</string>
+    <string name="update_installing">Подтвердите установку в окне Android. Приложение перезапустится, данные сохранятся.</string>
+    <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из co-shell. Включите его один раз и вернитесь сюда.</string>
+    <string name="update_allow_install">Разрешить установку</string>
+    <string name="update_retry">Повторить</string>
+    <string name="update_error_check">Не удалось проверить обновления. Проверьте интернет.</string>
+    <string name="update_error_download">Не удалось скачать обновление. Проверьте интернет и повторите.</string>
+    <string name="update_error_checksum">Скачанный файл повреждён — устанавливать его нельзя. Повторите загрузку.</string>
+    <string name="update_error_install">Android не установил обновление.</string>
+    <string name="update_open">Обновить</string>
+    <string name="update_later">Позже</string>
+    <string name="update_whats_new_title">Что нового в %1$s</string>
+    <string name="update_whats_new_ok">Понятно</string>
 </resources>

@@ -131,3 +131,16 @@ internal fun pow10(n: Int): Long {
     repeat(n) { result *= 10 }
     return result
 }
+
+/** a × 10^n for any n ≥ 0; throws on 128-bit overflow. */
+internal fun timesPow10(a: U128, n: Int): U128 {
+    require(n >= 0)
+    var result = a
+    var left = n
+    while (left > 0) {
+        val step = minOf(left, 18)
+        result = mulWide(result, pow10(step))
+        left -= step
+    }
+    return result
+}

@@ -25,12 +25,19 @@ class SaveTransactionUseCase(
         TARGET_CURRENCY_MISMATCH,
         CATEGORY_NOT_FOUND,
         CATEGORY_TYPE_MISMATCH,
+        /** Receipt amount in the account's own currency, or on a transfer. */
+        ORIGINAL_CURRENCY_INVALID,
     }
 
     suspend operator fun invoke(transaction: Transaction): Result {
         val account = accounts.getAccount(transaction.accountId)
             ?: return invalid(Reason.ACCOUNT_NOT_FOUND)
         if (account.currency != transaction.amount.currency) return invalid(Reason.CURRENCY_MISMATCH)
+        transaction.originalAmount?.let { original ->
+            if (transaction.type == TransactionType.TRANSFER || original.currency == account.currency) {
+                return invalid(Reason.ORIGINAL_CURRENCY_INVALID)
+            }
+        }
 
         if (transaction.type == TransactionType.TRANSFER) {
             val target = transaction.toAccountId?.let { accounts.getAccount(it) }

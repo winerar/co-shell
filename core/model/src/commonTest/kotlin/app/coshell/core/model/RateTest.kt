@@ -74,4 +74,34 @@ class RateTest {
             Rate.parse("1000000").convert(Money(Long.MAX_VALUE / 2, usd), ars)
         }
     }
+
+    @Test
+    fun `real rate of a deal from two amounts`() {
+        val usdt = CurrencyCode("USDT")
+        // 14.29 USDT debited for a 15 000 ARS receipt
+        val rate = Rate.between(Money(1_429, usdt), Money(1_500_000, ars))
+        assertEquals("1049.68509447166", rate.toPlainString())
+        assertEquals("1049.69", rate.rounded(2).toPlainString())
+        assertEquals("0.000953", rate.inverse().rounded(6).toPlainString())
+        // Different fraction digits: 1 000 JPY for 6.70 USD → 1 JPY = 0.0067 USD
+        assertEquals(Rate.parse("0.0067"), Rate.between(Money(1_000, jpy), Money(670, usd)))
+        assertEquals(Rate.parse("150"), Rate.between(Money(100, usd), Money(150, jpy)).rounded(10))
+        // Extreme magnitudes stay within 128 bits.
+        assertEquals("0.000000000000001", Rate.between(Money(1_000_000_000_000_000, amd), Money(1, usd)).toPlainString())
+        assertEquals("100000000000000000", Rate.between(Money(1, usd), Money(100_000_000_000_000_000, usd)).toPlainString())
+    }
+
+    @Test
+    fun `compares by value`() {
+        kotlin.test.assertTrue(Rate.parse("2.5") > Rate.parse("2.49999"))
+        kotlin.test.assertTrue(Rate.parse("0.001") < Rate.ONE)
+        assertEquals(0, Rate.parse("100").compareTo(Rate.parse("100.000")))
+    }
+
+    @Test
+    fun `rounded keeps rates that already fit`() {
+        assertEquals(Rate.parse("2.5"), Rate.parse("2.5").rounded(2))
+        assertEquals(Rate.parse("2.46"), Rate.parse("2.455").rounded(2))
+        assertEquals(Rate.parse("2"), Rate.parse("2.5").rounded(0)) // half to even
+    }
 }

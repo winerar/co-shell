@@ -67,6 +67,29 @@ private fun TransferPreview() {
     }
 }
 
+@Preview(showBackground = true, heightDp = 1100)
+@Composable
+private fun ReceiptInOtherCurrencyPreview() {
+    CoShellTheme {
+        TransactionEditScreen(
+            TransactionEditUiState(
+                amount = "14,29",
+                accounts = previewAccounts,
+                accountId = "cash",
+                receiptEnabled = true,
+                receiptCurrency = "ARS",
+                receiptAmount = "15 000",
+                receiptCurrencies = listOf("ARS", "USD", "EUR"),
+                categories = previewCategories,
+                categoryId = "home",
+                date = today,
+                today = today,
+            ),
+            TransactionEditActions(),
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun NoAccountsPreview() {

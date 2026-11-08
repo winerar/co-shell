@@ -26,6 +26,15 @@ data class TransactionEditUiState(
     val date: LocalDate = LocalDate(1970, 1, 1),
     val today: LocalDate = LocalDate(1970, 1, 1),
     val note: String = "",
+    /** Paid in another currency than the account's: the receipt amount is asked too (not for transfers). */
+    val receiptEnabled: Boolean = false,
+    val receiptCurrency: String = "",
+    /** Amount as on the receipt, in [receiptCurrency]. */
+    val receiptAmount: String = "",
+    /** Currency chips: receipt currencies used before, then currencies of the accounts. */
+    val receiptCurrencies: List<String> = emptyList(),
+    val receiptCurrencyError: ReceiptCurrencyError? = null,
+    val receiptAmountError: AmountError? = null,
     val amountError: AmountError? = null,
     val toAmountError: AmountError? = null,
     val accountError: Boolean = false,
@@ -44,6 +53,7 @@ data class TransactionEditUiState(
 
     enum class AmountError { REQUIRED, INVALID, TOO_MANY_FRACTION_DIGITS, NOT_POSITIVE }
     enum class ToAccountError { REQUIRED, SAME_ACCOUNT }
+    enum class ReceiptCurrencyError { INVALID, SAME_AS_ACCOUNT }
 
     val account: AccountOption? get() = accounts.firstOrNull { it.id == accountId }
     val toAccount: AccountOption? get() = accounts.firstOrNull { it.id == toAccountId }
@@ -53,6 +63,12 @@ data class TransactionEditUiState(
     /** A transfer between currencies needs the arriving amount too. */
     val needsToAmount: Boolean
         get() = isTransfer && account != null && toAccount != null && account?.currency != toAccount?.currency
+
+    /** The receipt block is shown and saved only for expenses and incomes. */
+    val hasReceipt: Boolean get() = receiptEnabled && !isTransfer
+
+    /** Chips without the account's own currency (a receipt in it makes no sense). */
+    val receiptCurrencyChoices: List<String> get() = receiptCurrencies.filter { it != account?.currency }
 
     val isToday: Boolean get() = date == today
     val isYesterday: Boolean get() = date == today.minus(1, DateTimeUnit.DAY)

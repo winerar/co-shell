@@ -8,7 +8,7 @@ package app.coshell.core.model
  * fraction digits; results of [times] and [inverse] are rounded half to even to that cap.
  * Always normalized (no trailing fraction zeros), so equal rates are `==`.
  */
-class Rate private constructor(val mantissa: Long, val scale: Int) {
+class Rate private constructor(val mantissa: Long, val scale: Int) : Comparable<Rate> {
 
     /** Rate of the opposite direction (1 / this), rounded to the precision cap. */
     fun inverse(): Rate {
@@ -41,12 +41,25 @@ class Rate private constructor(val mantissa: Long, val scale: Int) {
         return Money(if (money.amountMinor < 0) -result else result, to)
     }
 
+    /** Same rate rounded half to even to at most [maxScale] fraction digits (for display). */
+    fun rounded(maxScale: Int): Rate {
+        require(maxScale in 0..MAX_SCALE)
+        if (scale <= maxScale) return this
+        return normalize(U128.of(mantissa), scale, maxScale)
+    }
+
     /** "1234.5", "0.00012" — no exponent, no grouping, '.' as separator. */
     fun toPlainString(): String {
         if (scale <= 0) return mantissa.toString() + "0".repeat(-scale)
         val digits = mantissa.toString().padStart(scale + 1, '0')
         val point = digits.length - scale
         return digits.substring(0, point) + "." + digits.substring(point)
+    }
+
+    override fun compareTo(other: Rate): Int {
+        val common = maxOf(scale, other.scale)
+        return timesPow10(U128.of(mantissa), common - scale)
+            .compareTo(timesPow10(U128.of(other.mantissa), common - other.scale))
     }
 
     override fun equals(other: Any?): Boolean =
@@ -82,6 +95,27 @@ class Rate private constructor(val mantissa: Long, val scale: Int) {
             }
         }
 
+        /**
+         * The real rate of a deal where [from] was paid and [to] received: `1 from.currency = rate to.currency`.
+         * E.g. 14.29 USDT debited for a 15 000 ARS receipt → 1 USDT = 1049.69 ARS.
+         */
+        fun between(from: Money, to: Money): Rate {
+            require(from.isPositive && to.isPositive) { "Both amounts must be positive" }
+            val fromDigits = Currencies.info(from.currency).fractionDigits
+            val toDigits = Currencies.info(to.currency).fractionDigits
+            // value = to.minor * 10^fromDigits / (from.minor * 10^toDigits)
+            val divisor = mulWide(from.amountMinor, pow10(toDigits))
+            val numeratorDigits = digitCount(U128.of(to.amountMinor))
+            // Shift the numerator so the quotient keeps ~15 significant digits, within 128 bits.
+            val shift = minOf(digitCount(divisor) - numeratorDigits + MAX_SIGNIFICANT_DIGITS, 38 - numeratorDigits)
+            val quotient = if (shift >= 0) {
+                divRoundHalfEven(timesPow10(U128.of(to.amountMinor), shift), divisor)
+            } else {
+                divRoundHalfEven(U128.of(to.amountMinor), mulWide(divisor, pow10(-shift)))
+            }
+            return normalize(quotient, shift - fromDigits)
+        }
+
         fun parse(text: String): Rate =
             requireNotNull(parseOrNull(text)) { "Not a positive rate: '$text'" }
 
@@ -93,9 +127,9 @@ class Rate private constructor(val mantissa: Long, val scale: Int) {
         }
 
         /** Rounds `n / 10^scale` to the precision cap and strips trailing zeros. */
-        private fun normalize(n: U128, scale: Int): Rate {
+        private fun normalize(n: U128, scale: Int, maxScale: Int = MAX_SCALE): Rate {
             require(!n.isZero) { "Rate must be positive" }
-            val drop = maxOf(digitCount(n) - MAX_SIGNIFICANT_DIGITS, scale - MAX_SCALE, 0)
+            val drop = maxOf(digitCount(n) - MAX_SIGNIFICANT_DIGITS, scale - maxScale, 0)
             require(drop <= 38) { "Rate is below the smallest supported value" }
             val rounded = if (drop == 0) n else divRoundHalfEven(n, pow10Wide(drop))
             require(!rounded.isZero) { "Rate is below the smallest supported value" }

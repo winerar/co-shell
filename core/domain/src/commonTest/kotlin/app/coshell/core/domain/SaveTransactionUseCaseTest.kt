@@ -51,6 +51,32 @@ class SaveTransactionUseCaseTest {
     }
 
     @Test
+    fun `saves a purchase paid from an account in another currency`() = runTest {
+        // Receipt 15 000 ARS, debited 14.29 USD
+        val tx = Transaction(
+            "t", TransactionType.EXPENSE, "usd", Money(1_429, usd), date,
+            categoryId = "food", originalAmount = Money(1_500_000, ars),
+        )
+        assertEquals(Result.Saved, save(tx))
+        assertEquals(Money(1_500_000, ars), transactions.items.value["t"]?.originalAmount)
+    }
+
+    @Test
+    fun `rejects a receipt in the account currency or on a transfer`() = runTest {
+        val same = Transaction(
+            "t", TransactionType.EXPENSE, "usd", Money(1_429, usd), date,
+            categoryId = "food", originalAmount = Money(1_429, usd),
+        )
+        assertEquals(Result.Invalid(Reason.ORIGINAL_CURRENCY_INVALID), save(same))
+        val transfer = Transaction(
+            "t", TransactionType.TRANSFER, "usd", Money(100, usd), date,
+            toAccountId = "ars", toAmount = Money(100_000, ars), originalAmount = Money(100_000, ars),
+        )
+        assertEquals(Result.Invalid(Reason.ORIGINAL_CURRENCY_INVALID), save(transfer))
+        assertTrue(transactions.items.value.isEmpty())
+    }
+
+    @Test
     fun `rejects an amount in a currency other than the account's`() = runTest {
         val tx = Transaction("t", TransactionType.EXPENSE, "ars", Money(100, usd), date)
         assertEquals(Result.Invalid(Reason.CURRENCY_MISMATCH), save(tx))

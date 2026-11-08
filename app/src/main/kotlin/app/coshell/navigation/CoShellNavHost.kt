@@ -35,6 +35,8 @@ import app.coshell.home.HomeRoute
 import app.coshell.more.MoreRoute
 import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.TransactionsRoute
+import app.coshell.update.UpdateRoute
+import app.coshell.update.startup.StartupUpdateDialogs
 import kotlin.reflect.KClass
 import app.coshell.core.designsystem.R as DesignR
 
@@ -66,6 +68,8 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val current = backStackEntry?.destination
     val showBottomBar = TopLevel.entries.any { current.isOn(it) }
+
+    StartupUpdateDialogs(onOpenUpdate = { navController.navigate(UpdateDestination) { launchSingleTop = true } })
 
     Scaffold(
         bottomBar = {
@@ -120,7 +124,11 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                     MoreRoute(
                         onCategories = { navController.navigate(CategoriesDestination) },
                         onBackup = { navController.navigate(BackupDestination) },
+                        onUpdate = { navController.navigate(UpdateDestination) },
                     )
+                }
+                composable<UpdateDestination> {
+                    UpdateRoute(onBack = { navController.popBackStack() })
                 }
                 composable<BackupDestination> {
                     BackupRoute(onBack = { navController.popBackStack() })

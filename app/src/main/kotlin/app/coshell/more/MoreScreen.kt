@@ -16,14 +16,15 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Stateless menu tab: links to categories and backup. No ViewModel needed yet.
+// Stateless menu tab: links to categories, backup and app update. No ViewModel needed yet.
 
 @Composable
-fun MoreRoute(onCategories: () -> Unit, onBackup: () -> Unit) = MoreScreen(onCategories, onBackup)
+fun MoreRoute(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit) =
+    MoreScreen(onCategories, onBackup, onUpdate)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit) {
+fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit, onUpdate: () -> Unit) {
     Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.nav_more)) }) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
             item {
@@ -42,6 +43,14 @@ fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit) {
                     opensScreen = true,
                 )
             }
+            item {
+                ActionRow(
+                    icon = DesignR.drawable.ic_deployed_code_update,
+                    title = stringResource(R.string.update_title),
+                    onClick = onUpdate,
+                    opensScreen = true,
+                )
+            }
         }
     }
 }
@@ -49,5 +58,5 @@ fun MoreScreen(onCategories: () -> Unit, onBackup: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(onCategories = {}, onBackup = {}) }
+    CoShellTheme { MoreScreen(onCategories = {}, onBackup = {}, onUpdate = {}) }
 }

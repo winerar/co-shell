@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": "update-site",
+    "headers": [
+      {
+        "source": "/version.json",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.apk",
+        "headers": [{ "key": "Content-Type", "value": "application/vnd.android.package-archive" }]
+      }
+    ]
+  }
+}

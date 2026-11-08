@@ -24,8 +24,10 @@
 
 ## Окружение
 - Облачное окружение **co-shell**: разрешён `dl.google.com`, setup-скрипт ставит Android SDK
-  (platform 37.0, build-tools 36.0.0) и пишет `local.properties`. Скрипт ещё не проверен в новой сессии —
-  если SDK нет, см. `docs/agents/build-and-test.md`.
+  (platform 37.0, build-tools 36.0.0), пишет `local.properties` и заранее собирает проект (прогрев Gradle,
+  лог — `/tmp/gradle-warmup.log`). Скрипт ещё не проверен в новой сессии — если SDK нет,
+  см. `docs/agents/build-and-test.md`.
+- Сессию создавать **сразу в окружении co-shell**: при запуске в Default скрипт не выполняется.
 - Версии: Gradle 9.9.0, AGP 9.5.1, Kotlin 2.4.21, KSP 2.3.13, Hilt 2.60.1, Compose BOM 2026.09.00.
 
 ## Последняя сессия

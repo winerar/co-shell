@@ -25,10 +25,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.coshell.R
-import app.coshell.accounts.AccountEditRoute
-import app.coshell.accounts.AccountsRoute
-import app.coshell.categories.CategoriesRoute
-import app.coshell.categories.CategoryEditRoute
+import app.coshell.accounts.edit.AccountEditRoute
+import app.coshell.accounts.list.AccountsRoute
+import app.coshell.backup.BackupRoute
+import app.coshell.categories.edit.CategoryEditRoute
+import app.coshell.categories.list.CategoriesRoute
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreRoute
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -113,7 +114,13 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                     AccountEditRoute(onDone = { navController.popBackStack() })
                 }
                 composable<MoreDestination> {
-                    MoreRoute(onCategories = { navController.navigate(CategoriesDestination) })
+                    MoreRoute(
+                        onCategories = { navController.navigate(CategoriesDestination) },
+                        onBackup = { navController.navigate(BackupDestination) },
+                    )
+                }
+                composable<BackupDestination> {
+                    BackupRoute(onBack = { navController.popBackStack() })
                 }
                 composable<CategoriesDestination> {
                     CategoriesRoute(

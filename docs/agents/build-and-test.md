@@ -11,6 +11,7 @@
 |---|---|
 | `./gradlew check` | lint всех Android-модулей + все unit-тесты |
 | `./gradlew :core:model:jvmTest :core:domain:jvmTest` | тесты модели и домена (быстро) |
+| `./gradlew :core:data:jvmTest` | тесты Room на JVM (bundled SQLite) |
 | `./gradlew assembleDebug` | debug APK → `app/build/outputs/apk/debug/` |
 | `./gradlew :app:testDebugUnitTest` | unit-тесты приложения |
 
@@ -25,6 +26,8 @@
 ## Версии
 Все версии — в `gradle/libs.versions.toml`. AGP 9 встроенно компилирует Kotlin, поэтому
 плагин `org.jetbrains.kotlin.android` **не** подключается; нужен только `kotlin.compose` для Compose.
+KMP-модуль с Android-таргетом — плагин `com.android.kotlin.multiplatform.library` (блок `kotlin { android {} }`);
+KSP для него — `kspAndroid`/`kspJvm`. Версия `sqlite-bundled` = версии `androidx.sqlite`, от которой зависит Room.
 
 ## CI
 `.github/workflows/ci.yml`: на push в `main` и на PR — `check`, `assembleDebug`,

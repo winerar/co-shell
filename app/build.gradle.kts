@@ -41,6 +41,9 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(libs.room.runtime)
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.core.ktx)

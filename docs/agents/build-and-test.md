@@ -10,7 +10,7 @@
 | Команда | Что делает |
 |---|---|
 | `./gradlew check` | lint всех Android-модулей + все unit-тесты |
-| `./gradlew :core:model:jvmTest` | тесты модели (быстро) |
+| `./gradlew :core:model:jvmTest :core:domain:jvmTest` | тесты модели и домена (быстро) |
 | `./gradlew assembleDebug` | debug APK → `app/build/outputs/apk/debug/` |
 | `./gradlew :app:testDebugUnitTest` | unit-тесты приложения |
 
@@ -18,6 +18,7 @@
 
 ## Тесты
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).
+  Репозитории в тестах домена — фейки на `MutableStateFlow` (`core/domain/src/commonTest/.../Fakes.kt`).
 - ViewModel — JUnit + `kotlinx-coroutines-test` в `app/src/test`.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 

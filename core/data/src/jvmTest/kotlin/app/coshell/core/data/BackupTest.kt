@@ -103,4 +103,43 @@ class BackupTest {
         assertIs<BackupImportResult.Corrupted>(repos.backup.importJson(json))
         assertEquals(emptyList(), repos.accounts.observeAccounts().first())
     }
+
+    @Test
+    fun `restoring over seeded defaults merges categories with the same name instead of duplicating`() = runTest {
+        val source = Repos()
+        source.accounts.saveAccount(Account("rub", "Тинькофф", rub))
+        source.categories.saveCategory(Category("old-food", "Продукты", CategoryType.EXPENSE))
+        source.categories.saveCategory(Category("old-gift-in", "Подарки", CategoryType.INCOME))
+        source.categories.saveCategory(Category("old-fruit", "Фрукты", CategoryType.EXPENSE, parentId = "old-food"))
+        val json = source.backup.exportJson()
+
+        // Fresh install: defaults were seeded with new ids, and an operation was entered before restoring.
+        val target = Repos()
+        target.categories.saveCategory(Category("new-food", "продукты ", CategoryType.EXPENSE))
+        target.categories.saveCategory(Category("new-gift-out", "Подарки", CategoryType.EXPENSE))
+        target.categories.saveCategory(Category("new-gift-in", "Подарки", CategoryType.INCOME))
+        target.categories.saveCategory(Category("new-fruit", "Фрукты", CategoryType.EXPENSE, parentId = "new-food"))
+        target.categories.saveCategory(Category("new-veg", "Овощи", CategoryType.EXPENSE, parentId = "new-food"))
+        target.accounts.saveAccount(Account("rub", "Тинькофф", rub))
+        target.transactions.saveTransaction(
+            Transaction(
+                "t", TransactionType.EXPENSE, "rub", Money(100, rub), Instant.parse("2026-11-08T00:00:00Z"),
+                categoryId = "new-fruit",
+            ),
+        )
+        target.budgets.saveBudget(Budget("b", "new-food", YearMonth(2026, 11), Money(1000, rub)))
+
+        target.backup.importJson(json)
+
+        val ids = target.categories.observeCategories(includeArchived = true).first().map { it.id }.toSet()
+        // The expense "Подарки" has no twin in the backup (the backup's one is income) — it stays.
+        assertEquals(setOf("old-food", "old-gift-in", "old-fruit", "new-gift-out", "new-veg"), ids)
+        assertEquals("old-food", target.categories.getCategory("new-veg")?.parentId)
+        assertEquals("old-fruit", target.transactions.getTransaction("t")?.categoryId)
+        assertEquals("old-food", target.budgets.observeBudgets(YearMonth(2026, 11)).first().single().categoryId)
+
+        // Restoring again changes nothing.
+        target.backup.importJson(json)
+        assertEquals(ids, target.categories.observeCategories(includeArchived = true).first().map { it.id }.toSet())
+    }
 }

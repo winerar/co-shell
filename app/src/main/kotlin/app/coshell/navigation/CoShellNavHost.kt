@@ -29,6 +29,7 @@ import app.coshell.R
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
+import app.coshell.feedback.FeedbackRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.home.HomeRoute
@@ -125,10 +126,14 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                         onCategories = { navController.navigate(CategoriesDestination) },
                         onBackup = { navController.navigate(BackupDestination) },
                         onUpdate = { navController.navigate(UpdateDestination) },
+                        onFeedback = { navController.navigate(FeedbackDestination) },
                     )
                 }
                 composable<UpdateDestination> {
                     UpdateRoute(onBack = { navController.popBackStack() })
+                }
+                composable<FeedbackDestination> {
+                    FeedbackRoute(onBack = { navController.popBackStack() })
                 }
                 composable<BackupDestination> {
                     BackupRoute(onBack = { navController.popBackStack() })

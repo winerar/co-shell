@@ -21,3 +21,29 @@ data class AccountEditDestination(val accountId: String? = null) {
         const val ARG_ACCOUNT_ID = "accountId"
     }
 }
+
+@Serializable
+data object MoreDestination
+
+@Serializable
+data object CategoriesDestination
+
+/**
+ * Category editor. `categoryId == null` creates a new category of [type] (a [CategoryType] name),
+ * optionally inside folder [parentId]; [asFolder] opens it as a new folder.
+ */
+@Serializable
+data class CategoryEditDestination(
+    val categoryId: String? = null,
+    val type: String = "EXPENSE",
+    val parentId: String? = null,
+    val asFolder: Boolean = false,
+) {
+    companion object {
+        // SavedStateHandle keys; must match the property names.
+        const val ARG_CATEGORY_ID = "categoryId"
+        const val ARG_TYPE = "type"
+        const val ARG_PARENT_ID = "parentId"
+        const val ARG_AS_FOLDER = "asFolder"
+    }
+}

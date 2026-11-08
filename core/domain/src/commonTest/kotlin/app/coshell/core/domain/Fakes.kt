@@ -23,7 +23,9 @@ class FakeAccountRepository : AccountRepository {
 class FakeCategoryRepository : CategoryRepository {
     val items = MutableStateFlow<Map<String, Category>>(emptyMap())
     override fun observeCategories(type: CategoryType?, includeArchived: Boolean): Flow<List<Category>> =
-        items.map { it.values.toList() }
+        items.map { all ->
+            all.values.filter { (type == null || it.type == type) && (includeArchived || !it.archived) }
+        }
     override suspend fun getCategory(id: String) = items.value[id]
     override suspend fun saveCategory(category: Category) { items.value += category.id to category }
     override suspend fun deleteCategory(id: String) { items.value -= id }

@@ -17,7 +17,10 @@ class DeleteAccountUseCase(
     }
 }
 
-/** Same rule for categories: used categories are archived, not deleted. */
+/**
+ * Same rule for categories: used categories are archived, not deleted. Deleting a folder moves
+ * its subcategories to the top level.
+ */
 class DeleteCategoryUseCase(
     private val categories: CategoryRepository,
     private val transactions: TransactionRepository,
@@ -26,6 +29,8 @@ class DeleteCategoryUseCase(
 
     suspend operator fun invoke(categoryId: String): Result {
         if (transactions.countForCategory(categoryId) > 0) return Result.HAS_TRANSACTIONS
+        val lifted = liftChildren(categories, categoryId)
+        if (lifted.isNotEmpty()) categories.saveCategories(lifted)
         categories.deleteCategory(categoryId)
         return Result.DELETED
     }

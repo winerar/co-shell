@@ -27,7 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import app.coshell.R
 import app.coshell.accounts.AccountEditRoute
 import app.coshell.accounts.AccountsRoute
+import app.coshell.categories.CategoriesRoute
+import app.coshell.categories.CategoryEditRoute
 import app.coshell.home.HomeRoute
+import app.coshell.more.MoreRoute
 import app.coshell.transactions.TransactionsRoute
 import kotlin.reflect.KClass
 import app.coshell.core.designsystem.R as DesignR
@@ -46,7 +49,13 @@ private enum class TopLevel(
         R.string.nav_transactions,
         DesignR.drawable.ic_receipt_long,
     ),
-    ACCOUNTS(AccountsDestination, AccountsDestination::class, R.string.nav_accounts, DesignR.drawable.ic_account_balance_wallet),
+    ACCOUNTS(
+        AccountsDestination,
+        AccountsDestination::class,
+        R.string.nav_accounts,
+        DesignR.drawable.ic_account_balance_wallet,
+    ),
+    MORE(MoreDestination, MoreDestination::class, R.string.nav_more, DesignR.drawable.ic_more_horiz),
 }
 
 @Composable
@@ -89,6 +98,18 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                 }
                 composable<AccountEditDestination> {
                     AccountEditRoute(onDone = { navController.popBackStack() })
+                }
+                composable<MoreDestination> {
+                    MoreRoute(onCategories = { navController.navigate(CategoriesDestination) })
+                }
+                composable<CategoriesDestination> {
+                    CategoriesRoute(
+                        onBack = { navController.popBackStack() },
+                        onOpen = { navController.navigate(it) },
+                    )
+                }
+                composable<CategoryEditDestination> {
+                    CategoryEditRoute(onDone = { navController.popBackStack() })
                 }
             }
         }

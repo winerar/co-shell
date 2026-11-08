@@ -200,10 +200,10 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
 
             if (!state.isNew) {
                 OutlinedButton(onClick = actions.onToggleArchived, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(if (state.archived) R.string.account_unarchive else R.string.account_archive))
+                    Text(stringResource(if (state.archived) R.string.action_unarchive else R.string.action_archive))
                 }
                 TextButton(onClick = { confirmDelete = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.account_delete), color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error)
                 }
             }
         }
@@ -218,7 +218,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                 TextButton(onClick = {
                     confirmDelete = false
                     actions.onDelete()
-                }) { Text(stringResource(R.string.account_delete)) }
+                }) { Text(stringResource(R.string.action_delete)) }
             },
             dismissButton = {
                 TextButton(onClick = { confirmDelete = false }) { Text(stringResource(R.string.action_cancel)) }
@@ -235,7 +235,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                 TextButton(onClick = {
                     actions.onDismissDeleteBlocked()
                     actions.onToggleArchived()
-                }) { Text(stringResource(R.string.account_archive)) }
+                }) { Text(stringResource(R.string.action_archive)) }
             },
             dismissButton = {
                 TextButton(onClick = actions.onDismissDeleteBlocked) { Text(stringResource(R.string.action_cancel)) }

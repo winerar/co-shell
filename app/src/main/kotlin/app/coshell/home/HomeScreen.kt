@@ -28,15 +28,17 @@ import app.coshell.R
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.transactions.AddTransactionFab
 
 @Composable
 fun HomeRoute(
     onAccountClick: (String) -> Unit,
     onAddAccount: () -> Unit,
+    onAddTransaction: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state, onAccountClick, onAddAccount)
+    HomeScreen(state, onAccountClick, onAddAccount, onAddTransaction)
 }
 
 @Composable
@@ -44,8 +46,11 @@ fun HomeScreen(
     state: HomeUiState,
     onAccountClick: (String) -> Unit = {},
     onAddAccount: () -> Unit = {},
+    onAddTransaction: () -> Unit = {},
 ) {
-    Scaffold { padding ->
+    Scaffold(
+        floatingActionButton = { if (state.accounts.isNotEmpty()) AddTransactionFab(onAddTransaction) },
+    ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(16.dp),

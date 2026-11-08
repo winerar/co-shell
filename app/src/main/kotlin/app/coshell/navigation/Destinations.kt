@@ -47,3 +47,16 @@ data class CategoryEditDestination(
         const val ARG_AS_FOLDER = "asFolder"
     }
 }
+
+/**
+ * Transaction editor. `transactionId == null` creates a new transaction of [type]
+ * (a [app.coshell.core.model.TransactionType] name).
+ */
+@Serializable
+data class TransactionEditDestination(val transactionId: String? = null, val type: String = "EXPENSE") {
+    companion object {
+        // SavedStateHandle keys; must match the property names.
+        const val ARG_TRANSACTION_ID = "transactionId"
+        const val ARG_TYPE = "type"
+    }
+}

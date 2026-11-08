@@ -32,6 +32,7 @@ import app.coshell.categories.CategoryEditRoute
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreRoute
 import app.coshell.transactions.TransactionsRoute
+import app.coshell.transactions.edit.TransactionEditRoute
 import kotlin.reflect.KClass
 import app.coshell.core.designsystem.R as DesignR
 
@@ -87,9 +88,18 @@ fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
                     HomeRoute(
                         onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                         onAddAccount = { navController.navigate(AccountEditDestination()) },
+                        onAddTransaction = { navController.navigate(TransactionEditDestination()) },
                     )
                 }
-                composable<TransactionsDestination> { TransactionsRoute() }
+                composable<TransactionsDestination> {
+                    TransactionsRoute(onAddTransaction = { navController.navigate(TransactionEditDestination()) })
+                }
+                composable<TransactionEditDestination> {
+                    TransactionEditRoute(
+                        onDone = { navController.popBackStack() },
+                        onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    )
+                }
                 composable<AccountsDestination> {
                     AccountsRoute(
                         onAccountClick = { navController.navigate(AccountEditDestination(it)) },

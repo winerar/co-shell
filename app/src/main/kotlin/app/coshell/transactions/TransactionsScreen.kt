@@ -18,11 +18,11 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 // Placeholder tab until the transaction list (stage 1, step 4) lands.
 
 @Composable
-fun TransactionsRoute() = TransactionsScreen()
+fun TransactionsRoute(onAddTransaction: () -> Unit) = TransactionsScreen(onAddTransaction)
 
 @Composable
-fun TransactionsScreen() {
-    Scaffold { padding ->
+fun TransactionsScreen(onAddTransaction: () -> Unit = {}) {
+    Scaffold(floatingActionButton = { AddTransactionFab(onAddTransaction) }) { padding ->
         Box(Modifier.fillMaxSize().padding(padding).padding(24.dp), contentAlignment = Alignment.Center) {
             Text(
                 text = stringResource(R.string.transactions_coming_soon),

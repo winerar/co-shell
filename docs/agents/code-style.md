@@ -30,6 +30,8 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - Новая иконка: `npm pack @material-symbols/svg-300` в scratchpad, распаковать и выполнить
   `python3 scripts/material-symbol-to-vector.py <распаковка>/package/outlined core/designsystem/src/main/res/drawable <name>[:mirrored]`
   (`:mirrored` — для стрелок, зеркалятся в RTL). Имена — как на fonts.google.com/icons.
+- Иконки категорий: в БД хранится **ключ** (`"food"`), не имя файла; новый — строка в
+  `core/designsystem/.../category/CategoryIcons.kt`. Ключи не переименовывать (они в данных и бэкапах).
 
 ## DI (Hilt)
 - `@HiltViewModel` + `@Inject constructor`. Модули — `app/.../di/` (позже в модулях data).

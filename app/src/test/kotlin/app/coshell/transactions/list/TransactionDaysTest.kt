@@ -26,7 +26,7 @@ class TransactionDaysTest {
     private val g = MoneyFormat.NARROW_NBSP
     private val nbsp = MoneyFormat.NBSP
     private val accounts = listOf(Account("card", "Карта", ars), Account("cash", "Наличные", usd)).associateBy { it.id }
-    private val categories = listOf(Category("cafe", "Кафе", CategoryType.EXPENSE)).associateBy { it.id }
+    private val categories = listOf(Category("cafe", "Кафе", CategoryType.EXPENSE, icon = "cafe", color = 0xFF795548)).associateBy { it.id }
 
     private fun at(day: Int, hour: Int) = LocalDateTime(2026, 11, day, hour, 0).toInstant(zone)
 
@@ -83,5 +83,17 @@ class TransactionDaysTest {
         ).single().rows.single()
         assertNull(row.secondaryAmount)
         assertEquals("Карта → ?", row.subtitle)
+    }
+
+    @Test
+    fun `row carries category icon and colour`() {
+        val rows = build(
+            Transaction("e", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 12), categoryId = "cafe"),
+            Transaction("i", TransactionType.INCOME, "card", Money(100, ars), at(8, 11), categoryId = "gone"),
+        ).single().rows
+        assertEquals("cafe", rows[0].icon)
+        assertEquals(0xFF795548, rows[0].color)
+        assertNull(rows[1].icon)
+        assertNull(rows[1].color)
     }
 }

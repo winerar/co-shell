@@ -12,15 +12,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
-import app.coshell.core.designsystem.R as DesignR
+import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
 
 /**
- * Top-level categories as chips; folders carry a folder icon. When a folder (or one of its
+ * Top-level categories as chips with their icons. When a folder (or one of its
  * subcategories) is selected, its subcategories appear in a second row below.
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -46,17 +48,7 @@ internal fun CategoryChips(
                     selected = group.item.id == selectedId || group.item.id == openFolderId,
                     onClick = { onSelect(group.item.id) },
                     label = { Text(group.item.name) },
-                    leadingIcon = if (group.isFolder) {
-                        {
-                            Icon(
-                                painterResource(DesignR.drawable.ic_folder),
-                                contentDescription = null,
-                                modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            )
-                        }
-                    } else {
-                        null
-                    },
+                    leadingIcon = { ChipIcon(group.item) },
                 )
             }
         }
@@ -72,8 +64,20 @@ internal fun CategoryChips(
                     selected = child.id == selectedId,
                     onClick = { onSelect(child.id) },
                     label = { Text(child.name) },
+                    leadingIcon = { ChipIcon(child) },
                 )
             }
         }
     }
+}
+
+/** The category's own icon in its colour, chip-sized. */
+@Composable
+private fun ChipIcon(item: CategoryItem) {
+    Icon(
+        painterResource(CategoryIcons.drawableFor(item.icon)),
+        contentDescription = null,
+        tint = item.color?.let(::Color) ?: MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.size(FilterChipDefaults.IconSize),
+    )
 }

@@ -74,6 +74,8 @@
     <string name="category_name">Название</string>
     <string name="category_name_error">Введите название</string>
     <string name="category_type">Тип</string>
+    <string name="category_icon">Иконка</string>
+    <string name="category_color">Цвет</string>
     <string name="category_type_locked">Категория уже используется или содержит подкатегории — тип изменить нельзя</string>
     <string name="category_folder">Папка</string>
     <string name="category_folder_none">Без папки</string>

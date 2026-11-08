@@ -31,7 +31,7 @@ class CategoryEditViewModelTest {
         listOf(
             Category("car", "Машина", EXPENSE, sortOrder = 0),
             Category("fuel", "Бензин", EXPENSE, parentId = "car", sortOrder = 0),
-            Category("taxi", "Такси", EXPENSE, sortOrder = 1),
+            Category("taxi", "Такси", EXPENSE, icon = "taxi", color = 0xFFFFC107, sortOrder = 1),
             Category("food", "Продукты", EXPENSE, sortOrder = 2),
             Category("old", "Старое", EXPENSE, archived = true),
             Category("salary", "Зарплата", INCOME),
@@ -108,5 +108,21 @@ class CategoryEditViewModelTest {
         assertTrue(vm.state.value.isDone)
         assertEquals(true, categories.getCategory("car")?.archived)
         assertNull(categories.getCategory("fuel")?.parentId)
+    }
+
+    @Test
+    fun `icon and colour are loaded and saved`() = runTest {
+        seed()
+        val vm = editor(Args.ARG_CATEGORY_ID to "taxi")
+        assertEquals("taxi", vm.state.value.icon)
+        assertEquals(0xFFFFC107, vm.state.value.color)
+
+        vm.onIconChange("car")
+        vm.onColorChange(0xFF2196F3)
+        vm.save()
+
+        val saved = categories.getCategory("taxi")
+        assertEquals("car", saved?.icon)
+        assertEquals(0xFF2196F3, saved?.color)
     }
 }

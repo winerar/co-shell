@@ -32,6 +32,8 @@ private fun CategoryEditExistingPreview() {
             CategoryEditUiState(
                 isNew = false,
                 name = "Бензин",
+                icon = "fuel",
+                color = 0xFFFFC107,
                 typeLocked = true,
                 parentId = "car",
                 folders = listOf(CategoryEditUiState.Option("car", "Машина")),

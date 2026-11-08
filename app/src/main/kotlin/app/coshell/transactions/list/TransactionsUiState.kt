@@ -24,6 +24,9 @@ data class TransactionsUiState(
         val amount: String,
         /** Arriving amount of a transfer between currencies ("+120 000,00 $"). */
         val secondaryAmount: String? = null,
+        /** Category icon key and colour; both null for transfers and missing categories. */
+        val icon: String? = null,
+        val color: Long? = null,
     )
 
     enum class Kind { EXPENSE, INCOME, TRANSFER }

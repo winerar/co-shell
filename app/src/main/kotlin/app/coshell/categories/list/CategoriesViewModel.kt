@@ -56,5 +56,5 @@ class CategoriesViewModel @Inject constructor(categories: CategoryRepository) : 
         )
     }
 
-    private fun Category.toItem() = CategoriesUiState.Item(id, name, color)
+    private fun Category.toItem() = CategoriesUiState.Item(id, name, color, icon)
 }

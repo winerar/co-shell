@@ -15,12 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.category.CategoryBadge
+import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.Row as RowState
+import app.coshell.core.designsystem.R as DesignR
 
-/** Category (or "Перевод") and account on the left, coloured amount on the right. */
+/** Badge, category (or "Перевод") and account on the left, coloured amount on the right. */
 @Composable
 internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
     Row(
@@ -31,6 +34,7 @@ internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        RowBadge(row)
         Column(Modifier.weight(1f)) {
             Text(row.titleText(), style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
@@ -48,6 +52,13 @@ internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
             }
         }
     }
+}
+
+/** Category badge; transfers get a neutral arrows icon. */
+@Composable
+private fun RowBadge(row: RowState) {
+    if (row.kind == Kind.TRANSFER) IconBadge(DesignR.drawable.ic_sync_alt, color = null)
+    else CategoryBadge(row.icon, row.color)
 }
 
 @Composable

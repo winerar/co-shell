@@ -178,4 +178,63 @@ class TransactionEditViewModelTest {
         assertTrue(vm.state.value.isDone)
         assertNull(transactions.getTransaction("t"))
     }
+
+    @Test
+    fun `purchase in pesos paid from a dollar account keeps both amounts`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onAccountSelect("cash")
+        vm.onReceiptToggle(true)
+        assertEquals("ARS", vm.state.value.receiptCurrency) // the only other currency among accounts
+        vm.onAmountChange("14,29")
+        vm.onReceiptAmountChange("15 000")
+        assertEquals("1 USD = 1\u00A0049,69 ARS", receiptRateText(vm.state.value))
+        vm.onCategorySelect("food")
+        vm.save()
+
+        val saved = transactions.getTransaction("new")!!
+        assertEquals(Money(14_29, usd), saved.amount)
+        assertEquals(Money(15_000_00, ars), saved.originalAmount)
+    }
+
+    @Test
+    fun `receipt in the account currency is refused and the receipt is reloaded on edit`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onReceiptToggle(true)
+        vm.onReceiptCurrencyChange("ars") // account "card" is in ARS
+        vm.onAmountChange("100")
+        vm.onReceiptAmountChange("1")
+        vm.onCategorySelect("food")
+        vm.save()
+        assertEquals(TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT, vm.state.value.receiptCurrencyError)
+        assertTrue(transactions.items.value.isEmpty())
+
+        transactions.saveTransaction(
+            Transaction(
+                "t", TransactionType.EXPENSE, "cash", Money(10_00, usd), now,
+                categoryId = "food", originalAmount = Money(10_500_00, ars),
+            ),
+        )
+        val edit = viewModel("t").state.value
+        assertTrue(edit.hasReceipt)
+        assertEquals("ARS", edit.receiptCurrency)
+        assertEquals(MoneyFormat.RU.formatForEditing(Money(10_500_00, ars)), edit.receiptAmount)
+        assertEquals(listOf("ARS", "USD"), edit.receiptCurrencies) // earlier receipts first
+    }
+
+    @Test
+    fun `switching to transfer drops the receipt`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onAccountSelect("cash")
+        vm.onReceiptToggle(true)
+        vm.onReceiptAmountChange("15 000")
+        vm.onTypeChange(TransactionType.TRANSFER)
+        vm.onToAccountSelect("card")
+        vm.onAmountChange("10")
+        vm.onToAmountChange("10 500")
+        vm.save()
+        assertNull(transactions.getTransaction("new")!!.originalAmount)
+    }
 }

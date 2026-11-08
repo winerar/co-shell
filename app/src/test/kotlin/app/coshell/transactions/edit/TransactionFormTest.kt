@@ -90,4 +90,29 @@ class TransactionFormTest {
             errors(form(type = TransactionType.TRANSFER, toAccountId = "card")).toAccountError,
         )
     }
+
+    @Test
+    fun `receipt in another currency is validated and kept`() {
+        val base = form(accountId = "cash", amount = "14,29")
+        val ok = valid(base.copy(receiptEnabled = true, receiptCurrency = "ARS", receiptAmount = "15 000"))
+        assertEquals(Money(15_000_00, ars), ok.originalAmount)
+
+        val noAmount = errors(base.copy(receiptEnabled = true, receiptCurrency = "ARS"))
+        assertEquals(AmountError.REQUIRED, noAmount.receiptAmountError)
+        val badCode = errors(base.copy(receiptEnabled = true, receiptCurrency = "р", receiptAmount = "1"))
+        assertEquals(TransactionEditUiState.ReceiptCurrencyError.INVALID, badCode.receiptCurrencyError)
+        val same = errors(base.copy(receiptEnabled = true, receiptCurrency = "USD", receiptAmount = "1"))
+        assertEquals(TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT, same.receiptCurrencyError)
+        // Turned off: whatever was typed is ignored.
+        assertEquals(null, valid(base.copy(receiptCurrency = "р")).originalAmount)
+    }
+
+    @Test
+    fun `rate hint reads in the direction above one`() {
+        val base = form(accountId = "cash", amount = "14,29").copy(receiptEnabled = true, receiptCurrency = "ARS")
+        assertEquals("1 USD = 1\u00A0049,69 ARS", receiptRateText(base.copy(receiptAmount = "15 000")))
+        assertEquals("1 ARS = 1\u00A0050 USD", receiptRateText(base.copy(amount = "1 050", receiptAmount = "1")))
+        assertEquals(null, receiptRateText(base.copy(receiptAmount = "")))
+        assertEquals("0,0067", formatRate(app.coshell.core.model.Rate.parse("0.0067")))
+    }
 }

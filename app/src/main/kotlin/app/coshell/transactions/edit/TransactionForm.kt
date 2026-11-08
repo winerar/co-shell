@@ -2,7 +2,6 @@ package app.coshell.transactions.edit
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.Money
-import app.coshell.core.model.MoneyParser
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditUiState.AmountError
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
@@ -16,6 +15,8 @@ internal data class ValidForm(
     val toAmount: Money?,
     val categoryId: String?,
     val note: String,
+    /** What the receipt said, when paid in another currency than the account's. */
+    val originalAmount: Money? = null,
 )
 
 /** Field errors shown when the form is invalid. */
@@ -25,6 +26,8 @@ internal data class FormErrors(
     val toAccountError: ToAccountError? = null,
     val toAmountError: AmountError? = null,
     val categoryError: Boolean = false,
+    val receiptCurrencyError: TransactionEditUiState.ReceiptCurrencyError? = null,
+    val receiptAmountError: AmountError? = null,
 )
 
 internal sealed interface FormResult {
@@ -42,7 +45,7 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
     val amount = account?.let { parseAmount(form.amount, it) }
 
     var toAccountError: ToAccountError? = null
-    var toAmount: AmountResult? = null
+    var toAmount: AmountParse? = null
     if (form.isTransfer) {
         toAccountError = when {
             toAccount == null -> ToAccountError.REQUIRED
@@ -59,7 +62,8 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
     val money = amount?.money
     val toMoney = toAmount?.money
     val transferOk = !form.isTransfer || (toAccountError == null && toMoney != null)
-    if (account == null || money == null || categoryError || !transferOk) {
+    val receipt = validateReceipt(form, account)
+    if (account == null || money == null || categoryError || !transferOk || !receipt.isValid) {
         return FormResult.Invalid(
             FormErrors(
                 accountError = account == null,
@@ -67,6 +71,8 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
                 toAccountError = toAccountError,
                 toAmountError = toAmount?.error?.takeIf { form.needsToAmount },
                 categoryError = categoryError,
+                receiptCurrencyError = receipt.currencyError,
+                receiptAmountError = receipt.amountError,
             ),
         )
     }
@@ -79,23 +85,9 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
             toAmount = toMoney.takeIf { form.isTransfer },
             categoryId = categoryId,
             note = form.note.trim(),
+            originalAmount = receipt.money,
         ),
     )
 }
 
-private data class AmountResult(val money: Money?, val error: AmountError?)
-
-/** Amounts are always positive: the direction comes from the transaction type. */
-private fun parseAmount(text: String, account: Account): AmountResult =
-    when (val parsed = MoneyParser.parse(text, account.currency)) {
-        is MoneyParser.Result.Success ->
-            if (parsed.money.isPositive) AmountResult(parsed.money, null) else AmountResult(null, AmountError.NOT_POSITIVE)
-        is MoneyParser.Result.Error -> AmountResult(
-            null,
-            when (parsed.reason) {
-                MoneyParser.Reason.EMPTY -> AmountError.REQUIRED
-                MoneyParser.Reason.TOO_MANY_FRACTION_DIGITS -> AmountError.TOO_MANY_FRACTION_DIGITS
-                MoneyParser.Reason.INVALID_CHARACTERS, MoneyParser.Reason.TOO_LARGE -> AmountError.INVALID
-            },
-        )
-    }
+private fun parseAmount(text: String, account: Account): AmountParse = parsePositiveAmount(text, account.currency)

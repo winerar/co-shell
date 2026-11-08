@@ -1,0 +1,39 @@
+name: Feedback to issues
+
+# Messages from "More → Feedback" land in Firestore `feedback`; this turns new ones into issues
+# labelled `feedback` (docs/setup/feedback.md). Scheduled workflows run from the default branch.
+on:
+  schedule:
+    - cron: "17 */6 * * *" # every 6 hours (keeps Actions minutes of the private repo low)
+  workflow_dispatch: # Actions → Feedback to issues → Run workflow
+
+concurrency:
+  group: feedback
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  issues:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - name: Check setup
+        if: env.FIREBASE_SERVICE_ACCOUNT == ''
+        run: echo "::warning::FIREBASE_SERVICE_ACCOUNT secret is not set — nothing to do" && exit 0
+
+      - uses: actions/checkout@v7
+        if: env.FIREBASE_SERVICE_ACCOUNT != ''
+
+      - name: Create issues from new feedback
+        if: env.FIREBASE_SERVICE_ACCOUNT != ''
+        env:
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          pip install --quiet google-auth requests
+          python3 scripts/feedback_to_issues.py

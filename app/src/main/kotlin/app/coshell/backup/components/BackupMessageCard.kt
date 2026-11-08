@@ -1,33 +1,16 @@
 package app.coshell.backup.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.backup.BackupMessage
+import app.coshell.ui.form.MessageCard
 
-/** Result of the last export/import; errors use the error container colour. */
+/** Result of the last export/import. */
 @Composable
-internal fun BackupMessageCard(message: BackupMessage, modifier: Modifier = Modifier) {
-    val colors = if (message.isError) {
-        CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        )
-    } else {
-        CardDefaults.cardColors()
-    }
-    Card(colors = colors, modifier = modifier.fillMaxWidth()) {
-        Text(messageText(message), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(16.dp))
-    }
-}
+internal fun BackupMessageCard(message: BackupMessage, modifier: Modifier = Modifier) =
+    MessageCard(messageText(message), message.isError, modifier)
 
 @Composable
 private fun messageText(message: BackupMessage): String = when (message) {

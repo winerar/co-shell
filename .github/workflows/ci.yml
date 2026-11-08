@@ -23,6 +23,9 @@ jobs:
       SELF_UPDATE: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && secrets.RELEASE_KEYSTORE_BASE64 != '' && secrets.RELEASES_TOKEN != '' }}
       # Public repo with only APKs and version.json (the main repo is private).
       RELEASES_REPO: ${{ github.repository_owner }}/co-shell-releases
+      # Feedback form → Firestore (docs/setup/feedback.md); empty → the form says "not configured".
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
     steps:
       - uses: actions/checkout@v7
 
@@ -35,6 +38,9 @@ jobs:
 
       - name: Lint and unit tests
         run: ./gradlew check
+
+      - name: Script tests
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
 
       - name: Build debug APK
         run: ./gradlew assembleDebug

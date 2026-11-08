@@ -1,6 +1,89 @@
 <resources>
     <string name="app_name">co-shell</string>
+
+    <string name="action_save">Сохранить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_back">Назад</string>
+    <string name="action_archive">В архив</string>
+    <string name="action_unarchive">Вернуть из архива</string>
+    <string name="action_delete">Удалить</string>
+
+    <string name="nav_home">Обзор</string>
+    <string name="nav_transactions">Операции</string>
+    <string name="nav_accounts">Счета</string>
+    <string name="nav_more">Ещё</string>
+
     <string name="home_total_balance">Общий баланс</string>
     <string name="home_accounts">Счета</string>
-    <string name="home_no_accounts">Счетов пока нет. Экран добавления счёта появится в следующей версии.</string>
+    <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
+
+    <string name="transactions_coming_soon">Список операций появится в следующей версии.</string>
+
+    <string name="accounts_title">Счета</string>
+    <string name="accounts_add">Добавить счёт</string>
+    <string name="accounts_empty">Счетов пока нет. Нажмите «+», чтобы добавить первый.</string>
+    <string name="accounts_show_archived">Показать архивные (%1$d)</string>
+    <string name="accounts_hide_archived">Скрыть архивные (%1$d)</string>
+
+    <string name="account_type_cash">Наличные</string>
+    <string name="account_type_card">Карта</string>
+    <string name="account_type_deposit">Вклад</string>
+    <string name="account_type_crypto">Крипто</string>
+    <string name="account_type_other">Другое</string>
+
+    <string name="account_edit_title_new">Новый счёт</string>
+    <string name="account_edit_title">Счёт</string>
+    <string name="account_name">Название</string>
+    <string name="account_name_error">Введите название</string>
+    <string name="account_currency">Валюта</string>
+    <string name="account_currency_code">Код валюты</string>
+    <string name="account_currency_error">Код из 3–10 латинских букв или цифр, например ARS, USDT</string>
+    <string name="account_currency_locked">По счёту уже есть операции — валюту изменить нельзя</string>
+    <string name="account_type">Тип</string>
+    <string name="account_initial_balance">Начальный баланс</string>
+    <string name="account_initial_balance_hint">Сколько было на счёте до первой записанной операции. Для долга — со знаком минус.</string>
+    <string name="account_initial_balance_error">Не похоже на сумму</string>
+    <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой для этой валюты</string>
+    <string name="account_delete_confirm_title">Удалить счёт?</string>
+    <string name="account_delete_confirm_text">Счёт без операций будет удалён безвозвратно.</string>
+    <string name="account_delete_blocked_title">Счёт нельзя удалить</string>
+    <string name="account_delete_blocked_text">По счёту есть операции. Отправьте его в архив: история и баланс сохранятся, а в списках выбора он больше не появится.</string>
+
+    <string name="categories_title">Категории</string>
+    <string name="categories_add">Добавить категорию</string>
+    <string name="categories_add_folder">Новая папка</string>
+    <string name="categories_add_to_folder">Добавить в папку</string>
+    <string name="categories_expand">Развернуть</string>
+    <string name="categories_collapse">Свернуть</string>
+    <string name="categories_show_archived">Показать архивные (%1$d)</string>
+    <string name="categories_hide_archived">Скрыть архивные (%1$d)</string>
+    <plurals name="categories_in_folder">
+        <item quantity="one">%1$d категория</item>
+        <item quantity="few">%1$d категории</item>
+        <item quantity="many">%1$d категорий</item>
+        <item quantity="other">%1$d категории</item>
+    </plurals>
+
+    <string name="category_type_expense">Расходы</string>
+    <string name="category_type_income">Доходы</string>
+
+    <string name="category_edit_title_new">Новая категория</string>
+    <string name="category_edit_title_new_folder">Новая папка</string>
+    <string name="category_edit_title">Категория</string>
+    <string name="category_name">Название</string>
+    <string name="category_name_error">Введите название</string>
+    <string name="category_type">Тип</string>
+    <string name="category_type_locked">Категория уже используется или содержит подкатегории — тип изменить нельзя</string>
+    <string name="category_folder">Папка</string>
+    <string name="category_folder_none">Без папки</string>
+    <string name="category_children">Категории в папке</string>
+    <string name="category_children_hint">Отметьте категории, которые нужно сложить сюда. Сама папка тоже может выбираться в операциях.</string>
+    <string name="category_error_parent_not_found">Папка не найдена — выберите другую</string>
+    <string name="category_error_parent_nested">Папки не вкладываются друг в друга</string>
+    <string name="category_error_parent_type">Папка должна быть того же типа</string>
+    <string name="category_error_has_children">В этой категории есть подкатегории — её нельзя положить в папку</string>
+    <string name="category_delete_confirm_title">Удалить категорию?</string>
+    <string name="category_delete_confirm_text">Категория без операций будет удалена. Если это папка, её подкатегории останутся без папки.</string>
+    <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
+    <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе операций она больше не появится.</string>
 </resources>

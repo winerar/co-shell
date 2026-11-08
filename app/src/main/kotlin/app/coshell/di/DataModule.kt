@@ -10,11 +10,14 @@ import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
+import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
+import app.coshell.core.domain.SaveAccountUseCase
+import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.TransactionRepository
@@ -65,6 +68,17 @@ object DataModule {
         categories: CategoryRepository,
         transactions: TransactionRepository,
     ) = SaveTransactionUseCase(accounts, categories, transactions)
+
+    @Provides
+    fun provideSaveAccount(accounts: AccountRepository, transactions: TransactionRepository) =
+        SaveAccountUseCase(accounts, transactions)
+
+    @Provides
+    fun provideSaveCategory(categories: CategoryRepository, transactions: TransactionRepository) =
+        SaveCategoryUseCase(categories, transactions)
+
+    @Provides
+    fun provideArchiveCategory(categories: CategoryRepository) = ArchiveCategoryUseCase(categories)
 
     @Provides
     fun provideDeleteAccount(accounts: AccountRepository, transactions: TransactionRepository) =

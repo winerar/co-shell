@@ -1,5 +1,6 @@
 package app.coshell.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -28,13 +30,21 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 
 @Composable
-fun HomeRoute(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(
+    onAccountClick: (String) -> Unit,
+    onAddAccount: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state)
+    HomeScreen(state, onAccountClick, onAddAccount)
 }
 
 @Composable
-fun HomeScreen(state: HomeUiState) {
+fun HomeScreen(
+    state: HomeUiState,
+    onAccountClick: (String) -> Unit = {},
+    onAddAccount: () -> Unit = {},
+) {
     Scaffold { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
@@ -50,6 +60,9 @@ fun HomeScreen(state: HomeUiState) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+                item {
+                    Button(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
+                }
                 return@LazyColumn
             }
             item { TotalCard(state.totals) }
@@ -60,7 +73,7 @@ fun HomeScreen(state: HomeUiState) {
                     modifier = Modifier.padding(top = 8.dp),
                 )
             }
-            items(state.accounts, key = { it.id }) { AccountItem(it) }
+            items(state.accounts, key = { it.id }) { AccountItem(it, onAccountClick) }
         }
     }
 }
@@ -88,9 +101,9 @@ private fun TotalCard(totals: List<String>) {
 }
 
 @Composable
-private fun AccountItem(row: HomeUiState.AccountRow) {
+private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit) {
     val palette = LocalAmountPalette.current
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().clickable { onClick(row.id) }) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,

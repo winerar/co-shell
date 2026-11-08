@@ -24,6 +24,13 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - Цвета и типографика — только из `MaterialTheme` / `LocalAmountPalette`, без хардкода.
 - Суммы — стилем `AmountTextStyle` (табличные цифры).
 
+## Иконки
+- Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.
+- Лежат в `core/designsystem/src/main/res/drawable/ic_<name>.xml`, в коде — `painterResource(DesignR.drawable.ic_<name>)`.
+- Новая иконка: `npm pack @material-symbols/svg-300` в scratchpad, распаковать и выполнить
+  `python3 scripts/material-symbol-to-vector.py <распаковка>/package/outlined core/designsystem/src/main/res/drawable <name>[:mirrored]`
+  (`:mirrored` — для стрелок, зеркалятся в RTL). Имена — как на fonts.google.com/icons.
+
 ## DI (Hilt)
 - `@HiltViewModel` + `@Inject constructor`. Модули — `app/.../di/` (позже в модулях data).
 - Зависимости через интерфейсы там, где их надо подменять в тестах.

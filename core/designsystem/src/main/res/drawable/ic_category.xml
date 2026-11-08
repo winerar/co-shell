@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Outlined, weight 300: category (Apache 2.0) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="false"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="m288.31-539.85 192.31-310.92 192.3 310.92H288.31ZM704.27-95.39q-68.04 0-114-46.15-45.96-46.15-45.96-114.19 0-68.04 45.96-114 45.96-45.96 114-45.96 68.04 0 114.19 45.96 46.15 45.96 46.15 114 0 68.04-46.15 114.19-46.15 46.15-114.19 46.15Zm-568.88-23.84v-277.46h277.46v277.46H135.39Zm569.15-21.54q47.92 0 81.31-33.46 33.38-33.46 33.38-81.6 0-48.14-33.46-81.31t-81.57-33.17q-48.12 0-81.32 33.31-33.19 33.3-33.19 81.54 0 47.92 33.31 81.31 33.3 33.38 81.54 33.38Zm-523.77-23.85h186.69v-186.69H180.77v186.69Zm188.61-420.61h222.85L480.62-764.31 369.38-585.23Zm111.24 0ZM367.46-351.31Zm337 95.77Z" />
+    </group>
+</vector>

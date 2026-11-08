@@ -9,10 +9,14 @@ Android-приложение для учёта семейного бюджета
 3. `core:model` и `core:domain` — чистый Kotlin (готовность к KMP/iOS): без `android.*` и `java.*`.
 4. Любое изменение поведения — с unit-тестами. Перед коммитом: `./gradlew check assembleDebug`.
 5. Документация — часть изменения: поменял решение/структуру → обнови соответствующий файл ниже.
+6. **Начало сессии:** прочитай `docs/STATUS.md` и `docs/agents/owner.md`. **Конец сессии:** выполни
+   чек-лист «Конец сессии» из `docs/agents/workflow.md` (обновить STATUS, ROADMAP, запушить).
 
 ## Карта документации
 | Файл | О чём |
 |---|---|
+| [docs/STATUS.md](docs/STATUS.md) | **текущее состояние, следующие шаги, открытые вопросы** |
+| [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md) | модули, что где лежит, куда класть новое |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md) | сборка, тесты, SDK, CI |
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |

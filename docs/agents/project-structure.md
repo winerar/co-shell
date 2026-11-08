@@ -2,9 +2,12 @@
 
 ```
 app/                    Android-приложение: Application, MainActivity, экраны, DI-модули
-core/model/             KMP-модуль (пока только jvm): Money, CurrencyCode, Currencies, форматирование
+core/model/             KMP (jvm): Money, валюты, форматирование + доменные сущности
+                        (Account, Category, Transaction, Budget), IdGenerator
+core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
+core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
 core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
-docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md
+docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, samples/ (тестовые файлы форматов)
 .github/workflows/      CI
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
@@ -15,8 +18,10 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Что | Куда |
 |---|---|
 | Доменная модель, value-класс, чистая логика | `core:model` (`commonMain`) |
-| Use case, интерфейс репозитория | `core:domain` (создать на этапе 1, тоже KMP) |
-| Room, Firestore, реализации репозиториев | `core:data` (Android library, этап 1) |
+| Use case, интерфейс репозитория | `core:domain` |
+| Room, реализации репозиториев | `core:data/commonMain` |
+| Android-специфичное в data (Context, позже Firestore) | `core:data/androidMain` |
+| Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент | `core:designsystem` |
 | Экран | сейчас `app/.../<feature>/`; при росте — модуль `feature:<name>` |
 

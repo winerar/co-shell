@@ -32,8 +32,10 @@ APK, сверяет SHA-256 и ставит его через системное
    «Build signed release APK» и «Deploy update to Firebase Hosting».
 2. На телефоне открыть `https://<ID проекта>.web.app/version.json` — должен показаться текст с
    `versionCode`. Это и есть проверка, что Firebase доступен из Аргентины.
-3. Если шаг Deploy упал с «permission denied»: Google Cloud Console → IAM → сервисному аккаунту
-   `firebase-adminsdk-…` добавить роль **Firebase Hosting Admin**.
+3. Если шаг Deploy упал с «403 Permission denied … serviceusage.services.get»: Google Cloud Console →
+   IAM (https://console.cloud.google.com/iam-admin/iam) → проект → строка `firebase-adminsdk-…` → карандаш →
+   «Добавить другую роль» → **Service Usage Consumer** (Потребитель Service Usage) → Сохранить →
+   через 1–2 минуты снова Run workflow. Если в ошибке другое право — **Firebase Hosting Admin**.
 
 ## 5. Переход на новую сборку (один раз на каждом телефоне)
 Release-сборка — отдельное приложение (другое имя пакета и ключ), поэтому данные переносим копией:

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Outlined, weight 300: mobile_vibrate (Apache 2.0) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="false"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M314.46-140q-23.5 0-40.59-17.1-17.1-17.09-17.1-40.59v-564.62q0-23.5 17.1-40.59 17.09-17.1 40.59-17.1h331.69q23.5 0 40.6 17.1 17.09 17.09 17.09 40.59v564.62q0 23.5-17.09 40.59-17.1 17.1-40.6 17.1H314.46Zm344-57.69v-564.62q0-5.38-3.46-8.84t-8.85-3.46H314.46q-5 0-8.65 3.46-3.66 3.46-3.66 8.84v564.62q0 5.38 3.66 8.84 3.65 3.46 8.65 3.46h331.69q5.39 0 8.85-3.46t3.46-8.84ZM499.72-642.1q8.51-8.26 8.51-19.85 0-11.59-8.53-19.82-8.54-8.23-19.85-8.23-11.31 0-19.54 8.26-8.23 8.26-8.23 19.84 0 11.59 8.25 19.82 8.26 8.23 19.57 8.23 11.32 0 19.82-8.25ZM29.23-373.85v-212.69h45.39v212.69H29.23Zm115.39 86.08v-384.46H190v384.46h-45.38Zm740.76-86.08v-212.69h45.39v212.69h-45.39ZM770-287.77v-384.46h45.38v384.46H770Zm-467.85 90.08v12.3-589.22 576.92Z" />
+    </group>
+</vector>

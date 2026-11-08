@@ -139,6 +139,8 @@
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
     <string name="feedback_menu_hint">Сообщить об ошибке или предложить идею</string>
+    <string name="shake_to_add_title">Встряхнуть — новая операция</string>
+    <string name="shake_to_add_hint">Встряхните телефон, пока открыто приложение</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает. Версия приложения и модель телефона добавятся сами — писать их не нужно.</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>

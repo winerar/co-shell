@@ -9,6 +9,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write # publish releases
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,6 +31,8 @@ jobs:
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v7
@@ -35,6 +40,21 @@ jobs:
           name: co-shell-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+      # Every merge to main becomes a release with a fixed file name, so the newest APK is always at
+      # https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk
+      - name: Publish release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ github.event.head_commit.message }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk co-shell-debug.apk
+          gh release create "build-${{ github.run_number }}" co-shell-debug.apk \
+            --target "${{ github.sha }}" \
+            --title "Сборка ${{ github.run_number }}" \
+            --notes "$NOTES" \
+            --latest
 
       - name: Upload reports on failure
         if: failure()

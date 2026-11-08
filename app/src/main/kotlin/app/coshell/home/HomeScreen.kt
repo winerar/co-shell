@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
@@ -92,13 +94,17 @@ private fun TotalCard(totals: List<String>) {
         Column(Modifier.padding(20.dp)) {
             Text(stringResource(R.string.home_total_balance), style = MaterialTheme.typography.labelLarge)
             totals.forEachIndexed { index, total ->
+                val style = if (index == 0) {
+                    MaterialTheme.typography.displayMedium
+                } else {
+                    MaterialTheme.typography.titleLarge
+                }
+                // One line; a long amount shrinks instead of breaking inside the currency code.
                 Text(
                     text = total,
-                    style = if (index == 0) {
-                        MaterialTheme.typography.displayMedium
-                    } else {
-                        MaterialTheme.typography.titleLarge
-                    },
+                    style = style,
+                    maxLines = 1,
+                    autoSize = TextAutoSize.StepBased(minFontSize = 16.sp, maxFontSize = style.fontSize),
                 )
             }
         }

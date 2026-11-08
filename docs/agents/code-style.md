@@ -22,7 +22,10 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - `Screen` принимает state и лямбды, не ViewModel → его можно превьюить и тестировать.
 - У каждого экрана есть `@Preview` в `CoShellTheme`.
 - Цвета и типографика — только из `MaterialTheme` / `LocalAmountPalette`, без хардкода.
-- Суммы — стилем `AmountTextStyle` (табличные цифры).
+- Суммы — стилем `AmountTextStyle` (табличные цифры). Крупная сумма — в одну строку с `autoSize`:
+  неразрывные пробелы в `Money` иначе рвут строку посреди кода валюты («AR / S»).
+- Edge-to-edge: внешний `Scaffold` (`CoShellNavHost`) поглощает только нижний отступ; строку
+  статуса обрабатывает `Scaffold` экрана (через `padding` или `TopAppBar`).
 
 ## Иконки
 - Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.

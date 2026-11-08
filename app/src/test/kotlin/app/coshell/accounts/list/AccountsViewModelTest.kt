@@ -1,4 +1,4 @@
-package app.coshell.accounts
+package app.coshell.accounts.list
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance

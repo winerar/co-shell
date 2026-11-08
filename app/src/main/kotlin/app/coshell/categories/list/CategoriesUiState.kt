@@ -1,4 +1,4 @@
-package app.coshell.categories
+package app.coshell.categories.list
 
 import app.coshell.core.model.CategoryType
 

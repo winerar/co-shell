@@ -23,7 +23,8 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Room, реализации репозиториев | `core:data/commonMain` |
 | Android-специфичное в data (Context, позже Firestore) | `core:data/androidMain` |
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
-| Переиспользуемый Compose-компонент | `core:designsystem` |
+| Переиспользуемый Compose-компонент без строк приложения | `core:designsystem` |
+| Общий блок экранов со строками приложения (поля и кнопки форм, диалоги) | `app/.../ui/<тема>/` (напр. `ui/form/`) |
 | Экран | `app/.../<feature>/<screen>/` (см. ниже); при росте — модуль `feature:<name>` |
 | Маршрут навигации | `app/.../navigation/Destinations.kt` (`@Serializable`), граф и нижняя панель — `CoShellNavHost.kt` |
 | Иконка | `core:designsystem` res/drawable, правила — `code-style.md` §«Иконки» |
@@ -47,10 +48,18 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | `<Name>Previews.kt` | `@Preview` в `CoShellTheme` |
 | `<Тема>.kt` (напр. `TransactionForm.kt`) | чистая логика экрана (валидация и т. п.) |
 | `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
-Мелкий экран может держать Route+Screen+Previews в одном файле (`accounts/`, `categories/` — пока так).
+Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`.
+Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
+
 Аргументы маршрута ViewModel читает из `SavedStateHandle` по имени свойства (не `toRoute()` — так
 работает в unit-тестах без Android). Общее для нескольких экранов — на уровень `<feature>/`
-(напр. `transactions/AddTransactionFab.kt`) или в `core:designsystem`.
+(напр. `transactions/AddTransactionFab.kt`), в `ui/` или в `core:designsystem`.
+
+## Переиспользование (пожелание владельца)
+Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
+компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
+`NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
+`ConfirmDeleteDialog`, `DeleteBlockedDialog`. Сначала проверь там, потом пиши новое.
 
 ## Новый модуль
 1. `include(":path:name")` в `settings.gradle.kts`.

@@ -1,4 +1,4 @@
-package app.coshell.categories
+package app.coshell.categories.edit
 
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.model.CategoryType

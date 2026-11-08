@@ -1,4 +1,4 @@
-package app.coshell.categories
+package app.coshell.categories.edit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package app.coshell.transactions.edit.components
+package app.coshell.ui.form
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,9 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 
-/** A titled block of the form with an optional error line under the content. */
+/** A titled block of an edit form with an optional error line under the content. Used by all editors. */
 @Composable
-internal fun FormSection(title: String, error: String? = null, content: @Composable () -> Unit) {
+fun FormSection(title: String, error: String? = null, content: @Composable () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(title, style = MaterialTheme.typography.titleSmall)
         content()
@@ -17,4 +17,10 @@ internal fun FormSection(title: String, error: String? = null, content: @Composa
             Text(error, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         }
     }
+}
+
+/** A muted explanation line inside a [FormSection]. */
+@Composable
+fun FormHint(text: String) {
+    Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }

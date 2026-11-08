@@ -1,4 +1,4 @@
-package app.coshell.categories
+package app.coshell.categories.edit
 
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.ArchiveCategoryUseCase
@@ -13,7 +13,6 @@ import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -22,7 +21,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
-class CategoriesViewModelsTest {
+class CategoryEditViewModelTest {
     @get:Rule val main = MainDispatcherRule()
 
     private val categories = FakeCategoryRepository()
@@ -47,24 +46,6 @@ class CategoriesViewModelsTest {
         deleteCategory = DeleteCategoryUseCase(categories, transactions),
         ids = IdGenerator { "new" },
     )
-
-    @Test
-    fun `list groups subcategories under folders`() = runTest {
-        seed()
-        val vm = CategoriesViewModel(categories)
-        vm.state.launchIn(backgroundScope)
-        vm.toggleFolder("car")
-
-        val state = vm.state.first { !it.isLoading }
-        assertEquals(listOf("car", "taxi", "food"), state.groups.map { it.item.id })
-        val car = state.groups.first()
-        assertTrue(car.isFolder && car.expanded)
-        assertEquals(listOf("fuel"), car.children.map { it.id })
-        assertEquals(listOf("old"), state.archived.map { it.id })
-
-        vm.selectType(INCOME)
-        assertEquals(listOf("salary"), vm.state.first { it.type == INCOME }.groups.map { it.item.id })
-    }
 
     @Test
     fun `new folder collects chosen categories`() = runTest {

@@ -1,8 +1,8 @@
-package app.coshell.accounts
+package app.coshell.accounts.edit
 
 import androidx.lifecycle.SavedStateHandle
-import app.coshell.accounts.AccountEditUiState.BalanceError
-import app.coshell.accounts.AccountEditUiState.CurrencyError
+import app.coshell.accounts.edit.AccountEditUiState.BalanceError
+import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.model.Account

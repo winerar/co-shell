@@ -1,4 +1,4 @@
-package app.coshell.accounts
+package app.coshell.accounts.edit
 
 import app.coshell.core.model.AccountType
 

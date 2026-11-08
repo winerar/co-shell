@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev] # dev: checks only; releases are published from main
   pull_request:
   workflow_dispatch: # Actions → CI → Run workflow (e.g. first deploy after adding secrets)
 

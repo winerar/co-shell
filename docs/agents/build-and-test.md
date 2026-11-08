@@ -6,11 +6,24 @@
   или `sdk.dir` в `local.properties` (файл не коммитится).
 - Gradle — только через `./gradlew` (версия зафиксирована во wrapper).
 
+## Установка SDK вручную (если setup-скрипт окружения не отработал)
+Нужен доступ к `dl.google.com` (окружение **co-shell**).
+```bash
+mkdir -p /opt/android-sdk/cmdline-tools && cd /opt/android-sdk
+curl -sSo /tmp/clt.zip https://dl.google.com/android/repository/commandlinetools-linux-9862592_latest.zip
+unzip -q /tmp/clt.zip -d cmdline-tools && mv cmdline-tools/cmdline-tools cmdline-tools/latest
+yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk --licenses >/dev/null
+cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-37.0" "build-tools;36.0.0"
+echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
+```
+
 ## Команды
 | Команда | Что делает |
 |---|---|
 | `./gradlew check` | lint всех Android-модулей + все unit-тесты |
 | `./gradlew :core:model:jvmTest` | тесты модели (быстро) |
+| `./gradlew :core:domain:jvmTest` | тесты use cases (на фейках) |
+| `./gradlew :core:data:jvmTest` | тесты Room на JVM + перегенерация `core/data/schemas/` |
 | `./gradlew assembleDebug` | debug APK → `app/build/outputs/apk/debug/` |
 | `./gradlew :app:testDebugUnitTest` | unit-тесты приложения |
 
@@ -18,6 +31,7 @@
 
 ## Тесты
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).
+- Data — `core/data/src/jvmTest`, in-memory SQLite (подробности — `database.md`).
 - ViewModel — JUnit + `kotlinx-coroutines-test` в `app/src/test`.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 

@@ -21,10 +21,12 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md) | сборка, тесты, SDK, CI |
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
+| [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |
 | [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, обновление документации |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | архитектура и журнал решений |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | план и текущий этап |
+| [docs/research/](docs/research/) | исследования (напр. автоввод из банков) |
 
 ## Как поддерживать эти файлы
 - `AGENTS.md` — только индекс и золотые правила, **не длиннее ~40 строк**.

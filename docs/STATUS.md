@@ -61,10 +61,16 @@
 3. Проверить полный цикл обновления: релиз → «Доступна версия» → установка → «Что нового»;
    спрашивает ли Android подтверждение при второй установке (Android 12+).
 4. Закрыть этап 2 в ROADMAP, затем этап 3 (мультивалютность) или мелочи: итоги дня, фильтр по счёту.
+5. Новые идеи владельца (2026-11-08) разложены по ROADMAP: накопления на «Обзоре» — этап 3;
+   бюджеты, отчёты, графики, свои отчёты — этап 6 (исследования в `docs/research/budgets.md`,
+   `reports-and-charts.md`); встряхивание → ввод операции — этап 7 (можно сделать раньше, ~1 сессия).
 
 ## Открытые вопросы к владельцу
 - Автоввод из банков: кто каким банком пользуется, есть ли Bybit Card, образцы push и выписок —
   список в `docs/research/auto-import-banks.md` §7. Не блокирует этап 1.
+
+- Бюджеты и отчёты (`docs/research/budgets.md` §2, `reports-and-charts.md` §4): лимиты на папки,
+  перенос остатка, день начала месяца — нужны? С какой даты считать месяц (1-е или зарплата)?
 
 ## Окружение
 - Облачное окружение **co-shell**: разрешён `dl.google.com`, setup-скрипт ставит Android SDK
@@ -76,5 +82,5 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0.
 
 ## Последняя сессия
-2026-11-08 (ветка `claude/elegant-edison-7idfn4`): форма обратной связи → Firestore → GitHub issue
-(`feedback/`, `core:domain/feedback/`, `firebase/firestore.rules`, `scripts/feedback_to_issues.py`, `feedback.yml`).
+2026-11-08 (ветка `claude/awesome-brahmagupta-b2ya8a`): идеи фич в ROADMAP + исследования
+`docs/research/budgets.md`, `docs/research/reports-and-charts.md`. Кода нет.

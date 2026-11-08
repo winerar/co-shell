@@ -15,6 +15,7 @@ import app.coshell.core.domain.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
+import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.TransactionRepository
@@ -65,6 +66,10 @@ object DataModule {
         categories: CategoryRepository,
         transactions: TransactionRepository,
     ) = SaveTransactionUseCase(accounts, categories, transactions)
+
+    @Provides
+    fun provideSaveAccount(accounts: AccountRepository, transactions: TransactionRepository) =
+        SaveAccountUseCase(accounts, transactions)
 
     @Provides
     fun provideDeleteAccount(accounts: AccountRepository, transactions: TransactionRepository) =

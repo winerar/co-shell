@@ -7,6 +7,7 @@ core/model/             KMP (jvm): Money, валюты, форматирован
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
 core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
 core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
+scripts/                служебные скрипты (конвертация иконок)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, samples/ (тестовые файлы форматов)
 .github/workflows/      CI
 gradle/libs.versions.toml  все версии зависимостей и плагинов
@@ -24,10 +25,13 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент | `core:designsystem` |
 | Экран | сейчас `app/.../<feature>/`; при росте — модуль `feature:<name>` |
+| Маршрут навигации | `app/.../navigation/Destinations.kt` (`@Serializable`), граф и нижняя панель — `CoShellNavHost.kt` |
+| Иконка | `core:designsystem` res/drawable, правила — `code-style.md` §«Иконки» |
 
 ## Экран = 4 файла
 `<Name>Route` (достаёт ViewModel) · `<Name>Screen` (stateless, с `@Preview`) ·
-`<Name>ViewModel` (`StateFlow<UiState>`) · `<Name>UiState`.
+`<Name>ViewModel` (`StateFlow<UiState>`) · `<Name>UiState`. Аргументы маршрута ViewModel читает из
+`SavedStateHandle` по имени свойства (не `toRoute()` — так работает в unit-тестах без Android).
 
 ## Новый модуль
 1. `include(":path:name")` в `settings.gradle.kts`.

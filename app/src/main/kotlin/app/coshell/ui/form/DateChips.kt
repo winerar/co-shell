@@ -1,4 +1,4 @@
-package app.coshell.transactions.edit.components
+package app.coshell.ui.form
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -32,12 +32,12 @@ import kotlinx.datetime.toJavaLocalDate
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * "Сегодня" / "Вчера" / calendar chip. The calendar chip shows the chosen date when it is
+ * "Сегодня" / "Вчера" / calendar chip (transaction editor, manual rate dialog). The calendar chip shows the chosen date when it is
  * neither today nor yesterday and opens Material's date picker.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun DateChips(
+fun DateChips(
     date: LocalDate,
     today: LocalDate,
     dateMillisUtc: Long,

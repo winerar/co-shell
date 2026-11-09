@@ -32,7 +32,7 @@ import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField
 import app.coshell.transactions.edit.components.CategoryChips
-import app.coshell.transactions.edit.components.DateChips
+import app.coshell.ui.form.DateChips
 import app.coshell.transactions.edit.components.ReceiptSection
 import app.coshell.transactions.edit.components.TypeSelector
 import app.coshell.ui.form.ConfirmDeleteDialog

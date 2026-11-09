@@ -5,7 +5,9 @@ import app.coshell.core.data.rates.defaultRatesProvider
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RatesProvider
 import app.coshell.core.domain.rates.RefreshRatesUseCase
+import app.coshell.rates.RatesRefresher
 import app.coshell.rates.data.UrlConnectionHttpGet
+import app.coshell.rates.work.WorkManagerRatesRefresher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,4 +25,8 @@ object RatesModule {
     @Provides
     fun provideRefreshRates(provider: RatesProvider, repository: ExchangeRateRepository, clock: Clock) =
         RefreshRatesUseCase(provider, repository, clock, historyStart = RATES_HISTORY_START)
+
+    /** "Update now" on the rates screen: a one-off run of the same worker. */
+    @Provides
+    fun provideRatesRefresher(impl: WorkManagerRatesRefresher): RatesRefresher = impl
 }

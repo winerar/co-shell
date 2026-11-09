@@ -37,7 +37,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
             Text(
                 if (row.excludedFromTotal) stringResource(R.string.account_excluded_suffix, base) else base,
                 color = if (row.excludedFromTotal) LocalStatusPalette.current.warning else MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = 2,
             )
         },
         leading = { AccountBadge(row.name, row.color) },

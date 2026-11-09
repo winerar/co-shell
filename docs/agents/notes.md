@@ -40,6 +40,9 @@
   `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19). (11-09) curl тоже может
   получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`. Если 429 и там — зеркало
   `maven-central.storage-download.googleapis.com/maven2` (сработало 11-09).
+- (11-10) Robolectric сам качает `android-all-instrumented` и тоже ловит 429 («Failed to fetch maven artifact») —
+  скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
+- (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
 - (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,

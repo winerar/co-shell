@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,12 +25,13 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.update.components.ReleaseCard
 import app.coshell.update.components.UpdateHero
+import app.coshell.update.components.UpdateMainAction
 import app.coshell.update.components.UpdatePhaseContent
 import app.coshell.core.designsystem.R as DesignR
 
 /**
  * "More → App update" (issue #65): a big ring in the middle shows the step (check, download %, install),
- * under it the title, one centred button, then the release notes.
+ * under it the title and the release notes; the one action sits full width at the bottom, under the thumb.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +46,9 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
                     }
                 },
             )
+        },
+        bottomBar = {
+            UpdateMainAction(state, actions, Modifier.navigationBarsPadding().padding(horizontal = Spacing.l, vertical = Spacing.m))
         },
     ) { padding ->
         Column(

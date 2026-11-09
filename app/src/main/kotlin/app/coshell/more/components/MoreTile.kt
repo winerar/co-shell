@@ -41,6 +41,8 @@ internal fun MoreTile(icon: Int, title: String, subtitle: String?, color: Long, 
                     subtitle,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    // Two lines in every tile, so tiles in a row are of one height.
+                    minLines = 2,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )

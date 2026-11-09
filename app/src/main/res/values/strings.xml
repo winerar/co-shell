@@ -253,6 +253,7 @@
     <string name="feedback_sent_title">Отправленные</string>
     <string name="feedback_sent_explain">Сообщение станет задачей разработки в течение нескольких часов.</string>
     <string name="feedback_write_more">Написать ещё</string>
+    <string name="update_downloaded_mb">%1$s из %2$s МБ</string>
     <string name="feedback_send">Отправить</string>
     <string name="feedback_result_sent">Спасибо! Сообщение отправлено.</string>
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>

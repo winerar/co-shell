@@ -85,6 +85,7 @@ fun CoShellTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            motionScheme = CoShellMotionScheme,
             typography = CoShellTypography,
             shapes = CoShellShapes,
             content = content,

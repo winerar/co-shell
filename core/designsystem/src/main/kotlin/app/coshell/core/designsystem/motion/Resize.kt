@@ -28,10 +28,10 @@ import app.coshell.core.designsystem.tokens.Motion
 fun Modifier.smoothResize(): Modifier = animateContentSize(Motion.Resize)
 
 /** Unfolding from the top (a drop-down part of a block): grows and fades in. */
-val ExpandIn: EnterTransition = expandVertically(Motion.Resize, expandFrom = Alignment.Top) + fadeIn(Motion.enter())
+val ExpandIn: EnterTransition = expandVertically(Motion.Resize, expandFrom = Alignment.Top) + fadeIn(Motion.effects())
 
 /** Folding back: shrinks to the top and fades out a bit faster than it shrinks. */
-val CollapseOut: ExitTransition = shrinkVertically(Motion.Resize, shrinkTowards = Alignment.Top) + fadeOut(Motion.exit())
+val CollapseOut: ExitTransition = shrinkVertically(Motion.Resize, shrinkTowards = Alignment.Top) + fadeOut(Motion.effectsFast())
 
 /**
  * A drop-down part of a block (details under a total, extra fields of a form): unfolds when [expanded],
@@ -56,7 +56,7 @@ fun CoShellExpandable(
  * fades out, and the rest slide to their places with the same spring as [smoothResize]. Needs a `key`.
  */
 fun LazyItemScope.listItemMotion(): Modifier = Modifier.animateItem(
-    fadeInSpec = Motion.enter(),
+    fadeInSpec = Motion.effects(),
     placementSpec = Motion.Placement,
-    fadeOutSpec = Motion.exit(),
+    fadeOutSpec = Motion.effectsFast(),
 )

@@ -69,8 +69,8 @@ fun RollingAmountText(text: String, style: TextStyle, modifier: Modifier = Modif
 
 private fun roll(direction: Int): ContentTransform {
     val up = direction >= 0
-    return (slideInVertically(Motion.medium()) { if (up) it else -it } + fadeIn(Motion.medium()))
-        .togetherWith(slideOutVertically(Motion.medium()) { if (up) -it else it } + fadeOut(Motion.short()))
+    return (slideInVertically(Motion.Placement) { if (up) it else -it } + fadeIn(Motion.effects()))
+        .togetherWith(slideOutVertically(Motion.Placement) { if (up) -it else it } + fadeOut(Motion.effectsFast()))
 }
 
 /** Advance width of JetBrains Mono, in em. */

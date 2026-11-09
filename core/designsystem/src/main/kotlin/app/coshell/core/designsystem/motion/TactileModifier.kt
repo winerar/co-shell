@@ -1,8 +1,6 @@
 package app.coshell.core.designsystem.motion
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -30,6 +28,7 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
+import app.coshell.core.designsystem.tokens.Motion
 import kotlin.math.max
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -69,10 +68,10 @@ private data class TactileElement(
 }
 
 // Press: fast and firm. Release: softer and bouncy — the overshoot is what makes it feel alive.
-private val PressSpring = spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMediumLow * 3)
-private val ReleaseSpring = spring<Float>(dampingRatio = 0.45f, stiffness = Spring.StiffnessMediumLow)
-private val GlowIn = spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium)
-private val GlowOut = spring<Float>(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessLow)
+private val PressSpring = Motion.spatialFast<Float>()
+private val ReleaseSpring = Motion.bouncy<Float>()
+private val GlowIn = Motion.effectsFast<Float>()
+private val GlowOut = Motion.effectsSlow<Float>()
 
 private class TactileNode(
     private var source: InteractionSource,

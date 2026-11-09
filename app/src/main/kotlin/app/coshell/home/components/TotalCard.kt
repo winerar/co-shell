@@ -20,9 +20,11 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.RollingAmountText
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.formatDayMonth
@@ -45,9 +47,9 @@ internal fun TotalCard(state: HomeUiState) {
             state.totals.forEachIndexed { index, total ->
                 if (index == 0) {
                     // The main total rolls its digits when it changes (design-questions §6).
-                    RollingAmountText(total, AmountHeroStyle, color = MaterialTheme.colorScheme.primary)
+                    RollingAmountText(total, AmountHeroStyle, color = LocalHeroPalette.current.amount)
                 } else {
-                    AmountLine(total, AmountTitleStyle, MaterialTheme.colorScheme.onSurface)
+                    AmountLine(total, AmountTitleStyle, LocalHeroPalette.current.content)
                 }
             }
             state.rateDate?.let { Caption(stringResource(R.string.home_total_rate_date, formatDayMonth(it))) }
@@ -57,8 +59,9 @@ internal fun TotalCard(state: HomeUiState) {
             if (canExpand) {
                 Caption(stringResource(if (expanded) R.string.home_total_hide_breakdown else R.string.home_total_show_breakdown))
             }
-            if (expanded) {
-                state.byCurrency.forEach { AmountLine(it, AmountTextStyle, MaterialTheme.colorScheme.onSurface) }
+            // Sums per currency unfold under the hint; the card's height follows them.
+            CoShellExpandable(expanded) {
+                state.byCurrency.forEach { AmountLine(it, AmountTextStyle, LocalHeroPalette.current.content) }
             }
         }
     }

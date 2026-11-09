@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.tokens.PillShape
 
@@ -33,7 +34,7 @@ fun CoShellFilterChip(
             selected = selected,
             onClick = onClick,
             label = label,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).selectionPop(selected),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).selectionPop(selected).smoothResize(),
             enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,

@@ -70,6 +70,7 @@ class AccountEditViewModel @Inject constructor(
                     initialBalance = formatForEditing(account),
                     archived = account.archived,
                     includedInTotal = !account.excludedFromTotal,
+                    color = account.color,
                     shared = account.isShared,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
@@ -90,6 +91,8 @@ class AccountEditViewModel @Inject constructor(
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
 
     fun onIncludedInTotalChange(value: Boolean) = _state.update { it.copy(includedInTotal = value) }
+
+    fun onColorChange(value: Long?) = _state.update { it.copy(color = value) }
 
     fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
 
@@ -166,6 +169,7 @@ class AccountEditViewModel @Inject constructor(
             type = form.type,
             initialBalanceMinor = balanceMinor,
             excludedFromTotal = !form.includedInTotal,
+            color = form.color,
             isShared = form.shared,
             // The repository makes the current member the owner of a new personal account.
             ownerMemberId = if (form.shared) null else base.ownerMemberId,

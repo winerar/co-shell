@@ -26,6 +26,7 @@ data class AccountEntity(
     val archived: Boolean,
     @ColumnInfo(name = "sort_order") val sortOrder: Int,
     @ColumnInfo(name = "excluded_from_total", defaultValue = "0") val excludedFromTotal: Boolean = false,
+    val color: Long? = null,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,

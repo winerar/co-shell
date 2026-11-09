@@ -43,6 +43,8 @@ data class TransactionFilter(
     val from: Instant? = null,
     /** Exclusive. */
     val to: Instant? = null,
+    /** At most this many newest transactions; null — all. The list grows this window while scrolling. */
+    val limit: Int? = null,
 )
 
 interface TransactionRepository {

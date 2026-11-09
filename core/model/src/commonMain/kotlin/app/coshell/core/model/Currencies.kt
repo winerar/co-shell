@@ -20,24 +20,16 @@ object Currencies {
         listOf("CLF", "UYW").forEach { put(it, 4) }
     }
 
-    private val symbols: Map<String, String> = mapOf(
-        "RUB" to "₽", "USD" to "$", "EUR" to "€", "GBP" to "£", "JPY" to "¥", "CNY" to "¥",
-        "KZT" to "₸", "UAH" to "₴", "BYN" to "Br", "GEL" to "₾", "AMD" to "֏", "AZN" to "₼",
-        "TRY" to "₺", "THB" to "฿", "INR" to "₹", "KRW" to "₩", "ILS" to "₪", "VND" to "₫",
-        "PLN" to "zł", "CHF" to "Fr", "RSD" to "дин", "KGS" to "с", "UZS" to "сўм",
-    )
-
     /** Custom (non-ISO) assets the app knows about out of the box. */
     private val customAssets: Map<String, CurrencyInfo> = listOf(
-        CurrencyInfo(CurrencyCode("USDT"), fractionDigits = 2, symbol = "₮"),
-        CurrencyInfo(CurrencyCode("BTC"), fractionDigits = 8, symbol = "₿"),
+        CurrencyInfo(CurrencyCode("USDT"), fractionDigits = 2),
+        CurrencyInfo(CurrencyCode("BTC"), fractionDigits = 8),
     ).associateBy { it.code.value }
 
     fun info(code: CurrencyCode): CurrencyInfo =
         customAssets[code.value] ?: CurrencyInfo(
             code = code,
             fractionDigits = fractionDigitsOverrides[code.value] ?: DEFAULT_FRACTION_DIGITS,
-            symbol = symbols[code.value],
         )
 
     fun info(code: String): CurrencyInfo = info(CurrencyCode(code))

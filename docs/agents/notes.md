@@ -30,10 +30,18 @@
 - (11-09) Время шагов CI без логов: GitHub MCP `actions_list` → `list_workflow_runs` (`resource_id: ci.yml`),
   затем `list_workflow_jobs` (run id) — у каждого шага `started_at`/`completed_at`.
 - (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
+- (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
+  issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
 - Maven Central иногда отвечает 429 на большие файлы — повторить позже (так отпал Robolectric).
 
 ## Грабли проекта
+- (11-09) `AnimatedVisibility` внутри колонки с `spacedBy`: зазор появляется/исчезает рывком вместе с ребёнком —
+  отступ класть внутрь раскрывашки, а её — в колонку, где всегда что-то видно (так в форме операции).
+- (11-09) Lint `UnusedContentLambdaTargetStateParameter`: в `AnimatedContent` рисовать из параметра лямбды, а не из
+  внешнего состояния; ключ анимации — `contentKey` (иначе уходящий кадр показывает уже новое состояние).
 - (11-09) Облачные сессии создают ветки `ccr-*`/`claude/*`; сессия может закончиться, не открыв PR —
   `session-start.sh` показывает такие ветки (так нашёлся невлитый пункт (ж) в `ccr-08ccf27a-wf9rbo`).
 - (11-09) `main` содержит только merge-коммиты релизов: «коммиты не в `dev`» считать с `--no-merges`.
+- (11-09) Тест «пока следующая страница не пришла» нельзя писать на `UnconfinedTestDispatcher` — поток
+  пересобирается синхронно; нужен обычный `runTest` + `runCurrent()` (так в `GrowingWindowTest`).

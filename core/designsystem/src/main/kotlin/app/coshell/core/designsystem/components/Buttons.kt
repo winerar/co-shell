@@ -20,33 +20,50 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
+import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.tokens.PillShape
 
 // Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple.
 // Screens use these, never the Material ones (design-system.md §«Движение»).
 
-/** Filled pill button. [tactile] — `Primary` for the main action of a screen («Сохранить»). */
+/**
+ * Filled pill button. [tactile] — `Primary` for the main action of a screen («Сохранить»).
+ * Light theme: neon mint fill with dark ink, like the «+» (owner's choice 2026-11-09 — the deep teal looked dull
+ * next to the acid palette); dark theme: neon mint as is. Deep teal stays for links and small text.
+ */
 @Composable
 fun CoShellButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     tactile: Tactile = Tactile.Control,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: ButtonColors = coShellButtonColors(),
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
     NoRipple {
         Button(
             onClick = onClick,
-            modifier = modifier.tactile(source, tactile, PillShape, enabled),
+            modifier = modifier.tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
             content = content,
         )
+    }
+}
+
+/** Colours of [CoShellButton]: the neon fill of the theme with readable text on it. */
+@Composable
+fun coShellButtonColors(): ButtonColors {
+    val colors = MaterialTheme.colorScheme
+    return if (LocalDarkTheme.current) {
+        ButtonDefaults.buttonColors()
+    } else {
+        ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
     }
 }
 
@@ -62,7 +79,7 @@ fun CoShellOutlinedButton(
     NoRipple {
         OutlinedButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             interactionSource = source,
             content = content,
@@ -82,7 +99,7 @@ fun CoShellTextButton(
     NoRipple {
         TextButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             interactionSource = source,
             content = content,
@@ -103,7 +120,7 @@ fun CoShellIconButton(
     NoRipple {
         IconButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
@@ -128,7 +145,8 @@ fun CoShellFab(
     NoRipple {
         FloatingActionButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, tactile, shape),
+            // The fill flows into the sheet the «+» opens (issue #63).
+            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor),
             shape = shape,
             containerColor = containerColor,
             contentColor = contentColor,

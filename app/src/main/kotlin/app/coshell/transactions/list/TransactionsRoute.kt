@@ -12,5 +12,5 @@ fun TransactionsRoute(
     viewModel: TransactionsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    TransactionsScreen(state, onTransactionClick, viewModel::delete)
+    TransactionsScreen(state, onTransactionClick, viewModel::delete, viewModel::loadMore)
 }

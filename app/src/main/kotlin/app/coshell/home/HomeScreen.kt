@@ -1,7 +1,6 @@
 package app.coshell.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.accounts.iconRes
+import app.coshell.core.designsystem.category.IconBadge
+import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellButton
@@ -26,7 +28,6 @@ import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
-import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
@@ -93,14 +94,14 @@ fun HomeScreen(
 @Composable
 private fun AccountsCard(accounts: List<HomeUiState.AccountRow>, onClick: (String) -> Unit) {
     val palette = LocalAmountPalette.current
-    // Rows appear and disappear smoothly: the card's height follows them (design-questions §6). A relayout per
-    // frame, but only when an account is added or archived — rare, so it is worth it.
-    CoShellCard(Modifier.fillMaxWidth().animateContentSize(Motion.medium())) {
+    // Rows appear and disappear smoothly: CoShellCard follows its content's height itself (issue #64).
+    CoShellCard(Modifier.fillMaxWidth()) {
         accounts.forEach { row ->
             key(row.id) {
                 CoShellListRow(
                     title = row.name,
                     subtitle = if (row.excludedFromTotal) stringResource(R.string.account_excluded_from_total) else null,
+                    leading = { IconBadge(row.type.iconRes, row.color?.let { categoryColor(it) }) },
                     trailing = {
                         AmountText(
                             text = row.balance,
@@ -123,15 +124,15 @@ private fun HomeScreenPreview() {
             HomeUiState(
                 totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
                 rateDate = LocalDate(2026, 11, 9),
-                byCurrency = listOf("105 800,50 ₽", "150,00 USD"),
+                byCurrency = listOf("105 800,50 RUB", "150,00 USD"),
                 spending = HomeUiState.MonthSpending(
                     month = LocalDate(2026, 11, 1),
                     totals = listOf("412,30 USD", "598 000,00 ARS"),
                     missing = emptyList(),
                 ),
                 accounts = listOf(
-                    HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
-                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true, excludedFromTotal = true),
+                    HomeUiState.AccountRow("1", "Карта", "120 800,50 RUB", isNegative = false),
+                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 RUB", isNegative = true, excludedFromTotal = true),
                 ),
             ),
         )

@@ -11,6 +11,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.theme.AmountInputStyle
 
 // Text inputs of the app (design-system.md §«Компоненты»): outlined, 12 dp corners (shapes.extraSmall),
@@ -53,7 +54,8 @@ fun CoShellTextField(
         minLines = minLines,
         keyboardOptions = keyboardOptions,
         textStyle = textStyle,
-        modifier = modifier.fillMaxWidth(),
+        // The error/hint line comes and goes: the field grows to it smoothly (issue #64).
+        modifier = modifier.fillMaxWidth().smoothResize(),
     )
 }
 

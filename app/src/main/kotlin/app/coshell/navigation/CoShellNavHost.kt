@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onPlaced
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph
@@ -24,6 +26,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import app.coshell.core.designsystem.components.CoShellSheet
 import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
+import app.coshell.core.designsystem.motion.PressOrigin
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -59,6 +62,7 @@ fun CoShellNavHost(
     val onTab = TopLevel.entries.any { current.isOn(it) }
     val showBottomBar = TopLevel.entries.any { screen.isOn(it) }
     val snackbar = remember { SnackbarHostState() }
+    val origins = remember { ScreenOrigins(PressOrigin) }
     UndoSnackbarEffect(snackbar)
 
     StartupUpdateDialogs(onOpenUpdate = { navController.navigate(UpdateDestination) { launchSingleTop = true } })
@@ -85,14 +89,19 @@ fun CoShellNavHost(
         // Inner screens have their own Scaffold and handle the status bar themselves, so only the
         // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
         val bottomInset = PaddingValues(bottom = padding.calculateBottomPadding())
-        Box(Modifier.padding(bottomInset).consumeWindowInsets(bottomInset)) {
+        Box(
+            Modifier
+                .padding(bottomInset)
+                .consumeWindowInsets(bottomInset)
+                .onPlaced { origins.hostBounds = it.boundsInWindow() },
+        ) {
             NavHost(
                 navController = navController,
                 startDestination = HomeDestination,
-                enterTransition = { screenEnter() },
-                exitTransition = { screenExit() },
-                popEnterTransition = { screenPopEnter() },
-                popExitTransition = { screenPopExit() },
+                enterTransition = { enter(origins) },
+                exitTransition = { exit(origins) },
+                popEnterTransition = { popEnter(origins) },
+                popExitTransition = { popExit(origins) },
             ) {
                 composable<HomeDestination> {
                     HomeRoute(

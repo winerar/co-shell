@@ -7,24 +7,16 @@ package app.coshell.core.model
 data class MoneyFormat(
     val decimalSeparator: Char = ',',
     val groupSeparator: Char = NARROW_NBSP,
-    val symbolPosition: SymbolPosition = SymbolPosition.AFTER,
-    /** Hide the fraction when it is zero: "1 200 ₽" instead of "1 200,00 ₽". */
+    /** Hide the fraction when it is zero: "1 200 RUB" instead of "1 200,00 RUB". */
     val trimZeroFraction: Boolean = false,
 ) {
-    enum class SymbolPosition { BEFORE, AFTER }
-
+    /** «1 234,50 USD»: the number, a no-break space, the letter code (always after the number). */
     fun format(money: Money): String {
-        val info = Currencies.info(money.currency)
-        val number = formatNumber(money.amountMinor, info.fractionDigits)
-        val symbol = info.displaySymbol
-        return when (symbolPosition) {
-            SymbolPosition.AFTER -> "$number$NBSP$symbol"
-            SymbolPosition.BEFORE ->
-                if (number.startsWith('-')) "-$symbol${number.substring(1)}" else "$symbol$number"
-        }
+        val number = formatNumber(money.amountMinor, Currencies.info(money.currency).fractionDigits)
+        return "$number$NBSP${money.currency.value}"
     }
 
-    /** Formats the bare number without a currency symbol. */
+    /** Formats the bare number without a currency code. */
     fun formatNumber(amountMinor: Long, fractionDigits: Int): String {
         val negative = amountMinor < 0
         // Work with the absolute value as a string to stay safe at Long.MIN_VALUE.
@@ -39,7 +31,7 @@ data class MoneyFormat(
     }
 
     /**
-     * The number for an input field: no symbol, zero fraction trimmed, grouped with narrow spaces
+     * The number for an input field: no code, zero fraction trimmed, grouped with narrow spaces
      * so that [MoneyParser] reads it back unambiguously ("1 234,50", "1 200").
      */
     fun formatForEditing(money: Money): String =
@@ -50,14 +42,10 @@ data class MoneyFormat(
         const val NBSP = ' '
         const val NARROW_NBSP = ' '
 
-        /** 1 234,56 ₽ */
+        /** 1 234,56 RUB */
         val RU = MoneyFormat()
 
-        /** $1,234.56 */
-        val EN = MoneyFormat(
-            decimalSeparator = '.',
-            groupSeparator = ',',
-            symbolPosition = SymbolPosition.BEFORE,
-        )
+        /** 1,234.56 USD */
+        val EN = MoneyFormat(decimalSeparator = '.', groupSeparator = ',')
     }
 }

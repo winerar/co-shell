@@ -88,6 +88,21 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `4 to 5 keeps accounts without a colour`() {
+        helper.createDatabase(4).use { v4 ->
+            v4.execSQL(
+                """INSERT INTO accounts (id, name, currency, type, initial_balance_minor, is_shared,
+                   owner_member_id, archived, sort_order, excluded_from_total, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('a1', 'Cash', 'ARS', 'CASH', 5000, 1, NULL, 0, 0, 0, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(5, emptyList()).use { v5 ->
+            assertEquals("Cash|none", v5.single("SELECT name || '|' || IFNULL(color, 'none') FROM accounts"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

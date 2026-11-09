@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -14,24 +15,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.transactions.list.components.DayHeader
 import app.coshell.transactions.list.components.SwipeToDelete
 import app.coshell.transactions.list.components.TransactionRow
+import app.coshell.ui.list.LoadMoreEffect
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
-/** Day headers stick to the top while their transactions scroll under them. */
+/** Older pages load while scrolling ([LoadMoreEffect]). Day headers stick to the top while their transactions scroll under them. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsScreen(
     state: TransactionsUiState,
     onTransactionClick: (String) -> Unit = {},
     onDelete: (String) -> Unit = {},
+    onLoadMore: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
+    val listState = rememberLazyListState()
+    LoadMoreEffect(listState, enabled = state.hasMore, onLoadMore = onLoadMore)
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_transactions), scroll) },
         modifier = Modifier.tabScroll(scroll),
@@ -42,13 +48,14 @@ fun TransactionsScreen(
             return@Scaffold
         }
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize().padding(padding),
         ) {
             state.days.forEach { day ->
                 stickyHeader(key = day.date.toString()) { DayHeader(day.date, day.relative) }
                 items(day.rows, key = { it.id }) { row ->
                     // Rows slide in, out and into place (design-questions §6).
-                    SwipeToDelete(onDelete = { onDelete(row.id) }, modifier = Modifier.animateItem()) {
+                    SwipeToDelete(onDelete = { onDelete(row.id) }, modifier = listItemMotion()) {
                         TransactionRow(row, onTransactionClick)
                     }
                 }

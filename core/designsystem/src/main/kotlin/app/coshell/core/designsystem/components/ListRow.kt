@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.motion.tactileToggleable
 import app.coshell.core.designsystem.tokens.Sizes
@@ -100,6 +101,7 @@ private fun RowLayout(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .smoothResize() // a subtitle may appear or wrap to two lines (issue #64)
             .background(containerColor)
             .heightIn(min = Sizes.rowMinHeight)
             .padding(horizontal = Spacing.l, vertical = Spacing.m)

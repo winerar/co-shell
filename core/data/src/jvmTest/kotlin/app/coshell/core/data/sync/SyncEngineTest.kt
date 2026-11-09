@@ -30,7 +30,7 @@ class SyncEngineTest {
 
     @Test
     fun `records created on one phone appear on the other`() = runTest {
-        a.accounts.saveAccount(Account("acc", "Bybit", usd))
+        a.accounts.saveAccount(Account("acc", "Bybit", usd, color = 0xFFB388FF))
         a.transactions.saveTransaction(expense("t1", 12_50))
 
         assertEquals(2, a.engine.sync().pushed)
@@ -38,6 +38,7 @@ class SyncEngineTest {
         b.engine.sync()
 
         assertEquals("Bybit", b.accounts.getAccount("acc")?.name)
+        assertEquals(0xFFB388FF, b.accounts.getAccount("acc")?.color, "the account colour syncs too")
         assertEquals(Money(12_50, usd), b.transactions.getTransaction("t1")?.amount)
         assertEquals(0, b.pending(), "rows from the server are not sent back")
     }

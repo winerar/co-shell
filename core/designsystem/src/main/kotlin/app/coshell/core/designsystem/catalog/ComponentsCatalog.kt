@@ -8,18 +8,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
+import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellSection
+import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
+import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -74,4 +78,31 @@ private fun DialogPreview() = CoShellTheme(darkTheme = true) {
         dismissLabel = "Отмена",
         destructive = true,
     )
+}
+
+@Preview(name = "Bottom bar · dark")
+@Composable
+private fun BottomBarPreview() = CoShellTheme(darkTheme = true) {
+    CoShellBottomBar(
+        tabs = listOf(
+            CoShellTab(R.drawable.ic_home, "Обзор", selected = true),
+            CoShellTab(R.drawable.ic_receipt_long, "Операции", selected = false),
+            CoShellTab(R.drawable.ic_account_balance_wallet, "Счета", selected = false),
+            CoShellTab(R.drawable.ic_more_horiz, "Ещё", selected = false),
+        ),
+        onTab = {},
+        addLabel = "Новая операция",
+        onAdd = {},
+    )
+}
+
+@Preview(name = "Sheet content · light", showBackground = true)
+@Composable
+private fun SheetLayoutPreview() = CoShellTheme(darkTheme = false) {
+    Surface {
+        CoShellSheetLayout(title = "Новый счёт", actionLabel = "Сохранить", onAction = {}) {
+            CoShellTextField(value = "", onValueChange = {}, label = "Название")
+            CoShellAmountField(value = "", onValueChange = {}, label = "Начальный баланс", currency = "USD")
+        }
+    }
 }

@@ -12,6 +12,8 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
+import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
@@ -65,6 +67,7 @@ class TransactionEditViewModelTest {
         clock = object : Clock { override fun now(): Instant = now },
         timeZone = zone,
         rates = FakeExchangeRateRepository(),
+        deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
     )
 
     @Test

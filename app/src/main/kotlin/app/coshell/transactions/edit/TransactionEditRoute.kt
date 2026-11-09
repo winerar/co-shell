@@ -20,7 +20,6 @@ fun TransactionEditRoute(
     TransactionEditScreen(
         state = state,
         actions = TransactionEditActions(
-            onBack = onDone,
             onAddAccount = onAddAccount,
             onTypeChange = viewModel::onTypeChange,
             onAmountChange = viewModel::onAmountChange,
@@ -42,7 +41,6 @@ fun TransactionEditRoute(
 
 /** Everything the screen can ask for; defaults make previews short. */
 data class TransactionEditActions(
-    val onBack: () -> Unit = {},
     val onAddAccount: () -> Unit = {},
     val onTypeChange: (TransactionType) -> Unit = {},
     val onAmountChange: (String) -> Unit = {},

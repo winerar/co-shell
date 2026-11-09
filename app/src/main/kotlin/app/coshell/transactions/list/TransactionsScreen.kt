@@ -16,19 +16,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
-import app.coshell.transactions.AddTransactionFab
 import app.coshell.transactions.list.components.DayHeader
+import app.coshell.transactions.list.components.SwipeToDelete
 import app.coshell.transactions.list.components.TransactionRow
+import app.coshell.ui.top.TabTopBar
+import app.coshell.ui.top.rememberTabScrollBehavior
+import app.coshell.ui.top.tabScroll
 
 /** Day headers stick to the top while their transactions scroll under them. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsScreen(
     state: TransactionsUiState,
-    onAddTransaction: () -> Unit = {},
     onTransactionClick: (String) -> Unit = {},
+    onDelete: (String) -> Unit = {},
 ) {
-    Scaffold(floatingActionButton = { AddTransactionFab(onAddTransaction) }) { padding ->
+    val scroll = rememberTabScrollBehavior()
+    Scaffold(
+        topBar = { TabTopBar(stringResource(R.string.nav_transactions), scroll) },
+        modifier = Modifier.tabScroll(scroll),
+    ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.days.isEmpty()) {
             EmptyState(Modifier.padding(padding))
@@ -36,11 +43,12 @@ fun TransactionsScreen(
         }
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = 88.dp), // room for the FAB
         ) {
             state.days.forEach { day ->
                 stickyHeader(key = day.date.toString()) { DayHeader(day.date, day.relative) }
-                items(day.rows, key = { it.id }) { TransactionRow(it, onTransactionClick) }
+                items(day.rows, key = { it.id }) { row ->
+                    SwipeToDelete(onDelete = { onDelete(row.id) }) { TransactionRow(row, onTransactionClick) }
+                }
             }
         }
     }

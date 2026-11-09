@@ -30,18 +30,19 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
-import app.coshell.transactions.AddTransactionFab
+import app.coshell.ui.top.TabTopBar
+import app.coshell.ui.top.rememberTabScrollBehavior
+import app.coshell.ui.top.tabScroll
 import kotlinx.datetime.LocalDate
 
 @Composable
 fun HomeRoute(
     onAccountClick: (String) -> Unit,
     onAddAccount: () -> Unit,
-    onAddTransaction: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state, onAccountClick, onAddAccount, onAddTransaction)
+    HomeScreen(state, onAccountClick, onAddAccount)
 }
 
 @Composable
@@ -49,10 +50,11 @@ fun HomeScreen(
     state: HomeUiState,
     onAccountClick: (String) -> Unit = {},
     onAddAccount: () -> Unit = {},
-    onAddTransaction: () -> Unit = {},
 ) {
+    val scroll = rememberTabScrollBehavior()
     Scaffold(
-        floatingActionButton = { if (state.accounts.isNotEmpty()) AddTransactionFab(onAddTransaction) },
+        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
+        modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),

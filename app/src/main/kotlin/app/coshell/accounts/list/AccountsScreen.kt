@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,6 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountRow
+import app.coshell.ui.top.TabTopBar
+import app.coshell.ui.top.rememberTabScrollBehavior
+import app.coshell.ui.top.tabScroll
 import app.coshell.core.designsystem.R as DesignR
 
 /** "Accounts" tab: active accounts with balances, archived ones behind a toggle, FAB to add. */
@@ -32,8 +34,10 @@ fun AccountsScreen(
     onAddAccount: () -> Unit,
     onToggleArchived: () -> Unit,
 ) {
+    val scroll = rememberTabScrollBehavior()
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.accounts_title)) }) },
+        topBar = { TabTopBar(stringResource(R.string.accounts_title), scroll) },
+        modifier = Modifier.tabScroll(scroll),
         floatingActionButton = {
             FloatingActionButton(onClick = onAddAccount) {
                 Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.accounts_add))

@@ -1,75 +1,49 @@
 package app.coshell.navigation
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import app.coshell.R
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
-import app.coshell.family.FamilyRoute
-import app.coshell.feedback.FeedbackRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
-import app.coshell.home.HomeRoute
-import app.coshell.more.MoreRoute
-import app.coshell.rates.list.RatesRoute
 import app.coshell.currencies.list.ReportCurrenciesRoute
+import app.coshell.family.FamilyRoute
+import app.coshell.feedback.FeedbackRoute
+import app.coshell.home.HomeRoute
+import app.coshell.more.MoreActions
+import app.coshell.more.MoreScreen
+import app.coshell.rates.list.RatesRoute
+import app.coshell.settings.SettingsRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.TransactionsRoute
+import app.coshell.ui.sheet.EditSheetDialogProperties
+import app.coshell.ui.sheet.EditSheetHost
+import app.coshell.undo.UndoSnackbarEffect
 import app.coshell.update.UpdateRoute
 import app.coshell.update.startup.StartupUpdateDialogs
-import kotlin.reflect.KClass
-import app.coshell.core.designsystem.R as DesignR
-
-/** Tabs of the bottom navigation bar. */
-private enum class TopLevel(
-    val route: Any,
-    val routeClass: KClass<*>,
-    @StringRes val label: Int,
-    @DrawableRes val icon: Int,
-) {
-    HOME(HomeDestination, HomeDestination::class, R.string.nav_home, DesignR.drawable.ic_home),
-    TRANSACTIONS(
-        TransactionsDestination,
-        TransactionsDestination::class,
-        R.string.nav_transactions,
-        DesignR.drawable.ic_receipt_long,
-    ),
-    ACCOUNTS(
-        AccountsDestination,
-        AccountsDestination::class,
-        R.string.nav_accounts,
-        DesignR.drawable.ic_account_balance_wallet,
-    ),
-    MORE(MoreDestination, MoreDestination::class, R.string.nav_more, DesignR.drawable.ic_more_horiz),
-}
 
 @Composable
 fun CoShellNavHost(
@@ -78,30 +52,33 @@ fun CoShellNavHost(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val current = backStackEntry?.destination
-    val showBottomBar = TopLevel.entries.any { current.isOn(it) }
+    // A sheet (dialog destination) opens over a screen: the bar under it stays as it was.
+    val visible by navController.visibleEntries.collectAsStateWithLifecycle()
+    val screen = visible.lastOrNull { it.destination !is DialogNavigator.Destination && it.destination !is NavGraph }
+        ?.destination
+    val onTab = TopLevel.entries.any { current.isOn(it) }
+    val showBottomBar = TopLevel.entries.any { screen.isOn(it) }
+    val snackbar = remember { SnackbarHostState() }
+    UndoSnackbarEffect(snackbar)
 
     StartupUpdateDialogs(onOpenUpdate = { navController.navigate(UpdateDestination) { launchSingleTop = true } })
 
     // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
-        enabled = shakeEnabled && showBottomBar,
+        enabled = shakeEnabled && onTab,
         onShake = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
     )
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    TopLevel.entries.forEach { tab ->
-                        NavigationBarItem(
-                            selected = current.isOn(tab),
-                            onClick = { navController.navigateToTab(tab) },
-                            icon = { Icon(painterResource(tab.icon), contentDescription = null) },
-                            label = { Text(stringResource(tab.label)) },
-                        )
-                    }
-                }
+                CoShellBottomBar(
+                    current = screen,
+                    onTab = { navController.navigateToTab(it) },
+                    onAdd = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+                )
             }
         },
     ) { padding ->
@@ -114,20 +91,20 @@ fun CoShellNavHost(
                     HomeRoute(
                         onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                         onAddAccount = { navController.navigate(AccountEditDestination()) },
-                        onAddTransaction = { navController.navigate(TransactionEditDestination()) },
                     )
                 }
                 composable<TransactionsDestination> {
                     TransactionsRoute(
-                        onAddTransaction = { navController.navigate(TransactionEditDestination()) },
                         onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     )
                 }
-                composable<TransactionEditDestination> {
-                    TransactionEditRoute(
-                        onDone = { navController.popBackStack() },
-                        onAddAccount = { navController.navigate(AccountEditDestination()) },
-                    )
+                dialog<TransactionEditDestination>(dialogProperties = EditSheetDialogProperties) {
+                    EditSheetHost(onClosed = { navController.popBackStack() }) { close ->
+                        TransactionEditRoute(
+                            onDone = close,
+                            onAddAccount = { navController.navigate(AccountEditDestination()) },
+                        )
+                    }
                 }
                 composable<AccountsDestination> {
                     AccountsRoute(
@@ -135,18 +112,26 @@ fun CoShellNavHost(
                         onAddAccount = { navController.navigate(AccountEditDestination()) },
                     )
                 }
-                composable<AccountEditDestination> {
-                    AccountEditRoute(onDone = { navController.popBackStack() })
+                dialog<AccountEditDestination>(dialogProperties = EditSheetDialogProperties) {
+                    EditSheetHost(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }
                 }
                 composable<MoreDestination> {
-                    MoreRoute(
-                        onCategories = { navController.navigate(CategoriesDestination) },
-                        onRates = { navController.navigate(RatesDestination) },
+                    MoreScreen(
+                        MoreActions(
+                            onCategories = { navController.navigate(CategoriesDestination) },
+                            onRates = { navController.navigate(RatesDestination) },
+                            onFamily = { navController.navigate(FamilyDestination) },
+                            onBackup = { navController.navigate(BackupDestination) },
+                            onFeedback = { navController.navigate(FeedbackDestination) },
+                            onSettings = { navController.navigate(SettingsDestination) },
+                        ),
+                    )
+                }
+                composable<SettingsDestination> {
+                    SettingsRoute(
+                        onBack = { navController.popBackStack() },
                         onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
-                        onFamily = { navController.navigate(FamilyDestination) },
-                        onBackup = { navController.navigate(BackupDestination) },
                         onUpdate = { navController.navigate(UpdateDestination) },
-                        onFeedback = { navController.navigate(FeedbackDestination) },
                     )
                 }
                 composable<UpdateDestination> {
@@ -173,16 +158,13 @@ fun CoShellNavHost(
                         onOpen = { navController.navigate(it) },
                     )
                 }
-                composable<CategoryEditDestination> {
-                    CategoryEditRoute(onDone = { navController.popBackStack() })
+                dialog<CategoryEditDestination>(dialogProperties = EditSheetDialogProperties) {
+                    EditSheetHost(onClosed = { navController.popBackStack() }) { close -> CategoryEditRoute(onDone = close) }
                 }
             }
         }
     }
 }
-
-private fun NavDestination?.isOn(tab: TopLevel): Boolean =
-    this?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true
 
 private fun NavHostController.navigateToTab(tab: TopLevel) {
     navigate(tab.route) {

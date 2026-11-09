@@ -59,6 +59,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 распознавание толчков — `core:domain/shake/ShakeDetector`.
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
+`settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
@@ -84,8 +85,10 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 
 ## Переиспользование (пожелание владельца)
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
-компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
-`NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
+компонентом с параметрами, а не копируй. Шторка-редактор — `ui/sheet/` (`EditSheetHost`, `EditSheetLayout`
+с закреплённой «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, «Отменить» — `undo/UndoCenter`.
+Готовые общие блоки форм — `ui/form/`:
+`NameField`, `FormSection`/`FormHint`, `EditFooter` (Архив/Удалить), `DeleteButton`,
 `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`, строка-переключатель настройки — `ui/list/SwitchRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.

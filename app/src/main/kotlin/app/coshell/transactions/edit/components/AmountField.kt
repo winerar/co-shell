@@ -1,15 +1,10 @@
 package app.coshell.transactions.edit.components
 
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
-import app.coshell.core.designsystem.theme.AmountInputStyle
+import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.transactions.edit.TransactionEditUiState.AmountError
 
 /** Big amount input with the account's currency symbol as a suffix. */
@@ -23,19 +18,14 @@ internal fun AmountField(
     modifier: Modifier = Modifier,
     hint: String? = null,
 ) {
-    val supporting = error?.let { stringResource(it.messageRes) } ?: hint
-    OutlinedTextField(
+    CoShellAmountField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
-        placeholder = { Text("0") },
-        suffix = currencySymbol?.let { { Text(it) } },
-        isError = error != null,
-        supportingText = supporting?.let { { Text(it) } },
-        textStyle = AmountInputStyle,
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+        label = label,
         modifier = modifier,
+        currency = currencySymbol,
+        error = error?.let { stringResource(it.messageRes) },
+        hint = hint,
     )
 }
 

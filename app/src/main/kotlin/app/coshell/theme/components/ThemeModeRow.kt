@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
@@ -13,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellSegmentedButton
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ThemeMode
@@ -22,10 +22,10 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 fun ThemeModeRow(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
     val modes = ThemeMode.entries
-    ListItem(
-        leadingContent = { Icon(painterResource(DesignR.drawable.ic_contrast), contentDescription = null) },
-        headlineContent = { Text(stringResource(R.string.theme_title)) },
-        supportingContent = {
+    CoShellListRow(
+        leading = { Icon(painterResource(DesignR.drawable.ic_contrast), contentDescription = null) },
+        title = { Text(stringResource(R.string.theme_title)) },
+        supporting = {
             SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(top = Spacing.s)) {
                 modes.forEachIndexed { index, mode ->
                     CoShellSegmentedButton(

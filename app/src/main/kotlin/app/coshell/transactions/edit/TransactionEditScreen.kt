@@ -1,9 +1,9 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +23,7 @@ import app.coshell.transactions.edit.components.ReceiptSection
 import app.coshell.transactions.edit.components.TypeSelector
 import app.coshell.ui.form.DateChips
 import app.coshell.ui.form.DeleteButton
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.sheet.EditSheetLayout
 
@@ -71,7 +71,7 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
 
     if (!state.isTransfer) ReceiptSection(state, actions)
 
-    FormSection(
+    CoShellSection(
         title = stringResource(if (state.isTransfer) R.string.transaction_from_account else R.string.transaction_account),
         error = if (state.accountError) stringResource(R.string.transaction_account_required) else null,
     ) {
@@ -81,7 +81,7 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
     if (state.isTransfer) {
         TransferTarget(state, actions)
     } else {
-        FormSection(
+        CoShellSection(
             title = stringResource(R.string.transaction_category),
             error = if (state.categoryError) stringResource(R.string.transaction_category_required) else null,
         ) {
@@ -89,23 +89,23 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
         }
     }
 
-    FormSection(stringResource(R.string.transaction_date)) {
+    CoShellSection(stringResource(R.string.transaction_date)) {
         DateChips(state.date, state.today, state.dateMillisUtc, actions.onDateSelect, actions.onDatePicked)
     }
 
-    OutlinedTextField(
+    CoShellTextField(
         value = state.note,
         onValueChange = actions.onNoteChange,
-        label = { Text(stringResource(R.string.transaction_note)) },
+        label = stringResource(R.string.transaction_note),
+        singleLine = false,
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        modifier = Modifier.fillMaxWidth(),
     )
 }
 
 /** Target account of a transfer and, between currencies, the arriving amount. */
 @Composable
 private fun TransferTarget(state: TransactionEditUiState, actions: TransactionEditActions) {
-    FormSection(
+    CoShellSection(
         title = stringResource(R.string.transaction_to_account),
         error = when (state.toAccountError) {
             ToAccountError.REQUIRED -> stringResource(R.string.transaction_account_required)

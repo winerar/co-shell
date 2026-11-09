@@ -1,11 +1,13 @@
 package app.coshell
 
 import android.app.Application
+import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.family.sync.SyncScheduler
+import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -27,6 +29,9 @@ class CoShellApp : Application(), Configuration.Provider {
     /** WorkManager is initialized on demand with Hilt workers (default initializer removed in the manifest). */
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
+
+    // Notifications and workers speak the app's language too, not the phone's (AppLanguage).
+    override fun attachBaseContext(base: Context) = super.attachBaseContext(AppLanguage.wrap(base))
 
     override fun onCreate() {
         super.onCreate()

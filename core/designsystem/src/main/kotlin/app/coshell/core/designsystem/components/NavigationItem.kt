@@ -15,7 +15,7 @@ import app.coshell.core.designsystem.motion.tactile
 
 /** Bottom bar tab: sinks under the finger like any control, its icon pops when the tab opens. */
 @Composable
-fun RowScope.CoShellNavigationBarItem(
+internal fun RowScope.CoShellNavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,

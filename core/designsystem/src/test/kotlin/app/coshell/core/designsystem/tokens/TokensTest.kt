@@ -27,4 +27,12 @@ class TokensTest {
         // Long transitions make the app feel slow; keep every token under 400 ms.
         assertTrue(Motion.LONG_MS <= 400)
     }
+
+    @Test
+    fun sizesSitOnTheFourDpGrid() {
+        listOf(Sizes.rowMinHeight, Sizes.badge, Sizes.badgeSmall, Sizes.fabClearance).forEach {
+            assertEquals("${it.value} dp is off the 4 dp grid", 0f, it.value % 4f)
+        }
+        assertTrue(Sizes.badgeSmall < Sizes.badge)
+    }
 }

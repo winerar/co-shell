@@ -5,12 +5,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.backup.BackupMessage
-import app.coshell.ui.form.MessageCard
+import app.coshell.core.designsystem.components.CoShellMessage
 
 /** Result of the last export/import. */
 @Composable
 internal fun BackupMessageCard(message: BackupMessage, modifier: Modifier = Modifier) =
-    MessageCard(messageText(message), message.isError, modifier)
+    CoShellMessage(messageText(message), message.isError, modifier)
 
 @Composable
 private fun messageText(message: BackupMessage): String = when (message) {

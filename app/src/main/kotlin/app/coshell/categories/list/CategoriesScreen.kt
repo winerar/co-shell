@@ -1,5 +1,6 @@
 package app.coshell.categories.list
 
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.labelRes
 import app.coshell.categories.list.components.archivedItems
@@ -68,7 +68,7 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
                 }
             }
             if (state.isLoading) return@Column
-            LazyColumn(contentPadding = PaddingValues(bottom = 88.dp)) {
+            LazyColumn(contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
                 groupItems(state, actions)
                 archivedItems(state, actions)
             }

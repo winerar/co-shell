@@ -1,32 +1,27 @@
 package app.coshell.accounts.edit.components
 
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.components.CodeKeyboard
+import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellSection
 
 /** Currency: suggestion chips plus a code field; both disabled once the account has transactions. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun CurrencySection(state: AccountEditUiState, onCurrencyChange: (String) -> Unit) {
-    FormSection(stringResource(R.string.account_currency)) {
+    CoShellSection(stringResource(R.string.account_currency)) {
         if (!state.currencyLocked) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                 state.suggestedCurrencies.forEach { code ->
                     CoShellFilterChip(
                         selected = state.currency == code,
@@ -36,25 +31,18 @@ internal fun CurrencySection(state: AccountEditUiState, onCurrencyChange: (Strin
                 }
             }
         }
-        val supportingRes = when {
-            state.currencyError == CurrencyError.INVALID -> R.string.account_currency_error
-            state.currencyError == CurrencyError.LOCKED || state.currencyLocked -> R.string.account_currency_locked
-            else -> null
-        }
-        OutlinedTextField(
+        CoShellTextField(
             value = state.currency,
             onValueChange = onCurrencyChange,
-            label = { Text(stringResource(R.string.account_currency_code)) },
+            label = stringResource(R.string.account_currency_code),
             enabled = !state.currencyLocked,
-            isError = state.currencyError != null,
-            supportingText = supportingRes?.let { res -> { Text(stringResource(res)) } },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Characters,
-                keyboardType = KeyboardType.Ascii,
-                imeAction = ImeAction.Next,
-            ),
-            modifier = Modifier.fillMaxWidth(),
+            error = when (state.currencyError) {
+                CurrencyError.INVALID -> stringResource(R.string.account_currency_error)
+                CurrencyError.LOCKED -> stringResource(R.string.account_currency_locked)
+                null -> null
+            },
+            hint = if (state.currencyLocked) stringResource(R.string.account_currency_locked) else null,
+            keyboardOptions = CodeKeyboard,
         )
     }
 }

@@ -1,5 +1,6 @@
 package app.coshell.backup
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
@@ -46,13 +46,13 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             Text(
                 stringResource(R.string.backup_intro),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
             )
             ActionRow(
                 icon = DesignR.drawable.ic_file_save,
@@ -69,9 +69,9 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
                 enabled = !state.isBusy,
             )
             if (state.isBusy) {
-                LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = Spacing.l))
             }
-            state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = 16.dp)) }
+            state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = Spacing.l)) }
             AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
         }
     }

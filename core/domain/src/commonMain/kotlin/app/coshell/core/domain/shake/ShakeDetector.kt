@@ -13,7 +13,7 @@ class ShakeDetector(
     thresholdG: Float = DEFAULT_THRESHOLD_G,
     private val spikesToShake: Int = 2,
     private val minSpikeGapMillis: Long = 100,
-    private val windowMillis: Long = 700,
+    private val windowMillis: Long = 800,
     private val cooldownMillis: Long = 2_000,
 ) {
     // Compared squared to skip a square root per sample (the sensor delivers ~50 samples a second).
@@ -55,8 +55,11 @@ class ShakeDetector(
     }
 
     companion object {
-        /** About 2.7 g: a firm wrist shake, well above walking or putting the phone down. */
-        const val DEFAULT_THRESHOLD_G = 2.7f
+        /**
+         * About 2.3 g: a moderate wrist shake, still above walking or putting the phone down (a single
+         * jolt never counts). Was 2.7 g — too stiff in use (winerar/co-shell#48).
+         */
+        const val DEFAULT_THRESHOLD_G = 2.3f
         const val STANDARD_GRAVITY = 9.80665f
         private const val NANOS_PER_MILLI = 1_000_000L
         private const val NONE = Long.MIN_VALUE

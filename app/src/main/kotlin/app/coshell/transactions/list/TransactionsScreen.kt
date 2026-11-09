@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.transactions.list.components.DayHeader
 import app.coshell.transactions.list.components.SwipeToDelete
@@ -59,7 +59,7 @@ fun TransactionsScreen(
 
 @Composable
 private fun EmptyState(modifier: Modifier) {
-    Box(modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+    Box(modifier.fillMaxSize().padding(Spacing.xl), contentAlignment = Alignment.Center) {
         Text(
             text = stringResource(R.string.transactions_empty),
             style = MaterialTheme.typography.bodyLarge,

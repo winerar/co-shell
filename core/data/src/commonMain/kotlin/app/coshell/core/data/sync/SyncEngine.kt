@@ -1,0 +1,89 @@
+package app.coshell.core.data.sync
+
+import app.coshell.core.data.db.PulledRows
+import app.coshell.core.data.db.SyncStateEntity
+import app.coshell.core.data.db.SyncDao
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlin.time.Clock
+
+/** What one [SyncEngine.sync] run did. */
+data class SyncResult(val pulled: Int, val applied: Int, val pushed: Int)
+
+/**
+ * Two-way sync of Room with the family's server copy (docs/ARCHITECTURE.md §10).
+ *
+ * 1. **Pull** records the server stored since the last cursor and merge them: a row is replaced
+ *    only if the incoming version is newer ([remoteWins]); a newer local edit stays pending.
+ * 2. **Push** every pending row; the flag is cleared only if the row was not edited meanwhile.
+ *
+ * Pull goes first so that a stale offline edit cannot silently overwrite a newer one on the
+ * server. Runs are serialized; a failed run leaves rows pending and the cursor where it was,
+ * so the next run simply repeats the work (every step is idempotent).
+ */
+class SyncEngine(
+    private val dao: SyncDao,
+    private val remote: RemoteStore,
+    private val clock: Clock = Clock.System,
+) {
+    private val mutex = Mutex()
+
+    suspend fun sync(): SyncResult = mutex.withLock {
+        val pulled = remote.pull(since = dao.state(CURSOR)?.toLongOrNull())
+        var applied = 0
+        // The cursor is "at or after" (>=), so records sharing the last timestamp are read again
+        // next time — harmless, merging is idempotent — and never skipped.
+        pulled.chunked(MERGE_CHUNK).forEach { chunk ->
+            applied += dao.merge(chunk.toRows(), CURSOR, chunk.maxOf { it.serverTime })
+        }
+        val pushed = push()
+        dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
+        SyncResult(pulled = pulled.size, applied = applied, pushed = pushed)
+    }
+
+    private suspend fun push(): Int {
+        val pending = dao.pending()
+        val records = buildList {
+            pending.accounts.mapTo(this, SyncCodec::encode)
+            pending.categories.mapTo(this, SyncCodec::encode)
+            pending.transactions.mapTo(this, SyncCodec::encode)
+            pending.budgets.mapTo(this, SyncCodec::encode)
+            pending.manualRates.mapTo(this, SyncCodec::encode)
+        }
+        records.chunked(PUSH_CHUNK).forEach { chunk ->
+            remote.push(chunk)
+            chunk.forEach { clear(it) }
+        }
+        return records.size
+    }
+
+    private suspend fun clear(r: SyncRecord) = when (r.kind) {
+        SyncKind.ACCOUNT -> dao.clearAccount(r.id, r.updatedAt)
+        SyncKind.CATEGORY -> dao.clearCategory(r.id, r.updatedAt)
+        SyncKind.TRANSACTION -> dao.clearTransaction(r.id, r.updatedAt)
+        SyncKind.BUDGET -> dao.clearBudget(r.id, r.updatedAt)
+        SyncKind.MANUAL_RATE -> dao.clearManualRate(r.id, r.updatedAt)
+    }
+
+    private fun List<RemoteRecord>.toRows(): PulledRows {
+        val byKind = map { it.record }.groupBy { it.kind }
+        fun <T> of(kind: SyncKind, decode: (SyncRecord) -> T) = byKind[kind].orEmpty().map(decode)
+        return PulledRows(
+            accounts = of(SyncKind.ACCOUNT, SyncCodec::account),
+            categories = of(SyncKind.CATEGORY, SyncCodec::category),
+            transactions = of(SyncKind.TRANSACTION, SyncCodec::transaction),
+            budgets = of(SyncKind.BUDGET, SyncCodec::budget),
+            manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate),
+        )
+    }
+
+    companion object {
+        /** Key in `sync_state`: server time (epoch ms) of the newest pulled record. */
+        const val CURSOR = "pull_cursor"
+        /** Key in `sync_state`: epoch ms of the last successful sync, shown on the family screen. */
+        const val LAST_SYNC = "last_sync"
+        // Firestore commits take at most 500 writes; SQLite `IN (...)` lists stay small.
+        private const val PUSH_CHUNK = 400
+        private const val MERGE_CHUNK = 500
+    }
+}

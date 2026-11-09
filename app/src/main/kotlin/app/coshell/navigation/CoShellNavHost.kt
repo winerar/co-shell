@@ -1,9 +1,12 @@
 package app.coshell.navigation
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -13,6 +16,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import app.coshell.core.designsystem.components.CoShellSheet
 import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -33,19 +37,24 @@ import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
 import app.coshell.update.UpdateRoute
-import app.coshell.update.startup.StartupUpdateDialogs
+import app.coshell.update.notice.UpdateNoticeEffects
+import app.coshell.update.notice.UpdateNoticeViewModel
+import app.coshell.update.notice.UpdatePill
 
 @Composable
 fun CoShellNavHost(
     navController: NavHostController = rememberNavController(),
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
+    updates: UpdateNoticeViewModel = hiltViewModel(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
     val snackbar = remember { SnackbarHostState() }
     UndoSnackbarEffect(snackbar)
 
-    StartupUpdateDialogs(onOpenUpdate = { navController.navigate(UpdateDestination) { launchSingleTop = true } })
+    UpdateNoticeEffects(updates)
+    val updatePill by updates.pill.collectAsStateWithLifecycle()
+    val updateAvailable by updates.available.collectAsStateWithLifecycle()
 
     // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
@@ -58,6 +67,19 @@ fun CoShellNavHost(
         navController = navController,
         snackbar = snackbar,
         onAdd = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        moreBadge = updateAvailable != null,
+        overBar = { onBar ->
+            UpdatePill(
+                release = updatePill,
+                visible = onBar,
+                onOpen = { release ->
+                    updates.startUpdate(release)
+                    navController.navigate(UpdateDestination) { launchSingleTop = true }
+                },
+                onDismiss = updates::dismissPill,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+            )
+        },
     ) {
         composable<HomeDestination> {
             HomeRoute(
@@ -103,6 +125,7 @@ fun CoShellNavHost(
                     onFeedback = { navController.navigate(FeedbackDestination) },
                     onSettings = { navController.navigate(SettingsDestination) },
                 ),
+                availableUpdate = updateAvailable?.versionCode,
             )
         }
         composable<SettingsDestination> {
@@ -110,6 +133,7 @@ fun CoShellNavHost(
                 onBack = { navController.popBackStack() },
                 onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onUpdate = { navController.navigate(UpdateDestination) },
+                availableUpdate = updateAvailable?.versionCode,
             )
         }
         composable<UpdateDestination> {

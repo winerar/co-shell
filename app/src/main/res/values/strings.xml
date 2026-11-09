@@ -272,8 +272,6 @@
     <string name="update_hero_failed">Не получилось</string>
     <string name="update_check_again">Проверить снова</string>
     <string name="update_not_configured">В этой сборке обновления не настроены. Их получают сборки, выложенные из GitHub.</string>
-    <string name="update_available">Доступна версия %1$s (сборка %2$d)</string>
-    <string name="update_available_no_notes">Вышла новая версия Co-Shell.</string>
     <string name="update_installing">Подтвердите установку в окне Android. Приложение перезапустится, данные сохранятся.</string>
     <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из Co-Shell. Включите его один раз и вернитесь сюда.</string>
     <string name="update_allow_install">Разрешить установку</string>
@@ -283,7 +281,9 @@
     <string name="update_error_checksum">Скачанный файл повреждён — устанавливать его нельзя. Повторите загрузку.</string>
     <string name="update_error_install">Android не установил обновление.</string>
     <string name="update_open">Обновить</string>
-    <string name="update_later">Позже</string>
+    <string name="update_pill">Версия %1$d · Обновить</string>
+    <string name="update_pill_dismiss">Скрыть до следующего запуска</string>
+    <string name="update_settings_available">Доступна версия %1$d</string>
     <string name="update_whats_new_title">Что нового в %1$s</string>
     <string name="update_whats_new_ok">Понятно</string>
     <!-- More → Rates -->

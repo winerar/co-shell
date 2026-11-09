@@ -39,7 +39,7 @@ data class MoreActions(
 )
 
 @Composable
-fun MoreScreen(actions: MoreActions) {
+fun MoreScreen(actions: MoreActions, availableUpdate: Int? = null) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
@@ -64,10 +64,12 @@ fun MoreScreen(actions: MoreActions) {
                 MoreTile(tile.icon, stringResource(tile.title), stringResource(tile.subtitle), tile.color, tile.onClick, Modifier.staggeredEntrance(index))
             }
             item(key = "settings", span = { GridItemSpan(maxLineSpan) }) {
+                // The «Ещё» dot leads here: a newer build is named under «Настройки», where the update lives.
                 ActionRow(
                     icon = DesignR.drawable.ic_settings,
                     title = stringResource(R.string.settings_title),
-                    subtitle = stringResource(R.string.settings_menu_hint),
+                    subtitle = availableUpdate?.let { stringResource(R.string.update_settings_available, it) }
+                        ?: stringResource(R.string.settings_menu_hint),
                     onClick = actions.onSettings,
                     opensScreen = true,
                 )

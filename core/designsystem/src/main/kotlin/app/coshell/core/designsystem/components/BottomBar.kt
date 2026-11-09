@@ -8,6 +8,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +33,13 @@ import app.coshell.core.designsystem.tokens.Motion
 
 /** One tab of [CoShellBottomBar]. */
 @Immutable
-data class CoShellTab(@DrawableRes val icon: Int, val label: String, val selected: Boolean)
+data class CoShellTab(
+    @DrawableRes val icon: Int,
+    val label: String,
+    val selected: Boolean,
+    /** A small neon dot on the icon: something new inside (e.g. an app update under «Ещё»). */
+    val badge: Boolean = false,
+)
 
 /**
  * Bottom bar (design-system.md §«Навигация и жесты»): tabs with the round «+» in the middle — the most
@@ -115,10 +123,18 @@ private fun BottomBarContent(
                 colors = tabColors,
                 selected = tab.selected,
                 onClick = { onTab(index) },
-                icon = { Icon(painterResource(tab.icon), contentDescription = null) },
+                icon = { TabIcon(tab) },
                 iconModifier = Modifier.tabPillAnchor(pill, index),
                 label = { Text(tab.label) },
             )
         }
+    }
+}
+
+@Composable
+private fun TabIcon(tab: CoShellTab) {
+    if (!tab.badge) return Icon(painterResource(tab.icon), contentDescription = null)
+    BadgedBox(badge = { Badge(containerColor = MaterialTheme.colorScheme.tertiary) }) {
+        Icon(painterResource(tab.icon), contentDescription = null)
     }
 }

@@ -37,6 +37,7 @@ fun SettingsRoute(
     onBack: () -> Unit,
     onReportCurrencies: () -> Unit,
     onUpdate: () -> Unit,
+    availableUpdate: Int? = null,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
     themeSettings: ThemeSettingsViewModel = hiltViewModel(),
@@ -53,6 +54,7 @@ fun SettingsRoute(
             palette = palette ?: ThemePalette.VOLT,
             mainCurrency = currencies.currencies.firstOrNull(),
             shakeEnabled = shakeEnabled,
+            availableUpdate = availableUpdate,
         ),
         actions = SettingsActions(
             onBack = onBack,
@@ -70,6 +72,8 @@ data class SettingsState(
     val palette: ThemePalette = ThemePalette.VOLT,
     val mainCurrency: String? = null,
     val shakeEnabled: Boolean = true,
+    /** Build number of a newer release, shown under «Обновление приложения». */
+    val availableUpdate: Int? = null,
 )
 
 data class SettingsActions(
@@ -121,6 +125,7 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
                 ActionRow(
                     icon = DesignR.drawable.ic_deployed_code_update,
                     title = stringResource(R.string.update_title),
+                    subtitle = state.availableUpdate?.let { stringResource(R.string.update_settings_available, it) },
                     onClick = actions.onUpdate,
                     opensScreen = true,
                 )

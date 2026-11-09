@@ -39,6 +39,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import app.coshell.update.notice.UpdatePill
+import app.coshell.update.release
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -55,13 +57,22 @@ class MainShellSmokeTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
     private var adds = 0
+    private var pillTaps = 0
 
     @Before
     fun setUp() {
         compose.setContent {
             CoShellTheme(darkTheme = true) {
                 val nav = rememberNavController()
-                MainShell(nav, SnackbarHostState(), onAdd = { adds++ }) {
+                MainShell(
+                    nav,
+                    SnackbarHostState(),
+                    onAdd = { adds++ },
+                    moreBadge = true,
+                    overBar = { onBar ->
+                        UpdatePill(release(43), visible = onBar, onOpen = { pillTaps++ }, onDismiss = {})
+                    },
+                ) {
                     composable<HomeDestination> { HomeScreen(HOME) }
                     composable<TransactionsDestination> { TransactionsScreen(TRANSACTIONS) }
                     composable<AccountsDestination> { AccountsScreen(ACCOUNTS, AccountsActions()) }
@@ -114,6 +125,22 @@ class MainShellSmokeTest {
         compose.onNodeWithText(INNER).performClick()
         compose.waitForIdle()
         compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertIsDisplayed()
+    }
+
+    @Test
+    fun `update pill floats over the bar on tabs and hides on inner screens`() {
+        val pill = string(R.string.update_pill).replace("%1\$d", "43")
+        compose.onNodeWithText(pill).assertIsDisplayed()
+        val bar = compose.onNodeWithContentDescription(string(R.string.transaction_add)).getBoundsInRoot()
+        assertTrue("pill must sit above the bar", compose.onNodeWithText(pill).getBoundsInRoot().bottom <= bar.top)
+        compose.onNodeWithText(pill).performClick()
+        compose.waitForIdle()
+        assertEquals(1, pillTaps)
+
+        tab(R.string.nav_more)
+        compose.onNodeWithText(string(R.string.settings_title)).performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText(pill).assertDoesNotExist()
     }
 
     private fun tab(@StringRes label: Int) {

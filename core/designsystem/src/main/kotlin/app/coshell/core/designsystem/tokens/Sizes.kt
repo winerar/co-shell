@@ -4,6 +4,8 @@ import androidx.compose.ui.unit.dp
 
 /** Fixed sizes of repeating elements (medium list density, design-questions §4). Screens use these, not `N.dp`. */
 object Sizes {
+    /** List row: at least the touch-friendly 56 dp; with a [badge] and Spacing.m above and below it is 64. */
+    val rowMinHeight = 56.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
     /** Subcategory badge inside an open folder. */

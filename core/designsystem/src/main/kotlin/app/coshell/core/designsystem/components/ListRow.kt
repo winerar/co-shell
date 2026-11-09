@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.motion.tactileToggleable
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 // List rows of the app (design-system.md §«Компоненты»): medium density — a row with a 40 dp badge is
@@ -101,7 +101,7 @@ private fun RowLayout(
         modifier = modifier
             .fillMaxWidth()
             .background(containerColor)
-            .heightIn(min = ListRowMinHeight)
+            .heightIn(min = Sizes.rowMinHeight)
             .padding(horizontal = Spacing.l, vertical = Spacing.m)
             .alpha(if (enabled) 1f else DisabledAlpha),
         horizontalArrangement = Arrangement.spacedBy(Spacing.l),
@@ -121,9 +121,6 @@ private fun RowLayout(
         if (trailing != null) CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = trailing)
     }
 }
-
-/** One-line rows (settings) are at least this tall — Material's touch-friendly 56 dp. */
-private val ListRowMinHeight = 56.dp
 
 /** Material's "disabled" opacity. */
 private const val DisabledAlpha = 0.38f

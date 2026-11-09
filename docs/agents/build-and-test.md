@@ -27,7 +27,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 | `./gradlew assembleDebug` | debug APK → `app/build/outputs/apk/debug/` |
 | `./gradlew :app:testDebugUnitTest` | unit-тесты приложения |
 
-Перед коммитом обязательно: `./gradlew check assembleDebug`. Агенту — через `scripts/check.sh`: то же самое,
+Перед коммитом обязательно: `./gradlew check assembleDebug`. Агенту — через `scripts/agent/check.sh`: то же самое,
 но печатает только ошибки, упавшие тесты и итог (`Tests: N`, `OK`/`FAILED`) — экономит токены.
 
 ## Тесты
@@ -45,9 +45,15 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 плагин `org.jetbrains.kotlin.android` **не** подключается; нужен только `kotlin.compose` для Compose.
 
 ## CI
-`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → CI → Run workflow) — `check`, `assembleDebug`, debug APK в артефактах (14 дней).
-На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено
-самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
+`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → CI → Run workflow).
+- PR и `dev`: `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней). Если изменены только
+  `docs/` и `*.md` — Gradle пропускается (шаг «Detect code changes»), остаются тесты скриптов.
+- `main` (релиз): lint и тесты **не** повторяются — то же дерево уже проверено в PR `dev` → `main`;
+  только сборки APK. В `assembleRelease` выключен lintVital (`lint.checkReleaseBuilds = false`).
+- Кэш Gradle пишут `main` и `dev` (PR в `dev` стартуют с тёплым кэшем). Необязательный секрет
+  `GRADLE_ENCRYPTION_KEY` (`openssl rand -base64 16`) включает сохранение configuration cache.
+- На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено
+  самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
 `versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug подписан общим ключом
 `app/debug.keystore` из репозитория (не секрет), пакет `app.coshell.debug`, название «co-shell debug».
 

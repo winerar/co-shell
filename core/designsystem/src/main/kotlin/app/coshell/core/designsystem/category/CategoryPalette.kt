@@ -1,7 +1,7 @@
 package app.coshell.core.designsystem.category
 
 /**
- * Category colours: 18 neon hues (owner's choice, design-questions §2) + 6 warm ones. `Category.color` stores
+ * Category colours: 18 neon hues (owner's choice, design-questions §2) + 6 warm + 12 pastel/acid ones. `Category.color` stores
  * the neon value ([Swatch.stored], ARGB); on screen it is shown by theme — neon in the dark theme,
  * a deeper shade of the same hue in the light one (readable on white). See [display].
  *
@@ -39,6 +39,19 @@ object CategoryPalette {
         Swatch(0xFFFFC46B, 0xFF8F5A00), // honey
         Swatch(0xFFD9A066, 0xFF8A5A24), // caramel
         Swatch(0xFFF2D0A4, 0xFF7D5A2E), // sand
+        // Volt-style pastels and acid/deep tones (owner 2026-11-09: «больше цветов»). Appended, see above.
+        Swatch(0xFFC9B6FF, 0xFF6A4FC9), // lavender
+        Swatch(0xFF9FD8FF, 0xFF1F6FA3), // sky
+        Swatch(0xFF9BF5D6, 0xFF1A7A5E), // seafoam
+        Swatch(0xFFF4F59A, 0xFF6E6A12), // lemon cream
+        Swatch(0xFFFFB3D1, 0xFFA8336A), // blush
+        Swatch(0xFFE89BFF, 0xFF8A2EA8), // orchid
+        Swatch(0xFFD6F5FF, 0xFF3A6E80), // ice
+        Swatch(0xFFDFFF00, 0xFF5F6E00), // chartreuse
+        Swatch(0xFF7A7AFF, 0xFF2E2EC2), // ultramarine
+        Swatch(0xFFB5C23A, 0xFF59621A), // olive
+        Swatch(0xFFC9B27C, 0xFF6E5C30), // khaki
+        Swatch(0xFF3DDC97, 0xFF0E7A4F), // jade
     )
 
     /** Stored values offered in the category editor. */

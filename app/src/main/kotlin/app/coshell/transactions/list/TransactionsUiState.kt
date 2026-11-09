@@ -8,8 +8,21 @@ data class TransactionsUiState(
     val days: List<Day> = emptyList(),
     /** Older transactions exist beyond the loaded page. */
     val hasMore: Boolean = false,
+    val filter: ListFilter = ListFilter(),
+    /** Active accounts for the «Счёт» filter chip. */
+    val accounts: List<AccountChoice> = emptyList(),
 ) {
-    data class Day(val date: LocalDate, val relative: RelativeDay, val rows: List<Row>)
+    data class AccountChoice(val id: String, val name: String)
+
+    data class Day(
+        val date: LocalDate,
+        val relative: RelativeDay,
+        val rows: List<Row>,
+        /** Net of the day's incomes and expenses per currency ("−45 300,00 ARS · +1 200,00 USD"); transfers don't count. */
+        val total: String? = null,
+        /** [Kind.EXPENSE] — the day only spent, [Kind.INCOME] — only earned, `null` — mixed. */
+        val totalTone: Kind? = null,
+    )
 
     enum class RelativeDay { TODAY, YESTERDAY, OTHER }
 

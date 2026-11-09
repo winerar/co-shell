@@ -19,6 +19,7 @@ import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
+import app.coshell.core.designsystem.components.keypad.KeypadKey
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
@@ -54,9 +55,13 @@ class TransactionEditViewModelTest {
         categories.saveCategory(Category("salary", "Зарплата", CategoryType.INCOME))
     }
 
-    private fun viewModel(transactionId: String? = null, type: String = "EXPENSE") = TransactionEditViewModel(
+    private fun viewModel(transactionId: String? = null, type: String = "EXPENSE", copyFrom: String? = null) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
-            mapOf(TransactionEditDestination.ARG_TRANSACTION_ID to transactionId, TransactionEditDestination.ARG_TYPE to type),
+            mapOf(
+                TransactionEditDestination.ARG_TRANSACTION_ID to transactionId,
+                TransactionEditDestination.ARG_TYPE to type,
+                TransactionEditDestination.ARG_COPY_FROM to copyFrom,
+            ),
         ),
         accounts = accounts,
         categories = categories,
@@ -139,6 +144,71 @@ class TransactionEditViewModelTest {
         assertEquals("card", saved.toAccountId)
         assertEquals(Money(120_000_00, ars), saved.toAmount)
         assertNull(saved.categoryId)
+    }
+
+    @Test
+    fun `new operation starts on the account and moves on after a tap`() = runTest {
+        seed()
+        val vm = viewModel()
+        assertEquals(TransactionEditUiState.EntryStep.ACCOUNT, vm.state.value.step)
+        vm.onAccountSelect("cash")
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
+        vm.onStepChange(TransactionEditUiState.EntryStep.ACCOUNT)
+        vm.onAccountSelect("card")
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
+        assertEquals("card", vm.state.value.accountId)
+    }
+
+    @Test
+    fun `transfer asks the target account before the amount`() = runTest {
+        seed()
+        val vm = viewModel(type = "TRANSFER")
+        vm.onAccountSelect("cash")
+        assertEquals(TransactionEditUiState.EntryStep.TO_ACCOUNT, vm.state.value.step)
+        vm.onToAccountSelect("card")
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
+    }
+
+    @Test
+    fun `keypad adds up the amount and done saves`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onAccountSelect("card")
+        listOf('3', '2').forEach { vm.onKey(KeypadKey.Digit(it)) }
+        vm.onKey(KeypadKey.TripleZero)
+        vm.onKey(KeypadKey.Plus)
+        listOf('1', '5').forEach { vm.onKey(KeypadKey.Digit(it)) }
+        vm.onKey(KeypadKey.TripleZero)
+        assertEquals("32000 + 15000", vm.state.value.amount)
+        vm.onCategorySelect("food")
+        vm.onKey(KeypadKey.Done)
+        assertEquals(Money(47_000_00, ars), transactions.getTransaction("new")!!.amount)
+    }
+
+    @Test
+    fun `edited operation opens on the details`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onAmountChange("10")
+        vm.onCategorySelect("food")
+        vm.save()
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, viewModel(transactionId = "new").state.value.step)
+    }
+
+    @Test
+    fun `duplicate is a new operation today with the same fields`() = runTest {
+        seed()
+        val first = viewModel()
+        first.onAmountChange("250")
+        first.onCategorySelect("cafe")
+        first.onDateSelect(LocalDate(2026, 11, 1))
+        first.save()
+        val copy = viewModel(copyFrom = "new").state.value
+        assertTrue(copy.isNew)
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, copy.step)
+        assertEquals(LocalDate(2026, 11, 8), copy.date)
+        assertEquals("cafe", copy.categoryId)
+        assertEquals("card", copy.accountId)
     }
 
     @Test

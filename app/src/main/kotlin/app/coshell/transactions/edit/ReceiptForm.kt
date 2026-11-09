@@ -53,8 +53,24 @@ internal fun receiptCurrencySuggestions(recent: List<Transaction>, accounts: Lis
 
 internal data class AmountParse(val money: Money?, val error: TransactionEditUiState.AmountError?)
 
-/** Amounts are always positive: the direction comes from the transaction type. */
-internal fun parsePositiveAmount(text: String, currency: CurrencyCode): AmountParse =
+/**
+ * Amounts are always positive: the direction comes from the transaction type. The keypad's `+` makes a sum
+ * ("32000 + 1500"): every term is parsed on its own and the first error wins.
+ */
+internal fun parsePositiveAmount(text: String, currency: CurrencyCode): AmountParse {
+    val terms = text.split('+').map { it.trim() }.filter { it.isNotEmpty() }
+    if (terms.size <= 1) return parseOneAmount(terms.firstOrNull().orEmpty(), currency)
+    var total = 0L
+    for (term in terms) {
+        val part = parseOneAmount(term, currency)
+        val money = part.money ?: return part
+        total = runCatching { Math.addExact(total, money.amountMinor) }
+            .getOrElse { return AmountParse(null, TransactionEditUiState.AmountError.INVALID) }
+    }
+    return AmountParse(Money(total, currency), null)
+}
+
+private fun parseOneAmount(text: String, currency: CurrencyCode): AmountParse =
     when (val parsed = MoneyParser.parse(text, currency)) {
         is MoneyParser.Result.Success -> if (parsed.money.isPositive) {
             AmountParse(parsed.money, null)

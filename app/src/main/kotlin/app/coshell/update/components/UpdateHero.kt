@@ -1,10 +1,16 @@
 package app.coshell.update.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import app.coshell.R
+import app.coshell.core.designsystem.motion.breathing
+import app.coshell.core.designsystem.theme.RateTextStyle
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.size
 import app.coshell.core.designsystem.components.ProgressHero
@@ -20,13 +26,21 @@ internal fun UpdateHero(phase: UpdatePhase, modifier: Modifier = Modifier) {
     ProgressHero(
         ring = phase.heroRing,
         state = phase,
-        modifier = modifier,
+        modifier = modifier.breathing(phase is UpdatePhase.Available),
         accent = phase is UpdatePhase.Available || phase is UpdatePhase.Downloading,
         contentKey = { it.heroStep },
     ) { shown ->
         val step = shown.heroStep
         if (shown is UpdatePhase.Downloading) {
-            Text("${(shown.progress * 100).toInt()}%", style = AmountTitleStyle, color = colors.onPrimaryContainer)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("${(shown.progress * 100).toInt()}%", style = AmountTitleStyle, color = colors.onPrimaryContainer)
+                val total = shown.release.sizeBytes
+                Text(
+                    stringResource(R.string.update_downloaded_mb, megabytes((total * shown.progress).toLong()), megabytes(total)),
+                    style = RateTextStyle,
+                    color = colors.onSurfaceVariant,
+                )
+            }
         } else {
             val tint = when (step) {
                 UpdateHeroStep.Available -> colors.onPrimaryContainer

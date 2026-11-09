@@ -24,32 +24,18 @@ import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.model.CurrencyCode
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditUiState
+import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.transactions.edit.TransactionEditUiState.ReceiptCurrencyError
 import app.coshell.transactions.edit.receiptRateText
 
 /**
- * "Receipt in another currency": e.g. a 15 000 ARS purchase paid from a USDT card.
- * The main amount stays what left the account; here go the receipt currency and amount. The chip opens
- * the fields as a drop-down: they unfold under it and fold back when it is switched off.
+ * "Receipt in another currency": e.g. a 15 000 ARS purchase paid from a USDT card. Switched on by a chip of
+ * the entry sheet; here go the receipt currency and amount (typed on the keypad), the main amount stays
+ * what left the account and is suggested by the rate.
  */
-@Composable
-internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
-    Column(modifier) {
-        CoShellFilterChip(
-            selected = state.receiptEnabled,
-            onClick = { actions.onReceiptToggle(!state.receiptEnabled) },
-            label = { Text(stringResource(R.string.transaction_receipt_toggle)) },
-        )
-        CoShellExpandable(state.receiptEnabled) {
-            // The gap under the chip is inside: it folds together with the fields.
-            ReceiptFields(state, actions, Modifier.padding(top = Spacing.l))
-        }
-    }
-}
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ReceiptFields(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier) {
+internal fun ReceiptFields(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         val choices = state.receiptCurrencyChoices
         if (choices.isNotEmpty()) {
@@ -70,15 +56,15 @@ private fun ReceiptFields(state: TransactionEditUiState, actions: TransactionEdi
             error = state.receiptCurrencyError?.let { stringResource(it.messageRes) },
             keyboardOptions = CodeKeyboard,
         )
-        AmountField(
-            value = state.receiptAmount,
-            onValueChange = actions.onReceiptAmountChange,
+        AmountSlot(
             label = stringResource(R.string.transaction_receipt_amount),
-            currencyCode = CurrencyCode.parseOrNull(state.receiptCurrency)?.value,
+            text = state.receiptAmount,
+            currency = CurrencyCode.parseOrNull(state.receiptCurrency)?.value,
+            active = state.keypadTarget == KeypadTarget.RECEIPT,
             error = state.receiptAmountError,
+            onClick = { actions.onKeypadTarget(KeypadTarget.RECEIPT) },
             hint = receiptRateText(state)?.let { stringResource(R.string.transaction_receipt_rate, it) }
                 ?: stringResource(R.string.transaction_receipt_hint),
-            modifier = Modifier.fillMaxWidth(),
         )
         Text(
             stringResource(R.string.transaction_receipt_explain),

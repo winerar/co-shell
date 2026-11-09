@@ -134,6 +134,13 @@ class RepositoriesTest {
     }
 
     @Test
+    fun `limit returns only the newest transactions`() = runTest {
+        (1..5).forEach { transactions.saveTransaction(Transaction("$it", TransactionType.EXPENSE, "a", Money(1, usd), day(it))) }
+        assertEquals(listOf("5", "4"), transactions.observeTransactions(TransactionFilter(limit = 2)).first().map { it.id })
+        assertEquals(5, transactions.observeTransactions(TransactionFilter(limit = 10)).first().size)
+    }
+
+    @Test
     fun `the same imported record cannot be stored twice`() = runTest {
         fun imported(id: String) = Transaction(
             id, TransactionType.EXPENSE, "a", Money(1, usd), day(1), importSource = "wallet", importExternalId = "w1",

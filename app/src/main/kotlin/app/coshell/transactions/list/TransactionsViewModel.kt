@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.model.MoneyFormat
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-/** Live list of all transactions; grouping and formatting live in [buildTransactionDays]. */
+/** Live list of transactions, a page at a time ([GrowingWindow]); grouping and formatting live in [buildTransactionDays]. */
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
     transactions: TransactionRepository,
@@ -37,16 +38,21 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch { deleteWithUndo(id) }
     }
 
-    // TODO(stage 5): paging once the Wallet history (thousands of rows) is imported.
+    private val window = GrowingWindow()
+
+    /** The screen nears the end of the list: load the next page. */
+    fun loadMore() = window.loadMore()
+
     val state: StateFlow<TransactionsUiState> = combine(
-        transactions.observeTransactions(),
+        window.observe { limit -> transactions.observeTransactions(TransactionFilter(limit = limit)) },
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
         otherMembers.names(),
-    ) { items, accountList, categoryList, authors ->
+    ) { page, accountList, categoryList, authors ->
         TransactionsUiState(
+            hasMore = page.hasMore,
             days = buildTransactionDays(
-                transactions = items,
+                transactions = page.items,
                 accountsById = accountList.associateBy { it.id },
                 categoriesById = categoryList.associateBy { it.id },
                 moneyFormat = moneyFormat,

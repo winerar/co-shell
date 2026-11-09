@@ -55,7 +55,7 @@ class FakeCategoryRepository : CategoryRepository {
 class FakeTransactionRepository : TransactionRepository {
     val items = MutableStateFlow<Map<String, Transaction>>(emptyMap())
     override fun observeTransactions(filter: TransactionFilter): Flow<List<Transaction>> =
-        items.map { all -> all.values.sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.id }) }
+        items.map { all -> all.values.sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.id }).let { list -> filter.limit?.let(list::take) ?: list } }
     override suspend fun getTransaction(id: String) = items.value[id]
     override suspend fun saveTransaction(transaction: Transaction) { items.value += transaction.id to transaction }
     override suspend fun deleteTransaction(id: String) { items.value -= id }

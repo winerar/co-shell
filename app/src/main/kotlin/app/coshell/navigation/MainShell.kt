@@ -9,7 +9,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onPlaced
@@ -38,15 +40,21 @@ internal fun MainShell(
     val screen = visible.lastOrNull { it.destination !is DialogNavigator.Destination && it.destination !is NavGraph }
         ?.destination
     val showBottomBar = TopLevel.entries.any { screen.isOn(it) }
+    // While the bar rides away under an inner screen it keeps showing the tab it was opened from.
+    var barScreen by remember { mutableStateOf(screen) }
+    if (showBottomBar) barScreen = screen
     // Screens grow from the tapped button or row and shrink back into it.
     val origins = remember { ScreenOrigins(PressOrigin) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
-            if (showBottomBar) {
-                MainBottomBar(current = screen, onTab = { navController.navigateToTab(it) }, onAdd = onAdd)
-            }
+            MainBottomBar(
+                current = barScreen,
+                onTab = { navController.navigateToTab(it) },
+                onAdd = onAdd,
+                visible = showBottomBar,
+            )
         },
     ) { padding ->
         // Inner screens have their own Scaffold and handle the status bar themselves, so only the

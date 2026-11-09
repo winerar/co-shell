@@ -3,7 +3,10 @@ package app.coshell.navigation
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -56,11 +59,15 @@ class MainShellSmokeTest {
     fun setUp() {
         compose.setContent {
             CoShellTheme(darkTheme = true) {
-                MainShell(rememberNavController(), SnackbarHostState(), onAdd = { adds++ }) {
+                val nav = rememberNavController()
+                MainShell(nav, SnackbarHostState(), onAdd = { adds++ }) {
                     composable<HomeDestination> { HomeScreen(HOME) }
                     composable<TransactionsDestination> { TransactionsScreen(TRANSACTIONS) }
                     composable<AccountsDestination> { AccountsScreen(ACCOUNTS, {}, {}, {}) }
-                    composable<MoreDestination> { MoreScreen(MoreActions()) }
+                    composable<MoreDestination> {
+                        MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
+                    }
+                    composable<SettingsDestination> { Text(INNER, Modifier.clickable { nav.popBackStack() }) }
                 }
             }
         }
@@ -95,6 +102,19 @@ class MainShellSmokeTest {
         assertEquals(1, adds)
     }
 
+    @Test
+    fun `bar rides away on an inner screen and comes back on return`() {
+        tab(R.string.nav_more)
+        compose.onNodeWithText(string(R.string.settings_title)).performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText(INNER).assertIsDisplayed()
+        compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertDoesNotExist()
+
+        compose.onNodeWithText(INNER).performClick()
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertIsDisplayed()
+    }
+
     private fun tab(@StringRes label: Int) {
         compose.onNodeWithText(string(label)).performClick()
         compose.waitForIdle()
@@ -110,6 +130,7 @@ class MainShellSmokeTest {
         const val HOME_ACCOUNT = "Домашняя карта"
         const val TRANSACTION_CATEGORY = "Кафе"
         const val ACCOUNT = "Наличные"
+        const val INNER = "Внутренний экран"
 
         val HOME = HomeUiState(
             totals = listOf("1 310,50 USD"),

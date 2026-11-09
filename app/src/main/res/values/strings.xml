@@ -98,6 +98,7 @@
     <string name="transaction_amount">Сумма</string>
     <string name="transaction_to_amount">Сумма зачисления</string>
     <string name="transaction_amount_debited">Списано со счёта</string>
+    <string name="transaction_amount_suggested">По курсу на %1$s — поправьте по выписке банка</string>
     <string name="transaction_receipt_toggle">Чек в другой валюте</string>
     <string name="transaction_receipt_currency">Валюта чека</string>
     <string name="transaction_receipt_amount">Сумма по чеку</string>

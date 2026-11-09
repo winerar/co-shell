@@ -13,6 +13,10 @@ data class TransactionEditUiState(
     val type: TransactionType = TransactionType.EXPENSE,
     /** Amount as typed, in the currency of [accountId]. */
     val amount: String = "",
+    /** [amount] was filled from the receipt by the rate ([withDebitSuggestion]), not typed. */
+    val amountSuggested: Boolean = false,
+    /** Date of the rate behind a suggested [amount], for the "по курсу на …" hint. */
+    val suggestedRateDate: LocalDate? = null,
     /** Amount arriving to [toAccountId]; asked only when the two accounts differ in currency. */
     val toAmount: String = "",
     val accounts: List<AccountOption> = emptyList(),

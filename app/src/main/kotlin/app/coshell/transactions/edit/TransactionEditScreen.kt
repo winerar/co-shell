@@ -105,6 +105,9 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
         label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
         currencySymbol = state.account?.currencySymbol,
         error = state.amountError,
+        hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
+            stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
+        },
         modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
     )
 

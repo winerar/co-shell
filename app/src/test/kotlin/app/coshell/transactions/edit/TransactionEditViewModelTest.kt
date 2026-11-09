@@ -14,6 +14,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
+import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
@@ -63,6 +64,7 @@ class TransactionEditViewModelTest {
         moneyFormat = MoneyFormat.RU,
         clock = object : Clock { override fun now(): Instant = now },
         timeZone = zone,
+        rates = FakeExchangeRateRepository(),
     )
 
     @Test

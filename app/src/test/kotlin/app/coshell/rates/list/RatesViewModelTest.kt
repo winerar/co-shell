@@ -34,9 +34,9 @@ class RatesViewModelTest {
     private val refresher = FakeRatesRefresher()
     private val settings = FakeReportCurrencySettings()
 
-    // 2026-11-10 01:00 UTC is still 9 November in Buenos Aires.
+    // 2026-11-09 01:00 UTC is still 9 November in Buenos Aires.
     private val clock = object : Clock {
-        override fun now() = Instant.parse("2026-11-10T01:00:00Z")
+        override fun now() = Instant.parse("2026-11-09T01:00:00Z")
     }
     // Lazy: created inside the test, after MainDispatcherRule has set the main dispatcher.
     private val vm by lazy { RatesViewModel(repo, refresher, settings, clock, TimeZone.of("America/Argentina/Buenos_Aires")) }

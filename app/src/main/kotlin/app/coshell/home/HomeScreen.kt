@@ -26,6 +26,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
 import app.coshell.transactions.AddTransactionFab
 import kotlinx.datetime.LocalDate
@@ -71,6 +72,7 @@ fun HomeScreen(
                 return@LazyColumn
             }
             item { TotalCard(state) }
+            state.spending?.let { spending -> item { SpendingCard(spending) } }
             item {
                 Text(
                     text = stringResource(R.string.home_accounts),
@@ -110,6 +112,11 @@ private fun HomeScreenPreview() {
                 totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
                 rateDate = LocalDate(2026, 11, 9),
                 byCurrency = listOf("105 800,50 ₽", "150,00 USD"),
+                spending = HomeUiState.MonthSpending(
+                    month = LocalDate(2026, 11, 1),
+                    totals = listOf("412,30 USD", "598 000,00 ARS"),
+                    missing = emptyList(),
+                ),
                 accounts = listOf(
                     HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
                     HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true),

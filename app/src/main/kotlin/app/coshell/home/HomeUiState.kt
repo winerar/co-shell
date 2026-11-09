@@ -12,7 +12,22 @@ data class HomeUiState(
     val missing: List<String> = emptyList(),
     /** Plain sums per account currency — the breakdown under the totals (only when there are several). */
     val byCurrency: List<String> = emptyList(),
+    /** This month's expenses; `null` while loading. */
+    val spending: MonthSpending? = null,
     val accounts: List<AccountRow> = emptyList(),
 ) {
+    /**
+     * Expenses of the current month in each report currency, main first; each expense at the rate of its day.
+     * @property month first day of the month ("Траты за ноябрь").
+     * @property missing currencies of expenses left out for lack of any rate.
+     * @property converted some expense is in another currency than a report one (show the rate hint).
+     */
+    data class MonthSpending(
+        val month: LocalDate,
+        val totals: List<String>,
+        val missing: List<String>,
+        val converted: Boolean = false,
+    )
+
     data class AccountRow(val id: String, val name: String, val balance: String, val isNegative: Boolean)
 }

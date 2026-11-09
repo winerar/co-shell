@@ -28,26 +28,57 @@ jobs:
       FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # to diff against the base branch (docs-only check below)
+
+      # Docs-only changes (docs/, *.md) skip Gradle on PRs and dev; main always builds (it releases).
+      - name: Detect code changes
+        id: changes
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: |
+          code=true
+          if [ "$GITHUB_REF" != refs/heads/main ] && [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] \
+             && git rev-parse -q --verify "$BASE^{commit}" >/dev/null; then
+            changed=$(git diff --name-only "$BASE"...HEAD)
+            echo "$changed"
+            if [ -n "$changed" ] && ! echo "$changed" | grep -qvE '^docs/|\.md$'; then code=false; fi
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "Code changed: $code"
 
       - uses: actions/setup-java@v6
+        if: steps.changes.outputs.code == 'true'
         with:
           distribution: temurin
           java-version: 21
 
       - uses: gradle/actions/setup-gradle@v6
-
-      - name: Lint and unit tests
-        run: ./gradlew check
+        if: steps.changes.outputs.code == 'true'
+        with:
+          # dev writes the cache too (by default only the default branch does): PRs into dev start warm.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev' }}
+          # Optional secret; with it the configuration cache is saved as well (docs/agents/build-and-test.md).
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Script tests
         run: python3 -m unittest discover -s scripts -p 'test_*.py'
 
+      # main: the same tree was already checked by the dev → main PR, so lint and tests are skipped.
+      - name: Lint, unit tests and debug APK
+        if: steps.changes.outputs.code == 'true' && github.ref != 'refs/heads/main'
+        run: ./gradlew check assembleDebug
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+
       - name: Build debug APK
+        if: github.ref == 'refs/heads/main'
         run: ./gradlew assembleDebug
         env:
           BUILD_NUMBER: ${{ github.run_number }}
 
       - name: Upload debug APK
+        if: steps.changes.outputs.code == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: co-shell-debug

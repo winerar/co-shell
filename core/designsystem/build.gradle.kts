@@ -19,6 +19,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    lint {
+        ignoreTestSources = true // no tests to ship; saves the lintAnalyze*Test tasks
+    }
 }
 
 dependencies {

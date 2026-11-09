@@ -15,7 +15,8 @@ core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
               ProgressHero — большое кольцо статуса в центре экрана (обновление; позже импорт/синк)
   motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
   catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов (@Preview светлая/тёмная)
-  category/ CategoryBadge, палитра и иконки категорий
+  category/ CategoryBadge, палитра (18 неоновых + 6 тёплых, новые — только в конец списка:
+            старые Material-цвета сопоставляются по индексу) и иконки категорий (52, ключ — строка)
 core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр
 core/designsystem/src/main/res/font/onest.ttf            шрифт текста (лицензии — core/designsystem/fonts/)
 ```

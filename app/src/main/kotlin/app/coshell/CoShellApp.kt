@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
+import app.coshell.family.sync.SyncScheduler
 import app.coshell.rates.work.RatesRefreshScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class CoShellApp : Application(), Configuration.Provider {
         appScope.launch {
             seedDefaultCategories()
             RatesRefreshScheduler.schedule(this@CoShellApp)
+            SyncScheduler.schedulePeriodic(this@CoShellApp)
         }
     }
 }

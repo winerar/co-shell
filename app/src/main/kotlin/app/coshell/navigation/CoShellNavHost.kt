@@ -31,6 +31,7 @@ import app.coshell.R
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
+import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
@@ -142,6 +143,7 @@ fun CoShellNavHost(
                         onCategories = { navController.navigate(CategoriesDestination) },
                         onRates = { navController.navigate(RatesDestination) },
                         onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
+                        onFamily = { navController.navigate(FamilyDestination) },
                         onBackup = { navController.navigate(BackupDestination) },
                         onUpdate = { navController.navigate(UpdateDestination) },
                         onFeedback = { navController.navigate(FeedbackDestination) },
@@ -158,6 +160,9 @@ fun CoShellNavHost(
                 }
                 composable<ReportCurrenciesDestination> {
                     ReportCurrenciesRoute(onBack = { navController.popBackStack() })
+                }
+                composable<FamilyDestination> {
+                    FamilyRoute(onBack = { navController.popBackStack() })
                 }
                 composable<BackupDestination> {
                     BackupRoute(onBack = { navController.popBackStack() })

@@ -40,9 +40,12 @@ class FamilyService(
     /** Cached family for the list screens (author names); `null` — not in a family. */
     val joined: Family? get() = (_state.value as? FamilyState.Joined)?.family
 
-    /** Restores the state from the cache without network; call once at app start. */
+    private var loaded = false
+
+    /** Restores the state from the cache without network. Only the first call does anything. */
     suspend fun load() {
-        if (!configured) return
+        if (!configured || loaded) return
+        loaded = true
         val session = auth.session.value ?: return run { _state.value = FamilyState.SignedOut }
         val cached = cachedFamily()
         val me = cached?.member(session.uid)

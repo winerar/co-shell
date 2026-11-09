@@ -1,5 +1,6 @@
 package app.coshell
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.family.sync.ForegroundSync
+import app.coshell.language.AppLanguage
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.theme.ThemeSettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +30,9 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var foregroundSync: ForegroundSync
 
     private val themeSettings: ThemeSettingsViewModel by viewModels()
+
+    // Interface language is the app's, not the phone's (AppLanguage).
+    override fun attachBaseContext(newBase: Context) = super.attachBaseContext(AppLanguage.wrap(newBase))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

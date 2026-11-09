@@ -29,6 +29,12 @@ android {
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${env("GOOGLE_WEB_CLIENT_ID")}\"")
     }
 
+    androidResources {
+        // Only the app's languages (language/AppLanguage.SUPPORTED): libraries' other translations are
+        // dropped — a smaller APK, and nothing can show up in a language the app doesn't speak.
+        localeFilters += listOf("ru")
+    }
+
     signingConfigs {
         // Shared debug key in the repo: APKs from any machine or CI run install over each other
         // without losing data. Not a secret — debug builds only; release has its own key (below).

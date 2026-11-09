@@ -1,7 +1,6 @@
 package app.coshell.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
-import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
@@ -96,9 +94,8 @@ fun HomeScreen(
 @Composable
 private fun AccountsCard(accounts: List<HomeUiState.AccountRow>, onClick: (String) -> Unit) {
     val palette = LocalAmountPalette.current
-    // Rows appear and disappear smoothly: the card's height follows them (design-questions §6). A relayout per
-    // frame, but only when an account is added or archived — rare, so it is worth it.
-    CoShellCard(Modifier.fillMaxWidth().animateContentSize(Motion.medium())) {
+    // Rows appear and disappear smoothly: CoShellCard follows its content's height itself (issue #64).
+    CoShellCard(Modifier.fillMaxWidth()) {
         accounts.forEach { row ->
             key(row.id) {
                 CoShellListRow(

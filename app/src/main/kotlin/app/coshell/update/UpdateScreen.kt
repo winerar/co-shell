@@ -1,11 +1,6 @@
 package app.coshell.update
 
 import app.coshell.core.designsystem.tokens.Spacing
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.update.components.ReleaseCard
 import app.coshell.update.components.UpdateHero
 import app.coshell.update.components.UpdatePhaseContent
@@ -64,11 +59,7 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             UpdateHero(state.phase)
             UpdatePhaseContent(state, actions)
             val notes = state.phase.release?.takeIf { it.notes.isNotBlank() && state.phase !is UpdatePhase.Failed }
-            AnimatedVisibility(
-                visible = notes != null,
-                enter = fadeIn(Motion.enter()) + expandVertically(Motion.enter()),
-                exit = fadeOut(Motion.exit()) + shrinkVertically(Motion.exit()),
-            ) {
+            CoShellExpandable(expanded = notes != null) {
                 notes?.let { ReleaseCard(it) }
             }
         }

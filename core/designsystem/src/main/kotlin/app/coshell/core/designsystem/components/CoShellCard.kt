@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 
@@ -23,6 +24,7 @@ import app.coshell.core.designsystem.theme.LocalHeroPalette
  * «Обзор»): in the light theme a neon gradient fill without a border (`LocalHeroPalette`, issue #62), in the
  * dark theme the border takes the primary neon. Inside it, take text colors from `LocalHeroPalette`.
  * [tint] — a user-chosen colour (an account's): a soft wash of it over the background and a border of it. [onClick] makes the whole card a tap target with the `Tactile.Surface` motion.
+ * The card follows its content's height smoothly (issue #64): rows and lines inside may come and go.
  */
 @Composable
 fun CoShellCard(
@@ -53,7 +55,7 @@ fun CoShellCard(
         NoRipple {
             OutlinedCard(
                 onClick = onClick,
-                modifier = modifier.tactile(source, Tactile.Surface, shape).then(filled),
+                modifier = modifier.tactile(source, Tactile.Surface, shape).then(filled).smoothResize(),
                 shape = shape,
                 colors = colors,
                 border = border,
@@ -62,7 +64,7 @@ fun CoShellCard(
             )
         }
     } else {
-        OutlinedCard(modifier = modifier.then(filled), shape = shape, colors = colors, border = border, content = content)
+        OutlinedCard(modifier = modifier.then(filled).smoothResize(), shape = shape, colors = colors, border = border, content = content)
     }
 }
 

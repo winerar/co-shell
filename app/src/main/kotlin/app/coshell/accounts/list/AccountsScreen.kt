@@ -1,5 +1,6 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.Arrangement
@@ -61,7 +62,7 @@ fun AccountsScreen(
                 }
                 return@LazyColumn
             }
-            items(state.active, key = { it.id }) { AccountRow(it, onAccountClick, Modifier.animateItem()) }
+            items(state.active, key = { it.id }) { AccountRow(it, onAccountClick, listItemMotion()) }
             if (state.archived.isEmpty()) return@LazyColumn
             item(key = "archived-toggle") {
                 CoShellTextButton(onClick = onToggleArchived) {
@@ -74,7 +75,7 @@ fun AccountsScreen(
                 }
             }
             if (state.showArchived) {
-                items(state.archived, key = { it.id }) { AccountRow(it, onAccountClick, Modifier.animateItem()) }
+                items(state.archived, key = { it.id }) { AccountRow(it, onAccountClick, listItemMotion()) }
             }
         }
     }

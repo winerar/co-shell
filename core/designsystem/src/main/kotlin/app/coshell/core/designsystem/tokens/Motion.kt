@@ -3,7 +3,12 @@ package app.coshell.core.designsystem.tokens
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 
 /**
  * Motion tokens: every animation in the app takes its duration and curve from here
@@ -29,5 +34,19 @@ object Motion {
     fun <T> medium(): FiniteAnimationSpec<T> = tween(MEDIUM_MS, easing = Standard)
     fun <T> enter(): FiniteAnimationSpec<T> = tween(LONG_MS, easing = Decelerate)
     fun <T> exit(): FiniteAnimationSpec<T> = tween(SHORT_MS, easing = Accelerate)
+
+    /**
+     * Size changes (issue #64): a block that grows or shrinks follows a soft spring with a hint of
+     * overshoot — the same "physical" feel as the press springs. Settles in about 300 ms.
+     */
+    val Resize: FiniteAnimationSpec<IntSize> =
+        spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2, visibilityThreshold = IntSize.VisibilityThreshold)
+    /** Rows moving to their new place in a list (an item above appeared or left). */
+    val Placement: FiniteAnimationSpec<IntOffset> =
+        spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2, visibilityThreshold = IntOffset.VisibilityThreshold)
+    /** Rotation of an "expand" arrow and other small turns, in degrees. */
+    val Turn: FiniteAnimationSpec<Float> = spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2)
     // Press feedback (depth, tilt, light, springs) lives in `motion/Tactile` — one system for every element.
+
+    private const val RESIZE_DAMPING = 0.8f
 }

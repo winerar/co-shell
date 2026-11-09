@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -21,12 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import app.coshell.core.designsystem.motion.PressOrigin
 import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.growFrom
+import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
 import kotlinx.coroutines.launch
 
 // Bottom sheets (design-system.md §«Навигация и жесты»): editors slide up over the screen and close with
-// a swipe down, a tap outside or the back gesture; 28 dp top corners (shapes.extraLarge).
+// a swipe down, a tap outside or the back gesture; 28 dp top corners (shapes.extraLarge). A sheet grows out of
+// the element that opened it (issue #63): from the «+» it also starts in the «+»'s colour (`motion/GrowFrom`).
 
 /** Window of a `dialog<…>` navigation destination that hosts a [CoShellSheet]: full screen, insets left to the sheet. */
 val CoShellSheetDialogProperties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
@@ -48,7 +55,13 @@ fun CoShellSheet(onClosed: () -> Unit, content: @Composable (close: () -> Unit) 
     val once = remember { CloseOnce(onClosed) }
     val close: () -> Unit = { scope.launch { sheetState.hide() }.invokeOnCompletion { once.close() } }
 
-    ModalBottomSheet(onDismissRequest = once::close, sheetState = sheetState) {
+    // Opened by a tap → grow out of it while sliding up; opened otherwise (shake) → only the slide.
+    val from = remember { PressOrigin.take() }
+    val growth = remember { Animatable(if (from == null) 1f else 0f) }
+    LaunchedEffect(Unit) { growth.animateTo(1f, tween(Motion.LONG_MS, easing = Motion.Standard)) }
+    val grow = if (from != null) Modifier.growFrom(from, { growth.value }, BottomSheetDefaults.ExpandedShape) else Modifier
+
+    ModalBottomSheet(onDismissRequest = once::close, sheetState = sheetState, modifier = grow) {
         content(close)
     }
 }

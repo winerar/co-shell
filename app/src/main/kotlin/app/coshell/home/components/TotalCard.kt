@@ -20,6 +20,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.RollingAmountText
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -58,7 +59,8 @@ internal fun TotalCard(state: HomeUiState) {
             if (canExpand) {
                 Caption(stringResource(if (expanded) R.string.home_total_hide_breakdown else R.string.home_total_show_breakdown))
             }
-            if (expanded) {
+            // Sums per currency unfold under the hint; the card's height follows them.
+            CoShellExpandable(expanded) {
                 state.byCurrency.forEach { AmountLine(it, AmountTextStyle, LocalHeroPalette.current.content) }
             }
         }

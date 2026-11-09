@@ -25,6 +25,8 @@ import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.node.invalidateDraw
+import androidx.compose.ui.node.requireLayoutCoordinates
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
@@ -39,24 +41,27 @@ val LocalTactileLight = staticCompositionLocalOf { Color.White }
  * Makes an element physical ([Tactile]): put it **first** in the element's modifier chain (so the
  * background and border move too) and give it the element's [interactionSource]. [shape] clips the
  * light to rounded corners. Everything runs in the graphics layer and the draw phase — no
- * recomposition or relayout per frame (performance.md).
+ * recomposition or relayout per frame (performance.md). It also records the tap in [PressOrigin], so a screen
+ * or sheet it opens grows out of it; [originColor] — the fill that flows into what opens (the «+»).
  */
 fun Modifier.tactile(
     interactionSource: InteractionSource,
     tactile: Tactile = Tactile.Control,
     shape: Shape? = null,
     enabled: Boolean = true,
-): Modifier = this then TactileElement(interactionSource, tactile, shape, enabled)
+    originColor: Color = Color.Unspecified,
+): Modifier = this then TactileElement(interactionSource, tactile, shape, enabled, originColor)
 
 private data class TactileElement(
     val source: InteractionSource,
     val tactile: Tactile,
     val shape: Shape?,
     val enabled: Boolean,
+    val originColor: Color,
 ) : ModifierNodeElement<TactileNode>() {
-    override fun create() = TactileNode(source, tactile, shape, enabled)
+    override fun create() = TactileNode(source, tactile, shape, enabled, originColor)
 
-    override fun update(node: TactileNode) = node.update(source, tactile, shape, enabled)
+    override fun update(node: TactileNode) = node.update(source, tactile, shape, enabled, originColor)
 
     override fun InspectorInfo.inspectableProperties() {
         name = "tactile"
@@ -74,6 +79,7 @@ private class TactileNode(
     private var tactile: Tactile,
     private var shape: Shape?,
     private var enabled: Boolean,
+    private var originColor: Color,
 ) : Modifier.Node(), LayoutModifierNode, DrawModifierNode, CompositionLocalConsumerModifierNode {
 
     private val scale = Animatable(1f)
@@ -88,12 +94,13 @@ private class TactileNode(
 
     override fun onAttach() = collect()
 
-    fun update(source: InteractionSource, tactile: Tactile, shape: Shape?, enabled: Boolean) {
+    fun update(source: InteractionSource, tactile: Tactile, shape: Shape?, enabled: Boolean, originColor: Color) {
         val sourceChanged = source != this.source
         this.source = source
         this.tactile = tactile
         this.shape = shape
         this.enabled = enabled
+        this.originColor = originColor
         if (sourceChanged && isAttached) collect()
         if (!enabled) release()
         invalidateDraw()
@@ -104,11 +111,27 @@ private class TactileNode(
         collector = coroutineScope.launch {
             source.interactions.collect { interaction ->
                 when (interaction) {
-                    is PressInteraction.Press -> if (enabled) press(interaction.pressPosition)
-                    is PressInteraction.Release, is PressInteraction.Cancel -> release()
+                    is PressInteraction.Press -> if (enabled) {
+                        recordOrigin(interaction.pressPosition)
+                        press(interaction.pressPosition)
+                    }
+                    is PressInteraction.Release -> {
+                        // The click fires on release: refresh the time, so a long hold still opens from here.
+                        if (enabled) recordOrigin(interaction.press.pressPosition)
+                        release()
+                    }
+                    is PressInteraction.Cancel -> {
+                        PressOrigin.clear() // the finger went on to scroll — nothing opens from here
+                        release()
+                    }
                 }
             }
         }
+    }
+
+    private fun recordOrigin(at: Offset) {
+        if (!isAttached) return
+        PressOrigin.record(PressPoint(requireLayoutCoordinates().positionInWindow() + at, originColor))
     }
 
     private fun press(at: Offset) {

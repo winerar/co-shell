@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.labelRes
 import app.coshell.accounts.list.AccountsUiState
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 
@@ -43,7 +44,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Text(
+            AmountText(
                 text = row.balance,
                 style = AmountTextStyle,
                 color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,

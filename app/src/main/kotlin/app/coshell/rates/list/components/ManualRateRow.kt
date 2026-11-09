@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.rates.list.ManualRateItem
 import app.coshell.rates.list.formatRateDate
 import app.coshell.core.designsystem.R as DesignR
@@ -19,7 +20,7 @@ import app.coshell.core.designsystem.R as DesignR
 internal fun ManualRateRow(item: ManualRateItem, onClick: () -> Unit, onDelete: () -> Unit) {
     val rate = item.rate
     ListItem(
-        headlineContent = { Text(stringResource(R.string.rates_line, rate.from.value, item.rateText, rate.to.value)) },
+        headlineContent = { Text(stringResource(R.string.rates_line, rate.from.value, item.rateText, rate.to.value), style = RateTextStyle) },
         supportingContent = { Text(stringResource(R.string.rates_manual_since, formatRateDate(rate.date))) },
         trailingContent = {
             IconButton(onClick = onDelete) {

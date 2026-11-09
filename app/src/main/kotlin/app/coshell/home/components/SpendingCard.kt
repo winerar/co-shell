@@ -3,7 +3,6 @@ package app.coshell.home.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
@@ -31,12 +31,11 @@ internal fun SpendingCard(spending: HomeUiState.MonthSpending) {
             )
             spending.totals.forEachIndexed { index, total ->
                 val style = if (index == 0) AmountTitleStyle else AmountTextStyle
-                Text(
+                AmountText(
                     text = total,
                     style = style,
                     color = if (index == 0) palette.expense else MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    autoSize = TextAutoSize.StepBased(minFontSize = 14.sp, maxFontSize = style.fontSize),
+                    minFontSize = 14.sp,
                 )
             }
             if (spending.converted) SpendingCaption(stringResource(R.string.home_spending_rate_hint))

@@ -2,12 +2,12 @@ package app.coshell.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
@@ -104,7 +105,7 @@ private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit) 
                     )
                 }
             }
-            Text(
+            AmountText(
                 text = row.balance,
                 style = AmountTextStyle,
                 color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,

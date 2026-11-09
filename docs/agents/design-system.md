@@ -8,10 +8,12 @@
 ```
 core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
   tokens/   Spacing (отступы), Radii (+ CoShellShapes для Material), Motion (длительности, кривые)
-  theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста и сумм (Type.kt)
+  theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
+  amount/   AmountText — сумма с серым кодом валюты
   catalog/  TokensCatalog — витрина токенов (@Preview светлая/тёмная); растёт в каталог компонентов
   category/ CategoryBadge, палитра и иконки категорий
-core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр (лицензия — core/designsystem/fonts/)
+core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр
+core/designsystem/src/main/res/font/onest.ttf            шрифт текста (лицензии — core/designsystem/fonts/)
 ```
 
 ## Токены — правила
@@ -42,7 +44,20 @@ core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр (л
   на том же месте палитры (синк со старой версией не ломается). Свой цвет из импорта рисуется как есть.
 - Окно до первого кадра — `app/res/values(-night)/themes.xml` (`windowBackground` = фон темы, без вспышки).
 
-## Шрифты
+## Шрифты (решения владельца — `design-questions.md` §3)
+- **Текст — Onest** (`TextFontFamily`): вся `MaterialTheme.typography` — шкала Material 3 в Onest; заголовки
+  SemiBold, подписи кнопок/вкладок Medium, основной текст Regular. Отдельные размеры в экранах не задавать.
+  Файл вариативный (`wght`), урезан до латиницы, кириллицы и знаков — 77 КБ. Пересобрать (Onest из
+  google/fonts `ofl/onest/Onest[wght].ttf`):
+  ```
+  pyftsubset "Onest[wght].ttf" --output-file=onest.ttf --layout-features='kern,liga,calt,tnum,case,locl' \
+    --unicodes="U+0020-007E,U+00A0-00FF,U+0401,U+0404,U+0406,U+0407,U+0410-044F,U+0451,U+0454,U+0456,U+0457,U+0490,U+0491,U+2009,U+2013,U+2014,U+2018-201E,U+2022,U+2026,U+202F,U+2039,U+203A,U+20AC,U+20BD,U+2116,U+2190-2193,U+2212,U+2248,U+2260,U+2264,U+2265"
+  ```
+- **Суммы на экране — `AmountText`** (`amount/`): код валюты после числа («1 234,50 USD») мельче (0.8) и
+  серый `onSurfaceVariant`; копейки того же размера и цвета, что и сумма. `minFontSize` — автоуменьшение
+  длинной суммы. Символ перед числом ($) не используется: у USD/ARS/USDT он одинаковый.
+- **Курсы** — тем же моноширинным шрифтом: `RateTextStyle` («1 USD = 1 234,5 ARS»). Даты и прочие числа
+  в тексте — Onest.
 - **Цифры и суммы — JetBrains Mono** (решение владельца, winerar/co-shell#25): моноширинный, цифры не
   прыгают при изменении. Стили: `AmountHeroStyle` (главный итог «Обзора», 40 sp, с автоуменьшением),
   `AmountTitleStyle` (22 sp), `AmountInputStyle` (поле ввода, 24 sp), `AmountTextStyle` (строки списков, 16 sp).
@@ -56,7 +71,6 @@ core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр (л
   ```
   затем узкий пробел U+202F и U+2009 направить на глиф пробела (в шрифте их нет; разделитель тысяч
   `MoneyFormat.NARROW_NBSP`) — `fontTools`: в каждой unicode-таблице `cmap` `cmap[0x202F] = cmap[0x20]`.
-- Шрифт основного текста — пока системный (Roboto); выбор — `design-questions.md` §3.
 
 ## Компоненты
 - Сейчас общие блоки форм — в `app/.../ui/form/` (верхняя панель, кнопки, диалоги). Они переезжают в
@@ -66,7 +80,7 @@ core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр (л
 
 ## Порядок переезда (план)
 1. ✔ Токены отступов, скруглений, движения; шрифт цифр; витрина токенов.
-2. Ответы на вопросы дизайнеру → ✔ цвета; шрифт текста, формы, навигация (`design-questions.md`).
+2. Ответы на вопросы дизайнеру → ✔ цвета, ✔ шрифты; формы, навигация (`design-questions.md`).
 3. Базовые компоненты: кнопки, поля, карточки, строки списка, диалоги, шторки, нижняя панель.
 4. Экраны по одному: «Обзор» → ввод операции → «Операции» → остальные; после каждого — числа `dp` и
    `tween` в экране заменены токенами.

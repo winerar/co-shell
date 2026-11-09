@@ -2,12 +2,13 @@ package app.coshell.rates.list.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.theme.LocalStatusPalette
+import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.rates.list.CurrentRateItem
 import app.coshell.rates.list.formatRateDate
 
@@ -22,14 +23,14 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
     ListItem(
         headlineContent = {
             if (item.rateText != null) {
-                Text(stringResource(R.string.rates_line, base, item.rateText, item.currency))
+                Text(stringResource(R.string.rates_line, base, item.rateText, item.currency), style = RateTextStyle)
             } else {
                 Text(item.currency)
             }
         },
         supportingContent = {
             if (item.rateText == null) {
-                Text(stringResource(R.string.rates_no_rate), color = MaterialTheme.colorScheme.error)
+                Text(stringResource(R.string.rates_no_rate), color = LocalStatusPalette.current.warning)
             } else {
                 Text(details)
             }

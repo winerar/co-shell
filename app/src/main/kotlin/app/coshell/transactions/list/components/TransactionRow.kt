@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.theme.AmountTextStyle
@@ -46,9 +47,9 @@ internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(row.amount, style = AmountTextStyle, color = row.amountColor())
+            AmountText(row.amount, style = AmountTextStyle, color = row.amountColor())
             row.secondaryAmount?.let {
-                Text(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

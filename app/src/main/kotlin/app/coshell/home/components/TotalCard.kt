@@ -4,9 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +20,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -60,12 +61,7 @@ internal fun TotalCard(state: HomeUiState) {
 /** One line; a long amount shrinks instead of breaking inside the currency code. */
 @Composable
 private fun AmountLine(text: String, style: TextStyle) {
-    Text(
-        text = text,
-        style = style,
-        maxLines = 1,
-        autoSize = TextAutoSize.StepBased(minFontSize = 16.sp, maxFontSize = style.fontSize),
-    )
+    AmountText(text = text, style = style, color = LocalContentColor.current, minFontSize = 16.sp)
 }
 
 @Composable

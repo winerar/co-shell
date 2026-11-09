@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.LocalDarkTheme
@@ -46,7 +47,7 @@ fun CoShellButton(
     NoRipple {
         Button(
             onClick = onClick,
-            modifier = modifier.tactile(source, tactile, PillShape, enabled),
+            modifier = modifier.tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
@@ -78,7 +79,7 @@ fun CoShellOutlinedButton(
     NoRipple {
         OutlinedButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             interactionSource = source,
             content = content,
@@ -98,7 +99,7 @@ fun CoShellTextButton(
     NoRipple {
         TextButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             interactionSource = source,
             content = content,
@@ -119,7 +120,7 @@ fun CoShellIconButton(
     NoRipple {
         IconButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled),
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
@@ -144,7 +145,8 @@ fun CoShellFab(
     NoRipple {
         FloatingActionButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, tactile, shape),
+            // The fill flows into the sheet the «+» opens (issue #63).
+            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor),
             shape = shape,
             containerColor = containerColor,
             contentColor = contentColor,

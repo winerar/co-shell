@@ -12,9 +12,13 @@ import app.coshell.R
 import app.coshell.categories.list.CategoriesActions
 import app.coshell.categories.list.CategoriesUiState
 import app.coshell.core.designsystem.components.CoShellTextButton
+import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.navigation.CategoryEditDestination
 
-/** Top-level categories; an expanded folder adds its children and "Add to folder". */
+/**
+ * Top-level categories; an expanded folder adds its children and "Add to folder" — they fade in under the
+ * folder while the rows below slide down (`listItemMotion`), and fold back the same way.
+ */
 internal fun LazyListScope.groupItems(state: CategoriesUiState, actions: CategoriesActions) {
     val type = state.type.name
     state.groups.forEach { group ->
@@ -23,6 +27,7 @@ internal fun LazyListScope.groupItems(state: CategoriesUiState, actions: Categor
                 group = group,
                 onClick = { actions.onOpen(CategoryEditDestination(categoryId = group.item.id)) },
                 onToggle = { actions.onToggleFolder(group.item.id) },
+                modifier = listItemMotion(),
             )
         }
         if (!group.isFolder || !group.expanded) return@forEach
@@ -31,12 +36,13 @@ internal fun LazyListScope.groupItems(state: CategoriesUiState, actions: Categor
                 item = child,
                 indent = true,
                 onClick = { actions.onOpen(CategoryEditDestination(categoryId = child.id)) },
+                modifier = listItemMotion(),
             )
         }
         item(key = "add-to-${group.item.id}") {
             CoShellTextButton(
                 onClick = { actions.onOpen(CategoryEditDestination(type = type, parentId = group.item.id)) },
-                modifier = Modifier.padding(start = Spacing.l + Sizes.badge),
+                modifier = listItemMotion().padding(start = Spacing.l + Sizes.badge),
             ) { Text(stringResource(R.string.categories_add_to_folder)) }
         }
     }
@@ -46,7 +52,7 @@ internal fun LazyListScope.groupItems(state: CategoriesUiState, actions: Categor
 internal fun LazyListScope.archivedItems(state: CategoriesUiState, actions: CategoriesActions) {
     if (state.archived.isEmpty()) return
     item(key = "archived-toggle") {
-        CoShellTextButton(onClick = actions.onToggleArchived, modifier = Modifier.padding(horizontal = Spacing.s)) {
+        CoShellTextButton(onClick = actions.onToggleArchived, modifier = listItemMotion().padding(horizontal = Spacing.s)) {
             Text(
                 stringResource(
                     if (state.showArchived) R.string.categories_hide_archived else R.string.categories_show_archived,
@@ -57,6 +63,11 @@ internal fun LazyListScope.archivedItems(state: CategoriesUiState, actions: Cate
     }
     if (!state.showArchived) return
     items(state.archived, key = { "archived-${it.id}" }) { item ->
-        CategoryRow(item, indent = false, onClick = { actions.onOpen(CategoryEditDestination(categoryId = item.id)) })
+        CategoryRow(
+            item,
+            indent = false,
+            onClick = { actions.onOpen(CategoryEditDestination(categoryId = item.id)) },
+            modifier = listItemMotion(),
+        )
     }
 }

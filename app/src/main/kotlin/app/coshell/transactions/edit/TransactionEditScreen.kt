@@ -1,7 +1,9 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.designsystem.components.CoShellTextField
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
+import app.coshell.core.designsystem.motion.CoShellExpandable
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField
@@ -57,19 +61,22 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
 
     TypeSelector(state.type, actions.onTypeChange)
 
-    AmountField(
-        value = state.amount,
-        onValueChange = actions.onAmountChange,
-        label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
-        currencyCode = state.account?.currency,
-        error = state.amountError,
-        hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
-            stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
-        },
-        modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
-    )
-
-    if (!state.isTransfer) ReceiptSection(state, actions)
+    // Parts that depend on the type or the accounts unfold and fold (issue #64) instead of jumping. Each
+    // sits in a column that always shows something, so the sheet's gaps between blocks stay put.
+    Column {
+        AmountField(
+            value = state.amount,
+            onValueChange = actions.onAmountChange,
+            label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
+            currencyCode = state.account?.currency,
+            error = state.amountError,
+            hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
+                stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
+            },
+            modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
+        )
+        CoShellExpandable(!state.isTransfer) { ReceiptSection(state, actions, Modifier.padding(top = Spacing.l)) }
+    }
 
     CoShellSection(
         title = stringResource(if (state.isTransfer) R.string.transaction_from_account else R.string.transaction_account),
@@ -78,14 +85,16 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
         AccountChips(state.accounts, state.accountId, actions.onAccountSelect)
     }
 
-    if (state.isTransfer) {
-        TransferTarget(state, actions)
-    } else {
-        CoShellSection(
-            title = stringResource(R.string.transaction_category),
-            error = if (state.categoryError) stringResource(R.string.transaction_category_required) else null,
-        ) {
-            CategoryChips(state.categories, state.categoryId, state.openFolderId, actions.onCategorySelect)
+    // Transfer ↔ expense/income: the target account and the category swap places by folding.
+    Column {
+        CoShellExpandable(state.isTransfer) { TransferTarget(state, actions) }
+        CoShellExpandable(!state.isTransfer) {
+            CoShellSection(
+                title = stringResource(R.string.transaction_category),
+                error = if (state.categoryError) stringResource(R.string.transaction_category_required) else null,
+            ) {
+                CategoryChips(state.categories, state.categoryId, state.openFolderId, actions.onCategorySelect)
+            }
         }
     }
 
@@ -116,7 +125,9 @@ private fun TransferTarget(state: TransactionEditUiState, actions: TransactionEd
         AccountChips(state.accounts, state.toAccountId, actions.onToAccountSelect)
     }
     val toAccount = state.toAccount
-    if (state.needsToAmount && toAccount != null) {
+    // Between currencies the arriving amount unfolds under the account chips.
+    CoShellExpandable(state.needsToAmount && toAccount != null) {
+        if (toAccount == null) return@CoShellExpandable
         AmountField(
             value = state.toAmount,
             onValueChange = actions.onToAmountChange,
@@ -124,7 +135,7 @@ private fun TransferTarget(state: TransactionEditUiState, actions: TransactionEd
             currencyCode = toAccount.currency,
             error = state.toAmountError,
             hint = stringResource(R.string.transaction_to_amount_hint, toAccount.name),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = Spacing.l),
         )
     }
 }

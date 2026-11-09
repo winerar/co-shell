@@ -19,7 +19,7 @@
 ## Данные и память
 - Тяжёлое — не в главном потоке: Room, файлы, сеть — `suspend`/`Flow` на `Dispatchers.IO`/`Default`.
 - Суммы, итоги, группировки считает **SQL** (агрегаты), а не загрузка всех строк в память.
-- Длинные списки (операции) — постранично (Paging 3) при тысячах строк; держим не весь список.
+- Длинные списки — постранично: `GrowingWindow` (`TransactionFilter.limit`) + `LoadMoreEffect` у `LazyColumn`.
 - `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), …)` — потоки не работают в фоне.
 - Без утечек: никаких ссылок на `Activity`/`Context` в синглтонах и ViewModel.
 

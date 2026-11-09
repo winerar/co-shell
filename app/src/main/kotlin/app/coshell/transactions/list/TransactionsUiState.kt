@@ -6,6 +6,8 @@ import kotlinx.datetime.LocalDate
 data class TransactionsUiState(
     val isLoading: Boolean = false,
     val days: List<Day> = emptyList(),
+    /** Older transactions exist beyond the loaded page. */
+    val hasMore: Boolean = false,
 ) {
     data class Day(val date: LocalDate, val relative: RelativeDay, val rows: List<Row>)
 

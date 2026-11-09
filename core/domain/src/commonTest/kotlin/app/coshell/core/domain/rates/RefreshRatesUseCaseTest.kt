@@ -109,6 +109,7 @@ private class FakeRatesRepository : ExchangeRateRepository {
     override suspend fun saveManualRate(rate: ExchangeRate) = Unit
     override suspend fun deleteManualRate(date: LocalDate, a: CurrencyCode, b: CurrencyCode) = Unit
     override suspend fun saveDownloaded(snapshot: RatesSnapshot) { saved += snapshot }
+    override fun observeLatestDownload(): Flow<DownloadInfo?> = emptyFlow()
     override suspend fun latestDownloadedDate() = saved.maxOfOrNull { it.date }
     override suspend fun downloadedDates() = saved.map { it.date }.toSet()
     override suspend fun operationDates(timeZone: TimeZone) = operationDays

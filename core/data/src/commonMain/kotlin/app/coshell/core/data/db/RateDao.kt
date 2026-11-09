@@ -25,6 +25,10 @@ interface RateDao {
     @Upsert
     suspend fun upsertDownloaded(entities: List<DownloadedRateEntity>)
 
+    /** Newest downloaded row (latest date, then latest download) — for "last updated" on the rates screen. */
+    @Query("SELECT * FROM downloaded_rates ORDER BY date DESC, downloaded_at DESC LIMIT 1")
+    fun observeLatestDownloaded(): Flow<DownloadedRateEntity?>
+
     @Query("SELECT MAX(date) FROM downloaded_rates")
     suspend fun latestDownloadedDate(): String?
 

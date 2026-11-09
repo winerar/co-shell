@@ -7,6 +7,7 @@ import app.coshell.core.model.MoneyParser
 import app.coshell.core.model.Rate
 import app.coshell.core.model.Transaction
 import app.coshell.transactions.edit.TransactionEditUiState.ReceiptCurrencyError
+import app.coshell.ui.format.formatRate
 
 /** Receipt amount check; `null` money with no errors means the block is off. */
 internal data class ReceiptResult(
@@ -49,15 +50,6 @@ internal fun receiptRateText(form: TransactionEditUiState): String? {
 /** Receipt chips: currencies of earlier receipts (newest first), then of the accounts. */
 internal fun receiptCurrencySuggestions(recent: List<Transaction>, accounts: List<Account>): List<String> =
     (recent.mapNotNull { it.originalAmount?.currency?.value } + accounts.map { it.currency.value }).distinct()
-
-/** Ru-style: "1 049,69", "0,0067"; 2 fraction digits from 100, otherwise 4 significant-ish. */
-internal fun formatRate(rate: Rate): String {
-    val plain = rate.rounded(if (rate >= Rate.parse("100")) 2 else 4).toPlainString()
-    val integer = plain.substringBefore('.')
-    val fraction = plain.substringAfter('.', "")
-    val grouped = integer.reversed().chunked(3).joinToString(" ").reversed()
-    return if (fraction.isEmpty()) grouped else "$grouped,$fraction"
-}
 
 internal data class AmountParse(val money: Money?, val error: TransactionEditUiState.AmountError?)
 

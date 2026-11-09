@@ -28,6 +28,9 @@ interface ExchangeRateRepository {
     /** Stores a downloaded snapshot, replacing earlier rows of the same date and pair. */
     suspend fun saveDownloaded(snapshot: RatesSnapshot)
 
+    /** The newest downloaded rates (date, source, time), `null` until something is downloaded. */
+    fun observeLatestDownload(): Flow<DownloadInfo?>
+
     /** Latest date with downloaded rates, `null` if nothing was downloaded yet. */
     suspend fun latestDownloadedDate(): LocalDate?
 

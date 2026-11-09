@@ -4,6 +4,7 @@ import app.coshell.core.data.db.DownloadedRateEntity
 import app.coshell.core.data.db.ManualRateEntity
 import app.coshell.core.data.db.RateDao
 import app.coshell.core.data.db.manualRateId
+import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RatesSnapshot
 import app.coshell.core.model.CurrencyCode
@@ -46,6 +47,11 @@ class RoomExchangeRateRepository(
         val now = stamper.stamp().now
         rates.upsertDownloaded(snapshot.rates.map { it.toDownloadedEntity(snapshot.source, now) })
     }
+
+    override fun observeLatestDownload(): Flow<DownloadInfo?> =
+        rates.observeLatestDownloaded().map { row ->
+            row?.let { DownloadInfo(LocalDate.parse(it.date), it.source, Instant.fromEpochMilliseconds(it.downloadedAt)) }
+        }
 
     override suspend fun latestDownloadedDate(): LocalDate? = rates.latestDownloadedDate()?.let(LocalDate::parse)
 

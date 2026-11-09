@@ -98,6 +98,19 @@ class ExchangeRateRepositoryTest {
     }
 
     @Test
+    fun `latest download reports the newest date and its source`() = runTest {
+        rates.observeLatestDownload().test {
+            assertNull(awaitItem())
+            rates.saveDownloaded(RatesSnapshot(nov10, usd, listOf(downloaded(nov10, ars, "1460")), "currency-api/jsdelivr"))
+            val latest = awaitItem()!!
+            assertEquals(nov10, latest.date)
+            assertEquals("currency-api/jsdelivr", latest.source)
+            rates.saveDownloaded(snapshot(nov9, downloaded(nov9, ars, "1450")))
+            assertEquals(nov10, awaitItem()!!.date)
+        }
+    }
+
+    @Test
     fun `observeRates gives manual and downloaded rates together`() = runTest {
         rates.saveDownloaded(snapshot(nov9, downloaded(nov9, ars, "1440")))
         rates.saveManualRate(manual(nov9, usd, ars, "1500"))

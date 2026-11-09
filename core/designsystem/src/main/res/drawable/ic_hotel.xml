@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Outlined, weight 300: hotel (Apache 2.0) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="false"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M60-220v-560h60v380h330v-300h310q57.75 0 98.87 41.13Q900-617.75 900-560v340h-60v-120H120v120H60Zm147.5-267.55q-29.81-29.85-29.81-72.5 0-42.64 29.86-72.45 29.85-29.81 72.5-29.81 42.64 0 72.45 29.86 29.81 29.85 29.81 72.5 0 42.64-29.86 72.45-29.85 29.81-72.5 29.81-42.64 0-72.45-29.86ZM510-400h330v-160q0-33-23.5-56.5T760-640H510v240ZM310.04-529.96q12.27-12.27 12.27-30.04t-12.27-30.04q-12.27-12.27-30.04-12.27t-30.04 12.27q-12.27 12.27-12.27 30.04t12.27 30.04q12.27 12.27 30.04 12.27t30.04-12.27ZM280-560Zm230-80v240-240Z" />
+    </group>
+</vector>

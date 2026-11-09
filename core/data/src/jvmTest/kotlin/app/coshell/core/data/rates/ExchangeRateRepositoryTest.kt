@@ -20,6 +20,7 @@ import app.coshell.core.model.TransactionType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -127,6 +128,24 @@ class ExchangeRateRepositoryTest {
             ),
         )
         assertEquals(setOf(usdt, ars, amd), rates.usedCurrencies())
+    }
+
+    @Test
+    fun `operation days are local calendar days of live operations`() = runTest {
+        val accounts = RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
+        val transactions = RoomTransactionRepository(db.transactionDao(), stamper)
+        accounts.saveAccount(Account("cash", "Песо", ars))
+        fun op(id: String, at: String) =
+            Transaction(id, TransactionType.EXPENSE, "cash", Money(1_00, ars), Instant.parse(at))
+        transactions.saveTransaction(op("late", "2026-11-10T02:00:00Z")) // Nov 9, 23:00 in Buenos Aires
+        transactions.saveTransaction(op("noon", "2026-11-09T15:00:00Z"))
+        transactions.saveTransaction(op("gone", "2026-11-01T15:00:00Z"))
+        transactions.deleteTransaction("gone")
+        assertEquals(setOf(nov9), rates.operationDates(TimeZone.of("America/Argentina/Buenos_Aires")))
+        assertEquals(setOf(nov9, nov10), rates.operationDates(TimeZone.UTC))
+
+        rates.saveDownloaded(snapshot(nov9, downloaded(nov9, ars, "1440"), downloaded(nov9, amd, "386")))
+        assertEquals(setOf(nov9), rates.downloadedDates())
     }
 
     @Test

@@ -13,7 +13,10 @@ import app.coshell.core.model.RateOrigin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class RoomExchangeRateRepository(
     private val rates: RateDao,
@@ -45,6 +48,11 @@ class RoomExchangeRateRepository(
     }
 
     override suspend fun latestDownloadedDate(): LocalDate? = rates.latestDownloadedDate()?.let(LocalDate::parse)
+
+    override suspend fun downloadedDates(): Set<LocalDate> = rates.downloadedDates().map(LocalDate::parse).toSet()
+
+    override suspend fun operationDates(timeZone: TimeZone): Set<LocalDate> =
+        rates.operationTimes().mapTo(HashSet()) { Instant.fromEpochMilliseconds(it).toLocalDateTime(timeZone).date }
 
     override suspend fun usedCurrencies(): Set<CurrencyCode> =
         rates.usedCurrencies().mapNotNull(CurrencyCode::parseOrNull).toSet()

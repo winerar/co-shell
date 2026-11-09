@@ -28,6 +28,13 @@ interface RateDao {
     @Query("SELECT MAX(date) FROM downloaded_rates")
     suspend fun latestDownloadedDate(): String?
 
+    @Query("SELECT DISTINCT date FROM downloaded_rates")
+    suspend fun downloadedDates(): List<String>
+
+    /** Epoch millis of live operations; days are computed in Kotlin (time zone). */
+    @Query("SELECT DISTINCT date FROM transactions WHERE deleted = 0")
+    suspend fun operationTimes(): List<Long>
+
     /** Every currency live data is kept in; NULLs of optional columns are dropped. */
     @Query(
         """SELECT currency FROM accounts WHERE deleted = 0

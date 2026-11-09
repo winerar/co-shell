@@ -176,6 +176,10 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
+2026-11-09, ветка `ccr-12f50c1f-wtblfm` (PR → `dev`): **срочный фикс** — в релизах #52/#56 нижняя панель
+занимала весь экран (`fillMaxHeight` у ячейки «+» в `CoShellBottomBar`), экраны были высотой 0 и «не переключались».
+Убрано, добавлен `BottomBarLayoutRuleTest`. Нужен релиз `dev` → `main` по команде владельца; проверить на телефоне.
+
 2026-11-09, ветка `ccr-9c436267-yfitee` (PR → `dev`): релиз winerar/co-shell#56 (`dev` → `main`) смержен по команде
 владельца; **этап 5а** — разбор CSV Wallet в `core:domain/importer/` (+31 тест).
 

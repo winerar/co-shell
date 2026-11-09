@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.theme.LocalDarkTheme
 
 /**
@@ -21,7 +21,7 @@ import app.coshell.core.designsystem.theme.LocalDarkTheme
  * shown: category list, transaction list, pickers. Missing colour → neutral grey.
  */
 @Composable
-fun CategoryBadge(icon: String?, color: Long?, modifier: Modifier = Modifier, size: Dp = 40.dp) {
+fun CategoryBadge(icon: String?, color: Long?, modifier: Modifier = Modifier, size: Dp = Sizes.badge) {
     IconBadge(CategoryIcons.drawableFor(icon), color?.let { categoryColor(it) }, modifier, size)
 }
 
@@ -31,7 +31,7 @@ fun categoryColor(stored: Long): Color = Color(CategoryPalette.display(stored, L
 
 /** Same circle for any drawable, e.g. transfers in the transaction list. `null` [color] = neutral. */
 @Composable
-fun IconBadge(@DrawableRes iconRes: Int, color: Color?, modifier: Modifier = Modifier, size: Dp = 40.dp) {
+fun IconBadge(@DrawableRes iconRes: Int, color: Color?, modifier: Modifier = Modifier, size: Dp = Sizes.badge) {
     val tint = color ?: MaterialTheme.colorScheme.onSurfaceVariant
     Box(
         modifier = modifier

@@ -1,27 +1,13 @@
 package app.coshell.ui.sheet
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellButton
-import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.components.CoShellSheetLayout
 
-/**
- * Inside of an editor sheet: title, scrolling form, and «Сохранить» pinned at the bottom across the
- * width — under the thumb and above the keyboard. No back arrow: the sheet closes by swipe or gesture.
- */
+/** Editor inside a `CoShellSheet`: title, form and «Сохранить» pinned at the bottom (`CoShellSheetLayout`). */
 @Composable
 fun EditSheetLayout(
     title: String,
@@ -30,28 +16,12 @@ fun EditSheetLayout(
     saveEnabled: Boolean = true,
     showSave: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
-) {
-    Column(modifier.imePadding()) {
-        Text(
-            title,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s),
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f, fill = false)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = Spacing.l, vertical = Spacing.s),
-            verticalArrangement = Arrangement.spacedBy(Spacing.l),
-            content = content,
-        )
-        if (showSave) {
-            CoShellButton(
-                onClick = onSave,
-                enabled = saveEnabled,
-                tactile = Tactile.Primary,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.m),
-            ) { Text(stringResource(R.string.action_save)) }
-        }
-    }
-}
+) = CoShellSheetLayout(
+    title = title,
+    actionLabel = stringResource(R.string.action_save),
+    onAction = onSave,
+    modifier = modifier,
+    actionEnabled = saveEnabled,
+    showAction = showSave,
+    content = content,
+)

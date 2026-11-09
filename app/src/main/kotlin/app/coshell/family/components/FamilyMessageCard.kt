@@ -1,16 +1,10 @@
 package app.coshell.family.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.family.FamilyMessage
 
 /** Result of the last action on the family screen. */
@@ -24,12 +18,5 @@ internal fun FamilyMessageCard(message: FamilyMessage, modifier: Modifier = Modi
         is FamilyMessage.InviteSent -> stringResource(R.string.family_msg_invite_sent, message.email)
         is FamilyMessage.Synced -> stringResource(R.string.family_msg_synced, message.received, message.sent)
     }
-    val colors = if (message.isError) {
-        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-    } else {
-        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-    }
-    Card(colors = colors, modifier = modifier.fillMaxWidth()) {
-        Text(text, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(Spacing.l))
-    }
+    CoShellMessage(text, message.isError, modifier)
 }

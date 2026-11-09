@@ -1,7 +1,6 @@
 package app.coshell.family.components
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.family.FamilyActions
 import app.coshell.family.FamilyUiState
@@ -36,16 +36,13 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
             stringResource(R.string.family_you).takeIf { m.uid == joined.me.uid },
             stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid },
         )
-        ListItem(
-            headlineContent = { Text(m.name.ifBlank { m.email }) },
-            supportingContent = { Text((listOf(m.email) + tags).joinToString(" · ")) },
-        )
+        CoShellListRow(title = m.name.ifBlank { m.email }, subtitle = (listOf(m.email) + tags).joinToString(" · "))
     }
     state.invites.forEach { email ->
-        ListItem(
-            headlineContent = { Text(email) },
-            supportingContent = { Text(stringResource(R.string.family_invite_pending)) },
-            trailingContent = {
+        CoShellListRow(
+            title = email,
+            subtitle = stringResource(R.string.family_invite_pending),
+            trailing = {
                 CoShellIconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
                     Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.family_invite_cancel))
                 }

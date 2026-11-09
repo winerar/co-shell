@@ -1,5 +1,6 @@
 package app.coshell.rates.list
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.rates.list.components.CurrentRateRow
@@ -89,6 +89,6 @@ private fun MutedLine(text: String) {
         text,
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
     )
 }

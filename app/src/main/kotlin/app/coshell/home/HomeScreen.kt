@@ -1,32 +1,33 @@
 package app.coshell.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
 import app.coshell.ui.top.TabTopBar
@@ -57,8 +58,8 @@ fun HomeScreen(
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(Spacing.l),
+            verticalArrangement = Arrangement.spacedBy(Spacing.l),
         ) {
             if (state.isLoading) return@LazyColumn
             if (state.accounts.isEmpty()) {
@@ -80,37 +81,36 @@ fun HomeScreen(
                 Text(
                     text = stringResource(R.string.home_accounts),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier.padding(top = Spacing.s),
                 )
             }
-            items(state.accounts, key = { it.id }) { AccountItem(it, onAccountClick, Modifier.animateItem()) }
+            item { AccountsCard(state.accounts, onAccountClick) }
         }
     }
 }
 
+/** All accounts as one list group: name (and "not in the total"), balance on the right; tap opens the editor. */
 @Composable
-private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun AccountsCard(accounts: List<HomeUiState.AccountRow>, onClick: (String) -> Unit) {
     val palette = LocalAmountPalette.current
-    CoShellCard(modifier = modifier.fillMaxWidth(), onClick = { onClick(row.id) }) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column(Modifier.weight(1f)) {
-                Text(row.name, style = MaterialTheme.typography.bodyLarge)
-                if (row.excludedFromTotal) {
-                    Text(
-                        stringResource(R.string.account_excluded_from_total),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+    // Rows appear and disappear smoothly: the card's height follows them (design-questions §6). A relayout per
+    // frame, but only when an account is added or archived — rare, so it is worth it.
+    CoShellCard(Modifier.fillMaxWidth().animateContentSize(Motion.medium())) {
+        accounts.forEach { row ->
+            key(row.id) {
+                CoShellListRow(
+                    title = row.name,
+                    subtitle = if (row.excludedFromTotal) stringResource(R.string.account_excluded_from_total) else null,
+                    trailing = {
+                        AmountText(
+                            text = row.balance,
+                            style = AmountTextStyle,
+                            color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,
+                        )
+                    },
+                    onClick = { onClick(row.id) },
+                )
             }
-            AmountText(
-                text = row.balance,
-                style = AmountTextStyle,
-                color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,
-            )
         }
     }
 }

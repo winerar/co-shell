@@ -1,5 +1,7 @@
 package app.coshell.feedback
 
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
@@ -49,26 +49,24 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).imePadding()
-                .verticalScroll(rememberScrollState()).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .verticalScroll(rememberScrollState()).padding(Spacing.l),
+            verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             Text(
                 stringResource(R.string.feedback_intro),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedTextField(
+            CoShellTextField(
                 value = state.text,
                 onValueChange = actions.onTextChange,
-                label = { Text(stringResource(R.string.feedback_text_label)) },
-                supportingText = {
-                    Text(stringResource(R.string.feedback_counter, state.text.trim().length, SendFeedbackUseCase.MAX_LENGTH))
-                },
+                label = stringResource(R.string.feedback_text_label),
+                hint = stringResource(R.string.feedback_counter, state.text.trim().length, SendFeedbackUseCase.MAX_LENGTH),
                 isError = state.text.trim().length > SendFeedbackUseCase.MAX_LENGTH,
                 enabled = !state.isSending,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                singleLine = false,
                 minLines = 6,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 160.dp),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             )
             SendButton(enabled = state.canSend, onClick = actions.onSend)
             if (state.isSending) LinearProgressIndicator(Modifier.fillMaxWidth())

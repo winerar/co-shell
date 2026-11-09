@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellTextButton
@@ -48,7 +48,7 @@ fun DateChips(
     val yesterday = today.minus(1, DateTimeUnit.DAY)
     val isOther = date != today && date != yesterday
 
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
         CoShellFilterChip(
             selected = date == today,
             onClick = { onSelect(today) },

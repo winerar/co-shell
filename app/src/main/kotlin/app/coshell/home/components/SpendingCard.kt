@@ -8,14 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.formatMonth
 
@@ -24,7 +25,7 @@ import app.coshell.ui.format.formatMonth
 internal fun SpendingCard(spending: HomeUiState.MonthSpending) {
     val palette = LocalAmountPalette.current
     CoShellCard(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(20.dp)) {
+        Column(Modifier.padding(Spacing.l)) {
             Text(
                 stringResource(R.string.home_spending_title, formatMonth(spending.month)),
                 style = MaterialTheme.typography.labelLarge,
@@ -47,11 +48,4 @@ internal fun SpendingCard(spending: HomeUiState.MonthSpending) {
 }
 
 @Composable
-private fun SpendingCaption(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(top = 4.dp),
-    )
-}
+private fun SpendingCaption(text: String) = CoShellHint(text, Modifier.padding(top = Spacing.xs))

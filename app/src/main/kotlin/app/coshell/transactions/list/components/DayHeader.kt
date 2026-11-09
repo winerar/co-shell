@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.transactions.list.TransactionsUiState.RelativeDay
 import java.time.format.DateTimeFormatter
@@ -16,7 +16,7 @@ import java.time.format.FormatStyle
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
 
-/** Sticky day title: "Сегодня", "Вчера" or the full date in the phone's locale. */
+/** Sticky day title: "Сегодня", "Вчера" or the full date in the app's language (AppLanguage). */
 @Composable
 internal fun DayHeader(date: LocalDate, relative: RelativeDay) {
     val text = when (relative) {
@@ -31,6 +31,6 @@ internal fun DayHeader(date: LocalDate, relative: RelativeDay) {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = Spacing.l, vertical = Spacing.s),
     )
 }

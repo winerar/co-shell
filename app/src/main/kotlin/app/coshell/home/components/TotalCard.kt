@@ -14,15 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.RollingAmountText
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.formatDayMonth
 
@@ -39,7 +40,7 @@ internal fun TotalCard(state: HomeUiState) {
         accent = true,
         onClick = if (canExpand) ({ expanded = !expanded }) else null,
     ) {
-        Column(Modifier.padding(20.dp)) {
+        Column(Modifier.padding(Spacing.l)) {
             Text(stringResource(R.string.home_total_balance), style = MaterialTheme.typography.labelLarge)
             state.totals.forEachIndexed { index, total ->
                 if (index == 0) {
@@ -69,12 +70,6 @@ private fun AmountLine(text: String, style: TextStyle, color: Color) {
     AmountText(text = text, style = style, color = color, minFontSize = 16.sp)
 }
 
+/** Rate date, missing currencies, "tap for details" — grey hint under the amounts. */
 @Composable
-private fun Caption(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
-        modifier = Modifier.padding(top = 4.dp),
-    )
-}
+private fun Caption(text: String) = CoShellHint(text, Modifier.padding(top = Spacing.xs))

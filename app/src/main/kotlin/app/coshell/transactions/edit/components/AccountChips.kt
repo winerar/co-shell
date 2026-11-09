@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 
@@ -13,7 +13,7 @@ import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AccountChips(accounts: List<AccountOption>, selectedId: String?, onSelect: (String) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
         accounts.forEach { account ->
             CoShellFilterChip(
                 selected = account.id == selectedId,

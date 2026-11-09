@@ -85,11 +85,11 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 
 ## Переиспользование (пожелание владельца)
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
-компонентом с параметрами, а не копируй. Шторка-редактор — `ui/sheet/` (`EditSheetHost`, `EditSheetLayout`
-с закреплённой «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, «Отменить» — `undo/UndoCenter`.
-Готовые общие блоки форм — `ui/form/`:
-`NameField`, `FormSection`/`FormHint`, `EditFooter` (Архив/Удалить), `DeleteButton`,
-`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`, строка-переключатель настройки — `ui/list/SwitchRow`.
+компонентом с параметрами, а не копируй. Шторка-редактор — `CoShellSheet` (дизайн-система) + `ui/sheet/EditSheetLayout`
+(закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, «Отменить» — `undo/UndoCenter`.
+Базовые блоки — в `core:designsystem` `components/` (поля, строки, диалоги, разделы форм, сообщения —
+`design-system.md` §«Компоненты»). Обёртки со строками приложения — `ui/form/`: `EditFooter` (Архив/Удалить),
+`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строка меню — `ui/list/ActionRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

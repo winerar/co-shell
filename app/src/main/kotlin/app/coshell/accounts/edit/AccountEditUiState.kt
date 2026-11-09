@@ -14,6 +14,10 @@ data class AccountEditUiState(
     val archived: Boolean = false,
     /** Counted in the total balance on «Обзор»; off for debts and someone else's money. */
     val includedInTotal: Boolean = true,
+    /** Shared by the family; off — personal account of its owner (still visible to everyone). */
+    val shared: Boolean = true,
+    /** The family has other members, so «shared / personal» means something. */
+    val showSharing: Boolean = false,
     /** The account has transactions, so its currency cannot be changed. */
     val currencyLocked: Boolean = false,
     val suggestedCurrencies: List<String> = emptyList(),

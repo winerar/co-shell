@@ -40,3 +40,11 @@ fun normalizeEmail(email: String): String = email.trim().lowercase()
 /** Light check for the invite form; Google decides what really exists. */
 fun isPlausibleEmail(email: String): Boolean =
     Regex("^[^@\\s/]+@[^@\\s/]+\\.[^@\\s/]+$").matches(normalizeEmail(email))
+
+/**
+ * Names of the *other* family members by uid — for «who added it» in lists. Empty when not in a
+ * family or alone in it, so single-user screens stay as they were.
+ */
+fun interface OtherMembers {
+    fun names(): kotlinx.coroutines.flow.Flow<Map<String, String>>
+}

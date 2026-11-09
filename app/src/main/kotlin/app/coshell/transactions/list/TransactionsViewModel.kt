@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.model.MoneyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class TransactionsViewModel @Inject constructor(
     transactions: TransactionRepository,
     accounts: AccountRepository,
     categories: CategoryRepository,
+    otherMembers: OtherMembers,
     moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
@@ -32,7 +34,8 @@ class TransactionsViewModel @Inject constructor(
         transactions.observeTransactions(),
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
-    ) { items, accountList, categoryList ->
+        otherMembers.names(),
+    ) { items, accountList, categoryList, authors ->
         TransactionsUiState(
             days = buildTransactionDays(
                 transactions = items,
@@ -41,6 +44,7 @@ class TransactionsViewModel @Inject constructor(
                 moneyFormat = moneyFormat,
                 timeZone = timeZone,
                 today = clock.now().toLocalDateTime(timeZone).date,
+                authors = authors,
             ),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))

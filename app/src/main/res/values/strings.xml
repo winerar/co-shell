@@ -235,6 +235,11 @@
     <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
     <string name="rates_attribution">Rates By Exchange Rate API</string>
 
+    <string name="account_shared">Общий счёт</string>
+    <string name="account_shared_hint">Выключите для личного счёта — он останется виден всей семье, но с пометкой «личный»</string>
+    <string name="account_personal_mine">личный</string>
+    <string name="account_personal_of">личный · %1$s</string>
+
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
     <string name="family_title">Семья и синхронизация</string>
     <string name="family_menu_hint">Общий бюджет на двух телефонах</string>

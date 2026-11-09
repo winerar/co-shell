@@ -34,6 +34,18 @@ class TransactionDaysTest {
         buildTransactionDays(items.toList(), accounts, categories, MoneyFormat.RU, zone, today)
 
     @Test
+    fun `shows the author only for other members' operations`() {
+        val items = listOf(
+            Transaction("mine", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 9), authorMemberId = "me"),
+            Transaction("hers", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 10), authorMemberId = "wife"),
+            Transaction("old", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 11)),
+        )
+        val rows = buildTransactionDays(items, accounts, categories, MoneyFormat.RU, zone, today, authors = mapOf("wife" to "Маша"))
+            .single().rows.associate { it.id to it.author }
+        assertEquals(mapOf("mine" to null, "hers" to "Маша", "old" to null), rows)
+    }
+
+    @Test
     fun `groups by local day newest first with relative labels`() {
         val days = build(
             Transaction("a", TransactionType.EXPENSE, "card", Money(100, ars), at(6, 10)),

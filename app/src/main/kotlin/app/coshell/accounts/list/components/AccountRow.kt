@@ -33,8 +33,12 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit) {
             Column(Modifier.weight(1f)) {
                 Text(row.name, style = MaterialTheme.typography.bodyLarge)
                 val type = stringResource(row.type.labelRes)
+                val personal = row.personalOf?.let {
+                    if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
+                }
+                val base = listOfNotNull(type, personal).joinToString(" · ")
                 Text(
-                    if (row.excludedFromTotal) stringResource(R.string.account_excluded_suffix, type) else type,
+                    if (row.excludedFromTotal) stringResource(R.string.account_excluded_suffix, base) else base,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

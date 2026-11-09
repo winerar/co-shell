@@ -12,7 +12,10 @@ import app.coshell.core.domain.family.FamilyRemote.Companion.FAMILY_ID
 import app.coshell.core.model.Family
 import app.coshell.core.model.Invite
 import app.coshell.core.model.Member
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
@@ -41,6 +44,12 @@ class FamilyService(
     val joined: Family? get() = (_state.value as? FamilyState.Joined)?.family
 
     private var loaded = false
+
+    /** Other members' names by uid (see [app.coshell.core.domain.family.OtherMembers]). */
+    fun otherMemberNames(): Flow<Map<String, String>> = _state.map { s ->
+        (s as? FamilyState.Joined)?.let { j -> j.family.members.filter { it.uid != j.me.uid }.associate { it.uid to it.name.ifBlank { it.email } } }
+            .orEmpty()
+    }.distinctUntilChanged()
 
     /** Restores the state from the cache without network. Only the first call does anything. */
     suspend fun load() {

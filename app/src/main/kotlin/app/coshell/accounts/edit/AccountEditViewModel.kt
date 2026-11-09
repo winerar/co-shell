@@ -8,6 +8,7 @@ import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.SaveAccountUseCase
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.CurrencyCode
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -32,6 +34,7 @@ class AccountEditViewModel @Inject constructor(
     private val deleteAccount: DeleteAccountUseCase,
     private val ids: IdGenerator,
     private val moneyFormat: MoneyFormat,
+    private val otherMembers: OtherMembers = OtherMembers { flowOf(emptyMap()) },
 ) : ViewModel() {
 
     private val accountId: String? = savedStateHandle[AccountEditDestination.ARG_ACCOUNT_ID]
@@ -53,9 +56,10 @@ class AccountEditViewModel @Inject constructor(
 
         val account = accountId?.let { accounts.getAccount(it) }
         existing = account
+        val showSharing = otherMembers.names().first().isNotEmpty()
         _state.update {
             if (account == null) {
-                it.copy(isLoading = false, isNew = true, currency = suggested.first(), suggestedCurrencies = suggested)
+                it.copy(isLoading = false, isNew = true, currency = suggested.first(), suggestedCurrencies = suggested, showSharing = showSharing)
             } else {
                 it.copy(
                     isLoading = false,
@@ -66,6 +70,8 @@ class AccountEditViewModel @Inject constructor(
                     initialBalance = formatForEditing(account),
                     archived = account.archived,
                     includedInTotal = !account.excludedFromTotal,
+                    shared = account.isShared,
+                    showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
                 )
@@ -84,6 +90,8 @@ class AccountEditViewModel @Inject constructor(
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
 
     fun onIncludedInTotalChange(value: Boolean) = _state.update { it.copy(includedInTotal = value) }
+
+    fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
 
     fun save() {
         val current = _state.value
@@ -158,6 +166,9 @@ class AccountEditViewModel @Inject constructor(
             type = form.type,
             initialBalanceMinor = balanceMinor,
             excludedFromTotal = !form.includedInTotal,
+            isShared = form.shared,
+            // The repository makes the current member the owner of a new personal account.
+            ownerMemberId = if (form.shared) null else base.ownerMemberId,
         )
     }
 

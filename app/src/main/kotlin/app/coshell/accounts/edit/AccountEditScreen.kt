@@ -68,6 +68,15 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                 checked = state.includedInTotal,
                 onCheckedChange = actions.onIncludedInTotalChange,
             )
+            if (state.showSharing) {
+                SwitchRow(
+                    icon = null,
+                    title = stringResource(R.string.account_shared),
+                    subtitle = stringResource(R.string.account_shared_hint),
+                    checked = state.shared,
+                    onCheckedChange = actions.onSharedChange,
+                )
+            }
             EditFooter(
                 isNew = state.isNew,
                 archived = state.archived,

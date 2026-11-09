@@ -15,6 +15,7 @@ import app.coshell.core.data.remote.HttpClient
 import app.coshell.core.data.sync.SyncEngine
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.family.FamilyRemote
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.family.data.PrefsSessionStore
 import app.coshell.family.data.SafetyBackupWriter
 import app.coshell.family.data.UrlConnectionHttpClient
@@ -73,6 +74,9 @@ object SyncModule {
         val writer = SafetyBackupWriter(context)
         return FamilyService(isConfigured, auth, remote, dao, engine, backup) { writer.write(it) }
     }
+
+    @Provides
+    fun provideOtherMembers(family: FamilyService): OtherMembers = OtherMembers { family.otherMemberNames() }
 
     @Provides
     fun provideForegroundSync(@ApplicationContext context: Context, family: FamilyService, dao: SyncDao) =

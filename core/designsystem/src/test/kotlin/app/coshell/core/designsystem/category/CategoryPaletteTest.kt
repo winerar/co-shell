@@ -9,9 +9,9 @@ import org.junit.Test
 
 class CategoryPaletteTest {
     @Test
-    fun twentyFourDistinctColours() {
-        assertEquals(24, CategoryPalette.colors.size)
-        assertEquals(24, CategoryPalette.colors.toSet().size)
+    fun thirtySixDistinctColours() {
+        assertEquals(36, CategoryPalette.colors.size)
+        assertEquals(36, CategoryPalette.colors.toSet().size)
     }
 
     @Test

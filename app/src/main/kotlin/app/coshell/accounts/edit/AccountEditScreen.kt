@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.edit.components.AccountTypeSection
+import app.coshell.accounts.edit.components.BankColorSection
 import app.coshell.accounts.edit.components.CurrencySection
 import app.coshell.accounts.edit.components.InitialBalanceField
 import app.coshell.ui.form.ConfirmDeleteDialog
@@ -39,6 +40,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
         CurrencySection(state, actions.onCurrencyChange)
         AccountTypeSection(state.type, actions.onTypeChange)
         InitialBalanceField(state.initialBalance, state.balanceError, actions.onInitialBalanceChange)
+        BankColorSection(state.name, state.color, actions.onColorChange)
         ColorSection(state.color, actions.onColorChange, allowNone = true)
         CoShellSwitchRow(
             title = stringResource(R.string.account_included_in_total),

@@ -67,6 +67,9 @@
     <string name="account_type">Тип</string>
     <string name="account_initial_balance">Начальный баланс</string>
     <string name="account_initial_balance_hint">Сколько было на счёте до первой записанной операции. Для долга — со знаком минус.</string>
+    <string name="account_bank_colors">Цвет банка или приложения</string>
+    <string name="account_bank_suggest">Похоже на %1$s — взять его цвет</string>
+    <string name="account_bank_take">Взять</string>
     <string name="account_included_in_total">Учитывать в общем балансе</string>
     <string name="account_included_in_total_hint">Выключите для долга или чужих денег — счёт не попадёт в общий баланс на «Обзоре»</string>
     <string name="account_excluded_from_total">Не в общем балансе</string>

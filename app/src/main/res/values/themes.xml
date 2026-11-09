@@ -1,3 +1,7 @@
 <resources>
-    <style name="Theme.CoShell" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Window background = CoShellTheme background, so a cold start shows no flash. -->
+    <style name="Theme.CoShell" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+    <color name="window_background">#FFF7FAFA</color>
 </resources>

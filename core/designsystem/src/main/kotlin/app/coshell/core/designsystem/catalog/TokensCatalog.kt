@@ -16,14 +16,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountInputStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -37,6 +42,26 @@ fun TokensCatalog() {
         Text("1 049,69 ARS", style = AmountInputStyle)
         Text("−12,50 USDT", style = AmountTextStyle)
 
+        Text("Цвета", style = MaterialTheme.typography.titleSmall)
+        ColorRow(
+            listOf(
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.primaryContainer,
+                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.tertiary,
+                MaterialTheme.colorScheme.error,
+            ),
+        )
+        ColorRow(
+            listOf(
+                LocalAmountPalette.current.income,
+                LocalAmountPalette.current.expense,
+                LocalAmountPalette.current.transfer,
+                LocalStatusPalette.current.warning,
+            ),
+        )
+        CategoryPalette.colors.chunked(9).forEach { row -> ColorRow(row.map { categoryColor(it) }) }
+
         Text("Отступы", style = MaterialTheme.typography.titleSmall)
         Spacing.scale.forEach { SpacingSample(it) }
 
@@ -44,6 +69,13 @@ fun TokensCatalog() {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             listOf(Radii.small, Radii.medium, Radii.large, Radii.extraLarge).forEach { RadiusSample(it) }
         }
+    }
+}
+
+@Composable
+private fun ColorRow(colors: List<Color>) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+        colors.forEach { Box(Modifier.size(Spacing.xl).background(it, RoundedCornerShape(Radii.small))) }
     }
 }
 

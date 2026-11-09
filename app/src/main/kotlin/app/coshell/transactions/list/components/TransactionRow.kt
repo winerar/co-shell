@@ -70,5 +70,5 @@ private fun RowState.titleText(): String = title ?: stringResource(
 private fun RowState.amountColor() = when (kind) {
     Kind.EXPENSE -> LocalAmountPalette.current.expense
     Kind.INCOME -> LocalAmountPalette.current.income
-    Kind.TRANSFER -> MaterialTheme.colorScheme.onSurface
+    Kind.TRANSFER -> LocalAmountPalette.current.transfer
 }

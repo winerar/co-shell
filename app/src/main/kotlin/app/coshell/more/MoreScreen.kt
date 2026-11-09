@@ -17,12 +17,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.currencies.list.ReportCurrenciesViewModel
+import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.shake.ShakeSettingsViewModel
+import app.coshell.theme.ThemeSettingsViewModel
+import app.coshell.theme.components.ThemeModeRow
 import app.coshell.ui.list.ActionRow
 import app.coshell.ui.list.SwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Menu tab: links to categories, exchange rates, report currencies, family sync, backup, app update and feedback, plus the shake-to-add switch.
+// Menu tab: links to categories, exchange rates, report currencies, family sync, backup, app update and feedback, plus the theme and shake-to-add settings.
 
 @Composable
 fun MoreRoute(
@@ -35,9 +38,11 @@ fun MoreRoute(
     onFeedback: () -> Unit,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
+    themeSettings: ThemeSettingsViewModel = hiltViewModel(),
 ) {
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     val currencies by reportCurrencies.state.collectAsStateWithLifecycle()
+    val themeMode by themeSettings.mode.collectAsStateWithLifecycle()
     MoreScreen(
         onCategories = onCategories,
         onRates = onRates,
@@ -49,6 +54,8 @@ fun MoreRoute(
         onFeedback = onFeedback,
         shakeEnabled = shakeEnabled,
         onShakeEnabledChange = shakeSettings::setEnabled,
+        themeMode = themeMode ?: ThemeMode.SYSTEM,
+        onThemeModeChange = themeSettings::setMode,
     )
 }
 
@@ -65,6 +72,8 @@ fun MoreScreen(
     onFeedback: () -> Unit,
     shakeEnabled: Boolean,
     onShakeEnabledChange: (Boolean) -> Unit,
+    themeMode: ThemeMode,
+    onThemeModeChange: (ThemeMode) -> Unit,
 ) {
     Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.nav_more)) }) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
@@ -128,6 +137,7 @@ fun MoreScreen(
                     opensScreen = true,
                 )
             }
+            item { ThemeModeRow(selected = themeMode, onSelect = onThemeModeChange) }
             item {
                 SwitchRow(
                     icon = DesignR.drawable.ic_mobile_vibrate,
@@ -156,6 +166,8 @@ private fun MoreScreenPreview() {
             onFeedback = {},
             shakeEnabled = true,
             onShakeEnabledChange = {},
+            themeMode = ThemeMode.SYSTEM,
+            onThemeModeChange = {},
         )
      }
 }

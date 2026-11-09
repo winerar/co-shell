@@ -23,7 +23,27 @@ enum class ThemeMode {
     }
 }
 
+/**
+ * Colour palette of the app («Настройки → Тема», owner's choice 2026-11-09). Device-only like [ThemeMode].
+ * [VOLT] — acid lime, the default; [MOJITO] — soft lime; [MANGO] — warm sunset; [ULTRA] — electric blue.
+ */
+enum class ThemePalette {
+    VOLT,
+    MOJITO,
+    MANGO,
+    ULTRA,
+    ;
+
+    companion object {
+        /** Palette saved as [name]; unknown or missing → [VOLT]. */
+        fun parse(stored: String?): ThemePalette = entries.firstOrNull { it.name == stored } ?: VOLT
+    }
+}
+
 interface ThemeSettings {
     val mode: Flow<ThemeMode>
     suspend fun setMode(mode: ThemeMode)
+
+    val palette: Flow<ThemePalette>
+    suspend fun setPalette(palette: ThemePalette)
 }

@@ -1,88 +1,99 @@
 package app.coshell.core.designsystem.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 
 /**
- * Light theme (issue #62, variant B): mint-tinted white background, Neon Mint fills with dark ink (buttons,
- * selected tab, FAB, switches, selected day), acid lime as the second accent (Material puts
- * `secondaryContainer` under selected chips and segments). Neon on white is unreadable as text, so
- * text accents (links, headers, text buttons, focused fields) take [accentInk] — the ink, not a deep green.
+ * Light theme of a palette: tinted white background, the neon primary as a fill with dark ink (buttons,
+ * selected tab, FAB, switches, selected day); selected chips and segments sit on a pale wash of the accent
+ * (`secondaryContainer`). Neon on white is unreadable as text, so text accents take [accentInk] — the ink.
  */
-internal val CoShellLightColors = lightColorScheme(
-    primary = NeonMint,
-    onPrimary = MintInk,
-    primaryContainer = NeonMint,
-    onPrimaryContainer = MintInk,
-    inversePrimary = NeonMint,
-    secondary = LimeAcid,
-    onSecondary = LimeInk,
-    secondaryContainer = LimeAcid,
-    onSecondaryContainer = LimeInk,
-    tertiary = SkyDeep,
-    onTertiary = Color.White,
-    tertiaryContainer = SkyPale,
-    onTertiaryContainer = SkyInk,
-    error = AmountColors.ExpenseLight,
-    onError = Color.White,
-    errorContainer = CoralPale,
-    onErrorContainer = CoralInk,
-    background = Frost1,
-    onBackground = FrostText,
-    surface = Frost1,
-    onSurface = FrostText,
-    surfaceVariant = Frost4,
-    onSurfaceVariant = FrostTextMuted,
-    surfaceTint = NeonMint,
-    inverseSurface = Graphite4,
-    inverseOnSurface = GraphiteText,
-    outline = FrostLine,
-    outlineVariant = FrostLineSoft,
-    surfaceBright = Frost0,
-    surfaceDim = Frost5,
-    surfaceContainerLowest = Frost0,
-    surfaceContainerLow = Frost2,
-    surfaceContainer = Frost3,
-    surfaceContainerHigh = Frost4,
-    surfaceContainerHighest = Frost5,
-)
+internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
+    val n = lightNeutrals(p.backgroundLight)
+    return lightColorScheme(
+        primary = p.primary,
+        onPrimary = p.onPrimary,
+        primaryContainer = p.primary,
+        onPrimaryContainer = p.onPrimary,
+        inversePrimary = p.primary,
+        secondary = p.accentLight,
+        onSecondary = Color.White,
+        secondaryContainer = lerp(p.accentDark, Color.White, 0.78f),
+        onSecondaryContainer = lerp(p.accentLight, Color.Black, 0.55f),
+        tertiary = p.tertiaryLight,
+        onTertiary = Color.White,
+        tertiaryContainer = lerp(p.tertiaryDark, Color.White, 0.72f),
+        onTertiaryContainer = lerp(p.tertiaryLight, Color.Black, 0.55f),
+        error = p.expenseLight,
+        onError = Color.White,
+        errorContainer = CoralPale,
+        onErrorContainer = CoralInk,
+        background = n.background,
+        onBackground = n.text,
+        surface = n.background,
+        onSurface = n.text,
+        surfaceVariant = n.high,
+        onSurfaceVariant = n.textMuted,
+        surfaceTint = p.primary,
+        inverseSurface = darkNeutrals(p.backgroundDark).high,
+        inverseOnSurface = darkNeutrals(p.backgroundDark).text,
+        outline = n.line,
+        outlineVariant = n.lineSoft,
+        surfaceBright = n.bright,
+        surfaceDim = n.highest,
+        surfaceContainerLowest = n.lowest,
+        surfaceContainerLow = n.low,
+        surfaceContainer = n.container,
+        surfaceContainerHigh = n.high,
+        surfaceContainerHighest = n.highest,
+    )
+}
 
-/** Dark theme: graphite background, neon accents as is (Neon Mint fills with dark ink), no glow effects. */
-internal val CoShellDarkColors = darkColorScheme(
-    primary = NeonMint,
-    onPrimary = MintInk,
-    primaryContainer = NeonMint,
-    onPrimaryContainer = MintInk,
-    inversePrimary = FrostText,
-    secondary = VioletNeon,
-    onSecondary = VioletInk,
-    secondaryContainer = VioletShadow,
-    onSecondaryContainer = VioletPale,
-    tertiary = SkyNeon,
-    onTertiary = SkyInk,
-    tertiaryContainer = SkyShadow,
-    onTertiaryContainer = SkyPale,
-    error = CoralNeon,
-    onError = CoralInk,
-    errorContainer = CoralShadow,
-    onErrorContainer = CoralPale,
-    background = Graphite1,
-    onBackground = GraphiteText,
-    surface = Graphite1,
-    onSurface = GraphiteText,
-    surfaceVariant = Graphite4,
-    onSurfaceVariant = GraphiteTextMuted,
-    surfaceTint = NeonMint,
-    inverseSurface = GraphiteText,
-    inverseOnSurface = Graphite4,
-    outline = GraphiteLine,
-    outlineVariant = GraphiteLineSoft,
-    surfaceBright = Graphite5,
-    surfaceDim = Graphite1,
-    surfaceContainerLowest = Graphite0,
-    surfaceContainerLow = Graphite2,
-    surfaceContainer = Graphite3,
-    surfaceContainerHigh = Graphite4,
-    surfaceContainerHighest = Graphite5,
-)
+/** Dark theme of a palette: tinted graphite, neon accents as is (the primary fills with dark ink), no glow. */
+internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
+    val n = darkNeutrals(p.backgroundDark)
+    return darkColorScheme(
+        primary = p.primary,
+        onPrimary = p.onPrimary,
+        primaryContainer = p.primary,
+        onPrimaryContainer = p.onPrimary,
+        inversePrimary = lightNeutrals(p.backgroundLight).text,
+        secondary = p.accentDark,
+        onSecondary = lerp(p.accentDark, Color.Black, 0.82f),
+        secondaryContainer = lerp(p.accentDark, n.background, 0.68f),
+        onSecondaryContainer = lerp(p.accentDark, Color.White, 0.75f),
+        tertiary = p.tertiaryDark,
+        onTertiary = lerp(p.tertiaryDark, Color.Black, 0.82f),
+        tertiaryContainer = lerp(p.tertiaryDark, n.background, 0.7f),
+        onTertiaryContainer = lerp(p.tertiaryDark, Color.White, 0.75f),
+        error = p.expenseDark,
+        onError = lerp(p.expenseDark, Color.Black, 0.85f),
+        errorContainer = CoralShadow,
+        onErrorContainer = CoralPale,
+        background = n.background,
+        onBackground = n.text,
+        surface = n.background,
+        onSurface = n.text,
+        surfaceVariant = n.high,
+        onSurfaceVariant = n.textMuted,
+        surfaceTint = p.primary,
+        inverseSurface = n.text,
+        inverseOnSurface = n.high,
+        outline = n.line,
+        outlineVariant = n.lineSoft,
+        surfaceBright = n.bright,
+        surfaceDim = n.background,
+        surfaceContainerLowest = n.lowest,
+        surfaceContainerLow = n.low,
+        surfaceContainer = n.container,
+        surfaceContainerHigh = n.high,
+        surfaceContainerHighest = n.highest,
+    )
+}
+
+/** The default palette's schemes — previews and tests that do not care about the palette. */
+internal val CoShellLightColors = lightSchemeOf(CoShellPalette.Volt.spec)
+internal val CoShellDarkColors = darkSchemeOf(CoShellPalette.Volt.spec)

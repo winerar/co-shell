@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Accent for text and thin lines: links, section headers, text buttons, focused fields, the selected tab.
- * Dark theme — Neon Mint itself; light theme — the ink: neon on white is unreadable, and the owner
- * dropped the deep green (2026-11-09). Fills use `colorScheme.primary` / `primaryContainer`.
+ * Dark theme — the palette's neon itself; light theme — the ink: neon on white is unreadable, and the owner
+ * dropped deep shades of the accent (2026-11-09). Fills use `colorScheme.primary` / `primaryContainer`.
  */
 @Composable
 @ReadOnlyComposable
@@ -23,17 +23,17 @@ internal fun accentInkFor(scheme: ColorScheme, dark: Boolean): Color = if (dark)
 data class ProgressColors(val indicator: Color, val track: Color)
 
 /**
- * Graphite-mint progress (owner's choice 2026-11-09): light theme — graphite on a Neon Mint track
- * (neon on white is too pale), dark theme — Neon Mint on a graphite track.
+ * Graphite-neon progress (owner's choice 2026-11-09): light theme — graphite on a track of the primary neon
+ * (neon on white is too pale), dark theme — the neon on a graphite track.
  */
 @Composable
 @ReadOnlyComposable
 fun progressColors(): ProgressColors = progressColorsFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
 
-/** Progress colours: graphite on Neon Mint in the light theme, Neon Mint on graphite in the dark one. */
+/** Progress colours: graphite on the neon in the light theme, the neon on graphite in the dark one. */
 internal fun progressColorsFor(scheme: ColorScheme, dark: Boolean) =
     if (dark) {
-        ProgressColors(scheme.primary, GraphiteLineSoft)
+        ProgressColors(scheme.primary, scheme.outlineVariant)
     } else {
-        ProgressColors(Graphite4, scheme.primary)
+        ProgressColors(scheme.inverseSurface, scheme.primary)
     }

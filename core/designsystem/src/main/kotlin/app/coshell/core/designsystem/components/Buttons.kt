@@ -88,6 +88,7 @@ fun CoShellTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    contentColor: Color = accentInk(),
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
@@ -96,7 +97,7 @@ fun CoShellTextButton(
             onClick = onClick,
             modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
-            colors = ButtonDefaults.textButtonColors(contentColor = accentInk()),
+            colors = ButtonDefaults.textButtonColors(contentColor = contentColor),
             interactionSource = source,
             content = content,
         )

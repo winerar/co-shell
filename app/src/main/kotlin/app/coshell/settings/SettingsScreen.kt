@@ -19,16 +19,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.domain.settings.ThemeMode
+import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.currencies.list.ReportCurrenciesViewModel
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
+import app.coshell.theme.components.PaletteRow
 import app.coshell.theme.components.ThemeModeRow
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
-/** «Ещё → Настройки» (issue #30): device preferences — theme, report currencies, shake, app update. */
+/** «Ещё → Настройки» (issue #30): device preferences — theme and palette, report currencies, shake, app update. */
 @Composable
 fun SettingsRoute(
     onBack: () -> Unit,
@@ -41,15 +44,20 @@ fun SettingsRoute(
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     val currencies by reportCurrencies.state.collectAsStateWithLifecycle()
     val themeMode by themeSettings.mode.collectAsStateWithLifecycle()
+    val palette by themeSettings.palette.collectAsStateWithLifecycle()
+    // Theme and palette open as a circle from the tapped control (design-refactor Step 4).
+    val reveal = LocalThemeReveal.current
     SettingsScreen(
         state = SettingsState(
             themeMode = themeMode ?: ThemeMode.SYSTEM,
+            palette = palette ?: ThemePalette.VOLT,
             mainCurrency = currencies.currencies.firstOrNull(),
             shakeEnabled = shakeEnabled,
         ),
         actions = SettingsActions(
             onBack = onBack,
-            onThemeModeChange = themeSettings::setMode,
+            onThemeModeChange = { mode -> if (mode != themeMode) reveal.change { themeSettings.setMode(mode) } },
+            onPaletteChange = { p -> if (p != palette) reveal.change { themeSettings.setPalette(p) } },
             onReportCurrencies = onReportCurrencies,
             onShakeEnabledChange = shakeSettings::setEnabled,
             onUpdate = onUpdate,
@@ -59,6 +67,7 @@ fun SettingsRoute(
 
 data class SettingsState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val palette: ThemePalette = ThemePalette.VOLT,
     val mainCurrency: String? = null,
     val shakeEnabled: Boolean = true,
 )
@@ -66,6 +75,7 @@ data class SettingsState(
 data class SettingsActions(
     val onBack: () -> Unit = {},
     val onThemeModeChange: (ThemeMode) -> Unit = {},
+    val onPaletteChange: (ThemePalette) -> Unit = {},
     val onReportCurrencies: () -> Unit = {},
     val onShakeEnabledChange: (Boolean) -> Unit = {},
     val onUpdate: () -> Unit = {},
@@ -88,6 +98,7 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
     ) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
             item { ThemeModeRow(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
+            item { PaletteRow(selected = state.palette, onSelect = actions.onPaletteChange) }
             item {
                 ActionRow(
                     icon = DesignR.drawable.ic_payments,

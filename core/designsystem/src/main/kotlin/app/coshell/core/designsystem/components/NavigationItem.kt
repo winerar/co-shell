@@ -21,13 +21,14 @@ internal fun RowScope.CoShellNavigationBarItem(
     icon: @Composable () -> Unit,
     label: @Composable () -> Unit,
     colors: NavigationBarItemColors = NavigationBarItemDefaults.colors(),
+    iconModifier: Modifier = Modifier,
 ) {
     val source = remember { MutableInteractionSource() }
     NoRipple {
         NavigationBarItem(
             selected = selected,
             onClick = onClick,
-            icon = { Box(Modifier.selectionPop(selected)) { icon() } },
+            icon = { Box(iconModifier.selectionPop(selected)) { icon() } },
             label = label,
             modifier = Modifier.tactile(source, Tactile.Control),
             colors = colors,

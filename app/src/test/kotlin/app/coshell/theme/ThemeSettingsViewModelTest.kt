@@ -1,6 +1,7 @@
 package app.coshell.theme
 
 import app.coshell.core.domain.settings.ThemeMode
+import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.core.domain.settings.ThemeSettings
 import app.coshell.testing.MainDispatcherRule
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,11 @@ class ThemeSettingsViewModelTest {
         override suspend fun setMode(mode: ThemeMode) {
             this.mode.value = mode
         }
+
+        override val palette = MutableStateFlow(ThemePalette.VOLT)
+        override suspend fun setPalette(palette: ThemePalette) {
+            this.palette.value = palette
+        }
     }
 
     @Test
@@ -28,5 +34,15 @@ class ThemeSettingsViewModelTest {
         vm.setMode(ThemeMode.DARK)
         vm.mode.first { it == ThemeMode.DARK }
         assertEquals(ThemeMode.DARK, settings.mode.value)
+    }
+
+    @Test
+    fun `shows the saved palette and saves a change`() = runTest {
+        val vm = ThemeSettingsViewModel(settings)
+        vm.palette.first { it == ThemePalette.VOLT }
+
+        vm.setPalette(ThemePalette.MANGO)
+        vm.palette.first { it == ThemePalette.MANGO }
+        assertEquals(ThemePalette.MANGO, settings.palette.value)
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import app.coshell.core.designsystem.motion.errorShake
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.theme.AmountInputStyle
 import app.coshell.core.designsystem.theme.accentInk
@@ -59,8 +60,8 @@ fun CoShellTextField(
         keyboardOptions = keyboardOptions,
         textStyle = textStyle,
         colors = coShellFieldColors(),
-        // The error/hint line comes and goes: the field grows to it smoothly (issue #64).
-        modifier = modifier.fillMaxWidth().smoothResize(),
+        // The error/hint line comes and goes: the field grows to it smoothly (issue #64); a new error shakes it.
+        modifier = modifier.fillMaxWidth().errorShake(if (isError) error ?: true else null).smoothResize(),
     )
 }
 

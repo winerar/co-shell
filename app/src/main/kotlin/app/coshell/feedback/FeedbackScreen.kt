@@ -1,5 +1,6 @@
 package app.coshell.feedback
 
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
@@ -49,8 +49,8 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).imePadding()
-                .verticalScroll(rememberScrollState()).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .verticalScroll(rememberScrollState()).padding(Spacing.l),
+            verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             Text(
                 stringResource(R.string.feedback_intro),

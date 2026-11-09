@@ -1,5 +1,6 @@
 package app.coshell.categories.list.components
 
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -9,7 +10,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.list.CategoriesUiState
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -51,7 +51,7 @@ internal fun CategoryRow(item: CategoriesUiState.Item, indent: Boolean, onClick:
         title = item.name,
         leading = {
             // Subcategories: a smaller badge, shifted under the folder's badge.
-            if (indent) CategoryBadge(item.icon, item.color, Modifier.padding(start = Spacing.xl), size = 32.dp)
+            if (indent) CategoryBadge(item.icon, item.color, Modifier.padding(start = Spacing.xl), size = Sizes.badgeSmall)
             else CategoryBadge(item.icon, item.color)
         },
         onClick = onClick,

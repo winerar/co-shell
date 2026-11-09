@@ -7,7 +7,7 @@
 ## Что где лежит
 ```
 core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
-  tokens/   Spacing, Radii (+ CoShellShapes, PillShape), Motion (длительности, кривые)
+  tokens/   Spacing, Sizes (значки, кольцо выбора, запас под FAB), Radii (+ CoShellShapes, PillShape), Motion
   theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
   amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
   components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью;
@@ -21,7 +21,8 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
 
 ## Токены — правила
 - **Отступы** — только `Spacing.xxs…xxl` (2, 4, 8, 12, 16, 24, 32 dp; сетка 4 dp, кроме 2). Край экрана
-  и промежуток между блоками — `Spacing.l`. Новые экраны — без чисел `N.dp` для отступов.
+  и промежуток между блоками — `Spacing.l`. Размеры значков, кольца выбора, запас под FAB — `Sizes`.
+  В экранах чисел `N.dp` нет (тест `TokensRuleTest`).
 - **Скругления** (решение владельца, §4): карточки 16, шторки 28, поля 12, кнопки и чипы — «пилюли»
   (`PillShape`); всё уже в `MaterialTheme.shapes` (`CoShellShapes`), в экранах своих форм не задавать.
 - **Карточки** — только `components/CoShellCard`: фон экрана + тонкая рамка `outlineVariant`, без теней;
@@ -119,6 +120,6 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
 2. ✔ Ответы на вопросы дизайнеру: цвета, шрифты, навигация, формы, движение (`design-questions.md`).
 3. ✔ Базовые компоненты: кнопки, поля, карточки, строки списка, диалоги, блоки форм, шторка, нижняя панель
    (полосы прогресса и графики — когда понадобятся, этап 6).
-4. Экраны по одному: ✔ «Обзор» → ✔ ввод операции (+ `ui/form`, `ui/sheet`) → ✔ «Операции» (+ `ui/top`, `undo`) → остальные; после каждого — числа `dp` и
-   `tween` заменены токенами, пакет добавлен в `app/.../TokensRuleTest` (`migrated`) — тест держит правило.
-5. Правило в `code-style.md`: в экранах только компоненты и токены дизайн-системы.
+4. ✔ Экраны по одному: «Обзор» → ввод операции → «Операции» → остальные (2026-11-09). Чисел `dp`, `tween`,
+   `spring`, `Color(0x…)` в `app` нет — `app/.../TokensRuleTest` проверяет всё приложение.
+5. ✔ Правило в `code-style.md`: в экранах только компоненты и токены дизайн-системы.

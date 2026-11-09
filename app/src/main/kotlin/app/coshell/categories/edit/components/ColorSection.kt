@@ -1,5 +1,7 @@
 package app.coshell.categories.edit.components
 
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
@@ -33,15 +34,15 @@ internal fun ColorSection(selected: Long?, onSelect: (Long) -> Unit) {
     val selectedSwatch = selected?.let(CategoryPalette::normalize)
     CoShellSection(stringResource(R.string.category_color)) {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+            verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             CategoryPalette.colors.forEach { color ->
                 Box(
                     modifier = Modifier
                         .tactileClickable(Tactile.Control, CircleShape) { onSelect(color) }
                         .selectionPop(color == selectedSwatch)
-                        .size(40.dp)
+                        .size(Sizes.badge)
                         .clip(CircleShape)
                         .background(categoryColor(color)),
                     contentAlignment = Alignment.Center,

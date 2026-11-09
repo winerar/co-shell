@@ -1,5 +1,6 @@
 package app.coshell.rates.list.components
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.domain.rates.DownloadInfo
@@ -28,8 +28,8 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, onRefresh: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
         Text(
             text = if (lastDownload == null) {

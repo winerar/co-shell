@@ -1,5 +1,7 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountRow
 import app.coshell.core.designsystem.components.CoShellFab
@@ -46,8 +47,8 @@ fun AccountsScreen(
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 88.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Sizes.fabClearance),
+            verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             if (state.isLoading) return@LazyColumn
             if (state.active.isEmpty() && state.archived.isEmpty()) {

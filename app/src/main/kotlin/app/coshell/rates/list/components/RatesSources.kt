@@ -1,5 +1,6 @@
 package app.coshell.rates.list.components
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,7 +13,6 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 
 /** Where rates come from; open.er-api's terms ask for the "Rates By Exchange Rate API" link. */
@@ -28,7 +28,7 @@ internal fun RatesSources() {
         text,
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(Spacing.l),
     )
 }
 

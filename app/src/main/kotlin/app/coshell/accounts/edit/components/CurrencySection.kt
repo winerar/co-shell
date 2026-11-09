@@ -1,5 +1,6 @@
 package app.coshell.accounts.edit.components
 
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CodeKeyboard
 import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
@@ -21,7 +21,7 @@ import app.coshell.core.designsystem.components.CoShellSection
 internal fun CurrencySection(state: AccountEditUiState, onCurrencyChange: (String) -> Unit) {
     CoShellSection(stringResource(R.string.account_currency)) {
         if (!state.currencyLocked) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                 state.suggestedCurrencies.forEach { code ->
                     CoShellFilterChip(
                         selected = state.currency == code,

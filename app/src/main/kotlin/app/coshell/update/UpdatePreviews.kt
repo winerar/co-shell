@@ -31,3 +31,9 @@ private fun UpdateDownloadingPreview() = CoShellTheme {
 private fun UpdateFailedPreview() = CoShellTheme {
     UpdateScreen(UpdateUiState("0.1.0", 42, UpdatePhase.Failed(UpdateError.Checksum, sample)), UpdateActions())
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun UpdateUpToDateDarkPreview() = CoShellTheme(darkTheme = true) {
+    UpdateScreen(UpdateUiState("0.1.0", 42, UpdatePhase.UpToDate), UpdateActions())
+}

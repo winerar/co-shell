@@ -107,9 +107,11 @@
   счета, операции, переводы, резервная копия, обратная связь.
 - **Ветки:** работа → PR в `dev`; релиз (мерж `dev` → `main`) — **только по команде владельца**
   (`workflow.md` §«Git»). Всё из `dev` выпущено релизом winerar/co-shell#56 (верхний раздел `whats-new.md` —
-  «2026-11-09 · мелкие улучшения» — выпущен; новый пункт для семьи — новым разделом сверху). Висят PR winerar/co-shell#41 (ускорение CI, сильно отстал от `dev`) и
-  winerar/co-shell#50 (устаревшая запись в STATUS) — владельцу решить: обновить или закрыть.
+  «2026-11-09 · мелкие улучшения» — выпущен; новый пункт для семьи — новым разделом сверху). PR winerar/co-shell#50 закрыт (устарел), winerar/co-shell#41 обновлён от `dev` и влит.
   Рабочие ветки — **от `dev`** (сессии клонируют `main` — перейти на `dev`, `workflow.md` §«Git»).
+- CI (ускорен, PR winerar/co-shell#41, `build-and-test.md` §CI): правки только `docs/`/`*.md` — без Gradle; на `main`
+  lint и тесты не повторяются; кэш пишет и `dev`. Локально для итераций — `scripts/agent/check.sh --quick`
+  (только тесты), начало/конец сессии — `scripts/agent/session-start.sh` / `session-end.sh`; заметки — `docs/agents/notes.md`.
 - CI на `dev` — только проверки; на каждый мерж в `main`: debug → Releases приватного репозитория (`co-shell-debug.apk`);
   подписанный release → релиз `build-<N>` публичного `winerar/co-shell-releases` (`co-shell-<N>.apk` +
   `version.json`). **Работает с 2026-11-08** (сборка 27): `…/co-shell-releases/releases/latest/download/version.json`

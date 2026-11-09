@@ -14,5 +14,7 @@ data class AccountsUiState(
         val type: AccountType,
         val balance: String,
         val isNegative: Boolean,
+        /** Left out of the total balance on «Обзор». */
+        val excludedFromTotal: Boolean = false,
     )
 }

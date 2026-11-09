@@ -25,8 +25,9 @@ import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditFooter
 import app.coshell.ui.form.EditTopBar
 import app.coshell.ui.form.NameField
+import app.coshell.ui.list.SwitchRow
 
-/** Account editor layout: name, currency, type, initial balance, then save/archive/delete. */
+/** Account editor layout: name, currency, type, initial balance, "in the total", then save/archive/delete. */
 @Composable
 fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
@@ -60,6 +61,13 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             CurrencySection(state, actions.onCurrencyChange)
             AccountTypeSection(state.type, actions.onTypeChange)
             InitialBalanceField(state.initialBalance, state.balanceError, actions.onInitialBalanceChange)
+            SwitchRow(
+                icon = null,
+                title = stringResource(R.string.account_included_in_total),
+                subtitle = stringResource(R.string.account_included_in_total_hint),
+                checked = state.includedInTotal,
+                onCheckedChange = actions.onIncludedInTotalChange,
+            )
             EditFooter(
                 isNew = state.isNew,
                 archived = state.archived,

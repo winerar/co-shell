@@ -12,12 +12,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 
 /**
- * A settings line with an on/off switch: icon, title, optional [subtitle]. The whole row toggles.
+ * A settings line with an on/off switch: optional icon, title, optional [subtitle]. The whole row toggles.
  * Sibling of [ActionRow]; reuse it for any boolean setting.
  */
 @Composable
 fun SwitchRow(
-    @DrawableRes icon: Int,
+    @DrawableRes icon: Int?,
     title: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
@@ -26,7 +26,7 @@ fun SwitchRow(
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = subtitle?.let { { Text(it) } },
-        leadingContent = { Icon(painterResource(icon), contentDescription = null) },
+        leadingContent = icon?.let { { Icon(painterResource(it), contentDescription = null) } },
         // The row handles the click, so the switch itself is display-only (one target for TalkBack).
         trailingContent = { Switch(checked = checked, onCheckedChange = null) },
         modifier = Modifier.toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),

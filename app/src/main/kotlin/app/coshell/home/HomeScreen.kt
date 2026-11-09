@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -93,7 +94,16 @@ private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit) 
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(row.name, style = MaterialTheme.typography.bodyLarge)
+            Column(Modifier.weight(1f)) {
+                Text(row.name, style = MaterialTheme.typography.bodyLarge)
+                if (row.excludedFromTotal) {
+                    Text(
+                        stringResource(R.string.account_excluded_from_total),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             Text(
                 text = row.balance,
                 style = AmountTextStyle,
@@ -119,7 +129,7 @@ private fun HomeScreenPreview() {
                 ),
                 accounts = listOf(
                     HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
-                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true),
+                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true, excludedFromTotal = true),
                 ),
             ),
         )

@@ -36,6 +36,10 @@
 - Для загрузки истории: `downloadedDates()` и `operationDates(timeZone)` (дни живых операций; день
   считается в Kotlin по часовому поясу телефона — в БД время операции в миллисекундах).
 
+## Счета (схема v3)
+- `accounts.excluded_from_total` (`DEFAULT 0`, автомиграция 2→3) — счёт не входит в общий баланс
+  на «Обзоре»; в бэкапе — необязательное поле `excludedFromTotal` (без повышения версии файла).
+
 ## Тесты
 - `core/data/src/jvmTest`: `createInMemoryCoShellDatabase()` — настоящий SQLite в памяти, без эмулятора.
 - Flow-запросы — через Turbine (`flow.test { awaitItem() }`).

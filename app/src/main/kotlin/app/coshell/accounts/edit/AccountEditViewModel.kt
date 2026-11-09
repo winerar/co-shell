@@ -65,6 +65,7 @@ class AccountEditViewModel @Inject constructor(
                     type = account.type,
                     initialBalance = formatForEditing(account),
                     archived = account.archived,
+                    includedInTotal = !account.excludedFromTotal,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
                 )
@@ -81,6 +82,8 @@ class AccountEditViewModel @Inject constructor(
     fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value) }
 
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
+
+    fun onIncludedInTotalChange(value: Boolean) = _state.update { it.copy(includedInTotal = value) }
 
     fun save() {
         val current = _state.value
@@ -149,7 +152,13 @@ class AccountEditViewModel @Inject constructor(
             return null
         }
         val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
-        return base.copy(name = name, currency = currency, type = form.type, initialBalanceMinor = balanceMinor)
+        return base.copy(
+            name = name,
+            currency = currency,
+            type = form.type,
+            initialBalanceMinor = balanceMinor,
+            excludedFromTotal = !form.includedInTotal,
+        )
     }
 
     private fun formatForEditing(account: Account): String =

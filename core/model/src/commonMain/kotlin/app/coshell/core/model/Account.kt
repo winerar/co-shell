@@ -15,6 +15,8 @@ data class Account(
     val ownerMemberId: String? = null,
     val archived: Boolean = false,
     val sortOrder: Int = 0,
+    /** Left out of the total balance on «Обзор» (a debt, someone else's money). */
+    val excludedFromTotal: Boolean = false,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

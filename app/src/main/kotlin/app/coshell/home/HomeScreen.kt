@@ -123,15 +123,15 @@ private fun HomeScreenPreview() {
             HomeUiState(
                 totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
                 rateDate = LocalDate(2026, 11, 9),
-                byCurrency = listOf("105 800,50 ₽", "150,00 USD"),
+                byCurrency = listOf("105 800,50 RUB", "150,00 USD"),
                 spending = HomeUiState.MonthSpending(
                     month = LocalDate(2026, 11, 1),
                     totals = listOf("412,30 USD", "598 000,00 ARS"),
                     missing = emptyList(),
                 ),
                 accounts = listOf(
-                    HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
-                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true, excludedFromTotal = true),
+                    HomeUiState.AccountRow("1", "Карта", "120 800,50 RUB", isNegative = false),
+                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 RUB", isNegative = true, excludedFromTotal = true),
                 ),
             ),
         )

@@ -30,6 +30,8 @@
 - (11-09) Время шагов CI без логов: GitHub MCP `actions_list` → `list_workflow_runs` (`resource_id: ci.yml`),
   затем `list_workflow_jobs` (run id) — у каждого шага `started_at`/`completed_at`.
 - (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
+- (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
+  issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
 - Maven Central иногда отвечает 429 на большие файлы — повторить позже (так отпал Robolectric).
 

@@ -1,52 +1,66 @@
 package app.coshell.core.designsystem.tokens
 
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FiniteAnimationSpec
-import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 
 /**
- * Motion tokens: every animation in the app takes its duration and curve from here
- * (rule in docs/agents/performance.md). Short durations keep the UI responsive; animate only
- * cheap properties (alpha, translation, scale) so frames fit into 8 ms at 120 Hz.
+ * Motion tokens (owner 2026-11-09: «скорость анимации унифицировать»): every animation in the app is one of
+ * these springs — no durations, no easing curves. Two families, like the Material 3 Expressive motion scheme:
+ *
+ * - **spatial** — position, size, scale, rotation: slightly under-damped, so movement lands softly;
+ * - **effects** — alpha and colour: critically damped, never overshoots;
+ * - **bouncy** — the one spring with a visible overshoot: a released press, a "click into place".
+ *
+ * A spring starts from the current velocity, so an interrupted animation or a released gesture continues
+ * smoothly instead of jumping. Which token goes where — docs/agents/motion.md §«Темп». Animate only cheap
+ * properties (alpha, translation, scale) so frames fit into 8 ms at 120 Hz (performance.md).
  */
 object Motion {
-    /** Small state changes: color, alpha, icon swap. */
-    const val SHORT_MS = 150
-    /** Elements appearing or moving inside a screen. */
-    const val MEDIUM_MS = 250
-    /** Screen transitions and sheets. */
-    const val LONG_MS = 350
+    const val SPATIAL_DAMPING = 0.9f
+    const val SPATIAL_FAST = 1400f
+    const val SPATIAL_DEFAULT = 700f
+    const val SPATIAL_SLOW = 300f
 
-    /** Default curve for movement that starts and ends on screen. */
-    val Standard: Easing = CubicBezierEasing(0.2f, 0f, 0f, 1f)
-    /** Elements entering the screen: quick start, soft landing. */
-    val Decelerate: Easing = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1f)
-    /** Elements leaving the screen. */
-    val Accelerate: Easing = CubicBezierEasing(0.3f, 0f, 0.8f, 0.15f)
+    const val EFFECTS_DAMPING = 1f
+    const val EFFECTS_FAST = 3800f
+    const val EFFECTS_DEFAULT = 1600f
+    const val EFFECTS_SLOW = 800f
 
-    fun <T> short(): FiniteAnimationSpec<T> = tween(SHORT_MS, easing = Standard)
-    fun <T> medium(): FiniteAnimationSpec<T> = tween(MEDIUM_MS, easing = Standard)
-    fun <T> enter(): FiniteAnimationSpec<T> = tween(LONG_MS, easing = Decelerate)
-    fun <T> exit(): FiniteAnimationSpec<T> = tween(SHORT_MS, easing = Accelerate)
+    const val BOUNCY_DAMPING = 0.55f
+    const val BOUNCY_STIFFNESS = 420f
 
-    /**
-     * Size changes (issue #64): a block that grows or shrinks follows a soft spring with a hint of
-     * overshoot — the same "physical" feel as the press springs. Settles in about 300 ms.
-     */
-    val Resize: FiniteAnimationSpec<IntSize> =
-        spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2, visibilityThreshold = IntSize.VisibilityThreshold)
-    /** Rows moving to their new place in a list (an item above appeared or left). */
-    val Placement: FiniteAnimationSpec<IntOffset> =
-        spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2, visibilityThreshold = IntOffset.VisibilityThreshold)
+    /** Small moves that follow a finger: press depth, a switch thumb, the tab pill, a segment knob. */
+    fun <T> spatialFast(threshold: T? = null): SpringSpec<T> = spring(SPATIAL_DAMPING, SPATIAL_FAST, threshold)
+
+    /** Most movement: sheets, screens, unfolding blocks, size changes, rows finding their place. */
+    fun <T> spatial(threshold: T? = null): SpringSpec<T> = spring(SPATIAL_DAMPING, SPATIAL_DEFAULT, threshold)
+
+    /** Large, calm changes: a whole screen re-arranging, the theme switch. */
+    fun <T> spatialSlow(threshold: T? = null): SpringSpec<T> = spring(SPATIAL_DAMPING, SPATIAL_SLOW, threshold)
+
+    /** Instant-feeling effects: the light under a finger, an icon swap, something fading out. */
+    fun <T> effectsFast(): SpringSpec<T> = spring(EFFECTS_DAMPING, EFFECTS_FAST)
+
+    /** Fading in and colour changes. */
+    fun <T> effects(): SpringSpec<T> = spring(EFFECTS_DAMPING, EFFECTS_DEFAULT)
+
+    /** Slow fades: the press light dying away. */
+    fun <T> effectsSlow(): SpringSpec<T> = spring(EFFECTS_DAMPING, EFFECTS_SLOW)
+
+    /** Release of a press and a selected element clicking into place: the overshoot makes it feel alive. */
+    fun <T> bouncy(): SpringSpec<T> = spring(BOUNCY_DAMPING, BOUNCY_STIFFNESS)
+
+    /** Size changes (issue #64): a block that grows or shrinks. */
+    val Resize: FiniteAnimationSpec<IntSize> = spatial(IntSize.VisibilityThreshold)
+
+    /** Pixel moves: rows sliding to their new place, slide-in/out of screens and digits. */
+    val Placement: FiniteAnimationSpec<IntOffset> = spatial(IntOffset.VisibilityThreshold)
+
     /** Rotation of an "expand" arrow and other small turns, in degrees. */
-    val Turn: FiniteAnimationSpec<Float> = spring(dampingRatio = RESIZE_DAMPING, stiffness = Spring.StiffnessMediumLow * 2)
-    // Press feedback (depth, tilt, light, springs) lives in `motion/Tactile` — one system for every element.
-
-    private const val RESIZE_DAMPING = 0.8f
+    val Turn: FiniteAnimationSpec<Float> = spatial()
+    // Press feedback (depth, tilt, light) lives in `motion/Tactile` and takes its springs from here.
 }

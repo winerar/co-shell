@@ -31,7 +31,7 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
     AnimatedContent(
         targetState = state,
         contentKey = { it.phase.heroStep },
-        transitionSpec = { fadeIn(Motion.enter()).togetherWith(fadeOut(Motion.exit())) },
+        transitionSpec = { fadeIn(Motion.effects()).togetherWith(fadeOut(Motion.effectsFast())) },
         contentAlignment = Alignment.TopCenter,
         modifier = modifier.fillMaxWidth(),
         label = "updateText",

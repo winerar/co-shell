@@ -21,11 +21,16 @@ class TokensTest {
     }
 
     @Test
-    fun motionDurationsAreShortAndOrdered() {
-        assertTrue(Motion.SHORT_MS < Motion.MEDIUM_MS)
-        assertTrue(Motion.MEDIUM_MS < Motion.LONG_MS)
-        // Long transitions make the app feel slow; keep every token under 400 ms.
-        assertTrue(Motion.LONG_MS <= 400)
+    fun motionSpringsAreOrderedFastToSlow() {
+        assertTrue(Motion.SPATIAL_FAST > Motion.SPATIAL_DEFAULT && Motion.SPATIAL_DEFAULT > Motion.SPATIAL_SLOW)
+        assertTrue(Motion.EFFECTS_FAST > Motion.EFFECTS_DEFAULT && Motion.EFFECTS_DEFAULT > Motion.EFFECTS_SLOW)
+        // Effects never overshoot; spatial lands softly; only "bouncy" visibly springs past the target.
+        assertEquals(1f, Motion.EFFECTS_DAMPING)
+        assertTrue(Motion.SPATIAL_DAMPING in 0.8f..1f)
+        assertTrue(Motion.BOUNCY_DAMPING < Motion.SPATIAL_DAMPING)
+        // Slowest spatial spring settles (≈ 4 / (ζ·ω)) well under half a second: the app stays snappy.
+        val settleSeconds = 4.0 / (Motion.SPATIAL_DAMPING * Math.sqrt(Motion.SPATIAL_SLOW.toDouble()))
+        assertTrue("slow spring settles in $settleSeconds s", settleSeconds < 0.5)
     }
 
     @Test

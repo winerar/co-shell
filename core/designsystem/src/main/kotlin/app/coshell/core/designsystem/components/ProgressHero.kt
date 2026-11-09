@@ -62,7 +62,7 @@ fun <S> ProgressHero(
                 trackColor = track, strokeCap = StrokeCap.Round,
             )
             is HeroRing.Progress -> {
-                val fraction by animateFloatAsState(ring.fraction.coerceIn(0f, 1f), Motion.medium(), label = "heroProgress")
+                val fraction by animateFloatAsState(ring.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "heroProgress")
                 CircularProgressIndicator(
                     progress = { fraction }, modifier = Modifier.size(Sizes.heroRing),
                     strokeWidth = Sizes.heroStroke, trackColor = track, strokeCap = StrokeCap.Round,
@@ -80,8 +80,8 @@ fun <S> ProgressHero(
                 targetState = state,
                 contentKey = contentKey,
                 transitionSpec = {
-                    (scaleIn(Motion.enter(), initialScale = 0.6f) + fadeIn(Motion.enter()))
-                        .togetherWith(scaleOut(Motion.exit(), targetScale = 0.6f) + fadeOut(Motion.exit()))
+                    (scaleIn(Motion.spatial(), initialScale = 0.6f) + fadeIn(Motion.effects()))
+                        .togetherWith(scaleOut(Motion.spatialFast(), targetScale = 0.6f) + fadeOut(Motion.effectsFast()))
                 },
                 contentAlignment = Alignment.Center,
                 label = "heroContent",

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +57,7 @@ fun CoShellSheet(onClosed: () -> Unit, content: @Composable (close: () -> Unit) 
     // Opened by a tap → grow out of it while sliding up; opened otherwise (shake) → only the slide.
     val from = remember { PressOrigin.take() }
     val growth = remember { Animatable(if (from == null) 1f else 0f) }
-    LaunchedEffect(Unit) { growth.animateTo(1f, tween(Motion.LONG_MS, easing = Motion.Standard)) }
+    LaunchedEffect(Unit) { growth.animateTo(1f, Motion.spatial()) }
     val grow = if (from != null) Modifier.growFrom(from, { growth.value }, BottomSheetDefaults.ExpandedShape) else Modifier
 
     ModalBottomSheet(onDismissRequest = once::close, sheetState = sheetState, modifier = grow) {

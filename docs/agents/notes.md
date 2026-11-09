@@ -41,6 +41,10 @@
   получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
+- (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,
+  `@Config(qualifiers = "w393dp-h1000dp-xxhdpi")`, `onRoot().captureToImage()` → PNG в scratchpad, `Read` PNG;
+  перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
+
 ## Грабли проекта
 - (11-09) `rememberGraphicsLayer().record{}` хранит ссылки на слои детей, а не их копию — снимок «старого» кадра
   делать сразу `toImageBitmap()` до смены (так `motion/ThemeReveal.kt`), иначе дети перерисуются уже новыми.

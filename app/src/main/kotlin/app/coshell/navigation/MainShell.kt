@@ -100,7 +100,8 @@ private fun Shell(
     }
 }
 
-private fun NavHostController.navigateToTab(tab: TopLevel) {
+/** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */
+internal fun NavHostController.navigateToTab(tab: TopLevel) {
     navigate(tab.route) {
         popUpTo(graph.findStartDestination().id) { saveState = true }
         launchSingleTop = true

@@ -21,6 +21,7 @@ import app.coshell.categories.list.CategoriesRoute
 import app.coshell.currencies.list.ReportCurrenciesRoute
 import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
+import app.coshell.home.HomeActions
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
@@ -60,8 +61,13 @@ fun CoShellNavHost(
     ) {
         composable<HomeDestination> {
             HomeRoute(
-                onAccountClick = { navController.navigate(AccountEditDestination(it)) },
-                onAddAccount = { navController.navigate(AccountEditDestination()) },
+                HomeActions(
+                    onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
+                    onAccounts = { navController.navigateToTab(TopLevel.ACCOUNTS) },
+                    onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
+                    onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+                    onAddAccount = { navController.navigate(AccountEditDestination()) },
+                ),
             )
         }
         composable<TransactionsDestination> {

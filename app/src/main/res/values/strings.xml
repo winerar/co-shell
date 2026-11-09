@@ -22,6 +22,23 @@
     <string name="home_spending_title">Траты за %1$s</string>
     <string name="home_spending_rate_hint">Каждая трата — по курсу на её день</string>
     <string name="home_accounts">Счета</string>
+    <string name="home_spending_tile">Траты</string>
+    <string name="home_income_title">Доход</string>
+    <string name="home_income_none">Пока нет</string>
+    <string name="home_attention_title">Внимание</string>
+    <string name="home_attention_ok">Всё в порядке</string>
+    <string name="home_attention_missing_rates">Нет курса: %1$s</string>
+    <string name="home_attention_stale_rates">Курсы от %1$s</string>
+    <plurals name="home_attention_uncategorized">
+        <item quantity="one">%1$d операция без категории</item>
+        <item quantity="few">%1$d операции без категории</item>
+        <item quantity="many">%1$d операций без категории</item>
+        <item quantity="other">%1$d операции без категории</item>
+    </plurals>
+    <string name="home_accounts_excluded">%1$d не в общем балансе</string>
+    <string name="home_recent">Последние операции</string>
+    <string name="home_recent_all">Все</string>
+    <string name="home_recent_empty">Операций пока нет — нажмите «+» внизу.</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
     <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>

@@ -5,13 +5,15 @@ app/                    Android-приложение: Application, MainActivity,
 core/model/             KMP (jvm): Money, валюты, форматирование + доменные сущности
                         (Account, Category, Transaction, Budget), IdGenerator
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
-core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
+core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап,
+                        sync/ (SyncEngine), remote/ (Firestore REST), auth/ (Firebase Auth REST), family/
 core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
 scripts/                служебные скрипты (check.sh, иконки, файлы обновлений, отзывы → issues) + test_*.py
-firebase/               firestore.rules (вставляются в консоль Firebase вручную)
+firebase/               firestore.rules (вставляются в консоль вручную), rules-test/ (тесты правил, Node)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
                         whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)
-.github/workflows/      CI (ci.yml), release-ключ (release-key.yml), отзывы → issues (feedback.yml)
+.github/workflows/      CI (ci.yml), release-ключ (release-key.yml), отзывы → issues (feedback.yml),
+                        отпечатки ключей для входа Google (signing-fingerprint.yml)
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
 
@@ -23,7 +25,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Доменная модель, value-класс, чистая логика | `core:model` (`commonMain`) |
 | Use case, интерфейс репозитория | `core:domain` |
 | Room, реализации репозиториев | `core:data/commonMain` |
-| Android-специфичное в data (Context, позже Firestore) | `core:data/androidMain` |
+| Android-специфичное в data (Context) | `core:data/androidMain`; HTTP-клиент и Credential Manager — `app/.../family/data/` |
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент без строк приложения | `core:designsystem` |
 | Общий блок экранов со строками приложения | `app/.../ui/<тема>/`: `ui/form/` (формы, диалоги), `ui/list/` (строки списков) |

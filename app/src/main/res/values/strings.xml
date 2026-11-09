@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">co-shell</string>
+    <string name="app_name">Co-Shell</string>
 
     <string name="action_save">Сохранить</string>
     <string name="action_cancel">Отмена</string>
@@ -19,6 +19,8 @@
     <string name="home_total_missing">Без учёта: %1$s — нет курса</string>
     <string name="home_total_show_breakdown">Показать по валютам счетов</string>
     <string name="home_total_hide_breakdown">Скрыть разбивку</string>
+    <string name="home_spending_title">Траты за %1$s</string>
+    <string name="home_spending_rate_hint">Каждая трата — по курсу на её день</string>
     <string name="home_accounts">Счета</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
@@ -147,7 +149,7 @@
     <string name="backup_import_confirm">Восстановить</string>
     <string name="backup_result_exported">Копия сохранена.</string>
     <string name="backup_result_imported">Восстановлено: счетов — %1$d, категорий — %2$d, операций — %3$d.</string>
-    <string name="backup_error_not_backup">Это не файл резервной копии co-shell.</string>
+    <string name="backup_error_not_backup">Это не файл резервной копии Co-Shell.</string>
     <string name="backup_error_version">Копия сделана более новой версией приложения. Обновите приложение и попробуйте снова.</string>
     <string name="backup_error_corrupted">Файл копии повреждён — ничего не изменено.</string>
     <string name="backup_error_write">Не удалось записать файл. Попробуйте другую папку.</string>
@@ -172,11 +174,11 @@
     <string name="update_check_again">Проверить снова</string>
     <string name="update_not_configured">В этой сборке обновления не настроены. Их получают сборки, выложенные из GitHub.</string>
     <string name="update_available">Доступна версия %1$s (сборка %2$d)</string>
-    <string name="update_available_no_notes">Вышла новая версия co-shell.</string>
+    <string name="update_available_no_notes">Вышла новая версия Co-Shell.</string>
     <string name="update_download">Скачать и установить · %1$s МБ</string>
     <string name="update_downloading">Скачиваем… %1$d%%</string>
     <string name="update_installing">Подтвердите установку в окне Android. Приложение перезапустится, данные сохранятся.</string>
-    <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из co-shell. Включите его один раз и вернитесь сюда.</string>
+    <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из Co-Shell. Включите его один раз и вернитесь сюда.</string>
     <string name="update_allow_install">Разрешить установку</string>
     <string name="update_retry">Повторить</string>
     <string name="update_error_check">Не удалось проверить обновления. Проверьте интернет.</string>

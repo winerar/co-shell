@@ -35,7 +35,7 @@ class SendFeedbackUseCase(
     }
 
     companion object {
-        /** Must match `firebase/firestore.rules`. */
-        const val MAX_LENGTH = 4000
+        /** Must not exceed the limit in `firebase/firestore.rules` (4000 there, so older builds still work). */
+        const val MAX_LENGTH = 500
     }
 }

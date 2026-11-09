@@ -11,6 +11,10 @@ import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
+import app.coshell.testing.FakeTransactionRepository
+import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionType
+import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -36,6 +40,7 @@ class HomeViewModelTest {
     }
     private val viewModel = HomeViewModel(
         noAccounts,
+        FakeTransactionRepository(),
         FakeExchangeRateRepository(),
         FakeReportCurrencySettings(),
         MoneyFormat.RU,
@@ -52,7 +57,7 @@ class HomeViewModelTest {
 
     @Test
     fun `totals are shown in every report currency, main first`() {
-        val state = viewModel.buildState(accounts, rates, listOf(usd, ars), nov9)
+        val state = viewModel.buildState(accounts, emptyList(), rates, listOf(usd, ars), nov9)
 
         assertEquals(listOf(MoneyFormat.RU.format(Money(105_00, usd)), MoneyFormat.RU.format(Money(105_000_00, ars))), state.totals)
         assertEquals(nov5, state.rateDate)
@@ -65,7 +70,7 @@ class HomeViewModelTest {
     fun `currencies without rates are left out and named`() {
         val withRub = accounts + AccountWithBalance(Account("d", "Сбер", rub), Money(1_000_00, rub))
 
-        val state = viewModel.buildState(withRub, rates, listOf(usd), nov9)
+        val state = viewModel.buildState(withRub, emptyList(), rates, listOf(usd), nov9)
 
         assertEquals(listOf(MoneyFormat.RU.format(Money(105_00, usd))), state.totals)
         assertEquals(listOf("RUB"), state.missing)
@@ -73,10 +78,33 @@ class HomeViewModelTest {
 
     @Test
     fun `one currency needs no rate date and no breakdown`() {
-        val state = viewModel.buildState(accounts.take(2), emptyList(), listOf(ars), nov9)
+        val state = viewModel.buildState(accounts.take(2), emptyList(), emptyList(), listOf(ars), nov9)
 
         assertEquals(listOf(MoneyFormat.RU.format(Money(100_000_00, ars))), state.totals)
         assertNull(state.rateDate)
         assertEquals(emptyList<String>(), state.byCurrency)
+    }
+
+    @Test
+    fun `month spending is shown in every report currency`() {
+        val expenses = listOf(
+            Transaction("t1", TransactionType.EXPENSE, "a", Money(20_000_00, ars), nov9.atStartOfDayIn(TimeZone.UTC)),
+            Transaction("t2", TransactionType.EXPENSE, "c", Money(3_00, usd), nov9.atStartOfDayIn(TimeZone.UTC)),
+            Transaction("t3", TransactionType.INCOME, "c", Money(100_00, usd), nov9.atStartOfDayIn(TimeZone.UTC)),
+        )
+
+        val spending = viewModel.buildState(accounts, expenses, rates, listOf(usd, ars), nov9).spending!!
+
+        assertEquals(LocalDate(2026, 11, 1), spending.month)
+        assertEquals(listOf(MoneyFormat.RU.format(Money(23_00, usd)), MoneyFormat.RU.format(Money(23_000_00, ars))), spending.totals)
+        assertEquals(true, spending.converted)
+    }
+
+    @Test
+    fun `month without expenses shows zero and no rate hint`() {
+        val spending = viewModel.buildState(accounts, emptyList(), rates, listOf(usd), nov9).spending!!
+
+        assertEquals(listOf(MoneyFormat.RU.format(Money(0, usd))), spending.totals)
+        assertEquals(false, spending.converted)
     }
 }

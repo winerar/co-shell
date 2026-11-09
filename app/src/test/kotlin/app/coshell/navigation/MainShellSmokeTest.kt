@@ -135,7 +135,6 @@ class MainShellSmokeTest {
         val HOME = HomeUiState(
             totals = listOf("1 310,50 USD"),
             rateDate = LocalDate(2026, 11, 9),
-            byCurrency = listOf("150,00 USD"),
             accounts = listOf(HomeUiState.AccountRow("1", HOME_ACCOUNT, "120 800,50 ₽", isNegative = false)),
         )
         val TRANSACTIONS = TransactionsUiState(

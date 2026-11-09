@@ -61,7 +61,7 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
         value = state.amount,
         onValueChange = actions.onAmountChange,
         label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
-        currencySymbol = state.account?.currencySymbol,
+        currencyCode = state.account?.currency,
         error = state.amountError,
         hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
             stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
@@ -121,7 +121,7 @@ private fun TransferTarget(state: TransactionEditUiState, actions: TransactionEd
             value = state.toAmount,
             onValueChange = actions.onToAmountChange,
             label = stringResource(R.string.transaction_to_amount),
-            currencySymbol = toAccount.currencySymbol,
+            currencyCode = toAccount.currency,
             error = state.toAmountError,
             hint = stringResource(R.string.transaction_to_amount_hint, toAccount.name),
             modifier = Modifier.fillMaxWidth(),

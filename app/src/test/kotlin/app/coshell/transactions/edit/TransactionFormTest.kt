@@ -19,7 +19,7 @@ class TransactionFormTest {
     private val cash = Account("cash", "Наличные", usd)
     private val wallet = Account("wallet", "Кошелёк", ars)
     private val byId = listOf(card, cash, wallet).associateBy { it.id }
-    private val options = byId.values.map { AccountOption(it.id, it.name, it.currency.value, it.currency.value) }
+    private val options = byId.values.map { AccountOption(it.id, it.name, it.currency.value) }
 
     private fun form(
         type: TransactionType = TransactionType.EXPENSE,

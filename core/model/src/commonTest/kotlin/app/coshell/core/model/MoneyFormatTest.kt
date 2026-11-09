@@ -9,28 +9,36 @@ class MoneyFormatTest {
 
     @Test
     fun `formats rubles in russian style`() {
-        assertEquals("1${g}234,56$nbsp₽", MoneyFormat.RU.format(Money(123456, CurrencyCode("RUB"))))
-        assertEquals("0,05$nbsp₽", MoneyFormat.RU.format(Money(5, CurrencyCode("RUB"))))
-        assertEquals("-12,30$nbsp₽", MoneyFormat.RU.format(Money(-1230, CurrencyCode("RUB"))))
+        assertEquals("1${g}234,56${nbsp}RUB", MoneyFormat.RU.format(Money(123456, CurrencyCode("RUB"))))
+        assertEquals("0,05${nbsp}RUB", MoneyFormat.RU.format(Money(5, CurrencyCode("RUB"))))
+        assertEquals("-12,30${nbsp}RUB", MoneyFormat.RU.format(Money(-1230, CurrencyCode("RUB"))))
     }
 
     @Test
-    fun `formats in english style with leading symbol`() {
-        assertEquals("$1,234.56", MoneyFormat.EN.format(Money(123456, CurrencyCode("USD"))))
-        assertEquals("-$0.99", MoneyFormat.EN.format(Money(-99, CurrencyCode("USD"))))
+    fun `formats in english style with the code after the number`() {
+        assertEquals("1,234.56${nbsp}USD", MoneyFormat.EN.format(Money(123456, CurrencyCode("USD"))))
+        assertEquals("-0.99${nbsp}USD", MoneyFormat.EN.format(Money(-99, CurrencyCode("USD"))))
     }
 
     @Test
     fun `respects zero and three fraction digits`() {
-        assertEquals("1${g}500$nbsp¥", MoneyFormat.RU.format(Money(1500, CurrencyCode("JPY"))))
+        assertEquals("1${g}500${nbsp}JPY", MoneyFormat.RU.format(Money(1500, CurrencyCode("JPY"))))
         assertEquals("1,234${nbsp}KWD", MoneyFormat.RU.format(Money(1234, CurrencyCode("KWD"))))
+    }
+
+    @Test
+    fun `always shows the letter code, even for currencies with a well-known symbol`() {
+        assertEquals("1,00${nbsp}USD", MoneyFormat.RU.format(Money(100, CurrencyCode("USD"))))
+        assertEquals("1,00${nbsp}ARS", MoneyFormat.RU.format(Money(100, CurrencyCode("ARS"))))
+        assertEquals("1,00${nbsp}AMD", MoneyFormat.RU.format(Money(100, CurrencyCode("AMD"))))
+        assertEquals("1,00${nbsp}USDT", MoneyFormat.RU.format(Money(100, CurrencyCode("USDT"))))
     }
 
     @Test
     fun `can trim a zero fraction`() {
         val format = MoneyFormat.RU.copy(trimZeroFraction = true)
-        assertEquals("1${g}200$nbsp₽", format.format(Money(120000, CurrencyCode("RUB"))))
-        assertEquals("1${g}200,50$nbsp₽", format.format(Money(120050, CurrencyCode("RUB"))))
+        assertEquals("1${g}200${nbsp}RUB", format.format(Money(120000, CurrencyCode("RUB"))))
+        assertEquals("1${g}200,50${nbsp}RUB", format.format(Money(120050, CurrencyCode("RUB"))))
     }
 
     @Test

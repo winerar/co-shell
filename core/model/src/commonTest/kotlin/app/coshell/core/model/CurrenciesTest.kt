@@ -22,12 +22,6 @@ class CurrenciesTest {
     }
 
     @Test
-    fun `falls back to code when there is no symbol`() {
-        assertEquals("₽", Currencies.info("RUB").displaySymbol)
-        assertEquals("SEK", Currencies.info("SEK").displaySymbol)
-    }
-
-    @Test
     fun `validates currency codes`() {
         assertFailsWith<IllegalArgumentException> { CurrencyCode("rub") }
         assertFailsWith<IllegalArgumentException> { CurrencyCode("RU") }

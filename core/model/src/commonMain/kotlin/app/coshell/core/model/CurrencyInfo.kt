@@ -3,13 +3,14 @@ package app.coshell.core.model
 /**
  * Static facts about a currency needed to store and display amounts.
  *
+ * Amounts are always displayed with the letter code («1 234,50 USD», owner's choice, issue #61),
+ * so there is no currency symbol here.
+ *
  * @property fractionDigits number of minor-unit digits (JPY = 0, EUR = 2, KWD = 3).
- * @property symbol short display symbol, or `null` to display the code itself.
  */
 data class CurrencyInfo(
     val code: CurrencyCode,
     val fractionDigits: Int,
-    val symbol: String? = null,
 ) {
     init {
         require(fractionDigits in 0..MAX_FRACTION_DIGITS) {
@@ -24,8 +25,6 @@ data class CurrencyInfo(
             repeat(fractionDigits) { result *= 10 }
             return result
         }
-
-    val displaySymbol: String get() = symbol ?: code.value
 
     companion object {
         /** Enough for ISO 4217 (max 4) and common crypto assets (BTC = 8). */

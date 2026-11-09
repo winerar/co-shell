@@ -47,7 +47,7 @@ data class Money(
         fun zero(currency: CurrencyCode): Money = Money(0L, currency)
 
         /**
-         * Builds an amount from major and minor parts, e.g. `ofMajor(12, 50, RUB)` = 12.50 ₽.
+         * Builds an amount from major and minor parts, e.g. `ofMajor(12, 50, RUB)` = 12.50 RUB.
          * The sign is taken from [major] (or from [minor] when major is 0).
          */
         fun ofMajor(major: Long, minor: Long = 0, currency: CurrencyCode): Money {

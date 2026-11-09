@@ -47,7 +47,7 @@ data class TransactionEditUiState(
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
 ) {
-    data class AccountOption(val id: String, val name: String, val currency: String, val currencySymbol: String)
+    data class AccountOption(val id: String, val name: String, val currency: String)
 
     data class CategoryItem(val id: String, val name: String, val icon: String? = null, val color: Long? = null)
 

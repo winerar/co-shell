@@ -7,13 +7,13 @@ import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.transactions.edit.TransactionEditUiState.AmountError
 
-/** Big amount input with the account's currency symbol as a suffix. */
+/** Big amount input with the account's currency code as a suffix. */
 @Composable
 internal fun AmountField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    currencySymbol: String?,
+    currencyCode: String?,
     error: AmountError?,
     modifier: Modifier = Modifier,
     hint: String? = null,
@@ -23,7 +23,7 @@ internal fun AmountField(
         onValueChange = onValueChange,
         label = label,
         modifier = modifier,
-        currency = currencySymbol,
+        currency = currencyCode,
         error = error?.let { stringResource(it.messageRes) },
         hint = hint,
     )

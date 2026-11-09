@@ -25,7 +25,8 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
-| [docs/agents/design-system.md](docs/agents/design-system.md) | дизайн-система: токены, шрифты, компоненты, план переезда |
+| [docs/agents/design-system.md](docs/agents/design-system.md) | дизайн-система: токены, цвета, навигация, компоненты, план |
+| [docs/agents/fonts.md](docs/agents/fonts.md) | шрифты: Onest, JetBrains Mono, суммы и курсы, пересборка файлов |
 | [docs/agents/motion.md](docs/agents/motion.md) | движение: тактильная система, анимации, вибрация |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |

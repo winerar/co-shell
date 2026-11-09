@@ -4,7 +4,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellTextButton
 
 /** Place once at the app root; [onOpenUpdate] opens "More → App update". */
 @Composable
@@ -31,7 +31,7 @@ fun StartupUpdateDialogs(onOpenUpdate: () -> Unit, viewModel: StartupUpdateViewM
             title = { Text(stringResource(R.string.update_whats_new_title, whatsNew.versionName)) },
             text = { Text(whatsNew.notes, Modifier.verticalScroll(rememberScrollState())) },
             confirmButton = {
-                TextButton(onClick = viewModel::dismissWhatsNew) { Text(stringResource(R.string.update_whats_new_ok)) }
+                CoShellTextButton(onClick = viewModel::dismissWhatsNew) { Text(stringResource(R.string.update_whats_new_ok)) }
             },
         )
         available != null -> AlertDialog(
@@ -44,13 +44,13 @@ fun StartupUpdateDialogs(onOpenUpdate: () -> Unit, viewModel: StartupUpdateViewM
                 )
             },
             confirmButton = {
-                TextButton(onClick = {
+                CoShellTextButton(onClick = {
                     viewModel.dismissAvailable()
                     onOpenUpdate()
                 }) { Text(stringResource(R.string.update_open)) }
             },
             dismissButton = {
-                TextButton(onClick = viewModel::dismissAvailable) { Text(stringResource(R.string.update_later)) }
+                CoShellTextButton(onClick = viewModel::dismissAvailable) { Text(stringResource(R.string.update_later)) }
             },
         )
     }

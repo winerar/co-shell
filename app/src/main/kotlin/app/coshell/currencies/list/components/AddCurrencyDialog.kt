@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,6 +16,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellFilterChip
+import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.currencies.list.AddCurrencyForm
 import app.coshell.currencies.list.ReportCurrenciesActions
 
@@ -33,7 +33,7 @@ internal fun AddCurrencyDialog(form: AddCurrencyForm, actions: ReportCurrenciesA
                 if (form.suggestions.isNotEmpty()) {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         form.suggestions.forEach { code ->
-                            FilterChip(
+                            CoShellFilterChip(
                                 selected = form.code == code,
                                 onClick = { actions.onCodeChange(code) },
                                 label = { Text(code) },
@@ -60,7 +60,7 @@ internal fun AddCurrencyDialog(form: AddCurrencyForm, actions: ReportCurrenciesA
                 )
             }
         },
-        confirmButton = { TextButton(onClick = actions.onConfirmAdd) { Text(stringResource(R.string.action_add)) } },
-        dismissButton = { TextButton(onClick = actions.onDismissAdd) { Text(stringResource(R.string.action_cancel)) } },
+        confirmButton = { CoShellTextButton(onClick = actions.onConfirmAdd) { Text(stringResource(R.string.action_add)) } },
+        dismissButton = { CoShellTextButton(onClick = actions.onDismissAdd) { Text(stringResource(R.string.action_cancel)) } },
     )
 }

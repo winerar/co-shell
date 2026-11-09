@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.ui.form.FormSection
 
 /** Currency: suggestion chips plus a code field; both disabled once the account has transactions. */
@@ -28,7 +28,7 @@ internal fun CurrencySection(state: AccountEditUiState, onCurrencyChange: (Strin
         if (!state.currencyLocked) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 state.suggestedCurrencies.forEach { code ->
-                    FilterChip(
+                    CoShellFilterChip(
                         selected = state.currency == code,
                         onClick = { onCurrencyChange(code) },
                         label = { Text(code) },

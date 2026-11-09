@@ -7,10 +7,11 @@
 ## Что где лежит
 ```
 core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
-  tokens/   Spacing, Radii (+ CoShellShapes, PillShape), Motion (длительности, кривые, пружина), pressScale
+  tokens/   Spacing, Radii (+ CoShellShapes, PillShape), Motion (длительности, кривые)
   theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
   amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
-  components/ CoShellCard — карточка с тонкой рамкой (сюда же — остальные базовые компоненты)
+  components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью
+  motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
   catalog/  TokensCatalog — витрина токенов (@Preview светлая/тёмная); растёт в каталог компонентов
   category/ CategoryBadge, палитра и иконки категорий
 core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр
@@ -25,14 +26,8 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
 - **Карточки** — только `components/CoShellCard`: фон экрана + тонкая рамка `outlineVariant`, без теней;
   `accent = true` — главный блок экрана (рамка мятная). Плотность списков — средняя: строка ~64 dp, значок 40 dp.
 - **Иконки** — контурные Material Symbols 300; активная вкладка — мятная подложка-пилюля (в тёмной теме неон).
-- **Движение** (решение владельца, §6: «живые мелочи») — `Motion.short()/medium()/enter()/exit()/press()` и
-  `Motion.*_MS`; своих `tween(300)` в экранах нет. Анимировать только `alpha`/`translation`/`scale`
-  (`performance.md` §«Анимации»), все токены ≤ 400 мс. Уже есть: переходы экранов — сдвиг на 1/10 + растворение
-  (`navigation/ScreenTransitions`); строки списков — `Modifier.animateItem()`; главные кнопки («+», «Сохранить») —
-  `Modifier.pressScale` (пружинка); главный итог «Обзора» — `amount/RollingAmountText` (цифры перелистываются
-  вверх/вниз, сам ужимается по ширине).
-- **Вибрация** — только ключевые моменты: сохранение операции (`Confirm`), свайп дошёл до «удалить»
-  (`GestureThresholdActivate`), встряхивание (сила в настройках). Не на каждое нажатие.
+- **Движение, тактильность, вибрация** — `docs/agents/motion.md` (обязательно к прочтению перед любым
+  интерактивным элементом).
 - **Цвета** — `MaterialTheme.colorScheme.*`; суммы — `LocalAmountPalette` (доход/расход/перевод), состояния
   без слота в Material — `LocalStatusPalette` (предупреждение, успех), светлая/тёмная — `LocalDarkTheme`.
   Своих `Color(0x…)` в экранах нет. Подробно — §«Цвета» ниже.

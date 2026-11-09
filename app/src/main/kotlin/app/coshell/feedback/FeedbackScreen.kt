@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.components.FeedbackResultCard
 import app.coshell.feedback.components.SendButton
@@ -40,7 +40,7 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
             TopAppBar(
                 title = { Text(stringResource(R.string.feedback_title)) },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    CoShellIconButton(onClick = actions.onBack) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },

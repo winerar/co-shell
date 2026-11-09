@@ -1,9 +1,7 @@
 package app.coshell.categories.list.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.list.CategoriesUiState
 import app.coshell.core.designsystem.category.CategoryBadge
+import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.R as DesignR
 
 /** A top-level row: a plain category, or a folder with child count and expand arrow. */
@@ -32,7 +32,7 @@ internal fun GroupRow(group: CategoriesUiState.Group, onClick: () -> Unit, onTog
         },
         leadingContent = { CategoryBadge(group.item.icon, group.item.color) },
         trailingContent = {
-            IconButton(onClick = onToggle) {
+            CoShellIconButton(onClick = onToggle) {
                 Icon(
                     painterResource(DesignR.drawable.ic_keyboard_arrow_down),
                     contentDescription = stringResource(
@@ -42,7 +42,7 @@ internal fun GroupRow(group: CategoriesUiState.Group, onClick: () -> Unit, onTog
                 )
             }
         },
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier.tactileClickable(onClick = onClick),
     )
 }
 
@@ -52,6 +52,6 @@ internal fun CategoryRow(item: CategoriesUiState.Item, indent: Boolean, onClick:
     ListItem(
         headlineContent = { Text(item.name) },
         leadingContent = { CategoryBadge(item.icon, item.color, size = if (indent) 32.dp else 40.dp) },
-        modifier = Modifier.clickable(onClick = onClick).padding(start = if (indent) 40.dp else 0.dp),
+        modifier = Modifier.tactileClickable(onClick = onClick).padding(start = if (indent) 40.dp else 0.dp),
     )
 }

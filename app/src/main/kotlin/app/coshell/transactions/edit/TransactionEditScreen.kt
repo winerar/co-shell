@@ -2,7 +2,6 @@ package app.coshell.transactions.edit
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -15,16 +14,17 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
-import app.coshell.ui.format.formatDayMonth
+import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField
 import app.coshell.transactions.edit.components.CategoryChips
-import app.coshell.ui.form.DateChips
 import app.coshell.transactions.edit.components.ReceiptSection
 import app.coshell.transactions.edit.components.TypeSelector
+import app.coshell.ui.form.DateChips
 import app.coshell.ui.form.DeleteButton
 import app.coshell.ui.form.FormSection
+import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.sheet.EditSheetLayout
 
 /**
@@ -136,5 +136,5 @@ private fun NoAccounts(onAddAccount: () -> Unit) {
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    Button(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
+    CoShellButton(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
 }

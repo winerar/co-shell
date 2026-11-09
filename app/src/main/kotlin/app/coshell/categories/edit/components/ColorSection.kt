@@ -1,7 +1,6 @@
 package app.coshell.categories.edit.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -20,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.selectionPop
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.ui.form.FormSection
 import app.coshell.core.designsystem.R as DesignR
 
@@ -37,10 +39,11 @@ internal fun ColorSection(selected: Long?, onSelect: (Long) -> Unit) {
             CategoryPalette.colors.forEach { color ->
                 Box(
                     modifier = Modifier
+                        .tactileClickable(Tactile.Control, CircleShape) { onSelect(color) }
+                        .selectionPop(color == selectedSwatch)
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(categoryColor(color))
-                        .clickable { onSelect(color) },
+                        .background(categoryColor(color)),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (color == selectedSwatch) {

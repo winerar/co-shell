@@ -3,10 +3,10 @@ package app.coshell.ui.form
 import androidx.annotation.StringRes
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellTextButton
 
 /** Generic "are you sure?" dialog: [confirmLabel] runs [onConfirm], "Cancel" runs [onDismiss]. */
 @Composable
@@ -21,8 +21,8 @@ fun ConfirmDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(title)) },
         text = { Text(stringResource(text)) },
-        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(confirmLabel)) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+        confirmButton = { CoShellTextButton(onClick = onConfirm) { Text(stringResource(confirmLabel)) } },
+        dismissButton = { CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
     )
 }
 

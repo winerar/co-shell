@@ -2,20 +2,16 @@ package app.coshell.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,8 +20,10 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellFab
+import app.coshell.core.designsystem.components.CoShellNavigationBarItem
 import app.coshell.core.designsystem.theme.LocalDarkTheme
-import app.coshell.core.designsystem.tokens.pressScale
+import app.coshell.core.designsystem.motion.Tactile
 import kotlin.reflect.KClass
 import app.coshell.core.designsystem.R as DesignR
 
@@ -74,12 +72,10 @@ internal fun CoShellBottomBar(current: NavDestination?, onTab: (TopLevel) -> Uni
         tabs.forEachIndexed { index, tab ->
             if (index == tabs.size / 2) {
                 Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
-                    val interaction = remember { MutableInteractionSource() }
-                    FloatingActionButton(
+                    CoShellFab(
                         onClick = onAdd,
                         shape = CircleShape,
-                        interactionSource = interaction,
-                        modifier = Modifier.pressScale(interaction),
+                        tactile = Tactile.Primary,
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
@@ -88,7 +84,7 @@ internal fun CoShellBottomBar(current: NavDestination?, onTab: (TopLevel) -> Uni
                     }
                 }
             }
-            NavigationBarItem(
+            CoShellNavigationBarItem(
                 colors = tabColors,
                 selected = current.isOn(tab),
                 onClick = { onTab(tab) },

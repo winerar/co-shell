@@ -1,8 +1,6 @@
 package app.coshell.currencies.list.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.R as DesignR
 
 /** One report currency: "USD · Основная", or "ARS · Нажмите, чтобы сделать основной" with a bin. */
@@ -33,13 +33,13 @@ internal fun ReportCurrencyRow(
         },
         trailingContent = if (canRemove) {
             {
-                IconButton(onClick = onRemove) {
+                CoShellIconButton(onClick = onRemove) {
                     Icon(painterResource(DesignR.drawable.ic_delete), stringResource(R.string.action_delete))
                 }
             }
         } else {
             null
         },
-        modifier = if (isMain) Modifier else Modifier.clickable(onClick = onMakeMain),
+        modifier = if (isMain) Modifier else Modifier.tactileClickable(onClick = onMakeMain),
     )
 }

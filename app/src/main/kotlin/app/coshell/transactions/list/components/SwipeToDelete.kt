@@ -41,6 +41,8 @@ internal fun SwipeToDelete(onDelete: () -> Unit, modifier: Modifier = Modifier, 
         enableDismissFromStartToEnd = false,
         onDismiss = { if (it == SwipeToDismissBoxValue.EndToStart) onDelete() },
         backgroundContent = {
+            // Only while swiping: a pressed row sinks a little, and the red strip must not peek out.
+            if (state.dismissDirection != SwipeToDismissBoxValue.EndToStart) return@SwipeToDismissBox
             Box(
                 Modifier.fillMaxSize().background(MaterialTheme.colorScheme.errorContainer).padding(horizontal = Spacing.xl),
                 contentAlignment = Alignment.CenterEnd,

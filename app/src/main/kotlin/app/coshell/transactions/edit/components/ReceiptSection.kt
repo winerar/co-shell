@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.transactions.edit.TransactionEditActions
@@ -32,7 +32,7 @@ import app.coshell.transactions.edit.receiptRateText
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionEditActions) {
-    FilterChip(
+    CoShellFilterChip(
         selected = state.receiptEnabled,
         onClick = { actions.onReceiptToggle(!state.receiptEnabled) },
         label = { Text(stringResource(R.string.transaction_receipt_toggle)) },
@@ -44,7 +44,7 @@ internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionE
         if (choices.isNotEmpty()) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 choices.forEach { code ->
-                    FilterChip(
+                    CoShellFilterChip(
                         selected = state.receiptCurrency == code,
                         onClick = { actions.onReceiptCurrencyChange(code) },
                         label = { Text(code) },

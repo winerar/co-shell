@@ -3,13 +3,13 @@ package app.coshell.categories.edit.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.labelRes
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.model.CategoryType
 import app.coshell.ui.form.FormHint
 import app.coshell.ui.form.FormSection
@@ -21,7 +21,7 @@ internal fun CategoryTypeSection(selected: CategoryType, locked: Boolean, onSele
     FormSection(stringResource(R.string.category_type)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CategoryType.entries.forEach { type ->
-                FilterChip(
+                CoShellFilterChip(
                     selected = selected == type,
                     onClick = { onSelect(type) },
                     enabled = !locked,

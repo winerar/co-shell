@@ -1,15 +1,14 @@
 package app.coshell.ui.list
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
+import app.coshell.core.designsystem.components.CoShellSwitch
+import app.coshell.core.designsystem.motion.tactileToggleable
 
 /**
  * A settings line with an on/off switch: optional icon, title, optional [subtitle]. The whole row toggles.
@@ -28,7 +27,7 @@ fun SwitchRow(
         supportingContent = subtitle?.let { { Text(it) } },
         leadingContent = icon?.let { { Icon(painterResource(it), contentDescription = null) } },
         // The row handles the click, so the switch itself is display-only (one target for TalkBack).
-        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
-        modifier = Modifier.toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
+        trailingContent = { CoShellSwitch(checked = checked, onCheckedChange = null) },
+        modifier = Modifier.tactileToggleable(value = checked, onValueChange = onCheckedChange),
     )
 }

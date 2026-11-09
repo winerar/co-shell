@@ -3,8 +3,6 @@ package app.coshell.core.designsystem.tokens
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FiniteAnimationSpec
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 
 /**
@@ -31,10 +29,5 @@ object Motion {
     fun <T> medium(): FiniteAnimationSpec<T> = tween(MEDIUM_MS, easing = Standard)
     fun <T> enter(): FiniteAnimationSpec<T> = tween(LONG_MS, easing = Decelerate)
     fun <T> exit(): FiniteAnimationSpec<T> = tween(SHORT_MS, easing = Accelerate)
-
-    /** "Living" press (owner's choice, design-questions §6): a soft bouncy spring, settles in ~300 ms. */
-    fun <T> press(): FiniteAnimationSpec<T> = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium)
-
-    /** How far a pressed button shrinks. */
-    const val PRESSED_SCALE = 0.92f
+    // Press feedback (depth, tilt, light, springs) lives in `motion/Tactile` — one system for every element.
 }

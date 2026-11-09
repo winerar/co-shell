@@ -1,7 +1,6 @@
 package app.coshell.transactions.list.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.transactions.list.TransactionsUiState.Kind
@@ -30,9 +30,9 @@ import app.coshell.core.designsystem.R as DesignR
 internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
+            .tactileClickable { onClick(row.id) }
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface) // covers the swipe-to-delete strip
-            .clickable { onClick(row.id) }
             .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,

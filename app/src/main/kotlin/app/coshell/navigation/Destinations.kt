@@ -40,6 +40,9 @@ data object FeedbackDestination
 @Serializable
 data object RatesDestination
 
+@Serializable
+data object ReportCurrenciesDestination
+
 /**
  * Category editor. `categoryId == null` creates a new category of [type] (a [CategoryType] name),
  * optionally inside folder [parentId]; [asFolder] opens it as a new folder.

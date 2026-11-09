@@ -3,6 +3,7 @@
 
     <string name="action_save">Сохранить</string>
     <string name="action_cancel">Отмена</string>
+    <string name="action_add">Добавить</string>
     <string name="action_back">Назад</string>
     <string name="action_archive">В архив</string>
     <string name="action_unarchive">Вернуть из архива</string>
@@ -14,6 +15,10 @@
     <string name="nav_more">Ещё</string>
 
     <string name="home_total_balance">Общий баланс</string>
+    <string name="home_total_rate_date">По курсу на %1$s</string>
+    <string name="home_total_missing">Без учёта: %1$s — нет курса</string>
+    <string name="home_total_show_breakdown">Показать по валютам счетов</string>
+    <string name="home_total_hide_breakdown">Скрыть разбивку</string>
     <string name="home_accounts">Счета</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
@@ -185,6 +190,13 @@
     <!-- More → Rates -->
     <string name="rates_title">Курсы валют</string>
     <string name="rates_menu_hint">Обновляются сами раз в день</string>
+
+    <string name="report_currencies_title">Валюты отчётов</string>
+    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Первая — основная: она крупнее, и к ней приведены «Курсы валют».</string>
+    <string name="report_currencies_main">Основная</string>
+    <string name="report_currencies_make_main">Нажмите, чтобы сделать основной</string>
+    <string name="report_currencies_add">Добавить валюту</string>
+    <string name="report_currencies_menu_hint">Основная: %1$s</string>
     <string name="rates_current">Курсы на сегодня</string>
     <string name="rates_current_hint">Тап по строке — задать курс вручную</string>
     <string name="rates_line">1 %1$s = %2$s %3$s</string>

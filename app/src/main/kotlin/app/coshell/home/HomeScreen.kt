@@ -2,7 +2,6 @@ package app.coshell.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,14 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.home.components.TotalCard
 import app.coshell.transactions.AddTransactionFab
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun HomeRoute(
@@ -72,7 +70,7 @@ fun HomeScreen(
                 }
                 return@LazyColumn
             }
-            item { TotalCard(state.totals) }
+            item { TotalCard(state) }
             item {
                 Text(
                     text = stringResource(R.string.home_accounts),
@@ -81,32 +79,6 @@ fun HomeScreen(
                 )
             }
             items(state.accounts, key = { it.id }) { AccountItem(it, onAccountClick) }
-        }
-    }
-}
-
-@Composable
-private fun TotalCard(totals: List<String>) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(Modifier.padding(20.dp)) {
-            Text(stringResource(R.string.home_total_balance), style = MaterialTheme.typography.labelLarge)
-            totals.forEachIndexed { index, total ->
-                val style = if (index == 0) {
-                    MaterialTheme.typography.displayMedium
-                } else {
-                    MaterialTheme.typography.titleLarge
-                }
-                // One line; a long amount shrinks instead of breaking inside the currency code.
-                Text(
-                    text = total,
-                    style = style,
-                    maxLines = 1,
-                    autoSize = TextAutoSize.StepBased(minFontSize = 16.sp, maxFontSize = style.fontSize),
-                )
-            }
         }
     }
 }
@@ -135,7 +107,9 @@ private fun HomeScreenPreview() {
     CoShellTheme {
         HomeScreen(
             HomeUiState(
-                totals = listOf("110 300,50 ₽", "1 250,00 €"),
+                totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
+                rateDate = LocalDate(2026, 11, 9),
+                byCurrency = listOf("105 800,50 ₽", "150,00 USD"),
                 accounts = listOf(
                     HomeUiState.AccountRow("1", "Карта", "120 800,50 ₽", isNegative = false),
                     HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 ₽", isNegative = true),

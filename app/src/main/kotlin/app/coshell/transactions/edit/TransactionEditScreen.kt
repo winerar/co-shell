@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.ui.format.formatDayMonth
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField

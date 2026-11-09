@@ -16,24 +16,38 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.currencies.list.ReportCurrenciesViewModel
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.ui.list.ActionRow
 import app.coshell.ui.list.SwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Menu tab: links to categories, exchange rates, backup, app update and feedback, plus the shake-to-add switch.
+// Menu tab: links to categories, exchange rates, report currencies, backup, app update and feedback, plus the shake-to-add switch.
 
 @Composable
 fun MoreRoute(
     onCategories: () -> Unit,
     onRates: () -> Unit,
+    onReportCurrencies: () -> Unit,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
+    reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
 ) {
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
-    MoreScreen(onCategories, onRates, onBackup, onUpdate, onFeedback, shakeEnabled, shakeSettings::setEnabled)
+    val currencies by reportCurrencies.state.collectAsStateWithLifecycle()
+    MoreScreen(
+        onCategories = onCategories,
+        onRates = onRates,
+        onReportCurrencies = onReportCurrencies,
+        mainCurrency = currencies.currencies.firstOrNull(),
+        onBackup = onBackup,
+        onUpdate = onUpdate,
+        onFeedback = onFeedback,
+        shakeEnabled = shakeEnabled,
+        onShakeEnabledChange = shakeSettings::setEnabled,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +55,8 @@ fun MoreRoute(
 fun MoreScreen(
     onCategories: () -> Unit,
     onRates: () -> Unit,
+    onReportCurrencies: () -> Unit,
+    mainCurrency: String?,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
@@ -63,6 +79,15 @@ fun MoreScreen(
                     title = stringResource(R.string.rates_title),
                     subtitle = stringResource(R.string.rates_menu_hint),
                     onClick = onRates,
+                    opensScreen = true,
+                )
+            }
+            item {
+                ActionRow(
+                    icon = DesignR.drawable.ic_payments,
+                    title = stringResource(R.string.report_currencies_title),
+                    subtitle = mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
+                    onClick = onReportCurrencies,
                     opensScreen = true,
                 )
             }
@@ -111,6 +136,8 @@ private fun MoreScreenPreview() {
         MoreScreen(
             onCategories = {},
             onRates = {},
+            onReportCurrencies = {},
+            mainCurrency = "USD",
             onBackup = {},
             onUpdate = {},
             onFeedback = {},

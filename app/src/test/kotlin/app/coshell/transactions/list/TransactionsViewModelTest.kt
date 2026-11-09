@@ -44,5 +44,32 @@ class TransactionsViewModelTest {
         val days = vm.state.value.days
         assertEquals(listOf("t"), days.single().rows.map { it.id })
         assertEquals(TransactionsUiState.RelativeDay.TODAY, days.single().relative)
+        assertEquals(false, vm.state.value.hasMore)
+    }
+
+    @Test
+    fun `loads older transactions a page at a time`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        val total = GrowingWindow.PAGE_SIZE + 5
+        repeat(total) { i ->
+            transactions.saveTransaction(
+                Transaction("t$i", TransactionType.EXPENSE, "card", Money(100, ars), Instant.fromEpochSeconds(now.epochSeconds - i * 3_600L)),
+            )
+        }
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()),
+        )
+        vm.state.launchIn(backgroundScope)
+        val first = vm.state.first { !it.isLoading }
+        assertEquals(GrowingWindow.PAGE_SIZE, first.days.sumOf { it.rows.size })
+        assertEquals(true, first.hasMore)
+
+        vm.loadMore()
+        val all = vm.state.first { it.days.sumOf { d -> d.rows.size } == total }
+        assertEquals(false, all.hasMore)
     }
 }

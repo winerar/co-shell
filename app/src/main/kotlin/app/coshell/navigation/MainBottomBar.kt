@@ -39,14 +39,20 @@ internal enum class TopLevel(
 internal fun NavDestination?.isOn(tab: TopLevel): Boolean =
     this?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true
 
-/** Bottom bar of the app: Обзор · Операции · [+] · Счета · Ещё; the "+" opens a new transaction. */
+/** Bottom bar of the app: Обзор · Операции · [+] · Счета · Ещё; the "+" opens a new transaction. Hidden off the tabs. */
 @Composable
-internal fun MainBottomBar(current: NavDestination?, onTab: (TopLevel) -> Unit, onAdd: () -> Unit) {
+internal fun MainBottomBar(
+    current: NavDestination?,
+    onTab: (TopLevel) -> Unit,
+    onAdd: () -> Unit,
+    visible: Boolean = true,
+) {
     val tabs = TopLevel.entries
     CoShellBottomBar(
         tabs = tabs.map { CoShellTab(it.icon, stringResource(it.label), selected = current.isOn(it)) },
         onTab = { onTab(tabs[it]) },
         addLabel = stringResource(R.string.transaction_add),
         onAdd = onAdd,
+        visible = visible,
     )
 }

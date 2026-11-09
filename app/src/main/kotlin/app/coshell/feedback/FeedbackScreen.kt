@@ -1,11 +1,8 @@
 package app.coshell.feedback
 
-import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -14,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellLinearProgress
+import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.components.FeedbackResultCard
 import app.coshell.feedback.components.SendButton
@@ -69,7 +68,7 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             )
             SendButton(enabled = state.canSend, onClick = actions.onSend)
-            if (state.isSending) LinearProgressIndicator(Modifier.fillMaxWidth())
+            if (state.isSending) CoShellLinearProgress()
             state.result?.let { FeedbackResultCard(it) }
         }
     }

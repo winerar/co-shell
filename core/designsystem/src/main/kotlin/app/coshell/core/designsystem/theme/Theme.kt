@@ -68,7 +68,7 @@ fun CoShellTheme(
     val hero = if (darkTheme) {
         HeroPalette(null, colorScheme.onSurface, colorScheme.primary)
     } else {
-        HeroPalette(Brush.linearGradient(listOf(MintAcid, LimeSoft, LimeAcid)), MintInk, MintInk)
+        HeroPalette(Brush.linearGradient(listOf(NeonMint, LimeSoft, LimeAcid)), MintInk, MintInk)
     }
 
     // Pressed elements catch light: white on graphite, mint on white (motion/Tactile).
@@ -85,6 +85,7 @@ fun CoShellTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            motionScheme = CoShellMotionScheme,
             typography = CoShellTypography,
             shapes = CoShellShapes,
             content = content,

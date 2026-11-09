@@ -66,6 +66,16 @@ jobs:
         run: python3 -m unittest discover -s scripts -p 'test_*.py'
 
       # main: the same tree was already checked by the dev → main PR, so lint and tests are skipped.
+      # Robolectric (MainShellSmokeTest) downloads android-all (~160 MB) into ~/.m2 at test time,
+      # outside the Gradle cache. main runs no tests, so it neither needs nor writes this cache.
+      - name: Cache Robolectric android-all
+        if: steps.changes.outputs.code == 'true' && github.ref != 'refs/heads/main'
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: robolectric-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: robolectric-
+
       - name: Lint, unit tests and debug APK
         if: steps.changes.outputs.code == 'true' && github.ref != 'refs/heads/main'
         run: ./gradlew check assembleDebug

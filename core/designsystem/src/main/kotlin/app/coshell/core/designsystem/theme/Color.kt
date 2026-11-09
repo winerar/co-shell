@@ -4,22 +4,16 @@ import androidx.compose.ui.graphics.Color
 
 // Neon palette (owner's choice, design-questions §2): mint primary + violet accent, no glow.
 // Dark theme — bright neon on graphite. Light theme (issue #62, variant B): brighter, a little acid —
-// acid mint containers, acid lime as the second accent, raspberry expenses; mint still leads.
+// acid lime as the second accent, raspberry expenses; mint still leads.
 
-// Mint (primary)
-internal val MintNeon = Color(0xFF00E5C0)
-internal val MintBright = Color(0xFF5CFFE0)
-internal val MintDeep = Color(0xFF00806B)
+// Mint (primary). Owner's choice 2026-11-09: the accent is Neon Mint #80FFCC in both themes, always a fill
+// with dark ink on it — like the approved buttons; no deep teal/green anywhere. Text accents — [accentInk].
+internal val NeonMint = Color(0xFF80FFCC)
 internal val MintInk = Color(0xFF00382E)
-internal val MintShadow = Color(0xFF00473B)
-internal val MintPale = Color(0xFFB8FFF0)
-/** Light theme containers: more saturated than [MintBright]. */
-internal val MintAcid = Color(0xFF1FFFD2)
 
 // Acid lime (light theme second accent: selected chips and segments, the hero gradient's end)
 internal val LimeAcid = Color(0xFFD8FF3D)
 internal val LimeSoft = Color(0xFF8DFFD9)
-internal val LimeDeep = Color(0xFF4A6600)
 internal val LimeInk = Color(0xFF1F2A00)
 
 // Violet (accent)

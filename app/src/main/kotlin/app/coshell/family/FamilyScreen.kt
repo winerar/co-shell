@@ -3,13 +3,11 @@ package app.coshell.family
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.family.components.CheckingBlock
 import app.coshell.family.components.FamilyMessageCard
@@ -52,7 +51,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
             modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
-            if (state.isBusy) LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = Spacing.l))
+            if (state.isBusy) CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))
             when (val family = state.family) {
                 FamilyState.NotConfigured -> NotConfiguredBlock()
                 FamilyState.SignedOut -> SignedOutBlock(state.isBusy, actions.onSignIn)

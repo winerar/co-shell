@@ -1,6 +1,5 @@
 package app.coshell.rates.list.components
 
-import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellLinearProgress
+import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.rates.RefreshStatus
 import app.coshell.rates.list.formatRateDate
 import app.coshell.rates.list.sourceLabel
-import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.R as DesignR
 
 /** "Loaded: rates for 9 Nov, source currency-api", the "Update now" button and its result. */
@@ -46,7 +46,7 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
         }
         when (status) {
             RefreshStatus.Idle -> Unit
-            RefreshStatus.Running -> LinearProgressIndicator(Modifier.fillMaxWidth())
+            RefreshStatus.Running -> CoShellLinearProgress()
             RefreshStatus.Updated -> CoShellMessage(stringResource(R.string.rates_refresh_updated), isError = false)
             RefreshStatus.AlreadyFresh -> CoShellMessage(stringResource(R.string.rates_refresh_fresh), isError = false)
             RefreshStatus.Failed -> CoShellMessage(stringResource(R.string.rates_refresh_failed), isError = true)

@@ -1,6 +1,11 @@
 package app.coshell.core.designsystem.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -17,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.theme.LocalDarkTheme
+import app.coshell.core.designsystem.tokens.Motion
 
 /** One tab of [CoShellBottomBar]. */
 @Immutable
@@ -26,9 +32,28 @@ data class CoShellTab(@DrawableRes val icon: Int, val label: String, val selecte
  * Bottom bar (design-system.md §«Навигация и жесты»): tabs with the round «+» in the middle — the most
  * frequent action is always under the thumb. Active tab: outlined icon on a neon pill (bright mint in
  * both themes). [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ *
+ * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
+ * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
  */
 @Composable
-fun CoShellBottomBar(tabs: List<CoShellTab>, onTab: (Int) -> Unit, addLabel: String, onAdd: () -> Unit) {
+fun CoShellBottomBar(
+    tabs: List<CoShellTab>,
+    onTab: (Int) -> Unit,
+    addLabel: String,
+    onAdd: () -> Unit,
+    visible: Boolean = true,
+) {
+    AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
+        BottomBarContent(tabs, onTab, addLabel, onAdd)
+    }
+}
+
+private val BarIn = slideInVertically(Motion.Placement) { it } + expandVertically(Motion.Resize, expandFrom = Alignment.Top)
+private val BarOut = slideOutVertically(Motion.Placement) { it } + shrinkVertically(Motion.Resize, shrinkTowards = Alignment.Top)
+
+@Composable
+private fun BottomBarContent(tabs: List<CoShellTab>, onTab: (Int) -> Unit, addLabel: String, onAdd: () -> Unit) {
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
     val tabColors = NavigationBarItemDefaults.colors(

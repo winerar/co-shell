@@ -9,7 +9,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 
-/** One chip per account: "Карта · ₽". */
+/** One chip per account: "Карта · RUB". */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AccountChips(accounts: List<AccountOption>, selectedId: String?, onSelect: (String) -> Unit) {
@@ -18,7 +18,7 @@ internal fun AccountChips(accounts: List<AccountOption>, selectedId: String?, on
             CoShellFilterChip(
                 selected = account.id == selectedId,
                 onClick = { onSelect(account.id) },
-                label = { Text("${account.name} · ${account.currencySymbol}") },
+                label = { Text("${account.name} · ${account.currency}") },
             )
         }
     }

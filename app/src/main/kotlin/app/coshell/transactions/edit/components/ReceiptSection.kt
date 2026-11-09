@@ -19,7 +19,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditUiState
@@ -64,7 +63,7 @@ internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionE
             value = state.receiptAmount,
             onValueChange = actions.onReceiptAmountChange,
             label = stringResource(R.string.transaction_receipt_amount),
-            currencySymbol = CurrencyCode.parseOrNull(state.receiptCurrency)?.let { Currencies.info(it).displaySymbol },
+            currencyCode = CurrencyCode.parseOrNull(state.receiptCurrency)?.value,
             error = state.receiptAmountError,
             hint = receiptRateText(state)?.let { stringResource(R.string.transaction_receipt_rate, it) }
                 ?: stringResource(R.string.transaction_receipt_hint),

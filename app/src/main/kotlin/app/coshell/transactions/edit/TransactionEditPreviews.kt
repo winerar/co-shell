@@ -10,8 +10,8 @@ import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
 import kotlinx.datetime.LocalDate
 
 private val previewAccounts = listOf(
-    AccountOption("card", "Карта", "ARS", "$"),
-    AccountOption("cash", "Наличные", "USD", "US$"),
+    AccountOption("card", "Карта", "ARS"),
+    AccountOption("cash", "Наличные", "USD"),
 )
 
 private val previewCategories = listOf(

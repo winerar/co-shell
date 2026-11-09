@@ -22,7 +22,7 @@ data class TransactionsUiState(
         val note: String,
         /** With a sign for expenses ("-") and incomes ("+"), without one for transfers. */
         val amount: String,
-        /** Arriving amount of a transfer between currencies ("+120 000,00 $") or the receipt amount of a purchase paid in another currency. */
+        /** Arriving amount of a transfer between currencies ("+120 000,00 ARS") or the receipt amount of a purchase paid in another currency. */
         val secondaryAmount: String? = null,
         /** Category icon key and colour; both null for transfers and missing categories. */
         val icon: String? = null,

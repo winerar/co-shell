@@ -13,7 +13,6 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
-import app.coshell.core.model.Currencies
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
@@ -240,5 +239,5 @@ class TransactionEditViewModel @Inject constructor(
     }
 
     private fun Account.toOption() =
-        AccountOption(id, name, currency.value, Currencies.info(currency).displaySymbol)
+        AccountOption(id, name, currency.value)
 }

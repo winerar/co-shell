@@ -20,14 +20,14 @@ private fun TransactionsPreview() {
                         LocalDate(2026, 11, 8),
                         RelativeDay.TODAY,
                         listOf(
-                            Row("1", Kind.EXPENSE, "Кафе", "Карта", "кофе", "-4 500,00 $"),
-                            Row("2", Kind.TRANSFER, null, "Наличные → Карта", "", "100,00 US$", "+120 000,00 $"),
+                            Row("1", Kind.EXPENSE, "Кафе", "Карта", "кофе", "-4 500,00 ARS"),
+                            Row("2", Kind.TRANSFER, null, "Наличные → Карта", "", "100,00 USD", "+120 000,00 ARS"),
                         ),
                     ),
                     Day(
                         LocalDate(2026, 11, 5),
                         RelativeDay.OTHER,
-                        listOf(Row("3", Kind.INCOME, "Зарплата", "Ameria", "", "+500 000,00 ֏")),
+                        listOf(Row("3", Kind.INCOME, "Зарплата", "Ameria", "", "+500 000,00 AMD")),
                     ),
                 ),
             ),

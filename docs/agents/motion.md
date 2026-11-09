@@ -12,7 +12,8 @@
   раскрытие, размеры → `spatial`; проявление → `effects`; уход/растворение → `effectsFast` (внутри экрана) или
   `effectsSlow` (уходящий экран — чтобы движение успели увидеть); блик → `effectsFast`/`effectsSlow`.
   `tween`/`spring`/кривые вне `Motion.kt` ловят `MotionTokensRuleTest` (designsystem) и `TokensRuleTest` (app).
-  `MotionScheme` Material в 1.4.0 закрыт (`internal`) — встроенные компоненты пока на своих пружинах.
+  Встроенные компоненты Material двигаются на тех же пружинах через `theme/MotionScheme.kt` → `MaterialTheme(motionScheme)`;
+  для этого material3 закреплён на `1.5.0-rc01` (в 1.4.0 API закрыт). Сломается на телефоне — убрать версию в `libs.versions.toml` и схему.
   Анимировать `alpha`/`translation`/`scale`/`rotation`, размер — только через примитивы ниже (`performance.md`).
   Главный итог «Обзора» — `amount/RollingAmountText` (цифры перелистываются, ужимается по ширине).
 - **Размеры (#64, решение владельца: «всё, что меняет форму или размер, — с анимацией»)** — `motion/Resize.kt`:

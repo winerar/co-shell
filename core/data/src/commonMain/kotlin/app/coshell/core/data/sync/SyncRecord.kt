@@ -17,8 +17,11 @@ data class SyncRecord(
     val key: String get() = "${kind.wire}_$id"
 }
 
-/** A record read from the server; [serverTime] (epoch ms) is when the server stored it. */
-data class RemoteRecord(val record: SyncRecord, val serverTime: Long)
+/**
+ * A record read from the server. [cursor] is an opaque position right after this record in the
+ * server's order; passing it back to [RemoteStore.pull] returns only records stored later.
+ */
+data class RemoteRecord(val record: SyncRecord, val cursor: String)
 
 /** Synced tables. [wire] names are stored on the server — never rename them. */
 enum class SyncKind(val wire: String) {
@@ -40,8 +43,11 @@ enum class SyncKind(val wire: String) {
  * an in-memory fake. Both calls throw on network or permission errors.
  */
 interface RemoteStore {
-    /** Records stored at or after [since] (server time, epoch ms), oldest first; `null` — everything. */
-    suspend fun pull(since: Long?): List<RemoteRecord>
+    /**
+     * Records stored after [cursor] (a [RemoteRecord.cursor] from an earlier pull), oldest first;
+     * `null` — everything. Records already read are never returned again, so an idle pull is cheap.
+     */
+    suspend fun pull(cursor: String?): List<RemoteRecord>
 
     /** Stores [records], replacing what the server had under the same [SyncRecord.key]. */
     suspend fun push(records: List<SyncRecord>)

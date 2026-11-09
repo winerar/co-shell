@@ -38,7 +38,8 @@
   а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
   init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
   `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19). (11-09) curl тоже может
-  получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`.
+  получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`. Если 429 и там — зеркало
+  `maven-central.storage-download.googleapis.com/maven2` (сработало 11-09).
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
 - (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,
@@ -65,3 +66,6 @@
   пересобирается синхронно; нужен обычный `runTest` + `runCurrent()` (так в `GrowingWindowTest`).
 - (11-09) M3 красит `primary` и как заливку, и как текст (`TextButton`, фокус поля, `Tab`, «сегодня» в `DatePicker`).
   При светлом неоновом `primary` текстовые места переопределять на `accentInk()`, иначе текст исчезает на белом.
+- (11-09) Firestore 429 (`Too Many Requests`) = исчерпана дневная квота Spark (50 тыс. чтений), а не частота.
+  Опрос раз в 10 с: любое лишнее чтение × 360/ч × 2 телефона. Курсор pull — строго после последней записи
+  (`FirestoreRemoteStore.Position`); тест на «пустые опросы ничего не читают» — `SyncEngineTest`.

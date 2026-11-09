@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed (monochrome) app icon: same drawing in one color, Android tints it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Soft body flaring down like an upside-down scallop shell -->
+    <path
+        android:pathData="M35,55 C32,60 30.5,65 30.5,70 C30.5,77 37,80 54,80 C71,80 77.5,77 77.5,70 C77.5,65 76,60 73,55"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Kiss-lock frame with rounded shoulders -->
+    <path
+        android:pathData="M35,55 C35,45 38,41 45,41 L63,41 C70,41 73,45 73,55"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Shell ribs converging towards the clasp -->
+    <path
+        android:pathData="M47,48 L42,74 M54,47 L54,75 M61,48 L66,74"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Clasp ball one (mint) -->
+    <path
+        android:pathData="M52,41 L51,38.2 M47.7,35.4 a2.9,2.9 0 1,1 5.8,0 a2.9,2.9 0 1,1 -5.8,0"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Clasp ball two (violet): one ball per family member -->
+    <path
+        android:pathData="M56,41 L57,38.2 M54.5,35.4 a2.9,2.9 0 1,1 5.8,0 a2.9,2.9 0 1,1 -5.8,0"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

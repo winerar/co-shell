@@ -28,7 +28,7 @@ class StartupUpdateViewModelTest {
     )
 
     @Test
-    fun `offers a newer release once a day`() {
+    fun `offers a newer release once per launch`() {
         source.release = release(12)
         val vm = vm()
         vm.onAppStart()
@@ -36,6 +36,39 @@ class StartupUpdateViewModelTest {
         vm.dismissAvailable()
         vm.onAppStart()
         assertNull(vm.state.value.available)
+    }
+
+    @Test
+    fun `next launch offers the known release again without a network check`() {
+        source.release = release(12)
+        vm().onAppStart()
+        source.error = java.io.IOException("offline")
+        val next = vm()
+        next.onAppStart()
+        assertEquals(release(12), next.state.value.available)
+    }
+
+    @Test
+    fun `release found on the update screen is offered on the next launch`() {
+        source.release = release(12)
+        kotlinx.coroutines.runBlocking { CheckForUpdateUseCase(source, store, installed, clock)(force = true) }
+        val vm = vm()
+        vm.onAppStart()
+        assertEquals(release(12), vm.state.value.available)
+    }
+
+    @Test
+    fun `a newer release found later in the same launch is offered`() {
+        source.release = release(12)
+        val vm = vm()
+        vm.onAppStart()
+        vm.dismissAvailable()
+        source.release = release(13)
+        vm.onAppStart() // checked recently -> known 12, already offered
+        assertNull(vm.state.value.available)
+        store.lastCheck = null
+        vm.onAppStart()
+        assertEquals(release(13), vm.state.value.available)
     }
 
     @Test

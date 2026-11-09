@@ -24,10 +24,13 @@ class FakeReleaseSource(var release: AppRelease? = null, var error: Exception? =
 class FakeUpdateStateStore : UpdateStateStore {
     var lastCheck: Instant? = null
     var pending: AppRelease? = null
+    var known: AppRelease? = null
     override suspend fun lastCheckAt() = lastCheck
     override suspend fun setLastCheckAt(at: Instant) { lastCheck = at }
     override suspend fun pendingRelease() = pending
     override suspend fun setPendingRelease(release: AppRelease?) { pending = release }
+    override suspend fun knownRelease() = known
+    override suspend fun setKnownRelease(release: AppRelease?) { known = release }
 }
 
 class FixedClock(var now: Instant) : Clock {

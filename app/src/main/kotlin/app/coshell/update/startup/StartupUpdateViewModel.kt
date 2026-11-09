@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** Dialogs shown over any screen: "what's new" after an update, "update available" (daily check). */
+/** Dialogs shown over any screen: "what's new" after an update, "update available" on app start. */
 data class StartupUpdateState(val whatsNew: AppRelease? = null, val available: AppRelease? = null)
 
 @HiltViewModel
@@ -26,17 +26,26 @@ class StartupUpdateViewModel @Inject constructor(
     private val _state = MutableStateFlow(StartupUpdateState())
     val state: StateFlow<StartupUpdateState> = _state.asStateFlow()
 
+    /** Highest version already offered in this launch: "Later" is not repeated on every return to the app. */
+    private var offeredVersionCode = 0
+
     init {
         viewModelScope.launch {
             whatsNew()?.let { release -> _state.update { it.copy(whatsNew = release) } }
         }
     }
 
-    /** Called every time the app comes to the foreground; the use case limits checks to once a day. */
+    /**
+     * Called every time the app comes to the foreground. The use case limits network checks and
+     * remembers the found release, so a new launch offers it again until it is installed.
+     */
     fun onAppStart() {
         viewModelScope.launch {
             val result = check()
-            if (result is UpdateCheckResult.Available) _state.update { it.copy(available = result.release) }
+            if (result is UpdateCheckResult.Available && result.release.versionCode > offeredVersionCode) {
+                offeredVersionCode = result.release.versionCode
+                _state.update { it.copy(available = result.release) }
+            }
         }
     }
 

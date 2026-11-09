@@ -13,7 +13,9 @@
 - **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`
   (итог действия: блок на ступень светлее фона или контейнер ошибки).
 - **Шторка и панель** — `CoShellSheet` + `CoShellSheetLayout` (действие закреплено внизу), `CoShellBottomBar`
-  (`CoShellTab`: иконка, подпись, выбрана; «+» в середине, `addConfirm` — галочка после сохранения) — §«Навигация».
+  (`CoShellTab`: иконка, подпись, выбрана, `badge` — неоновая точка «есть новое»; «+» в середине, `addConfirm` —
+  галочка после сохранения) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
+  строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).
 - **Снэкбар** — `CoShellSnackbarHost` (выезжает снизу, полоска оставшегося времени); **палитра** — `CoShellPaletteSwatch`.
 - Тест `app/.../TactileRuleTest` запрещает в `app` импорт Material-кнопок, чипов, полей, диалогов,
   `ListItem`, `Card`, `ModalBottomSheet`, `NavigationBar` — только компоненты отсюда. Обёртки со строками приложения (`ui/form/ConfirmDialog`,

@@ -1,6 +1,7 @@
 package app.coshell.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,8 @@ internal fun MainShell(
     navController: NavHostController,
     snackbar: SnackbarHostState,
     onAdd: () -> Unit,
+    moreBadge: Boolean = false,
+    overBar: @Composable BoxScope.(onTab: Boolean) -> Unit = {},
     graph: NavGraphBuilder.() -> Unit,
 ) {
     // A sheet (dialog destination) opens over a screen: the bar under it stays as it was.
@@ -53,7 +56,7 @@ internal fun MainShell(
     val addConfirm = remember { ConfirmPulse() }
 
     CompositionLocalProvider(LocalAddConfirm provides addConfirm) {
-        Shell(navController, snackbar, onAdd, graph, barScreen, showBottomBar, origins)
+        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge), origins, overBar)
     }
 }
 
@@ -63,18 +66,19 @@ private fun Shell(
     snackbar: SnackbarHostState,
     onAdd: () -> Unit,
     graph: NavGraphBuilder.() -> Unit,
-    barScreen: NavDestination?,
-    showBottomBar: Boolean,
+    bar: BarState,
     origins: ScreenOrigins,
+    overBar: @Composable BoxScope.(onTab: Boolean) -> Unit,
 ) {
     Scaffold(
         snackbarHost = { CoShellSnackbarHost(snackbar) },
         bottomBar = {
             MainBottomBar(
-                current = barScreen,
+                current = bar.screen,
                 onTab = { navController.navigateToTab(it) },
                 onAdd = onAdd,
-                visible = showBottomBar,
+                visible = bar.visible,
+                moreBadge = bar.moreBadge,
             )
         },
     ) { padding ->
@@ -96,9 +100,14 @@ private fun Shell(
                 popExitTransition = { popExit(origins) },
                 builder = graph,
             )
+            // Quiet notices (the update pill) float just above the bar, only while it is shown.
+            overBar(bar.visible)
         }
     }
 }
+
+/** What the bottom bar shows: the tab it highlights, whether it is on screen, the dot on «Ещё». */
+private data class BarState(val screen: NavDestination?, val visible: Boolean, val moreBadge: Boolean)
 
 /** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */
 internal fun NavHostController.navigateToTab(tab: TopLevel) {

@@ -78,8 +78,9 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 траты/доход месяца и траты по дням — `core:domain/rates/MonthSpending.kt`, состояние «Обзора» — `home/HomeState.kt`,
 плитки 2×2 — `home/components/HomeTiles`, последние операции — `home/components/RecentCard` (строки — из `transactions/list`).
 Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`.
-У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
-(диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
+У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller), `UpdateController`
+(синглтон: проверка/скачивание/установка, живёт дольше экрана) и `notice/` (пилюля над панелью, точка на «Ещё»,
+«Что нового»; подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
 Импорт из Wallet (этап 5): разбор CSV — `core:domain/importer/csv/CsvReader` (общий RFC 4180), формат Wallet —
 `core:domain/importer/wallet/` (`WalletCsvParser` → `WalletRecord`/ошибки с номером строки, `WalletTransferMatcher`,

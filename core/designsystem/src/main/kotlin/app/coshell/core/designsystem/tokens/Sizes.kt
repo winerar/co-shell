@@ -32,4 +32,8 @@ object Sizes {
     val keypadKey = 56.dp
     /** Account tile in the account picker grid (badge, name, balance). */
     val accountTile = 96.dp
+    /** Thin outline of a card or a floating pill. */
+    val hairline = 1.dp
+    /** Floating notice pill over the bottom bar (CoShellNoticePill): a touch-friendly 48 dp. */
+    val pillHeight = 48.dp
 }

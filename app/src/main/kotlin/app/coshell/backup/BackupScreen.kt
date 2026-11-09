@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.backup.auto.AutoBackupUiState
+import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.list.ActionRow
@@ -29,7 +31,7 @@ import app.coshell.core.designsystem.R as DesignR
 /** "More → Backup": explanation, "Save a copy", "Restore from a copy", and the last result. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackupScreen(state: BackupUiState, actions: BackupActions) {
+fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupUiState = AutoBackupUiState()) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,6 +72,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions) {
                 LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
             }
             state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = 16.dp)) }
+            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
         }
     }
 

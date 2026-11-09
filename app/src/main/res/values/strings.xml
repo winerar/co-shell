@@ -240,6 +240,15 @@
     <string name="account_personal_mine">личный</string>
     <string name="account_personal_of">личный · %1$s</string>
 
+    <string name="auto_backup_title">Автоматически раз в неделю</string>
+    <string name="auto_backup_choose">Выбрать папку для автокопий</string>
+    <string name="auto_backup_folder">Папка: %1$s</string>
+    <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
+    <string name="auto_backup_pending">Первая копия скоро появится</string>
+    <string name="auto_backup_last">Последняя копия: %1$s</string>
+    <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
+    <string name="auto_backup_disable">Выключить автокопии</string>
+
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
     <string name="family_title">Семья и синхронизация</string>
     <string name="family_menu_hint">Общий бюджет на двух телефонах</string>

@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,12 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onPlaced
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
+import app.coshell.core.designsystem.components.CoShellSnackbarHost
+import app.coshell.core.designsystem.motion.ConfirmPulse
+import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.motion.PressOrigin
 
 /**
@@ -45,9 +49,26 @@ internal fun MainShell(
     if (showBottomBar) barScreen = screen
     // Screens grow from the tapped button or row and shrink back into it.
     val origins = remember { ScreenOrigins(PressOrigin) }
+    // An editor's save makes the «+» answer with a check mark (design-refactor Step 4).
+    val addConfirm = remember { ConfirmPulse() }
 
+    CompositionLocalProvider(LocalAddConfirm provides addConfirm) {
+        Shell(navController, snackbar, onAdd, graph, barScreen, showBottomBar, origins)
+    }
+}
+
+@Composable
+private fun Shell(
+    navController: NavHostController,
+    snackbar: SnackbarHostState,
+    onAdd: () -> Unit,
+    graph: NavGraphBuilder.() -> Unit,
+    barScreen: NavDestination?,
+    showBottomBar: Boolean,
+    origins: ScreenOrigins,
+) {
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbar) },
+        snackbarHost = { CoShellSnackbarHost(snackbar) },
         bottomBar = {
             MainBottomBar(
                 current = barScreen,

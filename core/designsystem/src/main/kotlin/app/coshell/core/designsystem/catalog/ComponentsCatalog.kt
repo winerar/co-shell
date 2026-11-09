@@ -2,6 +2,7 @@ package app.coshell.core.designsystem.catalog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,12 +21,14 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMessage
+import app.coshell.core.designsystem.components.CoShellPaletteSwatch
 import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.theme.AmountTextStyle
+import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.tokens.Spacing
@@ -105,4 +108,24 @@ private fun SheetLayoutPreview() = CoShellTheme(darkTheme = false) {
             CoShellAmountField(value = "", onValueChange = {}, label = "Начальный баланс", currency = "USD")
         }
     }
+}
+
+/** All palettes side by side, as in «Настройки → Тема», in each palette's own colours. */
+@Composable
+private fun PalettesRow(selected: CoShellPalette) {
+    Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        CoShellPalette.entries.forEach { palette ->
+            CoShellPaletteSwatch(palette, palette.name, selected = palette == selected, onClick = {})
+        }
+    }
+}
+
+@Preview(name = "Palettes · light", showBackground = true)
+@Composable
+private fun PalettesLightPreview() = CoShellTheme(darkTheme = false) { Surface { PalettesRow(CoShellPalette.Volt) } }
+
+@Preview(name = "Palettes · dark · Mango", showBackground = true)
+@Composable
+private fun PalettesDarkPreview() = CoShellTheme(darkTheme = true, palette = CoShellPalette.Mango) {
+    Surface { PalettesRow(CoShellPalette.Mango) }
 }

@@ -10,6 +10,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellTab
+import app.coshell.core.designsystem.motion.LocalAddConfirm
 import kotlin.reflect.KClass
 import app.coshell.core.designsystem.R as DesignR
 
@@ -54,5 +55,6 @@ internal fun MainBottomBar(
         addLabel = stringResource(R.string.transaction_add),
         onAdd = onAdd,
         visible = visible,
+        addConfirm = LocalAddConfirm.current,
     )
 }

@@ -37,10 +37,13 @@
 - (11-09) Maven Central из облачной сессии отвечает Gradle 429 на большие файлы (Robolectric), повтор не помогает,
   а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
   init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
-  `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19).
+  `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19). (11-09) curl тоже может
+  получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
 ## Грабли проекта
+- (11-09) `rememberGraphicsLayer().record{}` хранит ссылки на слои детей, а не их копию — снимок «старого» кадра
+  делать сразу `toImageBitmap()` до смены (так `motion/ThemeReveal.kt`), иначе дети перерисуются уже новыми.
 - (11-09) Слияние нескольких веток: читать **весь** вывод `git merge` (не `tail`), перед коммитом —
   `git grep -n '^<<<<<<< '`; так маркер конфликта чуть не уехал в `ARCHITECTURE.md`.
 - (11-09) `MaterialTheme(motionScheme = …)` и интерфейс `MotionScheme` в material3 **1.4.0 закрыты** (`internal`),

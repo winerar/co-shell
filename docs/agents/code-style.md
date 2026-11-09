@@ -31,6 +31,7 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 
 ## Иконки
 - Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.
+- Отступы, скругления, анимации и стили сумм — токены дизайн-системы (`design-system.md`).
 - Лежат в `core/designsystem/src/main/res/drawable/ic_<name>.xml`, в коде — `painterResource(DesignR.drawable.ic_<name>)`.
 - Новая иконка: `npm pack @material-symbols/svg-300` в scratchpad, распаковать и выполнить
   `python3 scripts/material-symbol-to-vector.py <распаковка>/package/outlined core/designsystem/src/main/res/drawable <name>[:mirrored]`

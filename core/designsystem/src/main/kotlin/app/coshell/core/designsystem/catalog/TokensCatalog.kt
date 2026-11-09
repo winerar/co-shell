@@ -1,0 +1,72 @@
+package app.coshell.core.designsystem.catalog
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.theme.AmountHeroStyle
+import app.coshell.core.designsystem.theme.AmountInputStyle
+import app.coshell.core.designsystem.theme.AmountTextStyle
+import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.designsystem.tokens.Radii
+import app.coshell.core.designsystem.tokens.Spacing
+
+/** Showcase of design tokens for Android Studio previews; grows into the component catalog. */
+@Composable
+fun TokensCatalog() {
+    Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
+        Text("Суммы", style = MaterialTheme.typography.titleSmall)
+        Text("1 234 567,89 USD", style = AmountHeroStyle)
+        Text("850 000 ARS", style = AmountTitleStyle)
+        Text("1 049,69 ARS", style = AmountInputStyle)
+        Text("−12,50 USDT", style = AmountTextStyle)
+
+        Text("Отступы", style = MaterialTheme.typography.titleSmall)
+        Spacing.scale.forEach { SpacingSample(it) }
+
+        Text("Скругления", style = MaterialTheme.typography.titleSmall)
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            listOf(Radii.small, Radii.medium, Radii.large, Radii.extraLarge).forEach { RadiusSample(it) }
+        }
+    }
+}
+
+@Composable
+private fun SpacingSample(value: Dp) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        Box(Modifier.width(value).height(Spacing.l).background(MaterialTheme.colorScheme.primary))
+        Text("$value", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
+private fun RadiusSample(radius: Dp) {
+    Box(
+        Modifier.size(56.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(radius)),
+        contentAlignment = Alignment.Center,
+    ) { Text("$radius", style = MaterialTheme.typography.labelSmall) }
+}
+
+@Preview(name = "Tokens · light", showBackground = true)
+@Composable
+private fun TokensCatalogLightPreview() = CoShellTheme(darkTheme = false) { Surface { TokensCatalog() } }
+
+@Preview(name = "Tokens · dark", showBackground = true)
+@Composable
+private fun TokensCatalogDarkPreview() = CoShellTheme(darkTheme = true) { Surface { TokensCatalog() } }

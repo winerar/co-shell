@@ -1,7 +1,6 @@
 package app.coshell.transactions.edit.components
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
-import app.coshell.core.designsystem.theme.AmountTextStyle
+import app.coshell.core.designsystem.theme.AmountInputStyle
 import app.coshell.transactions.edit.TransactionEditUiState.AmountError
 
 /** Big amount input with the account's currency symbol as a suffix. */
@@ -33,7 +32,7 @@ internal fun AmountField(
         suffix = currencySymbol?.let { { Text(it) } },
         isError = error != null,
         supportingText = supporting?.let { { Text(it) } },
-        textStyle = AmountTextStyle.merge(MaterialTheme.typography.headlineSmall),
+        textStyle = AmountInputStyle,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
         modifier = modifier,

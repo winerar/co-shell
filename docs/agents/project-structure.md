@@ -6,7 +6,7 @@ core/model/             KMP (jvm): Money, валюты, форматирован
                         (Account, Category, Transaction, Budget), IdGenerator
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
 core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
-core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
+core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
 scripts/                служебные скрипты (check.sh, иконки, файлы обновлений, отзывы → issues) + test_*.py
 firebase/               firestore.rules (вставляются в консоль Firebase вручную)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),

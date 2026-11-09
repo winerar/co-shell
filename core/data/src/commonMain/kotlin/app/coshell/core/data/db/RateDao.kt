@@ -25,8 +25,19 @@ interface RateDao {
     @Upsert
     suspend fun upsertDownloaded(entities: List<DownloadedRateEntity>)
 
+    /** Newest downloaded row (latest date, then latest download) — for "last updated" on the rates screen. */
+    @Query("SELECT * FROM downloaded_rates ORDER BY date DESC, downloaded_at DESC LIMIT 1")
+    fun observeLatestDownloaded(): Flow<DownloadedRateEntity?>
+
     @Query("SELECT MAX(date) FROM downloaded_rates")
     suspend fun latestDownloadedDate(): String?
+
+    @Query("SELECT DISTINCT date FROM downloaded_rates")
+    suspend fun downloadedDates(): List<String>
+
+    /** Epoch millis of live operations; days are computed in Kotlin (time zone). */
+    @Query("SELECT DISTINCT date FROM transactions WHERE deleted = 0")
+    suspend fun operationTimes(): List<Long>
 
     /** Every currency live data is kept in; NULLs of optional columns are dropped. */
     @Query(

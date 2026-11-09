@@ -58,9 +58,15 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
-HTTP на Android — `app/.../rates/data/UrlConnectionHttpGet`, DI — `di/RatesModule`. Хранение — контракт
+HTTP на Android — `app/.../rates/data/UrlConnectionHttpGet`, DI — `di/RatesModule`; ежедневная загрузка —
+`RefreshRatesUseCase` (`core:domain/rates/`) и `app/.../rates/work/` (`RatesRefreshWorker`, `RatesRefreshScheduler`,
+`WorkManagerRatesRefresher` — «Обновить сейчас» за интерфейсом `rates/RatesRefresher`;
+WorkManager создаётся через `CoShellApp.workManagerConfiguration`, стандартный инициализатор убран в манифесте). Хранение — контракт
 `ExchangeRateRepository` (`core:domain/rates/`), Room — `db/RateEntities.kt`, `db/RateDao.kt`,
-`repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`.
+`repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`. Экран «Ещё → Курсы валют» — `rates/list/`
+(курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
+`components/ManualRateDialog.kt`).
+Общие форматтеры — `app/.../ui/format/` (`formatRate`); выбор даты `DateChips` — `ui/form/`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.

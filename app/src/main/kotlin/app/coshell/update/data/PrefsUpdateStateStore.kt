@@ -25,6 +25,14 @@ class PrefsUpdateStateStore @Inject constructor(@ApplicationContext context: Con
         prefs.edit { putLong(KEY_LAST_CHECK, at.toEpochMilliseconds()) }
     }
 
+    override suspend fun knownRelease(): AppRelease? = io {
+        prefs.getString(KEY_KNOWN, null)?.let(::releaseFromJson)
+    }
+
+    override suspend fun setKnownRelease(release: AppRelease?) = io {
+        prefs.edit { if (release == null) remove(KEY_KNOWN) else putString(KEY_KNOWN, release.toJson()) }
+    }
+
     override suspend fun pendingRelease(): AppRelease? = io {
         prefs.getString(KEY_PENDING, null)?.let(::releaseFromJson)
     }
@@ -38,5 +46,6 @@ class PrefsUpdateStateStore @Inject constructor(@ApplicationContext context: Con
     private companion object {
         const val KEY_LAST_CHECK = "last_check_at"
         const val KEY_PENDING = "pending_release"
+        const val KEY_KNOWN = "known_release"
     }
 }

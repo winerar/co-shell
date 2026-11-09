@@ -7,6 +7,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 import app.coshell.transactions.edit.TransactionEditUiState.AmountError
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
+import app.coshell.ui.format.formatRate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

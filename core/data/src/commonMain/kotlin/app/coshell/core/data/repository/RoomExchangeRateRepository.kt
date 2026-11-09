@@ -4,6 +4,7 @@ import app.coshell.core.data.db.DownloadedRateEntity
 import app.coshell.core.data.db.ManualRateEntity
 import app.coshell.core.data.db.RateDao
 import app.coshell.core.data.db.manualRateId
+import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RatesSnapshot
 import app.coshell.core.model.CurrencyCode
@@ -13,7 +14,10 @@ import app.coshell.core.model.RateOrigin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class RoomExchangeRateRepository(
     private val rates: RateDao,
@@ -44,7 +48,17 @@ class RoomExchangeRateRepository(
         rates.upsertDownloaded(snapshot.rates.map { it.toDownloadedEntity(snapshot.source, now) })
     }
 
+    override fun observeLatestDownload(): Flow<DownloadInfo?> =
+        rates.observeLatestDownloaded().map { row ->
+            row?.let { DownloadInfo(LocalDate.parse(it.date), it.source, Instant.fromEpochMilliseconds(it.downloadedAt)) }
+        }
+
     override suspend fun latestDownloadedDate(): LocalDate? = rates.latestDownloadedDate()?.let(LocalDate::parse)
+
+    override suspend fun downloadedDates(): Set<LocalDate> = rates.downloadedDates().map(LocalDate::parse).toSet()
+
+    override suspend fun operationDates(timeZone: TimeZone): Set<LocalDate> =
+        rates.operationTimes().mapTo(HashSet()) { Instant.fromEpochMilliseconds(it).toLocalDateTime(timeZone).date }
 
     override suspend fun usedCurrencies(): Set<CurrencyCode> =
         rates.usedCurrencies().mapNotNull(CurrencyCode::parseOrNull).toSet()

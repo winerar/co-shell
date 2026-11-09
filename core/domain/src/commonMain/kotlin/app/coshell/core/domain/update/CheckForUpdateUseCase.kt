@@ -9,7 +9,7 @@ import kotlin.time.Duration.Companion.hours
 sealed interface UpdateCheckResult {
     data class Available(val release: AppRelease) : UpdateCheckResult
     data object UpToDate : UpdateCheckResult
-    /** Automatic check skipped: the last one was less than [CheckForUpdateUseCase.interval] ago. */
+    /** Automatic check skipped (the last one was less than [CheckForUpdateUseCase.interval] ago), nothing newer known. */
     data object CheckedRecently : UpdateCheckResult
     /** This build has no update server configured (local builds). */
     data object NotConfigured : UpdateCheckResult
@@ -17,21 +17,23 @@ sealed interface UpdateCheckResult {
 }
 
 /**
- * Asks the [ReleaseSource] whether a newer build exists. Automatic checks (on app start) run
- * at most once per [interval]; a check started by the user ([force]) always runs.
+ * Asks the [ReleaseSource] whether a newer build exists. Automatic checks (on app start) go to the
+ * network at most once per [interval]; in between, the release found last time is reported again,
+ * so "update available" is shown on every app start until it is installed.
+ * A check started by the user ([force]) always runs.
  */
 class CheckForUpdateUseCase(
     private val source: ReleaseSource,
     private val store: UpdateStateStore,
     private val installed: InstalledVersion,
     private val clock: Clock,
-    val interval: Duration = 24.hours,
+    val interval: Duration = 1.hours,
 ) {
     suspend operator fun invoke(force: Boolean = false): UpdateCheckResult {
         val now = clock.now()
         if (!force) {
             val last = store.lastCheckAt()
-            if (last != null && now - last in Duration.ZERO..<interval) return UpdateCheckResult.CheckedRecently
+            if (last != null && now - last in Duration.ZERO..<interval) return knownOrRecent()
         }
         val release = try {
             source.latestRelease() ?: return UpdateCheckResult.NotConfigured
@@ -41,10 +43,20 @@ class CheckForUpdateUseCase(
             return UpdateCheckResult.Failed(e.message ?: e::class.simpleName.orEmpty())
         }
         store.setLastCheckAt(now)
+        store.setKnownRelease(release)
         return if (release.versionCode > installed.versionCode) {
             UpdateCheckResult.Available(release)
         } else {
             UpdateCheckResult.UpToDate
+        }
+    }
+
+    private suspend fun knownOrRecent(): UpdateCheckResult {
+        val known = store.knownRelease()
+        return if (known != null && known.versionCode > installed.versionCode) {
+            UpdateCheckResult.Available(known)
+        } else {
+            UpdateCheckResult.CheckedRecently
         }
     }
 }

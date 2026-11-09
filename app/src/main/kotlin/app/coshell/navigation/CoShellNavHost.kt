@@ -36,6 +36,7 @@ import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreRoute
+import app.coshell.rates.list.RatesRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -138,6 +139,7 @@ fun CoShellNavHost(
                 composable<MoreDestination> {
                     MoreRoute(
                         onCategories = { navController.navigate(CategoriesDestination) },
+                        onRates = { navController.navigate(RatesDestination) },
                         onBackup = { navController.navigate(BackupDestination) },
                         onUpdate = { navController.navigate(UpdateDestination) },
                         onFeedback = { navController.navigate(FeedbackDestination) },
@@ -148,6 +150,9 @@ fun CoShellNavHost(
                 }
                 composable<FeedbackDestination> {
                     FeedbackRoute(onBack = { navController.popBackStack() })
+                }
+                composable<RatesDestination> {
+                    RatesRoute(onBack = { navController.popBackStack() })
                 }
                 composable<BackupDestination> {
                     BackupRoute(onBack = { navController.popBackStack() })

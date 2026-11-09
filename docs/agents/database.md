@@ -33,6 +33,8 @@
   `downloaded_at`; не синхронизируется, **не в бэкапе**. Сохранять только используемые валюты:
   `snapshot.keepOnly(repo.usedCurrencies())` (USD остаётся всегда — для кросс-курсов).
 - Дата — текст `YYYY-MM-DD`, курс — текст `Rate.toPlainString()`; `REAL` запрещён.
+- Для загрузки истории: `downloadedDates()` и `operationDates(timeZone)` (дни живых операций; день
+  считается в Kotlin по часовому поясу телефона — в БД время операции в миллисекундах).
 
 ## Тесты
 - `core/data/src/jvmTest`: `createInMemoryCoShellDatabase()` — настоящий SQLite в памяти, без эмулятора.

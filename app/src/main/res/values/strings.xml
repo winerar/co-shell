@@ -98,6 +98,7 @@
     <string name="transaction_amount">Сумма</string>
     <string name="transaction_to_amount">Сумма зачисления</string>
     <string name="transaction_amount_debited">Списано со счёта</string>
+    <string name="transaction_amount_suggested">По курсу на %1$s — поправьте по выписке банка</string>
     <string name="transaction_receipt_toggle">Чек в другой валюте</string>
     <string name="transaction_receipt_currency">Валюта чека</string>
     <string name="transaction_receipt_amount">Сумма по чеку</string>
@@ -181,4 +182,38 @@
     <string name="update_later">Позже</string>
     <string name="update_whats_new_title">Что нового в %1$s</string>
     <string name="update_whats_new_ok">Понятно</string>
+    <!-- More → Rates -->
+    <string name="rates_title">Курсы валют</string>
+    <string name="rates_menu_hint">Обновляются сами раз в день</string>
+    <string name="rates_current">Курсы на сегодня</string>
+    <string name="rates_current_hint">Тап по строке — задать курс вручную</string>
+    <string name="rates_line">1 %1$s = %2$s %3$s</string>
+    <string name="rates_no_rate">Курса пока нет</string>
+    <string name="rates_no_currencies">Здесь появятся курсы валют ваших счетов и операций</string>
+    <string name="rates_from_date">на %1$s</string>
+    <string name="rates_origin_manual">вручную</string>
+    <string name="rates_origin_cross">через USD</string>
+    <string name="rates_last_download">Загружено: курсы на %1$s, источник %2$s</string>
+    <string name="rates_never_downloaded">Курсы ещё не загружались — нужен интернет</string>
+    <string name="rates_refresh">Обновить сейчас</string>
+    <string name="rates_refresh_running">Загружаем курсы…</string>
+    <string name="rates_refresh_updated">Курсы обновлены</string>
+    <string name="rates_refresh_fresh">Курсы на сегодня уже загружены</string>
+    <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет и попробуйте ещё раз</string>
+    <string name="rates_manual">Ручные курсы</string>
+    <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного курса этой пары</string>
+    <string name="rates_manual_since">с %1$s</string>
+    <string name="rates_manual_add">Добавить курс</string>
+    <string name="rates_manual_title">Курс вручную</string>
+    <string name="rates_manual_from">Валюта</string>
+    <string name="rates_manual_to">Сколько стоит в</string>
+    <string name="rates_manual_rate">Курс</string>
+    <string name="rates_manual_date">Действует с</string>
+    <string name="rates_manual_currency_error">Код валюты: 3–10 латинских букв или цифр, например USD</string>
+    <string name="rates_manual_same_error">Нужны две разные валюты</string>
+    <string name="rates_manual_rate_error">Введите число больше нуля</string>
+    <string name="rates_manual_delete_title">Удалить ручной курс?</string>
+    <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
+    <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
+    <string name="rates_attribution">Rates By Exchange Rate API</string>
 </resources>

@@ -21,24 +21,26 @@ import app.coshell.ui.list.ActionRow
 import app.coshell.ui.list.SwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Menu tab: links to categories, backup, app update and feedback, plus the shake-to-add switch.
+// Menu tab: links to categories, exchange rates, backup, app update and feedback, plus the shake-to-add switch.
 
 @Composable
 fun MoreRoute(
     onCategories: () -> Unit,
+    onRates: () -> Unit,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
 ) {
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
-    MoreScreen(onCategories, onBackup, onUpdate, onFeedback, shakeEnabled, shakeSettings::setEnabled)
+    MoreScreen(onCategories, onRates, onBackup, onUpdate, onFeedback, shakeEnabled, shakeSettings::setEnabled)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreScreen(
     onCategories: () -> Unit,
+    onRates: () -> Unit,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
@@ -52,6 +54,15 @@ fun MoreScreen(
                     icon = DesignR.drawable.ic_category,
                     title = stringResource(R.string.categories_title),
                     onClick = onCategories,
+                    opensScreen = true,
+                )
+            }
+            item {
+                ActionRow(
+                    icon = DesignR.drawable.ic_currency_exchange,
+                    title = stringResource(R.string.rates_title),
+                    subtitle = stringResource(R.string.rates_menu_hint),
+                    onClick = onRates,
                     opensScreen = true,
                 )
             }
@@ -99,6 +110,7 @@ private fun MoreScreenPreview() {
     CoShellTheme { 
         MoreScreen(
             onCategories = {},
+            onRates = {},
             onBackup = {},
             onUpdate = {},
             onFeedback = {},

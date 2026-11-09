@@ -32,7 +32,7 @@ import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField
 import app.coshell.transactions.edit.components.CategoryChips
-import app.coshell.transactions.edit.components.DateChips
+import app.coshell.ui.form.DateChips
 import app.coshell.transactions.edit.components.ReceiptSection
 import app.coshell.transactions.edit.components.TypeSelector
 import app.coshell.ui.form.ConfirmDeleteDialog
@@ -105,6 +105,9 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
         label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
         currencySymbol = state.account?.currencySymbol,
         error = state.amountError,
+        hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
+            stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
+        },
         modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
     )
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.R
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.core.designsystem.tokens.Spacing
@@ -18,7 +19,7 @@ internal fun AutoBackupSection(state: AutoBackupUiState, onChooseFolder: () -> U
     Text(
         stringResource(R.string.auto_backup_title),
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
+        color = accentInk(),
         modifier = Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.l),
     )
     val subtitle = when {

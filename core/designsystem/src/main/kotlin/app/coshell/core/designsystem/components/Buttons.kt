@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Shape
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
-import app.coshell.core.designsystem.theme.LocalDarkTheme
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.PillShape
 
 // Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple.
@@ -31,8 +31,7 @@ import app.coshell.core.designsystem.tokens.PillShape
 
 /**
  * Filled pill button. [tactile] — `Primary` for the main action of a screen («Сохранить»).
- * Light theme: neon mint fill with dark ink, like the «+» (owner's choice 2026-11-09 — the deep teal looked dull
- * next to the acid palette); dark theme: neon mint as is. Deep teal stays for links and small text.
+ * Neon Mint fill with dark ink in both themes, like the «+» (owner's choice 2026-11-09 — no deep teal/green).
  */
 @Composable
 fun CoShellButton(
@@ -56,15 +55,11 @@ fun CoShellButton(
     }
 }
 
-/** Colours of [CoShellButton]: the neon fill of the theme with readable text on it. */
+/** Colours of [CoShellButton]: the Neon Mint fill with dark ink on it. */
 @Composable
 fun coShellButtonColors(): ButtonColors {
     val colors = MaterialTheme.colorScheme
-    return if (LocalDarkTheme.current) {
-        ButtonDefaults.buttonColors()
-    } else {
-        ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
-    }
+    return ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
 }
 
 /** Outlined pill button — secondary actions. */
@@ -93,6 +88,7 @@ fun CoShellTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    contentColor: Color = accentInk(),
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
@@ -101,6 +97,7 @@ fun CoShellTextButton(
             onClick = onClick,
             modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
+            colors = ButtonDefaults.textButtonColors(contentColor = contentColor),
             interactionSource = source,
             content = content,
         )

@@ -11,6 +11,7 @@
 | `session-start.sh` | первая команда сессии: fetch, чужие невлитые ветки, перенос ветки на `origin/dev`, шаги из STATUS |
 | `check.sh` | перед коммитом (`check assembleDebug`, краткий вывод); `--quick` — только unit-тесты |
 | `session-end.sh` | перед финальным PR: незакоммиченное/незапушенное, дата и число тестов в STATUS, размеры файлов |
+| `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
 | `profile-build.sh [задачи]` | где тратится время сборки: самые долгие задачи, итог lint/тестов (~3–5 мин) |
 
 Скрипты CI и для владельца остаются в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
@@ -33,9 +34,22 @@
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
-- Maven Central иногда отвечает 429 на большие файлы — повторить позже (так отпал Robolectric).
+- (11-09) Maven Central из облачной сессии отвечает Gradle 429 на большие файлы (Robolectric), повтор не помогает,
+  а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
+  init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
+  `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19). (11-09) curl тоже может
+  получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`.
+- (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
 ## Грабли проекта
+- (11-09) `rememberGraphicsLayer().record{}` хранит ссылки на слои детей, а не их копию — снимок «старого» кадра
+  делать сразу `toImageBitmap()` до смены (так `motion/ThemeReveal.kt`), иначе дети перерисуются уже новыми.
+- (11-09) Слияние нескольких веток: читать **весь** вывод `git merge` (не `tail`), перед коммитом —
+  `git grep -n '^<<<<<<< '`; так маркер конфликта чуть не уехал в `ARCHITECTURE.md`.
+- (11-09) `MaterialTheme(motionScheme = …)` и интерфейс `MotionScheme` в material3 **1.4.0 закрыты** (`internal`),
+  в `1.5.0-rc01` открыты — поэтому версия material3 закреплена в `libs.versions.toml`; при выходе стабильной 1.5 — перейти на неё.
+- (11-09) Пересечение касаний в Compose: родительский `detectTapGestures` получает тап по ребёнку, если тот не
+  поглотил событие (`Surface` без `onClick` не поглощает) — скрим шторки сделан **соседом** под ней, а не родителем.
 - (11-09) `AnimatedVisibility` внутри колонки с `spacedBy`: зазор появляется/исчезает рывком вместе с ребёнком —
   отступ класть внутрь раскрывашки, а её — в колонку, где всегда что-то видно (так в форме операции).
 - (11-09) Lint `UnusedContentLambdaTargetStateParameter`: в `AnimatedContent` рисовать из параметра лямбды, а не из
@@ -45,3 +59,5 @@
 - (11-09) `main` содержит только merge-коммиты релизов: «коммиты не в `dev`» считать с `--no-merges`.
 - (11-09) Тест «пока следующая страница не пришла» нельзя писать на `UnconfinedTestDispatcher` — поток
   пересобирается синхронно; нужен обычный `runTest` + `runCurrent()` (так в `GrowingWindowTest`).
+- (11-09) M3 красит `primary` и как заливку, и как текст (`TextButton`, фокус поля, `Tab`, «сегодня» в `DatePicker`).
+  При светлом неоновом `primary` текстовые места переопределять на `accentInk()`, иначе текст исчезает на белом.

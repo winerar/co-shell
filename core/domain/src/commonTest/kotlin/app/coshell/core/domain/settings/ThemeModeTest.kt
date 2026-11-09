@@ -24,4 +24,11 @@ class ThemeModeTest {
         assertEquals(ThemeMode.SYSTEM, ThemeMode.parse(null))
         assertEquals(ThemeMode.SYSTEM, ThemeMode.parse("purple"))
     }
+
+    @Test
+    fun paletteParseFallsBackToVolt() {
+        assertEquals(ThemePalette.MANGO, ThemePalette.parse("MANGO"))
+        assertEquals(ThemePalette.VOLT, ThemePalette.parse(null))
+        assertEquals(ThemePalette.VOLT, ThemePalette.parse("MINT"))
+    }
 }

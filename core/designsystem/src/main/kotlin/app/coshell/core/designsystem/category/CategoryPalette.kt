@@ -1,7 +1,7 @@
 package app.coshell.core.designsystem.category
 
 /**
- * Category colours: 18 neon hues (owner's choice, design-questions §2). `Category.color` stores
+ * Category colours: 18 neon hues (owner's choice, design-questions §2) + 6 warm ones. `Category.color` stores
  * the neon value ([Swatch.stored], ARGB); on screen it is shown by theme — neon in the dark theme,
  * a deeper shade of the same hue in the light one (readable on white). See [display].
  *
@@ -32,6 +32,13 @@ object CategoryPalette {
         Swatch(0xFF8FB3CC, 0xFF4A6B80), // steel
         Swatch(0xFFB0B8C4, 0xFF5F6874), // silver
         Swatch(0xFF7A8494, 0xFF454D5A), // graphite
+        // Warm, softer hues (design-refactor §palette). Appended: legacy mapping zips by index.
+        Swatch(0xFFFF8A65, 0xFFB8431F), // coral
+        Swatch(0xFFE07A5F, 0xFFA3432A), // terracotta
+        Swatch(0xFFFF8FA3, 0xFFB0304A), // rose
+        Swatch(0xFFFFC46B, 0xFF8F5A00), // honey
+        Swatch(0xFFD9A066, 0xFF8A5A24), // caramel
+        Swatch(0xFFF2D0A4, 0xFF7D5A2E), // sand
     )
 
     /** Stored values offered in the category editor. */

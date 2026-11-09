@@ -1,16 +1,13 @@
 package app.coshell.backup
 
-import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +21,8 @@ import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellLinearProgress
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
@@ -69,7 +68,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
                 enabled = !state.isBusy,
             )
             if (state.isBusy) {
-                LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = Spacing.l))
+                CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))
             }
             state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = Spacing.l)) }
             AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)

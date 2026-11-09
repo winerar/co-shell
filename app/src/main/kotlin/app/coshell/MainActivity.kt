@@ -15,11 +15,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import app.coshell.core.designsystem.motion.ThemeRevealHost
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.family.sync.ForegroundSync
 import app.coshell.language.AppLanguage
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.theme.ThemeSettingsViewModel
+import app.coshell.theme.toDesign
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
@@ -45,16 +47,21 @@ class MainActivity : ComponentActivity() {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
             // already matches the phone's mode), so a chosen theme never flashes the other one.
             val mode by themeSettings.mode.collectAsStateWithLifecycle()
+            val palette by themeSettings.palette.collectAsStateWithLifecycle()
             val systemDark = isSystemInDarkTheme()
             val darkTheme = mode?.isDark(systemDark) ?: return@setContent
+            val design = palette?.toDesign() ?: return@setContent
             // Status/navigation bar icons follow the app theme, not only the phone's mode.
             DisposableEffect(darkTheme) {
                 val style = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { darkTheme }
                 enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
                 onDispose {}
             }
-            CoShellTheme(darkTheme = darkTheme) {
-                CoShellNavHost()
+            // A theme or palette switch opens as a circle from the tapped control (motion/ThemeReveal).
+            ThemeRevealHost {
+                CoShellTheme(darkTheme = darkTheme, palette = design) {
+                    CoShellNavHost()
+                }
             }
         }
     }

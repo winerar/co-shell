@@ -17,6 +17,9 @@ Google-аккаунт видит «нет доступа» (правила в `f
    (вида `123…-abc….apps.googleusercontent.com`).
 4. GitHub → `co-shell` → **Settings → Secrets and variables → Actions → Variables** →
    **New repository variable**: `GOOGLE_WEB_CLIENT_ID` = этот ID. Он не секретный.
+5. ID вшивается в приложение при сборке. Если релиз уже вышел без него («Семья» пишет «не настроено»),
+   после шагов 1–4 и разделов 2–4 пересобрать: **Actions → CI → Run workflow** → `main` — телефоны
+   получат обновление с новым номером сборки.
 
 ## 2. Отпечатки ключей подписи (без них Google откажет во входе)
 1. GitHub → **Actions → Signing fingerprints → Run workflow**. В итоге запуска (Summary) будут

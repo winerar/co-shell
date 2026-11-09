@@ -1,13 +1,12 @@
 package app.coshell.core.designsystem.motion
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
+import app.coshell.core.designsystem.tokens.Motion
 
 /** How much a just-selected element swells before settling. */
 internal const val POP_SCALE = 1.08f
@@ -26,8 +25,8 @@ fun Modifier.selectionPop(selected: Boolean): Modifier = composed {
         }
         if (!selected) return@LaunchedEffect
         scale.snapTo(1f)
-        scale.animateTo(POP_SCALE, spring(stiffness = Spring.StiffnessHigh))
-        scale.animateTo(1f, spring(dampingRatio = 0.4f, stiffness = Spring.StiffnessMedium))
+        scale.animateTo(POP_SCALE, Motion.spatialFast())
+        scale.animateTo(1f, Motion.bouncy())
     }
     graphicsLayer {
         scaleX = scale.value

@@ -1,6 +1,7 @@
 package app.coshell.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -76,16 +78,17 @@ fun HomeScreen(
                 }
                 return@LazyColumn
             }
-            item { TotalCard(state) }
-            state.spending?.let { spending -> item { SpendingCard(spending) } }
+            // Blocks come in as a short cascade the first time the tab shows (design-refactor Step 4).
+            item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state) } }
+            state.spending?.let { spending -> item { Box(Modifier.staggeredEntrance(1)) { SpendingCard(spending) } } }
             item {
                 Text(
                     text = stringResource(R.string.home_accounts),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(top = Spacing.s),
+                    modifier = Modifier.staggeredEntrance(2).padding(top = Spacing.s),
                 )
             }
-            item { AccountsCard(state.accounts, onAccountClick) }
+            item { Box(Modifier.staggeredEntrance(3)) { AccountsCard(state.accounts, onAccountClick) } }
         }
     }
 }

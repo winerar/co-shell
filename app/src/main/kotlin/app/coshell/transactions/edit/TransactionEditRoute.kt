@@ -10,6 +10,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.model.TransactionType
 import kotlinx.datetime.LocalDate
 
@@ -22,11 +23,16 @@ fun TransactionEditRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val haptics = LocalHapticFeedback.current
+    val addConfirm = LocalAddConfirm.current
     var saving by remember { mutableStateOf(false) }
     LaunchedEffect(state.isDone) {
         if (!state.isDone) return@LaunchedEffect
         // A light tick confirms the saved operation (design-questions §6); delete has its snackbar.
-        if (saving) haptics.performHapticFeedback(HapticFeedbackType.Confirm)
+        // The «+» answers with a check mark (design-refactor Step 4).
+        if (saving) {
+            haptics.performHapticFeedback(HapticFeedbackType.Confirm)
+            addConfirm.fire()
+        }
         onDone()
     }
     TransactionEditScreen(

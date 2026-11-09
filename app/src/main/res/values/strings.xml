@@ -169,6 +169,15 @@
     <string name="theme_system">Системная</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
+    <string name="palette_title">Палитра</string>
+    <string name="palette_volt">Вольт</string>
+    <string name="palette_volt_hint">кислотный лайм и циан</string>
+    <string name="palette_mojito">Мохито</string>
+    <string name="palette_mojito_hint">мягкий лайм и фиолет</string>
+    <string name="palette_mango">Манго</string>
+    <string name="palette_mango_hint">тёплый закат: манго и малина</string>
+    <string name="palette_ultra">Ультра</string>
+    <string name="palette_ultra_hint">электрик и маджента</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает. Версия приложения и модель телефона добавятся сами — писать их не нужно.</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>

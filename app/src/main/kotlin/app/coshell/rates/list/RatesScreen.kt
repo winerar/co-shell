@@ -44,6 +44,8 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         },
     ) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+            // Status first (mockup 11): loaded or not, and the refresh button under the thumb's reach.
+            item(key = "refresh") { RefreshBlock(state.lastDownload, state.refresh, actions.onRefresh) }
             item(key = "current-header") {
                 RatesSectionHeader(
                     stringResource(R.string.rates_current),
@@ -56,7 +58,6 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             items(state.current, key = { "current-${it.currency}" }) { item ->
                 CurrentRateRow(item, state.base) { actions.onCurrentClick(item) }
             }
-            item(key = "refresh") { RefreshBlock(state.lastDownload, state.refresh, actions.onRefresh) }
 
             item(key = "manual-header") {
                 RatesSectionHeader(stringResource(R.string.rates_manual), stringResource(R.string.rates_manual_hint))

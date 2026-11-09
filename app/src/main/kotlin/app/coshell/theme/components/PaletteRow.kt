@@ -3,45 +3,39 @@ package app.coshell.theme.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellListRow
-import app.coshell.core.designsystem.components.CoShellPaletteSwatch
+import app.coshell.core.designsystem.components.CoShellPaletteCard
+import app.coshell.core.designsystem.components.CoShellSection
+import androidx.compose.foundation.layout.Column
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.theme.toDesign
-import app.coshell.core.designsystem.R as DesignR
 
-/** Settings line «Палитра»: four swatches (Вольт, Мохито, Манго, Ультра) and the chosen one's description. */
+/** Settings block «Палитра»: the six palettes as cards, two in a row (mockup 15). */
 @Composable
 fun PaletteRow(selected: ThemePalette, onSelect: (ThemePalette) -> Unit) {
-    CoShellListRow(
-        leading = { Icon(painterResource(DesignR.drawable.ic_contrast), contentDescription = null) },
-        title = { Text(stringResource(R.string.palette_title)) },
-        supporting = {
-            Text(stringResource(selected.hintRes))
-            Row(
-                Modifier.fillMaxWidth().padding(top = Spacing.s),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                ThemePalette.entries.forEach { palette ->
-                    CoShellPaletteSwatch(
-                        palette = palette.toDesign(),
-                        label = stringResource(palette.labelRes),
-                        selected = palette == selected,
-                        onClick = { onSelect(palette) },
-                    )
+    CoShellSection(stringResource(R.string.palette_title), modifier = Modifier.padding(horizontal = Spacing.l)) {
+        Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            ThemePalette.entries.chunked(2).forEach { pair ->
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                    pair.forEach { palette ->
+                        CoShellPaletteCard(
+                            palette = palette.toDesign(),
+                            label = stringResource(palette.labelRes),
+                            hint = stringResource(palette.hintRes),
+                            selected = palette == selected,
+                            onClick = { onSelect(palette) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
                 }
             }
-        },
-    )
+        }
+    }
 }
 
 @get:StringRes

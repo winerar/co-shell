@@ -339,6 +339,7 @@
     <string name="account_personal_of">личный · %1$s</string>
 
     <string name="auto_backup_title">Автоматически раз в неделю</string>
+    <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
     <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
@@ -370,6 +371,7 @@
     <string name="family_synced_at">Синхронизировано: %1$s</string>
     <string name="family_synced_pending">Синхронизировано: %1$s · ждут отправки: %2$d</string>
     <string name="family_members">Участники</string>
+    <string name="family_budget">Общий бюджет · участников: %1$d</string>
     <string name="family_you">вы</string>
     <string name="family_owner">создатель семьи</string>
     <string name="family_invite_pending">Приглашён — ждём входа</string>

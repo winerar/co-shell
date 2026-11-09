@@ -2,6 +2,9 @@ package app.coshell.backup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import app.coshell.more.components.MoreTile
+import app.coshell.core.designsystem.category.CategoryPalette
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +27,6 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.form.ConfirmDialog
-import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
 
 /** "More → Backup": explanation, "Save a copy", "Restore from a copy", and the last result. */
@@ -47,31 +49,39 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
             modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
-            Text(
-                stringResource(R.string.backup_intro),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
-            )
-            ActionRow(
-                icon = DesignR.drawable.ic_file_save,
-                title = stringResource(R.string.backup_export),
-                subtitle = stringResource(R.string.backup_export_hint),
-                onClick = actions.onExport,
-                enabled = !state.isBusy,
-            )
-            ActionRow(
-                icon = DesignR.drawable.ic_file_open,
-                title = stringResource(R.string.backup_import),
-                subtitle = stringResource(R.string.backup_import_hint),
-                onClick = actions.onImport,
-                enabled = !state.isBusy,
-            )
+            // Mockup 14: the automatic copy first (is the family's data safe?), manual copy as two tiles under it.
+            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
+            Row(
+                Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+            ) {
+                MoreTile(
+                    DesignR.drawable.ic_file_save,
+                    stringResource(R.string.backup_export),
+                    stringResource(R.string.backup_export_hint),
+                    CategoryPalette.colors[MANUAL_SAVE_COLOR],
+                    onClick = { if (!state.isBusy) actions.onExport() },
+                    modifier = Modifier.weight(1f),
+                )
+                MoreTile(
+                    DesignR.drawable.ic_file_open,
+                    stringResource(R.string.backup_import),
+                    stringResource(R.string.backup_import_hint),
+                    CategoryPalette.colors[MANUAL_RESTORE_COLOR],
+                    onClick = { if (!state.isBusy) actions.onImport() },
+                    modifier = Modifier.weight(1f),
+                )
+            }
             if (state.isBusy) {
                 CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))
             }
             state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = Spacing.l)) }
-            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
+            Text(
+                stringResource(R.string.backup_intro),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
+            )
         }
     }
 
@@ -85,3 +95,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
         )
     }
 }
+
+// Tile colours from the category palette: lime-green for saving, cyan for restoring (mockup 14).
+private const val MANUAL_SAVE_COLOR = 9
+private const val MANUAL_RESTORE_COLOR = 6

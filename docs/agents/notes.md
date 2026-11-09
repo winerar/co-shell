@@ -33,7 +33,9 @@
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
-- Maven Central иногда отвечает 429 на большие файлы — повторить позже (так отпал Robolectric).
+- (11-09) Maven Central из облачной сессии отвечает 429 на большие файлы (Robolectric, `android-all`), повтор
+  не помогает. В CI (GitHub) такого нет; локально — спросить владельца, как быть (подмену репозитория не коммитим).
+- (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 
 ## Грабли проекта
 - (11-09) `MaterialTheme(motionScheme = …)` и интерфейс `MotionScheme` в material3 **1.4.0 закрыты** (`internal`),

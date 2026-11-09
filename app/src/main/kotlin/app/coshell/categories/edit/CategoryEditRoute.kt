@@ -15,7 +15,6 @@ fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hil
     CategoryEditScreen(
         state = state,
         actions = CategoryEditActions(
-            onBack = onDone,
             onNameChange = viewModel::onNameChange,
             onTypeChange = viewModel::onTypeChange,
             onIconChange = viewModel::onIconChange,
@@ -32,7 +31,6 @@ fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hil
 
 /** Everything the screen can ask for; defaults make previews short. */
 data class CategoryEditActions(
-    val onBack: () -> Unit = {},
     val onNameChange: (String) -> Unit = {},
     val onTypeChange: (CategoryType) -> Unit = {},
     val onIconChange: (String) -> Unit = {},

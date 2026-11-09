@@ -3,6 +3,7 @@ package app.coshell.transactions.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -50,6 +51,7 @@ class TransactionEditViewModel @Inject constructor(
     private val clock: Clock,
     private val timeZone: TimeZone,
     private val rates: ExchangeRateRepository,
+    private val deleteWithUndo: DeleteTransactionWithUndo,
 ) : ViewModel() {
 
     private val transactionId: String? = savedStateHandle[TransactionEditDestination.ARG_TRANSACTION_ID]
@@ -205,7 +207,7 @@ class TransactionEditViewModel @Inject constructor(
     fun delete() {
         val transaction = existing ?: return
         viewModelScope.launch {
-            transactions.deleteTransaction(transaction.id)
+            deleteWithUndo(transaction.id)
             _state.update { it.copy(isDone = true) }
         }
     }

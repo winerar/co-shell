@@ -5,7 +5,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellTextButton
 
 /** Asks for the Google email of the person to invite. */
 @Composable
@@ -35,11 +35,11 @@ internal fun InviteDialog(onInvite: (String) -> Unit, onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            TextButton(onClick = { onInvite(email) }, enabled = email.isNotBlank()) {
+            CoShellTextButton(onClick = { onInvite(email) }, enabled = email.isNotBlank()) {
                 Text(stringResource(R.string.family_invite_send))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+        dismissButton = { CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
     )
 }
 
@@ -51,10 +51,10 @@ internal fun JoinModeDialog(onChoose: (keepLocalData: Boolean) -> Unit, onDismis
         title = { Text(stringResource(R.string.family_join_mode_title)) },
         text = { Text(stringResource(R.string.family_join_mode_text)) },
         confirmButton = {
-            TextButton(onClick = { onChoose(false) }) { Text(stringResource(R.string.family_join_replace)) }
+            CoShellTextButton(onClick = { onChoose(false) }) { Text(stringResource(R.string.family_join_replace)) }
         },
         dismissButton = {
-            TextButton(onClick = { onChoose(true) }) { Text(stringResource(R.string.family_join_keep)) }
+            CoShellTextButton(onClick = { onChoose(true) }) { Text(stringResource(R.string.family_join_keep)) }
         },
     )
 }

@@ -1,7 +1,6 @@
 package app.coshell.family.components
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.family.FamilyActions
 import app.coshell.family.FamilyUiState
 import app.coshell.ui.list.ActionRow
@@ -46,7 +46,7 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
             headlineContent = { Text(email) },
             supportingContent = { Text(stringResource(R.string.family_invite_pending)) },
             trailingContent = {
-                IconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
+                CoShellIconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
                     Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.family_invite_cancel))
                 }
             },

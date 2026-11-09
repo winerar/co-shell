@@ -6,6 +6,8 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
@@ -33,6 +35,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()),
         )
         vm.state.launchIn(backgroundScope)
         assertEquals(emptyList<TransactionsUiState.Day>(), vm.state.first { !it.isLoading }.days)

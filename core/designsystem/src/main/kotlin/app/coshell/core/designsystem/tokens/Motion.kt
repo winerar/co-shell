@@ -29,4 +29,5 @@ object Motion {
     fun <T> medium(): FiniteAnimationSpec<T> = tween(MEDIUM_MS, easing = Standard)
     fun <T> enter(): FiniteAnimationSpec<T> = tween(LONG_MS, easing = Decelerate)
     fun <T> exit(): FiniteAnimationSpec<T> = tween(SHORT_MS, easing = Accelerate)
+    // Press feedback (depth, tilt, light, springs) lives in `motion/Tactile` — one system for every element.
 }

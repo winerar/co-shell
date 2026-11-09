@@ -9,7 +9,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.rates.RefreshStatus
 import app.coshell.rates.list.formatRateDate
@@ -40,7 +40,7 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        OutlinedButton(onClick = onRefresh, enabled = status != RefreshStatus.Running) {
+        CoShellOutlinedButton(onClick = onRefresh, enabled = status != RefreshStatus.Running) {
             Icon(painterResource(DesignR.drawable.ic_refresh), null, Modifier.size(ButtonDefaults.IconSize))
             Text(stringResource(R.string.rates_refresh), Modifier.padding(start = ButtonDefaults.IconSpacing))
         }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +23,7 @@ import app.coshell.R
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
@@ -37,7 +37,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
             TopAppBar(
                 title = { Text(stringResource(R.string.backup_title)) },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    CoShellIconButton(onClick = actions.onBack) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },

@@ -9,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.family.components.CheckingBlock
 import app.coshell.family.components.FamilyMessageCard
@@ -41,7 +41,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
             TopAppBar(
                 title = { Text(stringResource(R.string.family_title)) },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    CoShellIconButton(onClick = actions.onBack) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },

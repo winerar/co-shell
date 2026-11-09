@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellFilterChip
+import app.coshell.core.designsystem.components.CoShellTextButton
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlinx.datetime.DateTimeUnit
@@ -49,17 +49,17 @@ fun DateChips(
     val isOther = date != today && date != yesterday
 
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        FilterChip(
+        CoShellFilterChip(
             selected = date == today,
             onClick = { onSelect(today) },
             label = { Text(stringResource(R.string.transaction_date_today)) },
         )
-        FilterChip(
+        CoShellFilterChip(
             selected = date == yesterday,
             onClick = { onSelect(yesterday) },
             label = { Text(stringResource(R.string.transaction_date_yesterday)) },
         )
-        FilterChip(
+        CoShellFilterChip(
             selected = isOther,
             onClick = { pickerOpen = true },
             label = { Text(if (isOther) date.formatLong() else stringResource(R.string.transaction_date_other)) },
@@ -92,12 +92,12 @@ private fun DatePickerSheet(initialMillisUtc: Long, onDismiss: () -> Unit, onCon
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = { pickerState.selectedDateMillis?.let(onConfirm) ?: onDismiss() }) {
+            CoShellTextButton(onClick = { pickerState.selectedDateMillis?.let(onConfirm) ?: onDismiss() }) {
                 Text(stringResource(R.string.action_ok))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
+            CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         },
     ) {
         DatePicker(state = pickerState)

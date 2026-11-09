@@ -1,6 +1,6 @@
 package app.coshell.transactions.list.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.transactions.list.TransactionsUiState.Kind
@@ -28,8 +30,9 @@ import app.coshell.core.designsystem.R as DesignR
 internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
+            .tactileClickable { onClick(row.id) }
             .fillMaxWidth()
-            .clickable { onClick(row.id) }
+            .background(MaterialTheme.colorScheme.surface) // covers the swipe-to-delete strip
             .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -46,9 +49,9 @@ internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(row.amount, style = AmountTextStyle, color = row.amountColor())
+            AmountText(row.amount, style = AmountTextStyle, color = row.amountColor())
             row.secondaryAmount?.let {
-                Text(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -70,5 +73,5 @@ private fun RowState.titleText(): String = title ?: stringResource(
 private fun RowState.amountColor() = when (kind) {
     Kind.EXPENSE -> LocalAmountPalette.current.expense
     Kind.INCOME -> LocalAmountPalette.current.income
-    Kind.TRANSFER -> MaterialTheme.colorScheme.onSurface
+    Kind.TRANSFER -> LocalAmountPalette.current.transfer
 }

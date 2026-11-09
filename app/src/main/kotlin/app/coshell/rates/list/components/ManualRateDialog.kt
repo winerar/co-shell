@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,6 +17,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.rates.list.ManualRateActions
 import app.coshell.rates.list.ManualRateForm
 import app.coshell.ui.form.DateChips
@@ -66,8 +66,8 @@ internal fun ManualRateDialog(form: ManualRateForm, actions: ManualRateActions) 
                 }
             }
         },
-        confirmButton = { TextButton(onClick = actions.onSave) { Text(stringResource(R.string.action_save)) } },
-        dismissButton = { TextButton(onClick = actions.onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+        confirmButton = { CoShellTextButton(onClick = actions.onSave) { Text(stringResource(R.string.action_save)) } },
+        dismissButton = { CoShellTextButton(onClick = actions.onDismiss) { Text(stringResource(R.string.action_cancel)) } },
     )
 }
 

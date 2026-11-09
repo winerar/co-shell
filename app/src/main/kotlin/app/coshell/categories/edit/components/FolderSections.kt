@@ -3,13 +3,13 @@ package app.coshell.categories.edit.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.edit.CategoryEditUiState.Option
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.ui.form.FormHint
 import app.coshell.ui.form.FormSection
 
@@ -19,13 +19,13 @@ import app.coshell.ui.form.FormSection
 internal fun FolderSection(folders: List<Option>, parentId: String?, onSelect: (String?) -> Unit) {
     FormSection(stringResource(R.string.category_folder)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(
+            CoShellFilterChip(
                 selected = parentId == null,
                 onClick = { onSelect(null) },
                 label = { Text(stringResource(R.string.category_folder_none)) },
             )
             folders.forEach { folder ->
-                FilterChip(
+                CoShellFilterChip(
                     selected = parentId == folder.id,
                     onClick = { onSelect(folder.id) },
                     label = { Text(folder.name) },
@@ -43,7 +43,7 @@ internal fun ChildrenSection(candidates: List<Option>, childIds: Set<String>, on
         FormHint(stringResource(R.string.category_children_hint))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             candidates.forEach { candidate ->
-                FilterChip(
+                CoShellFilterChip(
                     selected = candidate.id in childIds,
                     onClick = { onToggle(candidate.id) },
                     label = { Text(candidate.name) },

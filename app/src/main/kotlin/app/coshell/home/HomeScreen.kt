@@ -1,17 +1,14 @@
 package app.coshell.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,23 +21,27 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.components.CoShellButton
+import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.home.components.SpendingCard
 import app.coshell.home.components.TotalCard
-import app.coshell.transactions.AddTransactionFab
+import app.coshell.ui.top.TabTopBar
+import app.coshell.ui.top.rememberTabScrollBehavior
+import app.coshell.ui.top.tabScroll
 import kotlinx.datetime.LocalDate
 
 @Composable
 fun HomeRoute(
     onAccountClick: (String) -> Unit,
     onAddAccount: () -> Unit,
-    onAddTransaction: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state, onAccountClick, onAddAccount, onAddTransaction)
+    HomeScreen(state, onAccountClick, onAddAccount)
 }
 
 @Composable
@@ -48,10 +49,11 @@ fun HomeScreen(
     state: HomeUiState,
     onAccountClick: (String) -> Unit = {},
     onAddAccount: () -> Unit = {},
-    onAddTransaction: () -> Unit = {},
 ) {
+    val scroll = rememberTabScrollBehavior()
     Scaffold(
-        floatingActionButton = { if (state.accounts.isNotEmpty()) AddTransactionFab(onAddTransaction) },
+        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
+        modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
@@ -68,7 +70,7 @@ fun HomeScreen(
                     )
                 }
                 item {
-                    Button(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
+                    CoShellButton(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
                 }
                 return@LazyColumn
             }
@@ -81,15 +83,15 @@ fun HomeScreen(
                     modifier = Modifier.padding(top = 8.dp),
                 )
             }
-            items(state.accounts, key = { it.id }) { AccountItem(it, onAccountClick) }
+            items(state.accounts, key = { it.id }) { AccountItem(it, onAccountClick, Modifier.animateItem()) }
         }
     }
 }
 
 @Composable
-private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit) {
+private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalAmountPalette.current
-    Card(modifier = Modifier.fillMaxWidth().clickable { onClick(row.id) }) {
+    CoShellCard(modifier = modifier.fillMaxWidth(), onClick = { onClick(row.id) }) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -104,7 +106,7 @@ private fun AccountItem(row: HomeUiState.AccountRow, onClick: (String) -> Unit) 
                     )
                 }
             }
-            Text(
+            AmountText(
                 text = row.balance,
                 style = AmountTextStyle,
                 color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,

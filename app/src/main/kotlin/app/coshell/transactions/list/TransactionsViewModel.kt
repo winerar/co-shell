@@ -7,6 +7,7 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.model.MoneyFormat
+import app.coshell.transactions.DeleteTransactionWithUndo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -27,7 +29,13 @@ class TransactionsViewModel @Inject constructor(
     moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
+    private val deleteWithUndo: DeleteTransactionWithUndo,
 ) : ViewModel() {
+
+    /** Swipe in the list: deleted at once, «Отменить» in the snackbar. */
+    fun delete(id: String) {
+        viewModelScope.launch { deleteWithUndo(id) }
+    }
 
     // TODO(stage 5): paging once the Wallet history (thousands of rows) is imported.
     val state: StateFlow<TransactionsUiState> = combine(

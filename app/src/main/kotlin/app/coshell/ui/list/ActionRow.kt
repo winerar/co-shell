@@ -1,7 +1,6 @@
 package app.coshell.ui.list
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -10,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.R as DesignR
 
 /**
@@ -40,6 +40,6 @@ fun ActionRow(
             supportingColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
             leadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
         ),
-        modifier = Modifier.clickable(enabled = enabled, onClick = onClick),
+        modifier = Modifier.tactileClickable(enabled = enabled, onClick = onClick),
     )
 }

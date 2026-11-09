@@ -1,15 +1,15 @@
 package app.coshell.update.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellButton
+import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.update.UpdateActions
 import app.coshell.update.UpdateError
 import app.coshell.update.UpdatePhase
@@ -25,16 +25,16 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions) {
         }
         UpdatePhase.UpToDate -> {
             StatusText(stringResource(R.string.update_up_to_date))
-            OutlinedButton(onClick = actions.onCheck) { Text(stringResource(R.string.update_check_again)) }
+            CoShellOutlinedButton(onClick = actions.onCheck) { Text(stringResource(R.string.update_check_again)) }
         }
         UpdatePhase.NotConfigured -> StatusText(stringResource(R.string.update_not_configured))
         is UpdatePhase.Available -> {
             ReleaseCard(phase.release)
             if (state.needsInstallPermission) {
                 StatusText(stringResource(R.string.update_permission_hint))
-                Button(onClick = actions.onAllowInstall) { Text(stringResource(R.string.update_allow_install)) }
+                CoShellButton(onClick = actions.onAllowInstall) { Text(stringResource(R.string.update_allow_install)) }
             } else {
-                Button(onClick = actions.onDownload) {
+                CoShellButton(onClick = actions.onDownload) {
                     Text(stringResource(R.string.update_download, megabytes(phase.release.sizeBytes)))
                 }
             }
@@ -51,7 +51,7 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions) {
         is UpdatePhase.Failed -> {
             phase.release?.let { ReleaseCard(it) }
             ErrorCard(stringResource(errorText(phase.error)))
-            Button(onClick = if (phase.release != null) actions.onDownload else actions.onCheck) {
+            CoShellButton(onClick = if (phase.release != null) actions.onDownload else actions.onCheck) {
                 Text(stringResource(R.string.update_retry))
             }
         }

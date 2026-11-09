@@ -1,7 +1,6 @@
 package app.coshell.categories.edit.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,6 +15,9 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.CategoryIcons
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.selectionPop
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.ui.form.FormSection
 
 /** Grid of all category icons drawn in the chosen [color]; the selected one gets a ring. */
@@ -34,9 +36,10 @@ internal fun IconSection(selected: String?, color: Long?, onSelect: (String) -> 
                     icon = key,
                     color = color,
                     modifier = Modifier
+                        .tactileClickable(Tactile.Control, CircleShape) { onSelect(key) }
+                        .selectionPop(isSelected)
                         .clip(CircleShape)
-                        .then(if (isSelected) Modifier.border(2.dp, ring, CircleShape) else Modifier)
-                        .clickable { onSelect(key) },
+                        .then(if (isSelected) Modifier.border(2.dp, ring, CircleShape) else Modifier),
                 )
             }
         }

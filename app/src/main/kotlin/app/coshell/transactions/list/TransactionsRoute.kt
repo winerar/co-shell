@@ -8,10 +8,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 /** Connects [TransactionsScreen] to its ViewModel. */
 @Composable
 fun TransactionsRoute(
-    onAddTransaction: () -> Unit,
     onTransactionClick: (String) -> Unit,
     viewModel: TransactionsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    TransactionsScreen(state, onAddTransaction, onTransactionClick)
+    TransactionsScreen(state, onTransactionClick, viewModel::delete)
 }

@@ -10,6 +10,8 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.navigation.TransactionEditDestination
+import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
@@ -63,6 +65,7 @@ class DebitSuggestionTest {
             },
             timeZone = zone,
             rates = rates,
+            deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         ).also { it.onReceiptToggle(true) } // account "card" (USDT), receipt in ARS
     }
 

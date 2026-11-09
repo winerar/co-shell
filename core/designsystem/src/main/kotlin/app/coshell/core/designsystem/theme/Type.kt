@@ -8,9 +8,30 @@ import androidx.compose.ui.unit.sp
 
 private val Default = Typography()
 
-/** Text styles for words. Body font is still the system one until the owner picks it (ROADMAP). */
+private fun TextStyle.onest(weight: FontWeight? = null) =
+    copy(fontFamily = TextFontFamily, fontWeight = weight ?: fontWeight)
+
+/**
+ * Text styles for words: the Material 3 size scale set in Onest. Headings are SemiBold,
+ * labels (buttons, tabs, chips) Medium, body text Regular. Amounts and rates use the
+ * `Amount*Style` / [RateTextStyle] below, never these.
+ */
 val CoShellTypography = Typography(
-    titleLarge = Default.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+    displayLarge = Default.displayLarge.onest(),
+    displayMedium = Default.displayMedium.onest(),
+    displaySmall = Default.displaySmall.onest(),
+    headlineLarge = Default.headlineLarge.onest(FontWeight.SemiBold),
+    headlineMedium = Default.headlineMedium.onest(FontWeight.SemiBold),
+    headlineSmall = Default.headlineSmall.onest(FontWeight.SemiBold),
+    titleLarge = Default.titleLarge.onest(FontWeight.SemiBold),
+    titleMedium = Default.titleMedium.onest(FontWeight.Medium),
+    titleSmall = Default.titleSmall.onest(FontWeight.Medium),
+    bodyLarge = Default.bodyLarge.onest(),
+    bodyMedium = Default.bodyMedium.onest(),
+    bodySmall = Default.bodySmall.onest(),
+    labelLarge = Default.labelLarge.onest(FontWeight.Medium),
+    labelMedium = Default.labelMedium.onest(FontWeight.Medium),
+    labelSmall = Default.labelSmall.onest(FontWeight.Medium),
 )
 
 // Amounts: JetBrains Mono, so digits line up and do not jump while a number changes.
@@ -47,4 +68,12 @@ val AmountTextStyle = TextStyle(
     lineHeight = 24.sp,
     fontWeight = FontWeight.Medium,
     textAlign = TextAlign.End,
+)
+
+/** Exchange rates («1 USD = 1 234,5 ARS»): same monospace digits as amounts, list-row size. */
+val RateTextStyle = TextStyle(
+    fontFamily = NumbersFontFamily,
+    fontSize = 15.sp,
+    lineHeight = 24.sp,
+    fontWeight = FontWeight.Normal,
 )

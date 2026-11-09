@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.domain.update.AppRelease
 
 /** New version number and its "what's new" text. */
 @Composable
 internal fun ReleaseCard(release: AppRelease, modifier: Modifier = Modifier) {
-    Card(modifier.fillMaxWidth()) {
+    CoShellCard(modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 stringResource(R.string.update_available, release.versionName, release.versionCode),

@@ -6,34 +6,35 @@ import app.coshell.core.model.IdGenerator
 
 /**
  * Starter set of categories, created on first launch. Users rename/archive them freely, so
- * these are data, not UI strings. Icon keys are resolved by the UI.
+ * these are data, not UI strings. Icon keys are resolved by the UI; colours are neon values of
+ * the category palette (`core:designsystem` `CategoryPalette`).
  */
 object DefaultCategories {
     private data class Seed(val name: String, val icon: String, val color: Long)
 
     private val expenses = listOf(
-        Seed("Продукты", "food", 0xFF4CAF50),
-        Seed("Рестораны и кафе", "restaurant", 0xFFFF9800),
-        Seed("Дом", "home", 0xFF795548),
-        Seed("Коммунальные услуги", "utilities", 0xFF607D8B),
-        Seed("Транспорт", "transport", 0xFF2196F3),
-        Seed("Такси", "taxi", 0xFFFFC107),
-        Seed("Здоровье", "health", 0xFFE91E63),
-        Seed("Дети", "kids", 0xFF9C27B0),
-        Seed("Одежда и обувь", "clothes", 0xFF3F51B5),
-        Seed("Развлечения", "fun", 0xFFFF5722),
-        Seed("Образование", "education", 0xFF009688),
-        Seed("Связь и подписки", "subscriptions", 0xFF00BCD4),
-        Seed("Подарки", "gift", 0xFFF44336),
-        Seed("Документы и налоги", "documents", 0xFF9E9E9E),
-        Seed("Другое", "other", 0xFF757575),
+        Seed("Продукты", "food", 0xFF4DFF88),
+        Seed("Рестораны и кафе", "restaurant", 0xFFFFA53D),
+        Seed("Дом", "home", 0xFFFFB38A),
+        Seed("Коммунальные услуги", "utilities", 0xFF8FB3CC),
+        Seed("Транспорт", "transport", 0xFF38B6FF),
+        Seed("Такси", "taxi", 0xFFFFD43B),
+        Seed("Здоровье", "health", 0xFFFF4FD8),
+        Seed("Дети", "kids", 0xFFD36BFF),
+        Seed("Одежда и обувь", "clothes", 0xFF6E8BFF),
+        Seed("Развлечения", "fun", 0xFFFF7A3D),
+        Seed("Образование", "education", 0xFF00E5C0),
+        Seed("Связь и подписки", "subscriptions", 0xFF2BE4FF),
+        Seed("Подарки", "gift", 0xFFFF5470),
+        Seed("Документы и налоги", "documents", 0xFFB0B8C4),
+        Seed("Другое", "other", 0xFF7A8494),
     )
 
     private val incomes = listOf(
-        Seed("Зарплата", "salary", 0xFF4CAF50),
-        Seed("Проценты и дивиденды", "interest", 0xFF8BC34A),
-        Seed("Подарки", "gift", 0xFFF44336),
-        Seed("Другое", "other", 0xFF757575),
+        Seed("Зарплата", "salary", 0xFF4DFF88),
+        Seed("Проценты и дивиденды", "interest", 0xFFA8FF3E),
+        Seed("Подарки", "gift", 0xFFFF5470),
+        Seed("Другое", "other", 0xFF7A8494),
     )
 
     fun create(ids: IdGenerator): List<Category> =

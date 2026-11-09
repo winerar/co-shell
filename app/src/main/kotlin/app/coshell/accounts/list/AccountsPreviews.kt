@@ -13,7 +13,7 @@ private fun AccountsScreenPreview() {
             state = AccountsUiState(
                 active = listOf(
                     AccountsUiState.Row("1", "Наличные", AccountType.CASH, "85 000,00 $", isNegative = false),
-                    AccountsUiState.Row("2", "Кредитка", AccountType.CARD, "-15 000,00 ₽", isNegative = true),
+                    AccountsUiState.Row("2", "Кредитка", AccountType.CARD, "-15 000,00 ₽", isNegative = true, excludedFromTotal = true),
                 ),
                 archived = listOf(AccountsUiState.Row("3", "Старая карта", AccountType.CARD, "0,00 ₽", false)),
                 showArchived = true,

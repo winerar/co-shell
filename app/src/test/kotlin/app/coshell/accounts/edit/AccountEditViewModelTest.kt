@@ -62,6 +62,23 @@ class AccountEditViewModelTest {
     }
 
     @Test
+    fun `account can be left out of the total and back`() = runTest {
+        accounts.saveAccount(Account("debt", "Долг Ане", usd))
+        val vm = viewModel("debt")
+        assertTrue(vm.state.value.includedInTotal)
+
+        vm.onIncludedInTotalChange(false)
+        vm.save()
+        assertTrue(accounts.getAccount("debt")!!.excludedFromTotal)
+
+        val reopened = viewModel("debt")
+        assertFalse(reopened.state.value.includedInTotal)
+        reopened.onIncludedInTotalChange(true)
+        reopened.save()
+        assertFalse(accounts.getAccount("debt")!!.excludedFromTotal)
+    }
+
+    @Test
     fun `invalid form shows errors and saves nothing`() = runTest {
         val vm = viewModel()
         vm.onCurrencyChange("A")

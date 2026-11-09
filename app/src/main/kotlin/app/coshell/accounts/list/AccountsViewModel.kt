@@ -43,5 +43,6 @@ class AccountsViewModel @Inject constructor(
         type = item.account.type,
         balance = moneyFormat.format(item.balance),
         isNegative = item.balance.isNegative,
+        excludedFromTotal = item.account.excludedFromTotal,
     )
 }

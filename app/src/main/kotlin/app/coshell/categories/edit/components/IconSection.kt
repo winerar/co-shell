@@ -1,5 +1,6 @@
 package app.coshell.categories.edit.components
 
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.border
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +26,7 @@ import app.coshell.core.designsystem.components.CoShellSection
 @Composable
 internal fun IconSection(selected: String?, color: Long?, onSelect: (String) -> Unit) {
     // Same shade as the badge in this theme (neon in dark, deeper tone in light).
-    val ring = color?.let { categoryColor(it) } ?: MaterialTheme.colorScheme.primary
+    val ring = color?.let { categoryColor(it) } ?: accentInk()
     CoShellSection(stringResource(R.string.category_icon)) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),

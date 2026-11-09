@@ -3,6 +3,7 @@ package app.coshell.core.designsystem.theme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -13,6 +14,21 @@ class ColorContrastTest {
     @Test
     fun textOnItsBackgroundIsReadable() = schemes.forEach { (name, s) ->
         pairs(s).forEach { (label, fg, bg) -> assertContrast("$name $label", fg, bg, 4.5) }
+        assertContrast("$name accent ink on surface", accentInkFor(s, name == "dark"), s.surface, 4.5)
+    }
+
+    @Test
+    fun darkThemeNeonIsReadableAsText() {
+        val s = CoShellDarkColors
+        assertContrast("dark primary on surface", s.primary, s.surface, 4.5)
+        assertContrast("dark secondary on surface", s.secondary, s.surface, 4.5)
+    }
+
+    @Test
+    fun accentIsOwnersNeonMintFillInBothThemes() = schemes.forEach { (name, s) ->
+        // Owner's choice 2026-11-09: Neon Mint #80FFCC, a fill with dark ink — no deep green.
+        assertEquals("$name primary", Color(0xFF80FFCC), s.primary)
+        assertEquals("$name primaryContainer", Color(0xFF80FFCC), s.primaryContainer)
     }
 
     @Test
@@ -30,7 +46,7 @@ class ColorContrastTest {
     @Test
     fun heroCardTextIsReadableOnTheWholeGradient() {
         // Light theme hero card: ink text over every stop of the mint → lime gradient; grey hints too.
-        listOf(MintAcid, LimeSoft, LimeAcid).forEach { stop ->
+        listOf(NeonMint, LimeSoft, LimeAcid).forEach { stop ->
             assertContrast("hero ink on $stop", MintInk, stop, 4.5)
             assertContrast("hero hint on $stop", CoShellLightColors.onSurfaceVariant, stop, 4.5)
         }
@@ -40,10 +56,8 @@ class ColorContrastTest {
         Triple("onBackground", s.onBackground, s.background),
         Triple("onSurfaceVariant", s.onSurfaceVariant, s.surfaceContainerHigh),
         Triple("onPrimary", s.onPrimary, s.primary),
-        Triple("primary on surface", s.primary, s.surface),
         Triple("onPrimaryContainer", s.onPrimaryContainer, s.primaryContainer),
         Triple("onSecondary", s.onSecondary, s.secondary),
-        Triple("secondary on surface", s.secondary, s.surface),
         Triple("onSecondaryContainer", s.onSecondaryContainer, s.secondaryContainer),
         Triple("onTertiary", s.onTertiary, s.tertiary),
         Triple("onTertiaryContainer", s.onTertiaryContainer, s.tertiaryContainer),

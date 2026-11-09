@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.padding
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Spacing
 
 /** Explanation paragraph used by every block of the family screen. */
@@ -24,7 +25,7 @@ internal fun FamilySectionTitle(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
+        color = accentInk(),
         modifier = Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.l),
     )
 }

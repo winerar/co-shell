@@ -11,6 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
 import app.coshell.core.designsystem.components.CoShellFab
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.model.CategoryType
 import app.coshell.navigation.CategoryEditDestination
 import app.coshell.core.designsystem.R as DesignR
@@ -58,10 +60,21 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
         },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
-            PrimaryTabRow(selectedTabIndex = state.type.ordinal) {
+            // Text accent: ink in the light theme, Neon Mint in the dark one (no deep green).
+            val ink = accentInk()
+            PrimaryTabRow(
+                selectedTabIndex = state.type.ordinal,
+                indicator = {
+                    TabRowDefaults.PrimaryIndicator(
+                        Modifier.tabIndicatorOffset(state.type.ordinal, matchContentSize = true),
+                        color = ink,
+                    )
+                },
+            ) {
                 CategoryType.entries.forEach { tabType ->
                     Tab(
                         selected = state.type == tabType,
+                        selectedContentColor = ink,
                         onClick = { actions.onSelectType(tabType) },
                         text = { Text(stringResource(tabType.labelRes)) },
                     )

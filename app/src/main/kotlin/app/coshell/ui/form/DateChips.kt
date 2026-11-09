@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
@@ -23,6 +24,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellTextButton
+import app.coshell.core.designsystem.theme.accentInk
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlinx.datetime.DateTimeUnit
@@ -100,7 +102,16 @@ private fun DatePickerSheet(initialMillisUtc: Long, onDismiss: () -> Unit, onCon
             CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         },
     ) {
-        DatePicker(state = pickerState)
+        // Today and the current year in the text accent; the selected day — Neon Mint fill with ink.
+        val ink = accentInk()
+        DatePicker(
+            state = pickerState,
+            colors = DatePickerDefaults.colors(
+                todayContentColor = ink,
+                todayDateBorderColor = ink,
+                currentYearContentColor = ink,
+            ),
+        )
     }
 }
 

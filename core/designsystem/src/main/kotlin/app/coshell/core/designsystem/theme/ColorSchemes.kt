@@ -5,18 +5,19 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 /**
- * Light theme (issue #62, variant B): mint-tinted white background, muted mint for text-bearing elements
- * (buttons, links — WCAG contrast), acid mint in containers (selected tab, FAB), acid lime as the second
- * accent (Material puts `secondaryContainer` under selected chips and segments).
+ * Light theme (issue #62, variant B): mint-tinted white background, Neon Mint fills with dark ink (buttons,
+ * selected tab, FAB, switches, selected day), acid lime as the second accent (Material puts
+ * `secondaryContainer` under selected chips and segments). Neon on white is unreadable as text, so
+ * text accents (links, headers, text buttons, focused fields) take [accentInk] — the ink, not a deep green.
  */
 internal val CoShellLightColors = lightColorScheme(
-    primary = MintDeep,
-    onPrimary = Color.White,
-    primaryContainer = MintAcid,
+    primary = NeonMint,
+    onPrimary = MintInk,
+    primaryContainer = NeonMint,
     onPrimaryContainer = MintInk,
-    inversePrimary = MintNeon,
-    secondary = LimeDeep,
-    onSecondary = Color.White,
+    inversePrimary = NeonMint,
+    secondary = LimeAcid,
+    onSecondary = LimeInk,
     secondaryContainer = LimeAcid,
     onSecondaryContainer = LimeInk,
     tertiary = SkyDeep,
@@ -33,7 +34,7 @@ internal val CoShellLightColors = lightColorScheme(
     onSurface = FrostText,
     surfaceVariant = Frost4,
     onSurfaceVariant = FrostTextMuted,
-    surfaceTint = MintDeep,
+    surfaceTint = NeonMint,
     inverseSurface = Graphite4,
     inverseOnSurface = GraphiteText,
     outline = FrostLine,
@@ -47,13 +48,13 @@ internal val CoShellLightColors = lightColorScheme(
     surfaceContainerHighest = Frost5,
 )
 
-/** Dark theme: graphite background, neon accents as is, no glow effects. */
+/** Dark theme: graphite background, neon accents as is (Neon Mint fills with dark ink), no glow effects. */
 internal val CoShellDarkColors = darkColorScheme(
-    primary = MintNeon,
+    primary = NeonMint,
     onPrimary = MintInk,
-    primaryContainer = MintShadow,
-    onPrimaryContainer = MintPale,
-    inversePrimary = MintDeep,
+    primaryContainer = NeonMint,
+    onPrimaryContainer = MintInk,
+    inversePrimary = FrostText,
     secondary = VioletNeon,
     onSecondary = VioletInk,
     secondaryContainer = VioletShadow,
@@ -72,7 +73,7 @@ internal val CoShellDarkColors = darkColorScheme(
     onSurface = GraphiteText,
     surfaceVariant = Graphite4,
     onSurfaceVariant = GraphiteTextMuted,
-    surfaceTint = MintNeon,
+    surfaceTint = NeonMint,
     inverseSurface = GraphiteText,
     inverseOnSurface = Graphite4,
     outline = GraphiteLine,

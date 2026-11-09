@@ -73,6 +73,7 @@ fun CoShellNavHost(
         composable<TransactionsDestination> {
             TransactionsRoute(
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+                onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
             )
         }
         dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) {

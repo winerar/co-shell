@@ -64,6 +64,8 @@ class TransactionEditViewModel @Inject constructor(
         ?.let { name -> TransactionType.entries.firstOrNull { it.name == name } }
         ?: TransactionType.EXPENSE
 
+    private val copyFromId: String? = savedStateHandle[TransactionEditDestination.ARG_COPY_FROM]
+
     private var existing: Transaction? = null
     private var accountsById: Map<String, Account> = emptyMap()
     private var allCategories: List<Category> = emptyList()
@@ -89,7 +91,8 @@ class TransactionEditViewModel @Inject constructor(
     private suspend fun load() {
         val transaction = transactionId?.let { transactions.getTransaction(it) }
         existing = transaction
-        val used = setOfNotNull(transaction?.accountId, transaction?.toAccountId)
+        val template = copyFromId?.let { transactions.getTransaction(it) }
+        val used = setOfNotNull(transaction?.accountId, transaction?.toAccountId, template?.accountId, template?.toAccountId)
         // Archived accounts and categories are hidden unless the edited transaction uses them.
         val withBalances = accounts.observeAccountsWithBalance(includeArchived = true).first()
             .filter { !it.account.archived || it.account.id in used }
@@ -108,7 +111,12 @@ class TransactionEditViewModel @Inject constructor(
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
         )
-        val loaded = if (transaction == null) newForm(base, accountList, recent) else formOf(transaction, base)
+        val loaded = when {
+            transaction != null -> formOf(transaction, base)
+            // «Дублировать»: the same operation as a new one today, straight on the amount.
+            template != null -> formOf(template, base).copy(isNew = true, date = base.today)
+            else -> newForm(base, accountList, recent)
+        }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
     }
 
@@ -131,6 +139,7 @@ class TransactionEditViewModel @Inject constructor(
 
     private fun formOf(transaction: Transaction, base: TransactionEditUiState) = base.copy(
         isNew = false,
+        step = TransactionEditUiState.EntryStep.DETAILS,
         type = transaction.type,
         amount = moneyFormat.formatForEditing(transaction.amount),
         toAmount = transaction.toAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),

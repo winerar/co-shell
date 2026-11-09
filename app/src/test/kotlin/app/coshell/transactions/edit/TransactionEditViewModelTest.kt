@@ -55,9 +55,13 @@ class TransactionEditViewModelTest {
         categories.saveCategory(Category("salary", "Зарплата", CategoryType.INCOME))
     }
 
-    private fun viewModel(transactionId: String? = null, type: String = "EXPENSE") = TransactionEditViewModel(
+    private fun viewModel(transactionId: String? = null, type: String = "EXPENSE", copyFrom: String? = null) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
-            mapOf(TransactionEditDestination.ARG_TRANSACTION_ID to transactionId, TransactionEditDestination.ARG_TYPE to type),
+            mapOf(
+                TransactionEditDestination.ARG_TRANSACTION_ID to transactionId,
+                TransactionEditDestination.ARG_TYPE to type,
+                TransactionEditDestination.ARG_COPY_FROM to copyFrom,
+            ),
         ),
         accounts = accounts,
         categories = categories,
@@ -189,6 +193,22 @@ class TransactionEditViewModelTest {
         vm.onCategorySelect("food")
         vm.save()
         assertEquals(TransactionEditUiState.EntryStep.DETAILS, viewModel(transactionId = "new").state.value.step)
+    }
+
+    @Test
+    fun `duplicate is a new operation today with the same fields`() = runTest {
+        seed()
+        val first = viewModel()
+        first.onAmountChange("250")
+        first.onCategorySelect("cafe")
+        first.onDateSelect(LocalDate(2026, 11, 1))
+        first.save()
+        val copy = viewModel(copyFrom = "new").state.value
+        assertTrue(copy.isNew)
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, copy.step)
+        assertEquals(LocalDate(2026, 11, 8), copy.date)
+        assertEquals("cafe", copy.categoryId)
+        assertEquals("card", copy.accountId)
     }
 
     @Test

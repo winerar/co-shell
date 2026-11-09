@@ -2,6 +2,8 @@ package app.coshell.transactions.list
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
@@ -41,8 +43,33 @@ internal fun buildTransactionDays(
                     else -> RelativeDay.OTHER
                 },
                 rows = items.map { t -> t.toRow(accountsById, categoriesById, moneyFormat).copy(author = t.authorMemberId?.let(authors::get)) },
-            )
+            ).withTotal(items, moneyFormat)
         }
+}
+
+/** Net per currency in the order the currencies first appear; zero nets are left out. */
+private fun Day.withTotal(items: List<Transaction>, moneyFormat: MoneyFormat): Day {
+    val nets = linkedMapOf<CurrencyCode, Long>()
+    items.forEach { t ->
+        val sign = when (t.type) {
+            TransactionType.EXPENSE -> -1
+            TransactionType.INCOME -> 1
+            TransactionType.TRANSFER -> return@forEach
+        }
+        nets[t.amount.currency] = (nets[t.amount.currency] ?: 0L) + sign * t.amount.amountMinor
+    }
+    val shown = nets.filterValues { it != 0L }
+    if (shown.isEmpty()) return this
+    val text = shown.entries.joinToString(" · ") { (currency, minor) ->
+        val money = Money(minor, currency)
+        if (minor > 0) "+" + moneyFormat.format(money) else moneyFormat.format(money)
+    }
+    val tone = when {
+        shown.values.all { it < 0 } -> Kind.EXPENSE
+        shown.values.all { it > 0 } -> Kind.INCOME
+        else -> null
+    }
+    return copy(total = text, totalTone = tone)
 }
 
 private fun Transaction.toRow(

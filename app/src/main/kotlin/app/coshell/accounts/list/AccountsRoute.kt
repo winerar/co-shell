@@ -13,5 +13,16 @@ fun AccountsRoute(
     viewModel: AccountsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    AccountsScreen(state, onAccountClick, onAddAccount, viewModel::toggleArchived)
+    AccountsScreen(
+        state,
+        AccountsActions(
+            onAccountClick = onAccountClick,
+            onAddAccount = onAddAccount,
+            onToggleArchived = viewModel::toggleArchived,
+            onGrouping = viewModel::onGrouping,
+            onToggleGroup = viewModel::onToggleGroup,
+            onQuery = viewModel::onQuery,
+            onToggleSearch = viewModel::onToggleSearch,
+        ),
+    )
 }

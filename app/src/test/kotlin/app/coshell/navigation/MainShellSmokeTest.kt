@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.coshell.R
+import app.coshell.accounts.list.AccountsActions
 import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -63,7 +64,7 @@ class MainShellSmokeTest {
                 MainShell(nav, SnackbarHostState(), onAdd = { adds++ }) {
                     composable<HomeDestination> { HomeScreen(HOME) }
                     composable<TransactionsDestination> { TransactionsScreen(TRANSACTIONS) }
-                    composable<AccountsDestination> { AccountsScreen(ACCOUNTS, {}, {}, {}) }
+                    composable<AccountsDestination> { AccountsScreen(ACCOUNTS, AccountsActions()) }
                     composable<MoreDestination> {
                         MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
                     }
@@ -146,8 +147,10 @@ class MainShellSmokeTest {
                 ),
             ),
         )
+        private val ACCOUNT_ROW = AccountsUiState.Row("1", ACCOUNT, AccountType.CASH, "85 000,00 $", isNegative = false)
         val ACCOUNTS = AccountsUiState(
-            active = listOf(AccountsUiState.Row("1", ACCOUNT, AccountType.CASH, "85 000,00 $", isNegative = false)),
+            active = listOf(ACCOUNT_ROW),
+            groups = listOf(AccountsUiState.Group("TYPE:CASH", titleText = "Cash", rows = listOf(ACCOUNT_ROW), total = null, expanded = true)),
         )
     }
 }

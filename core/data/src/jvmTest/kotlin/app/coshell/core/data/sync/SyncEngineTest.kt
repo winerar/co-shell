@@ -136,9 +136,25 @@ class SyncEngineTest {
         a.engine.sync()
         val result = b.engine.sync()
 
-        // The cursor record (t1) is read again by design, but only t2 changes anything.
-        assertEquals(2, result.pulled)
+        assertEquals(1, result.pulled, "t1 must not be read again")
         assertEquals(1, result.applied)
         assertEquals(0, result.pushed)
+    }
+
+    @Test
+    fun `idle polls read nothing after a big push`() = runTest {
+        // All records of one push share one server time — the old ">= last time" cursor
+        // re-read the whole batch on every poll and burned the Firestore read quota.
+        repeat(50) { a.transactions.saveTransaction(expense("t$it", 1_00)) }
+        a.engine.sync()
+        assertEquals(50, b.engine.sync().pulled)
+        assertEquals(50, a.engine.sync().pulled, "its own push comes back once")
+
+        val read = server.recordsRead
+        repeat(5) {
+            assertEquals(0, a.engine.sync().pulled)
+            assertEquals(0, b.engine.sync().pulled)
+        }
+        assertEquals(read, server.recordsRead)
     }
 }

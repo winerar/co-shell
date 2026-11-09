@@ -74,7 +74,9 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `components/ManualRateDialog.kt`).
 Валюты отчётов (первая — основная): контракт и правила списка — `core:domain/settings/ReportCurrencies.kt`,
 хранение — `app/.../currencies/data/PrefsReportCurrencySettings`, экран «Ещё → Валюты отчётов» — `currencies/list/`.
-Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`).
+Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`);
+траты/доход месяца и траты по дням — `core:domain/rates/MonthSpending.kt`, состояние «Обзора» — `home/HomeState.kt`,
+плитки 2×2 — `home/components/HomeTiles`, последние операции — `home/components/RecentCard` (строки — из `transactions/list`).
 Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.

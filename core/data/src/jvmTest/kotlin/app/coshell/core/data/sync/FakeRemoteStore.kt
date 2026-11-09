@@ -1,6 +1,9 @@
 package app.coshell.core.data.sync
 
-/** In-memory server: keeps the last pushed record per key and stamps it with a growing server time. */
+/**
+ * In-memory server: keeps the last pushed record per key and stamps it with a growing server time.
+ * Like Firestore, every record of one push shares one server time; order is (time, key).
+ */
 class FakeRemoteStore : RemoteStore {
     private val docs = linkedMapOf<String, RemoteRecord>()
     private var serverClock = 1_000L
@@ -13,16 +16,21 @@ class FakeRemoteStore : RemoteStore {
 
     val records: Collection<RemoteRecord> get() = docs.values
 
-    override suspend fun pull(since: Long?): List<RemoteRecord> {
+    /** How many records all pulls returned — the Firestore read bill. */
+    var recordsRead = 0
+        private set
+
+    override suspend fun pull(cursor: String?): List<RemoteRecord> {
         pullCalls++
         if (failNextPull) { failNextPull = false; error("offline") }
-        return docs.values.filter { since == null || it.serverTime >= since }.sortedBy { it.serverTime }
+        return docs.values.filter { cursor == null || it.cursor > cursor }.sortedBy { it.cursor }
+            .also { recordsRead += it.size }
     }
 
     override suspend fun push(records: List<SyncRecord>) {
         if (failNextPush) { failNextPush = false; error("offline") }
         serverClock += 10
-        records.forEach { docs[it.key] = RemoteRecord(it, serverClock) }
+        records.forEach { docs[it.key] = RemoteRecord(it, "%015d %s".format(serverClock, it.key)) }
         afterPush()
     }
 }

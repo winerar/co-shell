@@ -23,14 +23,15 @@ class FirestoreRemoteStore(
 ) : RemoteStore {
     private val collection get() = "families/$familyId/records"
 
-    override suspend fun pull(since: Long?): List<RemoteRecord> {
+    override suspend fun pull(cursor: String?): List<RemoteRecord> {
         val result = mutableListOf<RemoteRecord>()
-        var after: JsonObject? = null // last document of the previous page
+        var after = cursor?.let { Position.parse(it) } // end of the previous pull or page
+        val since = cursor?.toLongOrNull() // cursor saved by an older app version: epoch ms
         while (true) {
             val page = client.runQuery("families/$familyId", query(since, after))
             page.mapNotNullTo(result, ::parse)
             if (page.size < PAGE) return result
-            after = page.last()
+            after = Position.of(page.last()) ?: return result
         }
     }
 
@@ -39,9 +40,9 @@ class FirestoreRemoteStore(
         client.commit(records.map(::write))
     }
 
-    private fun query(since: Long?, after: JsonObject?) = buildJsonObject {
+    private fun query(since: Long?, after: Position?) = buildJsonObject {
         put("from", buildJsonArray { add(buildJsonObject { put("collectionId", "records") }) })
-        if (since != null) {
+        if (since != null && after == null) {
             put("where", buildJsonObject {
                 put("fieldFilter", buildJsonObject {
                     put("field", fieldRef(SERVER_TIME))
@@ -55,10 +56,12 @@ class FirestoreRemoteStore(
             add(buildJsonObject { put("field", fieldRef("__name__")); put("direction", "ASCENDING") })
         })
         if (after != null) {
-            // Page cursor: strictly after (time, name) of the last document — no skips, no repeats.
-            val time = after["fields"]!!.obj()[SERVER_TIME]!!
+            // Strictly after (time, name) of the last document read — no skips, no repeats.
             put("startAt", buildJsonObject {
-                put("values", JsonArray(listOf(time, buildJsonObject { put("referenceValue", after["name"]!!.jsonPrimitive.content) })))
+                put("values", JsonArray(listOf(
+                    buildJsonObject { put("timestampValue", after.time) },
+                    buildJsonObject { put("referenceValue", after.name) },
+                )))
                 put("before", false)
             })
         }
@@ -95,7 +98,26 @@ class FirestoreRemoteStore(
             deleted = f.bool("deleted") ?: false,
             json = f.string("json") ?: return null,
         )
-        return RemoteRecord(record, f.timestampMs(SERVER_TIME) ?: return null)
+        return RemoteRecord(record, Position.of(document)?.toString() ?: return null)
+    }
+
+    /**
+     * A place in the `(serverUpdatedAt, __name__)` order. The time is kept exactly as the server
+     * sent it (microseconds): rounding to ms would make the last records look "after" the cursor.
+     */
+    private data class Position(val time: String, val name: String) {
+        override fun toString() = "$time $name"
+
+        companion object {
+            fun parse(cursor: String): Position? =
+                cursor.split(' ', limit = 2).takeIf { it.size == 2 }?.let { Position(it[0], it[1]) }
+
+            fun of(document: JsonObject): Position? {
+                val time = document["fields"]?.obj()?.get(SERVER_TIME)?.obj()?.get("timestampValue")
+                    ?.jsonPrimitive?.content ?: return null
+                return Position(time, document["name"]?.jsonPrimitive?.content ?: return null)
+            }
+        }
     }
 
     private companion object {

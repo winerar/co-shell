@@ -91,4 +91,41 @@ class MonthSpendingTest {
         assertEquals(money(5, usd), inUsd.sum)
         assertEquals(setOf(rub), inUsd.missing)
     }
+
+    @Test
+    fun `incomes are summed like expenses, each at its day rate`() {
+        val items = listOf(
+            Transaction("1", TransactionType.INCOME, "acc", money(10_000, ars), at(2)),
+            Transaction("2", TransactionType.INCOME, "acc", money(10_000, ars), at(6)),
+            expense("3", money(7, usd), 3),
+        )
+
+        val (inUsd) = book.incomeTotals(items, listOf(usd), tz)
+
+        assertEquals(money(15, usd), inUsd.sum)
+    }
+
+    @Test
+    fun `daily expenses cover every day of the month in one currency`() {
+        val items = listOf(
+            expense("1", money(10_000, ars), 2),
+            expense("2", money(5, usd), 2),
+            expense("3", money(10_000, ars), 30),
+            Transaction("4", TransactionType.INCOME, "acc", money(100, usd), at(3)),
+            expense("5", money(1_000, rub), 4),
+        )
+
+        val days = book.dailyExpenses(items, usd, day(9), tz)
+
+        assertEquals(30, days.size)
+        assertEquals(money(15, usd), days[1]) // 10 000 ARS at 1000 + 5 USD
+        assertEquals(money(0, usd), days[2]) // income is not spending
+        assertEquals(money(0, usd), days[3]) // no rate for RUB: left out
+        assertEquals(money(5, usd), days[29]) // the latest rate (2000)
+    }
+
+    @Test
+    fun `daily expenses of february in a leap year have 29 days`() {
+        assertEquals(29, book.dailyExpenses(emptyList(), usd, LocalDate(2028, 2, 10), tz).size)
+    }
 }

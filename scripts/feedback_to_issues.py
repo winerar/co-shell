@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import urllib.parse
+import urllib.error
 import urllib.request
 
 FIRESTORE = "https://firestore.googleapis.com/v1"
@@ -136,7 +137,15 @@ def main():
     github_token = os.environ["GITHUB_TOKEN"]
 
     token = google_token(account)
-    feedback_list = unprocessed_feedback(project, token)
+    try:
+        feedback_list = unprocessed_feedback(project, token)
+    except urllib.error.HTTPError as e:
+        if e.code != 429:
+            raise
+        # Daily free quota of Firestore reads is spent; it resets at midnight Pacific time and
+        # the next scheduled run picks the feedback up. Not a failure of this workflow.
+        print("::warning::Firestore quota exhausted (HTTP 429) — feedback will be fetched on the next run")
+        return 0
     print(f"New feedback: {len(feedback_list)}")
     for feedback in feedback_list:
         number = create_issue(repo, github_token, feedback)

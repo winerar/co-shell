@@ -88,7 +88,7 @@ abstract class SyncDao {
      * Returns how many rows changed.
      */
     @Transaction
-    open suspend fun merge(rows: PulledRows, cursorKey: String, cursor: Long?): Int {
+    open suspend fun merge(rows: PulledRows, cursorKey: String, cursor: String?): Int {
         var changed = 0
         fun <T> winners(remote: List<T>, local: List<T>, id: (T) -> String, v: (T) -> Version): List<T> {
             val byId = local.associateBy(id)
@@ -99,7 +99,7 @@ abstract class SyncDao {
         upsertTransactions(winners(rows.transactions, transactions(rows.transactions.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertBudgets(winners(rows.budgets, budgets(rows.budgets.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertManualRates(winners(rows.manualRates, manualRates(rows.manualRates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        if (cursor != null) setState(SyncStateEntity(cursorKey, cursor.toString()))
+        if (cursor != null) setState(SyncStateEntity(cursorKey, cursor))
         return changed
     }
 

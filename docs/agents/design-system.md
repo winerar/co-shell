@@ -12,7 +12,8 @@ core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
   amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
   components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью;
               поля (TextFields.kt), строки (ListRow.kt), диалоги (Dialogs.kt), раздел/подсказка/сообщение (FormBlocks.kt),
-              ProgressHero — большое кольцо статуса в центре экрана (обновление; позже импорт/синк)
+              ProgressHero — большое кольцо статуса в центре экрана (обновление; позже импорт/синк);
+              CoShellTile — плитка-«бенто» сетки 2×2 (Tile.kt), CoShellMiniBars — мини-столбики (MiniBars.kt)
   motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
   catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов (@Preview светлая/тёмная)
   category/ CategoryBadge, палитра (18 неоновых + 6 тёплых, новые — только в конец списка:

@@ -117,6 +117,7 @@ interface BackupDao {
     @Upsert suspend fun upsertCategories(entities: List<CategoryEntity>)
     @Upsert suspend fun upsertTransactions(entities: List<TransactionEntity>)
     @Upsert suspend fun upsertBudgets(entities: List<BudgetEntity>)
+    @Upsert suspend fun upsertManualRates(entities: List<ManualRateEntity>)
 
     @Transaction
     suspend fun upsertAll(
@@ -124,10 +125,12 @@ interface BackupDao {
         categories: List<CategoryEntity>,
         transactions: List<TransactionEntity>,
         budgets: List<BudgetEntity>,
+        manualRates: List<ManualRateEntity>,
     ) {
         upsertAccounts(accounts)
         upsertCategories(categories)
         upsertTransactions(transactions)
         upsertBudgets(budgets)
+        upsertManualRates(manualRates)
     }
 }

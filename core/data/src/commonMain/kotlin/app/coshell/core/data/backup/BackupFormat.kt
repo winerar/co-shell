@@ -6,9 +6,13 @@ import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
@@ -26,6 +30,8 @@ internal data class BackupFile(
     val categories: List<CategoryDto> = emptyList(),
     val transactions: List<TransactionDto> = emptyList(),
     val budgets: List<BudgetDto> = emptyList(),
+    /** Since schema v2; downloaded rates are not backed up (they can be downloaded again). */
+    val manualRates: List<ManualRateDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -127,3 +133,11 @@ internal data class BudgetDto(val id: String, val categoryId: String, val month:
 }
 
 internal fun Budget.toDto() = BudgetDto(id, categoryId, month.toString(), limit.toDto())
+
+/** `1 from = rate to` on [date] (`YYYY-MM-DD`); [rate] is a plain decimal string, never a JSON number. */
+@Serializable
+internal data class ManualRateDto(val date: String, val from: String, val to: String, val rate: String) {
+    fun toModel() = ExchangeRate(LocalDate.parse(date), CurrencyCode(from), CurrencyCode(to), Rate.parse(rate), RateOrigin.MANUAL)
+}
+
+internal fun ExchangeRate.toManualDto() = ManualRateDto(date.toString(), from.value, to.value, rate.toPlainString())

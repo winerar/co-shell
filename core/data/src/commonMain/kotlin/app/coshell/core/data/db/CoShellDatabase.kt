@@ -1,5 +1,6 @@
 package app.coshell.core.data.db
 
+import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -14,9 +15,15 @@ import kotlinx.coroutines.IO
  * Destructive fallback is never enabled — user data lives only here until sync (stage 4).
  */
 @Database(
-    entities = [AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class],
-    version = 1,
+    entities = [
+        AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
+        ManualRateEntity::class, DownloadedRateEntity::class,
+    ],
+    version = 2,
     exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
+    ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
 abstract class CoShellDatabase : RoomDatabase() {
@@ -25,6 +32,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun budgetDao(): BudgetDao
     abstract fun backupDao(): BackupDao
+    abstract fun rateDao(): RateDao
 
     companion object {
         const val FILE_NAME = "coshell.db"

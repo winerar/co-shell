@@ -2,7 +2,6 @@ package app.coshell.core.designsystem.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -40,7 +39,9 @@ fun CoShellBottomBar(tabs: List<CoShellTab>, onTab: (Int) -> Unit, addLabel: Str
     NavigationBar {
         tabs.forEachIndexed { index, tab ->
             if (index == tabs.size / 2) {
-                Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+                // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as
+                // its max height, so the bar would take the screen and leave screens 0 px tall.
+                Box(Modifier.weight(1f).align(Alignment.CenterVertically), contentAlignment = Alignment.Center) {
                     CoShellFab(
                         onClick = onAdd,
                         shape = CircleShape,

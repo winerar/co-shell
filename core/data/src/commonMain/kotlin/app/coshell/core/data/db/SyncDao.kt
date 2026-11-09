@@ -75,6 +75,8 @@ abstract class SyncDao {
     @Upsert abstract suspend fun upsertBudgets(rows: List<BudgetEntity>)
     @Upsert abstract suspend fun upsertManualRates(rows: List<ManualRateEntity>)
 
+    @Query("SELECT COUNT(*) FROM transactions WHERE deleted = 0") abstract suspend fun liveTransactionCount(): Int
+
     // --- state ---
     @Query("SELECT value FROM sync_state WHERE `key` = :key") abstract suspend fun state(key: String): String?
     @Query("SELECT value FROM sync_state WHERE `key` = :key") abstract fun observeState(key: String): Flow<String?>

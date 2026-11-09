@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import app.coshell.core.designsystem.motion.LocalTactileLight
 import app.coshell.core.designsystem.tokens.CoShellShapes
@@ -28,6 +29,16 @@ val LocalAmountPalette = staticCompositionLocalOf {
 val LocalStatusPalette = staticCompositionLocalOf {
     StatusPalette(StatusColors.WarningLight, StatusColors.SuccessLight)
 }
+
+/**
+ * The main block of a screen («Обзор» total, `CoShellCard(accent = true)`). Light theme: a neon gradient
+ * mint → lime (owner's choice, issue #62 — "the card from variant C") with dark ink on it; dark theme:
+ * no fill ([brush] = null), the card keeps its mint border.
+ */
+@Immutable
+data class HeroPalette(val brush: Brush?, val content: Color, val amount: Color)
+
+val LocalHeroPalette = staticCompositionLocalOf { HeroPalette(null, CoShellLightColors.onSurface, CoShellLightColors.primary) }
 
 /** Whether [CoShellTheme] is dark — e.g. to pick a category color's variant. */
 val LocalDarkTheme = staticCompositionLocalOf { false }
@@ -54,6 +65,12 @@ fun CoShellTheme(
         StatusPalette(StatusColors.WarningLight, StatusColors.SuccessLight)
     }
 
+    val hero = if (darkTheme) {
+        HeroPalette(null, colorScheme.onSurface, colorScheme.primary)
+    } else {
+        HeroPalette(Brush.linearGradient(listOf(MintAcid, LimeSoft, LimeAcid)), MintInk, MintInk)
+    }
+
     // Pressed elements catch light: white on graphite, mint on white (motion/Tactile).
     val tactileLight = if (darkTheme) Color.White else colorScheme.primary
     // Components we do not wrap (date picker, snackbar) keep a faint mint ripple.
@@ -62,6 +79,7 @@ fun CoShellTheme(
         LocalAmountPalette provides amounts,
         LocalStatusPalette provides status,
         LocalDarkTheme provides darkTheme,
+        LocalHeroPalette provides hero,
         LocalTactileLight provides tactileLight,
         LocalRippleConfiguration provides ripple,
     ) {

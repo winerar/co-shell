@@ -27,6 +27,15 @@ class ColorContrastTest {
         assertContrast("dark warning", StatusColors.WarningDark, dark, 4.5)
     }
 
+    @Test
+    fun heroCardTextIsReadableOnTheWholeGradient() {
+        // Light theme hero card: ink text over every stop of the mint → lime gradient; grey hints too.
+        listOf(MintAcid, LimeSoft, LimeAcid).forEach { stop ->
+            assertContrast("hero ink on $stop", MintInk, stop, 4.5)
+            assertContrast("hero hint on $stop", CoShellLightColors.onSurfaceVariant, stop, 4.5)
+        }
+    }
+
     private fun pairs(s: ColorScheme) = listOf(
         Triple("onBackground", s.onBackground, s.background),
         Triple("onSurfaceVariant", s.onSurfaceVariant, s.surfaceContainerHigh),

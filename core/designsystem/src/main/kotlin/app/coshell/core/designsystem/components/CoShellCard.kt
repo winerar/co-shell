@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.CardDefaults
@@ -9,14 +10,17 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
+import app.coshell.core.designsystem.theme.LocalHeroPalette
 
 /**
  * A block on the screen (owner's choice, design-questions §4): background of the screen, thin
  * `outlineVariant` border, 16 dp corners, no shadow. [accent] — the main block of a screen (total on
- * «Обзор»): the border takes the primary neon. [onClick] makes the whole card a tap target with the `Tactile.Surface` motion.
+ * «Обзор»): in the light theme a neon gradient fill without a border (`LocalHeroPalette`, issue #62), in the
+ * dark theme the border takes the primary neon. Inside it, take text colors from `LocalHeroPalette`. [onClick] makes the whole card a tap target with the `Tactile.Surface` motion.
  */
 @Composable
 fun CoShellCard(
@@ -25,18 +29,26 @@ fun CoShellCard(
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val border = BorderStroke(
-        1.dp,
-        if (accent) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else MaterialTheme.colorScheme.outlineVariant,
-    )
-    val colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     val shape = MaterialTheme.shapes.large
+    val hero = LocalHeroPalette.current
+    val fill = if (accent) hero.brush else null
+    val border = when {
+        fill != null -> BorderStroke(0.dp, Color.Transparent)
+        accent -> BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+        else -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    }
+    val colors = if (fill != null) {
+        CardDefaults.outlinedCardColors(containerColor = Color.Transparent, contentColor = hero.content)
+    } else {
+        CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+    }
+    val filled = if (fill != null) Modifier.background(fill, shape) else Modifier
     if (onClick != null) {
         val source = remember { MutableInteractionSource() }
         NoRipple {
             OutlinedCard(
                 onClick = onClick,
-                modifier = modifier.tactile(source, Tactile.Surface, shape),
+                modifier = modifier.tactile(source, Tactile.Surface, shape).then(filled),
                 shape = shape,
                 colors = colors,
                 border = border,
@@ -45,6 +57,6 @@ fun CoShellCard(
             )
         }
     } else {
-        OutlinedCard(modifier = modifier, shape = shape, colors = colors, border = border, content = content)
+        OutlinedCard(modifier = modifier.then(filled), shape = shape, colors = colors, border = border, content = content)
     }
 }

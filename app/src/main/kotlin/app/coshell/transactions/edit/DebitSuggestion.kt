@@ -3,9 +3,6 @@ package app.coshell.transactions.edit
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
-import java.time.format.DateTimeFormatter
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
 
 /**
  * "Receipt in another currency": fills "debited from the account" from the receipt amount by the
@@ -32,6 +29,3 @@ internal fun TransactionEditUiState.withDebitSuggestion(
         amountError = null,
     )
 }
-
-/** "8 ноября" in the phone's locale, for the suggestion hint. */
-internal fun formatDayMonth(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("d MMMM"))

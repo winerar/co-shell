@@ -66,7 +66,10 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`. Экран «Ещё → Курсы валют» — `rates/list/`
 (курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
 `components/ManualRateDialog.kt`).
-Общие форматтеры — `app/.../ui/format/` (`formatRate`); выбор даты `DateChips` — `ui/form/`.
+Валюты отчётов (первая — основная): контракт и правила списка — `core:domain/settings/ReportCurrencies.kt`,
+хранение — `app/.../currencies/data/PrefsReportCurrencySettings`, экран «Ещё → Валюты отчётов» — `currencies/list/`.
+Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`).
+Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.

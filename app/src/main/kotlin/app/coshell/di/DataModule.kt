@@ -7,6 +7,7 @@ import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
+import app.coshell.core.data.repository.RoomExchangeRateRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
@@ -21,6 +22,7 @@ import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.model.IdGenerator
 import dagger.Module
 import dagger.Provides
@@ -57,6 +59,10 @@ object DataModule {
     @Provides @Singleton
     fun provideBudgetRepository(db: CoShellDatabase, stamper: WriteStamper): BudgetRepository =
         RoomBudgetRepository(db.budgetDao(), stamper)
+
+    @Provides @Singleton
+    fun provideExchangeRateRepository(db: CoShellDatabase, stamper: WriteStamper): ExchangeRateRepository =
+        RoomExchangeRateRepository(db.rateDao(), stamper)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =

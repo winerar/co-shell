@@ -18,7 +18,13 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
+import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.designsystem.components.keypad.KeypadKey
+import app.coshell.core.model.Currencies
+import app.coshell.core.model.CurrencyCode
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
+import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
+import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -61,6 +67,7 @@ class TransactionEditViewModel @Inject constructor(
     private var existing: Transaction? = null
     private var accountsById: Map<String, Account> = emptyMap()
     private var allCategories: List<Category> = emptyList()
+    private var recentCategoryIds: List<String> = emptyList()
     /** Known rates for the "debited" suggestion; `null` until loaded. */
     private var converter: CurrencyConverter? = null
 
@@ -84,21 +91,25 @@ class TransactionEditViewModel @Inject constructor(
         existing = transaction
         val used = setOfNotNull(transaction?.accountId, transaction?.toAccountId)
         // Archived accounts and categories are hidden unless the edited transaction uses them.
-        val accountList = accounts.observeAccounts(includeArchived = true).first()
-            .filter { !it.archived || it.id in used }
+        val withBalances = accounts.observeAccountsWithBalance(includeArchived = true).first()
+            .filter { !it.account.archived || it.account.id in used }
+        val accountList = withBalances.map { it.account }
+        val balances = withBalances.associate { it.account.id to moneyFormat.format(it.balance) }
         accountsById = accountList.associateBy { it.id }
         allCategories = categories.observeCategories(includeArchived = true).first()
             .filter { !it.archived || it.id == transaction?.categoryId }
 
         val today = clock.now().toLocalDateTime(timeZone).date
         val recent = transactions.observeTransactions().first()
+        recentCategoryIds = recent.mapNotNull { it.categoryId }.distinct()
         val base = TransactionEditUiState(
-            accounts = accountList.map { it.toOption() },
+            accounts = accountList.map { it.toOption(balances[it.id].orEmpty()) },
+            recentAccountIds = recent.map { it.accountId }.distinct().filter { it in accountsById }.take(RECENT_ACCOUNTS),
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
         )
         val loaded = if (transaction == null) newForm(base, accountList, recent) else formOf(transaction, base)
-        _state.value = loaded.withCategoryOptions(allCategories)
+        _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     /** A new transaction starts on today and on the account used last. */
@@ -113,6 +124,8 @@ class TransactionEditViewModel @Inject constructor(
             type = initialType,
             accountId = lastAccount?.takeIf { it in accountsById } ?: accountList.firstOrNull()?.id,
             date = base.today,
+            // Owner 2026-11-09: the account is chosen first, even when the last one is preselected.
+            step = TransactionEditUiState.EntryStep.ACCOUNT,
         )
     }
 
@@ -136,7 +149,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, categoryError = false, toAccountError = null).withCategoryOptions(allCategories)
+        it.copy(type = type, categoryError = false, toAccountError = null).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onAmountChange(value: String) = _state.update {
@@ -145,15 +158,45 @@ class TransactionEditViewModel @Inject constructor(
 
     fun onToAmountChange(value: String) = _state.update { it.copy(toAmount = value, toAmountError = null) }
 
+    /** On the account step a tap also moves on: to the target account of a transfer, else to the amount. */
     fun onAccountSelect(id: String) = updateForm {
-        it.copy(accountId = id, accountError = false, amountError = null, toAccountError = null, receiptCurrencyError = null)
+        it.copy(
+            accountId = id,
+            accountError = false,
+            amountError = null,
+            toAccountError = null,
+            receiptCurrencyError = null,
+            step = it.step.afterAccount(it.isTransfer),
+            keypadTarget = KeypadTarget.AMOUNT,
+        )
     }
 
-    fun onToAccountSelect(id: String) = _state.update { it.copy(toAccountId = id, toAccountError = null) }
+    fun onToAccountSelect(id: String) = _state.update {
+        val step = if (it.step == EntryStep.TO_ACCOUNT) EntryStep.DETAILS else it.step
+        it.copy(toAccountId = id, toAccountError = null, step = step)
+    }
+
+    fun onStepChange(step: EntryStep) = _state.update { it.copy(step = step) }
+
+    fun onKeypadTarget(target: KeypadTarget) = _state.update { it.copy(keypadTarget = target) }
+
+    /** A keypad key types into [TransactionEditUiState.keypadTarget]; «Готово» saves. */
+    fun onKey(key: KeypadKey) {
+        val current = _state.value
+        if (key == KeypadKey.Done) return save()
+        when (current.keypadTarget) {
+            KeypadTarget.AMOUNT ->
+                onAmountChange(AmountKeys.apply(current.amount, key, current.account?.fractionDigits ?: 2))
+            KeypadTarget.TO_AMOUNT ->
+                onToAmountChange(AmountKeys.apply(current.toAmount, key, current.toAccount?.fractionDigits ?: 2))
+            KeypadTarget.RECEIPT ->
+                onReceiptAmountChange(AmountKeys.apply(current.receiptAmount, key, fractionDigitsOf(current.receiptCurrency)))
+        }
+    }
 
     /** Selecting a folder selects the folder itself and opens its subcategories. */
     fun onCategorySelect(id: String) = _state.update {
-        it.copy(categoryId = id, categoryError = false).withCategoryOptions(allCategories)
+        it.copy(categoryId = id, categoryError = false).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }
@@ -167,7 +210,14 @@ class TransactionEditViewModel @Inject constructor(
     /** Turning the receipt on preselects the last receipt currency that differs from the account's. */
     fun onReceiptToggle(enabled: Boolean) = updateForm {
         val currency = it.receiptCurrency.ifEmpty { it.receiptCurrencyChoices.firstOrNull().orEmpty() }
-        it.copy(receiptEnabled = enabled, receiptCurrency = currency, receiptCurrencyError = null, receiptAmountError = null)
+        it.copy(
+            receiptEnabled = enabled,
+            receiptCurrency = currency,
+            receiptCurrencyError = null,
+            receiptAmountError = null,
+            // The receipt amount is what one reads off the paper first; «списано» follows by the rate.
+            keypadTarget = if (enabled) KeypadTarget.RECEIPT else KeypadTarget.AMOUNT,
+        )
     }
 
     fun onReceiptCurrencyChange(value: String) = updateForm {
@@ -238,6 +288,13 @@ class TransactionEditViewModel @Inject constructor(
             copy(receiptCurrencyError = TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT)
     }
 
-    private fun Account.toOption() =
-        AccountOption(id, name, currency.value)
+    private fun Account.toOption(balance: String) =
+        AccountOption(id, name, currency.value, type, color, balance, Currencies.info(currency).fractionDigits)
+
+    private fun fractionDigitsOf(code: String): Int =
+        CurrencyCode.parseOrNull(code)?.let { Currencies.info(it).fractionDigits } ?: 2
+
+    private companion object {
+        const val RECENT_ACCOUNTS = 4
+    }
 }

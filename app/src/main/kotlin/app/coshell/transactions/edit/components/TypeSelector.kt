@@ -14,9 +14,9 @@ import app.coshell.core.model.TransactionType
 
 /** Expense / income / transfer switch at the top of the form. */
 @Composable
-internal fun TypeSelector(selected: TransactionType, onSelect: (TransactionType) -> Unit) {
+internal fun TypeSelector(selected: TransactionType, onSelect: (TransactionType) -> Unit, modifier: Modifier = Modifier) {
     val types = TransactionType.entries
-    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+    SingleChoiceSegmentedButtonRow(modifier.fillMaxWidth()) {
         types.forEachIndexed { index, type ->
             CoShellSegmentedButton(
                 selected = type == selected,

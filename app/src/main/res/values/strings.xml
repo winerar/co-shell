@@ -50,6 +50,23 @@
     <string name="accounts_show_archived">Показать архивные (%1$d)</string>
     <string name="accounts_hide_archived">Скрыть архивные (%1$d)</string>
 
+    <string name="account_group_card">Карты и банки</string>
+    <string name="account_group_crypto">Крипто</string>
+    <string name="account_group_cash">Наличные</string>
+    <string name="account_group_deposit">Вклады</string>
+    <string name="account_group_other">Другое</string>
+    <string name="picker_recent">Недавние</string>
+    <string name="picker_search">Найти счёт</string>
+    <string name="picker_nothing">Ничего не нашлось</string>
+    <string name="picker_from_expense">Откуда списали?</string>
+    <string name="picker_to_income">Куда пришло?</string>
+    <string name="picker_from_transfer">Откуда перевод?</string>
+    <string name="picker_to_transfer">Куда перевод?</string>
+    <string name="keypad_done">Готово</string>
+    <string name="keypad_backspace">Стереть</string>
+    <string name="transaction_change_account">Сменить счёт</string>
+    <string name="transaction_note_add">Заметка</string>
+    <string name="transaction_receipt_chip">Чек в другой валюте</string>
     <string name="account_type_cash">Наличные</string>
     <string name="account_type_card">Карта</string>
     <string name="account_type_deposit">Вклад</string>

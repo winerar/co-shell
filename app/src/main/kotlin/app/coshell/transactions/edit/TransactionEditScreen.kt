@@ -1,151 +1,97 @@
 package app.coshell.transactions.edit
 
-import app.coshell.core.designsystem.components.CoShellTextField
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
-import app.coshell.core.designsystem.motion.CoShellExpandable
+import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
-import app.coshell.transactions.edit.components.AccountChips
-import app.coshell.transactions.edit.components.AmountField
-import app.coshell.transactions.edit.components.CategoryChips
-import app.coshell.transactions.edit.components.ReceiptSection
+import app.coshell.core.model.TransactionType
+import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
+import app.coshell.transactions.edit.components.AccountPicker
+import app.coshell.transactions.edit.components.DetailsStep
 import app.coshell.transactions.edit.components.TypeSelector
-import app.coshell.ui.form.DateChips
-import app.coshell.ui.form.DeleteButton
-import app.coshell.core.designsystem.components.CoShellSection
-import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.sheet.EditSheetLayout
 
 /**
- * Form order follows how people think about a purchase: type → amount → account → category → date.
- * Each block is a component in `components/`; this file only arranges them.
+ * Entry sheet in two steps (owner 2026-11-09): 1) type and account — «откуда списали / куда пришло»,
+ * for a transfer then «куда»; 2) amount on the own keypad, category, date. Steps slide sideways in the
+ * direction of travel, the sheet resizes with the same spring. An edited operation opens on step 2.
  */
 @Composable
 fun TransactionEditScreen(state: TransactionEditUiState, actions: TransactionEditActions) {
-    EditSheetLayout(
-        title = stringResource(if (state.isNew) R.string.transaction_edit_title_new else R.string.transaction_edit_title),
-        onSave = actions.onSave,
-        saveEnabled = !state.isLoading,
-        showSave = !state.isLoading && state.accounts.isNotEmpty(),
-    ) {
-        if (state.isLoading) return@EditSheetLayout
-        if (state.accounts.isEmpty()) {
-            NoAccounts(actions.onAddAccount)
-            return@EditSheetLayout
+    if (state.isLoading) {
+        Box(Modifier.fillMaxWidth().height(Sizes.heroRing))
+        return
+    }
+    if (state.accounts.isEmpty()) {
+        EditSheetLayout(title = stringResource(R.string.transaction_edit_title_new), onSave = {}, showSave = false) {
+            Text(
+                stringResource(R.string.transaction_no_accounts),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            CoShellButton(onClick = actions.onAddAccount) { Text(stringResource(R.string.accounts_add)) }
         }
-        TransactionForm(state, actions)
-        // Deleted at once; «Отменить» appears in the snackbar after the sheet closes.
-        if (!state.isNew) DeleteButton(onClick = actions.onDelete)
+        return
     }
-}
-
-@Composable
-private fun TransactionForm(state: TransactionEditUiState, actions: TransactionEditActions) {
-    val amountFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { if (state.isNew) amountFocus.requestFocus() }
-
-    TypeSelector(state.type, actions.onTypeChange)
-
-    // Parts that depend on the type or the accounts unfold and fold (issue #64) instead of jumping. Each
-    // sits in a column that always shows something, so the sheet's gaps between blocks stay put.
-    Column {
-        AmountField(
-            value = state.amount,
-            onValueChange = actions.onAmountChange,
-            label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
-            currencyCode = state.account?.currency,
-            error = state.amountError,
-            hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
-                stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
-            },
-            modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
-        )
-        CoShellExpandable(!state.isTransfer) { ReceiptSection(state, actions, Modifier.padding(top = Spacing.l)) }
-    }
-
-    CoShellSection(
-        title = stringResource(if (state.isTransfer) R.string.transaction_from_account else R.string.transaction_account),
-        error = if (state.accountError) stringResource(R.string.transaction_account_required) else null,
-    ) {
-        AccountChips(state.accounts, state.accountId, actions.onAccountSelect)
-    }
-
-    // Transfer ↔ expense/income: the target account and the category swap places by folding.
-    Column {
-        CoShellExpandable(state.isTransfer) { TransferTarget(state, actions) }
-        CoShellExpandable(!state.isTransfer) {
-            CoShellSection(
-                title = stringResource(R.string.transaction_category),
-                error = if (state.categoryError) stringResource(R.string.transaction_category_required) else null,
-            ) {
-                CategoryChips(state.categories, state.categoryId, state.openFolderId, actions.onCategorySelect)
+    AnimatedContent(
+        targetState = state.step,
+        transitionSpec = { stepTransition() },
+        label = "entryStep",
+    ) { step ->
+        when (step) {
+            EntryStep.ACCOUNT -> Column {
+                TypeSelector(state.type, actions.onTypeChange, Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.m))
+                AccountPicker(
+                    title = stringResource(fromTitle(state.type)),
+                    accounts = state.accounts,
+                    recentIds = state.recentAccountIds,
+                    selectedId = state.accountId,
+                    onSelect = actions.onAccountSelect,
+                )
             }
+            EntryStep.TO_ACCOUNT -> AccountPicker(
+                title = stringResource(R.string.picker_to_transfer),
+                accounts = state.accounts,
+                recentIds = state.recentAccountIds,
+                selectedId = state.toAccountId,
+                onSelect = actions.onToAccountSelect,
+                excludeId = state.accountId,
+            )
+            EntryStep.DETAILS -> DetailsStep(state, actions)
         }
     }
-
-    CoShellSection(stringResource(R.string.transaction_date)) {
-        DateChips(state.date, state.today, state.dateMillisUtc, actions.onDateSelect, actions.onDatePicked)
-    }
-
-    CoShellTextField(
-        value = state.note,
-        onValueChange = actions.onNoteChange,
-        label = stringResource(R.string.transaction_note),
-        singleLine = false,
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-    )
 }
 
-/** Target account of a transfer and, between currencies, the arriving amount. */
-@Composable
-private fun TransferTarget(state: TransactionEditUiState, actions: TransactionEditActions) {
-    CoShellSection(
-        title = stringResource(R.string.transaction_to_account),
-        error = when (state.toAccountError) {
-            ToAccountError.REQUIRED -> stringResource(R.string.transaction_account_required)
-            ToAccountError.SAME_ACCOUNT -> stringResource(R.string.transaction_to_account_same)
-            null -> null
-        },
-    ) {
-        AccountChips(state.accounts, state.toAccountId, actions.onToAccountSelect)
-    }
-    val toAccount = state.toAccount
-    // Between currencies the arriving amount unfolds under the account chips.
-    CoShellExpandable(state.needsToAmount && toAccount != null) {
-        if (toAccount == null) return@CoShellExpandable
-        AmountField(
-            value = state.toAmount,
-            onValueChange = actions.onToAmountChange,
-            label = stringResource(R.string.transaction_to_amount),
-            currencyCode = toAccount.currency,
-            error = state.toAmountError,
-            hint = stringResource(R.string.transaction_to_amount_hint, toAccount.name),
-            modifier = Modifier.fillMaxWidth().padding(top = Spacing.l),
-        )
-    }
+private fun fromTitle(type: TransactionType): Int = when (type) {
+    TransactionType.EXPENSE -> R.string.picker_from_expense
+    TransactionType.INCOME -> R.string.picker_to_income
+    TransactionType.TRANSFER -> R.string.picker_from_transfer
 }
 
-@Composable
-private fun NoAccounts(onAddAccount: () -> Unit) {
-    Text(
-        stringResource(R.string.transaction_no_accounts),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
-    CoShellButton(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
+/** Forward — the new step comes from the right; back — from the left. A third of the width, plus a fade. */
+private fun AnimatedContentTransitionScope<EntryStep>.stepTransition(): ContentTransform {
+    val forward = targetState.ordinal > initialState.ordinal
+    val enter = slideInHorizontally(Motion.Placement) { if (forward) it / 3 else -it / 3 } + fadeIn(Motion.effects())
+    val exit = slideOutHorizontally(Motion.Placement) { if (forward) -it / 3 else it / 3 } + fadeOut(Motion.effectsFast())
+    return (enter togetherWith exit).using(SizeTransform(clip = false) { _, _ -> Motion.Resize })
 }

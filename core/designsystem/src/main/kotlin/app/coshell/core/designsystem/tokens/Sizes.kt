@@ -28,4 +28,8 @@ object Sizes {
     val miniBarsHeight = 32.dp
     /** Lowest visible bar: a day with little spending still shows; a day with none is a dot of this height. */
     val miniBarMin = 2.dp
+    /** Key of the amount keypad in the entry sheet: big enough to hit with a thumb without looking. */
+    val keypadKey = 56.dp
+    /** Account tile in the account picker grid (badge, name, balance). */
+    val accountTile = 96.dp
 }

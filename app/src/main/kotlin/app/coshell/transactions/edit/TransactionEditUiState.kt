@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.model.AccountType
 import app.coshell.core.model.TransactionType
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -46,8 +47,28 @@ data class TransactionEditUiState(
     val categoryError: Boolean = false,
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
+    /** Which part of the two-step sheet is shown: a new operation starts on the account. */
+    val step: EntryStep = EntryStep.DETAILS,
+    /** Accounts of the latest operations, newest first (at most 4) — the top row of the picker. */
+    val recentAccountIds: List<String> = emptyList(),
+    /** Which amount the keypad types into. */
+    val keypadTarget: KeypadTarget = KeypadTarget.AMOUNT,
 ) {
-    data class AccountOption(val id: String, val name: String, val currency: String)
+    data class AccountOption(
+        val id: String,
+        val name: String,
+        val currency: String,
+        val type: AccountType = AccountType.OTHER,
+        val color: Long? = null,
+        /** Formatted balance for the picker tile, `""` — unknown. */
+        val balance: String = "",
+        val fractionDigits: Int = 2,
+    )
+
+    /** Steps of the entry sheet (owner 2026-11-09: account first, then amount and category). */
+    enum class EntryStep { ACCOUNT, TO_ACCOUNT, DETAILS }
+
+    enum class KeypadTarget { AMOUNT, TO_AMOUNT, RECEIPT }
 
     data class CategoryItem(val id: String, val name: String, val icon: String? = null, val color: Long? = null)
 
@@ -79,4 +100,11 @@ data class TransactionEditUiState(
 
     /** [date] as UTC midnight millis — the format of Material's DatePicker. */
     val dateMillisUtc: Long get() = date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+}
+
+/** Where the sheet goes after an account is picked on [this] step. */
+internal fun TransactionEditUiState.EntryStep.afterAccount(isTransfer: Boolean): TransactionEditUiState.EntryStep = when {
+    this != TransactionEditUiState.EntryStep.ACCOUNT -> this
+    isTransfer -> TransactionEditUiState.EntryStep.TO_ACCOUNT
+    else -> TransactionEditUiState.EntryStep.DETAILS
 }

@@ -6,6 +6,7 @@ import app.coshell.core.domain.feedback.FeedbackReport
 import app.coshell.core.domain.feedback.FeedbackResult
 import app.coshell.core.domain.feedback.FeedbackSender
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
+import app.coshell.feedback.data.InMemoryFeedbackHistory
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -26,7 +27,22 @@ class FeedbackViewModelTest {
     private val device = object : DeviceInfoProvider {
         override suspend fun deviceInfo() = DeviceInfo("0.1.0", 27, "Google Pixel 8", "Android 15 (API 35)", "id")
     }
-    private val vm = FeedbackViewModel(SendFeedbackUseCase(sender, device, clock))
+    // Lazy: the ViewModel starts collecting the history in init, after MainDispatcherRule is in place.
+    private val vm by lazy { FeedbackViewModel(SendFeedbackUseCase(sender, device, clock)) }
+
+    @Test
+    fun `kind goes in front of the text and the sent message is remembered`() {
+        val history = InMemoryFeedbackHistory()
+        val vm = FeedbackViewModel(SendFeedbackUseCase(sender, device, clock), history, clock)
+        vm.onKind(FeedbackKind.IDEA)
+        vm.onTextChange(" Итог дня ")
+        vm.send("Идея")
+        assertEquals(listOf("Идея: Итог дня"), sender.sent.map { it.text })
+        assertEquals(listOf("Идея: Итог дня"), vm.state.value.history.map { it.text })
+        assertTrue(vm.state.value.justSent)
+        vm.onWriteMore()
+        assertFalse(vm.state.value.justSent)
+    }
 
     @Test
     fun `send is disabled for blank text`() {
@@ -42,7 +58,7 @@ class FeedbackViewModelTest {
         vm.send()
 
         assertEquals(listOf("Нет итога за день"), sender.sent.map { it.text })
-        assertEquals(FeedbackUiState(text = "", result = FeedbackResult.Sent), vm.state.value)
+        assertEquals(FeedbackUiState(text = "", result = FeedbackResult.Sent), vm.state.value.copy(history = emptyList()))
     }
 
     @Test

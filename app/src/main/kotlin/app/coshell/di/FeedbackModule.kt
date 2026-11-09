@@ -5,6 +5,8 @@ import app.coshell.core.domain.feedback.DeviceInfoProvider
 import app.coshell.core.domain.feedback.FeedbackSender
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.data.AndroidDeviceInfoProvider
+import app.coshell.feedback.data.FeedbackHistory
+import app.coshell.feedback.data.PrefsFeedbackHistory
 import app.coshell.feedback.data.FirestoreFeedbackSender
 import dagger.Binds
 import dagger.Module
@@ -18,6 +20,8 @@ import kotlin.time.Clock
 @InstallIn(SingletonComponent::class)
 interface FeedbackModule {
     @Binds fun bindDeviceInfo(impl: AndroidDeviceInfoProvider): DeviceInfoProvider
+
+    @Binds fun bindHistory(impl: PrefsFeedbackHistory): FeedbackHistory
 
     companion object {
         /** Empty in local builds: CI sets `FIREBASE_PROJECT_ID` and `FIREBASE_API_KEY`. */

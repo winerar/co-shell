@@ -217,6 +217,8 @@
     <string name="backup_error_write">Не удалось записать файл. Попробуйте другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
+    <string name="categories_menu_hint">Папки, иконки и цвета</string>
+    <string name="backup_menu_hint">Сохранить или восстановить данные</string>
     <string name="feedback_menu_hint">Сообщить об ошибке или предложить идею</string>
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
     <string name="shake_to_add_hint">Встряхните телефон, пока открыто приложение</string>
@@ -240,6 +242,17 @@
     <string name="feedback_intro">Опишите, что не работает или чего не хватает. Версия приложения и модель телефона добавятся сами — писать их не нужно.</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>
+    <string name="feedback_kind_bug">Ошибка</string>
+    <string name="feedback_kind_idea">Идея</string>
+    <string name="feedback_kind_design">Дизайн</string>
+    <string name="feedback_kind_other">Другое</string>
+    <string name="feedback_prompt_bug">Что случилось и где?</string>
+    <string name="feedback_prompt_idea">Что добавить или упростить?</string>
+    <string name="feedback_prompt_design">Что выглядит не так?</string>
+    <string name="feedback_prompt_other">Напишите как удобно</string>
+    <string name="feedback_sent_title">Отправленные</string>
+    <string name="feedback_sent_explain">Сообщение станет задачей разработки в течение нескольких часов.</string>
+    <string name="feedback_write_more">Написать ещё</string>
     <string name="feedback_send">Отправить</string>
     <string name="feedback_result_sent">Спасибо! Сообщение отправлено.</string>
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>

@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
         today: LocalDate,
     ): HomeUiState {
         val book = RateBook(rates)
-        val balances = accounts.map { it.balance }
+        val balances = accounts.filterNot { it.account.excludedFromTotal }.map { it.balance }
         val totals = book.balanceTotals(balances, currencies, today)
         val spending = book.expenseTotals(monthTransactions, currencies, timeZone)
         val byCurrency = balances.groupBy { it.currency }
@@ -81,7 +81,9 @@ class HomeViewModel @Inject constructor(
                 converted = monthTransactions.any { t -> t.type == TransactionType.EXPENSE && currencies.any { it != t.amount.currency } },
             ),
             accounts = accounts.map { (account, balance) ->
-                HomeUiState.AccountRow(account.id, account.name, moneyFormat.format(balance), balance.isNegative)
+                HomeUiState.AccountRow(
+                    account.id, account.name, moneyFormat.format(balance), balance.isNegative, account.excludedFromTotal,
+                )
             },
         )
     }

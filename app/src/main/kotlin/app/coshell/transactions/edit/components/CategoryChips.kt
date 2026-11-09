@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,9 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
 
@@ -41,10 +41,10 @@ internal fun CategoryChips(
         )
         return
     }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             groups.forEach { group ->
-                FilterChip(
+                CoShellFilterChip(
                     selected = group.item.id == selectedId || group.item.id == openFolderId,
                     onClick = { onSelect(group.item.id) },
                     label = { Text(group.item.name) },
@@ -58,9 +58,9 @@ internal fun CategoryChips(
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             folder.children.forEach { child ->
-                FilterChip(
+                CoShellFilterChip(
                     selected = child.id == selectedId,
                     onClick = { onSelect(child.id) },
                     label = { Text(child.name) },

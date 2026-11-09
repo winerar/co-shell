@@ -27,6 +27,8 @@ data class TransactionsUiState(
         /** Category icon key and colour; both null for transfers and missing categories. */
         val icon: String? = null,
         val color: Long? = null,
+        /** Who added it — only for the other family member's operations. */
+        val author: String? = null,
     )
 
     enum class Kind { EXPENSE, INCOME, TRANSFER }

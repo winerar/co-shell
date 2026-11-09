@@ -1,5 +1,6 @@
 package app.coshell.backup
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,9 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.backup.auto.AutoBackupUiState
+import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.list.ActionRow
 import app.coshell.core.designsystem.R as DesignR
@@ -29,13 +31,13 @@ import app.coshell.core.designsystem.R as DesignR
 /** "More → Backup": explanation, "Save a copy", "Restore from a copy", and the last result. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackupScreen(state: BackupUiState, actions: BackupActions) {
+fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupUiState = AutoBackupUiState()) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.backup_title)) },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    CoShellIconButton(onClick = actions.onBack) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },
@@ -44,13 +46,13 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions) {
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             Text(
                 stringResource(R.string.backup_intro),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
             )
             ActionRow(
                 icon = DesignR.drawable.ic_file_save,
@@ -67,9 +69,10 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions) {
                 enabled = !state.isBusy,
             )
             if (state.isBusy) {
-                LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = Spacing.l))
             }
-            state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = 16.dp)) }
+            state.message?.let { BackupMessageCard(it, Modifier.padding(horizontal = Spacing.l)) }
+            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
         }
     }
 

@@ -1,0 +1,30 @@
+name: Signing fingerprints
+
+# Manual run: prints SHA-1/SHA-256 of the release and debug signing certificates.
+# Needed once for Google sign-in (Firebase → Project settings → Android app → SHA certificate
+# fingerprints), see docs/setup/sync.md. Fingerprints are public, the key itself is not printed.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fingerprints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Print fingerprints
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        run: |
+          echo "## Release (app.coshell)" >> "$GITHUB_STEP_SUMMARY"
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          keytool -list -v -keystore "$RUNNER_TEMP/release.jks" -storepass "$RELEASE_KEYSTORE_PASSWORD" \
+            -alias "$RELEASE_KEY_ALIAS" | grep -E "SHA1:|SHA256:" | tee -a "$GITHUB_STEP_SUMMARY"
+          rm "$RUNNER_TEMP/release.jks"
+          echo "## Debug (app.coshell.debug)" >> "$GITHUB_STEP_SUMMARY"
+          keytool -list -v -keystore app/debug.keystore -storepass android -alias androiddebugkey \
+            | grep -E "SHA1:|SHA256:" | tee -a "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,6 @@
 package app.coshell.update
 
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,8 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.update.components.UpdatePhaseContent
 import app.coshell.core.designsystem.R as DesignR
 
@@ -31,7 +31,7 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             TopAppBar(
                 title = { Text(stringResource(R.string.update_title)) },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    CoShellIconButton(onClick = actions.onBack) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },
@@ -43,8 +43,8 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = Spacing.l, vertical = Spacing.s),
+            verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             Text(
                 stringResource(R.string.update_installed, state.installedVersionName, state.installedVersionCode),

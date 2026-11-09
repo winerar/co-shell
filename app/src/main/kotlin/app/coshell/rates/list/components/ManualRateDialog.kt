@@ -1,74 +1,61 @@
 package app.coshell.rates.list.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellDialog
+import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSection
+import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CodeKeyboard
+import app.coshell.core.designsystem.theme.RateTextStyle
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.rates.list.ManualRateActions
 import app.coshell.rates.list.ManualRateForm
 import app.coshell.ui.form.DateChips
-import app.coshell.ui.form.FormHint
-import app.coshell.ui.form.FormSection
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 
 /** "1 [USD] costs [1 450] [ARS], from [date]" — adds or edits a manual rate. */
 @Composable
 internal fun ManualRateDialog(form: ManualRateForm, actions: ManualRateActions) {
-    AlertDialog(
-        onDismissRequest = actions.onDismiss,
-        title = { Text(stringResource(R.string.rates_manual_title)) },
-        text = {
-            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    CurrencyField(form.from, R.string.rates_manual_from, form.fromError, actions.onFromChange, Modifier.weight(1f))
-                    CurrencyField(form.to, R.string.rates_manual_to, form.toError, actions.onToChange, Modifier.weight(1f))
-                }
-                OutlinedTextField(
-                    value = form.rate,
-                    onValueChange = actions.onRateChange,
-                    label = { Text(stringResource(R.string.rates_manual_rate)) },
-                    prefix = { Text("1 ${form.from} = ") },
-                    suffix = { Text(form.to) },
-                    isError = form.rateError,
-                    supportingText = if (form.rateError) {
-                        { Text(stringResource(R.string.rates_manual_rate_error)) }
-                    } else {
-                        null
-                    },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                FormSection(stringResource(R.string.rates_manual_date)) {
-                    DateChips(
-                        date = form.date,
-                        today = form.today,
-                        dateMillisUtc = form.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds(),
-                        onSelect = actions.onDateSelect,
-                        onPicked = actions.onDatePicked,
-                    )
-                    FormHint(stringResource(R.string.rates_manual_hint))
-                }
-            }
-        },
-        confirmButton = { TextButton(onClick = actions.onSave) { Text(stringResource(R.string.action_save)) } },
-        dismissButton = { TextButton(onClick = actions.onDismiss) { Text(stringResource(R.string.action_cancel)) } },
-    )
+    CoShellDialog(
+        title = stringResource(R.string.rates_manual_title),
+        confirmLabel = stringResource(R.string.action_save),
+        onConfirm = actions.onSave,
+        onDismiss = actions.onDismiss,
+        dismissLabel = stringResource(R.string.action_cancel),
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            CurrencyField(form.from, R.string.rates_manual_from, form.fromError, actions.onFromChange, Modifier.weight(1f))
+            CurrencyField(form.to, R.string.rates_manual_to, form.toError, actions.onToChange, Modifier.weight(1f))
+        }
+        CoShellTextField(
+            value = form.rate,
+            onValueChange = actions.onRateChange,
+            label = stringResource(R.string.rates_manual_rate),
+            prefix = "1 ${form.from} = ",
+            suffix = form.to,
+            error = if (form.rateError) stringResource(R.string.rates_manual_rate_error) else null,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            textStyle = RateTextStyle,
+        )
+        CoShellSection(stringResource(R.string.rates_manual_date)) {
+            DateChips(
+                date = form.date,
+                today = form.today,
+                dateMillisUtc = form.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds(),
+                onSelect = actions.onDateSelect,
+                onPicked = actions.onDatePicked,
+            )
+            CoShellHint(stringResource(R.string.rates_manual_hint))
+        }
+    }
 }
 
 @Composable
@@ -79,18 +66,16 @@ private fun CurrencyField(
     onChange: (String) -> Unit,
     modifier: Modifier,
 ) {
-    OutlinedTextField(
+    CoShellTextField(
         value = value,
         onValueChange = onChange,
-        label = { Text(stringResource(label)) },
-        isError = error != null,
-        supportingText = when (error) {
+        label = stringResource(label),
+        error = when (error) {
             null -> null
-            ManualRateForm.CurrencyError.INVALID -> { { Text(stringResource(R.string.rates_manual_currency_error)) } }
-            ManualRateForm.CurrencyError.SAME -> { { Text(stringResource(R.string.rates_manual_same_error)) } }
+            ManualRateForm.CurrencyError.INVALID -> stringResource(R.string.rates_manual_currency_error)
+            ManualRateForm.CurrencyError.SAME -> stringResource(R.string.rates_manual_same_error)
         },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+        keyboardOptions = CodeKeyboard,
         modifier = modifier,
     )
 }

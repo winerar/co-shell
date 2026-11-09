@@ -1,10 +1,94 @@
 rules_version = '2';
 
 // Firestore security rules for co-shell. Paste into Firebase console → Firestore → Rules
-// (docs/setup/feedback.md). Everything not listed here is denied.
-// Stage 4 (sync) will add family data with access only for family members.
+// (docs/setup/sync.md). Everything not listed here is denied.
+// Tests: scripts/test-rules.sh (emulator, firebase/rules-test/).
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function familyDoc(fid) {
+      return get(/databases/$(database)/documents/families/$(fid));
+    }
+
+    function isMember(fid) {
+      return signedIn() && exists(/databases/$(database)/documents/families/$(fid))
+             && request.auth.uid in familyDoc(fid).data.memberUids;
+    }
+
+    // Verified Google email of the caller, lower-case — the id of their invitation.
+    function myEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    function hasVerifiedEmail() {
+      return signedIn() && request.auth.token.email != null && request.auth.token.email_verified == true;
+    }
+
+    function isInvited(fid) {
+      return hasVerifiedEmail()
+             && exists(/databases/$(database)/documents/invites/$(myEmail()))
+             && get(/databases/$(database)/documents/invites/$(myEmail())).data.familyId == fid;
+    }
+
+    function memberEntry(m) {
+      return m.keys().hasOnly(['name', 'email']) && m.name is string && m.name.size() <= 100
+             && m.email is string && m.email.size() <= 200;
+    }
+
+    // One family per project (FamilyRemote.FAMILY_ID): whoever creates it first is the owner;
+    // everyone else can get in only by invitation (issue #34).
+    match /families/{fid} {
+      allow read: if (signedIn() && request.auth.uid in resource.data.memberUids) || isInvited(fid);
+
+      allow create: if fid == 'main' && signedIn()
+                    && request.resource.data.keys().hasOnly(['ownerUid', 'memberUids', 'members', 'createdAt'])
+                    && request.resource.data.ownerUid == request.auth.uid
+                    && request.resource.data.memberUids == [request.auth.uid]
+                    && request.resource.data.members.keys().hasOnly([request.auth.uid])
+                    && memberEntry(request.resource.data.members[request.auth.uid])
+                    && request.resource.data.createdAt == request.time;
+
+      // Joining: an invited user adds only themselves.
+      allow update: if isInvited(fid)
+                    && !(request.auth.uid in resource.data.memberUids)
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'members'])
+                    && request.resource.data.memberUids.toSet() == resource.data.memberUids.toSet().union([request.auth.uid].toSet())
+                    && request.resource.data.members.diff(resource.data.members).affectedKeys().hasOnly([request.auth.uid])
+                    && memberEntry(request.resource.data.members[request.auth.uid]);
+
+      // Budget data: one document per row (FirestoreRemoteStore). Rows are never deleted —
+      // deletion is a tombstone (`deleted: true`), so the other phone learns about it.
+      match /records/{key} {
+        allow read: if isMember(fid);
+        allow create, update: if isMember(fid)
+                    && request.resource.data.keys().hasOnly(['kind', 'id', 'updatedAt', 'updatedBy', 'deleted', 'json', 'serverUpdatedAt'])
+                    && request.resource.data.kind in ['account', 'category', 'transaction', 'budget', 'manualRate']
+                    && request.resource.data.id is string
+                    && key == request.resource.data.kind + '_' + request.resource.data.id
+                    && request.resource.data.updatedAt is int
+                    && (request.resource.data.updatedBy == null || request.resource.data.updatedBy == request.auth.uid)
+                    && request.resource.data.deleted is bool
+                    && request.resource.data.json is string && request.resource.data.json.size() <= 100000
+                    && request.resource.data.serverUpdatedAt == request.time;
+      }
+    }
+
+    // Invitations by Google email (document id = lower-case email).
+    match /invites/{email} {
+      allow get: if (hasVerifiedEmail() && email == myEmail()) || isMember(resource.data.familyId);
+      allow list: if isMember(resource.data.familyId);
+      allow create, update: if isMember(request.resource.data.familyId)
+                    && request.resource.data.keys().hasOnly(['familyId', 'invitedBy', 'createdAt'])
+                    && request.resource.data.invitedBy == request.auth.uid
+                    && request.resource.data.createdAt == request.time
+                    && email == email.lower()
+                    && (resource == null || isMember(resource.data.familyId));
+      allow delete: if isMember(resource.data.familyId) || (hasVerifiedEmail() && email == myEmail());
+    }
 
     // Feedback form: the app (no sign-in) may only CREATE a well-formed message.
     // Nobody can read, change or delete them from the app; the GitHub Action reads them

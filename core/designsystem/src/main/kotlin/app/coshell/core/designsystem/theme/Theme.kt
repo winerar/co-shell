@@ -1,84 +1,74 @@
 package app.coshell.core.designsystem.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.RippleConfiguration
+import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import app.coshell.core.designsystem.motion.LocalTactileLight
+import app.coshell.core.designsystem.tokens.CoShellShapes
 
-private val LightColors = lightColorScheme(
-    primary = Teal40,
-    onPrimary = Color.White,
-    primaryContainer = Teal90,
-    onPrimaryContainer = Teal10,
-    secondary = Sand40,
-    onSecondary = Color.White,
-    secondaryContainer = Sand90,
-    onSecondaryContainer = Sand10,
-    background = Neutral99,
-    onBackground = Neutral10,
-    surface = Neutral99,
-    onSurface = Neutral10,
-    surfaceVariant = Neutral95,
-)
-
-private val DarkColors = darkColorScheme(
-    primary = Teal80,
-    onPrimary = Teal20,
-    primaryContainer = Teal30,
-    onPrimaryContainer = Teal90,
-    secondary = Sand80,
-    onSecondary = Sand20,
-    secondaryContainer = Sand30,
-    onSecondaryContainer = Sand90,
-    background = Neutral10,
-    onBackground = Neutral90,
-    surface = Neutral10,
-    onSurface = Neutral90,
-)
-
+/** Amount colors: income, expense (always with "−" too), transfer (neutral). */
 @Immutable
-data class AmountPalette(val income: Color, val expense: Color)
+data class AmountPalette(val income: Color, val expense: Color, val transfer: Color)
+
+/** Colors for states Material has no slot for. */
+@Immutable
+data class StatusPalette(val warning: Color, val success: Color)
 
 val LocalAmountPalette = staticCompositionLocalOf {
-    AmountPalette(income = AmountColors.IncomeLight, expense = AmountColors.ExpenseLight)
+    AmountPalette(AmountColors.IncomeLight, AmountColors.ExpenseLight, CoShellLightColors.onSurfaceVariant)
 }
 
+val LocalStatusPalette = staticCompositionLocalOf {
+    StatusPalette(StatusColors.WarningLight, StatusColors.SuccessLight)
+}
+
+/** Whether [CoShellTheme] is dark — e.g. to pick a category color's variant. */
+val LocalDarkTheme = staticCompositionLocalOf { false }
+
 /**
- * App theme. Dynamic color (Material You) is off by default so the app looks the same
- * on both family phones; it can be enabled from settings later.
+ * App theme: own neon palette, light and dark. Wallpaper colors (Material You) are not used —
+ * the app looks the same on both family phones. [darkTheme] comes from the theme setting
+ * (system / light / dark).
  */
 @Composable
 fun CoShellTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColors
-        else -> LightColors
-    }
-    val amountPalette = if (darkTheme) {
-        AmountPalette(income = AmountColors.IncomeDark, expense = AmountColors.ExpenseDark)
+    val colorScheme = if (darkTheme) CoShellDarkColors else CoShellLightColors
+    val amounts = if (darkTheme) {
+        AmountPalette(AmountColors.IncomeDark, AmountColors.ExpenseDark, colorScheme.onSurfaceVariant)
     } else {
-        AmountPalette(income = AmountColors.IncomeLight, expense = AmountColors.ExpenseLight)
+        AmountPalette(AmountColors.IncomeLight, AmountColors.ExpenseLight, colorScheme.onSurfaceVariant)
+    }
+    val status = if (darkTheme) {
+        StatusPalette(StatusColors.WarningDark, StatusColors.SuccessDark)
+    } else {
+        StatusPalette(StatusColors.WarningLight, StatusColors.SuccessLight)
     }
 
-    androidx.compose.runtime.CompositionLocalProvider(LocalAmountPalette provides amountPalette) {
+    // Pressed elements catch light: white on graphite, mint on white (motion/Tactile).
+    val tactileLight = if (darkTheme) Color.White else colorScheme.primary
+    // Components we do not wrap (date picker, snackbar) keep a faint mint ripple.
+    val ripple = RippleConfiguration(color = colorScheme.primary, rippleAlpha = RippleAlpha(0.10f, 0.10f, 0.06f, 0.12f))
+    CompositionLocalProvider(
+        LocalAmountPalette provides amounts,
+        LocalStatusPalette provides status,
+        LocalDarkTheme provides darkTheme,
+        LocalTactileLight provides tactileLight,
+        LocalRippleConfiguration provides ripple,
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = CoShellTypography,
+            shapes = CoShellShapes,
             content = content,
         )
     }

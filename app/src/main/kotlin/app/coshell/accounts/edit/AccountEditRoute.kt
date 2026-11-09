@@ -15,11 +15,12 @@ fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltV
     AccountEditScreen(
         state = state,
         actions = AccountEditActions(
-            onBack = onDone,
             onNameChange = viewModel::onNameChange,
             onCurrencyChange = viewModel::onCurrencyChange,
             onTypeChange = viewModel::onTypeChange,
             onInitialBalanceChange = viewModel::onInitialBalanceChange,
+            onIncludedInTotalChange = viewModel::onIncludedInTotalChange,
+            onSharedChange = viewModel::onSharedChange,
             onSave = viewModel::save,
             onToggleArchived = viewModel::toggleArchived,
             onDelete = viewModel::delete,
@@ -30,11 +31,12 @@ fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltV
 
 /** Everything the screen can ask for; defaults make previews short. */
 data class AccountEditActions(
-    val onBack: () -> Unit = {},
     val onNameChange: (String) -> Unit = {},
     val onCurrencyChange: (String) -> Unit = {},
     val onTypeChange: (AccountType) -> Unit = {},
     val onInitialBalanceChange: (String) -> Unit = {},
+    val onIncludedInTotalChange: (Boolean) -> Unit = {},
+    val onSharedChange: (Boolean) -> Unit = {},
     val onSave: () -> Unit = {},
     val onToggleArchived: () -> Unit = {},
     val onDelete: () -> Unit = {},

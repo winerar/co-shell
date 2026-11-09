@@ -34,6 +34,9 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).
 - Data — `core/data/src/jvmTest`, in-memory SQLite (подробности — `database.md`).
 - ViewModel — JUnit + `kotlinx-coroutines-test` в `app/src/test`.
+- Правила Firestore и сквозной синк двух телефонов — в эмуляторе: `scripts/test-rules.sh` (правила) или
+  `scripts/test-rules.sh --kotlin` (+ `FirestoreEmulatorTest`); нужны Node 20+ и Java, эмулятор скачивается
+  сам. Поменял `firestore.rules` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
 - Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` (есть шаг в CI).
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 

@@ -26,6 +26,7 @@ internal fun buildTransactionDays(
     moneyFormat: MoneyFormat,
     timeZone: TimeZone,
     today: LocalDate,
+    authors: Map<String, String> = emptyMap(),
 ): List<Day> {
     val yesterday = today.minus(1, DateTimeUnit.DAY)
     return transactions
@@ -39,7 +40,7 @@ internal fun buildTransactionDays(
                     yesterday -> RelativeDay.YESTERDAY
                     else -> RelativeDay.OTHER
                 },
-                rows = items.map { it.toRow(accountsById, categoriesById, moneyFormat) },
+                rows = items.map { t -> t.toRow(accountsById, categoriesById, moneyFormat).copy(author = t.authorMemberId?.let(authors::get)) },
             )
         }
 }

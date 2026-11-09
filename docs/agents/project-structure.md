@@ -5,14 +5,16 @@ app/                    Android-приложение: Application, MainActivity,
 core/model/             KMP (jvm): Money, валюты, форматирование + доменные сущности
                         (Account, Category, Transaction, Budget), IdGenerator
 core/domain/            KMP (jvm): интерфейсы репозиториев, use cases, категории по умолчанию
-core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап
-core/designsystem/      Android library: тема CoShellTheme, цвета, типографика, общие компоненты
+core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап,
+                        sync/ (SyncEngine), remote/ (Firestore REST), auth/ (Firebase Auth REST), family/
+core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
 scripts/                скрипты CI и инструменты (иконки, файлы обновлений, отзывы → issues) + test_*.py
-scripts/agent/          служебные скрипты агента (начало/конец сессии, проверка, профиль) — notes.md
-firebase/               firestore.rules (вставляются в консоль Firebase вручную)
+scripts/agent/          служебные скрипты агента (начало/конец сессии, check.sh, профиль) — notes.md
+firebase/               firestore.rules (вставляются в консоль вручную), rules-test/ (тесты правил, Node)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
                         whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)
-.github/workflows/      CI (ci.yml), release-ключ (release-key.yml), отзывы → issues (feedback.yml)
+.github/workflows/      CI (ci.yml), release-ключ (release-key.yml), отзывы → issues (feedback.yml),
+                        отпечатки ключей для входа Google (signing-fingerprint.yml)
 gradle/libs.versions.toml  все версии зависимостей и плагинов
 ```
 
@@ -24,7 +26,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Доменная модель, value-класс, чистая логика | `core:model` (`commonMain`) |
 | Use case, интерфейс репозитория | `core:domain` |
 | Room, реализации репозиториев | `core:data/commonMain` |
-| Android-специфичное в data (Context, позже Firestore) | `core:data/androidMain` |
+| Android-специфичное в data (Context) | `core:data/androidMain`; HTTP-клиент и Credential Manager — `app/.../family/data/` |
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент без строк приложения | `core:designsystem` |
 | Общий блок экранов со строками приложения | `app/.../ui/<тема>/`: `ui/form/` (формы, диалоги), `ui/list/` (строки списков) |
@@ -56,6 +58,9 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 `shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
 распознавание толчков — `core:domain/shake/ShakeDetector`.
+`theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
+`data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
+`settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
@@ -74,6 +79,9 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
+Импорт из Wallet (этап 5): разбор CSV — `core:domain/importer/csv/CsvReader` (общий RFC 4180), формат Wallet —
+`core:domain/importer/wallet/` (`WalletCsvParser` → `WalletRecord`/ошибки с номером строки, `WalletTransferMatcher`,
+`WalletSummary`); образец для тестов — `WalletSamples` (копия `docs/samples/wallet-export-sample.csv`).
 
 Аргументы маршрута ViewModel читает из `SavedStateHandle` по имени свойства (не `toRoute()` — так
 работает в unit-тестах без Android). Общее для нескольких экранов — на уровень `<feature>/`
@@ -81,9 +89,11 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 
 ## Переиспользование (пожелание владельца)
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
-компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
-`NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
-`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`, строка-переключатель настройки — `ui/list/SwitchRow`.
+компонентом с параметрами, а не копируй. Шторка-редактор — `CoShellSheet` (дизайн-система) + `ui/sheet/EditSheetLayout`
+(закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, «Отменить» — `undo/UndoCenter`.
+Базовые блоки — в `core:designsystem` `components/` (поля, строки, диалоги, разделы форм, сообщения —
+`design-system.md` §«Компоненты»). Обёртки со строками приложения — `ui/form/`: `EditFooter` (Архив/Удалить),
+`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строка меню — `ui/list/ActionRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

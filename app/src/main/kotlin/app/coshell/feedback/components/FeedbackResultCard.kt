@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.domain.feedback.FeedbackResult
-import app.coshell.ui.form.MessageCard
+import app.coshell.core.designsystem.components.CoShellMessage
 
 /** Outcome of the last send. */
 @Composable
@@ -16,5 +16,5 @@ internal fun FeedbackResultCard(result: FeedbackResult) {
         FeedbackResult.NotConfigured -> stringResource(R.string.feedback_error_not_configured)
         is FeedbackResult.Failed -> stringResource(R.string.feedback_error_failed)
     }
-    MessageCard(text, isError = result != FeedbackResult.Sent)
+    CoShellMessage(text, isError = result != FeedbackResult.Sent)
 }

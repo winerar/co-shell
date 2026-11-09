@@ -37,9 +37,16 @@ class ShakeDetectorTest {
     @Test
     fun `jolts below the threshold are ignored`() {
         val detector = ShakeDetector()
+        assertFalse(detector.at(0, 2.1f))
+        assertFalse(detector.at(200, 2.1f))
+        assertFalse(detector.at(400, 2.1f))
+    }
+
+    @Test
+    fun `a moderate shake is enough`() {
+        val detector = ShakeDetector()
         assertFalse(detector.at(0, 2.5f))
-        assertFalse(detector.at(200, 2.5f))
-        assertFalse(detector.at(400, 2.5f))
+        assertTrue(detector.at(300, 2.5f))
     }
 
     @Test

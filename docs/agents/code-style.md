@@ -21,9 +21,11 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 ## Compose
 - `Screen` принимает state и лямбды, не ViewModel → его можно превьюить и тестировать.
 - У каждого экрана есть `@Preview` в `CoShellTheme`.
-- Цвета и типографика — только из `MaterialTheme` / `LocalAmountPalette`, без хардкода.
-  Отступы, скругления, длительности анимаций — тоже из темы, когда появятся токены (облегчит
-  переезд на дизайн-систему). Производительность Compose — `performance.md`.
+- **В экранах — только компоненты и токены дизайн-системы** (`design-system.md`): кнопки, поля, строки,
+  диалоги, карточки, шторки — `CoShell*`; отступы и размеры — `Spacing`/`Sizes`, анимации — `Motion`,
+  цвета — `MaterialTheme` / `LocalAmountPalette` / `LocalStatusPalette`, текст — `typography`. Голый Material
+  и числа `N.dp` ловят тесты `TactileRuleTest` и `TokensRuleTest`. Нужного компонента нет — добавь его в
+  `core:designsystem`, а не рисуй в экране. Производительность Compose — `performance.md`.
 - Суммы — стилем `AmountTextStyle` (табличные цифры). Крупная сумма — в одну строку с `autoSize`:
   неразрывные пробелы в `Money` иначе рвут строку посреди кода валюты («AR / S»).
 - Edge-to-edge: внешний `Scaffold` (`CoShellNavHost`) поглощает только нижний отступ; строку

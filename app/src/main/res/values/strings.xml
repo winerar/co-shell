@@ -50,6 +50,10 @@
     <string name="account_type">Тип</string>
     <string name="account_initial_balance">Начальный баланс</string>
     <string name="account_initial_balance_hint">Сколько было на счёте до первой записанной операции. Для долга — со знаком минус.</string>
+    <string name="account_included_in_total">Учитывать в общем балансе</string>
+    <string name="account_included_in_total_hint">Выключите для долга или чужих денег — счёт не попадёт в общий баланс на «Обзоре»</string>
+    <string name="account_excluded_from_total">Не в общем балансе</string>
+    <string name="account_excluded_suffix">%1$s · не в общем балансе</string>
     <string name="account_initial_balance_error">Не похоже на сумму</string>
     <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой для этой валюты</string>
     <string name="account_delete_confirm_title">Удалить счёт?</string>
@@ -134,8 +138,6 @@
     <string name="transaction_date_other">Другая дата</string>
     <string name="transaction_note">Заметка</string>
     <string name="transaction_no_accounts">Чтобы записать операцию, сначала добавьте счёт.</string>
-    <string name="transaction_delete_confirm_title">Удалить операцию?</string>
-    <string name="transaction_delete_confirm_text">Баланс счёта пересчитается.</string>
     <string name="action_ok">OK</string>
 
     <string name="backup_title">Резервная копия</string>
@@ -158,6 +160,14 @@
     <string name="feedback_menu_hint">Сообщить об ошибке или предложить идею</string>
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
     <string name="shake_to_add_hint">Встряхните телефон, пока открыто приложение</string>
+    <string name="transaction_deleted">Операция удалена</string>
+    <string name="action_undo">Отменить</string>
+    <string name="settings_title">Настройки</string>
+    <string name="settings_menu_hint">Тема, валюты отчётов, встряхивание, обновление</string>
+    <string name="theme_title">Тема</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает. Версия приложения и модель телефона добавятся сами — писать их не нужно.</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>
@@ -230,4 +240,61 @@
     <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
     <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
     <string name="rates_attribution">Rates By Exchange Rate API</string>
+
+    <string name="account_shared">Общий счёт</string>
+    <string name="account_shared_hint">Выключите для личного счёта — он останется виден всей семье, но с пометкой «личный»</string>
+    <string name="account_personal_mine">личный</string>
+    <string name="account_personal_of">личный · %1$s</string>
+
+    <string name="auto_backup_title">Автоматически раз в неделю</string>
+    <string name="auto_backup_choose">Выбрать папку для автокопий</string>
+    <string name="auto_backup_folder">Папка: %1$s</string>
+    <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
+    <string name="auto_backup_pending">Первая копия скоро появится</string>
+    <string name="auto_backup_last">Последняя копия: %1$s</string>
+    <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
+    <string name="auto_backup_disable">Выключить автокопии</string>
+
+    <!-- Family and sync (Ещё → Семья и синхронизация) -->
+    <string name="family_title">Семья и синхронизация</string>
+    <string name="family_menu_hint">Общий бюджет на двух телефонах</string>
+    <string name="family_not_configured">Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.</string>
+    <string name="family_intro">Войдите через Google, чтобы вести общий бюджет с семьёй. Данные хранятся на телефоне и в облаке Firebase, приложение работает и без интернета. Доступ — только по приглашению.</string>
+    <string name="family_sign_in">Войти через Google</string>
+    <string name="family_sign_in_hint">Выберите свой Google-аккаунт</string>
+    <string name="family_checking">Вы вошли как %1$s. Проверяем доступ…</string>
+    <string name="family_no_access">Вы вошли как %1$s. Доступа к семье нет: попросите участника пригласить этот адрес в «Семья → Пригласить», затем нажмите «Проверить снова».</string>
+    <string name="family_check_again">Проверить снова</string>
+    <string name="family_create">Создать семью</string>
+    <string name="family_create_hint">Только для первого участника. Данные этого телефона станут общими.</string>
+    <string name="family_invited">Вы вошли как %1$s. Вас пригласили в семью.</string>
+    <string name="family_join">Присоединиться к семье</string>
+    <string name="family_join_hint">На телефон загрузится общий бюджет</string>
+    <string name="family_offline">Вы вошли как %1$s. Нет связи с сервером — проверьте интернет.</string>
+    <string name="family_sign_out">Выйти</string>
+    <string name="family_sign_out_hint">Данные останутся на телефоне, синхронизация остановится</string>
+    <string name="family_sync_now">Синхронизировать сейчас</string>
+    <string name="family_never_synced">Ещё не синхронизировано</string>
+    <string name="family_synced_at">Синхронизировано: %1$s</string>
+    <string name="family_synced_pending">Синхронизировано: %1$s · ждут отправки: %2$d</string>
+    <string name="family_members">Участники</string>
+    <string name="family_you">вы</string>
+    <string name="family_owner">создатель семьи</string>
+    <string name="family_invite_pending">Приглашён — ждём входа</string>
+    <string name="family_invite_cancel">Отменить приглашение</string>
+    <string name="family_invite">Пригласить</string>
+    <string name="family_invite_hint">По адресу Google-аккаунта</string>
+    <string name="family_invite_dialog_text">Адрес Google-аккаунта, которым человек войдёт в приложение.</string>
+    <string name="family_invite_email">Email</string>
+    <string name="family_invite_send">Пригласить</string>
+    <string name="family_join_mode_title">На телефоне есть свои операции</string>
+    <string name="family_join_mode_text">Заменить их общим бюджетом семьи (перед этим сохранится копия) или добавить их в семью? Если это одни и те же траты, выберите «Заменить» — иначе будут дубли.</string>
+    <string name="family_join_replace">Заменить</string>
+    <string name="family_join_keep">Добавить в семью</string>
+    <string name="family_msg_sign_in_failed">Не удалось войти через Google. Попробуйте ещё раз.</string>
+    <string name="family_msg_exists">Семья уже создана. Попросите её участника пригласить вас.</string>
+    <string name="family_msg_network">Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.</string>
+    <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
+    <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google этим адресом.</string>
+    <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>
 </resources>

@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 // Exchange rates (schema v2). Dates are ISO `YYYY-MM-DD` text (sorts correctly), rates are
 // `Rate.toPlainString()` text — never REAL (docs/agents/money-and-currency.md).
@@ -13,6 +15,7 @@ import androidx.room.PrimaryKey
  * [id] is derived from date and the unordered pair ([manualRateId]), so the same pair and day
  * is one record on every phone, whichever direction was typed.
  */
+@Serializable
 @Entity(tableName = "manual_rates", indices = [Index("date")])
 data class ManualRateEntity(
     @PrimaryKey val id: String,
@@ -23,7 +26,7 @@ data class ManualRateEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
-    @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
 /** `2026-11-09:ARS:USD` — currencies in alphabetical order. */

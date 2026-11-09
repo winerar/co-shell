@@ -26,10 +26,16 @@ data class AccountEditDestination(val accountId: String? = null) {
 data object MoreDestination
 
 @Serializable
+data object SettingsDestination
+
+@Serializable
 data object CategoriesDestination
 
 @Serializable
 data object BackupDestination
+
+@Serializable
+data object FamilyDestination
 
 @Serializable
 data object UpdateDestination

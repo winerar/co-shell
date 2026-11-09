@@ -1,6 +1,7 @@
 package app.coshell.di
 
 import android.content.Context
+import app.coshell.core.data.auth.AuthManager
 import app.coshell.core.data.backup.JsonBackupRepository
 import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.createCoShellDatabase
@@ -30,6 +31,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlin.time.Clock
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,8 +40,9 @@ object DataModule {
     @Provides @Singleton
     fun provideDatabase(@ApplicationContext context: Context): CoShellDatabase = createCoShellDatabase(context)
 
+    /** Local edits are stamped with the signed-in member (sync, «who added it»). */
     @Provides @Singleton
-    fun provideStamper(): WriteStamper = WriteStamper()
+    fun provideStamper(auth: AuthManager, clock: Clock): WriteStamper = WriteStamper(clock) { auth.uid }
 
     @Provides
     fun provideIdGenerator(): IdGenerator = IdGenerator.Random

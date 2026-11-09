@@ -6,6 +6,8 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
@@ -13,6 +15,7 @@ import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.TimeZone
@@ -30,8 +33,9 @@ class TransactionsViewModelTest {
         val accounts = FakeAccountRepository().apply { saveAccount(Account("card", "Карта", ars)) }
         val transactions = FakeTransactionRepository()
         val vm = TransactionsViewModel(
-            transactions, accounts, FakeCategoryRepository(), MoneyFormat.RU,
+            transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()),
         )
         vm.state.launchIn(backgroundScope)
         assertEquals(emptyList<TransactionsUiState.Day>(), vm.state.first { !it.isLoading }.days)

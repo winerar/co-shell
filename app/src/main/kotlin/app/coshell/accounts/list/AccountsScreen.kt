@@ -60,7 +60,7 @@ fun AccountsScreen(
                 }
                 return@LazyColumn
             }
-            items(state.active, key = { it.id }) { AccountRow(it, onAccountClick) }
+            items(state.active, key = { it.id }) { AccountRow(it, onAccountClick, Modifier.animateItem()) }
             if (state.archived.isEmpty()) return@LazyColumn
             item(key = "archived-toggle") {
                 TextButton(onClick = onToggleArchived) {
@@ -73,7 +73,7 @@ fun AccountsScreen(
                 }
             }
             if (state.showArchived) {
-                items(state.archived, key = { it.id }) { AccountRow(it, onAccountClick) }
+                items(state.archived, key = { it.id }) { AccountRow(it, onAccountClick, Modifier.animateItem()) }
             }
         }
     }

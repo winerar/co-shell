@@ -86,7 +86,14 @@ fun CoShellNavHost(
         // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
         val bottomInset = PaddingValues(bottom = padding.calculateBottomPadding())
         Box(Modifier.padding(bottomInset).consumeWindowInsets(bottomInset)) {
-            NavHost(navController = navController, startDestination = HomeDestination) {
+            NavHost(
+                navController = navController,
+                startDestination = HomeDestination,
+                enterTransition = { screenEnter() },
+                exitTransition = { screenExit() },
+                popEnterTransition = { screenPopEnter() },
+                popExitTransition = { screenPopExit() },
+            ) {
                 composable<HomeDestination> {
                     HomeRoute(
                         onAccountClick = { navController.navigate(AccountEditDestination(it)) },

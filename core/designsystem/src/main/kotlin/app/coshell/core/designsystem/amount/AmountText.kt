@@ -42,21 +42,29 @@ fun AmountText(
 }
 
 /** Code relative to the number: noticeably smaller, still readable in list rows. */
-private val CODE_SIZE = 0.8.em
+internal val CODE_SIZE = 0.8.em
 
-private const val NBSP = ' '
+internal const val NBSP = '\u00A0'
 
 /**
- * Applies [codeStyle] to the currency code: the part after the last no-break space, when it has
- * no digits (`MoneyFormat` puts «NBSP + code» after the number; groups use a narrow space).
- * Anything else — symbol before the number, plain text — is returned unstyled.
+ * Splits a formatted amount into the number and the currency code: the code is the part after the
+ * last no-break space, when it has no digits (`MoneyFormat` puts «NBSP + code» after the number;
+ * groups use a narrow space). No code → `null`.
  */
-fun amountWithCode(text: String, codeStyle: SpanStyle): AnnotatedString {
+fun splitAmount(text: String): Pair<String, String?> {
     val split = text.lastIndexOf(NBSP)
     val code = if (split < 0) "" else text.substring(split + 1)
-    if (code.isEmpty() || code.any { it.isDigit() }) return AnnotatedString(text)
+    if (code.isEmpty() || code.any { it.isDigit() }) return text to null
+    return text.substring(0, split) to code
+}
+
+/** Applies [codeStyle] to the currency code ([splitAmount]); anything else is returned unstyled. */
+fun amountWithCode(text: String, codeStyle: SpanStyle): AnnotatedString {
+    val (number, code) = splitAmount(text)
+    if (code == null) return AnnotatedString(text)
     return buildAnnotatedString {
-        append(text.substring(0, split + 1))
+        append(number)
+        append(NBSP)
         withStyle(codeStyle) { append(code) }
     }
 }

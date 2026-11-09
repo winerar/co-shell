@@ -3,6 +3,11 @@ package app.coshell.transactions.edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.model.TransactionType
@@ -16,7 +21,14 @@ fun TransactionEditRoute(
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
+    val haptics = LocalHapticFeedback.current
+    var saving by remember { mutableStateOf(false) }
+    LaunchedEffect(state.isDone) {
+        if (!state.isDone) return@LaunchedEffect
+        // A light tick confirms the saved operation (design-questions §6); delete has its snackbar.
+        if (saving) haptics.performHapticFeedback(HapticFeedbackType.Confirm)
+        onDone()
+    }
     TransactionEditScreen(
         state = state,
         actions = TransactionEditActions(
@@ -33,7 +45,10 @@ fun TransactionEditRoute(
             onReceiptToggle = viewModel::onReceiptToggle,
             onReceiptCurrencyChange = viewModel::onReceiptCurrencyChange,
             onReceiptAmountChange = viewModel::onReceiptAmountChange,
-            onSave = viewModel::save,
+            onSave = {
+                saving = true
+                viewModel.save()
+            },
             onDelete = viewModel::delete,
         ),
     )

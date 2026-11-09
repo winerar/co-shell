@@ -47,7 +47,10 @@ fun TransactionsScreen(
             state.days.forEach { day ->
                 stickyHeader(key = day.date.toString()) { DayHeader(day.date, day.relative) }
                 items(day.rows, key = { it.id }) { row ->
-                    SwipeToDelete(onDelete = { onDelete(row.id) }) { TransactionRow(row, onTransactionClick) }
+                    // Rows slide in, out and into place (design-questions §6).
+                    SwipeToDelete(onDelete = { onDelete(row.id) }, modifier = Modifier.animateItem()) {
+                        TransactionRow(row, onTransactionClick)
+                    }
                 }
             }
         }

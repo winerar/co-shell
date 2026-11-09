@@ -3,7 +3,6 @@ package app.coshell.home.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
@@ -23,7 +23,7 @@ import app.coshell.ui.format.formatMonth
 @Composable
 internal fun SpendingCard(spending: HomeUiState.MonthSpending) {
     val palette = LocalAmountPalette.current
-    Card(modifier = Modifier.fillMaxWidth()) {
+    CoShellCard(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(20.dp)) {
             Text(
                 stringResource(R.string.home_spending_title, formatMonth(spending.month)),

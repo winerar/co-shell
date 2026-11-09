@@ -10,8 +10,11 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -23,10 +26,18 @@ import app.coshell.core.designsystem.R as DesignR
  * (design-questions §5). The red strip with the bin shows what the swipe will do.
  */
 @Composable
-internal fun SwipeToDelete(onDelete: () -> Unit, content: @Composable () -> Unit) {
+internal fun SwipeToDelete(onDelete: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val state = rememberSwipeToDismissBoxState()
+    val haptics = LocalHapticFeedback.current
+    // Tick when the swipe passes the point where letting go deletes (design-questions §6).
+    LaunchedEffect(state.targetValue) {
+        if (state.targetValue == SwipeToDismissBoxValue.EndToStart) {
+            haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+        }
+    }
     SwipeToDismissBox(
         state = state,
+        modifier = modifier,
         enableDismissFromStartToEnd = false,
         onDismiss = { if (it == SwipeToDismissBoxValue.EndToStart) onDelete() },
         backgroundContent = {

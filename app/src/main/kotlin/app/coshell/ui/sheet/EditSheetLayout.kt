@@ -1,5 +1,6 @@
 package app.coshell.ui.sheet
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -12,10 +13,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.tokens.pressScale
 
 /**
  * Inside of an editor sheet: title, scrolling form, and «Сохранить» pinned at the bottom across the
@@ -45,10 +48,15 @@ fun EditSheetLayout(
             content = content,
         )
         if (showSave) {
+            val interaction = remember { MutableInteractionSource() }
             Button(
                 onClick = onSave,
                 enabled = saveEnabled,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.m),
+                interactionSource = interaction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing.l, vertical = Spacing.m)
+                    .pressScale(interaction),
             ) { Text(stringResource(R.string.action_save)) }
         }
     }

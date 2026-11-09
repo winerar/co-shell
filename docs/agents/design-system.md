@@ -7,9 +7,10 @@
 ## Что где лежит
 ```
 core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
-  tokens/   Spacing (отступы), Radii (+ CoShellShapes для Material), Motion (длительности, кривые)
+  tokens/   Spacing, Radii (+ CoShellShapes, PillShape), Motion (длительности, кривые, пружина), pressScale
   theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
-  amount/   AmountText — сумма с серым кодом валюты
+  amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
+  components/ CoShellCard — карточка с тонкой рамкой (сюда же — остальные базовые компоненты)
   catalog/  TokensCatalog — витрина токенов (@Preview светлая/тёмная); растёт в каталог компонентов
   category/ CategoryBadge, палитра и иконки категорий
 core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр
@@ -19,9 +20,19 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
 ## Токены — правила
 - **Отступы** — только `Spacing.xxs…xxl` (2, 4, 8, 12, 16, 24, 32 dp; сетка 4 dp, кроме 2). Край экрана
   и промежуток между блоками — `Spacing.l`. Новые экраны — без чисел `N.dp` для отступов.
-- **Скругления** — `Radii` (8/12/16/28 dp) или `MaterialTheme.shapes.*` (те же значения подставлены в тему).
-- **Движение** — `Motion.short()/medium()/enter()/exit()` и `Motion.*_MS`; своих `tween(300)` в экранах нет.
-  Анимировать только `alpha`/`translation`/`scale` (`performance.md` §«Анимации»), все токены ≤ 400 мс.
+- **Скругления** (решение владельца, §4): карточки 16, шторки 28, поля 12, кнопки и чипы — «пилюли»
+  (`PillShape`); всё уже в `MaterialTheme.shapes` (`CoShellShapes`), в экранах своих форм не задавать.
+- **Карточки** — только `components/CoShellCard`: фон экрана + тонкая рамка `outlineVariant`, без теней;
+  `accent = true` — главный блок экрана (рамка мятная). Плотность списков — средняя: строка ~64 dp, значок 40 dp.
+- **Иконки** — контурные Material Symbols 300; активная вкладка — мятная подложка-пилюля (в тёмной теме неон).
+- **Движение** (решение владельца, §6: «живые мелочи») — `Motion.short()/medium()/enter()/exit()/press()` и
+  `Motion.*_MS`; своих `tween(300)` в экранах нет. Анимировать только `alpha`/`translation`/`scale`
+  (`performance.md` §«Анимации»), все токены ≤ 400 мс. Уже есть: переходы экранов — сдвиг на 1/10 + растворение
+  (`navigation/ScreenTransitions`); строки списков — `Modifier.animateItem()`; главные кнопки («+», «Сохранить») —
+  `Modifier.pressScale` (пружинка); главный итог «Обзора» — `amount/RollingAmountText` (цифры перелистываются
+  вверх/вниз, сам ужимается по ширине).
+- **Вибрация** — только ключевые моменты: сохранение операции (`Confirm`), свайп дошёл до «удалить»
+  (`GestureThresholdActivate`), встряхивание (сила в настройках). Не на каждое нажатие.
 - **Цвета** — `MaterialTheme.colorScheme.*`; суммы — `LocalAmountPalette` (доход/расход/перевод), состояния
   без слота в Material — `LocalStatusPalette` (предупреждение, успех), светлая/тёмная — `LocalDarkTheme`.
   Своих `Color(0x…)` в экранах нет. Подробно — §«Цвета» ниже.
@@ -95,7 +106,7 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
 
 ## Порядок переезда (план)
 1. ✔ Токены отступов, скруглений, движения; шрифт цифр; витрина токенов.
-2. Ответы на вопросы дизайнеру → ✔ цвета, ✔ шрифты, ✔ навигация; формы, движение (`design-questions.md`).
+2. ✔ Ответы на вопросы дизайнеру: цвета, шрифты, навигация, формы, движение (`design-questions.md`).
 3. Базовые компоненты: кнопки, поля, карточки, строки списка, диалоги, шторки, нижняя панель.
 4. Экраны по одному: «Обзор» → ввод операции → «Операции» → остальные; после каждого — числа `dp` и
    `tween` в экране заменены токенами.

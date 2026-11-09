@@ -6,6 +6,7 @@ import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.rates.RefreshStatus
 import app.coshell.testing.FakeExchangeRateRepository
+import app.coshell.testing.FakeReportCurrencySettings
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -31,13 +32,14 @@ class RatesViewModelTest {
         rates.value = listOf(ExchangeRate(nov9, usd, ars, Rate.parse("1460"), RateOrigin.DOWNLOADED))
     }
     private val refresher = FakeRatesRefresher()
+    private val settings = FakeReportCurrencySettings()
 
     // 2026-11-10 01:00 UTC is still 9 November in Buenos Aires.
     private val clock = object : Clock {
         override fun now() = Instant.parse("2026-11-10T01:00:00Z")
     }
     // Lazy: created inside the test, after MainDispatcherRule has set the main dispatcher.
-    private val vm by lazy { RatesViewModel(repo, refresher, clock, TimeZone.of("America/Argentina/Buenos_Aires")) }
+    private val vm by lazy { RatesViewModel(repo, refresher, settings, clock, TimeZone.of("America/Argentina/Buenos_Aires")) }
 
     private fun manual(date: LocalDate, rate: String) = ExchangeRate(date, usd, ars, Rate.parse(rate), RateOrigin.MANUAL)
 
@@ -48,6 +50,18 @@ class RatesViewModelTest {
         assertNull(current[0].rateText)
         assertEquals("1\u00A0460", current[1].rateText)
         assertEquals(nov9, current[1].date)
+    }
+
+    @Test
+    fun `current rates follow the main currency`() {
+        settings.currencies.value = listOf(ars, usd)
+
+        val state = vm.state.value
+        assertEquals("ARS", state.base)
+        assertEquals(listOf("AMD", "USD"), state.current.map { it.currency })
+        assertEquals("0,0007", state.current[1].rateText) // 1 ARS = 1/1460 USD
+        vm.addManual()
+        assertEquals("ARS", vm.state.value.editor!!.from)
     }
 
     @Test

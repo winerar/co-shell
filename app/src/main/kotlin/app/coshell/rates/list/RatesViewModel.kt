@@ -6,6 +6,7 @@ import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.rates.currentRates
+import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.RateOrigin
@@ -30,13 +31,15 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 /**
- * "More → Rates": rates in force today for every currency the family uses (`1 USD = X`),
+ * "More → Rates": rates in force today for every currency the family uses against the main
+ * currency (`1 USD = X`),
  * manual rates with add / edit / delete, and "Update now" (a one-off run of the daily worker).
  */
 @HiltViewModel
 class RatesViewModel @Inject constructor(
     private val rates: ExchangeRateRepository,
     private val refresher: RatesRefresher,
+    reportCurrencies: ReportCurrencySettings,
     private val clock: Clock,
     private val timeZone: TimeZone,
 ) : ViewModel() {
@@ -56,16 +59,17 @@ class RatesViewModel @Inject constructor(
     }
 
     val state: StateFlow<RatesUiState> = combine(
-        rates.observeRates(),
+        combine(rates.observeRates(), reportCurrencies.currencies) { all, report -> all to report.first() },
         rates.observeLatestDownload(),
         used.filterNotNull(),
         refresher.observe(),
         local,
-    ) { all, latest, used, refresh, local -> buildState(all, latest, used, refresh, local) }
+    ) { (all, base), latest, used, refresh, local -> buildState(all, base, latest, used, refresh, local) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, RatesUiState())
 
     private fun buildState(
         all: List<ExchangeRate>,
+        base: CurrencyCode,
         latest: DownloadInfo?,
         used: Set<CurrencyCode>,
         refresh: RefreshStatus,
@@ -73,7 +77,7 @@ class RatesViewModel @Inject constructor(
     ): RatesUiState {
         val manual = all.filter { it.origin == RateOrigin.MANUAL }.sortedByDescending { it.date }
         val currencies = used + manual.flatMap { listOf(it.from, it.to) }
-        val current = RateBook(all).currentRates(currencies, BASE, today()).map { row ->
+        val current = RateBook(all).currentRates(currencies, base, today()).map { row ->
             CurrentRateItem(
                 currency = row.currency.value,
                 rateText = row.found?.let { formatRate(it.rate) },
@@ -84,7 +88,7 @@ class RatesViewModel @Inject constructor(
         }
         return RatesUiState(
             isLoading = false,
-            base = BASE.value,
+            base = base.value,
             current = current,
             lastDownload = latest,
             manual = manual.map { ManualRateItem(it, formatRate(it.rate)) },
@@ -100,11 +104,11 @@ class RatesViewModel @Inject constructor(
         refresher.refreshNow()
     }
 
-    /** "Add a rate": `1 USD = ? <first currency>` from today. */
-    fun addManual() = openEditor(BASE.value, state.value.current.firstOrNull()?.currency.orEmpty(), "")
+    /** "Add a rate": `1 <main> = ? <first currency>` from today. */
+    fun addManual() = state.value.let { openEditor(it.base, it.current.firstOrNull()?.currency.orEmpty(), "") }
 
     /** Tap on a current rate: set it by hand, starting from the rate in force. */
-    fun setManual(item: CurrentRateItem) = openEditor(BASE.value, item.currency, item.rateText.orEmpty())
+    fun setManual(item: CurrentRateItem) = openEditor(state.value.base, item.currency, item.rateText.orEmpty())
 
     fun editManual(item: ManualRateItem) {
         val rate = item.rate
@@ -153,9 +157,4 @@ class RatesViewModel @Inject constructor(
         local.update { s -> s.copy(editor = s.editor?.let(change)) }
 
     private fun today(): LocalDate = clock.todayIn(timeZone)
-
-    private companion object {
-        /** Until the main currency setting exists (stage 3, step «д»), rates are shown against USD. */
-        val BASE = CurrencyCode("USD")
-    }
 }

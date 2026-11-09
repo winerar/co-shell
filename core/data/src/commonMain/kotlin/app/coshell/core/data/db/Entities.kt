@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 // Room schema. Conventions:
 // - money = `<name>_minor INTEGER` + currency TEXT column (see docs/agents/money-and-currency.md);
@@ -11,6 +13,7 @@ import androidx.room.PrimaryKey
 // - sync fields on every synced table: updated_at, updated_by, deleted (tombstone), pending_sync;
 // - no foreign keys: with sync, records can arrive in any order and are soft-deleted.
 
+@Serializable
 @Entity(tableName = "accounts")
 data class AccountEntity(
     @PrimaryKey val id: String,
@@ -26,9 +29,10 @@ data class AccountEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
-    @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+@Serializable
 @Entity(tableName = "categories")
 data class CategoryEntity(
     @PrimaryKey val id: String,
@@ -42,9 +46,10 @@ data class CategoryEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
-    @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+@Serializable
 @Entity(
     tableName = "transactions",
     indices = [
@@ -78,9 +83,10 @@ data class TransactionEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
-    @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+@Serializable
 @Entity(tableName = "budgets", indices = [Index("category_id", "month")])
 data class BudgetEntity(
     @PrimaryKey val id: String,
@@ -92,7 +98,7 @@ data class BudgetEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
-    @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
 /** Sum of transaction effects on one account (one row per account and direction). */

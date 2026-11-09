@@ -71,6 +71,23 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `3 to 4 keeps pending rows and adds sync state`() {
+        helper.createDatabase(3).use { v3 ->
+            v3.execSQL(
+                """INSERT INTO accounts (id, name, currency, type, initial_balance_minor, is_shared,
+                   owner_member_id, archived, sort_order, excluded_from_total, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('a1', 'Cash', 'ARS', 'CASH', 5000, 1, NULL, 0, 0, 0, 1, NULL, 0, 1)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(4, emptyList()).use { v4 ->
+            // Existing rows stay pending, so the first sync sends this phone's data to the family.
+            assertEquals("Cash|1", v4.single("SELECT name || '|' || pending_sync FROM accounts"))
+            assertEquals("0", v4.single("SELECT COUNT(*) FROM sync_state"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

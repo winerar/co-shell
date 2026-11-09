@@ -53,8 +53,12 @@ class RoomAccountRepository(
 
     override suspend fun getAccount(id: String): Account? = accounts.get(id)?.toModel()
 
-    override suspend fun saveAccount(account: Account) =
-        accounts.upsert(listOf(account.toEntity(stamper.stamp())))
+    /** A personal account without an owner belongs to whoever saves it. */
+    override suspend fun saveAccount(account: Account) {
+        val stamp = stamper.stamp()
+        val owned = if (!account.isShared && account.ownerMemberId == null) account.copy(ownerMemberId = stamp.by) else account
+        accounts.upsert(listOf(owned.toEntity(stamp)))
+    }
 
     override suspend fun deleteAccount(id: String) {
         val stamp = stamper.stamp()
@@ -102,8 +106,13 @@ class RoomTransactionRepository(
 
     override suspend fun getTransaction(id: String): Transaction? = transactions.get(id)?.toModel()
 
-    override suspend fun saveTransaction(transaction: Transaction) =
-        transactions.upsert(listOf(transaction.toEntity(stamper.stamp())))
+    /** The author is whoever created the operation; editing by the other member keeps it. */
+    override suspend fun saveTransaction(transaction: Transaction) {
+        val stamp = stamper.stamp()
+        val existing = transactions.get(transaction.id)
+        val author = if (existing != null) existing.authorMemberId else transaction.authorMemberId ?: stamp.by
+        transactions.upsert(listOf(transaction.copy(authorMemberId = author).toEntity(stamp)))
+    }
 
     override suspend fun deleteTransaction(id: String) {
         val stamp = stamper.stamp()

@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
+import app.coshell.core.designsystem.theme.progressColors
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -51,21 +52,23 @@ fun <S> ProgressHero(
 ) {
     val colors = MaterialTheme.colorScheme
     Box(modifier.size(Sizes.heroRing), contentAlignment = Alignment.Center) {
-        val track = colors.outlineVariant
+        val progress = progressColors()
+        val track = progress.track
+        val arc = progress.indicator
         when (ring) {
             HeroRing.Idle -> CircularProgressIndicator(
                 progress = { 0f }, modifier = Modifier.size(Sizes.heroRing),
-                strokeWidth = Sizes.heroStroke, trackColor = track,
+                strokeWidth = Sizes.heroStroke, color = arc, trackColor = track,
             )
             HeroRing.Busy -> CircularProgressIndicator(
                 modifier = Modifier.size(Sizes.heroRing), strokeWidth = Sizes.heroStroke,
-                trackColor = track, strokeCap = StrokeCap.Round,
+                color = arc, trackColor = track, strokeCap = StrokeCap.Round,
             )
             is HeroRing.Progress -> {
                 val fraction by animateFloatAsState(ring.fraction.coerceIn(0f, 1f), Motion.medium(), label = "heroProgress")
                 CircularProgressIndicator(
                     progress = { fraction }, modifier = Modifier.size(Sizes.heroRing),
-                    strokeWidth = Sizes.heroStroke, trackColor = track, strokeCap = StrokeCap.Round,
+                    strokeWidth = Sizes.heroStroke, color = arc, trackColor = track, strokeCap = StrokeCap.Round,
                 )
             }
         }

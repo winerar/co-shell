@@ -18,6 +18,13 @@ class ColorContrastTest {
     }
 
     @Test
+    fun progressIsVisibleOnItsTrack() = schemes.forEach { (name, s) ->
+        // Graphite-mint progress (owner's choice 2026-11-09): the moving part stands out (≥ 3, like icons).
+        val p = progressColorsFor(s, name == "dark")
+        assertContrast("$name progress on track", p.indicator, p.track, 3.0)
+    }
+
+    @Test
     fun darkThemeNeonIsReadableAsText() {
         val s = CoShellDarkColors
         assertContrast("dark primary on surface", s.primary, s.surface, 4.5)

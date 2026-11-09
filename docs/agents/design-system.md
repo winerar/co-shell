@@ -47,12 +47,14 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
   (кнопки, «+», вкладка, переключатели, выбранный день), кислотный лайм `#D8FF3D` — `secondary(Container)`
   (выбранные чипы и сегменты), расход — малиновый `#D6004A`. Главная карточка (`CoShellCard(accent)`) — градиент
   мята→лайм (`LocalHeroPalette`; в тёмной — рамка). `CoShellCard(tint)` — карточка в цвете счёта.
-- **Текстовый акцент** — `accentInk()` (`theme/AccentInk.kt`): ссылки, заголовки разделов, `CoShellTextButton`,
+- **Текстовый акцент** — `accentInk()` (`theme/AccentColors.kt`): ссылки, заголовки разделов, `CoShellTextButton`,
   фокус поля, выбранная вкладка, «сегодня» в календаре. В тёмной — Neon Mint, в светлой — чернила `onSurface`
   (неон на белом нечитаем). `colorScheme.primary` как цвет текста в экранах **не использовать**.
+- **Прогресс** — графитово-мятный (`progressColors()`): в светлой графит по мятной дорожке, в тёмной мята по
+  графиту; полоска — `CoShellLinearProgress` (голый `LinearProgressIndicator` в экранах запрещён тестом), кольцо `ProgressHero`.
 - Цвета обоев (Material You) **не используются** — одинаково на обоих телефонах. Тема: «Ещё → Настройки → Тема» —
   Системная (по умолчанию) / Светлая / Тёмная (`ThemeSettings`, хранится на устройстве, не синкается).
-- **Иконка приложения** (#66) — `res/drawable/ic_launcher_foreground.xml`: кошелёк-ракушка тонкой мятной линией
+- **Иконка приложения** (#66) — `res/drawable/ic_launcher_foreground.xml`: кошелёк-ракушка тонкой линией Neon Mint `#80FFCC`
   (2.4 из 108) на графите, шарики защёлки мятный и фиолетовый; одноцветная — `ic_launcher_monochrome.xml`.
 - Палитры — `theme/Color.kt`, схемы Material — `theme/ColorSchemes.kt`. Контраст по WCAG (текст ≥ 4.5,
   иконки ≥ 3) проверяет `ColorContrastTest` — новый цвет или слот добавляй туда же.

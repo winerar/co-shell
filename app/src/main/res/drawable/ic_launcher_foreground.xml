@@ -8,28 +8,28 @@
     <!-- Soft body flaring down like an upside-down scallop shell -->
     <path
         android:pathData="M35,55 C32,60 30.5,65 30.5,70 C30.5,77 37,80 54,80 C71,80 77.5,77 77.5,70 C77.5,65 76,60 73,55"
-        android:strokeColor="#00E5C0"
+        android:strokeColor="#80FFCC"
         android:strokeWidth="2.4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <!-- Kiss-lock frame with rounded shoulders -->
     <path
         android:pathData="M35,55 C35,45 38,41 45,41 L63,41 C70,41 73,45 73,55"
-        android:strokeColor="#00E5C0"
+        android:strokeColor="#80FFCC"
         android:strokeWidth="2.4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <!-- Shell ribs converging towards the clasp -->
     <path
         android:pathData="M47,48 L42,74 M54,47 L54,75 M61,48 L66,74"
-        android:strokeColor="#00E5C0"
+        android:strokeColor="#80FFCC"
         android:strokeWidth="2.4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <!-- Clasp ball one (mint) -->
     <path
         android:pathData="M52,41 L51,38.2 M47.7,35.4 a2.9,2.9 0 1,1 5.8,0 a2.9,2.9 0 1,1 -5.8,0"
-        android:strokeColor="#00E5C0"
+        android:strokeColor="#80FFCC"
         android:strokeWidth="2.4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />

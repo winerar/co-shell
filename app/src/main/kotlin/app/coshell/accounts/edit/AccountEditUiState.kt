@@ -14,6 +14,8 @@ data class AccountEditUiState(
     val archived: Boolean = false,
     /** Counted in the total balance on «Обзор»; off for debts and someone else's money. */
     val includedInTotal: Boolean = true,
+    /** Colour of the account's card (category palette), `null` — no colour. */
+    val color: Long? = null,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */
     val shared: Boolean = true,
     /** The family has other members, so «shared / personal» means something. */

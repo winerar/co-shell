@@ -17,6 +17,8 @@ data class Account(
     val sortOrder: Int = 0,
     /** Left out of the total balance on «Обзор» (a debt, someone else's money). */
     val excludedFromTotal: Boolean = false,
+    /** Colour of the account's card and badge as 0xAARRGGBB (the category palette), `null` — no colour. */
+    val color: Long? = null,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

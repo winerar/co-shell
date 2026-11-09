@@ -52,6 +52,7 @@ class AccountsViewModel @Inject constructor(
         balance = moneyFormat.format(item.balance),
         isNegative = item.balance.isNegative,
         excludedFromTotal = item.account.excludedFromTotal,
+        color = item.account.color,
         // Labels matter only with other members around.
         personalOf = if (item.account.isShared || others.isEmpty()) null else others[item.account.ownerMemberId].orEmpty(),
     )

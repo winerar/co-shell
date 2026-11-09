@@ -5,24 +5,25 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 /**
- * Light theme: near-white background, muted mint for text-bearing elements (buttons, links —
- * WCAG contrast), bright neon mint only in containers (selected tab, chips, FAB).
+ * Light theme (issue #62, variant B): mint-tinted white background, muted mint for text-bearing elements
+ * (buttons, links — WCAG contrast), acid mint in containers (selected tab, FAB), acid lime as the second
+ * accent (Material puts `secondaryContainer` under selected chips and segments).
  */
 internal val CoShellLightColors = lightColorScheme(
     primary = MintDeep,
     onPrimary = Color.White,
-    primaryContainer = MintBright,
+    primaryContainer = MintAcid,
     onPrimaryContainer = MintInk,
     inversePrimary = MintNeon,
-    secondary = VioletDeep,
+    secondary = LimeDeep,
     onSecondary = Color.White,
-    secondaryContainer = VioletPale,
-    onSecondaryContainer = VioletInk,
+    secondaryContainer = LimeAcid,
+    onSecondaryContainer = LimeInk,
     tertiary = SkyDeep,
     onTertiary = Color.White,
     tertiaryContainer = SkyPale,
     onTertiaryContainer = SkyInk,
-    error = CoralDeep,
+    error = AmountColors.ExpenseLight,
     onError = Color.White,
     errorContainer = CoralPale,
     onErrorContainer = CoralInk,

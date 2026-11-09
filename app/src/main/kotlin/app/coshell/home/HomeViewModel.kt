@@ -83,6 +83,7 @@ class HomeViewModel @Inject constructor(
             accounts = accounts.map { (account, balance) ->
                 HomeUiState.AccountRow(
                     account.id, account.name, moneyFormat.format(balance), balance.isNegative, account.excludedFromTotal,
+                    account.type, account.color,
                 )
             },
         )

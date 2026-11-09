@@ -18,5 +18,7 @@ data class AccountsUiState(
         val excludedFromTotal: Boolean = false,
         /** Personal account: `""` — mine, a name — the other member's; `null` — shared. */
         val personalOf: String? = null,
+        /** The account's colour (stored palette value), `null` — none. */
+        val color: Long? = null,
     )
 }

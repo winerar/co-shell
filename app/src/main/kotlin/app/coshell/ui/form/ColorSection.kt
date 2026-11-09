@@ -1,8 +1,9 @@
-package app.coshell.categories.edit.components
+package app.coshell.ui.form
 
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -26,10 +27,13 @@ import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.R as DesignR
 
-/** Palette swatches; the selected colour shows a check mark. */
+/**
+ * Palette swatches of a category or an account; the selected colour shows a check mark.
+ * [allowNone] — the first swatch means "no colour" (`onSelect(null)`), for accounts.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun ColorSection(selected: Long?, onSelect: (Long) -> Unit) {
+internal fun ColorSection(selected: Long?, onSelect: (Long?) -> Unit, allowNone: Boolean = false) {
     // A colour saved before the neon palette shows as its neon swatch.
     val selectedSwatch = selected?.let(CategoryPalette::normalize)
     CoShellSection(stringResource(R.string.category_color)) {
@@ -37,6 +41,23 @@ internal fun ColorSection(selected: Long?, onSelect: (Long) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
+            if (allowNone) {
+                Box(
+                    modifier = Modifier
+                        .tactileClickable(Tactile.Control, CircleShape) { onSelect(null) }
+                        .selectionPop(selected == null)
+                        .size(Sizes.badge)
+                        .border(Sizes.selectionRing, MaterialTheme.colorScheme.outline, CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val icon = if (selected == null) DesignR.drawable.ic_check else DesignR.drawable.ic_close
+                    Icon(
+                        painterResource(icon),
+                        contentDescription = stringResource(R.string.color_none),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             CategoryPalette.colors.forEach { color ->
                 Box(
                     modifier = Modifier

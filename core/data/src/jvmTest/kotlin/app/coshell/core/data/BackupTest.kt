@@ -43,7 +43,7 @@ class BackupTest {
     @Test
     fun `export then import into an empty database restores everything`() = runTest {
         val source = Repos()
-        source.accounts.saveAccount(Account("usd", "Bybit", usd, AccountType.CRYPTO, initialBalanceMinor = 10_00))
+        source.accounts.saveAccount(Account("usd", "Bybit", usd, AccountType.CRYPTO, initialBalanceMinor = 10_00, color = 0xFF00E5C0))
         source.accounts.saveAccount(Account("rub", "Тинькофф", rub, excludedFromTotal = true))
         source.categories.saveCategory(Category("kids", "Дети", CategoryType.EXPENSE, icon = "kids", color = 0xFF9C27B0))
         val transfer = Transaction(

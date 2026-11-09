@@ -3,7 +3,8 @@ package app.coshell.core.designsystem.theme
 import androidx.compose.ui.graphics.Color
 
 // Neon palette (owner's choice, design-questions §2): mint primary + violet accent, no glow.
-// Dark theme — bright neon on graphite; light theme — the same hues muted for contrast.
+// Dark theme — bright neon on graphite. Light theme (issue #62, variant B): brighter, a little acid —
+// acid mint containers, acid lime as the second accent, raspberry expenses; mint still leads.
 
 // Mint (primary)
 internal val MintNeon = Color(0xFF00E5C0)
@@ -12,6 +13,14 @@ internal val MintDeep = Color(0xFF00806B)
 internal val MintInk = Color(0xFF00382E)
 internal val MintShadow = Color(0xFF00473B)
 internal val MintPale = Color(0xFFB8FFF0)
+/** Light theme containers: more saturated than [MintBright]. */
+internal val MintAcid = Color(0xFF1FFFD2)
+
+// Acid lime (light theme second accent: selected chips and segments, the hero gradient's end)
+internal val LimeAcid = Color(0xFFD8FF3D)
+internal val LimeSoft = Color(0xFF8DFFD9)
+internal val LimeDeep = Color(0xFF4A6600)
+internal val LimeInk = Color(0xFF1F2A00)
 
 // Violet (accent)
 internal val VioletNeon = Color(0xFFB388FF)
@@ -46,23 +55,24 @@ internal val GraphiteLineSoft = Color(0xFF28313B)
 internal val GraphiteText = Color(0xFFE6EDF3)
 internal val GraphiteTextMuted = Color(0xFF9AA7B4)
 
-// Cool whites for the light theme.
+// Whites with a faint mint-lime tint for the light theme.
 internal val Frost0 = Color(0xFFFFFFFF)
-internal val Frost1 = Color(0xFFF7FAFA)
-internal val Frost2 = Color(0xFFF0F4F5)
-internal val Frost3 = Color(0xFFEAEFF0)
-internal val Frost4 = Color(0xFFE3E9EB)
-internal val Frost5 = Color(0xFFDCE4E6)
-internal val FrostLine = Color(0xFF75858E)
-internal val FrostLineSoft = Color(0xFFC5D0D5)
+internal val Frost1 = Color(0xFFF6FFF8)
+internal val Frost2 = Color(0xFFEDF9F2)
+internal val Frost3 = Color(0xFFE5F4EC)
+internal val Frost4 = Color(0xFFDDEFE6)
+internal val Frost5 = Color(0xFFD5E9DF)
+internal val FrostLine = Color(0xFF6C8A7F)
+internal val FrostLineSoft = Color(0xFFC2E6D6)
 internal val FrostText = Color(0xFF0F1A1F)
-internal val FrostTextMuted = Color(0xFF4A5961)
+internal val FrostTextMuted = Color(0xFF475A54)
 
 /** Semantic colors for amounts, independent of the Material scheme. Expense always also gets "−". */
 object AmountColors {
-    val IncomeLight = Color(0xFF0B7F3D)
+    val IncomeLight = Color(0xFF2E7A00)
     val IncomeDark = Color(0xFF4DFF88)
-    val ExpenseLight = CoralDeep
+    /** Raspberry: brighter than [CoralDeep], still ≥ 4.5 on the light background. */
+    val ExpenseLight = Color(0xFFD6004A)
     val ExpenseDark = CoralNeon
 }
 

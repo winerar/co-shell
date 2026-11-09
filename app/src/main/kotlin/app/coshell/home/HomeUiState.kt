@@ -1,5 +1,6 @@
 package app.coshell.home
 
+import app.coshell.core.model.AccountType
 import kotlinx.datetime.LocalDate
 
 data class HomeUiState(
@@ -36,5 +37,8 @@ data class HomeUiState(
         val balance: String,
         val isNegative: Boolean,
         val excludedFromTotal: Boolean = false,
+        val type: AccountType = AccountType.CARD,
+        /** The account's colour (stored palette value), `null` — none. */
+        val color: Long? = null,
     )
 }

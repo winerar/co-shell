@@ -63,6 +63,7 @@ class CategoryEditViewModel @Inject constructor(
                 typeLocked = saveCategory.isTypeLocked(category.id),
                 parentId = category.parentId,
                 childIds = all.filter { it.parentId == id }.map { it.id }.toSet(),
+                asFolder = all.any { it.parentId == id },
                 archived = category.archived,
             )
         }
@@ -74,6 +75,18 @@ class CategoryEditViewModel @Inject constructor(
     fun onTypeChange(type: CategoryType) = _state.update {
         if (it.typeLocked || it.type == type) it
         else withOptions(it.copy(type = type, parentId = null, childIds = emptySet(), saveError = null))
+    }
+
+    /**
+     * «Категория | Папка» at the top of the editor (owner 2026-11-09: one «+» for both). A folder holds
+     * subcategories and sits at the top level; a category can go into a folder and holds nothing.
+     */
+    fun onKindChange(folder: Boolean) = _state.update {
+        if (it.asFolder == folder) it
+        else withOptions(
+            if (folder) it.copy(asFolder = true, parentId = null, saveError = null)
+            else it.copy(asFolder = false, childIds = emptySet(), saveError = null),
+        )
     }
 
     fun onIconChange(icon: String) = _state.update { it.copy(icon = icon) }

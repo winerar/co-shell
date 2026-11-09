@@ -15,6 +15,13 @@ import app.coshell.categories.edit.components.CategoryTypeSection
 import app.coshell.categories.edit.components.ChildrenSection
 import app.coshell.categories.edit.components.IconSection
 import app.coshell.categories.edit.components.FolderSection
+import app.coshell.categories.edit.components.KindSelector
+import app.coshell.core.designsystem.category.CategoryBadge
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.Alignment
 import app.coshell.ui.form.ColorSection
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
@@ -30,22 +37,27 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
 
     EditSheetLayout(title = stringResource(state.titleRes), onSave = actions.onSave, saveEnabled = !state.isLoading) {
         if (state.isLoading) return@EditSheetLayout
-        CoShellTextField(
-            value = state.name,
-            onValueChange = actions.onNameChange,
-            label = stringResource(R.string.category_name),
-            error = if (state.nameError) stringResource(R.string.category_name_error) else null,
-            keyboardOptions = TextKeyboard.copy(imeAction = ImeAction.Done),
-        )
+        KindSelector(folder = state.asFolder, onSelect = actions.onKindChange)
+        // The badge as it will look in lists, beside the name (mockup 9).
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+            CategoryBadge(icon = state.icon, color = state.color, size = Sizes.badgeLarge)
+            CoShellTextField(
+                value = state.name,
+                onValueChange = actions.onNameChange,
+                label = stringResource(R.string.category_name),
+                error = if (state.nameError) stringResource(R.string.category_name_error) else null,
+                keyboardOptions = TextKeyboard.copy(imeAction = ImeAction.Done),
+                modifier = Modifier.weight(1f),
+            )
+        }
         CategoryTypeSection(state.type, state.typeLocked, actions.onTypeChange)
-        IconSection(state.icon, state.color, actions.onIconChange)
-        ColorSection(state.color, { color -> color?.let(actions.onColorChange) })
-        if (state.canMoveToFolder && state.folders.isNotEmpty()) {
+        if (state.asFolder) {
+            if (state.candidates.isNotEmpty()) ChildrenSection(state.candidates, state.childIds, actions.onToggleChild)
+        } else if (state.canMoveToFolder && state.folders.isNotEmpty()) {
             FolderSection(state.folders, state.parentId, actions.onParentChange)
         }
-        if (state.canHaveChildren && state.candidates.isNotEmpty()) {
-            ChildrenSection(state.candidates, state.childIds, actions.onToggleChild)
-        }
+        IconSection(state.icon, state.color, actions.onIconChange)
+        ColorSection(state.color, { color -> color?.let(actions.onColorChange) })
         state.saveError?.let { error ->
             Text(
                 stringResource(error.messageRes),

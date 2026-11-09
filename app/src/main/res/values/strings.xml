@@ -121,8 +121,9 @@
     <string name="account_delete_blocked_text">По счёту есть операции. Отправьте его в архив: история и баланс сохранятся, а в списках выбора он больше не появится.</string>
 
     <string name="categories_title">Категории</string>
-    <string name="categories_add">Добавить категорию</string>
-    <string name="categories_add_folder">Новая папка</string>
+    <string name="categories_add">Добавить</string>
+    <string name="category_kind_category">Категория</string>
+    <string name="category_kind_folder">Папка</string>
     <string name="categories_add_to_folder">Добавить в папку</string>
     <string name="categories_expand">Развернуть</string>
     <string name="categories_collapse">Свернуть</string>
@@ -239,6 +240,10 @@
     <string name="palette_mango_hint">тёплый закат: манго и малина</string>
     <string name="palette_ultra">Ультра</string>
     <string name="palette_ultra_hint">электрик и маджента</string>
+    <string name="palette_lagoon">Лагуна</string>
+    <string name="palette_lagoon_hint">бирюза и коралл</string>
+    <string name="palette_sakura">Сакура</string>
+    <string name="palette_sakura_hint">розовый и мята</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает. Версия приложения и модель телефона добавятся сами — писать их не нужно.</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>
@@ -334,6 +339,7 @@
     <string name="account_personal_of">личный · %1$s</string>
 
     <string name="auto_backup_title">Автоматически раз в неделю</string>
+    <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
     <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
@@ -365,6 +371,7 @@
     <string name="family_synced_at">Синхронизировано: %1$s</string>
     <string name="family_synced_pending">Синхронизировано: %1$s · ждут отправки: %2$d</string>
     <string name="family_members">Участники</string>
+    <string name="family_budget">Общий бюджет · участников: %1$d</string>
     <string name="family_you">вы</string>
     <string name="family_owner">создатель семьи</string>
     <string name="family_invite_pending">Приглашён — ждём входа</string>

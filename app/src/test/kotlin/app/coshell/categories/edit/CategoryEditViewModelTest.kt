@@ -86,9 +86,37 @@ class CategoryEditViewModelTest {
         assertFalse(vm.state.value.canMoveToFolder)
 
         vm.onToggleChild("fuel")
+        vm.onKindChange(folder = false)
         assertTrue(vm.state.value.canMoveToFolder)
         vm.save()
         assertNull(categories.getCategory("fuel")?.parentId)
+    }
+
+    @Test
+    fun `one editor makes both - a folder picks subcategories, a category picks a folder`() = runTest {
+        seed()
+        val vm = editor(Args.ARG_TYPE to "EXPENSE", Args.ARG_PARENT_ID to "car")
+        assertFalse(vm.state.value.asFolder)
+        vm.onKindChange(folder = true)
+        assertNull("a folder sits at the top level", vm.state.value.parentId)
+        assertEquals(listOf("taxi", "food"), vm.state.value.candidates.map { it.id })
+        vm.onToggleChild("food")
+        vm.onKindChange(folder = false)
+        assertTrue("a category holds nothing", vm.state.value.childIds.isEmpty())
+        assertTrue(vm.state.value.canMoveToFolder)
+
+        vm.onKindChange(folder = true)
+        vm.onNameChange("Еда")
+        vm.onToggleChild("food")
+        vm.save()
+        assertEquals("new", categories.getCategory("food")?.parentId)
+    }
+
+    @Test
+    fun `an existing folder opens as a folder`() = runTest {
+        seed()
+        assertTrue(editor(Args.ARG_CATEGORY_ID to "car").state.value.asFolder)
+        assertFalse(editor(Args.ARG_CATEGORY_ID to "taxi").state.value.asFolder)
     }
 
     @Test

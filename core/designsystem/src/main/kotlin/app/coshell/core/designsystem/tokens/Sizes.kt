@@ -8,6 +8,8 @@ object Sizes {
     val rowMinHeight = 56.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
+    /** Badge in an editor's header, beside the name: the category as it will look. */
+    val badgeLarge = 56.dp
     /** Subcategory badge inside an open folder. */
     val badgeSmall = 32.dp
     /** Ring around the selected swatch or icon. */

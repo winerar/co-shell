@@ -17,6 +17,7 @@ fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hil
         actions = CategoryEditActions(
             onNameChange = viewModel::onNameChange,
             onTypeChange = viewModel::onTypeChange,
+            onKindChange = viewModel::onKindChange,
             onIconChange = viewModel::onIconChange,
             onColorChange = viewModel::onColorChange,
             onParentChange = viewModel::onParentChange,
@@ -33,6 +34,7 @@ fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hil
 data class CategoryEditActions(
     val onNameChange: (String) -> Unit = {},
     val onTypeChange: (CategoryType) -> Unit = {},
+    val onKindChange: (Boolean) -> Unit = {},
     val onIconChange: (String) -> Unit = {},
     val onColorChange: (Long) -> Unit = {},
     val onParentChange: (String?) -> Unit = {},

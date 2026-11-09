@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.FloatingActionButtonElevation
@@ -150,6 +151,31 @@ fun CoShellFab(
             elevation = elevation,
             interactionSource = source,
             content = content,
+        )
+    }
+}
+
+/** Pill FAB with an icon and a word («+ Добавить») — the one add button of a list screen. */
+@Composable
+fun CoShellExtendedFab(
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    text: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = contentColorFor(containerColor),
+) {
+    val source = remember { MutableInteractionSource() }
+    NoRipple {
+        ExtendedFloatingActionButton(
+            text = text,
+            icon = icon,
+            onClick = onClick,
+            modifier = modifier.tactile(source, Tactile.Control, PillShape, originColor = containerColor),
+            shape = PillShape,
+            containerColor = containerColor,
+            contentColor = contentColor,
+            interactionSource = source,
         )
     }
 }

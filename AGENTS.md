@@ -7,18 +7,19 @@ Android-приложение для учёта семейного бюджета
 1. Деньги — только `Money` (`Long` минимальных единиц + `CurrencyCode`). Никаких `Double`/`Float`.
 2. Room — единственный источник истины для UI. Сеть пишет в Room, а не в экран.
 3. `core:model` и `core:domain` — чистый Kotlin (готовность к KMP/iOS): без `android.*` и `java.*`.
-4. Любое изменение поведения — с unit-тестами. Перед коммитом: `./gradlew check assembleDebug`.
+4. Любое изменение поведения — с unit-тестами. Перед коммитом: `scripts/agent/check.sh`.
 5. Документация — часть изменения: поменял решение/структуру → обнови соответствующий файл ниже.
 6. Маленькие файлы по одной теме (~200 строк), экран — пакет из блоков: `project-structure.md`.
-7. **Начало сессии:** прочитай `docs/STATUS.md` и `docs/agents/owner.md`, проверь чужие ветки
-   (чек-лист «Начало сессии» в `docs/agents/workflow.md`). **Конец сессии:** выполни
-   чек-лист «Конец сессии» из `docs/agents/workflow.md` (обновить STATUS, ROADMAP, запушить).
+7. **Начало сессии:** `scripts/agent/session-start.sh`, затем `owner.md` и `notes.md`. **Конец:**
+   чек-лист `workflow.md` + `scripts/agent/session-end.sh`. Узнал новое — в `notes.md`; рутина
+   повторилась — скрипт в `scripts/agent/`; ввёл практику — правило (`workflow.md` §«Самоулучшение»).
 
 ## Карта документации
 | Файл | О чём |
 |---|---|
 | [docs/STATUS.md](docs/STATUS.md) | **текущее состояние, следующие шаги, открытые вопросы** |
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
+| [docs/agents/notes.md](docs/agents/notes.md) | **заметки агента**: выясненные факты, грабли, замеры, служебные скрипты |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md) | модули, что где лежит, куда класть новое |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md) | сборка, тесты, SDK, CI |
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
@@ -29,8 +30,7 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, обновление документации |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | архитектура и журнал решений |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | план и текущий этап |
-| [docs/research/](docs/research/) | исследования (напр. автоввод из банков) |
-| [docs/setup/](docs/setup/) | пошаговые инструкции для владельца (напр. включить самообновление) |
+| [docs/research/](docs/research/), [docs/setup/](docs/setup/) | исследования; инструкции для владельца |
 
 ## Как поддерживать эти файлы
 - `AGENTS.md` — только индекс и золотые правила, **не длиннее ~40 строк**.

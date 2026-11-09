@@ -74,8 +74,8 @@
   (2026-11-09 · общий баланс в основной валюте) выпущен релизом winerar/co-shell#38 — следующий пункт для семьи — новым разделом.
   Рабочие ветки — **от `dev`** (сессии клонируют `main` — перейти на `dev`, `workflow.md` §«Git»).
 - CI (ускорен 2026-11-09, `build-and-test.md` §CI): правки только `docs/`/`*.md` — без Gradle; на `main`
-  lint и тесты не повторяются; кэш пишет и `dev`. Локально для итераций — `scripts/check.sh --quick`
-  (только тесты), начало сессии — `scripts/branches.sh`.
+  lint и тесты не повторяются; кэш пишет и `dev`. Локально для итераций — `scripts/agent/check.sh --quick`
+  (только тесты), начало/конец сессии — `scripts/agent/session-start.sh` / `session-end.sh`; заметки — `docs/agents/notes.md`.
 - CI на `dev` — только проверки; на каждый мерж в `main`: debug → Releases приватного репозитория (`co-shell-debug.apk`);
   подписанный release → релиз `build-<N>` публичного `winerar/co-shell-releases` (`co-shell-<N>.apk` +
   `version.json`). **Работает с 2026-11-08** (сборка 27): `…/co-shell-releases/releases/latest/download/version.json`
@@ -122,6 +122,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-09 (ветка `ccr-18a6ed6b-0czo2u`): ускорение CI и разработки перед дизайн-системой — пропуск Gradle
-для правок документации, без повторного lint/тестов на `main`, без lintVital в release и lint тестового кода,
-кэш с `dev`; `scripts/check.sh --quick`, `scripts/branches.sh`. Найдена невлитая ветка с пунктом (ж).
+2026-11-09 (ветка `ccr-18a6ed6b-0czo2u`, PR winerar/co-shell#41): ускорение CI перед дизайн-системой (пропуск
+Gradle для правок документации, без повторного lint/тестов на `main`, без lintVital и lint тестового кода, кэш
+с `dev`); папка `scripts/agent/` (начало/конец сессии, `check.sh --quick`, профиль сборки), заметки агента
+`docs/agents/notes.md` и правила самоулучшения (`workflow.md`). Найдена невлитая ветка с пунктом (ж).

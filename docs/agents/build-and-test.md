@@ -34,6 +34,10 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - Модель и домен — `kotlin.test` в `commonTest` (запускаются на JVM, позже и на iOS).
 - Data — `core/data/src/jvmTest`, in-memory SQLite (подробности — `database.md`).
 - ViewModel — JUnit + `kotlinx-coroutines-test` в `app/src/test`.
+- **Смоук-тест каркаса** — `app/src/test/.../navigation/MainShellSmokeTest` (Robolectric + Compose test, ~8 с):
+  `MainShell` (панель, NavHost, вкладки) с настоящими экранами вкладок на примерных данных — экран виден над
+  панелью, все вкладки открываются, «+» срабатывает. Без Hilt/Room/сети (`application = Application::class`:
+  `CoShellApp` открыл бы Room с нативным SQLite). Новая вкладка или поменял каркас — дополни тест.
 - Правила Firestore и сквозной синк двух телефонов — в эмуляторе: `scripts/test-rules.sh` (правила) или
   `scripts/test-rules.sh --kotlin` (+ `FirestoreEmulatorTest`); нужны Node 20+ и Java, эмулятор скачивается
   сам. Поменял `firestore.rules` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
@@ -50,6 +54,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   `docs/` и `*.md` — Gradle пропускается (шаг «Detect code changes»), остаются тесты скриптов.
 - `main` (релиз): lint и тесты **не** повторяются — то же дерево уже проверено в PR `dev` → `main`;
   только сборки APK. В `assembleRelease` выключен lintVital (`lint.checkReleaseBuilds = false`).
+- `android-all` для Robolectric кэшируется отдельно (`~/.m2/repository/org/robolectric`, `actions/cache`).
 - Кэш Gradle пишут `main` и `dev` (PR в `dev` стартуют с тёплым кэшем). Необязательный секрет
   `GRADLE_ENCRYPTION_KEY` (`openssl rand -base64 16`) включает сохранение configuration cache.
 - На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено

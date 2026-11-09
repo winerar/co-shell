@@ -83,6 +83,13 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        // Robolectric smoke tests (MainShellSmokeTest) read the app's strings and themes.
+        unitTests.isIncludeAndroidResources = true
+        // Robolectric reaches into JDK internals (FileDescriptor) — JDK 17+ must export them.
+        unitTests.all { it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED") }
+    }
+
     lint {
         // Full lint runs in `check` on every PR; skipping lintVital keeps `assembleRelease` fast on main.
         checkReleaseBuilds = false
@@ -115,4 +122,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

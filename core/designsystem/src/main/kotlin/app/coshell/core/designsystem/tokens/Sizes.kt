@@ -14,4 +14,10 @@ object Sizes {
     val selectionRing = 2.dp
     /** Space under the last list item so a floating button doesn't cover it: FAB 56 + margins 16 + 16. */
     val fabClearance = 88.dp
+    /** Big status ring in the middle of a single-purpose screen (update, later import/sync). */
+    val heroRing = 168.dp
+    /** Icon inside [heroRing]. */
+    val heroIcon = 56.dp
+    /** Stroke of [heroRing]. */
+    val heroStroke = 6.dp
 }

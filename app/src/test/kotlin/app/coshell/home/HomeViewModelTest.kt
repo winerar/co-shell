@@ -9,6 +9,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
 import app.coshell.testing.FakeTransactionRepository
@@ -18,6 +19,7 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.junit.Assert.assertEquals
@@ -43,6 +45,8 @@ class HomeViewModelTest {
         FakeTransactionRepository(),
         FakeExchangeRateRepository(),
         FakeReportCurrencySettings(),
+        FakeCategoryRepository(),
+        { flowOf(emptyMap()) },
         MoneyFormat.RU,
         Clock.System,
         TimeZone.UTC,
@@ -118,5 +122,58 @@ class HomeViewModelTest {
 
         assertEquals(listOf(MoneyFormat.RU.format(Money(0, usd))), spending.totals)
         assertEquals(false, spending.converted)
+    }
+
+    @Test
+    fun `month income is summed in every report currency`() {
+        val items = listOf(
+            Transaction("t1", TransactionType.INCOME, "a", Money(10_000_00, ars), nov9.atStartOfDayIn(TimeZone.UTC)),
+            Transaction("t2", TransactionType.EXPENSE, "c", Money(3_00, usd), nov9.atStartOfDayIn(TimeZone.UTC)),
+        )
+
+        val income = viewModel.buildState(accounts, items, rates, listOf(usd, ars), nov9).income!!
+
+        assertEquals(listOf(MoneyFormat.RU.format(Money(10_00, usd)), MoneyFormat.RU.format(Money(10_000_00, ars))), income.totals)
+    }
+
+    @Test
+    fun `daily bars are in the main currency with today marked`() {
+        val items = listOf(
+            Transaction("t1", TransactionType.EXPENSE, "a", Money(2_000_00, ars), LocalDate(2026, 11, 2).atStartOfDayIn(TimeZone.UTC)),
+            Transaction("t2", TransactionType.EXPENSE, "c", Money(3_00, usd), nov9.atStartOfDayIn(TimeZone.UTC)),
+        )
+
+        val spending = viewModel.buildState(accounts, items, rates, listOf(usd, ars), nov9).spending!!
+
+        assertEquals(30, spending.daily.size)
+        assertEquals(2_00L, spending.daily[1])
+        assertEquals(3_00L, spending.daily[8])
+        assertEquals(8, spending.today)
+    }
+
+    @Test
+    fun `attention lists missing rates, old rates and operations without a category`() {
+        val withRub = accounts + AccountWithBalance(Account("r", "Рубли", rub), Money(1_000_00, rub))
+        val items = listOf(
+            Transaction("t1", TransactionType.EXPENSE, "a", Money(1_00, ars), nov9.atStartOfDayIn(TimeZone.UTC)),
+            Transaction("t2", TransactionType.EXPENSE, "a", Money(1_00, ars), nov9.atStartOfDayIn(TimeZone.UTC), categoryId = "food"),
+            Transaction("t3", TransactionType.TRANSFER, "a", Money(1_00, ars), nov9.atStartOfDayIn(TimeZone.UTC), toAccountId = "b", toAmount = Money(1_00, ars)),
+        )
+
+        val attention = viewModel.buildState(withRub, items, rates, listOf(usd), nov9).attention
+
+        assertEquals(listOf("RUB"), attention.missingRates)
+        assertEquals(nov5, attention.staleRatesSince) // 4 days old: the daily download keeps failing
+        assertEquals(1, attention.uncategorized)
+        assertEquals(3, attention.count)
+        assertEquals(true, attention.isRatesIssue)
+    }
+
+    @Test
+    fun `fresh rates and categorised operations need no attention`() {
+        val attention = viewModel.buildState(accounts, emptyList(), rates, listOf(usd), LocalDate(2026, 11, 7)).attention
+
+        assertNull(attention.staleRatesSince)
+        assertEquals(0, attention.count)
     }
 }

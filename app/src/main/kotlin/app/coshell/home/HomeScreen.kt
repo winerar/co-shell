@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -12,48 +11,43 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.coshell.accounts.iconRes
-import app.coshell.core.designsystem.category.IconBadge
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.R
-import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellButton
-import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.motion.staggeredEntrance
-import app.coshell.core.designsystem.components.CoShellListRow
-import app.coshell.core.designsystem.theme.AmountTextStyle
-import app.coshell.core.designsystem.theme.CoShellTheme
-import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.home.components.SpendingCard
+import app.coshell.home.components.HomeTiles
+import app.coshell.home.components.RecentCard
 import app.coshell.home.components.TotalCard
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
-import kotlinx.datetime.LocalDate
+
+/** Everything «Обзор» can open: the other tabs, the rates screen, an operation, a new account. */
+data class HomeActions(
+    val onTransactions: () -> Unit = {},
+    val onAccounts: () -> Unit = {},
+    val onRates: () -> Unit = {},
+    val onTransactionClick: (String) -> Unit = {},
+    val onAddAccount: () -> Unit = {},
+)
 
 @Composable
-fun HomeRoute(
-    onAccountClick: (String) -> Unit,
-    onAddAccount: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
+fun HomeRoute(actions: HomeActions, viewModel: HomeViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state, onAccountClick, onAddAccount)
+    HomeScreen(state, actions)
 }
 
+/**
+ * «Обзор» (design-refactor Step 5): hero card with the total, bento tiles 2×2, the latest operations.
+ * Blocks come in as a short cascade the first time the tab shows (Step 4).
+ */
 @Composable
-fun HomeScreen(
-    state: HomeUiState,
-    onAccountClick: (String) -> Unit = {},
-    onAddAccount: () -> Unit = {},
-) {
+fun HomeScreen(state: HomeUiState, actions: HomeActions = HomeActions()) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
@@ -61,7 +55,7 @@ fun HomeScreen(
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(Spacing.l),
+            contentPadding = PaddingValues(start = Spacing.l, top = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance),
             verticalArrangement = Arrangement.spacedBy(Spacing.l),
         ) {
             if (state.isLoading) return@LazyColumn
@@ -73,77 +67,22 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                item {
-                    CoShellButton(onClick = onAddAccount) { Text(stringResource(R.string.accounts_add)) }
-                }
+                item { CoShellButton(onClick = actions.onAddAccount) { Text(stringResource(R.string.accounts_add)) } }
                 return@LazyColumn
             }
-            // Blocks come in as a short cascade the first time the tab shows (design-refactor Step 4).
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state) } }
-            state.spending?.let { spending -> item { Box(Modifier.staggeredEntrance(1)) { SpendingCard(spending) } } }
             item {
-                Text(
-                    text = stringResource(R.string.home_accounts),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.staggeredEntrance(2).padding(top = Spacing.s),
+                HomeTiles(
+                    state,
+                    onTransactions = actions.onTransactions,
+                    onAccounts = actions.onAccounts,
+                    onRates = actions.onRates,
+                    modifier = Modifier.staggeredEntrance(1),
                 )
             }
-            item { Box(Modifier.staggeredEntrance(3)) { AccountsCard(state.accounts, onAccountClick) } }
-        }
-    }
-}
-
-/** All accounts as one list group: name (and "not in the total"), balance on the right; tap opens the editor. */
-@Composable
-private fun AccountsCard(accounts: List<HomeUiState.AccountRow>, onClick: (String) -> Unit) {
-    val palette = LocalAmountPalette.current
-    // Rows appear and disappear smoothly: CoShellCard follows its content's height itself (issue #64).
-    CoShellCard(Modifier.fillMaxWidth()) {
-        accounts.forEach { row ->
-            key(row.id) {
-                CoShellListRow(
-                    title = row.name,
-                    subtitle = if (row.excludedFromTotal) stringResource(R.string.account_excluded_from_total) else null,
-                    leading = { IconBadge(row.type.iconRes, row.color?.let { categoryColor(it) }) },
-                    trailing = {
-                        AmountText(
-                            text = row.balance,
-                            style = AmountTextStyle,
-                            color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,
-                        )
-                    },
-                    onClick = { onClick(row.id) },
-                )
+            item {
+                RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, Modifier.staggeredEntrance(2))
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun HomeScreenPreview() {
-    CoShellTheme {
-        HomeScreen(
-            HomeUiState(
-                totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
-                rateDate = LocalDate(2026, 11, 9),
-                byCurrency = listOf("105 800,50 RUB", "150,00 USD"),
-                spending = HomeUiState.MonthSpending(
-                    month = LocalDate(2026, 11, 1),
-                    totals = listOf("412,30 USD", "598 000,00 ARS"),
-                    missing = emptyList(),
-                ),
-                accounts = listOf(
-                    HomeUiState.AccountRow("1", "Карта", "120 800,50 RUB", isNegative = false),
-                    HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 RUB", isNegative = true, excludedFromTotal = true),
-                ),
-            ),
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun HomeScreenEmptyPreview() {
-    CoShellTheme { HomeScreen(HomeUiState()) }
 }

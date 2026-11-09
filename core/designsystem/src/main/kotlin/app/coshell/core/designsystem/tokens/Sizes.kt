@@ -20,4 +20,12 @@ object Sizes {
     val heroIcon = 56.dp
     /** Stroke of [heroRing]. */
     val heroStroke = 6.dp
+    /** Bento tile on «Обзор» (2 in a row): tall enough for a label, a large amount and a line under it. */
+    val tileMinHeight = 128.dp
+    /** Small icon in a tile's header. */
+    val tileIcon = 20.dp
+    /** Height of the mini bars in a tile (expenses per day). */
+    val miniBarsHeight = 32.dp
+    /** Lowest visible bar: a day with little spending still shows; a day with none is a dot of this height. */
+    val miniBarMin = 2.dp
 }

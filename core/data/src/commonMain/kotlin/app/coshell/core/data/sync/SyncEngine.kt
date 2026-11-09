@@ -29,12 +29,13 @@ class SyncEngine(
     private val mutex = Mutex()
 
     suspend fun sync(): SyncResult = mutex.withLock {
-        val pulled = remote.pull(since = dao.state(CURSOR)?.toLongOrNull())
+        val pulled = remote.pull(cursor = dao.state(CURSOR))
         var applied = 0
-        // The cursor is "at or after" (>=), so records sharing the last timestamp are read again
-        // next time — harmless, merging is idempotent — and never skipped.
+        // The cursor points right after the last merged record: the next pull reads only newer
+        // ones. (It used to be ">= last server time", and every record of the last commit — they
+        // share one server time — was read again on each 10-second poll, exhausting the quota.)
         pulled.chunked(MERGE_CHUNK).forEach { chunk ->
-            applied += dao.merge(chunk.toRows(), CURSOR, chunk.maxOf { it.serverTime })
+            applied += dao.merge(chunk.toRows(), CURSOR, chunk.last().cursor)
         }
         val pushed = push()
         dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
@@ -78,7 +79,7 @@ class SyncEngine(
     }
 
     companion object {
-        /** Key in `sync_state`: server time (epoch ms) of the newest pulled record. */
+        /** Key in `sync_state`: [RemoteRecord.cursor] of the newest pulled record. */
         const val CURSOR = "pull_cursor"
         /** Key in `sync_state`: epoch ms of the last successful sync, shown on the family screen. */
         const val LAST_SYNC = "last_sync"

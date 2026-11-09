@@ -13,9 +13,9 @@ import androidx.compose.ui.text.input.ImeAction
 import app.coshell.R
 import app.coshell.categories.edit.components.CategoryTypeSection
 import app.coshell.categories.edit.components.ChildrenSection
-import app.coshell.categories.edit.components.ColorSection
 import app.coshell.categories.edit.components.IconSection
 import app.coshell.categories.edit.components.FolderSection
+import app.coshell.ui.form.ColorSection
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditFooter
@@ -39,7 +39,7 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
         )
         CategoryTypeSection(state.type, state.typeLocked, actions.onTypeChange)
         IconSection(state.icon, state.color, actions.onIconChange)
-        ColorSection(state.color, actions.onColorChange)
+        ColorSection(state.color, { color -> color?.let(actions.onColorChange) })
         if (state.canMoveToFolder && state.folders.isNotEmpty()) {
             FolderSection(state.folders, state.parentId, actions.onParentChange)
         }

@@ -18,6 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.accounts.iconRes
+import app.coshell.core.designsystem.category.IconBadge
+import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellButton
@@ -101,6 +104,7 @@ private fun AccountsCard(accounts: List<HomeUiState.AccountRow>, onClick: (Strin
                 CoShellListRow(
                     title = row.name,
                     subtitle = if (row.excludedFromTotal) stringResource(R.string.account_excluded_from_total) else null,
+                    leading = { IconBadge(row.type.iconRes, row.color?.let { categoryColor(it) }) },
                     trailing = {
                         AmountText(
                             text = row.balance,

@@ -35,6 +35,7 @@ internal fun AccountEntity.toModel() = Account(
     archived = archived,
     sortOrder = sortOrder,
     excludedFromTotal = excludedFromTotal,
+    color = color,
 )
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
@@ -48,6 +49,7 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     archived = archived,
     sortOrder = sortOrder,
     excludedFromTotal = excludedFromTotal,
+    color = color,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

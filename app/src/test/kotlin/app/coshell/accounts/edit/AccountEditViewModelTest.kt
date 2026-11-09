@@ -79,6 +79,23 @@ class AccountEditViewModelTest {
     }
 
     @Test
+    fun `account colour is saved, shown on reopen and can be removed`() = runTest {
+        accounts.saveAccount(Account("card", "Карта", usd))
+        val vm = viewModel("card")
+        assertNull(vm.state.value.color)
+
+        vm.onColorChange(0xFFB388FF)
+        vm.save()
+        assertEquals(0xFFB388FF, accounts.getAccount("card")!!.color)
+
+        val reopened = viewModel("card")
+        assertEquals(0xFFB388FF, reopened.state.value.color)
+        reopened.onColorChange(null)
+        reopened.save()
+        assertNull(accounts.getAccount("card")!!.color)
+    }
+
+    @Test
     fun `invalid form shows errors and saves nothing`() = runTest {
         val vm = viewModel()
         vm.onCurrencyChange("A")

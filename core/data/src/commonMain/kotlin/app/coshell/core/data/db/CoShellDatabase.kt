@@ -19,12 +19,13 @@ import kotlinx.coroutines.IO
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
         AutoMigration(from = 2, to = 3), // v3: accounts.excluded_from_total
         AutoMigration(from = 3, to = 4), // v4: sync_state
+        AutoMigration(from = 4, to = 5), // v5: accounts.color
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)

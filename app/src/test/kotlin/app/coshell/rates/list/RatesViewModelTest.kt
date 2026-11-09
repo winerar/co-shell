@@ -59,9 +59,18 @@ class RatesViewModelTest {
         val state = vm.state.value
         assertEquals("ARS", state.base)
         assertEquals(listOf("AMD", "USD"), state.current.map { it.currency })
-        assertEquals("0,0007", state.current[1].rateText) // 1 ARS = 1/1460 USD
+        assertEquals("0,0006849", state.current[1].rateText) // 1 ARS = 1/1460 USD
         vm.addManual()
         assertEquals("ARS", vm.state.value.editor!!.from)
+    }
+
+    @Test
+    fun `a tiny rate like USD to BTC is shown instead of crashing`() {
+        val btc = CurrencyCode("BTC")
+        repo.used = setOf(usd, btc)
+        repo.rates.value = listOf(ExchangeRate(nov9, usd, btc, Rate.parse("0.0000098766"), RateOrigin.DOWNLOADED))
+
+        assertEquals("0,000009877", vm.state.value.current.single().rateText)
     }
 
     @Test

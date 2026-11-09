@@ -29,8 +29,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 /**
@@ -80,14 +78,23 @@ class TransactionEditViewModel @Inject constructor(
             .filter { !it.archived || it.id == transaction?.categoryId }
 
         val today = clock.now().toLocalDateTime(timeZone).date
-        val base = TransactionEditUiState(accounts = accountList.map { it.toOption() }, today = today)
-        val loaded = if (transaction == null) newForm(base, accountList) else formOf(transaction, base)
+        val recent = transactions.observeTransactions().first()
+        val base = TransactionEditUiState(
+            accounts = accountList.map { it.toOption() },
+            today = today,
+            receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
+        )
+        val loaded = if (transaction == null) newForm(base, accountList, recent) else formOf(transaction, base)
         _state.value = loaded.withCategoryOptions(allCategories)
     }
 
     /** A new transaction starts on today and on the account used last. */
-    private suspend fun newForm(base: TransactionEditUiState, accountList: List<Account>): TransactionEditUiState {
-        val lastAccount = transactions.observeTransactions().first().firstOrNull()?.accountId
+    private fun newForm(
+        base: TransactionEditUiState,
+        accountList: List<Account>,
+        recent: List<Transaction>,
+    ): TransactionEditUiState {
+        val lastAccount = recent.firstOrNull()?.accountId
         return base.copy(
             isNew = true,
             type = initialType,
@@ -106,6 +113,9 @@ class TransactionEditViewModel @Inject constructor(
         categoryId = transaction.categoryId,
         date = transaction.date.toLocalDateTime(timeZone).date,
         note = transaction.note,
+        receiptEnabled = transaction.originalAmount != null,
+        receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
+        receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
     )
 
     // endregion
@@ -121,7 +131,7 @@ class TransactionEditViewModel @Inject constructor(
     fun onToAmountChange(value: String) = _state.update { it.copy(toAmount = value, toAmountError = null) }
 
     fun onAccountSelect(id: String) = _state.update {
-        it.copy(accountId = id, accountError = false, amountError = null, toAccountError = null)
+        it.copy(accountId = id, accountError = false, amountError = null, toAccountError = null, receiptCurrencyError = null)
     }
 
     fun onToAccountSelect(id: String) = _state.update { it.copy(toAccountId = id, toAccountError = null) }
@@ -139,6 +149,18 @@ class TransactionEditViewModel @Inject constructor(
 
     fun onNoteChange(value: String) = _state.update { it.copy(note = value) }
 
+    /** Turning the receipt on preselects the last receipt currency that differs from the account's. */
+    fun onReceiptToggle(enabled: Boolean) = _state.update {
+        val currency = it.receiptCurrency.ifEmpty { it.receiptCurrencyChoices.firstOrNull().orEmpty() }
+        it.copy(receiptEnabled = enabled, receiptCurrency = currency, receiptCurrencyError = null, receiptAmountError = null)
+    }
+
+    fun onReceiptCurrencyChange(value: String) = _state.update {
+        it.copy(receiptCurrency = value.trim().uppercase(), receiptCurrencyError = null, receiptAmountError = null)
+    }
+
+    fun onReceiptAmountChange(value: String) = _state.update { it.copy(receiptAmount = value, receiptAmountError = null) }
+
     // endregion
 
     // region Save and delete
@@ -153,7 +175,7 @@ class TransactionEditViewModel @Inject constructor(
             }
             is FormResult.Valid -> result.form
         }
-        val transaction = toTransaction(form, current.date)
+        val transaction = buildTransaction(existing, form, dateWithTime(existing?.date ?: clock.now(), current.date, timeZone), ids)
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
                 SaveTransactionUseCase.Result.Saved -> _state.update { it.copy(isDone = true) }
@@ -170,40 +192,6 @@ class TransactionEditViewModel @Inject constructor(
         }
     }
 
-    /** Edits keep the fields the form does not show (payee, labels, import info…). */
-    private fun toTransaction(form: ValidForm, date: LocalDate): Transaction {
-        val date = dateWithTime(date)
-        val base = existing ?: return Transaction(
-            id = ids.newId(),
-            type = form.type,
-            accountId = form.account.id,
-            amount = form.amount,
-            date = date,
-            toAccountId = form.toAccount?.id,
-            toAmount = form.toAmount,
-            categoryId = form.categoryId,
-            note = form.note,
-        )
-        return base.copy(
-            type = form.type,
-            accountId = form.account.id,
-            amount = form.amount,
-            toAccountId = form.toAccount?.id,
-            toAmount = form.toAmount,
-            categoryId = form.categoryId,
-            date = date,
-            note = form.note,
-        )
-    }
-
-    /** Keeps the time of day of the edited transaction (or the current time) on the chosen date. */
-    private fun dateWithTime(date: LocalDate): Instant {
-        val reference = existing?.date ?: clock.now()
-        val local = reference.toLocalDateTime(timeZone)
-        if (local.date == date) return reference
-        return date.atTime(local.time).toInstant(timeZone)
-    }
-
     // endregion
 
     private fun TransactionEditUiState.withErrors(errors: FormErrors) = copy(
@@ -212,6 +200,8 @@ class TransactionEditViewModel @Inject constructor(
         toAccountError = errors.toAccountError,
         toAmountError = errors.toAmountError,
         categoryError = errors.categoryError,
+        receiptCurrencyError = errors.receiptCurrencyError,
+        receiptAmountError = errors.receiptAmountError,
     )
 
     /** Use case refusals that the form could not foresee (e.g. an account deleted on the other phone). */
@@ -225,6 +215,8 @@ class TransactionEditViewModel @Inject constructor(
         SaveTransactionUseCase.Reason.CATEGORY_NOT_FOUND,
         SaveTransactionUseCase.Reason.CATEGORY_TYPE_MISMATCH,
         -> copy(categoryError = true, categoryId = null)
+        SaveTransactionUseCase.Reason.ORIGINAL_CURRENCY_INVALID ->
+            copy(receiptCurrencyError = TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT)
     }
 
     private fun Account.toOption() =

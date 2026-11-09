@@ -96,4 +96,16 @@ class TransactionDaysTest {
         assertNull(rows[1].icon)
         assertNull(rows[1].color)
     }
+
+    @Test
+    fun `purchase paid in another currency shows the receipt amount`() {
+        val row = build(
+            Transaction(
+                "r", TransactionType.EXPENSE, "cash", Money(14_29, usd), at(8, 12),
+                categoryId = "cafe", originalAmount = Money(15_000_00, ars),
+            ),
+        ).single().rows.single()
+        assertEquals(MoneyFormat.RU.format(-Money(14_29, usd)), row.amount)
+        assertEquals(MoneyFormat.RU.format(Money(15_000_00, ars)), row.secondaryAmount)
+    }
 }

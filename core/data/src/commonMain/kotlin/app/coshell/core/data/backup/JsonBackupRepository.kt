@@ -6,6 +6,7 @@ import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.TransactionEntity
 import app.coshell.core.data.repository.Stamp
 import app.coshell.core.data.repository.WriteStamper
+import app.coshell.core.data.repository.toManualEntity
 import app.coshell.core.data.repository.toEntity
 import app.coshell.core.data.repository.toModel
 import app.coshell.core.domain.BackupImportResult
@@ -13,6 +14,7 @@ import app.coshell.core.domain.BackupRepository
 import app.coshell.core.model.Account
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Transaction
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -43,6 +45,7 @@ class JsonBackupRepository(
             categories = database.categoryDao().getAll().map { it.toModel().toDto() },
             transactions = database.transactionDao().getAll().map { it.toModel().toDto() },
             budgets = database.budgetDao().getAll().map { it.toModel().toDto() },
+            manualRates = database.rateDao().getAllManual().map { it.toModel().toManualDto() },
         )
         json.encodeToString(BackupFile.serializer(), file)
     }
@@ -71,6 +74,7 @@ class JsonBackupRepository(
                 file.categories.map { it.toModel() },
                 file.transactions.map { it.toModel() },
                 file.budgets.map { it.toModel() },
+                file.manualRates.map { it.toModel() },
             )
         } catch (e: IllegalArgumentException) {
             return BackupImportResult.Corrupted(e.message ?: "invalid record")
@@ -83,9 +87,11 @@ class JsonBackupRepository(
             categories = local.categories + models.categories.map { it.toEntity(stamp) },
             transactions = local.transactions + models.transactions.map { it.toEntity(stamp) },
             budgets = local.budgets + models.budgets.map { it.toEntity(stamp) },
+            manualRates = models.manualRates.map { it.toManualEntity(stamp) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,
+            models.manualRates.size,
         )
     }
 
@@ -142,5 +148,6 @@ class JsonBackupRepository(
         val categories: List<Category>,
         val transactions: List<Transaction>,
         val budgets: List<Budget>,
+        val manualRates: List<ExchangeRate>,
     )
 }

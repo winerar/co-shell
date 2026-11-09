@@ -52,6 +52,15 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
 Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`, `update/`,
 `feedback/` (+ `data/`: отправка в Firestore REST, сведения о телефоне; решения — `core:domain/feedback/`).
+`shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
+`ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
+распознавание толчков — `core:domain/shake/ShakeDetector`.
+Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
+`CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
+источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
+HTTP на Android — `app/.../rates/data/UrlConnectionHttpGet`, DI — `di/RatesModule`. Хранение — контракт
+`ExchangeRateRepository` (`core:domain/rates/`), Room — `db/RateEntities.kt`, `db/RateDao.kt`,
+`repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
@@ -64,7 +73,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
 компонентом с параметрами, а не копируй. Готовые общие блоки форм — `ui/form/`: `EditTopBar`,
 `NameField`, `FormSection`/`FormHint`, `EditFooter` (Сохранить/Архив/Удалить), `DeleteButton`,
-`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`.
+`ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `MessageCard` (итог действия); строки меню — `ui/list/ActionRow`, строка-переключатель настройки — `ui/list/SwitchRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

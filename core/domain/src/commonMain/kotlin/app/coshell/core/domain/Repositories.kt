@@ -75,8 +75,13 @@ interface BackupRepository {
 }
 
 sealed interface BackupImportResult {
-    data class Imported(val accounts: Int, val categories: Int, val transactions: Int, val budgets: Int) :
-        BackupImportResult
+    data class Imported(
+        val accounts: Int,
+        val categories: Int,
+        val transactions: Int,
+        val budgets: Int,
+        val manualRates: Int = 0,
+    ) : BackupImportResult
     data object NotABackup : BackupImportResult
     data class UnsupportedVersion(val version: Int) : BackupImportResult
     data class Corrupted(val message: String) : BackupImportResult

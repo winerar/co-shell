@@ -20,8 +20,19 @@
 2. `./gradlew :core:data:jvmTest` перегенерирует `core/data/schemas/<version>.json` — **закоммить его**.
 3. Добавь `AutoMigration(from, to)` в `@Database` или ручную `Migration`, если auto не справляется
    (переименование, перенос данных).
-4. Тест миграции на JVM (`MigrationTestHelper` + `BundledSQLiteDriver`).
+4. Тест миграции на JVM — `jvmTest/.../MigrationTest.kt` (`MigrationTestHelper` из `room-testing` +
+   `BundledSQLiteDriver`): создать старую версию, вставить данные SQL-ом, мигрировать, проверить.
 5. `fallbackToDestructiveMigration` **запрещён**: до этапа 4 данные живут только на телефоне.
+
+## Курсы (схема v2)
+- `manual_rates` — ручные курсы, синхронизируемая таблица (поля синка, мягкое удаление), **в бэкапе**
+  (`manualRates`). `id` = `<дата>:<A>:<B>` (валюты по алфавиту, `manualRateId`): одна запись на пару и
+  день в любом направлении — сохранение `ARS → USD` заменяет `USD → ARS` того же дня, и на двух
+  телефонах это один документ.
+- `downloaded_rates` — кэш загрузки, ключ `(date, from_currency, to_currency)`, плюс `source` и
+  `downloaded_at`; не синхронизируется, **не в бэкапе**. Сохранять только используемые валюты:
+  `snapshot.keepOnly(repo.usedCurrencies())` (USD остаётся всегда — для кросс-курсов).
+- Дата — текст `YYYY-MM-DD`, курс — текст `Rate.toPlainString()`; `REAL` запрещён.
 
 ## Тесты
 - `core/data/src/jvmTest`: `createInMemoryCoShellDatabase()` — настоящий SQLite в памяти, без эмулятора.

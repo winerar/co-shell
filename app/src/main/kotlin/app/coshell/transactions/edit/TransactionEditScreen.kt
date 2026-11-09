@@ -33,6 +33,7 @@ import app.coshell.transactions.edit.components.AccountChips
 import app.coshell.transactions.edit.components.AmountField
 import app.coshell.transactions.edit.components.CategoryChips
 import app.coshell.transactions.edit.components.DateChips
+import app.coshell.transactions.edit.components.ReceiptSection
 import app.coshell.transactions.edit.components.TypeSelector
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteButton
@@ -101,11 +102,13 @@ private fun TransactionForm(state: TransactionEditUiState, actions: TransactionE
     AmountField(
         value = state.amount,
         onValueChange = actions.onAmountChange,
-        label = stringResource(R.string.transaction_amount),
+        label = stringResource(if (state.hasReceipt) R.string.transaction_amount_debited else R.string.transaction_amount),
         currencySymbol = state.account?.currencySymbol,
         error = state.amountError,
         modifier = Modifier.fillMaxWidth().focusRequester(amountFocus),
     )
+
+    if (!state.isTransfer) ReceiptSection(state, actions)
 
     FormSection(
         title = stringResource(if (state.isTransfer) R.string.transaction_from_account else R.string.transaction_account),

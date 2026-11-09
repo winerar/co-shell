@@ -16,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -34,6 +36,8 @@ import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreRoute
+import app.coshell.shake.ShakeEffect
+import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.update.UpdateRoute
@@ -65,12 +69,22 @@ private enum class TopLevel(
 }
 
 @Composable
-fun CoShellNavHost(navController: NavHostController = rememberNavController()) {
+fun CoShellNavHost(
+    navController: NavHostController = rememberNavController(),
+    shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val current = backStackEntry?.destination
     val showBottomBar = TopLevel.entries.any { current.isOn(it) }
 
     StartupUpdateDialogs(onOpenUpdate = { navController.navigate(UpdateDestination) { launchSingleTop = true } })
+
+    // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
+    val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
+    ShakeEffect(
+        enabled = shakeEnabled && showBottomBar,
+        onShake = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+    )
 
     Scaffold(
         bottomBar = {

@@ -61,6 +61,7 @@ private fun Transaction.toRow(
             subtitle = accountName,
             note = note,
             amount = moneyFormat.format(-amount),
+            secondaryAmount = originalAmount?.let(moneyFormat::format),
         )
         TransactionType.INCOME -> Row(
             id = id,
@@ -71,6 +72,7 @@ private fun Transaction.toRow(
             subtitle = accountName,
             note = note,
             amount = "+" + moneyFormat.format(amount),
+            secondaryAmount = originalAmount?.let(moneyFormat::format),
         )
         TransactionType.TRANSFER -> {
             val target = toAccountId?.let { accountsById[it]?.name } ?: UNKNOWN

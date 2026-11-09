@@ -11,14 +11,14 @@ import app.coshell.R
 import app.coshell.categories.labelRes
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.model.CategoryType
-import app.coshell.ui.form.FormHint
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSection
 
 /** Expense/income chips; locked (with a hint) when the category is inside a folder or has children. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun CategoryTypeSection(selected: CategoryType, locked: Boolean, onSelect: (CategoryType) -> Unit) {
-    FormSection(stringResource(R.string.category_type)) {
+    CoShellSection(stringResource(R.string.category_type)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CategoryType.entries.forEach { type ->
                 CoShellFilterChip(
@@ -29,6 +29,6 @@ internal fun CategoryTypeSection(selected: CategoryType, locked: Boolean, onSele
                 )
             }
         }
-        if (locked) FormHint(stringResource(R.string.category_type_locked))
+        if (locked) CoShellHint(stringResource(R.string.category_type_locked))
     }
 }

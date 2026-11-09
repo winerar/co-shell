@@ -22,7 +22,7 @@ import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileClickable
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.R as DesignR
 
 /** Palette swatches; the selected colour shows a check mark. */
@@ -31,7 +31,7 @@ import app.coshell.core.designsystem.R as DesignR
 internal fun ColorSection(selected: Long?, onSelect: (Long) -> Unit) {
     // A colour saved before the neon palette shows as its neon swatch.
     val selectedSwatch = selected?.let(CategoryPalette::normalize)
-    FormSection(stringResource(R.string.category_color)) {
+    CoShellSection(stringResource(R.string.category_color)) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),

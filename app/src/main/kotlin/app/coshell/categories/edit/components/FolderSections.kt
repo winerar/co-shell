@@ -10,14 +10,14 @@ import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.categories.edit.CategoryEditUiState.Option
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.ui.form.FormHint
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSection
 
 /** Which folder the category is in: "No folder" plus one chip per folder. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun FolderSection(folders: List<Option>, parentId: String?, onSelect: (String?) -> Unit) {
-    FormSection(stringResource(R.string.category_folder)) {
+    CoShellSection(stringResource(R.string.category_folder)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CoShellFilterChip(
                 selected = parentId == null,
@@ -39,8 +39,8 @@ internal fun FolderSection(folders: List<Option>, parentId: String?, onSelect: (
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ChildrenSection(candidates: List<Option>, childIds: Set<String>, onToggle: (String) -> Unit) {
-    FormSection(stringResource(R.string.category_children)) {
-        FormHint(stringResource(R.string.category_children_hint))
+    CoShellSection(stringResource(R.string.category_children)) {
+        CoShellHint(stringResource(R.string.category_children_hint))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             candidates.forEach { candidate ->
                 CoShellFilterChip(

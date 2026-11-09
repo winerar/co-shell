@@ -20,7 +20,8 @@ import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditFooter
 import app.coshell.ui.sheet.EditSheetLayout
-import app.coshell.ui.form.NameField
+import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.TextKeyboard
 
 /** Category editor layout: name, type, icon, colour, folder or subcategories, then save/archive/delete. */
 @Composable
@@ -29,12 +30,12 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
 
     EditSheetLayout(title = stringResource(state.titleRes), onSave = actions.onSave, saveEnabled = !state.isLoading) {
         if (state.isLoading) return@EditSheetLayout
-        NameField(
+        CoShellTextField(
             value = state.name,
             onValueChange = actions.onNameChange,
             label = stringResource(R.string.category_name),
             error = if (state.nameError) stringResource(R.string.category_name_error) else null,
-            imeAction = ImeAction.Done,
+            keyboardOptions = TextKeyboard.copy(imeAction = ImeAction.Done),
         )
         CategoryTypeSection(state.type, state.typeLocked, actions.onTypeChange)
         IconSection(state.icon, state.color, actions.onIconChange)

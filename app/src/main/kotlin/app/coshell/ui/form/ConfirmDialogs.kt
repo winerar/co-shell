@@ -1,12 +1,10 @@
 package app.coshell.ui.form
 
 import androidx.annotation.StringRes
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellTextButton
+import app.coshell.core.designsystem.components.CoShellAlertDialog
 
 /** Generic "are you sure?" dialog: [confirmLabel] runs [onConfirm], "Cancel" runs [onDismiss]. */
 @Composable
@@ -16,20 +14,23 @@ fun ConfirmDialog(
     @StringRes confirmLabel: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    destructive: Boolean = false,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(title)) },
-        text = { Text(stringResource(text)) },
-        confirmButton = { CoShellTextButton(onClick = onConfirm) { Text(stringResource(confirmLabel)) } },
-        dismissButton = { CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+    CoShellAlertDialog(
+        title = stringResource(title),
+        text = stringResource(text),
+        confirmLabel = stringResource(confirmLabel),
+        onConfirm = onConfirm,
+        onDismiss = onDismiss,
+        dismissLabel = stringResource(R.string.action_cancel),
+        destructive = destructive,
     )
 }
 
-/** "Delete X?" confirmation shared by all editors. */
+/** "Delete X?" confirmation shared by all editors; «Удалить» is red. */
 @Composable
 fun ConfirmDeleteDialog(@StringRes title: Int, @StringRes text: Int, onConfirm: () -> Unit, onDismiss: () -> Unit) =
-    ConfirmDialog(title, text, R.string.action_delete, onConfirm, onDismiss)
+    ConfirmDialog(title, text, R.string.action_delete, onConfirm, onDismiss, destructive = true)
 
 /** Delete was refused because the item is in use; offers archiving instead. */
 @Composable

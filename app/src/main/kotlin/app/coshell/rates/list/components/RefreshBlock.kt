@@ -21,7 +21,7 @@ import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.rates.RefreshStatus
 import app.coshell.rates.list.formatRateDate
 import app.coshell.rates.list.sourceLabel
-import app.coshell.ui.form.MessageCard
+import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.R as DesignR
 
 /** "Loaded: rates for 9 Nov, source currency-api", the "Update now" button and its result. */
@@ -47,9 +47,9 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
         when (status) {
             RefreshStatus.Idle -> Unit
             RefreshStatus.Running -> LinearProgressIndicator(Modifier.fillMaxWidth())
-            RefreshStatus.Updated -> MessageCard(stringResource(R.string.rates_refresh_updated), isError = false)
-            RefreshStatus.AlreadyFresh -> MessageCard(stringResource(R.string.rates_refresh_fresh), isError = false)
-            RefreshStatus.Failed -> MessageCard(stringResource(R.string.rates_refresh_failed), isError = true)
+            RefreshStatus.Updated -> CoShellMessage(stringResource(R.string.rates_refresh_updated), isError = false)
+            RefreshStatus.AlreadyFresh -> CoShellMessage(stringResource(R.string.rates_refresh_fresh), isError = false)
+            RefreshStatus.Failed -> CoShellMessage(stringResource(R.string.rates_refresh_failed), isError = true)
         }
     }
 }

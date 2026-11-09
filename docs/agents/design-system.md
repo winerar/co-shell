@@ -10,9 +10,10 @@ core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
   tokens/   Spacing, Radii (+ CoShellShapes, PillShape), Motion (длительности, кривые)
   theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
   amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
-  components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью
+  components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью;
+              поля (TextFields.kt), строки (ListRow.kt), диалоги (Dialogs.kt), раздел/подсказка/сообщение (FormBlocks.kt)
   motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
-  catalog/  TokensCatalog — витрина токенов (@Preview светлая/тёмная); растёт в каталог компонентов
+  catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов (@Preview светлая/тёмная)
   category/ CategoryBadge, палитра и иконки категорий
 core/designsystem/src/main/res/font/jetbrains_mono.ttf   шрифт цифр
 core/designsystem/src/main/res/font/onest.ttf            шрифт текста (лицензии — core/designsystem/fonts/)
@@ -94,15 +95,27 @@ core/designsystem/src/main/res/font/onest.ttf            шрифт текста
   параметры устройства (тема, валюты отчётов, встряхивание, обновление). Сумма — системная цифровая клавиатура.
 
 ## Компоненты
-- Сейчас общие блоки форм — в `app/.../ui/form/` (верхняя панель, кнопки, диалоги). Они переезжают в
-  `core:designsystem` как свои компоненты поверх Material 3, когда будут ответы по формам и навигации.
+- **Поля** — `CoShellTextField` (подпись, `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
+  на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
+  после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
+- **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
+  `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `enabled = false` → 38 %); прозрачная,
+  `containerColor` — чтобы закрыть полосу свайпа. `CoShellSwitchRow` — вся строка переключает.
+- **Диалоги** — `CoShellAlertDialog` (вопрос: текст и 1–2 кнопки, `destructive` — красная «Удалить»),
+  `CoShellDialog` (маленькая форма, содержимое прокручивается). Редакторы — не диалоги, а шторки.
+- **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`
+  (итог действия: блок на ступень светлее фона или контейнер ошибки).
+- Тест `app/.../TactileRuleTest` запрещает в `app` импорт Material-кнопок, чипов, полей, диалогов,
+  `ListItem` и `Card` — только компоненты отсюда. Обёртки со строками приложения (`ui/form/ConfirmDialog`,
+  `ui/list/ActionRow`, `EditFooter`, `DateChips`) остаются в `app`, но строятся на этих компонентах.
 - Новый компонент: без строк приложения (тексты — параметрами), с `@Preview` светлой и тёмной темы,
   добавить его в `catalog/`.
 
 ## Порядок переезда (план)
 1. ✔ Токены отступов, скруглений, движения; шрифт цифр; витрина токенов.
 2. ✔ Ответы на вопросы дизайнеру: цвета, шрифты, навигация, формы, движение (`design-questions.md`).
-3. Базовые компоненты: кнопки, поля, карточки, строки списка, диалоги, шторки, нижняя панель.
+3. Базовые компоненты: ✔ кнопки, поля, карточки, строки списка, диалоги, блоки форм; дальше — шторка
+   (`app/ui/sheet/` → сюда), нижняя панель, полосы прогресса.
 4. Экраны по одному: «Обзор» → ввод операции → «Операции» → остальные; после каждого — числа `dp` и
    `tween` в экране заменены токенами.
 5. Правило в `code-style.md`: в экранах только компоненты и токены дизайн-системы.

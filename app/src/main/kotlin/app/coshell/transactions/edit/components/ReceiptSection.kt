@@ -1,5 +1,7 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.core.designsystem.components.CodeKeyboard
+import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -7,7 +9,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,19 +53,12 @@ internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionE
                 }
             }
         }
-        OutlinedTextField(
+        CoShellTextField(
             value = state.receiptCurrency,
             onValueChange = actions.onReceiptCurrencyChange,
-            label = { Text(stringResource(R.string.transaction_receipt_currency)) },
-            isError = state.receiptCurrencyError != null,
-            supportingText = state.receiptCurrencyError?.let { error -> { Text(stringResource(error.messageRes)) } },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Characters,
-                keyboardType = KeyboardType.Ascii,
-                imeAction = ImeAction.Next,
-            ),
-            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.transaction_receipt_currency),
+            error = state.receiptCurrencyError?.let { stringResource(it.messageRes) },
+            keyboardOptions = CodeKeyboard,
         )
         AmountField(
             value = state.receiptAmount,

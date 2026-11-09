@@ -11,13 +11,13 @@ import app.coshell.R
 import app.coshell.accounts.labelRes
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.model.AccountType
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellSection
 
 /** Account type as a row of chips (cash, card, deposit…). */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AccountTypeSection(selected: AccountType, onSelect: (AccountType) -> Unit) {
-    FormSection(stringResource(R.string.account_type)) {
+    CoShellSection(stringResource(R.string.account_type)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             AccountType.entries.forEach { type ->
                 CoShellFilterChip(

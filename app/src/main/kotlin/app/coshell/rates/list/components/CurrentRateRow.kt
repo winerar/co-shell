@@ -1,12 +1,10 @@
 package app.coshell.rates.list.components
 
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.rates.list.CurrentRateItem
@@ -20,21 +18,21 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
         if (item.isManual) add(stringResource(R.string.rates_origin_manual))
         if (item.viaPivot) add(stringResource(R.string.rates_origin_cross))
     }.joinToString(" · ")
-    ListItem(
-        headlineContent = {
+    CoShellListRow(
+        title = {
             if (item.rateText != null) {
                 Text(stringResource(R.string.rates_line, base, item.rateText, item.currency), style = RateTextStyle)
             } else {
                 Text(item.currency)
             }
         },
-        supportingContent = {
+        supporting = {
             if (item.rateText == null) {
                 Text(stringResource(R.string.rates_no_rate), color = LocalStatusPalette.current.warning)
             } else {
                 Text(details)
             }
         },
-        modifier = Modifier.tactileClickable(onClick = onClick),
+        onClick = onClick,
     )
 }

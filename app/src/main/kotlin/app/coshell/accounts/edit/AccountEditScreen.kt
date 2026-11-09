@@ -15,8 +15,8 @@ import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditFooter
 import app.coshell.ui.sheet.EditSheetLayout
-import app.coshell.ui.form.NameField
-import app.coshell.ui.list.SwitchRow
+import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSwitchRow
 
 /** Account editor layout: name, currency, type, initial balance, "in the total", then save/archive/delete. */
 @Composable
@@ -29,7 +29,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
         saveEnabled = !state.isLoading,
     ) {
         if (state.isLoading) return@EditSheetLayout
-        NameField(
+        CoShellTextField(
             value = state.name,
             onValueChange = actions.onNameChange,
             label = stringResource(R.string.account_name),
@@ -38,16 +38,14 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
         CurrencySection(state, actions.onCurrencyChange)
         AccountTypeSection(state.type, actions.onTypeChange)
         InitialBalanceField(state.initialBalance, state.balanceError, actions.onInitialBalanceChange)
-        SwitchRow(
-            icon = null,
+        CoShellSwitchRow(
             title = stringResource(R.string.account_included_in_total),
             subtitle = stringResource(R.string.account_included_in_total_hint),
             checked = state.includedInTotal,
             onCheckedChange = actions.onIncludedInTotalChange,
         )
         if (state.showSharing) {
-            SwitchRow(
-                icon = null,
+            CoShellSwitchRow(
                 title = stringResource(R.string.account_shared),
                 subtitle = stringResource(R.string.account_shared_hint),
                 checked = state.shared,

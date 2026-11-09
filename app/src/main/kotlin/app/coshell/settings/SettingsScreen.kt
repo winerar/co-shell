@@ -25,7 +25,7 @@ import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.ThemeModeRow
 import app.coshell.ui.list.ActionRow
-import app.coshell.ui.list.SwitchRow
+import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
 /** «Ещё → Настройки» (issue #30): device preferences — theme, report currencies, shake, app update. */
@@ -98,8 +98,8 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
                 )
             }
             item {
-                SwitchRow(
-                    icon = DesignR.drawable.ic_mobile_vibrate,
+                CoShellSwitchRow(
+                    leading = { Icon(painterResource(DesignR.drawable.ic_mobile_vibrate), contentDescription = null) },
                     title = stringResource(R.string.shake_to_add_title),
                     subtitle = stringResource(R.string.shake_to_add_hint),
                     checked = state.shakeEnabled,

@@ -18,14 +18,14 @@ import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileClickable
-import app.coshell.ui.form.FormSection
+import app.coshell.core.designsystem.components.CoShellSection
 
 /** Grid of all category icons drawn in the chosen [color]; the selected one gets a ring. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun IconSection(selected: String?, color: Long?, onSelect: (String) -> Unit) {
     val ring = color?.let(::Color) ?: MaterialTheme.colorScheme.primary
-    FormSection(stringResource(R.string.category_icon)) {
+    CoShellSection(stringResource(R.string.category_icon)) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),

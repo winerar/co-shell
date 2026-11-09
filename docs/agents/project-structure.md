@@ -78,6 +78,9 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`
 (диалоги при запуске, подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
 Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
+Импорт из Wallet (этап 5): разбор CSV — `core:domain/importer/csv/CsvReader` (общий RFC 4180), формат Wallet —
+`core:domain/importer/wallet/` (`WalletCsvParser` → `WalletRecord`/ошибки с номером строки, `WalletTransferMatcher`,
+`WalletSummary`); образец для тестов — `WalletSamples` (копия `docs/samples/wallet-export-sample.csv`).
 
 Аргументы маршрута ViewModel читает из `SavedStateHandle` по имени свойства (не `toRoute()` — так
 работает в unit-тестах без Android). Общее для нескольких экранов — на уровень `<feature>/`

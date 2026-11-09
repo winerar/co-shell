@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.designsystem.motion.LocalAddConfirm
+import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.TransactionType
 import kotlinx.datetime.LocalDate
 
@@ -56,6 +57,12 @@ fun TransactionEditRoute(
                 viewModel.save()
             },
             onDelete = viewModel::delete,
+            onStepChange = viewModel::onStepChange,
+            onKeypadTarget = viewModel::onKeypadTarget,
+            onKey = { key ->
+                if (key == KeypadKey.Done) saving = true
+                viewModel.onKey(key)
+            },
         ),
     )
 }
@@ -77,4 +84,7 @@ data class TransactionEditActions(
     val onReceiptAmountChange: (String) -> Unit = {},
     val onSave: () -> Unit = {},
     val onDelete: () -> Unit = {},
+    val onStepChange: (TransactionEditUiState.EntryStep) -> Unit = {},
+    val onKeypadTarget: (TransactionEditUiState.KeypadTarget) -> Unit = {},
+    val onKey: (KeypadKey) -> Unit = {},
 )

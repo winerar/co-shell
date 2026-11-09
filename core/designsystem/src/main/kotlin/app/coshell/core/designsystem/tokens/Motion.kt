@@ -1,6 +1,11 @@
 package app.coshell.core.designsystem.tokens
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
@@ -62,5 +67,14 @@ object Motion {
 
     /** Rotation of an "expand" arrow and other small turns, in degrees. */
     val Turn: FiniteAnimationSpec<Float> = spatial()
+    /**
+     * The only looping motion: a slow «breath» of something waiting for the user (an update ready to install).
+     * A spring cannot repeat, so this one has a period; it is calm (2.2 s) and only scales by a few percent.
+     */
+    fun breath(): InfiniteRepeatableSpec<Float> =
+        infiniteRepeatable(tween(BREATH_HALF_MS, easing = FastOutSlowInEasing), RepeatMode.Reverse)
+
+    private const val BREATH_HALF_MS = 1100
+
     // Press feedback (depth, tilt, light) lives in `motion/Tactile` and takes its springs from here.
 }

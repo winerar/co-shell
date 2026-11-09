@@ -52,6 +52,7 @@
   | Активная вкладка | `components/TabPill.kt` | одна пилюля на панель; передний край — `spatialFast`, задний — `spatial` (капля тянется и собирается) |
   | «+» после сохранения | `motion/ConfirmPulse.kt` | редактор зовёт `LocalAddConfirm.current.fire()` → «+» поворачивается в ✓, заливка `primary → tertiary`, через 0.7 с обратно |
   | Блоки экрана | `Modifier.staggeredEntrance(i)` | проявление + подъём 12 dp, шаг 30 мс (не больше 8 ступеней), только при первом показе (`rememberSaveable`) |
+  | Ожидание действия (обновление готово) | `Modifier.breathing(active)` | единственная петля: `Motion.breath()` (2,2 с, масштаб 1→1,04) |
   | Поле с новой ошибкой | `Modifier.errorShake(error)` (уже в `CoShellTextField`) | сдвиг вбок пружиной `bouncy` с начальной скоростью ≈ 2 качания |
   | Снэкбар «Отменить» | `components/Snackbar.kt` | выезжает снизу (`Placement`), полоска времени — по часам кадров, не пружина (это таймер) |
   | Смена темы/палитры | `motion/ThemeReveal.kt` | `LocalThemeReveal.current.change { … }`: старый кадр снимается один раз в картинку, новая тема раскрывается кругом от касания (`spatialSlow`) |

@@ -120,4 +120,28 @@ class TransactionDaysTest {
         assertEquals(MoneyFormat.RU.format(-Money(14_29, usd)), row.amount)
         assertEquals(MoneyFormat.RU.format(Money(15_000_00, ars)), row.secondaryAmount)
     }
+
+    @Test
+    fun `day total nets incomes and expenses per currency without transfers`() {
+        val day = build(
+            Transaction("e1", TransactionType.EXPENSE, "card", Money(30_000_00, ars), at(8, 9)),
+            Transaction("e2", TransactionType.EXPENSE, "card", Money(15_300_00, ars), at(8, 10)),
+            Transaction("t", TransactionType.TRANSFER, "card", Money(1_000_00, ars), at(8, 11), toAccountId = "cash", toAmount = Money(1_00, usd)),
+        ).single()
+        assertEquals("-45${g}300,00${nbsp}ARS", day.total)
+        assertEquals(Kind.EXPENSE, day.totalTone)
+    }
+
+    @Test
+    fun `mixed day has no tone and a day of transfers no total`() {
+        val mixed = build(
+            Transaction("e", TransactionType.EXPENSE, "card", Money(100_00, ars), at(8, 9)),
+            Transaction("i", TransactionType.INCOME, "cash", Money(5_00, usd), at(8, 10)),
+        ).single()
+        assertNull(mixed.totalTone)
+        val transfers = build(
+            Transaction("t", TransactionType.TRANSFER, "card", Money(1_00, ars), at(8, 11), toAccountId = "cash", toAmount = Money(1, usd)),
+        ).single()
+        assertNull(transfers.total)
+    }
 }

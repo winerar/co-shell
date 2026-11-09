@@ -11,7 +11,13 @@ fun FeedbackRoute(onBack: () -> Unit, viewModel: FeedbackViewModel = hiltViewMod
     val state by viewModel.state.collectAsStateWithLifecycle()
     FeedbackScreen(
         state = state,
-        actions = FeedbackActions(onBack = onBack, onTextChange = viewModel::onTextChange, onSend = viewModel::send),
+        actions = FeedbackActions(
+            onBack = onBack,
+            onTextChange = viewModel::onTextChange,
+            onSend = viewModel::send,
+            onKind = viewModel::onKind,
+            onWriteMore = viewModel::onWriteMore,
+        ),
     )
 }
 
@@ -19,5 +25,8 @@ fun FeedbackRoute(onBack: () -> Unit, viewModel: FeedbackViewModel = hiltViewMod
 data class FeedbackActions(
     val onBack: () -> Unit = {},
     val onTextChange: (String) -> Unit = {},
-    val onSend: () -> Unit = {},
+    /** Gets the localized name of the chosen kind, which goes in front of the text. */
+    val onSend: (String) -> Unit = {},
+    val onKind: (FeedbackKind) -> Unit = {},
+    val onWriteMore: () -> Unit = {},
 )

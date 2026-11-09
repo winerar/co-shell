@@ -1,6 +1,9 @@
 package app.coshell.core.designsystem.motion
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -69,3 +72,15 @@ private val STAGGER_RISE = 12.dp
 private const val STAGGER_STEP_MS = 30L
 private const val MAX_STAGGERED = 8
 private val SHAKE_AMPLITUDE = 8.dp
+
+/** Gently grows and shrinks while [active] (an update ready to install); still otherwise. */
+fun Modifier.breathing(active: Boolean): Modifier = composed {
+    if (!active) return@composed this
+    val scale by rememberInfiniteTransition(label = "breath").animateFloat(1f, BREATH_SCALE, Motion.breath(), label = "breathScale")
+    graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+    }
+}
+
+private const val BREATH_SCALE = 1.04f

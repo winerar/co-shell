@@ -74,10 +74,16 @@ data class CategoryEditDestination(
  * (a [app.coshell.core.model.TransactionType] name).
  */
 @Serializable
-data class TransactionEditDestination(val transactionId: String? = null, val type: String = "EXPENSE") {
+data class TransactionEditDestination(
+    val transactionId: String? = null,
+    val type: String = "EXPENSE",
+    /** A new operation filled from this one (swipe right in «Операции» — «Дублировать»), dated today. */
+    val copyFrom: String? = null,
+) {
     companion object {
         // SavedStateHandle keys; must match the property names.
         const val ARG_TRANSACTION_ID = "transactionId"
         const val ARG_TYPE = "type"
+        const val ARG_COPY_FROM = "copyFrom"
     }
 }

@@ -44,10 +44,7 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
             val installed = stringResource(R.string.update_installed, shown.installedVersionName, shown.installedVersionCode)
             when (val phase = shown.phase) {
                 UpdatePhase.Checking -> Texts(stringResource(R.string.update_hero_checking), installed)
-                UpdatePhase.UpToDate -> {
-                    Texts(stringResource(R.string.update_hero_up_to_date), installed)
-                    CoShellOutlinedButton(onClick = actions.onCheck) { Text(stringResource(R.string.update_check_again)) }
-                }
+                UpdatePhase.UpToDate -> Texts(stringResource(R.string.update_hero_up_to_date), installed)
                 UpdatePhase.NotConfigured ->
                     Texts(stringResource(R.string.update_hero_not_configured), stringResource(R.string.update_not_configured))
                 is UpdatePhase.Available -> {
@@ -56,12 +53,7 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
                         stringResource(R.string.update_hero_available, release.versionName),
                         stringResource(R.string.update_hero_available_sub, release.versionCode, megabytes(release.sizeBytes)),
                     )
-                    if (shown.needsInstallPermission) {
-                        Subtitle(stringResource(R.string.update_permission_hint))
-                        MainButton(stringResource(R.string.update_allow_install), actions.onAllowInstall)
-                    } else {
-                        MainButton(stringResource(R.string.update_open), actions.onDownload)
-                    }
+                    if (shown.needsInstallPermission) Subtitle(stringResource(R.string.update_permission_hint))
                 }
                 is UpdatePhase.Downloading -> Texts(
                     stringResource(R.string.update_hero_downloading),
@@ -69,13 +61,8 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
                 )
                 is UpdatePhase.Installing ->
                     Texts(stringResource(R.string.update_hero_installing), stringResource(R.string.update_installing))
-                is UpdatePhase.Failed -> {
+                is UpdatePhase.Failed ->
                     Texts(stringResource(R.string.update_hero_failed), stringResource(errorText(phase.error)), isError = true)
-                    MainButton(
-                        stringResource(R.string.update_retry),
-                        if (phase.release != null) actions.onDownload else actions.onCheck,
-                    )
-                }
             }
         }
     }
@@ -95,10 +82,29 @@ private fun Subtitle(text: String, isError: Boolean = false) = Text(
     textAlign = TextAlign.Center,
 )
 
-/** The screen's single main action, centred under the ring. */
+/**
+ * The screen's single action, full width at the bottom (under the thumb): download / allow / retry are the
+ * filled main button, «Проверить ещё раз» an outlined one; nothing while checking, downloading, installing.
+ */
 @Composable
-private fun MainButton(text: String, onClick: () -> Unit) =
-    CoShellButton(onClick = onClick, tactile = Tactile.Primary) { Text(text) }
+internal fun UpdateMainAction(state: UpdateUiState, actions: UpdateActions, modifier: Modifier = Modifier) {
+    val wide = modifier.fillMaxWidth()
+    when (val phase = state.phase) {
+        UpdatePhase.UpToDate ->
+            CoShellOutlinedButton(onClick = actions.onCheck, modifier = wide) { Text(stringResource(R.string.update_check_again)) }
+        is UpdatePhase.Available -> if (state.needsInstallPermission) {
+            CoShellButton(onClick = actions.onAllowInstall, tactile = Tactile.Primary, modifier = wide) { Text(stringResource(R.string.update_allow_install)) }
+        } else {
+            CoShellButton(onClick = actions.onDownload, tactile = Tactile.Primary, modifier = wide) { Text(stringResource(R.string.update_open)) }
+        }
+        is UpdatePhase.Failed -> CoShellButton(
+            onClick = if (phase.release != null) actions.onDownload else actions.onCheck,
+            tactile = Tactile.Primary,
+            modifier = wide,
+        ) { Text(stringResource(R.string.update_retry)) }
+        else -> Unit
+    }
+}
 
 private fun errorText(error: UpdateError): Int = when (error) {
     UpdateError.Check -> R.string.update_error_check

@@ -10,7 +10,7 @@ import org.junit.Test
  * is moved; this test names the line to fix if a raw number creeps back.
  */
 class TokensRuleTest {
-    private val migrated = listOf("home")
+    private val migrated = listOf("home", "transactions/edit", "ui/form", "ui/sheet")
 
     private val forbidden = listOf(
         Regex("""\b\d+(\.\d+)?\.dp\b"""),

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.components.CoShellFilterChip
@@ -41,8 +41,8 @@ internal fun CategoryChips(
         )
         return
     }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             groups.forEach { group ->
                 CoShellFilterChip(
                     selected = group.item.id == selectedId || group.item.id == openFolderId,
@@ -58,7 +58,7 @@ internal fun CategoryChips(
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             folder.children.forEach { child ->
                 CoShellFilterChip(
                     selected = child.id == selectedId,

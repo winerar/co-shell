@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CodeKeyboard
 import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.model.Currencies
@@ -40,10 +40,10 @@ internal fun ReceiptSection(state: TransactionEditUiState, actions: TransactionE
     )
     if (!state.receiptEnabled) return
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         val choices = state.receiptCurrencyChoices
         if (choices.isNotEmpty()) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                 choices.forEach { code ->
                     CoShellFilterChip(
                         selected = state.receiptCurrency == code,

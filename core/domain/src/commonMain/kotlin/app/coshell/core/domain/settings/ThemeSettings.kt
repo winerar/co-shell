@@ -25,13 +25,16 @@ enum class ThemeMode {
 
 /**
  * Colour palette of the app («Настройки → Тема», owner's choice 2026-11-09). Device-only like [ThemeMode].
- * [VOLT] — acid lime, the default; [MOJITO] — soft lime; [MANGO] — warm sunset; [ULTRA] — electric blue.
+ * [VOLT] — acid lime, the default; [MOJITO] — soft lime; [MANGO] — warm sunset; [ULTRA] — electric blue;
+ * [LAGOON] — turquoise and coral; [SAKURA] — pink and mint.
  */
 enum class ThemePalette {
     VOLT,
     MOJITO,
     MANGO,
     ULTRA,
+    LAGOON,
+    SAKURA,
     ;
 
     companion object {

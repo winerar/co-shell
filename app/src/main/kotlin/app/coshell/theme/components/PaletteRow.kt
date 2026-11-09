@@ -51,6 +51,8 @@ private val ThemePalette.labelRes: Int
         ThemePalette.MOJITO -> R.string.palette_mojito
         ThemePalette.MANGO -> R.string.palette_mango
         ThemePalette.ULTRA -> R.string.palette_ultra
+        ThemePalette.LAGOON -> R.string.palette_lagoon
+        ThemePalette.SAKURA -> R.string.palette_sakura
     }
 
 @get:StringRes
@@ -60,4 +62,6 @@ private val ThemePalette.hintRes: Int
         ThemePalette.MOJITO -> R.string.palette_mojito_hint
         ThemePalette.MANGO -> R.string.palette_mango_hint
         ThemePalette.ULTRA -> R.string.palette_ultra_hint
+        ThemePalette.LAGOON -> R.string.palette_lagoon_hint
+        ThemePalette.SAKURA -> R.string.palette_sakura_hint
     }

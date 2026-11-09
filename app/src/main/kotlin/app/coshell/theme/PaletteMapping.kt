@@ -9,4 +9,6 @@ fun ThemePalette.toDesign(): CoShellPalette = when (this) {
     ThemePalette.MOJITO -> CoShellPalette.Mojito
     ThemePalette.MANGO -> CoShellPalette.Mango
     ThemePalette.ULTRA -> CoShellPalette.Ultra
+    ThemePalette.LAGOON -> CoShellPalette.Lagoon
+    ThemePalette.SAKURA -> CoShellPalette.Sakura
 }

@@ -58,7 +58,9 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
-HTTP на Android — `app/.../rates/data/UrlConnectionHttpGet`, DI — `di/RatesModule`. Хранение — контракт
+HTTP на Android — `app/.../rates/data/UrlConnectionHttpGet`, DI — `di/RatesModule`; ежедневная загрузка —
+`RefreshRatesUseCase` (`core:domain/rates/`) и `app/.../rates/work/` (`RatesRefreshWorker`, `RatesRefreshScheduler`;
+WorkManager создаётся через `CoShellApp.workManagerConfiguration`, стандартный инициализатор убран в манифесте). Хранение — контракт
 `ExchangeRateRepository` (`core:domain/rates/`), Room — `db/RateEntities.kt`, `db/RateDao.kt`,
 `repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller) и `startup/`

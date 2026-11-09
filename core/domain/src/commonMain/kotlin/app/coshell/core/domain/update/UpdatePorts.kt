@@ -13,6 +13,10 @@ interface UpdateStateStore {
     suspend fun lastCheckAt(): Instant?
     suspend fun setLastCheckAt(at: Instant)
 
+    /** Latest release seen by the last successful check; offered on every app start until installed. */
+    suspend fun knownRelease(): AppRelease?
+    suspend fun setKnownRelease(release: AppRelease?)
+
     /** Release being installed; remembered so its notes can be shown after the restart. */
     suspend fun pendingRelease(): AppRelease?
     suspend fun setPendingRelease(release: AppRelease?)

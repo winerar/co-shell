@@ -4,6 +4,7 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 
 /**
  * Local store of exchange rates (docs/agents/database.md §«Курсы»):
@@ -29,6 +30,12 @@ interface ExchangeRateRepository {
 
     /** Latest date with downloaded rates, `null` if nothing was downloaded yet. */
     suspend fun latestDownloadedDate(): LocalDate?
+
+    /** Every date that has downloaded rates. */
+    suspend fun downloadedDates(): Set<LocalDate>
+
+    /** Calendar days (in [timeZone]) of live operations — the days history rates are needed for. */
+    suspend fun operationDates(timeZone: TimeZone): Set<LocalDate>
 
     /** Currencies of live accounts, operations (incl. transfer and receipt sides) and budgets. */
     suspend fun usedCurrencies(): Set<CurrencyCode>

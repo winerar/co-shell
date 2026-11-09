@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
 
@@ -30,15 +31,31 @@ class CheckForUpdateUseCaseTest {
     }
 
     @Test
-    fun `automatic check runs at most once a day`() = runTest {
+    fun `automatic check goes to the network at most once an hour`() = runTest {
         source.release = release(10)
         check()
-        clock.now = start + 23.hours
+        clock.now = start + 59.minutes
         assertEquals(UpdateCheckResult.CheckedRecently, check())
         assertEquals(1, source.calls)
-        clock.now = start + 24.hours
+        clock.now = start + 1.hours
         assertEquals(UpdateCheckResult.UpToDate, check())
         assertEquals(2, source.calls)
+    }
+
+    @Test
+    fun `known newer release is reported again between network checks`() = runTest {
+        source.release = release(11)
+        check(force = true)
+        clock.now = start + 10.minutes
+        assertEquals(UpdateCheckResult.Available(release(11)), check())
+        assertEquals(1, source.calls)
+    }
+
+    @Test
+    fun `known release that is already installed is not reported`() = runTest {
+        store.known = release(10)
+        store.lastCheck = start
+        assertEquals(UpdateCheckResult.CheckedRecently, check())
     }
 
     @Test

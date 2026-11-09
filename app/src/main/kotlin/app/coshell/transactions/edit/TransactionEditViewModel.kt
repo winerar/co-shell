@@ -7,6 +7,9 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.rates.CurrencyConverter
+import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.Currencies
@@ -46,6 +49,7 @@ class TransactionEditViewModel @Inject constructor(
     private val moneyFormat: MoneyFormat,
     private val clock: Clock,
     private val timeZone: TimeZone,
+    private val rates: ExchangeRateRepository,
 ) : ViewModel() {
 
     private val transactionId: String? = savedStateHandle[TransactionEditDestination.ARG_TRANSACTION_ID]
@@ -56,12 +60,20 @@ class TransactionEditViewModel @Inject constructor(
     private var existing: Transaction? = null
     private var accountsById: Map<String, Account> = emptyMap()
     private var allCategories: List<Category> = emptyList()
+    /** Known rates for the "debited" suggestion; `null` until loaded. */
+    private var converter: CurrencyConverter? = null
 
     private val _state = MutableStateFlow(TransactionEditUiState(isLoading = true, isNew = transactionId == null))
     val state: StateFlow<TransactionEditUiState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch { load() }
+        viewModelScope.launch {
+            rates.observeRates().collect { list ->
+                converter = CurrencyConverter(RateBook(list))
+                if (!_state.value.isLoading) updateForm { it }
+            }
+        }
     }
 
     // region Loading
@@ -126,11 +138,13 @@ class TransactionEditViewModel @Inject constructor(
         it.copy(type = type, categoryError = false, toAccountError = null).withCategoryOptions(allCategories)
     }
 
-    fun onAmountChange(value: String) = _state.update { it.copy(amount = value, amountError = null) }
+    fun onAmountChange(value: String) = _state.update {
+        it.copy(amount = value, amountError = null, amountSuggested = false, suggestedRateDate = null)
+    }
 
     fun onToAmountChange(value: String) = _state.update { it.copy(toAmount = value, toAmountError = null) }
 
-    fun onAccountSelect(id: String) = _state.update {
+    fun onAccountSelect(id: String) = updateForm {
         it.copy(accountId = id, accountError = false, amountError = null, toAccountError = null, receiptCurrencyError = null)
     }
 
@@ -141,7 +155,7 @@ class TransactionEditViewModel @Inject constructor(
         it.copy(categoryId = id, categoryError = false).withCategoryOptions(allCategories)
     }
 
-    fun onDateSelect(date: LocalDate) = _state.update { it.copy(date = date) }
+    fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }
 
     /** From Material's DatePicker, which works in UTC midnight millis. */
     fun onDatePicked(millisUtc: Long) =
@@ -150,16 +164,20 @@ class TransactionEditViewModel @Inject constructor(
     fun onNoteChange(value: String) = _state.update { it.copy(note = value) }
 
     /** Turning the receipt on preselects the last receipt currency that differs from the account's. */
-    fun onReceiptToggle(enabled: Boolean) = _state.update {
+    fun onReceiptToggle(enabled: Boolean) = updateForm {
         val currency = it.receiptCurrency.ifEmpty { it.receiptCurrencyChoices.firstOrNull().orEmpty() }
         it.copy(receiptEnabled = enabled, receiptCurrency = currency, receiptCurrencyError = null, receiptAmountError = null)
     }
 
-    fun onReceiptCurrencyChange(value: String) = _state.update {
+    fun onReceiptCurrencyChange(value: String) = updateForm {
         it.copy(receiptCurrency = value.trim().uppercase(), receiptCurrencyError = null, receiptAmountError = null)
     }
 
-    fun onReceiptAmountChange(value: String) = _state.update { it.copy(receiptAmount = value, receiptAmountError = null) }
+    fun onReceiptAmountChange(value: String) = updateForm { it.copy(receiptAmount = value, receiptAmountError = null) }
+
+    /** Changes that affect the receipt conversion also refresh the suggested debited amount. */
+    private fun updateForm(change: (TransactionEditUiState) -> TransactionEditUiState) =
+        _state.update { change(it).withDebitSuggestion(converter, moneyFormat) }
 
     // endregion
 

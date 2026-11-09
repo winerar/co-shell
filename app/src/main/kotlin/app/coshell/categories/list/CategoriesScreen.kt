@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import app.coshell.core.designsystem.components.CoShellSegmentedButton
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -22,9 +24,8 @@ import app.coshell.R
 import app.coshell.categories.labelRes
 import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
-import app.coshell.core.designsystem.components.CoShellFab
+import app.coshell.core.designsystem.components.CoShellExtendedFab
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.model.CategoryType
 import app.coshell.navigation.CategoryEditDestination
 import app.coshell.core.designsystem.R as DesignR
@@ -43,40 +44,27 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
                         Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                     }
                 },
-                actions = {
-                    CoShellIconButton(onClick = { actions.onOpen(CategoryEditDestination(type = type, asFolder = true)) }) {
-                        Icon(
-                            painterResource(DesignR.drawable.ic_create_new_folder),
-                            stringResource(R.string.categories_add_folder),
-                        )
-                    }
-                },
             )
         },
         floatingActionButton = {
-            CoShellFab(onClick = { actions.onOpen(CategoryEditDestination(type = type)) }) {
-                Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.categories_add))
-            }
+            // One «+» for categories and folders: the kind is chosen in the editor (owner 2026-11-09).
+            CoShellExtendedFab(
+                onClick = { actions.onOpen(CategoryEditDestination(type = type)) },
+                icon = { Icon(painterResource(DesignR.drawable.ic_add), contentDescription = null) },
+                text = { Text(stringResource(R.string.categories_add)) },
+            )
         },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
-            // Text accent: ink in the light theme, Neon Mint in the dark one (no deep green).
-            val ink = accentInk()
-            PrimaryTabRow(
-                selectedTabIndex = state.type.ordinal,
-                indicator = {
-                    TabRowDefaults.PrimaryIndicator(
-                        Modifier.tabIndicatorOffset(state.type.ordinal, matchContentSize = true),
-                        color = ink,
-                    )
-                },
-            ) {
-                CategoryType.entries.forEach { tabType ->
-                    Tab(
+            // Expenses / income as a pill switch (mockup 8), like the theme switch in «Настройки».
+            val types = CategoryType.entries
+            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s)) {
+                types.forEachIndexed { index, tabType ->
+                    CoShellSegmentedButton(
                         selected = state.type == tabType,
-                        selectedContentColor = ink,
                         onClick = { actions.onSelectType(tabType) },
-                        text = { Text(stringResource(tabType.labelRes)) },
+                        shape = SegmentedButtonDefaults.itemShape(index, types.size),
+                        label = { Text(stringResource(tabType.labelRes)) },
                     )
                 }
             }

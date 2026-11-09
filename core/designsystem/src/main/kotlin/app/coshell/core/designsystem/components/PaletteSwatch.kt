@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.runtime.getValue
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,6 +70,50 @@ fun CoShellPaletteSwatch(
         Text(label, style = MaterialTheme.typography.labelMedium)
     }
 }
+
+/**
+ * A palette as a card for a two-column grid (mockup 15): its three key colours over the palette's own
+ * surface, the [label] and a short [hint] under them. Selected — a ring in the palette's primary.
+ */
+@Composable
+fun CoShellPaletteCard(
+    palette: CoShellPalette,
+    label: String,
+    hint: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val dark = LocalDarkTheme.current
+    val colors = remember(palette, dark) { themeColorsFor(palette, dark) }
+    val shape = MaterialTheme.shapes.large
+    val ring by animateColorAsState(
+        if (selected) colors.scheme.primary else MaterialTheme.colorScheme.outlineVariant,
+        Motion.effects(),
+        label = "ring",
+    )
+    Column(
+        modifier
+            .tactileClickable(Tactile.Control, shape, role = Role.RadioButton, onClick = onClick)
+            .selectionPop(selected)
+            .border(if (selected) Sizes.selectionRing else Sizes.hairline, ring, shape)
+            .background(MaterialTheme.colorScheme.surfaceContainer, shape)
+            .padding(Spacing.m),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s),
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy((-8).dp)) {
+            listOf(colors.scheme.primary, colors.scheme.secondary, colors.amounts.income).forEach { dot ->
+                Box(Modifier.size(CARD_DOT).background(dot, CircleShape))
+            }
+        }
+        Column {
+            Text(label, style = MaterialTheme.typography.titleSmall)
+            Text(hint, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+private val CARD_DOT = 26.dp
 
 /** Colour dots overlap a little, like paint samples. */
 private val DOT = 20.dp

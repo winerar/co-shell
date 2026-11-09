@@ -1,12 +1,12 @@
 package app.coshell.family.components
 
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -16,6 +16,9 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.family.FamilyActions
 import app.coshell.family.FamilyUiState
 import app.coshell.ui.list.ActionRow
+import app.coshell.ui.hero.StatusCard
+import app.coshell.core.designsystem.category.AccountBadge
+import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.R as DesignR
 
 /** In the family: sync status, members, invitations, sign out. */
@@ -28,15 +31,31 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         state.pending > 0 -> stringResource(R.string.family_synced_pending, state.lastSync, state.pending)
         else -> stringResource(R.string.family_synced_at, state.lastSync)
     }
-    ActionRow(DesignR.drawable.ic_sync, stringResource(R.string.family_sync_now), actions.onSyncNow, subtitle = status, enabled = !state.isBusy)
+    // Family at a glance (mockup 13): who is in, when it last synced, «Синхронизировать сейчас» at hand.
+    StatusCard(
+        icon = DesignR.drawable.ic_group,
+        title = stringResource(R.string.family_budget, joined.family.members.size),
+        subtitle = status,
+        tint = MaterialTheme.colorScheme.secondary,
+        trailing = {
+            CoShellIconButton(onClick = actions.onSyncNow, enabled = !state.isBusy) {
+                Icon(painterResource(DesignR.drawable.ic_sync), stringResource(R.string.family_sync_now))
+            }
+        },
+    )
 
     FamilySectionTitle(stringResource(R.string.family_members))
-    joined.family.members.forEach { m ->
+    joined.family.members.forEachIndexed { index, m ->
         val tags = listOfNotNull(
             stringResource(R.string.family_you).takeIf { m.uid == joined.me.uid },
             stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid },
         )
-        CoShellListRow(title = m.name.ifBlank { m.email }, subtitle = (listOf(m.email) + tags).joinToString(" · "))
+        val name = m.name.ifBlank { m.email }
+        CoShellListRow(
+            title = name,
+            subtitle = (listOf(m.email) + tags).joinToString(" · "),
+            leading = { AccountBadge(name, MemberColors[index % MemberColors.size]) },
+        )
     }
     state.invites.forEach { email ->
         CoShellListRow(
@@ -65,3 +84,6 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         )
     }
 }
+
+/** Avatar colours of members, in join order: violet, cyan, then warm ones (mockup 13). */
+private val MemberColors: List<Long> = listOf(3, 6, 5, 2).map { CategoryPalette.colors[it] }

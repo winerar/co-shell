@@ -1,13 +1,13 @@
 package app.coshell.accounts.edit
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.accounts.edit.components.AccountPreviewCard
 import app.coshell.accounts.edit.components.AccountTypeSection
 import app.coshell.accounts.edit.components.BankColorSection
 import app.coshell.accounts.edit.components.CurrencySection
@@ -31,6 +31,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
         saveEnabled = !state.isLoading,
     ) {
         if (state.isLoading) return@EditSheetLayout
+        AccountPreviewCard(state)
         CoShellTextField(
             value = state.name,
             onValueChange = actions.onNameChange,

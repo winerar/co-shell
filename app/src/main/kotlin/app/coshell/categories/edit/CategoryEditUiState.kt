@@ -6,7 +6,7 @@ import app.coshell.core.model.CategoryType
 data class CategoryEditUiState(
     val isLoading: Boolean = false,
     val isNew: Boolean = true,
-    /** Opened via "new folder": the folder picker is hidden. */
+    /** «Папка» chosen at the top: subcategories are picked instead of a folder. */
     val asFolder: Boolean = false,
     val name: String = "",
     val type: CategoryType = CategoryType.EXPENSE,

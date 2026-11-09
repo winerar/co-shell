@@ -29,7 +29,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | Android-специфичное в data (Context) | `core:data/androidMain`; HTTP-клиент и Credential Manager — `app/.../family/data/` |
 | Hilt-модули (связывание интерфейсов с реализациями) | `app/.../di/` |
 | Переиспользуемый Compose-компонент без строк приложения | `core:designsystem` |
-| Общий блок экранов со строками приложения | `app/.../ui/<тема>/`: `ui/form/` (формы, диалоги), `ui/list/` (строки списков) |
+| Общий блок экранов со строками приложения | `app/.../ui/<тема>/`: `ui/form/` (формы, диалоги), `ui/list/` (строки списков), `ui/hero/` (карточка состояния) |
 | Экран | `app/.../<feature>/<screen>/` (см. ниже); при росте — модуль `feature:<name>` |
 | Маршрут навигации | `app/.../navigation/Destinations.kt` (`@Serializable`), граф — `CoShellNavHost.kt`, каркас (панель, NavHost) — `MainShell.kt` |
 | Иконка | `core:designsystem` res/drawable, правила — `code-style.md` §«Иконки» |

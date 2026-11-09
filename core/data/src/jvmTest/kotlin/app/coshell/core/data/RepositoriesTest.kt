@@ -158,4 +158,22 @@ class RepositoriesTest {
         categories.deleteCategory("food")
         assertEquals(1, categories.countCategories())
     }
+
+    @Test
+    fun `author is the creator and survives edits by others`() = runTest {
+        transactions.saveTransaction(Transaction("t", TransactionType.EXPENSE, "usd", Money(1_00, usd), day(1)))
+        assertEquals("member-1", transactions.getTransaction("t")?.authorMemberId)
+
+        val other = RoomTransactionRepository(db.transactionDao(), WriteStamper(fixedClock) { "member-2" })
+        other.saveTransaction(transactions.getTransaction("t")!!.copy(note = "edited", authorMemberId = null))
+        assertEquals("member-1", transactions.getTransaction("t")?.authorMemberId)
+    }
+
+    @Test
+    fun `new personal account belongs to whoever saves it`() = runTest {
+        accounts.saveAccount(Account("p", "Мой", usd, isShared = false))
+        assertEquals("member-1", accounts.getAccount("p")?.ownerMemberId)
+        accounts.saveAccount(Account("s", "Общий", usd))
+        assertNull(accounts.getAccount("s")?.ownerMemberId)
+    }
 }

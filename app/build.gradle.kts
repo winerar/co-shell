@@ -24,6 +24,9 @@ android {
         // by design, access is limited by Firestore rules. Empty locally → the form says "not configured".
         buildConfigField("String", "FIREBASE_PROJECT_ID", "\"${env("FIREBASE_PROJECT_ID")}\"")
         buildConfigField("String", "FIREBASE_API_KEY", "\"${env("FIREBASE_API_KEY")}\"")
+        // Google sign-in for family sync (docs/setup/sync.md): OAuth "Web client" ID, public by design.
+        // Empty → the «Семья» screen says sync is not configured in this build.
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${env("GOOGLE_WEB_CLIENT_ID")}\"")
     }
 
     signingConfigs {
@@ -88,6 +91,9 @@ dependencies {
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services)
+    implementation(libs.googleid)
     implementation(libs.androidx.hilt.work)
     implementation(libs.kotlinx.serialization.json)
 

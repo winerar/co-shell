@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDate
 
 data class HomeUiState(
     val isLoading: Boolean = false,
-    /** Total of all accounts in each report currency, main first, e.g. ["125 300,00 USD", "180 000 000 ARS"]. */
+    /** Total of all accounts (except excluded ones) in each report currency, main first, e.g. ["125 300,00 USD", "180 000 000 ARS"]. */
     val totals: List<String> = emptyList(),
     /** Oldest rate behind the totals ("по курсу на 9 ноября"); `null` when nothing was converted. */
     val rateDate: LocalDate? = null,
@@ -29,5 +29,12 @@ data class HomeUiState(
         val converted: Boolean = false,
     )
 
-    data class AccountRow(val id: String, val name: String, val balance: String, val isNegative: Boolean)
+    /** @property excludedFromTotal the account is left out of [totals] ("не в общей сумме"). */
+    data class AccountRow(
+        val id: String,
+        val name: String,
+        val balance: String,
+        val isNegative: Boolean,
+        val excludedFromTotal: Boolean = false,
+    )
 }

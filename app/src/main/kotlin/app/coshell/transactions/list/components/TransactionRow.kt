@@ -38,7 +38,7 @@ internal fun TransactionRow(row: RowState, onClick: (String) -> Unit) {
         Column(Modifier.weight(1f)) {
             Text(row.titleText(), style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
-                text = if (row.note.isBlank()) row.subtitle else "${row.subtitle} · ${row.note}",
+                text = listOfNotNull(row.subtitle, row.author, row.note.ifBlank { null }).joinToString(" · "),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,

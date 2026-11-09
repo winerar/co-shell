@@ -26,4 +26,17 @@ class AccountsViewModelTest {
         assertEquals(listOf("b"), state.archived.map { it.id })
         assertEquals(true, state.active.single().isNegative)
     }
+
+    @Test
+    fun `personal accounts are labelled only when the family has other members`() {
+        val vm = AccountsViewModel(FakeAccountRepository(), MoneyFormat.RU)
+        val items = listOf(
+            AccountWithBalance(Account("shared", "Общий", ars), Money(0, ars)),
+            AccountWithBalance(Account("mine", "Мой", ars, isShared = false, ownerMemberId = "me"), Money(0, ars)),
+            AccountWithBalance(Account("hers", "Её", ars, isShared = false, ownerMemberId = "wife"), Money(0, ars)),
+        )
+        val labels = vm.buildState(items, showArchived = false, others = mapOf("wife" to "Маша")).active.associate { it.id to it.personalOf }
+        assertEquals(mapOf("shared" to null, "mine" to "", "hers" to "Маша"), labels)
+        assertEquals(listOf(null, null, null), vm.buildState(items, showArchived = false).active.map { it.personalOf })
+    }
 }

@@ -13,6 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.core.designsystem.theme.AmountTextStyle
+import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.formatMonth
@@ -28,7 +30,7 @@ internal fun SpendingCard(spending: HomeUiState.MonthSpending) {
                 style = MaterialTheme.typography.labelLarge,
             )
             spending.totals.forEachIndexed { index, total ->
-                val style = if (index == 0) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.titleMedium
+                val style = if (index == 0) AmountTitleStyle else AmountTextStyle
                 Text(
                     text = total,
                     style = style,

@@ -17,12 +17,14 @@ import kotlinx.coroutines.IO
 @Database(
     entities = [
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
-        ManualRateEntity::class, DownloadedRateEntity::class,
+        ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class,
     ],
-    version = 2,
+    version = 4,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
+        AutoMigration(from = 2, to = 3), // v3: accounts.excluded_from_total
+        AutoMigration(from = 3, to = 4), // v4: sync_state
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
@@ -33,6 +35,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun backupDao(): BackupDao
     abstract fun rateDao(): RateDao
+    abstract fun syncDao(): SyncDao
 
     companion object {
         const val FILE_NAME = "coshell.db"

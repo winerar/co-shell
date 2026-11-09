@@ -22,7 +22,7 @@ Firestore → вкладка **Rules** → заменить всё содерж�
    пропустить (файл `google-services.json` не нужен); ключ появится.
 2. Ключ не секретный (он есть в любом приложении на Firebase), но **не ограничивайте его
    «Android apps»** — приложение ходит в Firestore напрямую, и запрос будет отклонён. Ограничение
-   по API (Cloud Firestore API) — можно.
+   по API — можно, но с синхронизацией нужны ещё Identity Toolkit API и Token Service API (`sync.md`).
 3. GitHub → `co-shell` → **Settings → Secrets and variables → Actions → вкладка Variables** →
    **New repository variable**: `FIREBASE_API_KEY` = ключ. Там же должна быть `FIREBASE_PROJECT_ID`
    (уже есть).

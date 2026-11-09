@@ -77,6 +77,18 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `excluded account is left out of totals and breakdown but stays in the list`() {
+        val debt = AccountWithBalance(Account("d", "Долг", rub, excludedFromTotal = true), Money(-1_000_00, rub))
+
+        val state = viewModel.buildState(accounts + debt, emptyList(), rates, listOf(usd), nov9)
+
+        assertEquals(listOf(MoneyFormat.RU.format(Money(105_00, usd))), state.totals)
+        assertEquals(emptyList<String>(), state.missing)
+        assertEquals(listOf(MoneyFormat.RU.format(Money(100_000_00, ars)), MoneyFormat.RU.format(Money(5_00, usd))), state.byCurrency)
+        assertEquals(listOf(false, false, false, true), state.accounts.map { it.excludedFromTotal })
+    }
+
+    @Test
     fun `one currency needs no rate date and no breakdown`() {
         val state = viewModel.buildState(accounts.take(2), emptyList(), emptyList(), listOf(ars), nov9)
 

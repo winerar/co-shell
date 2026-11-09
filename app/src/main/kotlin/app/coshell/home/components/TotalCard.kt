@@ -20,6 +20,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.core.designsystem.theme.AmountHeroStyle
+import app.coshell.core.designsystem.theme.AmountTextStyle
+import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.formatDayMonth
 
@@ -38,7 +41,7 @@ internal fun TotalCard(state: HomeUiState) {
         Column(Modifier.padding(20.dp)) {
             Text(stringResource(R.string.home_total_balance), style = MaterialTheme.typography.labelLarge)
             state.totals.forEachIndexed { index, total ->
-                AmountLine(total, if (index == 0) MaterialTheme.typography.displayMedium else MaterialTheme.typography.titleLarge)
+                AmountLine(total, if (index == 0) AmountHeroStyle else AmountTitleStyle)
             }
             state.rateDate?.let { Caption(stringResource(R.string.home_total_rate_date, formatDayMonth(it))) }
             if (state.missing.isNotEmpty()) {
@@ -48,7 +51,7 @@ internal fun TotalCard(state: HomeUiState) {
                 Caption(stringResource(if (expanded) R.string.home_total_hide_breakdown else R.string.home_total_show_breakdown))
             }
             if (expanded) {
-                state.byCurrency.forEach { AmountLine(it, MaterialTheme.typography.titleMedium) }
+                state.byCurrency.forEach { AmountLine(it, AmountTextStyle) }
             }
         }
     }

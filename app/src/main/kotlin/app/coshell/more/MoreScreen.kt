@@ -22,13 +22,14 @@ import app.coshell.ui.list.ActionRow
 import app.coshell.ui.list.SwitchRow
 import app.coshell.core.designsystem.R as DesignR
 
-// Menu tab: links to categories, exchange rates, report currencies, backup, app update and feedback, plus the shake-to-add switch.
+// Menu tab: links to categories, exchange rates, report currencies, family sync, backup, app update and feedback, plus the shake-to-add switch.
 
 @Composable
 fun MoreRoute(
     onCategories: () -> Unit,
     onRates: () -> Unit,
     onReportCurrencies: () -> Unit,
+    onFamily: () -> Unit,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
@@ -42,6 +43,7 @@ fun MoreRoute(
         onRates = onRates,
         onReportCurrencies = onReportCurrencies,
         mainCurrency = currencies.currencies.firstOrNull(),
+        onFamily = onFamily,
         onBackup = onBackup,
         onUpdate = onUpdate,
         onFeedback = onFeedback,
@@ -57,6 +59,7 @@ fun MoreScreen(
     onRates: () -> Unit,
     onReportCurrencies: () -> Unit,
     mainCurrency: String?,
+    onFamily: () -> Unit,
     onBackup: () -> Unit,
     onUpdate: () -> Unit,
     onFeedback: () -> Unit,
@@ -88,6 +91,15 @@ fun MoreScreen(
                     title = stringResource(R.string.report_currencies_title),
                     subtitle = mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
                     onClick = onReportCurrencies,
+                    opensScreen = true,
+                )
+            }
+            item {
+                ActionRow(
+                    icon = DesignR.drawable.ic_group,
+                    title = stringResource(R.string.family_title),
+                    subtitle = stringResource(R.string.family_menu_hint),
+                    onClick = onFamily,
                     opensScreen = true,
                 )
             }
@@ -138,6 +150,7 @@ private fun MoreScreenPreview() {
             onRates = {},
             onReportCurrencies = {},
             mainCurrency = "USD",
+            onFamily = {},
             onBackup = {},
             onUpdate = {},
             onFeedback = {},

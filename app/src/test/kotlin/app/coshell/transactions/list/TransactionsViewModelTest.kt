@@ -13,6 +13,7 @@ import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.TimeZone
@@ -30,7 +31,7 @@ class TransactionsViewModelTest {
         val accounts = FakeAccountRepository().apply { saveAccount(Account("card", "Карта", ars)) }
         val transactions = FakeTransactionRepository()
         val vm = TransactionsViewModel(
-            transactions, accounts, FakeCategoryRepository(), MoneyFormat.RU,
+            transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
         )
         vm.state.launchIn(backgroundScope)

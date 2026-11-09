@@ -12,6 +12,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import app.coshell.core.designsystem.tokens.CoShellShapes
 
 private val LightColors = lightColorScheme(
     primary = Teal40,
@@ -79,6 +80,7 @@ fun CoShellTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = CoShellTypography,
+            shapes = CoShellShapes,
             content = content,
         )
     }

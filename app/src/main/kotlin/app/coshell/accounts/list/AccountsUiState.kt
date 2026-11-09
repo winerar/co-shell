@@ -14,5 +14,9 @@ data class AccountsUiState(
         val type: AccountType,
         val balance: String,
         val isNegative: Boolean,
+        /** Left out of the total balance on «Обзор». */
+        val excludedFromTotal: Boolean = false,
+        /** Personal account: `""` — mine, a name — the other member's; `null` — shared. */
+        val personalOf: String? = null,
     )
 }

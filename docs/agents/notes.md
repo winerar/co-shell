@@ -12,6 +12,8 @@
 | `check.sh` | перед коммитом (`check assembleDebug`, краткий вывод); `--quick` — только unit-тесты |
 | `session-end.sh` | перед финальным PR: незакоммиченное/незапушенное, дата и число тестов в STATUS, размеры файлов |
 | `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
+| `sync-dev.sh` | влить `origin/dev` в ветку: «OK» или конфликтующие файлы с подсказками (STATUS, схемы Room) |
+| `build-summary.sh [--ci] <лог>` | краткий отчёт сборки: ошибки, `Tests: N`, упавшие тесты с причиной, lint; его зовут `check.sh` и CI |
 | `profile-build.sh [задачи]` | где тратится время сборки: самые долгие задачи, итог lint/тестов (~3–5 мин) |
 
 Скрипты CI и для владельца остаются в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
@@ -30,6 +32,8 @@
 ## Инструменты окружения
 - (11-09) Время шагов CI без логов: GitHub MCP `actions_list` → `list_workflow_runs` (`resource_id: ci.yml`),
   затем `list_workflow_jobs` (run id) — у каждого шага `started_at`/`completed_at`.
+- (11-10) `mawk` считает `length` в байтах (кириллица ×2) — длину строк в символах мерить `python3`/`wc -m`.
+- (11-10) `actionlint` без установки: бинарник из релиза `rhysd/actionlint` (v1.7.7) в scratchpad, `actionlint -shellcheck=`.
 - (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.

@@ -22,6 +22,10 @@ behind=$(git rev-list --count HEAD..origin/dev)
 today=$(date +%F)
 grep -q "^\*\*Обновлено:\*\* $today" docs/STATUS.md || bad "docs/STATUS.md «Обновлено» is not $today"
 git diff --quiet origin/dev -- docs/STATUS.md && bad "docs/STATUS.md not changed in this branch"
+# STATUS is read at every session start: keep it short (workflow.md «Сессии ИИ-агента»).
+long=$(python3 -c 'import sys; print(*[i for i, l in enumerate(open(sys.argv[1], encoding="utf-8"), 1) if len(l) > 501], end=" ")' docs/STATUS.md)
+[ -n "${long// /}" ] && bad "docs/STATUS.md lines over 500 chars: $long— shorten (history goes to ARCHITECTURE/ROADMAP)"
+[ "$(wc -l <docs/STATUS.md)" -gt 150 ] && warn "docs/STATUS.md is $(wc -l <docs/STATUS.md) lines (aim ≤150) — drop finished items"
 git diff --quiet origin/dev -- docs/agents/notes.md && warn "docs/agents/notes.md not changed — anything learned this session?"
 
 # Test count in STATUS vs the last test run (scripts/agent/check.sh leaves the XML results).
@@ -39,5 +43,5 @@ done
 find app core -name '*.kt' -path '*/src/*' -not -path '*/build/*' -exec wc -l {} + | grep -v ' total$' |
     awk '$1 > 220 {print "! " $2 " is " $1 " lines (aim ~200)"}'
 
-[ $fail -eq 0 ] && echo "OK: session-end checks passed (now: PR into dev, report to the owner)"
+[ $fail -eq 0 ] && echo "OK: session-end checks passed (now: mark the draft PR into dev ready — automerge — and report to the owner)"
 exit $fail

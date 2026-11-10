@@ -27,6 +27,8 @@ android {
         // Google sign-in for family sync (docs/setup/sync.md): OAuth "Web client" ID, public by design.
         // Empty → the «Семья» screen says sync is not configured in this build.
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${env("GOOGLE_WEB_CLIENT_ID")}\"")
+        // Realtime Database for the instant-sync bell; empty → <project>-default-rtdb.firebaseio.com.
+        buildConfigField("String", "FIREBASE_DATABASE_URL", "\"${env("FIREBASE_DATABASE_URL")}\"")
     }
 
     androidResources {

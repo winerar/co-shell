@@ -26,13 +26,15 @@ class FakeFamilyServer {
     var family: Family? = null
     val invites = mutableMapOf<String, Invite>()
     var offline = false
+    /** How many times the family document was read (each is a billed Firestore read). */
+    var familyReads = 0
 }
 
 class FakeFamilyRemote(private val server: FakeFamilyServer, private val auth: FakeAuth) : FamilyRemote {
     private fun uid() = auth.session.value!!.uid
     private fun check() { if (server.offline) error("offline") }
 
-    override suspend fun family(familyId: String): Family? { check(); return server.family?.takeIf { it.isMember(uid()) } }
+    override suspend fun family(familyId: String): Family? { check(); server.familyReads++; return server.family?.takeIf { it.isMember(uid()) } }
     override suspend fun inviteFor(email: String): Invite? { check(); return server.invites[normalizeEmail(email)] }
     override suspend fun create(familyId: String, me: Member): Boolean {
         check(); if (server.family != null) return false

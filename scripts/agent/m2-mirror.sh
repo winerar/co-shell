@@ -26,6 +26,8 @@ for coord in "$@"; do
         [ $ok -eq 1 ] && echo "ok   $path/$file" || echo "FAIL $path/$file"
     done
 done
+# With M2_REPO the files land in Gradle's own ~/.m2 cache: keep the init script of the earlier call.
+[ -n "${M2_REPO:-}" ] && exit 0
 cat >"$dir/m2-init.gradle" <<GRADLE
 settingsEvaluated { s ->
     def add = { r -> def m = r.maven { url = uri('$repo') }; r.remove(m); r.addFirst(m) }

@@ -38,9 +38,9 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   `MainShell` (панель, NavHost, вкладки) с настоящими экранами вкладок на примерных данных — экран виден над
   панелью, все вкладки открываются, «+» срабатывает. Без Hilt/Room/сети (`application = Application::class`:
   `CoShellApp` открыл бы Room с нативным SQLite). Новая вкладка или поменял каркас — дополни тест.
-- Правила Firestore и сквозной синк двух телефонов — в эмуляторе: `scripts/test-rules.sh` (правила) или
+- Правила Firestore и Realtime Database (`database.test.js`) и сквозной синк двух телефонов — в эмуляторе: `scripts/test-rules.sh` (правила) или
   `scripts/test-rules.sh --kotlin` (+ `FirestoreEmulatorTest`); нужны Node 20+ и Java, эмулятор скачивается
-  сам. Поменял `firestore.rules` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
+  сам. Поменял `firestore.rules`, `database.rules.json` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
 - Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` (есть шаг в CI).
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 

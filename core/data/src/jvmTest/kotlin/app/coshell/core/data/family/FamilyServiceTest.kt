@@ -17,6 +17,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 class FamilyServiceTest {
     private val records = FakeRemoteStore()
@@ -29,9 +32,11 @@ class FamilyServiceTest {
         private val stamper = WriteStamper { auth.uid }
         val accounts = RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
         val backups = mutableListOf<String>()
+        var now = Instant.fromEpochMilliseconds(1_700_000_000_000)
+        private val clock = object : Clock { override fun now() = this@TestPhone.now }
         fun service(configured: Boolean = true) = FamilyService(
             configured, auth, FakeFamilyRemote(familyServer, auth), db.syncDao(),
-            SyncEngine(db.syncDao(), records), JsonBackupRepository(db, stamper),
+            SyncEngine(db.syncDao(), records), JsonBackupRepository(db, stamper), clock,
         ) { backups += it }
         val family = service(configured)
         init { phones += this }
@@ -138,5 +143,25 @@ class FamilyServiceTest {
         assertEquals(FamilyState.SignedOut, owner.family.state.value)
         assertNotNull(owner.accounts.getAccount("cash"))
         owner.service().apply { load() }.also { assertEquals(FamilyState.SignedOut, it.state.value) }
+    }
+
+    @Test
+    fun `lone member re-reads the member list at most once a minute`() = runTest {
+        val owner = TestPhone()
+        owner.family.signIn("owner"); owner.family.createFamily()
+        val wife = TestPhone("wife")
+        owner.family.invite("wife@gmail.com")
+        wife.family.load(); wife.family.refresh()
+
+        val before = familyServer.familyReads
+        repeat(6) { owner.family.sync(); owner.now += 10.seconds } // a minute of 10-second polls
+        assertEquals(before + 1, familyServer.familyReads)
+
+        wife.family.join(keepLocalData = true)
+        owner.family.sync()
+        assertEquals(2, owner.family.joined!!.members.size) // the minute passed: the wife appears
+        val reads = familyServer.familyReads
+        repeat(3) { owner.family.sync() }
+        assertEquals(reads, familyServer.familyReads) // two members: no more member checks
     }
 }

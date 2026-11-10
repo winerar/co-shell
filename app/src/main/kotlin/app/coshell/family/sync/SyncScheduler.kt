@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 /**
  * When [SyncWorker] runs: every hour with network (other phone's changes arrive even if the app
  * is closed) and a few seconds after local edits. While the app is open, [ForegroundSync] pulls
- * every 10 seconds directly.
+ * directly (every 10–60 seconds).
  */
 object SyncScheduler {
     private const val PERIODIC = "sync-periodic"

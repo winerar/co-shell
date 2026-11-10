@@ -53,8 +53,8 @@ class TypeTest(unittest.TestCase):
     def test_type_label_maps_to_option(self):
         self.assertEqual(type_of(["status:next", "type:story", "design"]), "История")
         self.assertEqual(type_of(["type:bug", "source:app"]), "Баг")
-        self.assertEqual(type_of(["question", "status:needs-owner"]), "Вопрос")
-        self.assertEqual(type_of(["owner"]), "Владельцу")
+        self.assertEqual(type_of(["type:question", "status:needs-owner"]), "Вопрос")
+        self.assertEqual(type_of(["type:owner"]), "Владельцу")
 
     def test_feedback_without_type_has_none(self):
         self.assertIsNone(type_of(["source:app", "status:triage"]))

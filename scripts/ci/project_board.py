@@ -30,13 +30,13 @@ COLUMNS = [
     ("status:needs-owner", "Ждёт владельца", "ORANGE"),
 ]
 TYPE_FIELD = "Тип"
-# type label → «Тип» option; the first label found wins (question/owner are not development tasks)
+# type label → «Тип» option; an issue has exactly one (docs/agents/tasks.md), the first found wins
 TYPES = [
     ("type:story", "История", "PURPLE"),
     ("type:feature", "Фича", "BLUE"),
     ("type:bug", "Баг", "RED"),
-    ("question", "Вопрос", "PINK"),
-    ("owner", "Владельцу", "ORANGE"),
+    ("type:question", "Вопрос", "PINK"),
+    ("type:owner", "Владельцу", "ORANGE"),
 ]
 LABEL_TO_COLUMN = {label: column for label, column, _ in COLUMNS}
 COLUMN_TO_LABEL = {column: label for label, column, _ in COLUMNS}

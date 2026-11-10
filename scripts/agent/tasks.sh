@@ -12,11 +12,11 @@ json=$(timeout 30 gh api -X GET search/issues --paginate \
     -q '.items[] | {n: .number, t: .title, l: [.labels[].name]}' 2>/dev/null) || {
     echo "(tasks: GitHub search unavailable — use GitHub MCP list_issues)"; exit 0; }
 
-# Row: type tag (Б баг · Ф фича · И история · ? вопрос · В владельцу), 📣 — отзыв из приложения, other labels.
-row='(.l as $l | [["type:bug","Б"],["type:feature","Ф"],["type:story","И"],["question","?"],["owner","В"]]
+# Row: type tag (Б баг · Ф фича · И история · ? вопрос · В владельцу; · — нет типа), 📣 — отзыв из приложения, other labels.
+row='(.l as $l | [["type:bug","Б"],["type:feature","Ф"],["type:story","И"],["type:question","?"],["type:owner","В"]]
   | map(select(.[0] as $k | $l | index($k))) | (.[0][1] // "·")) as $t
   | (if (.l | index("source:app")) then " 📣" else "" end) as $a
-  | "  \($t) #\(.n)\($a) \(.t[0:70])" + (([.l[] | select(test("^(status|type):|^(source:app|question|owner)$") | not)]
+  | "  \($t) #\(.n)\($a) \(.t[0:70])" + (([.l[] | select(test("^(status|type):|^source:app$") | not)]
   | join(",")) as $o | if $o == "" then "" else "  [\($o)]" end)'
 for s in "${statuses[@]}"; do
     items=$(jq -r --arg s "status:$s" "select(.l | index(\$s)) | $row" <<<"$json")
@@ -26,5 +26,5 @@ for s in "${statuses[@]}"; do
 done
 none=$(jq -r "select([.l[] | startswith(\"status:\")] | any | not) | $row" <<<"$json")
 [ -z "$none" ] || { echo "== без статуса — разметить"; echo "$none"; }
-untyped=$(jq -r "select(.l | (index(\"status:triage\") or any(test(\"^type:|^(question|owner)$\"))) | not) | $row" <<<"$json")
-[ -z "$untyped" ] || { echo "== без типа (type:bug|feature|story) — разметить"; echo "$untyped"; }
+untyped=$(jq -r "select(.l | (index(\"status:triage\") or any(startswith(\"type:\"))) | not) | $row" <<<"$json")
+[ -z "$untyped" ] || { echo "== без типа (type:*) — разметить"; echo "$untyped"; }

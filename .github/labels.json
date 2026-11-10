@@ -10,8 +10,8 @@
   {"name": "type:bug", "from": "bug", "color": "e11d21", "description": "Баг: работает не так, как задумано"},
   {"name": "source:app", "from": "feedback", "color": "ff69b4", "description": "Отзыв из приложения (Ещё → Обратная связь)"},
   {"name": "design", "color": "f9d0c4", "description": "Видимое изменение — сначала макет владельцу"},
-  {"name": "owner", "color": "ff9f1c", "description": "Не задача разработки: делает владелец (проверка на телефоне, настройка)"},
-  {"name": "question", "color": "d876e3", "description": "Не задача разработки: вопрос владельцу, ждёт решения"},
+  {"name": "type:question", "from": "question", "color": "d876e3", "description": "Вопрос: решение владельца, ответ — в доки, задачу закрыть"},
+  {"name": "type:owner", "from": "owner", "color": "ff9f1c", "description": "Делает владелец: проверка на телефоне, настройка, переезд"},
   {"name": "chore", "delete": true},
   {"name": "hold", "color": "000000", "description": "PR: не вливать автоматически"},
 

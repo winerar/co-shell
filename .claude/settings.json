@@ -6,12 +6,22 @@
   "permissions": {
     "allow": [
       "Bash(./gradlew:*)",
-      "Bash(scripts/check.sh:*)",
+      "Bash(scripts/agent/check.sh:*)",
+      "Bash(scripts/agent/session-start.sh:*)",
+      "Bash(scripts/agent/session-end.sh:*)",
+      "Bash(scripts/agent/sync-dev.sh:*)",
+      "Bash(scripts/agent/build-summary.sh:*)",
+      "Bash(python3 -m unittest:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git fetch:*)",
-      "Bash(git show:*)"
+      "Bash(git show:*)",
+      "Bash(git grep:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }

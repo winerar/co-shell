@@ -59,6 +59,7 @@ data class CategoryEntity(
         Index("category_id"),
         Index("date"),
         Index(value = ["import_source", "import_external_id"], unique = true),
+        Index("import_batch_id"),
     ],
 )
 data class TransactionEntity(
@@ -81,6 +82,7 @@ data class TransactionEntity(
     @ColumnInfo(name = "author_member_id") val authorMemberId: String?,
     @ColumnInfo(name = "import_source") val importSource: String?,
     @ColumnInfo(name = "import_external_id") val importExternalId: String?,
+    @ColumnInfo(name = "import_batch_id") val importBatchId: String? = null,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,

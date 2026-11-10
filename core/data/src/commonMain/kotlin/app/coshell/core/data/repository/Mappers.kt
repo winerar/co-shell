@@ -94,6 +94,7 @@ internal fun TransactionEntity.toModel() = Transaction(
     authorMemberId = authorMemberId,
     importSource = importSource,
     importExternalId = importExternalId,
+    importBatchId = importBatchId,
 )
 
 internal fun Transaction.toEntity(stamp: Stamp) = TransactionEntity(
@@ -115,6 +116,7 @@ internal fun Transaction.toEntity(stamp: Stamp) = TransactionEntity(
     authorMemberId = authorMemberId,
     importSource = importSource,
     importExternalId = importExternalId,
+    importBatchId = importBatchId,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

@@ -29,6 +29,7 @@ sealed interface UnpairedChoice {
  * @property categories Wallet category + direction → co-shell category id.
  * @property adjustmentCategories category ids for [UnpairedChoice.Adjustment], by direction.
  * @property baseCurrency Wallet's base currency ([WalletBaseCurrency]) — converts records in a foreign currency.
+ * @property otherAccounts co-shell accounts not in the file — targets of [UnpairedChoice.TransferWith].
  */
 data class WalletImportDecisions(
     val accounts: Map<String, Account>,
@@ -37,6 +38,7 @@ data class WalletImportDecisions(
     val baseCurrency: CurrencyCode?,
     val timeZone: TimeZone,
     val unpaired: Map<Int, UnpairedChoice> = emptyMap(),
+    val otherAccounts: List<Account> = emptyList(),
 )
 
 /** Why a record was not turned into a transaction. */
@@ -112,7 +114,8 @@ class WalletImportBuilder(private val ids: IdGenerator) {
         /** The record is one side; [otherId] is the other. A negative record leaves its account. */
         fun transferWith(r: WalletRecord, otherId: String): Transaction? {
             val own = d.accounts[r.account] ?: return issue(r, WalletImportProblem.UNMAPPED)
-            val other = d.accounts.values.firstOrNull { it.id == otherId } ?: return issue(r, WalletImportProblem.UNMAPPED)
+            val other = (d.accounts.values.asSequence() + d.otherAccounts).firstOrNull { it.id == otherId }
+                ?: return issue(r, WalletImportProblem.UNMAPPED)
             if (own.id == other.id) return issue(r, WalletImportProblem.UNMAPPED)
             val ownAmount = inAccountCurrency(r, own) ?: return null
             val otherAmount = inAccountCurrency(r, other) ?: return null

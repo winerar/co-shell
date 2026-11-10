@@ -10,6 +10,7 @@ core/data/              KMP (android + jvm для тестов): Room, DAO, ре
 core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
 scripts/                скрипты CI и инструменты (иконки, файлы обновлений, отзывы → issues) + test_*.py
 scripts/agent/          служебные скрипты агента (начало/конец сессии, check.sh, профиль) — notes.md
+scripts/ci/             логика workflow (automerge.sh); release_notes.py — в scripts/ (тесты рядом)
 firebase/               firestore.rules (вставляются в консоль вручную), rules-test/ (тесты правил, Node)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
                         whats-new.md (текст «Что нового»), samples/ (тестовые файлы форматов)

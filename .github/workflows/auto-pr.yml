@@ -45,5 +45,12 @@ jobs:
             echo
             git log --no-merges --reverse --format='- %s' origin/dev..HEAD
           } > body.md
-          gh pr create --draft --base dev --head "$BRANCH" --title "$title" --body-file body.md
+          if ! gh pr create --draft --base dev --head "$BRANCH" --title "$title" --body-file body.md 2>err.txt; then
+            cat err.txt
+            # Not an error of the branch: either the setting is off or someone opened the PR meanwhile.
+            if grep -q 'not permitted to create' err.txt; then
+              echo "::warning::Actions may not create PRs — enable it (docs/setup/release.md, step 1); open the PR by hand"
+            fi
+            exit 0
+          fi
           gh workflow run ci.yml --ref "$BRANCH"

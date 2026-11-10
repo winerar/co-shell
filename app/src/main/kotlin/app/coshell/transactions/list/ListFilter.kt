@@ -19,13 +19,21 @@ data class ListFilter(
     val kind: Kind? = null,
     val accountId: String? = null,
     val period: Period = Period.ALL,
+    /** Only expenses and incomes without a category (opened from «Обзор» → «Внимание»). */
+    val uncategorized: Boolean = false,
 ) {
     enum class Period { ALL, THIS_MONTH, LAST_MONTH }
 
-    val isActive: Boolean get() = query.isNotBlank() || kind != null || accountId != null || period != Period.ALL
+    val isActive: Boolean
+        get() = query.isNotBlank() || kind != null || accountId != null || period != Period.ALL || uncategorized
 
-    /** Search and type are checked in memory, so they need the whole (period/account-limited) list, not a page. */
-    internal val needsAll: Boolean get() = query.isNotBlank() || kind != null
+    /** Search, type and «без категории» are checked in memory: they need the whole (period/account-limited) list. */
+    internal val needsAll: Boolean get() = query.isNotBlank() || kind != null || uncategorized
+
+    companion object {
+        /** What «Внимание» counts: this month's expenses and incomes without a category. */
+        val UncategorizedThisMonth = ListFilter(period = Period.THIS_MONTH, uncategorized = true)
+    }
 }
 
 /** Account and period go to Room; the page [limit] only when nothing is filtered in memory. */
@@ -60,6 +68,7 @@ internal fun ListFilter.matches(
         Kind.TRANSFER -> t.type == TransactionType.TRANSFER
     }
     if (!typeOk) return false
+    if (uncategorized && (t.type == TransactionType.TRANSFER || t.categoryId != null)) return false
     val needle = query.squash()
     if (needle.isEmpty()) return true
     val haystack = listOfNotNull(

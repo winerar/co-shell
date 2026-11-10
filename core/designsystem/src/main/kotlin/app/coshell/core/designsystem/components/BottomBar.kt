@@ -6,6 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
@@ -14,6 +15,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.MorphIcon
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.confirmProgress
-import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.tokens.Motion
 
 /** One tab of [CoShellBottomBar]. */
@@ -44,7 +46,7 @@ data class CoShellTab(
 /**
  * Bottom bar (design-system.md §«Навигация и жесты»): tabs with the round «+» in the middle — the most
  * frequent action is always under the thumb. Active tab: outlined icon on a neon pill of the palette's
- * primary; the pill flows from tab to tab (`TabPill.kt`), the icon pops. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ * primary (both themes); the pill flows from tab to tab (`TabPill.kt`), the icon pops. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
  *
  * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
  * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
@@ -99,18 +101,25 @@ private fun BottomBarContent(
     onAdd: () -> Unit,
     addConfirm: ConfirmPulse?,
 ) {
-    val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
-    // One pill flows between tabs (TabPill.kt), so the per-tab Material indicator is transparent.
-    val pillColor = if (dark) scheme.primary else scheme.primaryContainer
+    // One pill flows between tabs (TabPill.kt), so the per-tab Material indicator is transparent. Neon of the
+    // palette in both themes, as in the mockup: the open tab must be seen at a glance.
+    val pillColor = scheme.primary
     val pill = rememberTabPillState()
     AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
     val tabColors = NavigationBarItemDefaults.colors(
         indicatorColor = Color.Transparent,
-        selectedIconColor = if (dark) scheme.onPrimary else scheme.onPrimaryContainer,
+        selectedIconColor = scheme.onPrimary,
         selectedTextColor = scheme.onSurface,
     )
-    NavigationBar(Modifier.tabPill(pill, pillColor)) {
+    // The bar's own Surface would paint its background over a pill drawn behind it (the pill was invisible),
+    // so the background goes first, then the pill, and the bar itself stays transparent.
+    val barColor = NavigationBarDefaults.containerColor
+    NavigationBar(
+        modifier = Modifier.background(barColor).tabPill(pill, pillColor),
+        containerColor = Color.Transparent,
+        tonalElevation = 0.dp,
+    ) {
         tabs.forEachIndexed { index, tab ->
             if (index == tabs.size / 2) {
                 // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as

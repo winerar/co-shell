@@ -52,6 +52,9 @@
   перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
 
 ## Грабли проекта
+- (11-10) `Modifier.drawBehind` на `NavigationBar`/`Surface` рисует **под** их фоном — фон закрасит рисунок.
+  Фон ставить своим `background()` перед `drawBehind`, а `containerColor = Transparent` (так пилюля вкладки).
+- (11-10) Тест `Transaction` перевода: нужны `toAmount` и `toAccountId` ≠ `accountId` (проверки в `init`).
 - (11-09) `rememberGraphicsLayer().record{}` хранит ссылки на слои детей, а не их копию — снимок «старого» кадра
   делать сразу `toImageBitmap()` до смены (так `motion/ThemeReveal.kt`), иначе дети перерисуются уже новыми.
 - (11-09) Слияние нескольких веток: читать **весь** вывод `git merge` (не `tail`), перед коммитом —

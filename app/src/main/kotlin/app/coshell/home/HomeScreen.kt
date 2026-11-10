@@ -17,12 +17,17 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
+import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.components.HomeTiles
 import app.coshell.home.components.RecentCard
+import app.coshell.home.components.SyncBanner
+import app.coshell.home.components.SyncBannerActions
 import app.coshell.home.components.TotalCard
+import app.coshell.home.sync.SyncBannerState
+import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
@@ -36,12 +41,26 @@ data class HomeActions(
     val onUncategorized: () -> Unit = {},
     val onTransactionClick: (String) -> Unit = {},
     val onAddAccount: () -> Unit = {},
+    /** Sync banner: «Войти» → «Семья», «Отзыв» → feedback with the error code typed in. */
+    val onFamily: () -> Unit = {},
+    val onFeedback: (prefill: String) -> Unit = {},
 )
 
 @Composable
-fun HomeRoute(actions: HomeActions, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(
+    actions: HomeActions,
+    viewModel: HomeViewModel = hiltViewModel(),
+    syncViewModel: SyncBannerViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreen(state, actions)
+    val sync by syncViewModel.state.collectAsStateWithLifecycle()
+    val syncActions = SyncBannerActions(
+        onRetry = syncViewModel::retry,
+        onSignIn = actions.onFamily,
+        onFeedback = actions.onFeedback,
+        onDismiss = syncViewModel::dismiss,
+    )
+    HomeScreen(state, actions, sync, syncActions)
 }
 
 /**
@@ -49,7 +68,12 @@ fun HomeRoute(actions: HomeActions, viewModel: HomeViewModel = hiltViewModel()) 
  * Blocks come in as a short cascade the first time the tab shows (Step 4).
  */
 @Composable
-fun HomeScreen(state: HomeUiState, actions: HomeActions = HomeActions()) {
+fun HomeScreen(
+    state: HomeUiState,
+    actions: HomeActions = HomeActions(),
+    sync: SyncBannerState? = null,
+    syncActions: SyncBannerActions = SyncBannerActions(),
+) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
@@ -61,6 +85,7 @@ fun HomeScreen(state: HomeUiState, actions: HomeActions = HomeActions()) {
             verticalArrangement = Arrangement.spacedBy(Spacing.l),
         ) {
             if (state.isLoading) return@LazyColumn
+            sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             if (state.accounts.isEmpty()) {
                 item {
                     Text(

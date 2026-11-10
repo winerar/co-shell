@@ -6,6 +6,7 @@ import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.data.remote.ApiException
 import app.coshell.core.data.sync.ChangeBell
 import app.coshell.core.data.sync.SyncEngine
+import app.coshell.core.data.sync.SyncIssue
 import app.coshell.core.data.sync.SyncResult
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.family.FamilyRemote
@@ -85,7 +86,12 @@ class FamilyService(
                 }
             }
         } catch (e: ApiException) {
-            if (e.isUnauthenticated) signOut() else offline(session.email)
+            if (e.isUnauthenticated) {
+                signOut()
+                recordIssue(e) // after signOut, which clears it: the banner offers «Войти»
+            } else {
+                offline(session.email)
+            }
         } catch (e: Exception) {
             offline(session.email)
         }
@@ -93,12 +99,14 @@ class FamilyService(
 
     suspend fun signIn(googleIdToken: String) {
         auth.signInWithGoogle(googleIdToken)
+        clearIssue()
         refresh()
     }
 
     suspend fun signOut() {
         auth.signOut()
         cache(null)
+        clearIssue()
         _state.value = if (configured) FamilyState.SignedOut else FamilyState.NotConfigured
     }
 
@@ -154,13 +162,30 @@ class FamilyService(
         val joined = _state.value as? FamilyState.Joined ?: return null
         return try {
             engine.sync().also {
+                clearIssue()
                 if (it.pushed > 0) ringQuietly()
                 if (joined.family.members.size < 2) refreshMembersThrottled()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: ApiException) {
             if (e.isPermissionDenied || e.isUnauthenticated) refresh()
+            recordIssue(e)
+            throw e
+        } catch (e: Exception) {
+            recordIssue(e)
             throw e
         }
+    }
+
+    /** Remembers why sync failed ([SyncIssue]) for the banner on «Обзор». */
+    private suspend fun recordIssue(error: Throwable) {
+        val issue = SyncIssue.of(error, clock.now(), SyncIssue.decode(dao.state(SyncIssue.KEY)))
+        dao.setState(SyncStateEntity(SyncIssue.KEY, issue.encode()))
+    }
+
+    private suspend fun clearIssue() {
+        if (!dao.state(SyncIssue.KEY).isNullOrEmpty()) dao.setState(SyncStateEntity(SyncIssue.KEY, ""))
     }
 
     /** The ring is a speed-up only: if it fails, the other phone still gets the edits by polling. */

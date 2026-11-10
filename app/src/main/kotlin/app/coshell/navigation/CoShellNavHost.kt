@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import app.coshell.core.designsystem.components.CoShellSheet
 import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
 import app.coshell.core.designsystem.tokens.Spacing
@@ -96,6 +97,8 @@ fun CoShellNavHost(
                     },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
+                    onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
                 ),
             )
         }
@@ -131,7 +134,7 @@ fun CoShellNavHost(
                     onFamily = { navController.navigate(FamilyDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
                     onImport = { navController.navigate(WalletImportDestination) },
-                    onFeedback = { navController.navigate(FeedbackDestination) },
+                    onFeedback = { navController.navigate(FeedbackDestination()) },
                     onSettings = { navController.navigate(SettingsDestination) },
                 ),
                 availableUpdate = updateAvailable?.versionCode,
@@ -148,8 +151,8 @@ fun CoShellNavHost(
         composable<UpdateDestination> {
             UpdateRoute(onBack = { navController.popBackStack() })
         }
-        composable<FeedbackDestination> {
-            FeedbackRoute(onBack = { navController.popBackStack() })
+        composable<FeedbackDestination> { entry ->
+            FeedbackRoute(onBack = { navController.popBackStack() }, prefill = entry.toRoute<FeedbackDestination>().prefill)
         }
         composable<RatesDestination> {
             RatesRoute(onBack = { navController.popBackStack() })

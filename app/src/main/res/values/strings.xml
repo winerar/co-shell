@@ -393,4 +393,27 @@
     <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
     <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google этим адресом.</string>
     <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>
+    <!-- Sync banner on «Обзор» (board 17А, feedback #102) -->
+    <string name="sync_banner_offline_title">Нет интернета</string>
+    <string name="sync_banner_offline_text">Отправим и получим изменения сами, когда появится сеть.</string>
+    <string name="sync_banner_signed_out_title">Вход в Google истёк</string>
+    <string name="sync_banner_signed_out_text">Войдите снова — ничего не потеряно.</string>
+    <string name="sync_banner_no_access_title">Сервер не пускает в семью</string>
+    <string name="sync_banner_no_access_text">Нет доступа к семье. Отправьте отзыв — в нём будет код ошибки %1$s.</string>
+    <string name="sync_banner_server_title">Сервер не отвечает</string>
+    <string name="sync_banner_server_text">Это не у вас. Попробуем снова через минуту.</string>
+    <string name="sync_banner_quota_title">Дневной лимит исчерпан</string>
+    <string name="sync_banner_quota_text">Бесплатный лимит Firebase на сегодня закончился. Синхронизация продолжится в %1$s.</string>
+    <plurals name="sync_banner_pending">
+        <item quantity="one">%1$d изменение ждёт на телефоне.</item>
+        <item quantity="few">%1$d изменения ждут на телефоне.</item>
+        <item quantity="many">%1$d изменений ждут на телефоне.</item>
+        <item quantity="other">%1$d изменения ждут на телефоне.</item>
+    </plurals>
+    <string name="sync_banner_last">Последняя синхронизация: %1$s</string>
+    <string name="sync_banner_retry">Повторить</string>
+    <string name="sync_banner_sign_in">Войти</string>
+    <string name="sync_banner_feedback">Отзыв</string>
+    <string name="sync_banner_ok">Понятно</string>
+    <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
 </resources>

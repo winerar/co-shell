@@ -3,46 +3,34 @@ package app.coshell.backup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import app.coshell.more.components.MoreTile
-import app.coshell.core.designsystem.category.CategoryPalette
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
-import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.more.components.MoreTile
 import app.coshell.ui.form.ConfirmDialog
+import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
 /** "More → Backup": explanation, "Save a copy", "Restore from a copy", and the last result. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupUiState = AutoBackupUiState()) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.backup_title)) },
-                navigationIcon = {
-                    CoShellIconButton(onClick = actions.onBack) {
-                        Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
-                    }
-                },
-            )
+            ScreenTopBar(stringResource(R.string.backup_title), onBack = actions.onBack)
         },
     ) { padding ->
         Column(

@@ -17,6 +17,7 @@ class WalletImportUseCase(
     private val imports: ImportRepository,
     private val ensureAdjustment: EnsureAdjustmentCategoriesUseCase,
     ids: IdGenerator = IdGenerator.Random,
+    private val newAccountColor: NewAccountColor = NewAccountColor.None,
 ) {
     private val planner = WalletImportPlanner(ids)
 
@@ -27,6 +28,7 @@ class WalletImportUseCase(
             existing = accounts.observeAccountsWithBalance().first(),
             adjustmentCategories = CategoryType.entries.associateWith(SystemCategories::adjustmentId),
             known = imports.knownExternalIds(WalletImportBuilder.SOURCE),
+            color = newAccountColor,
         )
 
     /** Creates «Корректировка баланса» if needed (the plan may use it), then saves everything at once. */

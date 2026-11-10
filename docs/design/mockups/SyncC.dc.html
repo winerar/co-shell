@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Синк: строка в карточке баланса</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 420ms cubic-bezier(.34,1.56,.64,1),background-color 300ms ease-out}
+.tap:active{transform:scale(0.96);transition:transform 90ms ease-out}
+.drop{animation:drop 420ms cubic-bezier(.34,1.4,.64,1)}
+@keyframes drop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.sheet{animation:up 380ms cubic-bezier(.2,.9,.3,1)}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.spin{animation:spin 900ms linear infinite;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; font-family: Onest, system-ui, sans-serif; color: {{ink}}; position: relative; overflow: hidden; padding: 12px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 8px; height: 48px;">
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Обзор</h1>
+    <button type="button" class="tap" aria-label="Поиск" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ink}}" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.5-4.5"></path></svg></button>
+  </div>
+
+  <div style="margin-top: 10px; padding: 18px 18px 16px; border-radius: 24px; background: {{card}}; border: 1px solid {{line}};">
+    <div style="font-size: 13px; color: {{muted}};">Общий баланс</div>
+    <div style="margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; letter-spacing: -0.5px;">12 480,00 <span style="font-size: 18px; color: {{muted}};">USD</span></div>
+    <div style="margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{muted}};">≈ 15 974 400 ARS · 4 836 000 AMD</div>
+    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid {{line}};">
+      <sc-if value="{{ok}}" hint-placeholder-val="{{false}}"><div style="display: flex; align-items: center; gap: 8px; font-size: 13px; min-height: 36px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{okc}};"></span>Синхронизировано только что</div></sc-if>
+      <sc-if value="{{error}}" hint-placeholder-val="{{true}}">
+      <button type="button" class="tap" onClick="{{toggle}}" style="width: 100%; min-height: 36px; padding: 0; border: none; background: transparent; display: flex; align-items: center; gap: 8px; color: {{warn}}; font-size: 13px; font-weight: 600; text-align: left;"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{warn}};"></span><span style="flex-grow: 1;">Не синхронизируется: {{r.short}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{warn}}" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 10l4 4 4-4"></path></svg></button>
+      <sc-if value="{{open}}" hint-placeholder-val="{{false}}"><div class="drop" style="padding: 4px 0 2px 16px;">
+        <div style="font-size: 12px; line-height: 1.4;">{{r.text}}</div>
+        <div style="margin-top: 4px; font-size: 11px; color: {{muted}};">{{lastSync}}</div>
+        <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end;">
+          <button type="button" class="tap" onClick="{{next}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid {{line}}; background: transparent; color: {{ink}}; font-size: 13px;">Другая причина →</button>
+          <button type="button" class="tap" onClick="{{retry}}" style="height: 36px; padding: 0 14px; border-radius: 999px; border: none; background: {{warn}}; color: {{bg}}; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;"><sc-if value="{{busy}}" hint-placeholder-val="{{false}}"><svg class="spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{bg}}" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"></path></svg></sc-if>{{r.action}}</button>
+        </div>
+      </div></sc-if>
+      </sc-if>
+    </div>
+  </div>
+  <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+    <div style="padding: 14px; border-radius: 20px; background: {{card}}; border: 1px solid {{line}};">
+      <div style="font-size: 12px; color: {{muted}};">Траты за ноябрь</div>
+      <div style="margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700;">1 240,50</div>
+      <div style="font-size: 12px; color: {{muted}};">USD</div>
+    </div>
+    <div style="padding: 14px; border-radius: 20px; background: {{card}}; border: 1px solid {{line}};">
+      <div style="font-size: 12px; color: {{muted}};">Без категории</div>
+      <div style="margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700;">14</div>
+      <div style="font-size: 12px; color: {{muted}};">операций</div>
+    </div>
+  </div>
+  <div style="margin: 16px 4px 8px; font-size: 13px; font-weight: 600; color: {{muted}};">Последние</div>
+  <div style="border-radius: 20px; background: {{card}}; border: 1px solid {{line}}; overflow: hidden;">
+    <sc-for list="{{recent}}" as="t" hint-placeholder-count="4">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 14px; border-top: {{t.border}};">
+        <span style="width: 36px; height: 36px; border-radius: 50%; background: {{t.tint}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: {{t.color}};">{{t.letter}}</span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">{{t.name}}</span><span style="font-size: 12px; color: {{muted}};">{{t.sub}}</span></span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700;">{{t.sum}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 24px; right: 24px; bottom: 20px; height: 64px; border-radius: 999px; background: {{bar}}; border: 1px solid {{line}}; display: flex; align-items: center; justify-content: space-around; padding: 0 10px;">
+    <span style="width: 64px; height: 44px; border-radius: 999px; background: {{accent}}; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{onAccent}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"></path></svg></span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"></path></svg>
+    <span style="width: 52px; height: 52px; border-radius: 50%; background: {{accent}}; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{onAccent}}" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18v12H3zM3 11h18"></path></svg>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="{{muted}}" aria-hidden="true"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { r: 0, busy: false, ok: false, open: false }; }
+  renderVals() {
+    const s = this.state;
+    const dark = this.props.dark ?? true;
+    const T = dark
+      ? { bg: '#050805', ink: '#EEF5E6', muted: '#9AA594', card: '#10160D', line: '#222B1E', bar: '#141B11', accent: '#B8FF2E', onAccent: '#0E1F00', warn: '#FFB547', warnBg: '#2A1E08', warnLine: '#5A3F10', okc: '#5CFFB0', scrim: 'rgba(0,0,0,0.6)', sheet: '#141B11' }
+      : { bg: '#F7FBF2', ink: '#14200F', muted: '#5C6757', card: '#FFFFFF', line: '#DCE5D3', bar: '#FFFFFF', accent: '#B8FF2E', onAccent: '#0E1F00', warn: '#8A5A00', warnBg: '#FFF3DC', warnLine: '#F0D49A', okc: '#0B7F3D', scrim: 'rgba(20,32,15,0.35)', sheet: '#FFFFFF' };
+    const R = [
+      { title: 'Нет интернета', short: 'нет интернета', text: '3 изменения сохранены на телефоне и уйдут сами, когда появится сеть.', action: 'Повторить' },
+      { title: 'Вход в Google истёк', short: 'нужно войти снова', text: 'Войдите снова — 3 изменения ждут отправки, ничего не потеряно.', action: 'Войти' },
+      { title: 'Сервер не пускает в семью', short: 'нет доступа к семье', text: 'Нет доступа к «Общему бюджету». Отправьте отзыв — в нём будет код ошибки PERMISSION_DENIED.', action: 'Отзыв' },
+      { title: 'Сервер не отвечает', short: 'сервер не отвечает', text: 'Это не у вас. Попробуем снова через минуту; изменения ждут на телефоне.', action: 'Повторить' },
+      { title: 'Дневной лимит исчерпан', short: 'лимит на сегодня', text: 'Бесплатный лимит Firebase на сегодня закончился. Синхронизация продолжится в 04:00.', action: 'Понятно' }
+    ];
+    const r = R[s.r];
+    const C = ['#B8FF2E', '#00F0FF', '#B266FF', '#FFB547'];
+    const recent = [
+      ['Супермаркет', 'Galicia · сегодня', '−48 300 ARS'],
+      ['Такси', 'USDT-карта · сегодня', '−12,40 USD'],
+      ['Зарплата', 'Ameria · вчера', '+850 000 AMD'],
+      ['Аптека', 'Наличные ARS · вчера', '−9 800 ARS']
+    ].map((x, n) => ({ name: x[0], sub: x[1], sum: x[2], letter: x[0].slice(0, 1), color: C[n], tint: C[n] + '22', border: n ? '1px solid ' + T.line : 'none' }));
+    return {
+      ...T, recent, r,
+      error: !s.ok,
+      ok: s.ok,
+      busy: s.busy,
+      open: s.open,
+      lastSync: 'Последняя синхронизация: сегодня 09:12',
+      next: () => this.setState({ r: (s.r + 1) % R.length, ok: false }),
+      toggle: () => this.setState({ open: !s.open }),
+      close: () => this.setState({ open: false }),
+      retry: () => {
+        this.setState({ busy: true });
+        setTimeout(() => this.setState({ busy: false, ok: true, open: false }), 1200);
+        setTimeout(() => this.setState({ ok: false, r: (s.r + 1) % R.length }), 4200);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

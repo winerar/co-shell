@@ -39,7 +39,7 @@ class WalletImportViewModelTest {
     private var backupOk = true
     private var backups = 0
     private var n = 0
-    private val useCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories)) { "id${n++}" }
+    private val useCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids = { "id${n++}" })
 
     // Lazy: init {} starts collecting in viewModelScope, which must see the rule's Main dispatcher.
     private val vm by lazy {

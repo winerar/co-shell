@@ -46,6 +46,8 @@
   `maven-central.storage-download.googleapis.com/maven2` (сработало 11-09).
 - (11-10) Robolectric сам качает `android-all-instrumented` и тоже ловит 429 («Failed to fetch maven artifact») —
   скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
+- (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
+  читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
 - (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
   Если тест падает «Failed to fetch maven artifact …android-all-instrumented…» (429) — скачать jar+pom curl-ом

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Счета</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+:root{
+--spatial:linear(0,0.06 2.4%,0.22 5.3%,0.5 10.5%,0.74 16%,0.89 21.5%,0.97 27%,1.01 33%,1.02 40%,1.01 50%,1);
+--bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);
+}
+button,a{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 520ms var(--bouncy),background-color 240ms ease-out,color 240ms ease-out}
+.tap:active{transform:scale(0.96);transition:transform 90ms ease-out}
+.pill{transition:transform 560ms var(--bouncy)}
+.fold{display:grid;transition:grid-template-rows 520ms var(--spatial),opacity 300ms ease-out}
+.fold>div{overflow:hidden;min-height:0}
+.chev{transition:transform 520ms var(--bouncy)}
+.scroll{overflow-y:auto;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden;">
+  <div class="scroll" style="position: absolute; inset: 0; padding: 20px 16px 110px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0 10px;">
+      <h1 style="margin: 0; font-size: 30px; font-weight: 700;">Счета</h1>
+      <span style="display: flex; gap: 8px;">
+        <button type="button" class="tap" aria-label="Поиск" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid #2E382A; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9D3C2" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+        <button type="button" class="tap" aria-label="Новый счёт" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #B8FF2E; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 2px; padding: 2px 0 14px;">
+      <span style="font-size: 13px; color: #9AA594;">Всего в общем балансе · 12 счетов</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700; letter-spacing: -0.02em;">9 640 <span style="font-size: 18px; color: #9AA594; font-weight: 500;">USD</span></span>
+    </div>
+
+    <div style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: #121810; margin-bottom: 8px;">
+      <div class="pill" style="{{pillStyle}}"></div>
+      <sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+        <button type="button" class="tap" onClick="{{m.pick}}" style="{{m.style}}">{{m.label}}</button>
+      </sc-for>
+    </div>
+
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+      <div>
+        <button type="button" class="tap" onClick="{{g.toggle}}" style="width: 100%; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 4px; background: none; border: none; color: #EEF5E6;">
+          <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #B8FF2E;">{{g.title}}</span>
+          <span style="font-size: 12px; color: #9AA594;">{{g.count}}</span>
+          <span style="flex-grow: 1;"></span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C9D3C2;">{{g.total}}</span>
+          <svg class="chev" style="{{g.chev}}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div class="fold" style="{{g.fold}}">
+          <div>
+            <div style="border-radius: 16px; background: #0E130B; border: 1px solid #1E261A; overflow: hidden; margin-bottom: 6px;">
+              <sc-for list="{{g.items}}" as="a" hint-placeholder-count="3">
+                <a href="#" class="tap" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 14px; text-decoration: none; border-top: 1px solid {{a.sep}};">
+                  <span style="width: 40px; height: 40px; border-radius: 12px; background: {{a.color}}; color: {{a.ink}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex: none;">{{a.ini}}</span>
+                  <span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+                    <span style="font-size: 15px; color: #EEF5E6;">{{a.name}}</span>
+                    <span style="font-size: 12px; color: {{a.subColor}};">{{a.sub}}</span>
+                  </span>
+                  <span style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #EEF5E6; white-space: nowrap;">{{a.bal}} <span style="font-size: 11px; color: #9AA594;">{{a.cur}}</span></span>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9AA594;">{{a.usd}}</span>
+                  </span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; min-height: 48px; padding: 0 4px; color: #9AA594; font-size: 13px;">
+      <span>Архив · 2</span>
+      <span>Удерживайте строку — порядок и закрепление</span>
+    </div>
+  </div>
+
+  <nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: #161D12; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">
+    <a href="#" aria-label="Обзор" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"></path></svg></a>
+    <a href="#" aria-label="Операции" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"></path></svg></a>
+    <a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 52px; height: 52px; border-radius: 50%; background: #B8FF2E; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span></a>
+    <a href="#" aria-label="Счета" style="display: flex; justify-content: center; align-items: center; height: 44px; margin: 0 2px; border-radius: 999px; background: #B8FF2E;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"></rect><path d="M3 10h18"></path></svg></a>
+    <a href="#" aria-label="Ещё" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="#9AA594" aria-hidden="true"><circle cx="5" cy="12" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="19" cy="12" r="1.6"></circle></svg></a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: 'type', closed: {} };
+  }
+  ink(hex) {
+    const n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#111611' : '#FFFFFF';
+  }
+  renderVals() {
+    const s = this.state;
+    const A = [
+      ['Galicia', 'GA', '#F26E22', '1 250 000', 'ARS', 1220, 'card', 'Карта', 'Миша'],
+      ['Mercado Pago', 'MP', '#00B1EA', '96 400', 'ARS', 94, 'card', 'Кошелёк', 'Аня'],
+      ['Santander', 'SA', '#EC0000', '310 000', 'ARS', 302, 'card', 'Карта', 'Миша'],
+      ['Ameria', 'AM', '#B01E2F', '410 000', 'AMD', 1060, 'card', 'личный · Аня', 'Аня'],
+      ['Inecobank', 'IN', '#0096D6', '120 000', 'AMD', 310, 'card', 'Карта', 'Аня'],
+      ['Т-Банк', 'Т', '#FFDD2D', '18 500', 'RUB', 190, 'card', 'Карта', 'Миша'],
+      ['Binance', 'BN', '#F0B90B', '1 840', 'USDT', 1840, 'crypto', 'Биржа', 'Миша'],
+      ['Bybit Card', 'BY', '#F7A600', '470', 'USDT', 470, 'crypto', 'Карта', 'Аня'],
+      ['Наличные', '₱', '#A8FF3E', '85 000', 'ARS', 83, 'cash', 'не в общем балансе', 'Миша'],
+      ['Доллары', '$', '#00E5C0', '1 300', 'USD', 1300, 'cash', 'Наличные', 'Миша'],
+      ['Драмы', '֏', '#D36BFF', '52 000', 'AMD', 134, 'cash', 'Наличные', 'Аня'],
+      ['Вклад', 'ВК', '#6E8BFF', '3 000', 'USD', 3000, 'save', 'до 15 марта', 'Миша']
+    ].map(([name, ini, color, bal, cur, usdN, grp, sub, who]) => ({ name, ini, color, bal, cur, usdN, grp, sub, who, ink: this.ink(color), usd: '≈ ' + usdN.toLocaleString('ru-RU') + ' USD', subColor: sub === 'не в общем балансе' ? '#FFE600' : '#9AA594' }));
+    const defs = {
+      type: [['card', 'КАРТЫ И БАНКИ'], ['crypto', 'КРИПТО'], ['cash', 'НАЛИЧНЫЕ'], ['save', 'ВКЛАДЫ']].map(([k, t]) => [t, (a) => a.grp === k]),
+      cur: ['ARS', 'USD', 'USDT', 'AMD', 'RUB'].map((c) => [c, (a) => a.cur === c]),
+      who: ['Миша', 'Аня'].map((w) => [w.toUpperCase(), (a) => a.who === w])
+    };
+    const groups = defs[s.mode].map(([title, f]) => {
+      const items = A.filter(f).map((a, i) => ({ ...a, sep: i === 0 ? 'transparent' : '#1E261A' }));
+      const open = !s.closed[s.mode + title];
+      const sum = items.reduce((x, a) => x + a.usdN, 0);
+      return {
+        title, items, count: String(items.length),
+        total: '≈ ' + sum.toLocaleString('ru-RU') + ' USD',
+        fold: 'grid-template-rows:' + (open ? '1fr' : '0fr') + ';opacity:' + (open ? 1 : 0.2) + ';',
+        chev: 'transform:rotate(' + (open ? 0 : -90) + 'deg);',
+        toggle: () => this.setState({ closed: { ...s.closed, [s.mode + title]: open } })
+      };
+    }).filter((g) => g.items.length);
+    const M = [['type', 'По типу'], ['cur', 'По валюте'], ['who', 'Чьи']];
+    const mi = M.findIndex(([k]) => k === s.mode);
+    return {
+      groups,
+      pillStyle: 'position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);border-radius:999px;background:#2A2240;transform:translateX(' + (mi * 100) + '%);',
+      modes: M.map(([k, label]) => ({
+        label,
+        style: 'position:relative;z-index:1;height:40px;border:none;border-radius:999px;font-size:14px;font-weight:600;background:transparent;color:' + (k === s.mode ? '#E6D6FF' : '#9AA594') + ';',
+        pick: () => this.setState({ mode: k })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

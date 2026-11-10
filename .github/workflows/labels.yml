@@ -1,0 +1,27 @@
+name: Labels
+
+# Keeps repository labels in sync with .github/labels.json (create or update; nothing is deleted).
+# Task workflow and label meanings: docs/agents/tasks.md.
+on:
+  push:
+    paths: [".github/labels.json", ".github/workflows/labels.yml"]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create or update labels
+        run: |
+          jq -c '.[]' .github/labels.json | while read -r l; do
+            gh label create "$(jq -r .name <<<"$l")" --force \
+              --color "$(jq -r .color <<<"$l")" --description "$(jq -r .description <<<"$l")"
+          done

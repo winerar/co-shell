@@ -1,0 +1,53 @@
+name: Issue status
+
+# Moves `status:*` labels so the task board stays true without manual work (docs/agents/tasks.md):
+# - a PR merged into dev → issues it names as `Fixes #N` get `status:in-dev`
+#   (they close when the release PR dev → main is merged);
+# - a closed issue loses its `status:*` label.
+# Issues created with GITHUB_TOKEN (feedback.yml) do not trigger workflows, so the feedback script
+# labels them `status:triage` itself.
+on:
+  pull_request:
+    types: [closed]
+    branches: [dev]
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  merged-into-dev:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BODY: ${{ github.event.pull_request.body }}
+    steps:
+      - name: Mark fixed issues as in dev
+        run: |
+          nums=$(grep -oiE '\b(fix(es|ed)?|close[sd]?|resolve[sd]?)[[:space:]]+#[0-9]+' <<<"$BODY" \
+            | grep -oE '[0-9]+$' | sort -un || true)
+          for n in $nums; do
+            [ "$(gh issue view "$n" --json state -q .state 2>/dev/null)" = OPEN ] || continue
+            old=$(gh issue view "$n" --json labels -q '[.labels[].name | select(startswith("status:"))] | join(",")')
+            gh issue edit "$n" --add-label status:in-dev ${old:+--remove-label "$old"}
+            echo "#$n → status:in-dev"
+          done
+
+  closed:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      N: ${{ github.event.issue.number }}
+    steps:
+      - name: Drop status labels
+        run: |
+          old=$(gh issue view "$N" --json labels -q '[.labels[].name | select(startswith("status:"))] | join(",")')
+          [ -z "$old" ] || gh issue edit "$N" --remove-label "$old"

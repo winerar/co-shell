@@ -1,0 +1,29 @@
+[
+  {"name": "status:triage", "color": "d93f0b", "description": "Новое — разобрать: принять в план или закрыть"},
+  {"name": "status:backlog", "color": "c5def5", "description": "В плане, не в ближайшей очереди"},
+  {"name": "status:next", "color": "0e8a16", "description": "Ближайшая очередь (порядок — ROADMAP «Порядок»)"},
+  {"name": "status:in-progress", "color": "fbca04", "description": "В работе у агента"},
+  {"name": "status:needs-owner", "color": "b60205", "description": "Ждёт владельца: решение, выбор макета, проверка"},
+  {"name": "status:in-dev", "color": "5319e7", "description": "Влито в dev, ждёт релиза; закроется релизом"},
+
+  {"name": "epic", "color": "3e4b9e", "description": "Крупная задача; части — подзадачи"},
+  {"name": "feature", "color": "a2eeef", "description": "Новая возможность"},
+  {"name": "bug", "color": "e11d21", "description": "Ошибка"},
+  {"name": "design", "color": "f9d0c4", "description": "Видимое изменение — сначала макет владельцу"},
+  {"name": "chore", "color": "ededed", "description": "Рефакторинг, инфраструктура, документация"},
+  {"name": "owner", "color": "ff9f1c", "description": "Делает владелец (проверка на телефоне, настройка)"},
+  {"name": "question", "color": "d876e3", "description": "Вопрос владельцу, ждёт решения"},
+  {"name": "feedback", "color": "7057ff", "description": "Отзыв из приложения"},
+  {"name": "hold", "color": "000000", "description": "PR: не вливать автоматически"},
+
+  {"name": "stage:4", "color": "bfdadc", "description": "Этап 4 — синхронизация на двоих"},
+  {"name": "stage:5", "color": "bfdadc", "description": "Этап 5 — переезд из Wallet"},
+  {"name": "stage:6", "color": "bfdadc", "description": "Этап 6 — бюджеты и аналитика"},
+  {"name": "stage:7", "color": "bfdadc", "description": "Этап 7 — удобства ввода"},
+  {"name": "stage:8", "color": "bfdadc", "description": "Этап 8 — автоввод из банков"},
+  {"name": "stage:9", "color": "bfdadc", "description": "Этап 9 — цели и планирование"},
+  {"name": "area:design-system", "color": "d4c5f9", "description": "Сквозное: дизайн-система"},
+  {"name": "area:reliability", "color": "d4c5f9", "description": "Сквозное: надёжность данных и семья"},
+  {"name": "area:performance", "color": "d4c5f9", "description": "Сквозное: производительность"},
+  {"name": "area:delivery", "color": "d4c5f9", "description": "Сквозное: доставка, CI, релизы"}
+]

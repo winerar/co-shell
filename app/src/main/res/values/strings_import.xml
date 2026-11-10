@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Ещё → Импорт из Wallet» (ROADMAP 5c). Counts use «Записей: N» — no plural forms needed. -->
+<resources>
+    <string name="import_title">Импорт из Wallet</string>
+    <string name="import_menu_hint">Перенести операции из выгрузки CSV</string>
+    <string name="import_next">Далее</string>
+    <string name="import_do">Импортировать</string>
+    <string name="import_step_of">Шаг %1$d из %2$d</string>
+
+    <string name="import_step_start">Файл</string>
+    <string name="import_step_summary">Что в файле</string>
+    <string name="import_step_accounts">Счета</string>
+    <string name="import_step_categories">Категории</string>
+    <string name="import_step_transfers">Переводы без пары</string>
+    <string name="import_step_preview">Проверка</string>
+    <string name="import_step_done">Готово</string>
+
+    <string name="import_start_intro">В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь. Перед записью приложение само сделает резервную копию, а импорт можно отменить целиком.</string>
+    <string name="import_pick_file">Выбрать файл CSV</string>
+    <string name="import_pick_file_hint">Повторный импорт того же или более нового файла добавит только новое</string>
+    <string name="import_batches_title">Прошлые импорты</string>
+    <string name="import_batch_row">%1$s · операций: %2$d</string>
+    <string name="import_batch_period">с %1$s по %2$s</string>
+    <string name="import_undo">Отменить импорт</string>
+    <string name="import_undo_confirm_title">Отменить импорт?</string>
+    <string name="import_undo_confirm_text">Все операции этой загрузки будут удалены (и на втором телефоне). Счета и категории останутся.</string>
+    <string name="import_undone">Импорт отменён: удалено операций — %1$d.</string>
+
+    <string name="import_summary_records">Записей: %1$d</string>
+    <string name="import_summary_period">с %1$s по %2$s</string>
+    <string name="import_summary_accounts">Счетов: %1$d</string>
+    <string name="import_summary_currencies">Валюты: %1$s</string>
+    <string name="import_summary_categories">Категорий: %1$d</string>
+    <string name="import_summary_transfers">Переводов: %1$d, без пары: %2$d</string>
+    <string name="import_summary_labels">Метки: %1$s</string>
+    <string name="import_parse_errors_title">Не прочитано строк: %1$d — они не попадут в импорт</string>
+    <string name="import_parse_error_line">Строка %1$d: %2$s</string>
+
+    <string name="import_accounts_hint">Каждый счёт Wallet можно перенести в новый счёт или слить с существующим той же валюты.</string>
+    <string name="import_account_records">Записей: %1$d · %2$s</string>
+    <string name="import_account_new">Новый счёт</string>
+    <string name="import_wallet_balance">Баланс в Wallet сейчас</string>
+    <string name="import_wallet_balance_hint">Необязательно: разница уйдёт в начальный баланс</string>
+    <string name="import_wallet_balance_error">Не похоже на сумму</string>
+
+    <string name="import_categories_hint">Нажмите на категорию, чтобы выбрать существующую вместо новой.</string>
+    <string name="import_category_records">%1$s · записей: %2$d</string>
+    <string name="import_category_new">Новая: %1$s</string>
+    <string name="import_category_pick_title">Категория для «%1$s»</string>
+    <string name="import_expense">Расход</string>
+    <string name="import_income">Доход</string>
+
+    <string name="import_transfers_hint">У этих переводов в файле нет второй половины. Обычно это выравнивание баланса в Wallet.</string>
+    <string name="import_unpaired_adjustment">Корректировка</string>
+    <string name="import_unpaired_skip">Пропустить</string>
+    <string name="import_unpaired_transfer">Перевод: %1$s</string>
+    <string name="import_unpaired_pick_title">Второй счёт перевода</string>
+    <string name="import_unpaired_transfer_choose">Перевод на счёт…</string>
+
+    <string name="import_preview_new">Будет добавлено операций: %1$d</string>
+    <string name="import_preview_known">Уже загружено раньше: %1$d — пропускаются</string>
+    <string name="import_preview_skipped">Пропущено по вашему выбору: %1$d</string>
+    <string name="import_preview_issues">Требуют решения: %1$d — не попадут в импорт</string>
+    <string name="import_preview_new_accounts">Новых счетов: %1$d, новых категорий: %2$d</string>
+    <string name="import_preview_balances">Балансы после импорта</string>
+    <string name="import_preview_nothing">Новых операций нет — всё из этого файла уже загружено.</string>
+    <string name="import_issue_unmapped">не выбран счёт или категория</string>
+    <string name="import_issue_needs_rate">валюта не совпадает со счётом, курса нет</string>
+    <string name="import_issue_zero">нулевая сумма</string>
+    <string name="import_issue_line">Строка %1$d: %2$s</string>
+
+    <string name="import_done_title">Импорт завершён</string>
+    <string name="import_done_text">Добавлено операций: %1$d. Перед этим сделана резервная копия.</string>
+    <string name="import_done_close">Готово</string>
+
+    <string name="import_error_read">Не удалось открыть файл.</string>
+    <string name="import_error_not_wallet">Это не похоже на выгрузку Wallet: нет нужных колонок или строк.</string>
+    <string name="import_error_backup">Не удалось сделать резервную копию — импорт не начат.</string>
+    <string name="import_error_save">Не удалось сохранить — ничего не записано. Попробуйте ещё раз.</string>
+
+    <string name="import_problem_empty_file">файл пустой</string>
+    <string name="import_problem_quote">незакрытая кавычка</string>
+    <string name="import_problem_column">нет колонки %1$s</string>
+    <string name="import_problem_value">неверное значение «%1$s» в колонке %2$s</string>
+</resources>

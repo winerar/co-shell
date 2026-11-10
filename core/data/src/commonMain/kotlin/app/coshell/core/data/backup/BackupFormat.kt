@@ -105,6 +105,7 @@ internal data class TransactionDto(
     val authorMemberId: String? = null,
     val importSource: String? = null,
     val importExternalId: String? = null,
+    val importBatchId: String? = null,
 ) {
     fun toModel() = Transaction(
         id = id,
@@ -122,12 +123,13 @@ internal data class TransactionDto(
         authorMemberId = authorMemberId,
         importSource = importSource,
         importExternalId = importExternalId,
+        importBatchId = importBatchId,
     )
 }
 
 internal fun Transaction.toDto() = TransactionDto(
     id, type.name, accountId, amount.toDto(), date.toString(), categoryId, toAccountId, toAmount?.toDto(),
-    note, payee, labels, originalAmount?.toDto(), authorMemberId, importSource, importExternalId,
+    note, payee, labels, originalAmount?.toDto(), authorMemberId, importSource, importExternalId, importBatchId,
 )
 
 @Serializable

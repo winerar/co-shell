@@ -103,6 +103,23 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `5 to 6 keeps imported operations outside any batch`() {
+        helper.createDatabase(5).use { v5 ->
+            v5.execSQL(
+                """INSERT INTO transactions (id, type, account_id, amount_minor, currency, to_account_id, to_amount_minor,
+                   to_currency, category_id, date, note, payee, labels, original_amount_minor, original_currency,
+                   author_member_id, import_source, import_external_id, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('t1', 'EXPENSE', 'a1', 100, 'ARS', NULL, NULL, NULL, 'c1', 1, '', NULL, '[]', NULL, NULL,
+                   NULL, 'wallet', 'w1', 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(6, emptyList()).use { v6 ->
+            assertEquals("w1|none", v6.single("SELECT import_external_id || '|' || IFNULL(import_batch_id, 'none') FROM transactions"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

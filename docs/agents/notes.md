@@ -38,6 +38,11 @@
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
+- (11-09, скрипт 11-10) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — `scripts/agent/m2-mirror.sh
+  <scratchpad> group:artifact:ver` (curl, зеркало googleapis) → `check.sh --init-script <scratchpad>/m2-init.gradle`.
+  Нужен был `org.robolectric:nativeruntime-dist-compat:1.0.19`. Robolectric сам качает `android-all-instrumented`
+  («Failed to fetch maven artifact») — `M2_REPO=~/.m2/repository scripts/agent/m2-mirror.sh <dir> <coord>`
+  (11-10: `org.robolectric:android-all-instrumented:16-robolectric-13921718-i7`).
 - (11-09) Maven Central из облачной сессии отвечает Gradle 429 на большие файлы (Robolectric), повтор не помогает,
   а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
   init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
@@ -58,6 +63,8 @@
   перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
 
 ## Грабли проекта
+- (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
+  класса инициализируется раньше `MainDispatcherRule`, и `viewModelScope` молча не работает.
 - (11-10) `Modifier.drawBehind` на `NavigationBar`/`Surface` рисует **под** их фоном — фон закрасит рисунок.
   Фон ставить своим `background()` перед `drawBehind`, а `containerColor = Transparent` (так пилюля вкладки).
 - (11-10) Тест `Transaction` перевода: нужны `toAmount` и `toAccountId` ≠ `accountId` (проверки в `init`).

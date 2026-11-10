@@ -9,6 +9,7 @@ import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
+import app.coshell.core.data.repository.RoomImportRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
@@ -18,11 +19,14 @@ import app.coshell.core.domain.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
+import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.importer.ImportRepository
+import app.coshell.core.domain.importer.wallet.WalletImportUseCase
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.model.IdGenerator
 import dagger.Module
@@ -66,6 +70,18 @@ object DataModule {
     @Provides @Singleton
     fun provideExchangeRateRepository(db: CoShellDatabase, stamper: WriteStamper): ExchangeRateRepository =
         RoomExchangeRateRepository(db.rateDao(), stamper)
+
+    @Provides @Singleton
+    fun provideImportRepository(db: CoShellDatabase, stamper: WriteStamper): ImportRepository =
+        RoomImportRepository(db.importDao(), stamper)
+
+    @Provides
+    fun provideWalletImport(
+        accounts: AccountRepository,
+        imports: ImportRepository,
+        categories: CategoryRepository,
+        ids: IdGenerator,
+    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =

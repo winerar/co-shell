@@ -22,6 +22,7 @@ import app.coshell.core.domain.importer.wallet.AccountChoice
 import app.coshell.core.domain.importer.wallet.WalletAccountInfo
 import app.coshell.core.domain.importer.wallet.WalletAccountMatcher
 import app.coshell.core.model.Account
+import app.coshell.core.model.AmountSign
 import app.coshell.importer.wallet.WalletImportDraft
 
 /**
@@ -88,6 +89,8 @@ private fun WalletAccountCard(
                 currency = info.currency.value,
                 error = if (balanceInvalid) stringResource(R.string.import_wallet_balance_error) else null,
                 hint = stringResource(R.string.import_wallet_balance_hint),
+                onToggleSign = { onBalance(AmountSign.toggle(balance)) },
+                toggleSignLabel = stringResource(R.string.import_wallet_balance_toggle_sign),
             )
         }
     }

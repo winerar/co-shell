@@ -8,8 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -43,6 +46,7 @@ fun CoShellTextField(
     minLines: Int = 1,
     keyboardOptions: KeyboardOptions = TextKeyboard,
     textStyle: TextStyle = LocalTextStyle.current,
+    trailingIcon: (@Composable () -> Unit)? = null,
 ) {
     val supporting = supportingLine(error, hint)
     OutlinedTextField(
@@ -52,6 +56,7 @@ fun CoShellTextField(
         placeholder = placeholder?.let { { Text(it) } },
         prefix = prefix?.let { { Text(it) } },
         suffix = suffix?.let { { Text(it) } },
+        trailingIcon = trailingIcon,
         isError = isError,
         supportingText = supporting?.let { { Text(it) } },
         enabled = enabled,
@@ -68,6 +73,8 @@ fun CoShellTextField(
 /**
  * Money input: decimal keyboard, the amount font ([AmountInputStyle]), "0" placeholder and the
  * currency after the number in grey ([currency] — code or symbol).
+ * [onToggleSign] — shows a "±" button (decimal keyboards often lack a minus; issue #128),
+ * [toggleSignLabel] — its spoken description.
  */
 @Composable
 fun CoShellAmountField(
@@ -79,6 +86,8 @@ fun CoShellAmountField(
     error: String? = null,
     hint: String? = null,
     imeAction: ImeAction = ImeAction.Done,
+    onToggleSign: (() -> Unit)? = null,
+    toggleSignLabel: String? = null,
 ) = CoShellTextField(
     value = value,
     onValueChange = onValueChange,
@@ -90,6 +99,13 @@ fun CoShellAmountField(
     suffix = currency,
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = imeAction),
     textStyle = AmountInputStyle,
+    trailingIcon = onToggleSign?.let { toggle ->
+        {
+            TextButton(onClick = toggle, modifier = Modifier.semantics { toggleSignLabel?.let { contentDescription = it } }) {
+                Text("±", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    },
 )
 
 /** Focused field: ink border, label and cursor (neon on white is unreadable), Neon Mint selection. */

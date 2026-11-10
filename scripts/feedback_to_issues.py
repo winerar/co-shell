@@ -2,7 +2,7 @@
 """Turns new feedback from Firestore into GitHub issues (run by .github/workflows/feedback.yml).
 
 Reads documents of the `feedback` collection with `processed == false` (written by the app's
-feedback form), creates an issue labelled `feedback` for each, then marks the document
+feedback form), creates an issue labelled `feedback` + `status:triage` for each, then marks the document
 `processed = true` with the issue number. An issue is created before marking, so a failure in
 between can at worst produce a duplicate issue, never lose a message.
 
@@ -21,7 +21,7 @@ import urllib.request
 FIRESTORE = "https://firestore.googleapis.com/v1"
 BATCH = 20
 TITLE_LENGTH = 70
-LABEL = "feedback"
+LABELS = ["feedback", "status:triage"]  # status labels: docs/agents/tasks.md
 
 
 def decode_value(value):
@@ -119,7 +119,7 @@ def unprocessed_feedback(project, token):
 
 def create_issue(repo, token, feedback):
     url = f"https://api.github.com/repos/{repo}/issues"
-    body = {"title": issue_title(feedback.get("text", "")), "body": issue_body(feedback), "labels": [LABEL]}
+    body = {"title": issue_title(feedback.get("text", "")), "body": issue_body(feedback), "labels": LABELS}
     issue = request("POST", url, token, body, {"Accept": "application/vnd.github+json"})
     return issue["number"]
 

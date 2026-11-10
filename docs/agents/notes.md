@@ -8,7 +8,8 @@
 ## Служебные скрипты `scripts/agent/`
 | Скрипт | Когда |
 |---|---|
-| `session-start.sh` | первая команда сессии: fetch, чужие невлитые ветки, перенос ветки на `origin/dev`, шаги из STATUS |
+| `session-start.sh` | первая команда сессии: fetch, чужие невлитые ветки, перенос ветки на `origin/dev`, STATUS, доска задач |
+| `tasks.sh [статус…]` | открытые задачи по колонкам (`gh api search/issues`); `tasks.sh next` — одна колонка |
 | `check.sh` | перед коммитом (`check assembleDebug`, краткий вывод); `--quick` — только unit-тесты |
 | `session-end.sh` | перед финальным PR: незакоммиченное/незапушенное, дата и число тестов в STATUS, размеры файлов |
 | `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
@@ -36,6 +37,10 @@
 - (11-10) `mawk` считает `length` в байтах (кириллица ×2) — длину строк в символах мерить `python3`/`wc -m`.
 - (11-10) `actionlint` без установки: бинарник из релиза `rhysd/actionlint` (v1.7.7) в scratchpad, `actionlint -shellcheck=`.
 - (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
+- (11-10) Задачи: `gh api -X GET search/issues -f q='repo:winerar/co-shell is:open label:status:next'` работает
+  (на нём `tasks.sh`). Ветка по умолчанию в репо — **`dev`**: `Fixes #N` закрывает issue при мерже в `dev`.
+  `sub_issue_write` отвечает ~15 КБ JSON — подзадачу создавать `issue_write` с `parent_issue_number`.
+  `issue_write` с `parent_issue_number` не создаёт новые метки (ошибка «label not found»), без него — создаёт серые.
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.

@@ -29,4 +29,6 @@ fi
 
 echo "## STATUS"
 sed -n '/^\*\*Обновлено/p' docs/STATUS.md | cut -c1-400
-sed -n '/^## Следующие шаги/,/^## /p' docs/STATUS.md | head -20
+sed -n '/^## В работе/,/^## /p' docs/STATUS.md | head -12
+echo "## Tasks (GitHub issues by status; docs/agents/tasks.md)"
+"$(dirname "$0")/tasks.sh"

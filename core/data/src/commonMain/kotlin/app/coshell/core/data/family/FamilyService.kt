@@ -4,6 +4,7 @@ import app.coshell.core.data.auth.AuthGateway
 import app.coshell.core.data.db.SyncDao
 import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.data.remote.ApiException
+import app.coshell.core.data.sync.ChangeBell
 import app.coshell.core.data.sync.SyncEngine
 import app.coshell.core.data.sync.SyncResult
 import app.coshell.core.domain.BackupRepository
@@ -20,6 +21,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 
 /**
  * Sign-in, family membership and sync in one place (docs/ARCHITECTURE.md §10).
@@ -35,6 +40,8 @@ class FamilyService(
     private val dao: SyncDao,
     private val engine: SyncEngine,
     private val backup: BackupRepository,
+    private val clock: Clock = Clock.System,
+    private val bell: ChangeBell = ChangeBell.None,
     private val safetyBackup: suspend (json: String) -> Unit,
 ) {
     private val _state = MutableStateFlow<FamilyState>(if (configured) FamilyState.SignedOut else FamilyState.NotConfigured)
@@ -44,6 +51,7 @@ class FamilyService(
     val joined: Family? get() = (_state.value as? FamilyState.Joined)?.family
 
     private var loaded = false
+    private var membersCheckedAt: Instant? = null
 
     /** Other members' names by uid (see [app.coshell.core.domain.family.OtherMembers]). */
     fun otherMemberNames(): Flow<Map<String, String>> = _state.map { s ->
@@ -137,17 +145,41 @@ class FamilyService(
 
     /**
      * One sync run if this phone is in the family, else `null`. While the family has a single
-     * member, the member list is re-read too, so the owner sees the second person appear.
-     * A permission error means we were removed — the state is re-checked.
+     * member, the member list is re-read too (at most every [MEMBERS_CHECK], it costs a Firestore
+     * read — on every 10-second poll it doubled the reads), so the owner sees the second person appear.
+     * A permission error means we were removed — the state is re-checked. After sending edits it
+     * rings the [bell], so the other phone pulls at once instead of on its next poll.
      */
     suspend fun sync(): SyncResult? {
         val joined = _state.value as? FamilyState.Joined ?: return null
         return try {
-            engine.sync().also { if (joined.family.members.size < 2) refresh() }
+            engine.sync().also {
+                if (it.pushed > 0) ringQuietly()
+                if (joined.family.members.size < 2) refreshMembersThrottled()
+            }
         } catch (e: ApiException) {
             if (e.isPermissionDenied || e.isUnauthenticated) refresh()
             throw e
         }
+    }
+
+    /** The ring is a speed-up only: if it fails, the other phone still gets the edits by polling. */
+    private suspend fun ringQuietly() {
+        try {
+            bell.ring()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // ignored on purpose, see above
+        }
+    }
+
+    private suspend fun refreshMembersThrottled() {
+        val now = clock.now()
+        val last = membersCheckedAt
+        if (last != null && now - last < MEMBERS_CHECK) return
+        membersCheckedAt = now
+        refresh()
     }
 
     private fun offline(email: String) {
@@ -176,6 +208,7 @@ class FamilyService(
 
     private companion object {
         const val FAMILY_KEY = "family"
+        val MEMBERS_CHECK = 1.minutes
         val json = Json { ignoreUnknownKeys = true }
     }
 }

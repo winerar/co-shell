@@ -44,4 +44,10 @@ object Sizes {
     val bottomBarPill = 44.dp
     /** The «+» circle in the middle of the bar. */
     val bottomBarAdd = 52.dp
+    /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */
+    val actionBarButton = 48.dp
+    /** Icon next to a button's label. */
+    val buttonIcon = 20.dp
+    /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
+    val tabSwipe = 80.dp
 }

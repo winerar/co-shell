@@ -9,6 +9,8 @@ class FakeRemoteStore : RemoteStore {
     private var serverClock = 1_000L
     var failNextPush = false
     var failNextPull = false
+    /** The next pull throws this (e.g. an `ApiException` with a server status). */
+    var failNextPullWith: Throwable? = null
     /** Called after a push is stored, before the client clears its flags. */
     var afterPush: suspend () -> Unit = {}
     var pullCalls = 0
@@ -23,6 +25,7 @@ class FakeRemoteStore : RemoteStore {
     override suspend fun pull(cursor: String?): List<RemoteRecord> {
         pullCalls++
         if (failNextPull) { failNextPull = false; error("offline") }
+        failNextPullWith?.let { failNextPullWith = null; throw it }
         return docs.values.filter { cursor == null || it.cursor > cursor }.sortedBy { it.cursor }
             .also { recordsRead += it.size }
     }

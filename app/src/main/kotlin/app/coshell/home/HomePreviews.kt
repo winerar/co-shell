@@ -2,7 +2,9 @@ package app.coshell.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.coshell.core.data.sync.SyncIssueKind
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.home.sync.SyncBannerState
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.Row
 import kotlinx.datetime.LocalDate
@@ -41,7 +43,8 @@ private fun HomeScreenPreview() {
 @Preview(showBackground = true, heightDp = 900)
 @Composable
 private fun HomeScreenDarkPreview() {
-    CoShellTheme(darkTheme = true) { HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention())) }
+    val offline = SyncBannerState(SyncIssueKind.OFFLINE, pending = 3, lastSync = "9:12")
+    CoShellTheme(darkTheme = true) { HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention()), sync = offline) }
 }
 
 @Preview(showBackground = true)

@@ -53,6 +53,10 @@
   скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
 - (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
   читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
+- (11-10) Варианты на холсте для выбора владельцем: одна доска на вариант (сравнивать рядом), тема — tweak
+  `"dark":{"editor":"boolean"}`, альтернативы внутри доски — `"editor":"enum"` (доски `SyncA–C`, `Wipe`).
+- (11-10) Конструктор с хвостовой лямбдой (`WalletImportUseCase(...) { "id" }`): новый параметр с дефолтом
+  в конце перехватывает лямбду — в тестах передавать `ids = { … }` по имени.
 - (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
   Если тест падает «Failed to fetch maven artifact …android-all-instrumented…» (429) — скачать jar+pom curl-ом

@@ -8,6 +8,7 @@ import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
+import app.coshell.core.data.repository.RoomDataWipeRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
 import app.coshell.core.data.repository.RoomImportRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
@@ -17,6 +18,7 @@ import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.DataWipeRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
@@ -25,10 +27,12 @@ import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.WipeAllDataUseCase
 import app.coshell.core.domain.importer.ImportRepository
 import app.coshell.core.domain.importer.wallet.WalletImportUseCase
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.model.IdGenerator
+import app.coshell.importer.wallet.ImportAccountColors
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,7 +85,7 @@ object DataModule {
         imports: ImportRepository,
         categories: CategoryRepository,
         ids: IdGenerator,
-    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids)
+    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =
@@ -116,4 +120,11 @@ object DataModule {
     @Provides
     fun provideSeedDefaultCategories(categories: CategoryRepository, ids: IdGenerator) =
         SeedDefaultCategoriesUseCase(categories, ids)
+
+    @Provides
+    fun provideDataWipeRepository(db: CoShellDatabase, stamper: WriteStamper): DataWipeRepository =
+        RoomDataWipeRepository(db.wipeDao(), stamper)
+
+    @Provides
+    fun provideWipeAllData(wipe: DataWipeRepository, seed: SeedDefaultCategoriesUseCase) = WipeAllDataUseCase(wipe, seed)
 }

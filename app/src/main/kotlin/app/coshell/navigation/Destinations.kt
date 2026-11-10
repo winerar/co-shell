@@ -38,13 +38,17 @@ data object BackupDestination
 data object WalletImportDestination
 
 @Serializable
+data object WipeDataDestination
+
+@Serializable
 data object FamilyDestination
 
 @Serializable
 data object UpdateDestination
 
+/** [prefill] — text typed in for the user (the sync banner's error code). */
 @Serializable
-data object FeedbackDestination
+data class FeedbackDestination(val prefill: String? = null)
 
 @Serializable
 data object RatesDestination

@@ -45,6 +45,15 @@ class FeedbackViewModelTest {
     }
 
     @Test
+    fun `prefill fills an empty field only`() {
+        vm.prefill("Синхронизация: код PERMISSION_DENIED.")
+        assertEquals("Синхронизация: код PERMISSION_DENIED.", vm.state.value.text)
+        vm.onTextChange("Своё")
+        vm.prefill("другое")
+        assertEquals("Своё", vm.state.value.text)
+    }
+
+    @Test
     fun `send is disabled for blank text`() {
         vm.onTextChange("  ")
         assertFalse(vm.state.value.canSend)

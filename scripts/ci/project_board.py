@@ -3,7 +3,7 @@
 
 Labels are the source of truth the agent reads and writes; the board is the owner's view.
 - every open issue is on the board; its Status column follows its `status:*` label;
-- a closed issue goes to «Готово»;
+- a closed issue goes to «Готово» (closed = merged into dev: `Fixes #N`, dev is the default branch);
 - the owner moved a card (the item changed after the issue's last label change) → the label
   follows the board; «Готово» on an open issue closes it.
 
@@ -26,7 +26,6 @@ COLUMNS = [
     ("status:next", "Очередь", "GREEN"),
     ("status:in-progress", "В работе", "YELLOW"),
     ("status:needs-owner", "Ждёт владельца", "ORANGE"),
-    ("status:in-dev", "В dev — ждёт релиза", "PURPLE"),
 ]
 LABEL_TO_COLUMN = {label: column for label, column, _ in COLUMNS}
 COLUMN_TO_LABEL = {column: label for label, column, _ in COLUMNS}

@@ -5,7 +5,7 @@
 set -uo pipefail
 REPO=${REPO:-winerar/co-shell}
 statuses=("$@")
-[ ${#statuses[@]} -gt 0 ] || statuses=(in-progress next needs-owner triage in-dev backlog)
+[ ${#statuses[@]} -gt 0 ] || statuses=(in-progress next needs-owner triage backlog)
 
 json=$(timeout 30 gh api -X GET search/issues --paginate \
     -f q="repo:$REPO is:issue is:open" -f per_page=100 \

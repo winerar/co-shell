@@ -17,7 +17,8 @@
 ## Карта документации
 | Файл | О чём |
 |---|---|
-| [docs/STATUS.md](docs/STATUS.md) | **текущее состояние, следующие шаги, открытые вопросы** |
+| [docs/STATUS.md](docs/STATUS.md) | **текущее состояние** (передача между сессиями) |
+| [docs/agents/tasks.md](docs/agents/tasks.md) | **задачи — GitHub Issues + доска**: метки статусов, как брать и закрывать |
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
 | [docs/agents/notes.md](docs/agents/notes.md) | **заметки агента**: выясненные факты, грабли, замеры, служебные скрипты |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md) | модули, что где лежит, куда класть новое |

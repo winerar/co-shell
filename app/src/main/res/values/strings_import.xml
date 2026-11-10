@@ -41,6 +41,7 @@
     <string name="import_account_new">Новый счёт</string>
     <string name="import_wallet_balance">Баланс в Wallet сейчас</string>
     <string name="import_wallet_balance_hint">Необязательно: разница уйдёт в начальный баланс</string>
+    <string name="import_wallet_balance_toggle_sign">Сменить знак: минус — долг по кредитке</string>
     <string name="import_wallet_balance_error">Не похоже на сумму</string>
 
     <string name="import_categories_hint">Нажмите на категорию, чтобы выбрать существующую вместо новой.</string>

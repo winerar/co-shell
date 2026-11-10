@@ -12,6 +12,8 @@
 | `check.sh` | перед коммитом (`check assembleDebug`, краткий вывод); `--quick` — только unit-тесты |
 | `session-end.sh` | перед финальным PR: незакоммиченное/незапушенное, дата и число тестов в STATUS, размеры файлов |
 | `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
+| `sync-dev.sh` | влить `origin/dev` в ветку: «OK» или конфликтующие файлы с подсказками (STATUS, схемы Room) |
+| `build-summary.sh [--ci] <лог>` | краткий отчёт сборки: ошибки, `Tests: N`, упавшие тесты с причиной, lint; его зовут `check.sh` и CI |
 | `profile-build.sh [задачи]` | где тратится время сборки: самые долгие задачи, итог lint/тестов (~3–5 мин) |
 
 Скрипты CI и для владельца остаются в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
@@ -30,10 +32,17 @@
 ## Инструменты окружения
 - (11-09) Время шагов CI без логов: GitHub MCP `actions_list` → `list_workflow_runs` (`resource_id: ci.yml`),
   затем `list_workflow_jobs` (run id) — у каждого шага `started_at`/`completed_at`.
+- (11-10) `mawk` считает `length` в байтах (кириллица ×2) — длину строк в символах мерить `python3`/`wc -m`.
+- (11-10) `actionlint` без установки: бинарник из релиза `rhysd/actionlint` (v1.7.7) в scratchpad, `actionlint -shellcheck=`.
 - (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
   issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
+- (11-09, скрипт 11-10) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — `scripts/agent/m2-mirror.sh
+  <scratchpad> group:artifact:ver` (curl, зеркало googleapis) → `check.sh --init-script <scratchpad>/m2-init.gradle`.
+  Нужен был `org.robolectric:nativeruntime-dist-compat:1.0.19`. Robolectric сам качает `android-all-instrumented`
+  («Failed to fetch maven artifact») — `M2_REPO=~/.m2/repository scripts/agent/m2-mirror.sh <dir> <coord>`
+  (11-10: `org.robolectric:android-all-instrumented:16-robolectric-13921718-i7`).
 - (11-09) Maven Central из облачной сессии отвечает Gradle 429 на большие файлы (Robolectric), повтор не помогает,
   а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
   init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
@@ -42,6 +51,8 @@
   `maven-central.storage-download.googleapis.com/maven2` (сработало 11-09).
 - (11-10) Robolectric сам качает `android-all-instrumented` и тоже ловит 429 («Failed to fetch maven artifact») —
   скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
+- (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
+  читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
 - (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
   Если тест падает «Failed to fetch maven artifact …android-all-instrumented…» (429) — скачать jar+pom curl-ом
@@ -52,6 +63,13 @@
   перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
 
 ## Грабли проекта
+- (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
+  класса инициализируется раньше `MainDispatcherRule`, и `viewModelScope` молча не работает.
+- (11-10) `Modifier.drawBehind` на `NavigationBar`/`Surface` рисует **под** их фоном — фон закрасит рисунок.
+  Фон ставить своим `background()` перед `drawBehind`, а `containerColor = Transparent` (так пилюля вкладки).
+- (11-10) Тест `Transaction` перевода: нужны `toAmount` и `toAccountId` ≠ `accountId` (проверки в `init`).
+- (11-10) Ручной курс в `RateBook` действует до **следующего ручного** и бьёт скачанные на всех поздних датах —
+  массово писать ручные курсы (импорт и т. п.) нельзя: последний такой курс заморозит пересчёт пары.
 - (11-09) `rememberGraphicsLayer().record{}` хранит ссылки на слои детей, а не их копию — снимок «старого» кадра
   делать сразу `toImageBitmap()` до смены (так `motion/ThemeReveal.kt`), иначе дети перерисуются уже новыми.
 - (11-09) Слияние нескольких веток: читать **весь** вывод `git merge` (не `tail`), перед коммитом —
@@ -74,3 +92,6 @@
 - (11-09) Firestore 429 (`Too Many Requests`) = исчерпана дневная квота Spark (50 тыс. чтений), а не частота.
   Опрос раз в 10 с: любое лишнее чтение × 360/ч × 2 телефона. Курсор pull — строго после последней записи
   (`FirestoreRemoteStore.Position`); тест на «пустые опросы ничего не читают» — `SyncEngineTest`.
+- (11-10) Release падал «Top section of docs/whats-new.md is already released»: три PR (#90, #91, #94) влили
+  заметные изменения без нового раздела. Теперь `session-end.sh` предупреждает, если верхний раздел совпадает
+  с `main`, а ветка меняет `app/`/`core/`.

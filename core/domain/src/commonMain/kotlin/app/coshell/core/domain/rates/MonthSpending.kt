@@ -4,6 +4,7 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.core.model.isBalanceAdjustment
 import kotlin.time.Instant
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -24,6 +25,7 @@ fun monthBounds(day: LocalDate, timeZone: TimeZone): Pair<Instant, Instant> {
  * rate of its own day (ARCHITECTURE §6: expenses — at the operation date), so the sum does not
  * change when rates move later. The account amount (what was actually debited) is counted, not
  * the receipt amount. Expenses without any known rate are left out and listed in `missing`.
+ * Balance adjustments ([isBalanceAdjustment]) are not spending and are left out.
  */
 fun RateBook.expenseTotals(
     transactions: List<Transaction>,
@@ -45,7 +47,7 @@ private fun RateBook.typeTotals(
     timeZone: TimeZone,
 ): List<CurrencyConverter.Total> {
     val items = transactions
-        .filter { it.type == type }
+        .filter { it.type == type && !it.isBalanceAdjustment }
         .map { it.amount to it.date.toLocalDateTime(timeZone).date }
     val converter = CurrencyConverter(this)
     return currencies.map { converter.total(items, it) }
@@ -54,7 +56,7 @@ private fun RateBook.typeTotals(
 /**
  * Expenses of each day of the month that contains [month], in [currency] (each at the rate of its day):
  * element 0 is the 1st, the list is as long as the month. Days without expenses are zero; expenses
- * without any known rate are left out (the month total lists them). For the mini bars on «Обзор».
+ * without any known rate are left out (the month total lists them), adjustments too. For the mini bars on «Обзор».
  */
 fun RateBook.dailyExpenses(
     transactions: List<Transaction>,
@@ -67,7 +69,7 @@ fun RateBook.dailyExpenses(
     val converter = CurrencyConverter(this)
     val byDay = MutableList(days) { Money.zero(currency) }
     for (t in transactions) {
-        if (t.type != TransactionType.EXPENSE) continue
+        if (t.type != TransactionType.EXPENSE || t.isBalanceAdjustment) continue
         val date = t.date.toLocalDateTime(timeZone).date
         if (date.year != first.year || date.month != first.month) continue
         val converted = converter.convert(t.amount, currency, date) ?: continue

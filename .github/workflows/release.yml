@@ -1,0 +1,102 @@
+name: Release
+
+# Owner's button: Actions → Release → Run workflow. Creates (or updates) the PR dev → main with the
+# family section of docs/whats-new.md, the merged PRs and `Fixes #N`, merges it and dispatches CI on
+# main, which publishes the build to the phones. A merge made with GITHUB_TOKEN does not trigger push
+# workflows — hence the explicit dispatch. Setup and details: docs/setup/release.md.
+on:
+  workflow_dispatch:
+    inputs:
+      pr_only:
+        description: "Только создать PR dev → main, не вливать"
+        type: boolean
+        default: false
+      allow_no_whats_new:
+        description: "Выпустить без нового раздела в whats-new.md"
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Anything to release?
+        run: |
+          git fetch -q origin main dev
+          count=$(git rev-list --no-merges --count origin/main..origin/dev)
+          echo "Commits in dev not in main: $count"
+          [ "$count" -gt 0 ] || { echo "::error::Nothing to release: dev has no new commits"; exit 1; }
+
+      - name: CI on dev is green
+        run: |
+          sha=$(git rev-parse origin/dev)
+          id=$(gh run list --workflow ci.yml --commit "$sha" --limit 1 --json databaseId -q '.[0].databaseId')
+          if [ -z "$id" ]; then
+            echo "No CI run for dev ${sha:0:7} — starting one"
+            gh workflow run ci.yml --ref dev
+            for _ in $(seq 20); do
+              sleep 6
+              id=$(gh run list --workflow ci.yml --commit "$sha" --limit 1 --json databaseId -q '.[0].databaseId')
+              [ -n "$id" ] && break
+            done
+            [ -n "$id" ] || { echo "::error::CI on dev did not start"; exit 1; }
+          fi
+          gh run watch "$id" --exit-status >/dev/null || {
+            echo "::error::CI on dev ${sha:0:7} is not green: $(gh run view "$id" --json url -q .url)"; exit 1; }
+          echo "CI on dev ${sha:0:7} is green"
+
+      - name: Release notes
+        env:
+          ALLOW: ${{ inputs.allow_no_whats_new }}
+        run: |
+          flag=(); [ "$ALLOW" = true ] && flag=(--allow-no-whats-new)
+          python3 scripts/release_notes.py "${flag[@]}" > notes.txt || { code=$?
+            [ $code -eq 2 ] && echo "::error::Top section of docs/whats-new.md is already released — add a new one in dev or tick «Выпустить без нового раздела»"
+            exit 1; }
+          head -1 notes.txt > title.txt
+          tail -n +2 notes.txt > body.md
+          cat notes.txt
+
+      - name: Release PR
+        id: pr
+        run: |
+          num=$(gh pr list --base main --head dev --state open --json number -q '.[0].number')
+          if [ -n "$num" ]; then
+            gh pr edit "$num" --title "$(cat title.txt)" --body-file body.md
+          else
+            gh pr create --base main --head dev --title "$(cat title.txt)" --body-file body.md
+            num=$(gh pr list --base main --head dev --state open --json number -q '.[0].number')
+          fi
+          url=$(gh pr view "$num" --json url -q .url)
+          echo "num=$num" >> "$GITHUB_OUTPUT"
+          echo "Release PR: $url" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Merge and publish
+        if: ${{ !inputs.pr_only }}
+        env:
+          NUM: ${{ steps.pr.outputs.num }}
+        run: |
+          if ! gh pr merge "$NUM" --merge --match-head-commit "$(git rev-parse origin/dev)"; then
+            echo "::warning::Could not merge (branch protection?) — merge the PR by hand; CI publishes on the merge"
+            exit 0
+          fi
+          gh workflow run ci.yml --ref main
+          echo "Merged; CI on main publishes the build: ${{ github.server_url }}/${{ github.repository }}/actions/workflows/ci.yml" \
+            | tee -a "$GITHUB_STEP_SUMMARY"

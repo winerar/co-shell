@@ -1,0 +1,40 @@
+name: Automerge
+
+# Agent PRs (claude/*, ccr-*) into dev merge by themselves once CI is green and the PR is ready
+# (not a draft) and has no `hold` label. Logic: scripts/ci/automerge.sh. main is never auto-merged.
+# workflow_run fires only for the copy of this file on the default branch (main).
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  pull_request:
+    types: [ready_for_review, labeled, unlabeled]
+    branches: [dev]
+
+concurrency:
+  group: automerge-${{ github.event.workflow_run.head_branch || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # merge, delete the branch
+  pull-requests: write
+  actions: write # dispatch CI on dev after the merge
+
+jobs:
+  merge:
+    if: >-
+      github.event_name == 'pull_request' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch != 'main' && github.event.workflow_run.head_branch != 'dev')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }} # the script, not the PR code
+      - name: Merge if ready
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TARGET: ${{ github.event.pull_request.number || github.event.workflow_run.head_branch }}
+        run: bash scripts/ci/automerge.sh "$TARGET"

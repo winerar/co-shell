@@ -1,0 +1,56 @@
+name: Auto PR
+
+# The first push of an agent branch (claude/*, ccr-*) opens a draft PR into dev, so no session ends
+# without a PR. At the end of the session the agent marks it ready (GitHub MCP update_pull_request,
+# draft: false) and Automerge takes over. A PR created with GITHUB_TOKEN does not trigger CI, so CI
+# is dispatched on the branch here; later pushes trigger it as usual.
+on:
+  push:
+    branches: ["claude/**", "ccr-*"]
+
+concurrency:
+  group: auto-pr-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: write
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BRANCH: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Open a draft PR into dev
+        run: |
+          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number -q '.[].number')" ]; then
+            echo "PR already exists"; exit 0
+          fi
+          git fetch -q origin dev
+          if [ "$(git rev-list --no-merges --count origin/dev..HEAD)" -eq 0 ]; then
+            echo "No commits beyond dev"; exit 0
+          fi
+          title=$(git log --no-merges --reverse --format=%s origin/dev..HEAD | head -1)
+          {
+            echo "Черновик создан автоматически при первом push. Агент в конце сессии допишет описание"
+            echo "и снимет черновик — после зелёного CI PR вольётся в \`dev\` сам (метка \`hold\` — остановить)."
+            echo
+            git log --no-merges --reverse --format='- %s' origin/dev..HEAD
+          } > body.md
+          if ! gh pr create --draft --base dev --head "$BRANCH" --title "$title" --body-file body.md 2>err.txt; then
+            cat err.txt
+            # Not an error of the branch: either the setting is off or someone opened the PR meanwhile.
+            if grep -q 'not permitted to create' err.txt; then
+              echo "::warning::Actions may not create PRs — enable it (docs/setup/release.md, step 1); open the PR by hand"
+            fi
+            exit 0
+          fi
+          gh workflow run ci.yml --ref "$BRANCH"

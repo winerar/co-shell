@@ -41,6 +41,7 @@ internal fun HomeTiles(
     onTransactions: () -> Unit,
     onAccounts: () -> Unit,
     onRates: () -> Unit,
+    onUncategorized: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
@@ -49,7 +50,7 @@ internal fun HomeTiles(
             { IncomeTile(state.income, onTransactions, it) },
         )
         TileRow(
-            { AttentionTile(state.attention, onClick = if (state.attention.isRatesIssue) onRates else onTransactions, it) },
+            { AttentionTile(state.attention, onClick = if (state.attention.isRatesIssue) onRates else onUncategorized, it) },
             { AccountsTile(state.accounts, onAccounts, it) },
         )
     }
@@ -104,7 +105,10 @@ private fun MainAndOthers(totals: List<String>, color: Color) {
     }
 }
 
-/** Missing or old rates and operations without a category; «Всё в порядке» when there is nothing. */
+/**
+ * Missing or old rates and operations without a category; «Всё в порядке» when there is nothing. A tap opens
+ * what needs fixing: the rates, or «Операции» filtered to this month's operations without a category.
+ */
 @Composable
 private fun AttentionTile(attention: HomeUiState.Attention, onClick: () -> Unit, modifier: Modifier) {
     val ok = attention.count == 0

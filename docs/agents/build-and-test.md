@@ -59,6 +59,12 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   `GRADLE_ENCRYPTION_KEY` (`openssl rand -base64 16`) включает сохранение configuration cache.
 - На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено
   самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
+- Упавший `check` пишет короткую сводку (`scripts/agent/build-summary.sh --ci`) в summary джоба и одним
+  комментарием `<!-- ci-summary -->` в PR (обновляется; после зелёного — «исправлено»).
+- `auto-pr.yml` (draft PR на первый push агентской ветки), `automerge.yml` (мерж в `dev` после зелёного CI,
+  логика — `scripts/ci/automerge.sh`), `release.yml` (кнопка релиза, описание — `scripts/release_notes.py`).
+  Мерж/PR через `GITHUB_TOKEN` **не запускает** `push`/`pull_request`-workflow — поэтому они вызывают
+  `gh workflow run ci.yml` (dispatch разрешён). `workflow_run` и кнопки работают из копии в `main`.
 `versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug подписан общим ключом
 `app/debug.keystore` из репозитория (не секрет), пакет `app.coshell.debug`, название «co-shell debug».
 

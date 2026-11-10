@@ -34,6 +34,8 @@ data class Transaction(
     val importSource: String? = null,
     /** Stable id of the record in [importSource]; repeated imports skip known ids. */
     val importExternalId: String? = null,
+    /** One import run (one file loaded at once): «отменить импорт» removes the whole batch. */
+    val importBatchId: String? = null,
 ) {
     init {
         require(amount.isPositive) { "Transaction amount must be positive, got $amount" }
@@ -52,6 +54,7 @@ data class Transaction(
         require((importSource == null) == (importExternalId == null)) {
             "importSource and importExternalId go together"
         }
+        require(importBatchId == null || importSource != null) { "Only imported records belong to a batch" }
     }
 
     /** How this transaction changes the balance of [account], in that account's currency. */

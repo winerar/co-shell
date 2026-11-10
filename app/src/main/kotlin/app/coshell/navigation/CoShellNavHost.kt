@@ -20,6 +20,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
+import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.currencies.list.ReportCurrenciesRoute
@@ -34,6 +35,7 @@ import app.coshell.settings.SettingsRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
+import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
 import app.coshell.update.UpdateRoute
@@ -87,13 +89,19 @@ fun CoShellNavHost(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
                     onAccounts = { navController.navigateToTab(TopLevel.ACCOUNTS) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
+                    onUncategorized = {
+                        navController.navigateToTab(TopLevel.TRANSACTIONS)
+                        navController.getBackStackEntry<TransactionsDestination>()
+                            .savedStateHandle[PRESET_UNCATEGORIZED] = true
+                    },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
                 ),
             )
         }
-        composable<TransactionsDestination> {
+        composable<TransactionsDestination> { entry ->
             TransactionsRoute(
+                preset = entry.savedStateHandle,
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                 onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
             )
@@ -122,6 +130,7 @@ fun CoShellNavHost(
                     onRates = { navController.navigate(RatesDestination) },
                     onFamily = { navController.navigate(FamilyDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
+                    onImport = { navController.navigate(WalletImportDestination) },
                     onFeedback = { navController.navigate(FeedbackDestination) },
                     onSettings = { navController.navigate(SettingsDestination) },
                 ),
@@ -153,6 +162,9 @@ fun CoShellNavHost(
         }
         composable<BackupDestination> {
             BackupRoute(onBack = { navController.popBackStack() })
+        }
+        composable<WalletImportDestination> {
+            WalletImportRoute(onBack = { navController.popBackStack() })
         }
         composable<CategoriesDestination> {
             CategoriesRoute(

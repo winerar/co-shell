@@ -1,0 +1,4 @@
+# Parallel agent sessions append to these files; keep both sides instead of conflicting
+# (built-in git `union` merge; honored by local git and the Actions runner, not by the GitHub UI).
+docs/agents/notes.md merge=union
+docs/whats-new.md merge=union

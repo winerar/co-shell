@@ -10,6 +10,7 @@ Android-приложение для совместного учёта семей
 Этап 0 завершён: каркас проекта, модель денег, CI. См.:
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — архитектура и стек
 - [docs/ROADMAP.md](docs/ROADMAP.md) — план разработки
+- [docs/design/](docs/design/README.md) — дизайн: макеты экранов, воркфлоу, компоненты ([холст](https://claude.ai/artifact/Kfegn8qM8QEnPKr7HRYpw5))
 - [AGENTS.md](AGENTS.md) — правила для разработки (людям и ИИ-агентам)
 
 ## Сборка

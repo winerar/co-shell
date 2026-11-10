@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Валюты отчётов</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+:root{--bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1)}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 520ms var(--bouncy),background-color 300ms ease-out,border-color 300ms ease-out}
+.tap:active{transform:scale(0.97);transition:transform 90ms ease-out}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
+    <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Валюты отчётов</h1>
+  </div>
+  <p style="margin: 8px 4px 0; font-size: 14px; line-height: 1.4; color: #9AA594;">Общий баланс на «Обзоре» показывается в каждой из этих валют. Тап — сделать основной.</p>
+
+  <div style="margin-top: 14px; padding: 16px; border-radius: 20px; background: linear-gradient(135deg, #B8FF2E, #00F0FF); color: #0B0F0A;">
+    <div style="font-size: 13px; font-weight: 600;">Общий баланс · так будет на «Обзоре»</div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; margin-top: 6px;">{{mainAmount}}</div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-top: 4px; opacity: 0.75;">{{otherAmounts}}</div>
+  </div>
+
+  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <button type="button" class="tap" onClick="{{r.pick}}" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px; border-radius: 16px; background: #10160D; border: 1px solid {{r.border}}; color: #EEF5E6; text-align: left;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6F7A6A" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 7h8M8 12h8M8 17h8"></path></svg>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; width: 56px;">{{r.code}}</span>
+        <span style="flex-grow: 1; font-size: 13px; color: #9AA594;">{{r.name}}</span>
+        <span style="{{r.badgeStyle}}">{{r.badge}}</span>
+      </button>
+    </sc-for>
+  </div>
+  <button type="button" class="tap" style="margin-top: 10px; width: 100%; height: 48px; border-radius: 999px; border: 1px dashed #2E382A; background: transparent; color: #B8FF2E; font-size: 15px; font-weight: 600;">+ Добавить валюту</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { main: 0 }; }
+  renderVals() {
+    const list = [
+      { code: 'USD', name: 'доллар США', amount: '3 412,80' },
+      { code: 'ARS', name: 'аргентинское песо', amount: '4 044 168,00' },
+      { code: 'RUB', name: 'российский рубль', amount: '277 802,00' }
+    ];
+    const m = this.state.main;
+    return {
+      mainAmount: list[m].amount + ' ' + list[m].code,
+      otherAmounts: list.filter((_, n) => n !== m).map(x => x.amount + ' ' + x.code).join(' · '),
+      rows: list.map((x, n) => ({
+        code: x.code, name: x.name,
+        border: n === m ? '#B8FF2E' : '#222B1E',
+        badge: n === m ? 'Основная' : '',
+        badgeStyle: n === m ? 'height:26px;padding:0 10px;border-radius:999px;background:#B8FF2E;color:#0E1F00;font-size:12px;font-weight:600;display:inline-flex;align-items:center;' : 'display:none;',
+        pick: () => this.setState({ main: n })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

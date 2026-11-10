@@ -38,4 +38,10 @@ object Sizes {
     val hairline = 1.dp
     /** Floating notice pill over the bottom bar (CoShellNoticePill): a touch-friendly 48 dp. */
     val pillHeight = 48.dp
+    /** Floating bottom bar capsule (mockups: 64 high, 16 from the screen edges). */
+    val bottomBarHeight = 64.dp
+    /** Active tab's pill inside the bar. */
+    val bottomBarPill = 44.dp
+    /** The «+» circle in the middle of the bar. */
+    val bottomBarAdd = 52.dp
 }

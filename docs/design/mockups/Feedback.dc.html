@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Обратная связь</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+:root{
+--spatial:linear(0,0.06 2.4%,0.22 5.3%,0.5 10.5%,0.74 16%,0.89 21.5%,0.97 27%,1.01 33%,1.02 40%,1.01 50%,1);
+--bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);
+}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 520ms var(--bouncy),background-color 260ms ease-out,color 260ms ease-out,border-color 260ms ease-out,opacity 260ms ease-out}
+.tap:active{transform:scale(0.94);transition:transform 90ms ease-out}
+.bar{transition:width 420ms var(--spatial),background-color 300ms ease-out}
+.pop{animation:pop 560ms var(--bouncy)}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.rise{animation:rise 520ms var(--spatial)}
+@keyframes rise{0%{transform:translateY(16px);opacity:0}100%{transform:none;opacity:1}}
+textarea::placeholder{color:#6F7A69}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 8px;">
+    <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Обратная связь</h1>
+  </div>
+
+  <sc-if value="{{notSent}}" hint-placeholder-val="{{true}}">
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <sc-for list="{{kinds}}" as="k" hint-placeholder-count="4">
+          <button type="button" class="tap" onClick="{{k.pick}}" style="{{k.style}}">{{k.label}}</button>
+        </sc-for>
+      </div>
+
+      <label style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #10160D; border: 1px solid {{fieldBorder}};" class="tap">
+        <span style="font-size: 13px; color: #B8FF2E; font-weight: 600;">{{prompt}}</span>
+        <textarea rows="7" maxlength="500" placeholder="Например: на «Обзоре» итог не обновился после перевода" onInput="{{onText}}" style="resize: none; background: none; border: none; outline: none; color: #EEF5E6; font-family: inherit; font-size: 16px; line-height: 1.45;"></textarea>
+        <div style="height: 3px; border-radius: 2px; background: #1E261A; overflow: hidden;">
+          <div class="bar" style="{{barStyle}}"></div>
+        </div>
+        <span style="align-self: flex-end; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9AA594;">{{count}} / 500</span>
+      </label>
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 0 2px; font-size: 12px; color: #9AA594;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"></rect><path d="M11 18h2"></path></svg>
+        <span>Приложим: версия 41 · Pixel 8 · Android 16 · экран «Обзор»</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{sent}}" hint-placeholder-val="{{false}}">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 0 24px; text-align: center;">
+      <div class="pop" style="width: 120px; height: 120px; border-radius: 50%; background: #B8FF2E; display: flex; align-items: center; justify-content: center;">
+        <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+      </div>
+      <div class="rise" style="font-size: 22px; font-weight: 700;">Отправлено</div>
+      <div class="rise" style="font-size: 14px; color: #9AA594; max-width: 280px;">Сообщение попадёт в задачи разработки в течение нескольких часов.</div>
+      <button type="button" class="tap" onClick="{{again}}" style="margin-top: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #2E382A; background: transparent; color: #B8FF2E; font-size: 14px; font-weight: 600;">Написать ещё</button>
+    </div>
+  </sc-if>
+
+  <div style="margin-top: 20px;">
+    <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: #9AA594; margin-bottom: 6px;">ОТПРАВЛЕННЫЕ</div>
+    <sc-for list="{{history}}" as="h" hint-placeholder-count="2">
+      <div class="rise" style="display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid #1A2117;">
+        <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: {{h.bg}}; color: {{h.fg}}; font-size: 11px; font-weight: 600; display: flex; align-items: center; flex: none;">{{h.kind}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0;">
+          <span style="font-size: 14px; color: #DDE5D6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 270px;">{{h.text}}</span>
+          <span style="font-size: 12px; color: #9AA594;">{{h.when}}</span>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{notSent}}" hint-placeholder-val="{{true}}">
+    <div style="position: absolute; left: 16px; right: 16px; bottom: 20px;">
+      <button type="button" class="tap" onClick="{{send}}" style="{{sendStyle}}">Отправить</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { kind: 'bug', text: '', sent: false, history: [
+      { kind: 'Идея', text: 'Хочу видеть итог дня в списке операций', when: '9 ноября, 14:20' },
+      { kind: 'Ошибка', text: 'Шторка дёргается при открытии клавиатуры', when: '8 ноября, 22:05' }
+    ] };
+  }
+  renderVals() {
+    const s = this.state;
+    const K = [['bug', 'Ошибка', 'Что случилось и где?'], ['idea', 'Идея', 'Что добавить или упростить?'], ['design', 'Дизайн', 'Что выглядит не так?'], ['other', 'Другое', 'Напишите как удобно']];
+    const tag = { 'Ошибка': ['#3A1220', '#FF8FA3'], 'Идея': ['#1D2A0B', '#C8FF6B'], 'Дизайн': ['#2A2240', '#E6D6FF'], 'Другое': ['#1E261A', '#C9D3C2'] };
+    const cur = K.find(([k]) => k === s.kind);
+    const n = s.text.length;
+    const ok = n > 0;
+    return {
+      notSent: !s.sent, sent: s.sent,
+      prompt: cur[2],
+      count: String(n),
+      fieldBorder: ok ? '#3D5A16' : '#222B1E',
+      barStyle: 'height:100%;border-radius:2px;width:' + Math.min(100, n / 5) + '%;background:' + (n > 450 ? '#FFE600' : '#B8FF2E') + ';',
+      onText: (e) => this.setState({ text: e.target.value }),
+      kinds: K.map(([k, label]) => ({
+        label,
+        style: 'height:40px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:600;' + (k === s.kind ? 'background:#B8FF2E;color:#0E1F00;border:1px solid #B8FF2E;' : 'background:transparent;color:#C9D3C2;border:1px solid #2E382A;'),
+        pick: () => this.setState({ kind: k })
+      })),
+      sendStyle: 'width:100%;height:56px;border:none;border-radius:999px;font-size:17px;font-weight:600;background:#B8FF2E;color:#0E1F00;opacity:' + (ok ? 1 : 0.38) + ';',
+      send: () => { if (!ok) return; this.setState({ sent: true, text: '', history: [{ kind: cur[1], text: s.text, when: 'только что' }, ...s.history] }); },
+      again: () => this.setState({ sent: false }),
+      history: s.history.map((h) => ({ ...h, bg: tag[h.kind][0], fg: tag[h.kind][1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

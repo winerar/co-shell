@@ -6,32 +6,40 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.MorphIcon
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.confirmProgress
+import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
 
 /** One tab of [CoShellBottomBar]. */
 @Immutable
@@ -44,9 +52,10 @@ data class CoShellTab(
 )
 
 /**
- * Bottom bar (design-system.md §«Навигация и жесты»): tabs with the round «+» in the middle — the most
- * frequent action is always under the thumb. Active tab: outlined icon on a neon pill of the palette's
- * primary (both themes); the pill flows from tab to tab (`TabPill.kt`), the icon pops. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ * Bottom bar (design-system.md §«Навигация и жесты», mockups in docs/design/): a floating capsule with
+ * icon-only tabs and the round «+» in the middle — the most frequent action is always under the thumb.
+ * Active tab: a wide neon pill of the palette's primary that flows from tab to tab (`TabPill.kt`), the
+ * icon pops. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
  *
  * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
  * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
@@ -76,6 +85,7 @@ private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse
     val p = progress.value.coerceIn(0f, 1f)
     CoShellFab(
         onClick = onAdd,
+        modifier = Modifier.size(Sizes.bottomBarAdd),
         shape = CircleShape,
         tactile = Tactile.Primary,
         containerColor = lerp(scheme.primary, scheme.tertiary, p),
@@ -101,49 +111,58 @@ private fun BottomBarContent(
     onAdd: () -> Unit,
     addConfirm: ConfirmPulse?,
 ) {
+    val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
-    // One pill flows between tabs (TabPill.kt), so the per-tab Material indicator is transparent. Neon of the
-    // palette in both themes, as in the mockup: the open tab must be seen at a glance.
-    val pillColor = scheme.primary
+    // One pill flows between tabs (TabPill.kt) instead of one per tab.
+    val pillColor = if (dark) scheme.primary else scheme.primaryContainer
     val pill = rememberTabPillState()
     AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
-    val tabColors = NavigationBarItemDefaults.colors(
-        indicatorColor = Color.Transparent,
-        selectedIconColor = scheme.onPrimary,
-        selectedTextColor = scheme.onSurface,
-    )
-    // The bar's own Surface would paint its background over a pill drawn behind it (the pill was invisible),
-    // so the background goes first, then the pill, and the bar itself stays transparent.
-    val barColor = NavigationBarDefaults.containerColor
-    NavigationBar(
-        modifier = Modifier.background(barColor).tabPill(pill, pillColor),
-        containerColor = Color.Transparent,
-        tonalElevation = 0.dp,
+    // A floating capsule over the screen's background, clear of the system navigation bar.
+    // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as its max height,
+    // so the bar would take the screen and leave screens 0 px tall (releases #52/#56).
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Spacing.l),
     ) {
-        tabs.forEachIndexed { index, tab ->
-            if (index == tabs.size / 2) {
-                // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as
-                // its max height, so the bar would take the screen and leave screens 0 px tall.
-                Box(Modifier.weight(1f).align(Alignment.CenterVertically), contentAlignment = Alignment.Center) {
-                    AddButton(addLabel, onAdd, addConfirm)
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .height(Sizes.bottomBarHeight)
+                .clip(PillShape)
+                .background(scheme.surfaceContainerHigh)
+                .tabPill(pill, pillColor)
+                .padding(horizontal = Spacing.xs + Spacing.xxs),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            tabs.forEachIndexed { index, tab ->
+                if (index == tabs.size / 2) {
+                    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        AddButton(addLabel, onAdd, addConfirm)
+                    }
                 }
+                val iconColor = when {
+                    !tab.selected -> scheme.onSurfaceVariant
+                    dark -> scheme.onPrimary
+                    else -> scheme.onPrimaryContainer
+                }
+                val tint by animateColorAsState(iconColor, Motion.effects(), label = "tabIcon")
+                CoShellBarTab(
+                    label = tab.label,
+                    selected = tab.selected,
+                    onClick = { onTab(index) },
+                    pillModifier = Modifier.tabPillAnchor(pill, index),
+                ) { TabIcon(tab, tint) }
             }
-            CoShellNavigationBarItem(
-                colors = tabColors,
-                selected = tab.selected,
-                onClick = { onTab(index) },
-                icon = { TabIcon(tab) },
-                iconModifier = Modifier.tabPillAnchor(pill, index),
-                label = { Text(tab.label) },
-            )
         }
     }
 }
 
 @Composable
-private fun TabIcon(tab: CoShellTab) {
-    if (!tab.badge) return Icon(painterResource(tab.icon), contentDescription = null)
+private fun TabIcon(tab: CoShellTab, tint: Color) {
+    if (!tab.badge) return Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
     BadgedBox(badge = { Badge(containerColor = MaterialTheme.colorScheme.tertiary) }) {
-        Icon(painterResource(tab.icon), contentDescription = null)
+        Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
     }
 }

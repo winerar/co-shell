@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Резервная копия</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
+    <button type="button" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Резервная копия</h1>
+  </div>
+
+  <div style="display: flex; flex-direction: column; align-items: center; padding: 16px 0 8px;">
+    <div style="position: relative; width: 168px; height: 168px;">
+      <svg width="168" height="168" viewBox="0 0 168 168" aria-hidden="true" style="position: absolute; inset: 0; transform: rotate(-90deg);">
+        <circle cx="84" cy="84" r="76" fill="none" stroke="#1A2117" stroke-width="8"></circle>
+        <circle cx="84" cy="84" r="76" fill="none" stroke="#FFE600" stroke-width="8" stroke-linecap="round" stroke-dasharray="477" stroke-dashoffset="136"></circle>
+      </svg>
+      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700;">2</span>
+        <span style="font-size: 12px; color: #9AA594;">дня до копии</span>
+      </div>
+    </div>
+    <div style="font-size: 20px; font-weight: 700; margin-top: 12px;">Автокопия включена</div>
+    <div style="font-size: 13px; color: #9AA594; margin-top: 2px;">Последняя: 3 ноября · раз в неделю</div>
+  </div>
+
+  <div style="margin-top: 10px; border-radius: 16px; background: #10160D; border: 1px solid #222B1E; overflow: hidden;">
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px;">
+      <span style="width: 40px; height: 40px; border-radius: 12px; background: #262305; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFE600" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3z"></path></svg></span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Папка: Google Диск / Co-Shell</span><span style="font-size: 12px; color: #9AA594;">тап — выбрать другую</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border-top: 1px solid #1B2317;">
+      <span style="flex-grow: 1; font-size: 15px;">Автоматически раз в неделю</span>
+      <span style="width: 52px; height: 32px; border-radius: 999px; background: #FFE600; position: relative;"><span style="position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; background: #262305;"></span></span>
+    </div>
+  </div>
+
+  <div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Вручную</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+    <button type="button" style="min-height: 112px; padding: 14px; border-radius: 16px; background: #10160D; border: 1px solid #222B1E; color: #EEF5E6; text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B8FF2E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+      <span><span style="display: block; font-size: 15px; font-weight: 600;">Сохранить копию</span><span style="font-size: 12px; color: #9AA594;">в папку или на Диск</span></span>
+    </button>
+    <button type="button" style="min-height: 112px; padding: 14px; border-radius: 16px; background: #10160D; border: 1px solid #222B1E; color: #EEF5E6; text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9M7 14l5-5 5 5M5 3h14"></path></svg>
+      <span><span style="display: block; font-size: 15px; font-weight: 600;">Восстановить</span><span style="font-size: 12px; color: #9AA594;">записи добавятся к текущим</span></span>
+    </button>
+  </div>
+  <p style="margin: 14px 4px 0; font-size: 12px; line-height: 1.4; color: #6F7A6A;">Копия — один файл со всеми счетами, категориями, операциями и ручными курсами.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

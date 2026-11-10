@@ -33,6 +33,7 @@ import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.rates.list.RatesRoute
 import app.coshell.settings.SettingsRoute
+import app.coshell.wipe.WipeDataRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -145,7 +146,16 @@ fun CoShellNavHost(
                 onBack = { navController.popBackStack() },
                 onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onUpdate = { navController.navigate(UpdateDestination) },
+                onWipeData = { navController.navigate(WipeDataDestination) },
                 availableUpdate = updateAvailable?.versionCode,
+            )
+        }
+        composable<WipeDataDestination> {
+            WipeDataRoute(
+                onBack = { navController.popBackStack() },
+                onImport = {
+                    navController.navigate(WalletImportDestination) { popUpTo<WipeDataDestination> { inclusive = true } }
+                },
             )
         }
         composable<UpdateDestination> {

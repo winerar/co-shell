@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -13,16 +14,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.currencies.list.ReportCurrenciesViewModel
+import app.coshell.ui.list.SectionTitle
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.PaletteRow
@@ -37,6 +41,7 @@ fun SettingsRoute(
     onBack: () -> Unit,
     onReportCurrencies: () -> Unit,
     onUpdate: () -> Unit,
+    onWipeData: () -> Unit = {},
     availableUpdate: Int? = null,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
@@ -63,6 +68,7 @@ fun SettingsRoute(
             onReportCurrencies = onReportCurrencies,
             onShakeEnabledChange = shakeSettings::setEnabled,
             onUpdate = onUpdate,
+            onWipeData = onWipeData,
         ),
     )
 }
@@ -83,6 +89,8 @@ data class SettingsActions(
     val onReportCurrencies: () -> Unit = {},
     val onShakeEnabledChange: (Boolean) -> Unit = {},
     val onUpdate: () -> Unit = {},
+    /** «Данные → Стереть все данные» (board 18). */
+    val onWipeData: () -> Unit = {},
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,8 +138,23 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
                     opensScreen = true,
                 )
             }
+            item { SectionTitle(stringResource(R.string.settings_data_section)) }
+            item { WipeDataRow(actions.onWipeData) }
         }
     }
+}
+
+/** The only red line in settings: it opens the confirmation, nothing is deleted here. */
+@Composable
+private fun WipeDataRow(onClick: () -> Unit) {
+    val danger = MaterialTheme.colorScheme.error
+    CoShellListRow(
+        title = { Text(stringResource(R.string.wipe_title), color = danger, fontWeight = FontWeight.SemiBold) },
+        supporting = { Text(stringResource(R.string.wipe_settings_hint)) },
+        leading = { Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = null, tint = danger) },
+        trailing = { Icon(painterResource(DesignR.drawable.ic_chevron_right), contentDescription = null) },
+        onClick = onClick,
+    )
 }
 
 @Preview(showBackground = true)

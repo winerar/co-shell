@@ -14,6 +14,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.importer.wallet.WalletImportPlan
 import app.coshell.core.model.MoneyFormat
 import app.coshell.importer.wallet.text
+import app.coshell.ui.list.SectionTitle
 
 /** Step 6: N new, M already loaded, K needing a decision, and every touched account's balance after. */
 fun LazyListScope.previewStep(plan: WalletImportPlan, moneyFormat: MoneyFormat) {

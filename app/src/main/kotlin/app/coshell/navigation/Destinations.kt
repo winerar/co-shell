@@ -38,6 +38,9 @@ data object BackupDestination
 data object WalletImportDestination
 
 @Serializable
+data object WipeDataDestination
+
+@Serializable
 data object FamilyDestination
 
 @Serializable

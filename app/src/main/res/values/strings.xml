@@ -416,4 +416,25 @@
     <string name="sync_banner_feedback">Отзыв</string>
     <string name="sync_banner_ok">Понятно</string>
     <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
+    <!-- «Стереть все данные» (board 18, feedback #107) -->
+    <string name="settings_data_section">Данные</string>
+    <string name="wipe_title">Стереть все данные</string>
+    <string name="wipe_settings_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
+    <string name="wipe_family_title">Удалится у всей семьи</string>
+    <string name="wipe_family_hint">На обоих телефонах, при следующей синхронизации</string>
+    <string name="wipe_count_accounts">счетов</string>
+    <string name="wipe_count_transactions">операций</string>
+    <string name="wipe_count_categories">категорий</string>
+    <string name="wipe_count_rates">ручных курсов</string>
+    <string name="wipe_kept">Останутся: семья и участники, настройки, тема. Категории по умолчанию появятся заново.</string>
+    <string name="wipe_backup_title">Сначала сохраним копию</string>
+    <string name="wipe_backup_hint">Файл co-shell-before-wipe-….json в «Загрузках». Вернуть — «Ещё → Резервная копия».</string>
+    <string name="wipe_word_prompt">Чтобы подтвердить, введите %1$s</string>
+    <string name="wipe_word_label">Слово</string>
+    <string name="wipe_button">Стереть у всей семьи</string>
+    <string name="wipe_backup_failed">Не удалось сохранить копию — ничего не стёрто. Проверьте место на телефоне.</string>
+    <string name="wipe_done_title">Данные стёрты</string>
+    <string name="wipe_done_text">Копия: %1$s в «Загрузках». Второй телефон очистится при следующей синхронизации.</string>
+    <string name="wipe_done_import">Импорт из Wallet</string>
+    <string name="wipe_done_ok">Готово</string>
 </resources>

@@ -4,6 +4,8 @@ import app.coshell.backup.ContentResolverDocumentStorage
 import app.coshell.backup.DocumentStorage
 import app.coshell.importer.PreImportBackup
 import app.coshell.importer.data.FilesPreImportBackup
+import app.coshell.wipe.WipeBackup
+import app.coshell.wipe.data.DownloadsWipeBackup
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,7 @@ interface StorageModule {
 
     @Binds
     fun bindPreImportBackup(impl: FilesPreImportBackup): PreImportBackup
+
+    @Binds
+    fun bindWipeBackup(impl: DownloadsWipeBackup): WipeBackup
 }

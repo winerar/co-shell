@@ -14,6 +14,7 @@ import app.coshell.core.domain.importer.wallet.WalletParseError
 import app.coshell.core.domain.importer.wallet.WalletSummary
 import app.coshell.importer.wallet.text
 import app.coshell.ui.format.formatShortDate
+import app.coshell.ui.list.SectionTitle
 
 /** Step 2: what the file holds before anything is mapped, and rows that could not be read. */
 fun LazyListScope.summaryStep(summary: WalletSummary, errors: List<WalletParseError>) {

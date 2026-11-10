@@ -35,6 +35,9 @@ data object CategoriesDestination
 data object BackupDestination
 
 @Serializable
+data object WalletImportDestination
+
+@Serializable
 data object FamilyDestination
 
 @Serializable

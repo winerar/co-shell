@@ -18,12 +18,15 @@ sealed interface CategoryChoice {
 object WalletCategoryMatcher {
 
     /** Category keys of non-transfer records, most used first. */
-    fun keys(records: List<WalletRecord>): List<WalletCategoryKey> =
+    fun keys(records: List<WalletRecord>): List<WalletCategoryKey> = counts(records).keys.toList()
+
+    /** How many records each category key has, most used first (iteration order). */
+    fun counts(records: List<WalletRecord>): Map<WalletCategoryKey, Int> =
         records.filter { !it.isTransfer && it.category != WalletSummary.TRANSFER_CATEGORY }
             .groupingBy { it.categoryKey() }
             .eachCount()
             .entries.sortedByDescending { it.value }
-            .map { it.key }
+            .associate { it.key to it.value }
 
     /** Suggestion: a live category of the same type and name (ignoring case), else create. */
     fun suggest(keys: List<WalletCategoryKey>, existing: List<Category>): Map<WalletCategoryKey, CategoryChoice> =

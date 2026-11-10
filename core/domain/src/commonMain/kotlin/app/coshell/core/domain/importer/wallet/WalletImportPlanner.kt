@@ -30,6 +30,7 @@ data class WalletImportChoices(
  * @property alreadyImported operations from the file that are stored already (same `importExternalId`).
  * @property balancesAfter balance of every touched or new account once [write] is saved, by account id.
  * @property accountNames co-shell account name by id, new accounts included — for the preview.
+ * @property newAccounts how many of [ImportWrite.accounts] are new (the rest are reconciled existing ones).
  */
 data class WalletImportPlan(
     val batchId: String,
@@ -39,6 +40,7 @@ data class WalletImportPlan(
     val skipped: Int,
     val balancesAfter: Map<String, Money>,
     val accountNames: Map<String, String>,
+    val newAccounts: Int,
 ) {
     val newCount: Int get() = write.transactions.size
 }
@@ -117,6 +119,7 @@ class WalletImportPlanner(private val ids: IdGenerator) {
             skipped = built.skipped,
             balancesAfter = after.filterKeys { it in involved },
             accountNames = touched.associate { it.account.id to it.account.name },
+            newAccounts = newAccounts.size,
         )
     }
 }

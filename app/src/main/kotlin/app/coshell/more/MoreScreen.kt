@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.importer.wallet.components.ImportColors
 import app.coshell.more.components.MoreTile
 import app.coshell.ui.list.ActionRow
 import app.coshell.ui.top.TabTopBar
@@ -34,6 +35,7 @@ data class MoreActions(
     val onRates: () -> Unit = {},
     val onFamily: () -> Unit = {},
     val onBackup: () -> Unit = {},
+    val onImport: () -> Unit = {},
     val onFeedback: () -> Unit = {},
     val onSettings: () -> Unit = {},
 )
@@ -50,6 +52,7 @@ fun MoreScreen(actions: MoreActions, availableUpdate: Int? = null) {
             Tile(DesignR.drawable.ic_currency_exchange, R.string.rates_title, R.string.rates_menu_hint, CategoryPalette.colors[6], actions.onRates),
             Tile(DesignR.drawable.ic_group, R.string.family_title, R.string.family_menu_hint, CategoryPalette.colors[3], actions.onFamily),
             Tile(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, R.string.backup_menu_hint, CategoryPalette.colors[11], actions.onBackup),
+            Tile(DesignR.drawable.ic_download, R.string.import_title, R.string.import_menu_hint, CategoryPalette.colors[ImportColors.MENU], actions.onImport),
             Tile(DesignR.drawable.ic_feedback, R.string.feedback_title, R.string.feedback_menu_hint, CategoryPalette.colors[18], actions.onFeedback),
         )
         // Bento grid of sections (design-refactor Step 5), «Настройки» as a row under it.

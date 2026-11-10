@@ -41,6 +41,7 @@ class WalletImportPlannerTest {
         // «Карта USD» merged into the existing card (same name ignoring case, same currency).
         assertEquals(setOf("Наличные ARS", "Карта RUB", "Счёт AMD"), plan.write.accounts.map { it.name }.toSet())
         assertEquals(6, plan.write.categories.size)
+        assertEquals(3, plan.newAccounts)
         assertTrue(plan.write.transactions.all { it.importBatchId == plan.batchId })
         assertTrue(plan.write.transactions.any { it.accountId == "card" })
     }

@@ -20,6 +20,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
+import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.currencies.list.ReportCurrenciesRoute
@@ -122,6 +123,7 @@ fun CoShellNavHost(
                     onRates = { navController.navigate(RatesDestination) },
                     onFamily = { navController.navigate(FamilyDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
+                    onImport = { navController.navigate(WalletImportDestination) },
                     onFeedback = { navController.navigate(FeedbackDestination) },
                     onSettings = { navController.navigate(SettingsDestination) },
                 ),
@@ -153,6 +155,9 @@ fun CoShellNavHost(
         }
         composable<BackupDestination> {
             BackupRoute(onBack = { navController.popBackStack() })
+        }
+        composable<WalletImportDestination> {
+            WalletImportRoute(onBack = { navController.popBackStack() })
         }
         composable<CategoriesDestination> {
             CategoriesRoute(

@@ -25,6 +25,7 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
+| [docs/design/](docs/design/README.md) | **макеты всех экранов, воркфлоу и компонентов** (холст claude.ai + копии) |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
 | [docs/agents/motion.md](docs/agents/motion.md) | движение: тактильная система, анимации, вибрация |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |

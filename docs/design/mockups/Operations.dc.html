@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Операции</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 20px 16px 0;">
+  <h1 style="margin: 8px 0 14px; font-size: 30px; font-weight: 700;">Операции</h1>
+
+  <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: #121810;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+    <input type="search" placeholder="Поиск: заметка, сумма, категория" style="flex-grow: 1; background: none; border: none; outline: none; color: #EEF5E6; font-family: inherit; font-size: 15px;">
+  </label>
+
+  <div style="display: flex; gap: 8px; margin-top: 12px;">
+    <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: none; background: #2A2240; color: #E6D6FF; font-size: 13px; font-weight: 600;">Расходы ✕</button>
+    <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #2E382A; background: transparent; color: #C9D3C2; font-size: 13px;">Счёт ▾</button>
+    <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #2E382A; background: transparent; color: #C9D3C2; font-size: 13px;">Ноябрь ▾</button>
+  </div>
+
+  <div style="margin-top: 18px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0;">
+      <span style="font-size: 13px; font-weight: 600; color: #B8FF2E; letter-spacing: 0.04em;">СЕГОДНЯ</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FF5C7F;">−45 300 <span style="color: #9AA594;">ARS</span></span>
+    </div>
+    <sc-for list="{{today}}" as="r" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 64px;">
+        <span style="width: 40px; height: 40px; border-radius: 50%; background: {{r.color}}; display: flex; align-items: center; justify-content: center; flex: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>
+        </span>
+        <span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+          <span style="font-size: 16px;">{{r.title}}</span>
+          <span style="font-size: 13px; color: #9AA594;">{{r.sub}}</span>
+        </span>
+        <span style="display: flex; flex-direction: column; align-items: flex-end;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: {{r.amountColor}};">{{r.amount}} <span style="color: #9AA594; font-size: 12px;">{{r.cur}}</span></span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9AA594;">{{r.second}}</span>
+        </span>
+      </div>
+    </sc-for>
+
+    <div style="position: relative; margin: 0 -16px; border-radius: 0; overflow: hidden;">
+      <div style="position: absolute; inset: 0; background: #7A3DFF; display: flex; align-items: center; padding-left: 20px; gap: 8px; color: #FFFFFF; font-size: 13px; font-weight: 600;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path></svg>
+        Дублировать
+      </div>
+      <div style="position: relative; transform: translateX(120px); background: #050805; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px;">
+        <span style="width: 40px; height: 40px; border-radius: 50%; background: #FFE600; display: flex; align-items: center; justify-content: center; flex: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3M7 11h10"></path></svg>
+        </span>
+        <span style="display: flex; flex-direction: column;">
+          <span style="font-size: 16px;">Такси</span>
+          <span style="font-size: 13px; color: #9AA594;">Наличные</span>
+        </span>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 6px;">
+      <span style="font-size: 13px; font-weight: 600; color: #B8FF2E; letter-spacing: 0.04em;">ВЧЕРА</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #00F0FF;">+1 200 <span style="color: #9AA594;">USD</span></span>
+    </div>
+    <sc-for list="{{yesterday}}" as="r" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 64px;">
+        <span style="width: 40px; height: 40px; border-radius: 50%; background: {{r.color}}; display: flex; align-items: center; justify-content: center; flex: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>
+        </span>
+        <span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+          <span style="font-size: 16px;">{{r.title}}</span>
+          <span style="font-size: 13px; color: #9AA594;">{{r.sub}}</span>
+        </span>
+        <span style="display: flex; flex-direction: column; align-items: flex-end;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: {{r.amountColor}};">{{r.amount}} <span style="color: #9AA594; font-size: 12px;">{{r.cur}}</span></span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9AA594;">{{r.second}}</span>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: #161D12; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">
+    <a href="#" aria-label="Обзор" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"></path></svg></a>
+    <a href="#" aria-label="Операции" style="display: flex; justify-content: center; align-items: center; height: 44px; margin: 0 2px; border-radius: 999px; background: #B8FF2E;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"></path></svg></a>
+    <a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 52px; height: 52px; border-radius: 50%; background: #B8FF2E; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span></a>
+    <a href="#" aria-label="Счета" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"></rect><path d="M3 10h18"></path></svg></a>
+    <a href="#" aria-label="Ещё" style="display: flex; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="#9AA594" aria-hidden="true"><circle cx="5" cy="12" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="19" cy="12" r="1.6"></circle></svg></a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const exp = '#FF5C7F', inc = '#00F0FF', tr = '#EEF5E6';
+    return {
+      today: [
+        { title: 'Продукты', sub: 'Galicia · Coto', color: '#B8FF2E', icon: 'M3 4h2l2.4 11h11l2-8H6.5M9 20h.01M17 20h.01', amount: '−32 000', cur: 'ARS', amountColor: exp, second: '' },
+        { title: 'Кафе', sub: 'USDT-карта · Аня', color: '#FFB547', icon: 'M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 9h2a2 2 0 0 1 0 4h-2', amount: '−13,10', cur: 'USDT', amountColor: exp, second: 'чек 13 300 ARS' }
+      ],
+      yesterday: [
+        { title: 'Зарплата', sub: 'Ameria', color: '#00F0FF', icon: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16', amount: '+1 200', cur: 'USD', amountColor: inc, second: '' },
+        { title: 'Ameria → Galicia', sub: 'Перевод', color: '#C79BFF', icon: 'M4 8h14l-3-3M20 16H6l3 3', amount: '500', cur: 'USD', amountColor: tr, second: '512 000 ARS' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

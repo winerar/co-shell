@@ -11,6 +11,7 @@ import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.core.model.isBalanceAdjustment
 import app.coshell.core.model.sum
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
@@ -49,7 +50,7 @@ internal fun buildHomeState(
             month = LocalDate(today.year, today.month, 1),
             totals = spending.map { moneyFormat.format(it.sum) },
             missing = spendingMissing,
-            converted = monthTransactions.any { t -> t.type == TransactionType.EXPENSE && currencies.any { it != t.amount.currency } },
+            converted = monthTransactions.any { t -> t.type == TransactionType.EXPENSE && !t.isBalanceAdjustment && currencies.any { it != t.amount.currency } },
             daily = currencies.firstOrNull()
                 ?.let { main -> book.dailyExpenses(monthTransactions, main, today, timeZone).map { it.amountMinor } }
                 .orEmpty(),

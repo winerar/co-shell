@@ -1,6 +1,7 @@
 package app.coshell.core.domain
 
 import app.coshell.core.model.Category
+import app.coshell.core.model.SystemCategories
 import kotlinx.coroutines.flow.first
 
 // Categories form at most two levels: a top-level category may act as a folder for
@@ -25,7 +26,7 @@ class SaveCategoryUseCase(
         PARENT_TYPE_MISMATCH,
         /** The category is a folder with subcategories, so it cannot go into another folder. */
         HAS_SUBCATEGORIES,
-        /** Expense/income cannot change once the category is used or has subcategories. */
+        /** Expense/income cannot change once the category is used or has subcategories, or ever for a system one. */
         TYPE_LOCKED,
     }
 
@@ -59,7 +60,8 @@ class SaveCategoryUseCase(
     }
 
     suspend fun isTypeLocked(categoryId: String): Boolean =
-        transactions.countForCategory(categoryId) > 0 ||
+        SystemCategories.isAdjustment(categoryId) ||
+            transactions.countForCategory(categoryId) > 0 ||
             categories.observeCategories(includeArchived = true).first().any { it.parentId == categoryId }
 
     private fun invalid(reason: Reason) = Result.Invalid(reason)

@@ -29,6 +29,7 @@ import app.coshell.core.domain.importer.ImportRepository
 import app.coshell.core.domain.importer.wallet.WalletImportUseCase
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.model.IdGenerator
+import app.coshell.importer.wallet.ImportAccountColors
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,7 +82,7 @@ object DataModule {
         imports: ImportRepository,
         categories: CategoryRepository,
         ids: IdGenerator,
-    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids)
+    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =

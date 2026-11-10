@@ -52,6 +52,7 @@ class WalletImportPlanner(private val ids: IdGenerator) {
      * @param existing live co-shell accounts with their current balances.
      * @param adjustmentCategories ids of «Корректировка баланса» by direction (must exist before saving).
      * @param known `importExternalId`s already stored for Wallet.
+     * @param color colour of each account the import creates (Wallet's export has none, #106).
      */
     fun plan(
         records: List<WalletRecord>,
@@ -59,6 +60,7 @@ class WalletImportPlanner(private val ids: IdGenerator) {
         existing: List<AccountWithBalance>,
         adjustmentCategories: Map<CategoryType, String>,
         known: Set<String>,
+        color: NewAccountColor = NewAccountColor.None,
     ): WalletImportPlan {
         val existingById = existing.associateBy { it.account.id }
         val newAccounts = LinkedHashMap<Pair<String, String>, Account>()
@@ -66,7 +68,8 @@ class WalletImportPlanner(private val ids: IdGenerator) {
             when (choice) {
                 is AccountChoice.MergeInto -> existingById[choice.accountId]?.account
                 is AccountChoice.CreateNew -> newAccounts.getOrPut(choice.name.trim().lowercase() to choice.currency.value) {
-                    Account(ids.newId(), choice.name.trim(), choice.currency)
+                    val name = choice.name.trim()
+                    Account(ids.newId(), name, choice.currency, color = color.pick(name, newAccounts.size))
                 }
             }?.let { walletName to it }
         }.toMap()

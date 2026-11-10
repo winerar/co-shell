@@ -98,4 +98,17 @@ class WalletImportPlannerTest {
         val plan = plan(merged)
         assertEquals(1, plan.write.accounts.count { it.name == "Наличные ARS" })
     }
+
+    @Test
+    fun newAccountsGetAColourByNameAndOrderButMergedOnesKeepTheirs() {
+        val picked = mutableListOf<Pair<String, Int>>()
+        val plan = planner.plan(records, choices(), listOf(card), adjustment, emptySet()) { name, index ->
+            picked += name to index
+            0xFF000000 + index
+        }
+        assertEquals(listOf(0, 1, 2), picked.map { it.second })
+        assertEquals(picked.map { it.first }.toSet(), plan.write.accounts.filter { it.id != "card" }.map { it.name }.toSet())
+        assertEquals(setOf(0xFF000000, 0xFF000001, 0xFF000002), plan.write.accounts.filter { it.id != "card" }.map { it.color }.toSet())
+        assertEquals(null, plan.write.accounts.singleOrNull { it.id == "card" }?.color)
+    }
 }

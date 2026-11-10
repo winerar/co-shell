@@ -34,6 +34,25 @@ class DeleteTransactionWithUndoTest {
     }
 
     @Test
+    fun `deletes several at once and one undo brings them all back`() = runTest {
+        val u = t.copy(id = "u")
+        transactions.saveTransaction(t)
+        transactions.saveTransaction(u)
+        val offer = async { undo.offers.first() }
+        testScheduler.runCurrent()
+
+        delete(listOf("t", "u", "missing"))
+        assertNull(transactions.getTransaction("t"))
+        assertNull(transactions.getTransaction("u"))
+        val shown = offer.await()
+        assertEquals(listOf<Any>(2), shown.args)
+
+        shown.undo()
+        assertEquals(t, transactions.getTransaction("t"))
+        assertEquals(u, transactions.getTransaction("u"))
+    }
+
+    @Test
     fun `unknown id does nothing`() = runTest {
         delete("missing")
         assertNull(transactions.getTransaction("missing"))

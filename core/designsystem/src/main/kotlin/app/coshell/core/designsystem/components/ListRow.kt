@@ -20,12 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.motion.tactileCombinedClickable
 import app.coshell.core.designsystem.motion.tactileToggleable
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 // List rows of the app (design-system.md §«Компоненты»): medium density — a row with a 40 dp badge is
-// 64 dp tall; edge padding Spacing.l; tap = Tactile.Row (depth and light, no tilt). Transparent, so it sits
+// 64 dp tall; edge padding Spacing.l; tap = Tactile.Row (depth and light, no tilt); `onLongClick` — the selection mode of a list. Transparent, so it sits
 // on a screen, card or sheet alike; `containerColor` — to cover something under it (swipe-to-delete strip).
 
 /** Slot row: [title] in bodyLarge, [supporting] in grey bodyMedium, [leading]/[trailing] in grey. */
@@ -39,8 +40,14 @@ fun CoShellListRow(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     containerColor: Color = Color.Transparent,
+    onLongClick: (() -> Unit)? = null,
 ) {
-    val clickable = if (onClick != null) Modifier.tactileClickable(enabled = enabled, onClick = onClick) else Modifier
+    val clickable = when {
+        onClick != null && onLongClick != null ->
+            Modifier.tactileCombinedClickable(enabled = enabled, onLongClick = onLongClick, onClick = onClick)
+        onClick != null -> Modifier.tactileClickable(enabled = enabled, onClick = onClick)
+        else -> Modifier
+    }
     RowLayout(modifier.then(clickable), enabled, containerColor, title, supporting, leading, trailing)
 }
 
@@ -56,6 +63,7 @@ fun CoShellListRow(
     onClick: (() -> Unit)? = null,
     enabled: Boolean = true,
     containerColor: Color = Color.Transparent,
+    onLongClick: (() -> Unit)? = null,
 ) = CoShellListRow(
     title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
     modifier = modifier,
@@ -65,6 +73,7 @@ fun CoShellListRow(
     onClick = onClick,
     enabled = enabled,
     containerColor = containerColor,
+    onLongClick = onLongClick,
 )
 
 /** Settings row with a switch; the whole row toggles (one target for TalkBack, the switch only shows). */

@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -40,9 +41,23 @@ class TransactionsViewModel @Inject constructor(
     private val deleteWithUndo: DeleteTransactionWithUndo,
 ) : ViewModel() {
 
-    /** Swipe in the list: deleted at once, «Отменить» in the snackbar. */
-    fun delete(id: String) {
-        viewModelScope.launch { deleteWithUndo(id) }
+    private val _selection = MutableStateFlow(Selection())
+
+    /** Rows chosen by a long press (19В); the screen swaps the bottom bar for «Дублировать · Удалить». */
+    val selection: StateFlow<Selection> = _selection.asStateFlow()
+
+    fun onLongPress(id: String) = _selection.update { it.longPress(id) }
+
+    fun onToggle(id: String) = _selection.update { it.toggle(id) }
+
+    fun clearSelection() = _selection.update { Selection() }
+
+    /** Deletes the chosen rows at once; one «Отменить» brings them all back. */
+    fun deleteSelected() {
+        val ids = _selection.value.ids
+        if (ids.isEmpty()) return
+        _selection.value = Selection()
+        viewModelScope.launch { deleteWithUndo(ids) }
     }
 
     private val window = GrowingWindow()
@@ -66,6 +81,7 @@ class TransactionsViewModel @Inject constructor(
         val accountsById = accountList.associateBy { it.id }
         val categoriesById = categoryList.associateBy { it.id }
         val shown = page.items.filter { f.matches(it, accountsById, categoriesById, moneyFormat) }
+        _selection.update { it.keepOnly(shown.mapTo(HashSet()) { t -> t.id }) }
         TransactionsUiState(
             hasMore = page.hasMore && !f.needsAll,
             filter = f,

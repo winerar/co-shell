@@ -1,6 +1,8 @@
 package app.coshell.transactions.list
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,32 +26,44 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.components.DayHeader
 import app.coshell.transactions.list.components.FilterBar
-import app.coshell.transactions.list.components.SwipeActions
+import app.coshell.transactions.list.components.SelectionActions
 import app.coshell.transactions.list.components.TransactionRow
+import app.coshell.ui.bar.ReplaceBottomBar
 import app.coshell.ui.list.LoadMoreEffect
+import app.coshell.ui.top.SelectionTopBar
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
 /**
- * «Операции»: search and filter chips on top, days with their net on the right; swipe left deletes, right
- * duplicates. Older pages load while scrolling ([LoadMoreEffect]); day headers stick to the top.
+ * «Операции»: search and filter chips on top, days with their net on the right. Rows have no swipes — a
+ * horizontal swipe flips tabs (issue #112); a long press chooses rows (mockup 19В): the header counts them,
+ * the bottom bar turns into «Дублировать · Удалить · N», back or «✕» leaves the mode.
+ * Older pages load while scrolling ([LoadMoreEffect]); day headers stick to the top.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsScreen(
     state: TransactionsUiState,
-    onTransactionClick: (String) -> Unit = {},
-    onDelete: (String) -> Unit = {},
-    onLoadMore: () -> Unit = {},
-    onDuplicate: (String) -> Unit = {},
-    onFilter: ((ListFilter) -> ListFilter) -> Unit = {},
+    selection: Selection = Selection(),
+    actions: TransactionsActions = TransactionsActions(),
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
-    LoadMoreEffect(listState, enabled = state.hasMore, onLoadMore = onLoadMore)
+    LoadMoreEffect(listState, enabled = state.hasMore, onLoadMore = actions.onLoadMore)
+    BackHandler(enabled = selection.active, onBack = actions.onClearSelection)
+    ReplaceBottomBar(active = selection.active) {
+        SelectionActions(
+            count = selection.count,
+            onDuplicate = { selection.single?.let(actions.onDuplicate) },
+            onDelete = actions.onDeleteSelected,
+        )
+    }
     Scaffold(
-        topBar = { TabTopBar(stringResource(R.string.nav_transactions), scroll) },
+        topBar = {
+            if (selection.active) SelectionTopBar(selection.count, actions.onClearSelection, scroll)
+            else TabTopBar(stringResource(R.string.nav_transactions), scroll)
+        },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         if (state.isLoading) return@Scaffold
@@ -59,24 +73,42 @@ fun TransactionsScreen(
             contentPadding = PaddingValues(bottom = Sizes.fabClearance),
         ) {
             if (state.days.isNotEmpty() || state.filter.isActive) {
-                item(key = "filters") { FilterBar(state.filter, state.accounts, onFilter, Modifier.padding(bottom = Spacing.s)) }
+                item(key = "filters") { FilterBar(state.filter, state.accounts, actions.onFilter, Modifier.padding(bottom = Spacing.s)) }
             }
             if (state.days.isEmpty()) {
-                item(key = "empty") { EmptyState(filtered = state.filter.isActive, onReset = { onFilter { ListFilter() } }) }
+                item(key = "empty") { EmptyState(filtered = state.filter.isActive, onReset = { actions.onFilter { ListFilter() } }) }
                 return@LazyColumn
             }
             state.days.forEach { day ->
                 stickyHeader(key = day.date.toString()) { DayHeader(day) }
                 items(day.rows, key = { it.id }) { row ->
                     // Rows slide in, out and into place (design-questions §6).
-                    SwipeActions(onDelete = { onDelete(row.id) }, onDuplicate = { onDuplicate(row.id) }, modifier = listItemMotion()) {
-                        TransactionRow(row, onTransactionClick)
+                    Box(listItemMotion()) {
+                        TransactionRow(
+                            row = row,
+                            // While choosing, a tap adds or removes the row instead of opening it.
+                            onClick = if (selection.active) actions.onToggle else actions.onTransactionClick,
+                            onLongClick = actions.onLongPress,
+                            selected = row.id in selection,
+                        )
                     }
                 }
             }
         }
     }
 }
+
+/** Everything the list can ask for; defaults make previews short. */
+data class TransactionsActions(
+    val onTransactionClick: (String) -> Unit = {},
+    val onLoadMore: () -> Unit = {},
+    val onFilter: ((ListFilter) -> ListFilter) -> Unit = {},
+    val onLongPress: (String) -> Unit = {},
+    val onToggle: (String) -> Unit = {},
+    val onClearSelection: () -> Unit = {},
+    val onDuplicate: (String) -> Unit = {},
+    val onDeleteSelected: () -> Unit = {},
+)
 
 @Composable
 private fun EmptyState(filtered: Boolean, onReset: () -> Unit) {

@@ -24,10 +24,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
+import app.coshell.core.designsystem.components.CoShellActionBar
 import app.coshell.core.designsystem.components.CoShellSnackbarHost
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.motion.PressOrigin
+import app.coshell.ui.bar.BottomBarSlot
+import app.coshell.ui.bar.LocalBottomBarSlot
 
 /**
  * The app's frame: the bottom bar on the tabs, the snackbar and the [NavHost] with [graph]. No Hilt
@@ -55,8 +58,11 @@ internal fun MainShell(
     // An editor's save makes the «+» answer with a check mark (design-refactor Step 4).
     val addConfirm = remember { ConfirmPulse() }
 
-    CompositionLocalProvider(LocalAddConfirm provides addConfirm) {
-        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge), origins, overBar)
+    // A tab screen may put its own buttons in place of the tabs (selection mode, 19В).
+    val slot = remember { BottomBarSlot() }
+
+    CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot) {
+        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot), origins, overBar)
     }
 }
 
@@ -72,15 +78,7 @@ private fun Shell(
 ) {
     Scaffold(
         snackbarHost = { CoShellSnackbarHost(snackbar) },
-        bottomBar = {
-            MainBottomBar(
-                current = bar.screen,
-                onTab = { navController.navigateToTab(it) },
-                onAdd = onAdd,
-                visible = bar.visible,
-                moreBadge = bar.moreBadge,
-            )
-        },
+        bottomBar = { Bar(bar, onTab = { navController.navigateToTab(it) }, onAdd = onAdd) },
     ) { padding ->
         // Inner screens have their own Scaffold and handle the status bar themselves, so only the
         // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
@@ -89,7 +87,12 @@ private fun Shell(
             Modifier
                 .padding(bottomInset)
                 .consumeWindowInsets(bottomInset)
-                .onPlaced { origins.hostBounds = it.boundsInWindow() },
+                .onPlaced { origins.hostBounds = it.boundsInWindow() }
+                .tabSwipe(
+                    enabled = bar.visible && bar.slot.content == null,
+                    current = TopLevel.entries.firstOrNull { bar.screen.isOn(it) },
+                    onTab = { navController.navigateToTab(it) },
+                ),
         ) {
             NavHost(
                 navController = navController,
@@ -106,8 +109,21 @@ private fun Shell(
     }
 }
 
-/** What the bottom bar shows: the tab it highlights, whether it is on screen, the dot on «Ещё». */
-private data class BarState(val screen: NavDestination?, val visible: Boolean, val moreBadge: Boolean)
+/** The tabs, or a screen's own buttons from [BarState.slot] in the same capsule. */
+@Composable
+private fun Bar(bar: BarState, onTab: (TopLevel) -> Unit, onAdd: () -> Unit) {
+    val buttons = bar.slot.content
+    // Keeps the buttons while their capsule rides away.
+    var shown by remember { mutableStateOf(buttons) }
+    if (buttons != null) shown = buttons
+    Box {
+        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge)
+        CoShellActionBar(visible = bar.visible && buttons != null) { shown?.invoke(this) }
+    }
+}
+
+/** What the bottom bar shows: the tab it highlights, whether it is on screen, the dot on «Ещё», a screen's buttons. */
+private data class BarState(val screen: NavDestination?, val visible: Boolean, val moreBadge: Boolean, val slot: BottomBarSlot)
 
 /** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */
 internal fun NavHostController.navigateToTab(tab: TopLevel) {

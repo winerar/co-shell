@@ -34,5 +34,22 @@ fun TransactionsRoute(
         }
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
-    TransactionsScreen(state, onTransactionClick, viewModel::delete, viewModel::loadMore, onDuplicate, viewModel::onFilter)
+    val selection by viewModel.selection.collectAsStateWithLifecycle()
+    TransactionsScreen(
+        state = state,
+        selection = selection,
+        actions = TransactionsActions(
+            onTransactionClick = onTransactionClick,
+            onLoadMore = viewModel::loadMore,
+            onFilter = viewModel::onFilter,
+            onLongPress = viewModel::onLongPress,
+            onToggle = viewModel::onToggle,
+            onClearSelection = viewModel::clearSelection,
+            onDuplicate = { id ->
+                viewModel.clearSelection()
+                onDuplicate(id)
+            },
+            onDeleteSelected = viewModel::deleteSelected,
+        ),
+    )
 }

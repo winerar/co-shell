@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.keypad.CoShellKeypad
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
@@ -129,7 +131,10 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     }
 }
 
-/** The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. */
+/**
+ * The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. On the right:
+ * «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
+ */
 @Composable
 private fun Header(state: TransactionEditUiState, actions: TransactionEditActions) {
     Row(
@@ -148,11 +153,27 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
         }
         Spacer(Modifier.weight(1f))
         if (!state.isNew) {
+            CoShellIconButton(onClick = actions.onDuplicate) {
+                Icon(painterResource(DesignR.drawable.ic_content_copy), contentDescription = stringResource(R.string.action_duplicate))
+            }
             CoShellIconButton(onClick = actions.onDelete) {
                 Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = stringResource(R.string.action_delete))
             }
         }
+        if (state.isCopy) CopyLabel()
     }
+}
+
+/** «Копия · сегодня»: a quiet violet pill, the colour of view modes (review 2026-11-10). */
+@Composable
+private fun CopyLabel() {
+    val colors = MaterialTheme.colorScheme
+    Text(
+        stringResource(R.string.transaction_copy_today),
+        style = MaterialTheme.typography.labelLarge,
+        color = colors.onSecondaryContainer,
+        modifier = Modifier.background(colors.secondaryContainer, PillShape).padding(horizontal = Spacing.m, vertical = Spacing.xs + Spacing.xxs),
+    )
 }
 
 @Composable

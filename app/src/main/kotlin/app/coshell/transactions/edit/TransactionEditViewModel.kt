@@ -59,7 +59,8 @@ class TransactionEditViewModel @Inject constructor(
     private val deleteWithUndo: DeleteTransactionWithUndo,
 ) : ViewModel() {
 
-    private val transactionId: String? = savedStateHandle[TransactionEditDestination.ARG_TRANSACTION_ID]
+    /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
+    val transactionId: String? = savedStateHandle[TransactionEditDestination.ARG_TRANSACTION_ID]
     private val initialType: TransactionType = savedStateHandle.get<String>(TransactionEditDestination.ARG_TYPE)
         ?.let { name -> TransactionType.entries.firstOrNull { it.name == name } }
         ?: TransactionType.EXPENSE
@@ -114,7 +115,7 @@ class TransactionEditViewModel @Inject constructor(
         val loaded = when {
             transaction != null -> formOf(transaction, base)
             // «Дублировать»: the same operation as a new one today, straight on the amount.
-            template != null -> formOf(template, base).copy(isNew = true, date = base.today)
+            template != null -> formOf(template, base).copy(isNew = true, isCopy = true, date = base.today)
             else -> newForm(base, accountList, recent)
         }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)

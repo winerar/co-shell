@@ -110,3 +110,8 @@
   Токен эмулятора Auth годится для `?auth=`; `Authorization: Bearer owner` — админ (засеять данные).
 - (11-10) `m2-mirror.sh` с `M2_REPO` раньше перезаписывал `m2-init.gradle` путём к `~/.m2` → Gradle снова шёл в
   Maven Central и ловил 429. Теперь с `M2_REPO` init-скрипт не пишется.
+- (11-10) Скриншот экрана для сверки с доской без эмулятора: временный тест Robolectric с
+  `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, `qualifiers = "w390dp-h844dp-xxhdpi"`, `MainShell` + экран на данных
+  доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с).
+- (11-10) `MainShellSmokeTest`: плашка обновления там не выровнена и лежит слева вверху поверх «✕»/«назад» шапки —
+  клик по ним не доходит; выход из режима проверять `onBackPressedDispatcher.onBackPressed()`.

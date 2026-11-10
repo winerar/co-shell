@@ -11,6 +11,8 @@ import kotlinx.datetime.minus
 data class TransactionEditUiState(
     val isLoading: Boolean = false,
     val isNew: Boolean = true,
+    /** A copy of another operation («Дублировать»): the header says «Копия · сегодня». */
+    val isCopy: Boolean = false,
     val type: TransactionType = TransactionType.EXPENSE,
     /** Amount as typed, in the currency of [accountId]. */
     val amount: String = "",

@@ -8,8 +8,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-/** Something just done that can be taken back: shown as «[message] · Отменить» at the bottom. */
-class UndoOffer(@StringRes val message: Int, val undo: suspend () -> Unit)
+/**
+ * Something just done that can be taken back: shown as «[message] · Отменить» at the bottom.
+ * [args] fill the message's placeholders («Удалено операций: %d»).
+ */
+class UndoOffer(@StringRes val message: Int, val args: List<Any> = emptyList(), val undo: suspend () -> Unit)
 
 /**
  * Undo instead of «Are you sure?» dialogs (design-questions §5): a screen does the action at once and

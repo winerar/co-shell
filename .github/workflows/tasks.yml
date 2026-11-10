@@ -1,21 +1,36 @@
-name: Issue status
+name: Tasks
 
-# Moves `status:*` labels so the task board stays true without manual work (docs/agents/tasks.md):
+# Keeps the task board true without manual work (docs/agents/tasks.md).
+# Labels:
 # - a PR merged into dev → issues it names as `Fixes #N` get `status:in-dev`
 #   (they close when the release PR dev → main is merged);
 # - a closed issue loses its `status:*` label.
 # Issues created with GITHUB_TOKEN (feedback.yml) do not trigger workflows, so the feedback script
 # labels them `status:triage` itself.
+# Board (GitHub Projects, owner's view): scripts/ci/project_board.py — open issues on the board, column
+# follows the `status:*` label, a card the owner moved changes the label. Needs the PROJECT_TOKEN secret.
 on:
   pull_request:
     types: [closed]
     branches: [dev]
   issues:
-    types: [closed]
+    types: [opened, reopened, closed, labeled, unlabeled]
+  schedule:
+    - cron: "41 */3 * * *" # picks up cards the owner moved (board moves send no events to the repo)
+  workflow_dispatch:
+
+concurrency:
+  group: tasks
+  cancel-in-progress: false
 
 permissions:
+  contents: read
   issues: write
   pull-requests: read
+
+env:
+  PROJECT_OWNER: winerar
+  PROJECT_NUMBER: 4
 
 jobs:
   merged-into-dev:
@@ -39,7 +54,7 @@ jobs:
           done
 
   closed:
-    if: github.event_name == 'issues'
+    if: github.event_name == 'issues' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -51,3 +66,21 @@ jobs:
         run: |
           old=$(gh issue view "$N" --json labels -q '[.labels[].name | select(startswith("status:"))] | join(",")')
           [ -z "$old" ] || gh issue edit "$N" --remove-label "$old"
+
+  board:
+    needs: [merged-into-dev, closed]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check setup
+        if: env.PROJECT_TOKEN == ''
+        run: echo "::warning::PROJECT_TOKEN secret is not set — board not synced (docs/agents/tasks.md)"
+      - uses: actions/checkout@v7
+        if: env.PROJECT_TOKEN != ''
+      - name: Sync the board with labels
+        if: env.PROJECT_TOKEN != ''
+        run: python3 scripts/ci/project_board.py

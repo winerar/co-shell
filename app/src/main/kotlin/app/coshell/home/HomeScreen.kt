@@ -32,6 +32,8 @@ data class HomeActions(
     val onTransactions: () -> Unit = {},
     val onAccounts: () -> Unit = {},
     val onRates: () -> Unit = {},
+    /** «Внимание» → «Операции» with the «Без категории · Этот месяц» filter. */
+    val onUncategorized: () -> Unit = {},
     val onTransactionClick: (String) -> Unit = {},
     val onAddAccount: () -> Unit = {},
 )
@@ -77,6 +79,7 @@ fun HomeScreen(state: HomeUiState, actions: HomeActions = HomeActions()) {
                     onTransactions = actions.onTransactions,
                     onAccounts = actions.onAccounts,
                     onRates = actions.onRates,
+                    onUncategorized = actions.onUncategorized,
                     modifier = Modifier.staggeredEntrance(1),
                 )
             }

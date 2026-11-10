@@ -7,17 +7,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.ListFilter
 import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.TransactionsUiState.Kind
+import app.coshell.core.designsystem.R as DesignR
 
-/** Search field and filter chips (type, account, period) at the top of «Операции». */
+/** Search field and filter chips («без категории» when set, type, account, period) at the top of «Операции». */
 @Composable
 internal fun FilterBar(
     filter: ListFilter,
@@ -33,6 +38,17 @@ internal fun FilterBar(
             modifier = Modifier.fillMaxWidth(),
         )
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            if (filter.uncategorized) {
+                // Set from «Обзор» → «Внимание»: shown first and lit, so it is clear why the list is short; ✕ clears it.
+                CoShellFilterChip(
+                    selected = true,
+                    onClick = { onFilter { it.copy(uncategorized = false) } },
+                    label = { Text(stringResource(R.string.filter_uncategorized)) },
+                    trailingIcon = {
+                        Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.filter_uncategorized_clear))
+                    },
+                )
+            }
             val kinds = listOf(
                 null to stringResource(R.string.filter_all_types),
                 Kind.EXPENSE to stringResource(R.string.filter_expenses),

@@ -1,7 +1,6 @@
 # AGENTS.md — co-shell
 
-Android-приложение для учёта семейного бюджета (2 пользователя, мультивалютность,
-офлайн-first, синхронизация через Firestore). Kotlin + Jetpack Compose.
+Семейный бюджет на Android (2 пользователя, мультивалютность, офлайн-first, синк через Firestore). Kotlin + Compose.
 
 ## Золотые правила
 1. Деньги — только `Money` (`Long` минимальных единиц + `CurrencyCode`). Никаких `Double`/`Float`.
@@ -13,6 +12,7 @@ Android-приложение для учёта семейного бюджета
 7. **Начало сессии:** `scripts/agent/session-start.sh`, затем `owner.md` и `notes.md`. **Конец:**
    чек-лист `workflow.md` + `scripts/agent/session-end.sh`. Узнал новое — в `notes.md`; рутина
    повторилась — скрипт в `scripts/agent/`; ввёл практику — правило (`workflow.md` §«Самоулучшение»).
+8. **Визуальное — сначала примеры:** любое видимое изменение сначала макетом владельцу, код — после «ок» (`workflow.md`).
 
 ## Карта документации
 | Файл | О чём |
@@ -29,9 +29,8 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/motion.md](docs/agents/motion.md) | движение: тактильная система, анимации, вибрация |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |
-| [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, обновление документации |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | архитектура и журнал решений |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | план и текущий этап |
+| [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, документация, визуальные изменения, отзывы |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/ROADMAP.md](docs/ROADMAP.md) | архитектура и журнал решений; план и очередь |
 | [docs/design/](docs/design/README.md), [docs/research/](docs/research/), [docs/setup/](docs/setup/) | **макеты экранов, воркфлоу, компонентов**; исследования; инструкции владельцу |
 
 ## Как поддерживать эти файлы

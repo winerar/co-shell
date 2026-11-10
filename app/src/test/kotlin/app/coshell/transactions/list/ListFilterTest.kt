@@ -56,4 +56,17 @@ class ListFilterTest {
         assertEquals(200, f.limit)
         assertNull(ListFilter(query = "x").toRepositoryFilter(200, today, zone).limit)
     }
+
+    @Test
+    fun uncategorizedKeepsOnlyExpensesAndIncomesWithoutCategory() {
+        val f = ListFilter.UncategorizedThisMonth
+        assertFalse(f.hit())
+        assertTrue(f.hit(coto.copy(categoryId = null)))
+        assertTrue(f.hit(coto.copy(type = TransactionType.INCOME, categoryId = null)))
+        assertFalse(f.hit(coto.copy(type = TransactionType.TRANSFER, categoryId = null, toAccountId = "cash", toAmount = coto.amount)))
+        assertTrue(f.isActive)
+        assertEquals(ListFilter.Period.THIS_MONTH, f.period)
+        // Checked in memory, so Room must return the whole month, not a page.
+        assertNull(f.toRepositoryFilter(200, LocalDate(2026, 11, 9), zone).limit)
+    }
 }

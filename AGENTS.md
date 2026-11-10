@@ -32,7 +32,7 @@ Android-приложение для учёта семейного бюджета
 | [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, обновление документации |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | архитектура и журнал решений |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | план и текущий этап |
-| [docs/research/](docs/research/), [docs/setup/](docs/setup/) | исследования; инструкции для владельца |
+| [docs/design/](docs/design/README.md), [docs/research/](docs/research/), [docs/setup/](docs/setup/) | **макеты экранов, воркфлоу, компонентов**; исследования; инструкции владельцу |
 
 ## Как поддерживать эти файлы
 - `AGENTS.md` — только индекс и золотые правила, **не длиннее ~40 строк**.

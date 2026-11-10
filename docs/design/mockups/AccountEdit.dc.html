@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Счёт</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+:root{--bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);--spatial:linear(0,0.06 2.4%,0.22 5.3%,0.5 10.5%,0.74 16%,0.89 21.5%,0.97 27%,1.01 33%,1.02 40%,1.01 50%,1)}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 520ms var(--bouncy),background-color 300ms ease-out,color 300ms ease-out}
+.tap:active{transform:scale(0.95);transition:transform 90ms ease-out}
+.knob{transition:transform 420ms var(--bouncy),background-color 300ms ease-out}
+.card{transition:background 400ms ease-out,opacity 300ms ease-out}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
+    <button type="button" class="tap" aria-label="Закрыть" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Счёт</h1>
+    <button type="button" class="tap" aria-label="В архив" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16v3H4zM5 10v9h14v-9M10 14h4"></path></svg></button>
+  </div>
+
+  <div class="card" style="margin-top: 10px; height: 118px; border-radius: 20px; padding: 16px; box-sizing: border-box; background: {{cardBg}}; opacity: {{cardOpacity}}; display: flex; flex-direction: column; justify-content: space-between; color: {{cardInk}};">
+    <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;"><span>Галисия · карта</span><span>{{typeLabel}}</span></div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700;">245 300,00 <span style="font-size: 16px;">ARS</span></div>
+  </div>
+
+  <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+    <label style="display: flex; flex-direction: column; gap: 2px; padding: 8px 14px; border-radius: 14px; background: #10160D; border: 1px solid #222B1E;">
+      <span style="font-size: 12px; color: #9AA594;">Название</span>
+      <input value="Галисия · карта" style="border: none; outline: none; background: transparent; color: #EEF5E6; font-family: inherit; font-size: 16px; padding: 0;">
+    </label>
+    <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px;">
+      <div style="padding: 8px 14px; border-radius: 14px; background: #10160D; border: 1px solid #222B1E;">
+        <div style="font-size: 12px; color: #9AA594;">Валюта</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 16px; margin-top: 2px;">ARS <span style="font-size: 11px; color: #9AA594;">заблок.</span></div>
+      </div>
+      <div style="padding: 8px 14px; border-radius: 14px; background: #10160D; border: 1px solid #222B1E;">
+        <div style="font-size: 12px; color: #9AA594;">Начальный баланс</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 16px; margin-top: 2px;">120 000,00</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin: 14px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Тип</div>
+  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+    <sc-for list="{{types}}" as="t" hint-placeholder-count="5">
+      <button type="button" class="tap" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+    </sc-for>
+  </div>
+
+  <div style="margin: 14px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Цвет</div>
+  <div style="padding: 10px 12px; border-radius: 14px; background: #1B2317; border: 1px solid #3A4A1E; display: flex; align-items: center; gap: 10px; font-size: 13px;">
+    <span style="width: 22px; height: 22px; border-radius: 50%; background: #F26E22;"></span>
+    <span style="flex-grow: 1;">Похоже на Галисию — взять её цвет</span>
+    <button type="button" class="tap" onClick="{{takeBank}}" style="height: 34px; padding: 0 14px; border-radius: 999px; border: none; background: #B8FF2E; color: #0E1F00; font-weight: 600; font-size: 13px;">Взять</button>
+  </div>
+  <div style="margin-top: 8px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px;">
+    <sc-for list="{{colors}}" as="c" hint-placeholder-count="8">
+      <button type="button" class="tap" aria-label="{{c.hex}}" onClick="{{c.pick}}" style="aspect-ratio: 1; border-radius: 50%; border: none; background: {{c.hex}}; box-shadow: {{c.ring}};"></button>
+    </sc-for>
+  </div>
+
+  <button type="button" class="tap" onClick="{{toggle}}" style="margin-top: 12px; width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 4px; border: none; background: transparent; color: #EEF5E6; text-align: left;">
+    <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-size: 15px;">Учитывать в общем балансе</span>
+      <span style="font-size: 12px; color: #9AA594;">Выключите для долга или чужих денег</span>
+    </span>
+    <span style="width: 52px; height: 32px; border-radius: 999px; background: {{trackBg}}; position: relative; flex-shrink: 0;">
+      <span class="knob" style="position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 50%; background: {{knobBg}}; transform: translateX({{knobX}}px);"></span>
+    </span>
+  </button>
+
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 20px;">
+    <button type="button" class="tap" style="width: 100%; height: 56px; border-radius: 999px; border: none; background: #B8FF2E; color: #0E1F00; font-size: 17px; font-weight: 600;">Сохранить</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { type: 1, color: 1, total: true }; }
+  renderVals() {
+    const s = this.state;
+    const types = ['Наличные', 'Карта', 'Вклад', 'Крипто', 'Другое'];
+    const colors = ['#B8FF2E', '#00F0FF', '#B266FF', '#FF3DD6', '#FFE600', '#FF8A5C', '#F26E22', '#7A8494'];
+    const hex = colors[s.color];
+    const dark = hex === '#7A8494' || hex === '#B266FF';
+    return {
+      typeLabel: types[s.type],
+      cardBg: 'linear-gradient(135deg, ' + hex + ', ' + hex + 'AA)',
+      cardInk: dark ? '#FFFFFF' : '#0B0F0A',
+      cardOpacity: s.total ? 1 : 0.55,
+      types: types.map((label, n) => ({
+        label,
+        style: 'height:38px;padding:0 14px;border-radius:999px;font-size:14px;' + (n === s.type ? 'border:none;background:#B8FF2E;color:#0E1F00;font-weight:600;' : 'border:1px solid #2E382A;background:transparent;color:#C9D3C2;'),
+        pick: () => this.setState({ type: n })
+      })),
+      colors: colors.map((c, n) => ({ hex: c, ring: n === s.color ? '0 0 0 2px #050805, 0 0 0 4px ' + c : 'none', pick: () => this.setState({ color: n }) })),
+      takeBank: () => this.setState({ color: 6 }),
+      toggle: () => this.setState({ total: !s.total }),
+      trackBg: s.total ? '#B8FF2E' : '#2A3326',
+      knobBg: s.total ? '#0E1F00' : '#9AA594',
+      knobX: s.total ? 20 : 0
+    };
+  }
+}
+</script>
+</body>
+</html>

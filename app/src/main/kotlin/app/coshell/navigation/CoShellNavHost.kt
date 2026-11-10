@@ -35,6 +35,7 @@ import app.coshell.settings.SettingsRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
+import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
 import app.coshell.update.UpdateRoute
@@ -88,13 +89,19 @@ fun CoShellNavHost(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
                     onAccounts = { navController.navigateToTab(TopLevel.ACCOUNTS) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
+                    onUncategorized = {
+                        navController.navigateToTab(TopLevel.TRANSACTIONS)
+                        navController.getBackStackEntry<TransactionsDestination>()
+                            .savedStateHandle[PRESET_UNCATEGORIZED] = true
+                    },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
                 ),
             )
         }
-        composable<TransactionsDestination> {
+        composable<TransactionsDestination> { entry ->
             TransactionsRoute(
+                preset = entry.savedStateHandle,
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                 onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
             )

@@ -86,6 +86,8 @@
     <string name="filter_period_all">Всё время</string>
     <string name="filter_period_this">Этот месяц</string>
     <string name="filter_period_last">Прошлый месяц</string>
+    <string name="filter_uncategorized">Без категории</string>
+    <string name="filter_uncategorized_clear">Убрать фильтр «Без категории»</string>
     <string name="filter_reset">Сбросить фильтры</string>
     <string name="transactions_nothing">Ничего не нашлось</string>
     <string name="action_duplicate">Дублировать</string>

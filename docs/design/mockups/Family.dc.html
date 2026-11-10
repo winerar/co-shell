@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Семья и синхронизация</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+.pulse{animation:pulse 2200ms ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(178,102,255,0.45)}50%{box-shadow:0 0 0 10px rgba(178,102,255,0)}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
+    <button type="button" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Семья</h1>
+  </div>
+
+  <div style="margin-top: 10px; padding: 18px 16px; border-radius: 20px; background: linear-gradient(135deg, #1B0F2B, #0B1A10); border: 1px solid #3A2257;">
+    <div style="display: flex; align-items: center;">
+      <span class="pulse" style="width: 56px; height: 56px; border-radius: 50%; background: #B266FF; color: #1A0533; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;">М</span>
+      <span style="width: 56px; height: 56px; margin-left: -12px; border-radius: 50%; background: #00F0FF; color: #002A2E; border: 3px solid #0F0D1A; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;">А</span>
+      <span style="margin-left: 14px; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 18px; font-weight: 700;">Общий бюджет</span>
+        <span style="font-size: 13px; color: #C9B3E6;">2 участника</span>
+      </span>
+    </div>
+    <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; font-size: 13px;">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #5CFFB0;"></span>
+      <span style="flex-grow: 1;">Синхронизировано: 2 мин назад</span>
+      <span style="font-family: 'JetBrains Mono', monospace; color: #9AA594;">раз в 10 с</span>
+    </div>
+  </div>
+
+  <button type="button" style="margin-top: 10px; width: 100%; height: 52px; border-radius: 999px; border: 1px solid #3A2257; background: transparent; color: #D9C2FF; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D9C2FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Синхронизировать сейчас</button>
+
+  <div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Участники</div>
+  <div style="border-radius: 16px; background: #10160D; border: 1px solid #222B1E; overflow: hidden;">
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px;">
+      <span style="width: 40px; height: 40px; border-radius: 50%; background: #B266FF; color: #1A0533; display: flex; align-items: center; justify-content: center; font-weight: 700;">М</span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Вы</span><span style="font-size: 12px; color: #9AA594;">создатель семьи</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px; border-top: 1px solid #1B2317;">
+      <span style="width: 40px; height: 40px; border-radius: 50%; background: #00F0FF; color: #002A2E; display: flex; align-items: center; justify-content: center; font-weight: 700;">А</span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Второй участник</span><span style="font-size: 12px; color: #9AA594;">вошёл · 12 операций за неделю</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px; border-top: 1px solid #1B2317;">
+      <span style="width: 40px; height: 40px; border-radius: 50%; border: 1px dashed #2E382A; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 7v10M7 12h10"></path></svg></span>
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: #B8FF2E;">Пригласить</span><span style="font-size: 12px; color: #9AA594;">по адресу Google-аккаунта</span></span>
+    </div>
+  </div>
+
+  <div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Аккаунт</div>
+  <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #10160D; border: 1px solid #222B1E;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"></path></svg>
+    <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Выйти</span><span style="font-size: 12px; color: #9AA594;">Данные останутся, синхронизация остановится</span></span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Курсы валют</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
+    <button type="button" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Курсы валют</h1>
+  </div>
+
+  <div style="margin-top: 10px; padding: 14px 16px; border-radius: 20px; background: linear-gradient(135deg, #062224, #0B1A10); border: 1px solid #0E4448; display: flex; align-items: center; gap: 14px;">
+    <span style="width: 44px; height: 44px; border-radius: 50%; background: #00F0FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#002A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+    </span>
+    <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;">
+      <span style="font-size: 16px; font-weight: 600;">Курсы на сегодня</span>
+      <span style="font-size: 12px; color: #9AA594;">Загружено 9 ноября · currency-api</span>
+    </span>
+    <button type="button" aria-label="Обновить сейчас" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid #0E4448; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg></button>
+  </div>
+
+  <div style="margin: 18px 4px 8px; display: flex; justify-content: space-between; font-size: 13px;"><span style="font-weight: 600; color: #9AA594;">Валюты ваших счетов</span><span style="color: #9AA594;">тап — задать вручную</span></div>
+  <div style="border-radius: 16px; background: #10160D; border: 1px solid #222B1E; overflow: hidden;">
+    <sc-for list="{{rates}}" as="r" hint-placeholder-count="5">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 14px; border-top: 1px solid {{r.line}};">
+        <span style="width: 40px; height: 40px; border-radius: 12px; background: #161D12; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: {{r.tint}};">{{r.code}}</span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px;">{{r.line1}}</span>
+          <span style="font-size: 12px; color: {{r.subColor}};">{{r.sub}}</span>
+        </span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{r.deltaColor}};">{{r.delta}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: #9AA594;">Ручные курсы</div>
+  <div style="padding: 12px 14px; border-radius: 16px; background: #1B0F2B; border: 1px solid #3A2257; display: flex; align-items: center; gap: 12px;">
+    <span style="width: 8px; height: 40px; border-radius: 4px; background: #B266FF;"></span>
+    <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px;">1 USD = 1 185,00 ARS</span>
+      <span style="font-size: 12px; color: #C9B3E6;">вручную · с 1 ноября · важнее загруженного</span>
+    </span>
+  </div>
+  <button type="button" style="margin-top: 8px; width: 100%; height: 48px; border-radius: 999px; border: 1px dashed #2E382A; background: transparent; color: #B8FF2E; font-size: 15px; font-weight: 600;">+ Добавить курс</button>
+
+  <div style="position: absolute; left: 20px; right: 20px; bottom: 22px; font-size: 11px; color: #6F7A6A; line-height: 1.4;">Источники: fawazahmed0/currency-api и ExchangeRate-API. Курсы обновляются сами раз в день.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const up = '#5CFFB0', down = '#FF5C7F', muted = '#9AA594';
+    return {
+      rates: [
+        { code: 'USD', line1: '1 USD = 1 185,00 ARS', sub: 'вручную', subColor: '#C9B3E6', delta: '', tint: '#B8FF2E' },
+        { code: 'EUR', line1: '1 EUR = 1,08 USD', sub: 'на 9 ноября', subColor: muted, delta: '+0,4%', deltaColor: up, tint: '#00F0FF' },
+        { code: 'AMD', line1: '1 USD = 387,20 AMD', sub: 'на 9 ноября', subColor: muted, delta: '−0,1%', deltaColor: down, tint: '#FFC46B' },
+        { code: 'RUB', line1: '1 USD = 81,40 RUB', sub: 'на 9 ноября', subColor: muted, delta: '+0,2%', deltaColor: up, tint: '#FF8FA3' },
+        { code: 'USDT', line1: '1 USDT = 1,00 USD', sub: 'через USD', subColor: muted, delta: '', tint: '#5CFFB0' }
+      ].map((r, n) => ({ ...r, line: n === 0 ? 'transparent' : '#1B2317', deltaColor: r.deltaColor || muted }))
+    };
+  }
+}
+</script>
+</body>
+</html>

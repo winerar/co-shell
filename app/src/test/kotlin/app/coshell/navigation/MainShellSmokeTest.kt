@@ -144,7 +144,8 @@ class MainShellSmokeTest {
     }
 
     private fun tab(@StringRes label: Int) {
-        compose.onNodeWithText(string(label)).performClick()
+        // Tabs are icons without text (mockups): found by the label TalkBack reads.
+        compose.onNodeWithContentDescription(string(label)).performClick()
         compose.waitForIdle()
     }
 

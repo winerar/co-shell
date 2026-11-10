@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Операции: дубль и удаление в шторке</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap{transition:transform 160ms cubic-bezier(.2,.9,.25,1.2)}
+.tap:active{transform:scale(0.96)}
+@keyframes pop{from{opacity:0;transform:scale(0.92) translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes rise{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes drain{from{width:100%}to{width:0}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{t.bg}}; font-family: Onest, system-ui, sans-serif; color: {{t.ink}}; position: relative; overflow: hidden;">
+  <div onPointerDown="{{down}}" onPointerMove="{{move}}" onPointerUp="{{up}}" onPointerCancel="{{up}}" onPointerLeave="{{up}}" style="{{trackStyle}}">
+    <div style="position: relative; width: 390px; height: 844px; flex: none; box-sizing: border-box; padding: 0 16px;">
+      <div style="display: flex; align-items: center; height: 64px;"><h2 style="margin: 0; font-size: 28px; font-weight: 700;">Обзор</h2></div>
+      <div style="height: 150px; border-radius: 20px; background: {{t.card}};"></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+      </div>
+      <div style="height: 220px; border-radius: 20px; background: {{t.card}}; margin-top: 12px;"></div>
+      <p style="margin: 16px 4px 0; font-size: 13px; color: {{t.muted}};">Макет «Обзора» — доска 17А. Здесь — только чтобы показать листание.</p>
+    </div>
+    <div style="position: relative; width: 390px; height: 844px; flex: none; box-sizing: border-box;">
+      <sc-if value="{{selecting}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px;">
+          <button type="button" class="tap" aria-label="Отменить выбор" onClick="{{clearSel}}" style="width: 48px; height: 48px; border: none; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{t.ink}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+          <span style="font-size: 22px; font-weight: 700;">Выбрано {{selCount}}</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{notSelecting}}" hint-placeholder-val="{{true}}">
+        <div style="display: flex; align-items: center; height: 64px; padding: 0 16px;"><h1 style="margin: 0; font-size: 28px; font-weight: 700;">Операции</h1></div>
+      </sc-if>
+      <div style="padding: 0 16px;">
+        <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: {{t.field}};">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+          <input type="search" placeholder="Поиск: заметка, сумма, категория" style="flex-grow: 1; min-width: 0; background: none; border: none; outline: none; color: {{t.ink}}; font-family: inherit; font-size: 15px;">
+        </label>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: none; background: {{t.chipOn}}; color: {{t.chipOnInk}}; font-size: 13px; font-weight: 600;">Расходы ✕</button>
+          <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; font-size: 13px;">Счёт ▾</button>
+          <button type="button" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; font-size: 13px;">Ноябрь ▾</button>
+        </div>
+      </div>
+      <div style="position: relative; margin-top: 14px;">
+        <sc-if value="{{menuAny}}" hint-placeholder-val="{{false}}">
+          <button type="button" aria-label="Закрыть меню" onClick="{{closeMenu}}" style="position: absolute; left: 0; right: 0; top: -400px; height: 1400px; z-index: 5; border: none; background: transparent;"></button>
+        </sc-if>
+        <sc-for list="{{days}}" as="d" hint-placeholder-count="2">
+          <div style="padding: 0 16px;"><div style="display: flex; justify-content: space-between; align-items: baseline; padding: {{d.pad}}; ">
+          <span style="font-size: 13px; font-weight: 600; color: {{t.accentInk}}; letter-spacing: 0.04em;">{{d.title}}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{d.color}};">{{d.total}} <span style="color: {{t.muted}};">{{d.cur}}</span></span>
+        </div></div>
+          <sc-for list="{{d.rows}}" as="r" hint-placeholder-count="2">
+        <div style="{{r.wrap}}">
+          <div onPointerDown="{{r.down}}" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px; background: {{r.bg}}; user-select: none; -webkit-user-select: none; touch-action: pan-y;">
+            <span style="width: 40px; height: 40px; border-radius: 50%; background: {{r.dot}}; display: flex; align-items: center; justify-content: center; flex: none;">
+              <sc-if value="{{r.selected}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></sc-if>
+              <sc-if value="{{r.plain}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg></sc-if>
+            </span>
+            <span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+              <span style="font-size: 16px;">{{r.title}}</span>
+              <span style="font-size: 13px; color: {{t.muted}};">{{r.sub}}</span>
+            </span>
+            <span style="display: flex; flex-direction: column; align-items: flex-end;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: {{r.amountColor}};">{{r.amount}} <span style="color: {{t.muted}}; font-size: 12px;">{{r.cur}}</span></span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{t.muted}};">{{r.second}}</span>
+            </span>
+          </div>
+          <sc-if value="{{r.menuOpen}}" hint-placeholder-val="{{false}}">
+            <div role="menu" style="position: absolute; right: 16px; top: 52px; z-index: 7; width: 210px; padding: 6px; border-radius: 16px; background: {{t.menu}}; border: 1px solid {{t.line}}; box-shadow: 0 12px 32px rgba(0,0,0,0.45); animation: pop 220ms cubic-bezier(.2,.9,.25,1.1);">
+              <button type="button" role="menuitem" class="tap" onClick="{{r.dup}}" style="display: flex; align-items: center; gap: 12px; width: 100%; height: 48px; padding: 0 12px; border: none; border-radius: 12px; background: transparent; color: {{t.ink}}; font-size: 15px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>Дублировать</button>
+              <button type="button" role="menuitem" class="tap" onClick="{{r.del}}" style="display: flex; align-items: center; gap: 12px; width: 100%; height: 48px; padding: 0 12px; border: none; border-radius: 12px; background: transparent; color: {{t.danger}}; font-size: 15px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.danger}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg>Удалить</button>
+            </div>
+          </sc-if>
+        </div>
+          </sc-for>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position: relative; width: 390px; height: 844px; flex: none; box-sizing: border-box; padding: 0 16px;">
+      <div style="display: flex; align-items: center; height: 64px;"><h2 style="margin: 0; font-size: 28px; font-weight: 700;">Счета</h2></div>
+      <div style="height: 96px; border-radius: 20px; background: {{t.card}};"></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+      </div>
+      <div style="height: 220px; border-radius: 20px; background: {{t.card}}; margin-top: 12px;"></div>
+      <p style="margin: 16px 4px 0; font-size: 13px; color: {{t.muted}};">Макет «Счетов» — доска 3.</p>
+    </div>
+    <div style="position: relative; width: 390px; height: 844px; flex: none; box-sizing: border-box; padding: 0 16px;">
+      <div style="display: flex; align-items: center; height: 64px;"><h2 style="margin: 0; font-size: 28px; font-weight: 700;">Ещё</h2></div>
+      <div style="height: 180px; border-radius: 20px; background: {{t.card}};"></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+        <div style="height: 120px; border-radius: 20px; background: {{t.card}};"></div>
+      </div>
+      <div style="height: 220px; border-radius: 20px; background: {{t.card}}; margin-top: 12px;"></div>
+      <p style="margin: 16px 4px 0; font-size: 13px; color: {{t.muted}};">Макет «Ещё» — доска 4.</p>
+    </div>
+  </div>
+
+  <sc-if value="{{snack.show}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 8; border-radius: 12px; background: {{t.snack}}; overflow: hidden; animation: pop 220ms cubic-bezier(.2,.9,.25,1.1);">
+      <div style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px 0 16px;">
+        <span style="flex-grow: 1; font-size: 14px;">{{snack.text}}</span>
+        <button type="button" class="tap" onClick="{{undo}}" style="height: 36px; padding: 0 12px; border: none; background: transparent; color: {{t.accentInk}}; font-size: 14px; font-weight: 600;">Отменить</button>
+      </div>
+      <div style="height: 3px; background: {{t.accent}}; animation: drain 4s linear forwards;"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{selecting}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; z-index: 6; border-radius: 999px; background: {{t.bar}}; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box; animation: pop 220ms cubic-bezier(.2,.9,.25,1.1);">
+      <button type="button" class="tap" onClick="{{dupSel}}" style="{{dupSelStyle}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>Дублировать</button>
+      <button type="button" class="tap" onClick="{{delSel}}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border: none; border-radius: 999px; background: {{t.dangerBg}}; color: {{t.danger}}; font-size: 15px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.danger}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg>Удалить · {{selCount}}</button>
+    </div>
+  </sc-if>
+  <sc-if value="{{notSelecting}}" hint-placeholder-val="{{true}}">
+    <nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: {{t.bar}}; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">
+      <span style="{{pillStyle}}"></span>
+      <button type="button" class="tap" aria-label="Обзор" onClick="{{tabs.home.go}}" style="position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; height: 44px; border: none; background: transparent;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{tabs.home.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"></path></svg></button>
+      <button type="button" class="tap" aria-label="Операции" onClick="{{tabs.ops.go}}" style="position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; height: 44px; border: none; background: transparent;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{tabs.ops.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"></path></svg></button>
+      <button type="button" class="tap" aria-label="Новая операция" style="display: flex; justify-content: center; border: none; background: transparent;"><span style="width: 52px; height: 52px; border-radius: 50%; background: {{t.accent}}; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span></button>
+      <button type="button" class="tap" aria-label="Счета" onClick="{{tabs.acc.go}}" style="position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; height: 44px; border: none; background: transparent;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{tabs.acc.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"></rect><path d="M3 10h18"></path></svg></button>
+      <button type="button" class="tap" aria-label="Ещё" onClick="{{tabs.more.go}}" style="position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; height: 44px; border: none; background: transparent;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{tabs.more.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="19" cy="12" r="1.6"></circle></svg></button>
+    </nav>
+  </sc-if>
+
+  <sc-if value="{{sheet.show}}" hint-placeholder-val="{{false}}">
+    <button type="button" aria-label="Закрыть шторку" onClick="{{closeSheet}}" style="position: absolute; inset: 0; z-index: 9; border: none; background: {{t.scrim}}; animation: fade 200ms ease-out;"></button>
+    <div role="dialog" aria-label="Операция" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; border-radius: 28px 28px 0 0; background: {{t.sheet}}; padding: 10px 16px 24px; box-sizing: border-box; animation: rise 360ms cubic-bezier(.2,.9,.25,1.05);">
+      <div style="width: 36px; height: 4px; border-radius: 2px; background: {{t.line}}; margin: 0 auto 12px;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px 0 6px; border-radius: 999px; border: 1px solid {{t.line}}; background: {{t.field}};">
+          <span style="width: 34px; height: 34px; border-radius: 11px; background: #F26E22; color: #1A0A00; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">GA</span>
+          <span style="font-size: 14px; font-weight: 600;">Galicia</span>
+        </span>
+        <span style="flex-grow: 1;"></span>
+        <sc-if value="{{sheet.existing}}" hint-placeholder-val="{{true}}">
+          <button type="button" class="tap" aria-label="Дублировать" onClick="{{sheet.dup}}" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid {{t.line}}; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></button>
+          <button type="button" class="tap" aria-label="Удалить" onClick="{{sheet.del}}" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid {{t.line}}; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{t.danger}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg></button>
+        </sc-if>
+        <sc-if value="{{sheet.copy}}" hint-placeholder-val="{{false}}">
+          <span style="height: 32px; padding: 0 12px; border-radius: 999px; background: {{t.chipOn}}; color: {{t.chipOnInk}}; font-size: 13px; font-weight: 600; display: flex; align-items: center;">Копия · сегодня</span>
+        </sc-if>
+      </div>
+      <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 20px 0 8px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 700; color: {{sheet.amountColor}};">{{sheet.amount}}</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: {{t.muted}};">{{sheet.cur}}</span>
+      </div>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px;">
+        <span style="width: 28px; height: 28px; border-radius: 50%; background: {{sheet.dot}};"></span>{{sheet.title}}
+      </div>
+      <p style="margin: 18px 0; text-align: center; font-size: 13px; color: {{t.muted}};">…категории, дата, заметка и клавиатура — как на доске «1 · Шторка»</p>
+      <button type="button" class="tap" onClick="{{sheet.save}}" style="width: 100%; height: 56px; border-radius: 999px; border: none; background: {{t.accent}}; color: #0E1F00; font-size: 17px; font-weight: 600;">{{sheet.saveLabel}}</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { idx: 1, dx: 0, dragging: false, gone: [], copies: [], sheet: null, menu: null, sel: [], snack: null };
+    this.g = {};
+  }
+  componentWillUnmount() { clearTimeout(this.g.lp); clearTimeout(this.g.sn); }
+  rows() {
+    const exp = '#FF5C7F', inc = '#00F0FF', tr = this.T().ink;
+    const base = [
+      { id: 'p', day: 0, title: 'Продукты', sub: 'Galicia · Coto', dot: '#B8FF2E', icon: 'M3 4h2l2.4 11h11l2-8H6.5M9 20h.01M17 20h.01', amount: '−32 000', cur: 'ARS', amountColor: exp, second: '' },
+      { id: 'k', day: 0, title: 'Кафе', sub: 'USDT-карта · Аня', dot: '#FFB547', icon: 'M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 9h2a2 2 0 0 1 0 4h-2', amount: '−13,10', cur: 'USDT', amountColor: exp, second: 'чек 13 300 ARS' },
+      { id: 't', day: 1, title: 'Такси', sub: 'Наличные', dot: '#FFE600', icon: 'M5 16h14l-1.5-6h-11zM7 16v2M17 16v2M8 10l1-3h6l1 3', amount: '−6 500', cur: 'ARS', amountColor: exp, second: '' },
+      { id: 'z', day: 1, title: 'Зарплата', sub: 'Ameria', dot: '#00F0FF', icon: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16', amount: '+1 200', cur: 'USD', amountColor: inc, second: '' },
+      { id: 'x', day: 1, title: 'Ameria → Galicia', sub: 'Перевод', dot: '#C79BFF', icon: 'M4 8h14l-3-3M20 16H6l3 3', amount: '500', cur: 'USD', amountColor: tr, second: '512 000 ARS' }
+    ];
+    return this.state.copies.concat(base).filter((r) => this.state.gone.indexOf(r.id) < 0);
+  }
+  T() {
+    return (this.props.dark ?? true)
+      ? { bg: '#050805', ink: '#EEF5E6', muted: '#9AA594', card: '#10160D', field: '#121810', line: '#2E382A', bar: '#161D12', sheet: '#10160D', menu: '#1B2317', snack: '#1B2317', accent: '#B8FF2E', accentInk: '#B8FF2E', chipOn: '#2A2240', chipOnInk: '#E6D6FF', danger: '#FF5C7F', dangerBg: '#2B0F17', scrim: 'rgba(0,0,0,0.6)', selBg: '#16200F' }
+      : { bg: '#F7FBF2', ink: '#14200F', muted: '#5C6757', card: '#FFFFFF', field: '#EDF3E6', line: '#D3DDC9', bar: '#FFFFFF', sheet: '#FFFFFF', menu: '#FFFFFF', snack: '#14200F', accent: '#B8FF2E', accentInk: '#3F6B00', chipOn: '#E9DDFF', chipOnInk: '#3A1F70', danger: '#C2183F', dangerBg: '#FCE4EA', scrim: 'rgba(20,32,15,0.35)', selBg: '#EAF6D6' };
+  }
+  showSnack(text, restore) {
+    clearTimeout(this.g.sn);
+    this.setState({ snack: { text, restore } });
+    this.g.sn = setTimeout(() => this.setState({ snack: null }), 4000);
+  }
+  remove(ids) {
+    const prev = this.state.gone;
+    this.setState({ gone: prev.concat(ids), sheet: null, menu: null, sel: [] });
+    this.showSnack(ids.length > 1 ? 'Удалено операций: ' + ids.length : 'Операция удалена', prev);
+  }
+  duplicate(id) { this.setState({ sheet: { id, copy: true }, menu: null, sel: [] }); }
+  renderVals() {
+    const V = 'A';
+    const s = this.state, t = this.T(), W = 390;
+    const selecting = s.sel.length > 0;
+    const rows = this.rows();
+    const mk = (r) => {
+      const selected = s.sel.indexOf(r.id) >= 0;
+      return {
+        ...r, selected, plain: !selected,
+        dot: selected ? t.accent : r.dot,
+        bg: selected ? t.selBg : t.bg,
+        menuOpen: s.menu === r.id,
+        wrap: 'position: relative;' + (s.menu === r.id ? ' z-index: 6;' : ''),
+        down: () => { this.g.row = r.id; },
+        dup: () => this.duplicate(r.id),
+        del: () => this.remove([r.id])
+      };
+    };
+    const days = [
+      { title: 'СЕГОДНЯ', total: '−45 300', cur: 'ARS', color: '#FF5C7F', pad: '6px 0' },
+      { title: 'ВЧЕРА', total: '+1 200', cur: 'USD', color: '#00F0FF', pad: '14px 0 6px' }
+    ].map((d, i) => ({ ...d, rows: rows.filter((r) => r.day === i).map(mk) })).filter((d) => d.rows.length);
+    const pos = Math.max(0, Math.min(3, s.idx - s.dx / W));
+    const slot = pos <= 1 ? pos : pos >= 2 ? pos + 1 : 1 + (pos - 1) * 2;
+    const ease = s.dragging ? 'none' : 'transform 380ms cubic-bezier(.2,.9,.25,1.05)';
+    const col = 'calc((100% - 12px) / 5)';
+    const tab = (k) => ({ go: () => this.setState({ idx: k }), ink: Math.round(pos) === k ? '#0E1F00' : t.muted });
+    const sheetRow = s.sheet && (rows.find((r) => r.id === s.sheet.id) || this.rows().find((r) => r.id === s.sheet.id));
+    const longPress = V === 'B' || V === 'C';
+    return {
+      t, days, selecting, notSelecting: !selecting, selCount: String(s.sel.length), menuAny: s.menu !== null,
+      trackStyle: 'display: flex; width: ' + (W * 4) + 'px; height: 844px; transform: translateX(' + (-pos * W) + 'px); transition: ' + ease + '; touch-action: pan-y;',
+      pillStyle: 'position: absolute; top: 10px; height: 44px; left: calc(6px + ' + col + ' * ' + slot + ' + 2px); width: calc(' + col + ' - 4px); border-radius: 999px; background: ' + t.accent + '; transition: ' + (s.dragging ? 'none' : 'left 380ms cubic-bezier(.2,.9,.25,1.05)') + ';',
+      tabs: { home: tab(0), ops: tab(1), acc: tab(2), more: tab(3) },
+      down: (e) => {
+        this.g.x = e.clientX; this.g.y = e.clientY; this.g.drag = false; this.g.fired = false; this.g.active = true;
+        clearTimeout(this.g.lp);
+        if (longPress && this.g.row && !selecting && !s.sheet) {
+          this.g.lp = setTimeout(() => {
+            this.g.fired = true;
+            if (V === 'B') this.setState({ menu: this.g.row }); else this.setState({ sel: [this.g.row] });
+          }, 450);
+        }
+      },
+      move: (e) => {
+        if (!this.g.active) return;
+        const dx = e.clientX - this.g.x, dy = e.clientY - this.g.y;
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) clearTimeout(this.g.lp);
+        if (!this.g.drag && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) && !selecting && s.menu === null) this.g.drag = true;
+        if (this.g.drag) {
+          const edge = (dx > 0 && s.idx === 0) || (dx < 0 && s.idx === 3);
+          this.setState({ dx: edge ? dx / 3 : dx, dragging: true });
+        }
+      },
+      up: () => {
+        if (!this.g.active) return;
+        this.g.active = false;
+        clearTimeout(this.g.lp);
+        const row = this.g.row; this.g.row = null;
+        if (this.g.drag) {
+          let idx = s.idx;
+          if (s.dx < -80 && idx < 3) idx++;
+          if (s.dx > 80 && idx > 0) idx--;
+          this.setState({ idx, dx: 0, dragging: false });
+          return;
+        }
+        if (!row || this.g.fired) return;
+        if (selecting) {
+          const sel = s.sel.indexOf(row) >= 0 ? s.sel.filter((x) => x !== row) : s.sel.concat([row]);
+          this.setState({ sel });
+        } else if (s.menu === null) {
+          this.setState({ sheet: { id: row, copy: false } });
+        }
+      },
+      closeMenu: () => this.setState({ menu: null }),
+      clearSel: () => this.setState({ sel: [] }),
+      dupSel: () => { if (s.sel.length === 1) this.duplicate(s.sel[0]); },
+      dupSelStyle: 'flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border: 1px solid ' + t.line + '; border-radius: 999px; background: transparent; color: ' + t.ink + '; font-size: 15px; font-weight: 600; opacity: ' + (s.sel.length === 1 ? 1 : 0.38) + ';',
+      delSel: () => this.remove(s.sel.slice()),
+      snack: { show: !!s.snack, text: s.snack ? s.snack.text : '' },
+      undo: () => { clearTimeout(this.g.sn); this.setState({ gone: s.snack ? s.snack.restore : s.gone, snack: null }); },
+      closeSheet: () => this.setState({ sheet: null }),
+      sheet: {
+        show: !!sheetRow, existing: !!(s.sheet && !s.sheet.copy), copy: !!(s.sheet && s.sheet.copy),
+        amount: sheetRow ? sheetRow.amount : '', cur: sheetRow ? sheetRow.cur : '', amountColor: sheetRow ? sheetRow.amountColor : t.ink,
+        title: sheetRow ? sheetRow.title : '', dot: sheetRow ? sheetRow.dot : t.accent,
+        saveLabel: s.sheet && s.sheet.copy ? 'Сохранить копию' : 'Готово',
+        dup: () => s.sheet && this.duplicate(s.sheet.id),
+        del: () => s.sheet && this.remove([s.sheet.id]),
+        save: () => this.setState(s.sheet && s.sheet.copy && sheetRow ? { sheet: null, copies: [{ ...sheetRow, id: 'c' + s.copies.length, day: 0 }].concat(s.copies) } : { sheet: null })
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Task board in the terminal: open issues grouped by `status:*` label (docs/agents/tasks.md).
+# Task board in the terminal: open issues grouped by `status:*` label, with type (docs/agents/tasks.md).
 # Usage: scripts/agent/tasks.sh [status...]   e.g. `tasks.sh next in-progress`; no args — all columns.
 # Uses `gh api search/issues` (the only gh call allowed in cloud sessions; GitHub MCP for the rest).
 set -uo pipefail
@@ -12,7 +12,12 @@ json=$(timeout 30 gh api -X GET search/issues --paginate \
     -q '.items[] | {n: .number, t: .title, l: [.labels[].name]}' 2>/dev/null) || {
     echo "(tasks: GitHub search unavailable — use GitHub MCP list_issues)"; exit 0; }
 
-row='"  #\(.n) \(.t[0:70])" + (([.l[] | select(startswith("status:") | not)] | join(",")) as $o | if $o == "" then "" else "  [\($o)]" end)'
+# Row: type tag (Б баг · Ф фича · И история · ? вопрос · В владельцу), 📣 — отзыв из приложения, other labels.
+row='(.l as $l | [["type:bug","Б"],["type:feature","Ф"],["type:story","И"],["question","?"],["owner","В"]]
+  | map(select(.[0] as $k | $l | index($k))) | (.[0][1] // "·")) as $t
+  | (if (.l | index("source:app")) then " 📣" else "" end) as $a
+  | "  \($t) #\(.n)\($a) \(.t[0:70])" + (([.l[] | select(test("^(status|type):|^(source:app|question|owner)$") | not)]
+  | join(",")) as $o | if $o == "" then "" else "  [\($o)]" end)'
 for s in "${statuses[@]}"; do
     items=$(jq -r --arg s "status:$s" "select(.l | index(\$s)) | $row" <<<"$json")
     [ -n "$items" ] || continue
@@ -21,3 +26,5 @@ for s in "${statuses[@]}"; do
 done
 none=$(jq -r "select([.l[] | startswith(\"status:\")] | any | not) | $row" <<<"$json")
 [ -z "$none" ] || { echo "== без статуса — разметить"; echo "$none"; }
+untyped=$(jq -r "select(.l | (index(\"status:triage\") or any(test(\"^type:|^(question|owner)$\"))) | not) | $row" <<<"$json")
+[ -z "$untyped" ] || { echo "== без типа (type:bug|feature|story) — разметить"; echo "$untyped"; }

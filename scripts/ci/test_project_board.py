@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
-from project_board import DONE, decide  # noqa: E402
+from project_board import DONE, decide, decide_type, type_of  # noqa: E402
 
 
 def issue(*labels, open=True, at="2026-11-10T10:00:00Z"):
@@ -17,10 +17,10 @@ def item(status, at="2026-11-10T09:00:00Z"):
 
 class DecideTest(unittest.TestCase):
     def test_new_issue_goes_to_its_column(self):
-        self.assertEqual(decide(issue("feature", "status:next"), None), ("Очередь", None, False))
+        self.assertEqual(decide(issue("type:feature", "status:next"), None), ("Очередь", None, False))
 
     def test_issue_without_status_goes_to_triage(self):
-        self.assertEqual(decide(issue("feedback"), None), ("Разобрать", None, False))
+        self.assertEqual(decide(issue("source:app"), None), ("Разобрать", None, False))
 
     def test_in_sync_does_nothing(self):
         self.assertEqual(decide(issue("status:next"), item("Очередь")), (None, None, False))
@@ -47,6 +47,28 @@ class DecideTest(unittest.TestCase):
 
     def test_issue_never_labelled_and_card_moved(self):
         self.assertEqual(decide(issue(at=None), item("Бэклог")), (None, "status:backlog", False))
+
+
+class TypeTest(unittest.TestCase):
+    def test_type_label_maps_to_option(self):
+        self.assertEqual(type_of(["status:next", "type:story", "design"]), "История")
+        self.assertEqual(type_of(["type:bug", "source:app"]), "Баг")
+        self.assertEqual(type_of(["question", "status:needs-owner"]), "Вопрос")
+        self.assertEqual(type_of(["owner"]), "Владельцу")
+
+    def test_feedback_without_type_has_none(self):
+        self.assertIsNone(type_of(["source:app", "status:triage"]))
+
+    def test_type_follows_label(self):
+        self.assertEqual(decide_type(issue("type:feature"), None), (True, "Фича"))
+        self.assertEqual(decide_type(issue("type:feature"), "Фича"), (False, "Фича"))
+        self.assertEqual(decide_type(issue("type:bug"), "Фича"), (True, "Баг"))
+
+    def test_type_label_removed_clears_field(self):
+        self.assertEqual(decide_type(issue("status:triage"), "Баг"), (True, None))
+
+    def test_closed_issue_keeps_type(self):
+        self.assertEqual(decide_type(issue(open=False), "Баг"), (False, "Баг"))
 
 
 if __name__ == "__main__":

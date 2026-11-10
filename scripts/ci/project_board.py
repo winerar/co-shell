@@ -5,7 +5,9 @@ Labels are the source of truth the agent reads and writes; the board is the owne
 - every open issue is on the board; its Status column follows its `status:*` label;
 - a closed issue goes to «Готово» (closed = merged into dev: `Fixes #N`, dev is the default branch);
 - the owner moved a card (the item changed after the issue's last label change) → the label
-  follows the board; «Готово» on an open issue closes it.
+  follows the board; «Готово» on an open issue closes it;
+- field «Тип» (story / feature / bug / question / owner check) follows the type label, one way:
+  the owner can group or filter the board by it.
 
 Env: PROJECT_TOKEN (PAT with project access), GITHUB_TOKEN (repo issues), GITHUB_REPOSITORY,
 PROJECT_OWNER, PROJECT_NUMBER. Docs: docs/agents/tasks.md.
@@ -26,6 +28,15 @@ COLUMNS = [
     ("status:next", "Очередь", "GREEN"),
     ("status:in-progress", "В работе", "YELLOW"),
     ("status:needs-owner", "Ждёт владельца", "ORANGE"),
+]
+TYPE_FIELD = "Тип"
+# type label → «Тип» option; the first label found wins (question/owner are not development tasks)
+TYPES = [
+    ("type:story", "История", "PURPLE"),
+    ("type:feature", "Фича", "BLUE"),
+    ("type:bug", "Баг", "RED"),
+    ("question", "Вопрос", "PINK"),
+    ("owner", "Владельцу", "ORANGE"),
 ]
 LABEL_TO_COLUMN = {label: column for label, column, _ in COLUMNS}
 COLUMN_TO_LABEL = {column: label for label, column, _ in COLUMNS}
@@ -54,6 +65,16 @@ def decide(issue, item):
     return want, None, False
 
 
+def type_of(labels):
+    return next((name for label, name, _ in TYPES if label in labels), None)
+
+
+def decide_type(issue, current):
+    """«Тип» to set for an open issue: (change?, option name or None to clear)."""
+    want = type_of(issue["labels"]) if issue["open"] else current
+    return want != current, want
+
+
 def graphql(token, query, **variables):
     body = json.dumps({"query": query, "variables": variables}).encode()
     req = urllib.request.Request(f"{API}/graphql", body, {"Authorization": f"bearer {token}"})
@@ -80,8 +101,10 @@ def drop_status(token, repo, number, labels):
 
 PROJECT_Q = """query($owner:String!,$number:Int!,$after:String){user(login:$owner){projectV2(number:$number){
  id field(name:"Status"){... on ProjectV2SingleSelectField{id options{id name}}}
+ kind:field(name:"Тип"){... on ProjectV2SingleSelectField{id options{id name}}}
  items(first:100,after:$after){pageInfo{hasNextPage endCursor} nodes{id updatedAt
   fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name}}
+  kind:fieldValueByName(name:"Тип"){... on ProjectV2ItemFieldSingleSelectValue{name}}
   content{... on Issue{number repository{nameWithOwner}}}}}}}}"""
 
 ISSUES_Q = """query($owner:String!,$name:String!,$after:String){repository(owner:$owner,name:$name){
@@ -93,6 +116,13 @@ ISSUES_Q = """query($owner:String!,$name:String!,$after:String){repository(owner
 SET_OPTIONS_M = """mutation($field:ID!,$options:[ProjectV2SingleSelectFieldOptionInput!]!){
  updateProjectV2Field(input:{fieldId:$field,singleSelectOptions:$options}){
   projectV2Field{... on ProjectV2SingleSelectField{id options{id name}}}}}"""
+
+CREATE_FIELD_M = """mutation($project:ID!,$name:String!,$options:[ProjectV2SingleSelectFieldOptionInput!]!){
+ createProjectV2Field(input:{projectId:$project,dataType:SINGLE_SELECT,name:$name,singleSelectOptions:$options}){
+  projectV2Field{... on ProjectV2SingleSelectField{id options{id name}}}}}"""
+
+CLEAR_M = """mutation($project:ID!,$item:ID!,$field:ID!){clearProjectV2ItemFieldValue(input:{
+ projectId:$project,itemId:$item,fieldId:$field}){projectV2Item{id}}}"""
 
 ADD_M = """mutation($project:ID!,$content:ID!){addProjectV2ItemById(input:{projectId:$project,contentId:$content}){
  item{id}}}"""
@@ -114,23 +144,34 @@ def paged(token, query, path, **variables):
         after = conn["pageInfo"]["endCursor"]
 
 
+def ensure_options(token, project, field, name, wanted):
+    """Creates the single-select field or resets its options. Returns (field, values were reset?)."""
+    names = [n for n, _ in wanted]
+    if field and [o["name"] for o in field["options"]] == names:
+        return field, False
+    opts = [{"name": n, "color": c, "description": ""} for n, c in wanted]
+    if field:  # recreating options clears values; they are set again below
+        field = graphql(token, SET_OPTIONS_M, field=field["id"], options=opts)["updateProjectV2Field"]["projectV2Field"]
+    else:
+        field = graphql(token, CREATE_FIELD_M, project=project, name=name,
+                        options=opts)["createProjectV2Field"]["projectV2Field"]
+    print(f"{name} options reset:", ", ".join(names))
+    return field, True
+
+
 def main():
     ptoken, rtoken = os.environ["PROJECT_TOKEN"], os.environ["GITHUB_TOKEN"]
     repo = os.environ["GITHUB_REPOSITORY"]
     owner, name = repo.split("/")
     pages = list(paged(ptoken, PROJECT_Q, ["user", "projectV2"],
                        owner=os.environ["PROJECT_OWNER"], number=int(os.environ["PROJECT_NUMBER"])))
-    project, field = pages[0]["id"], pages[0]["field"]
-    wanted = [c for _, c, _ in COLUMNS] + [DONE]
-    if [o["name"] for o in field["options"]] != wanted:  # recreating options clears values; set below
-        colors = [color for _, _, color in COLUMNS] + ["BLUE"]
-        opts = [{"name": n, "color": c, "description": ""} for n, c in zip(wanted, colors)]
-        field = graphql(ptoken, SET_OPTIONS_M, field=field["id"], options=opts)["updateProjectV2Field"]["projectV2Field"]
-        print("Status columns reset:", ", ".join(wanted))
-        reset = True
-    else:
-        reset = False
+    project = pages[0]["id"]
+    field, reset = ensure_options(ptoken, project, pages[0]["field"], FIELD,
+                                  [(c, color) for _, c, color in COLUMNS] + [(DONE, "BLUE")])
+    kind, kind_reset = ensure_options(ptoken, project, pages[0]["kind"], TYPE_FIELD,
+                                      [(n, color) for _, n, color in TYPES])
     option = {o["name"]: o["id"] for o in field["options"]}
+    kind_option = {o["name"]: o["id"] for o in kind["options"]}
 
     items = {}
     for page in pages:
@@ -138,7 +179,8 @@ def main():
             c = n["content"] or {}
             if c.get("repository", {}).get("nameWithOwner") == repo:
                 items[c["number"]] = {"id": n["id"], "updated_at": n["updatedAt"],
-                                      "status": None if reset else (n["fieldValueByName"] or {}).get("name")}
+                                      "status": None if reset else (n["fieldValueByName"] or {}).get("name"),
+                                      "kind": None if kind_reset else (n["kind"] or {}).get("name")}
     issues = {}
     for page in paged(rtoken, ISSUES_Q, ["repository"], owner=owner, name=name):
         for n in page["issues"]["nodes"]:
@@ -156,6 +198,13 @@ def main():
         if column:
             graphql(ptoken, SET_M, project=project, item=item["id"], field=field["id"], option=option[column])
             print(f"#{number} → {column}")
+        change, want = decide_type(issue, item.get("kind") if item else None)
+        if change and item:
+            if want:
+                graphql(ptoken, SET_M, project=project, item=item["id"], field=kind["id"], option=kind_option[want])
+            else:
+                graphql(ptoken, CLEAR_M, project=project, item=item["id"], field=kind["id"])
+            print(f"#{number}: {TYPE_FIELD} → {want or '—'}")
         if label:
             drop_status(rtoken, repo, number, issue["labels"])
             rest(rtoken, "POST", f"/repos/{repo}/issues/{number}/labels", {"labels": [label]})

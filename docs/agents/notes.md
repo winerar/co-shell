@@ -42,7 +42,7 @@
   `sub_issue_write` отвечает ~15 КБ JSON — подзадачу создавать `issue_write` с `parent_issue_number`.
   `issue_write` с `parent_issue_number` не создаёт новые метки (ошибка «label not found»), без него — создаёт серые.
 - (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
-  issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
+  issue появляются через ~20 с; затем `list_issues` с `labels: [source:app]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
 - (11-09, скрипт 11-10) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — `scripts/agent/m2-mirror.sh
   <scratchpad> group:artifact:ver` (curl, зеркало googleapis) → `check.sh --init-script <scratchpad>/m2-init.gradle`.

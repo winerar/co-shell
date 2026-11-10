@@ -30,7 +30,7 @@ fun UndoSnackbarEffect(host: SnackbarHostState, viewModel: UndoViewModel = hiltV
     LaunchedEffect(viewModel, resources) {
         viewModel.center.offers.collectLatest { offer ->
             val result = host.showSnackbar(
-                message = resources.getString(offer.message),
+                message = resources.getString(offer.message, *offer.args.toTypedArray()),
                 actionLabel = resources.getString(R.string.action_undo),
                 duration = SnackbarDuration.Long,
             )

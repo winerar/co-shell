@@ -100,8 +100,8 @@ private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse
     }
 }
 
-private val BarIn = slideInVertically(Motion.Placement) { it } + expandVertically(Motion.Resize, expandFrom = Alignment.Top)
-private val BarOut = slideOutVertically(Motion.Placement) { it } + shrinkVertically(Motion.Resize, shrinkTowards = Alignment.Top)
+internal val BarIn = slideInVertically(Motion.Placement) { it } + expandVertically(Motion.Resize, expandFrom = Alignment.Top)
+internal val BarOut = slideOutVertically(Motion.Placement) { it } + shrinkVertically(Motion.Resize, shrinkTowards = Alignment.Top)
 
 @Composable
 private fun BottomBarContent(

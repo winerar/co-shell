@@ -72,4 +72,28 @@ class TransactionsViewModelTest {
         val all = vm.state.first { it.days.sumOf { d -> d.rows.size } == total }
         assertEquals(false, all.hasMore)
     }
+
+    @Test
+    fun `selection deletes the chosen rows and ends`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        listOf("a", "b", "c").forEach { transactions.saveTransaction(Transaction(it, TransactionType.EXPENSE, "card", Money(100, ars), now)) }
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()),
+        )
+        vm.state.launchIn(backgroundScope)
+        vm.state.first { !it.isLoading }
+
+        vm.onLongPress("a")
+        vm.onToggle("b")
+        assertEquals(setOf("a", "b"), vm.selection.value.ids)
+
+        vm.deleteSelected()
+        assertEquals(false, vm.selection.value.active)
+        val left = vm.state.first { it.days.sumOf { d -> d.rows.size } == 1 }
+        assertEquals(listOf("c"), left.days.single().rows.map { it.id })
+    }
 }

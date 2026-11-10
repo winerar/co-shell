@@ -6,8 +6,8 @@
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
   после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
-  `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `enabled = false` → 38 %); прозрачная,
-  `containerColor` — чтобы закрыть полосу свайпа. `CoShellSwitchRow` — вся строка переключает.
+  `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
+  → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.
 - **Диалоги** — `CoShellAlertDialog` (вопрос: текст и 1–2 кнопки, `destructive` — красная «Удалить»),
   `CoShellDialog` (маленькая форма, содержимое прокручивается). Редакторы — не диалоги, а шторки.
 - **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`
@@ -37,4 +37,6 @@
   Цвет бренда хранится как есть и не перекрашивается темой; не должен совпадать со swatch палитры (тест).
   Оттенки примерные; Ameria — зелёный, сверить с сайтом (из песочницы сайт недоступен).
 - **Прогресс** — `CoShellLinearProgress()` (бесконечная) и `CoShellLinearProgress(progress)` (заполнение плывёт пружиной).
-
+- **Панель действий** — `CoShellActionBar` (`components/ActionBar.kt`): та же капсула и пружина, что у нижней
+  панели, но с кнопками (режим выбора 19В). Экран ставит её вместо вкладок через `ui/bar/ReplaceBottomBar`;
+  шапка режима — `ui/top/SelectionTopBar` («✕ Выбрано N»).

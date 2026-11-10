@@ -226,6 +226,11 @@
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
     <string name="shake_to_add_hint">Встряхните телефон, пока открыто приложение</string>
     <string name="transaction_deleted">Операция удалена</string>
+    <string name="transactions_deleted_many">Удалено операций: %d</string>
+    <string name="transactions_selected">Выбрано %d</string>
+    <string name="transactions_selection_clear">Отменить выбор</string>
+    <string name="transactions_delete_selected">Удалить · %d</string>
+    <string name="transaction_copy_today">Копия · сегодня</string>
     <string name="action_undo">Отменить</string>
     <string name="settings_title">Настройки</string>
     <string name="settings_menu_hint">Тема, валюты отчётов, встряхивание, обновление</string>

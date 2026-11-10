@@ -13,7 +13,15 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +35,8 @@ import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
+import app.coshell.transactions.list.Selection
+import app.coshell.transactions.list.TransactionsActions
 import app.coshell.transactions.list.TransactionsScreen
 import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.TransactionsUiState.Day
@@ -74,7 +84,18 @@ class MainShellSmokeTest {
                     },
                 ) {
                     composable<HomeDestination> { HomeScreen(HOME) }
-                    composable<TransactionsDestination> { TransactionsScreen(TRANSACTIONS) }
+                    composable<TransactionsDestination> {
+                        var selection by remember { mutableStateOf(Selection()) }
+                        TransactionsScreen(
+                            TRANSACTIONS,
+                            selection,
+                            TransactionsActions(
+                                onLongPress = { selection = selection.longPress(it) },
+                                onToggle = { selection = selection.toggle(it) },
+                                onClearSelection = { selection = Selection() },
+                            ),
+                        )
+                    }
                     composable<AccountsDestination> { AccountsScreen(ACCOUNTS, AccountsActions()) }
                     composable<MoreDestination> {
                         MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
@@ -141,6 +162,31 @@ class MainShellSmokeTest {
         compose.onNodeWithText(string(R.string.settings_title)).performClick()
         compose.waitForIdle()
         compose.onNodeWithText(pill).assertDoesNotExist()
+    }
+
+    @Test
+    fun `long press on a row swaps the tabs for the selection bar`() {
+        tab(R.string.nav_transactions)
+        compose.onNodeWithText(TRANSACTION_CATEGORY).performTouchInput { longClick() }
+        compose.waitForIdle()
+        compose.onNodeWithText(string(R.string.transactions_selected).replace("%d", "1")).assertIsDisplayed()
+        compose.onNodeWithText(string(R.string.transactions_delete_selected).replace("%d", "1")).assertIsDisplayed()
+        compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertDoesNotExist()
+        // «Назад» leaves the mode (in this test the update pill covers «✕» at the top left).
+        compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        compose.waitForIdle()
+        compose.onNodeWithText(string(R.string.nav_transactions)).assertIsDisplayed()
+        compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertIsDisplayed()
+    }
+
+    @Test
+    fun `swipe flips tabs`() {
+        compose.onRoot().performTouchInput { swipeLeft() }
+        compose.waitForIdle()
+        compose.onNodeWithText(TRANSACTION_CATEGORY).assertIsDisplayed()
+        compose.onRoot().performTouchInput { swipeRight() }
+        compose.waitForIdle()
+        compose.onNodeWithText(HOME_ACCOUNT).assertIsDisplayed()
     }
 
     private fun tab(@StringRes label: Int) {

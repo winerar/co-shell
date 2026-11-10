@@ -20,6 +20,7 @@ import kotlinx.datetime.LocalDate
 fun TransactionEditRoute(
     onDone: () -> Unit,
     onAddAccount: () -> Unit,
+    onDuplicate: (String) -> Unit = {},
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -57,6 +58,7 @@ fun TransactionEditRoute(
                 viewModel.save()
             },
             onDelete = viewModel::delete,
+            onDuplicate = { viewModel.transactionId?.let(onDuplicate) },
             onStepChange = viewModel::onStepChange,
             onKeypadTarget = viewModel::onKeypadTarget,
             onKey = { key ->
@@ -84,6 +86,7 @@ data class TransactionEditActions(
     val onReceiptAmountChange: (String) -> Unit = {},
     val onSave: () -> Unit = {},
     val onDelete: () -> Unit = {},
+    val onDuplicate: () -> Unit = {},
     val onStepChange: (TransactionEditUiState.EntryStep) -> Unit = {},
     val onKeypadTarget: (TransactionEditUiState.KeypadTarget) -> Unit = {},
     val onKey: (KeypadKey) -> Unit = {},

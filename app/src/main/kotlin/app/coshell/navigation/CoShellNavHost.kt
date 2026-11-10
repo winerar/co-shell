@@ -115,6 +115,12 @@ fun CoShellNavHost(
                 TransactionEditRoute(
                     onDone = close,
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    // The copy replaces the open sheet: back from it returns to the list.
+                    onDuplicate = { id ->
+                        navController.navigate(TransactionEditDestination(copyFrom = id)) {
+                            popUpTo<TransactionEditDestination> { inclusive = true }
+                        }
+                    },
                 )
             }
         }

@@ -14,6 +14,7 @@
 | `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
 | `sync-dev.sh` | влить `origin/dev` в ветку: «OK» или конфликтующие файлы с подсказками (STATUS, схемы Room) |
 | `build-summary.sh [--ci] <лог>` | краткий отчёт сборки: ошибки, `Tests: N`, упавшие тесты с причиной, lint; его зовут `check.sh` и CI |
+| `gen-flows-board.py [файл]` | перерисовать доску «Воркфлоу» из таблицы потоков в скрипте; потом `h` в `canvas.json` и публикация на холст |
 | `profile-build.sh [задачи]` | где тратится время сборки: самые долгие задачи, итог lint/тестов (~3–5 мин) |
 
 Скрипты CI и для владельца остаются в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
@@ -53,6 +54,7 @@
   скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
 - (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
   читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
+  `root` — папка, где файлы лежат как `project/<имя>` (скопировать в scratchpad); перед первой публикацией в сессии — `read` без `paths`.
 - (11-10) Варианты на холсте для выбора владельцем: одна доска на вариант (сравнивать рядом), тема — tweak
   `"dark":{"editor":"boolean"}`, альтернативы внутри доски — `"editor":"enum"` (доски `SyncA–C`, `Wipe`).
 - (11-10) Конструктор с хвостовой лямбдой (`WalletImportUseCase(...) { "id" }`): новый параметр с дефолтом

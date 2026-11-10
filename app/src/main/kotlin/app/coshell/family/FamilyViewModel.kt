@@ -9,7 +9,7 @@ import app.coshell.core.data.sync.SyncEngine
 import app.coshell.core.domain.family.isPlausibleEmail
 import app.coshell.core.domain.family.normalizeEmail
 import app.coshell.family.data.GoogleSignInResult
-import app.coshell.ui.format.formatDayMonth
+import app.coshell.ui.format.formatDayTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 /** Sign-in, family creation and invitations, sync status (docs/ARCHITECTURE.md §10). */
 @HiltViewModel
@@ -118,10 +117,5 @@ class FamilyViewModel @Inject constructor(
         }
     }
 
-    private fun formatTime(epochMs: Long): String {
-        val time = Instant.fromEpochMilliseconds(epochMs).toLocalDateTime(timeZone)
-        val today = clock.now().toLocalDateTime(timeZone).date
-        val hm = "%d:%02d".format(time.hour, time.minute)
-        return if (time.date == today) hm else "${formatDayMonth(time.date)} $hm"
-    }
+    private fun formatTime(epochMs: Long): String = formatDayTime(Instant.fromEpochMilliseconds(epochMs), clock.now(), timeZone)
 }

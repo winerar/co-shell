@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import app.coshell.core.designsystem.components.CoShellSheet
 import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
 import app.coshell.core.designsystem.tokens.Spacing
@@ -32,6 +33,7 @@ import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.rates.list.RatesRoute
 import app.coshell.settings.SettingsRoute
+import app.coshell.wipe.WipeDataRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -96,6 +98,8 @@ fun CoShellNavHost(
                     },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
+                    onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
                 ),
             )
         }
@@ -131,7 +135,7 @@ fun CoShellNavHost(
                     onFamily = { navController.navigate(FamilyDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
                     onImport = { navController.navigate(WalletImportDestination) },
-                    onFeedback = { navController.navigate(FeedbackDestination) },
+                    onFeedback = { navController.navigate(FeedbackDestination()) },
                     onSettings = { navController.navigate(SettingsDestination) },
                 ),
                 availableUpdate = updateAvailable?.versionCode,
@@ -142,14 +146,23 @@ fun CoShellNavHost(
                 onBack = { navController.popBackStack() },
                 onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onUpdate = { navController.navigate(UpdateDestination) },
+                onWipeData = { navController.navigate(WipeDataDestination) },
                 availableUpdate = updateAvailable?.versionCode,
+            )
+        }
+        composable<WipeDataDestination> {
+            WipeDataRoute(
+                onBack = { navController.popBackStack() },
+                onImport = {
+                    navController.navigate(WalletImportDestination) { popUpTo<WipeDataDestination> { inclusive = true } }
+                },
             )
         }
         composable<UpdateDestination> {
             UpdateRoute(onBack = { navController.popBackStack() })
         }
-        composable<FeedbackDestination> {
-            FeedbackRoute(onBack = { navController.popBackStack() })
+        composable<FeedbackDestination> { entry ->
+            FeedbackRoute(onBack = { navController.popBackStack() }, prefill = entry.toRoute<FeedbackDestination>().prefill)
         }
         composable<RatesDestination> {
             RatesRoute(onBack = { navController.popBackStack() })

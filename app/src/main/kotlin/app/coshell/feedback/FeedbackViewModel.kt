@@ -33,6 +33,9 @@ class FeedbackViewModel @Inject constructor(
 
     fun onTextChange(text: String) = _state.update { it.copy(text = text, result = null) }
 
+    /** Starts the field with [text] (an error code from the sync banner) unless something is typed already. */
+    fun prefill(text: String) = _state.update { if (it.text.isBlank()) it.copy(text = text) else it }
+
     fun onKind(kind: FeedbackKind) = _state.update { it.copy(kind = kind) }
 
     /** «Написать ещё» after a successful send. */

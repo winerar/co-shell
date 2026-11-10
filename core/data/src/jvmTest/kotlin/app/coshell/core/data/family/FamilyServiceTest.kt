@@ -4,6 +4,7 @@ import app.coshell.core.data.backup.JsonBackupRepository
 import app.coshell.core.data.db.createInMemoryCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.WriteStamper
+import app.coshell.core.data.sync.ChangeBell
 import app.coshell.core.data.sync.FakeRemoteStore
 import app.coshell.core.data.sync.SyncEngine
 import app.coshell.core.model.Account
@@ -34,9 +35,12 @@ class FamilyServiceTest {
         val backups = mutableListOf<String>()
         var now = Instant.fromEpochMilliseconds(1_700_000_000_000)
         private val clock = object : Clock { override fun now() = this@TestPhone.now }
+        var rings = 0
+        var bellDown = false
+        private val bell = ChangeBell { if (bellDown) error("RTDB down") else rings++ }
         fun service(configured: Boolean = true) = FamilyService(
             configured, auth, FakeFamilyRemote(familyServer, auth), db.syncDao(),
-            SyncEngine(db.syncDao(), records), JsonBackupRepository(db, stamper), clock,
+            SyncEngine(db.syncDao(), records), JsonBackupRepository(db, stamper), clock, bell,
         ) { backups += it }
         val family = service(configured)
         init { phones += this }
@@ -163,5 +167,23 @@ class FamilyServiceTest {
         val reads = familyServer.familyReads
         repeat(3) { owner.family.sync() }
         assertEquals(reads, familyServer.familyReads) // two members: no more member checks
+    }
+
+    @Test
+    fun `rings the bell only after sending edits, and a dead bell does not break sync`() = runTest {
+        val owner = TestPhone()
+        owner.family.signIn("owner"); owner.family.createFamily()
+        owner.family.sync()
+        assertEquals(0, owner.rings) // nothing to send yet
+
+        owner.accounts.saveAccount(Account("cash", "Наличные", usd))
+        owner.family.sync()
+        assertEquals(1, owner.rings)
+        owner.family.sync()
+        assertEquals(1, owner.rings) // an idle poll does not ring
+
+        owner.bellDown = true
+        owner.accounts.saveAccount(Account("card", "Карта", usd))
+        assertEquals(1, owner.family.sync()!!.pushed)
     }
 }

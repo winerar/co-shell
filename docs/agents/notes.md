@@ -99,3 +99,8 @@
 - (11-10) Release падал «Top section of docs/whats-new.md is already released»: три PR (#90, #91, #94) влили
   заметные изменения без нового раздела. Теперь `session-end.sh` предупреждает, если верхний раздел совпадает
   с `main`, а ветка меняет `app/`/`core/`.
+- (11-10) RTDB REST/SSE проверены в эмуляторе (`database`, порт 9000, `?ns=demo-coshell-default-rtdb`): поток шлёт
+  `event: put` / `data: {"path":"/","data":…}` + пустая строка, первым — текущее значение узла (`null`, если пусто).
+  Токен эмулятора Auth годится для `?auth=`; `Authorization: Bearer owner` — админ (засеять данные).
+- (11-10) `m2-mirror.sh` с `M2_REPO` раньше перезаписывал `m2-init.gradle` путём к `~/.m2` → Gradle снова шёл в
+  Maven Central и ловил 429. Теперь с `M2_REPO` init-скрипт не пишется.

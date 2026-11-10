@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * When [SyncWorker] runs: every hour with network (other phone's changes arrive even if the app
- * is closed) and a few seconds after local edits. While the app is open, [ForegroundSync] pulls
+ * is closed) and a second after local edits. While the app is open, [ForegroundSync] pulls
  * directly (every 10–60 seconds).
  */
 object SyncScheduler {
@@ -36,7 +36,7 @@ object SyncScheduler {
     fun syncSoon(context: Context) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(network)
-            .setInitialDelay(3, TimeUnit.SECONDS)
+            .setInitialDelay(1, TimeUnit.SECONDS)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork(SOON, ExistingWorkPolicy.APPEND_OR_REPLACE, request)

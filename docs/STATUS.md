@@ -236,8 +236,6 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-10, ветка `ccr-5fe4398f-5rcxgj`: автоматизация PR и релиза — draft PR на первый push (`auto-pr.yml`),
-автомерж в `dev` после зелёного CI (`automerge.yml`, метка `hold`), кнопка Release (`release.yml`), сводка ошибок CI
-комментарием в PR, `sync-dev.sh`, `merge=union` для `notes.md`/`whats-new.md`. **Владельцу:** шаги из
-`docs/setup/release.md` (разрешить Actions создавать PR, метка `hold`, один релиз по-старому — workflow
-заработают только из `main`).
+2026-11-10, ветка `ccr-ffd72bb3-l6lzfj`: починка кнопки Release — она останавливалась, потому что в `dev` не было
+нового раздела `docs/whats-new.md` (#90, #91, #94 влиты без него). Добавлен раздел «импорт из Wallet, новая нижняя
+панель»; `session-end.sh` теперь напоминает о разделе. **Владельцу:** после влития PR в `dev` снова нажать Release.

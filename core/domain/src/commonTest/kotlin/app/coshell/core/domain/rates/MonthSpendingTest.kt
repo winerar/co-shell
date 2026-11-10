@@ -5,6 +5,7 @@ import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.core.model.SystemCategories
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import kotlin.test.Test
@@ -127,5 +128,18 @@ class MonthSpendingTest {
     @Test
     fun `daily expenses of february in a leap year have 29 days`() {
         assertEquals(29, book.dailyExpenses(emptyList(), usd, LocalDate(2028, 2, 10), tz).size)
+    }
+
+    @Test
+    fun `balance adjustments are neither spending nor income`() {
+        val items = listOf(
+            expense("1", money(5, usd), 2),
+            expense("2", money(7, usd), 2).copy(categoryId = SystemCategories.ADJUSTMENT_EXPENSE_ID),
+            Transaction("3", TransactionType.INCOME, "acc", money(9, usd), at(3), categoryId = SystemCategories.ADJUSTMENT_INCOME_ID),
+        )
+
+        assertEquals(money(5, usd), book.expenseTotals(items, listOf(usd), tz).single().sum)
+        assertEquals(money(0, usd), book.incomeTotals(items, listOf(usd), tz).single().sum)
+        assertEquals(money(5, usd), book.dailyExpenses(items, usd, day(9), tz)[1])
     }
 }

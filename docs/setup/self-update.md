@@ -32,7 +32,7 @@ Android. В этом репозитории только APK и `version.json` �
    Name `RELEASES_TOKEN`, Secret — скопированный токен.
 
 ## 4. Проверка
-1. `co-shell` → Actions → **CI** → **Run workflow** → `main` → Run workflow. Через 5 минут должны
+1. `co-shell` → Actions → **«Сборка и тесты (CI)»** → **Run workflow** → `main` → Run workflow. Через 5 минут должны
    пройти шаги «Build signed release APK» и «Publish update».
 2. В `co-shell-releases` → **Releases** появится «Сборка N» с файлами `co-shell-N.apk` и `version.json`.
 3. На телефоне открыть

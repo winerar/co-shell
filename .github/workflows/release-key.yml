@@ -1,6 +1,6 @@
-name: Create release key
+name: "Ключ подписи релизов (один раз)"
 
-# Run once by hand (Actions → Create release key → Run workflow). Produces a short-lived artifact
+# Run once by hand (Actions → «Ключ подписи релизов (один раз)» → Run workflow). Produces a short-lived artifact
 # with the release keystore and the values for the four GitHub Secrets; see docs/setup/self-update.md.
 on:
   workflow_dispatch:

@@ -31,6 +31,8 @@ class PackageInstallerApkInstaller @Inject constructor(
 
     override suspend fun install(file: File) = withContext(Dispatchers.IO) {
         val installer = context.packageManager.packageInstaller
+        // A session left by an earlier attempt (dialog never shown, app killed) would hold the APK copy.
+        installer.mySessions.forEach { runCatching { installer.abandonSession(it.sessionId) } }
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
             setAppPackageName(context.packageName)
             setSize(file.length())

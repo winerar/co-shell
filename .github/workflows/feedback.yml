@@ -1,11 +1,11 @@
-name: Feedback to issues
+name: "Отзывы из приложения → задачи"
 
 # Messages from "More → Feedback" land in Firestore `feedback`; this turns new ones into issues
 # labelled `feedback` (docs/setup/feedback.md). Scheduled workflows run from the default branch.
 on:
   schedule:
     - cron: "17 */6 * * *" # every 6 hours (keeps Actions minutes of the private repo low)
-  workflow_dispatch: # Actions → Feedback to issues → Run workflow
+  workflow_dispatch: # Actions → «Отзывы из приложения → задачи» → Run workflow
 
 concurrency:
   group: feedback

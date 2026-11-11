@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Pre-commit check with short output (saves AI-agent tokens): runs `./gradlew check assembleDebug`
-# quietly and prints only errors, failed tests and a one-line summary. Extra args go to Gradle.
+# Pre-commit check with short output (saves AI-agent tokens): runs `check assembleDebug` through gradle.sh
+# (Maven mirror + retry on 429, #156) quietly; prints only errors, failed tests and a summary. Extra args go to Gradle.
 # `scripts/agent/check.sh --quick` — unit tests only (no lint, no APK): for iterations; full run before commit.
 set -uo pipefail
 cd "$(dirname "$0")/../.."
@@ -12,7 +12,7 @@ if [ "${1:-}" = "--quick" ]; then
 fi
 
 log=$(mktemp)
-./gradlew "${tasks[@]}" -q --console=plain "$@" >"$log" 2>&1
+scripts/agent/gradle.sh "${tasks[@]}" -q --console=plain "$@" >"$log" 2>&1
 status=$?
 scripts/agent/build-summary.sh "$log"
 rm -f "$log"

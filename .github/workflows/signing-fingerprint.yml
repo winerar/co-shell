@@ -1,4 +1,4 @@
-name: Signing fingerprints
+name: "Отпечатки ключей подписи"
 
 # Manual run: prints SHA-1/SHA-256 of the release and debug signing certificates.
 # Needed once for Google sign-in (Firebase → Project settings → Android app → SHA certificate

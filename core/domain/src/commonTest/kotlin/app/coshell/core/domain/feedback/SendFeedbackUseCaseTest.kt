@@ -15,7 +15,7 @@ class SendFeedbackUseCaseTest {
 
     @Test
     fun `sends trimmed text with device info and time`() = runTest {
-        assertEquals(FeedbackResult.Sent, send("  Не сохраняется заметка \n"))
+        assertEquals(FeedbackResult.Sent("doc-1"), send("  Не сохраняется заметка \n"))
         assertEquals(listOf(FeedbackReport("Не сохраняется заметка", now, device)), sender.sent)
     }
 
@@ -29,7 +29,7 @@ class SendFeedbackUseCaseTest {
     fun `refuses text over the limit`() = runTest {
         val max = SendFeedbackUseCase.MAX_LENGTH
         assertEquals(FeedbackResult.TooLong(max), send("a".repeat(max + 1)))
-        assertEquals(FeedbackResult.Sent, send("a".repeat(max)))
+        assertEquals(FeedbackResult.Sent("doc-1"), send("a".repeat(max)))
     }
 
     @Test
@@ -51,9 +51,10 @@ private class FakeFeedbackSender : FeedbackSender {
     var error: Exception? = null
     val sent = mutableListOf<FeedbackReport>()
 
-    override suspend fun send(report: FeedbackReport) {
+    override suspend fun send(report: FeedbackReport): String {
         error?.let { throw it }
         sent += report
+        return "doc-1"
     }
 }
 

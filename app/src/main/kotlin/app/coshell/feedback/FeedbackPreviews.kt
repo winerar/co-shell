@@ -14,7 +14,7 @@ private fun FeedbackEmptyPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun FeedbackSentPreview() {
-    CoShellTheme { FeedbackScreen(FeedbackUiState(result = FeedbackResult.Sent), FeedbackActions()) }
+    CoShellTheme { FeedbackScreen(FeedbackUiState(result = FeedbackResult.Sent()), FeedbackActions()) }
 }
 
 @Preview(showBackground = true)

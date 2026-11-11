@@ -68,7 +68,7 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
                 ) { sent ->
                     if (sent) Sent(actions.onWriteMore) else Form(state, actions)
                 }
-                SentList(state.history)
+                SentList(state.history, onOpen = actions.onOpen, onRemove = actions.onRemove)
             }
             if (!state.justSent) {
                 Column(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {

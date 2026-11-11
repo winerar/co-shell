@@ -50,4 +50,8 @@ object Sizes {
     val buttonIcon = 20.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
     val tabSwipe = 80.dp
+    /** Small status pill in a list row («В работе», «Сделано · 248»; #157). */
+    val statusChipHeight = 24.dp
+    /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
+    val timelineDot = 12.dp
 }

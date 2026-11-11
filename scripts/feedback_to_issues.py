@@ -4,19 +4,23 @@
 Reads documents of the `feedback` collection with `processed == false` (written by the app's
 feedback form), creates an issue labelled `source:app` + `status:triage` for each, then marks the document
 `processed = true` with the issue number. An issue is created before marking, so a failure in
-between can at worst produce a duplicate issue, never lose a message.
+between can at worst produce a duplicate issue, never lose a message. Then writes each issue's status
+back into its document for the app (feedback_status.py, #157).
 
 Environment:
   FIREBASE_SERVICE_ACCOUNT  service account key JSON (needs role "Cloud Datastore User")
   FIREBASE_PROJECT_ID       optional, defaults to the key's project_id
   GITHUB_TOKEN, GITHUB_REPOSITORY  set by GitHub Actions (issues: write)
 """
+import datetime
 import json
 import os
 import sys
 import urllib.parse
 import urllib.error
 import urllib.request
+
+import feedback_status
 
 FIRESTORE = "https://firestore.googleapis.com/v1"
 BATCH = 20
@@ -139,18 +143,21 @@ def main():
     token = google_token(account)
     try:
         feedback_list = unprocessed_feedback(project, token)
+        print(f"New feedback: {len(feedback_list)}")
+        for feedback in feedback_list:
+            number = create_issue(repo, github_token, feedback)
+            mark_processed(feedback["_name"], token, number)
+            print(f"feedback/{feedback['_id']} → issue #{number}")
+        now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        updated = feedback_status.sync_statuses(request, project, token, repo, github_token, decode_document, now)
+        print(f"Statuses updated: {updated}")
     except urllib.error.HTTPError as e:
         if e.code != 429:
             raise
         # Daily free quota of Firestore reads is spent; it resets at midnight Pacific time and
         # the next scheduled run picks the feedback up. Not a failure of this workflow.
         print("::warning::Firestore quota exhausted (HTTP 429) — feedback will be fetched on the next run")
-        return 0
-    print(f"New feedback: {len(feedback_list)}")
-    for feedback in feedback_list:
-        number = create_issue(repo, github_token, feedback)
-        mark_processed(feedback["_name"], token, number)
-        print(f"feedback/{feedback['_id']} → issue #{number}")
+    return 0
 
 
 if __name__ == "__main__":

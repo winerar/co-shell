@@ -62,6 +62,8 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
 `settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
+Бюджеты (#167): модель `core:model/Budget.kt`, логика — `core:domain/budgets/` (`BudgetPlan` — лимит месяца,
+`SaveBudgetUseCase`, `RemoveBudgetUseCase`); Room — `BudgetDao`, `RoomBudgetRepository`. Расчёт — #182, экраны — #103.
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),

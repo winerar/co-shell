@@ -99,8 +99,8 @@ interface TransactionDao {
 
 @Dao
 interface BudgetDao {
-    @Query("SELECT * FROM budgets WHERE deleted = 0 AND month = :month")
-    fun observe(month: String): Flow<List<BudgetEntity>>
+    @Query("SELECT * FROM budgets WHERE deleted = 0")
+    fun observeAll(): Flow<List<BudgetEntity>>
 
     @Query("SELECT * FROM budgets WHERE deleted = 0")
     suspend fun getAll(): List<BudgetEntity>
@@ -108,8 +108,15 @@ interface BudgetDao {
     @Upsert
     suspend fun upsert(entities: List<BudgetEntity>)
 
-    @Query("UPDATE budgets SET deleted = 1, pending_sync = 1, updated_at = :now, updated_by = :by WHERE id = :id")
-    suspend fun markDeleted(id: String, now: Long, by: String?)
+    @Query("UPDATE budgets SET deleted = 1, pending_sync = 1, updated_at = :now, updated_by = :by WHERE id IN (:ids)")
+    suspend fun markDeleted(ids: List<String>, now: Long, by: String?)
+
+    /** Deletes first: a saved row may reuse the id of a deleted one. */
+    @Transaction
+    suspend fun apply(save: List<BudgetEntity>, deleteIds: List<String>, now: Long, by: String?) {
+        if (deleteIds.isNotEmpty()) markDeleted(deleteIds, now, by)
+        if (save.isNotEmpty()) upsert(save)
+    }
 }
 
 /** Multi-table writes that must be atomic. */

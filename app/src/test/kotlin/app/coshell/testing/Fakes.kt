@@ -4,11 +4,18 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.templates.SaveAsTemplateUseCase
+import app.coshell.core.domain.templates.SaveTemplateUseCase
+import app.coshell.core.domain.templates.TemplateRepository
+import app.coshell.core.domain.templates.TemplateUsage
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
+import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
+import app.coshell.transactions.edit.EntryTemplates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -64,3 +71,31 @@ class FakeTransactionRepository : TransactionRepository {
     override suspend fun countForCategory(categoryId: String) =
         items.value.values.count { it.categoryId == categoryId }
 }
+
+class FakeTemplateRepository : TemplateRepository {
+    val items = MutableStateFlow<Map<String, TransactionTemplate>>(emptyMap())
+    override fun observeTemplates(): Flow<List<TransactionTemplate>> =
+        items.map { all -> all.values.sortedWith(compareBy({ it.sortOrder }, { it.name })) }
+    override suspend fun getTemplate(id: String) = items.value[id]
+    override suspend fun saveTemplate(template: TransactionTemplate) { items.value += template.id to template }
+    override suspend fun deleteTemplate(id: String) { items.value -= id }
+    override suspend fun maxSortOrder() = items.value.values.maxOfOrNull { it.sortOrder }
+}
+
+class FakeTemplateUsage(initial: Map<String, Int> = emptyMap()) : TemplateUsage {
+    val state = MutableStateFlow(initial)
+    override val counts: Flow<Map<String, Int>> = state
+    override suspend fun record(templateId: String) { state.value += templateId to (state.value[templateId] ?: 0) + 1 }
+}
+
+/** [EntryTemplates] on fakes; a template saved through it gets the id `tpl-new`. */
+fun fakeEntryTemplates(
+    accounts: AccountRepository,
+    categories: CategoryRepository,
+    templates: TemplateRepository = FakeTemplateRepository(),
+    usage: TemplateUsage = FakeTemplateUsage(),
+) = EntryTemplates(
+    templates,
+    usage,
+    SaveAsTemplateUseCase(templates, SaveTemplateUseCase(accounts, categories, templates), IdGenerator { "tpl-new" }),
+)

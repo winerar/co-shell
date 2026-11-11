@@ -26,7 +26,7 @@
 | Курсы и валюты | `Rates`, `RatesRefreshing`, `RatesFailed`, `RatesEmpty`, `RatesManual`, `ReportCurrencies`, `CurrencyAdd` | `rates/list/`, `currencies/` |
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
-| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | — (#169, #104); доски — `mockup_screens_{templates,budgets,reports}.py` |
+| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports}.py` |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | — (#167, #103) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | — (#168, #140) |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |

@@ -62,9 +62,11 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
 `settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
-Шаблоны операций (#169, экранов пока нет — #104): модель `core:model/TransactionTemplate.kt`, логика —
-`core:domain/templates/` (`SaveTemplateUseCase`, `SaveAsTemplateUseCase` — «Сохранить как шаблон», `ApplyTemplateUseCase` →
-`TransactionDraft` с `gaps`), Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`.
+Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
+(`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
+Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
+`components/` (чип, полоса), `strip/` (полоса в шторке «+»), `list/` («Все шаблоны»), `edit/` (редактор), `data/PrefsTemplateUsage`;
+в шторке операции — `transactions/edit/EntryTemplates.kt` и `components/TemplateBits.kt` (пилюля, «Сохранить как шаблон»).
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);
@@ -105,7 +107,7 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 (закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, внутреннего экрана — `ui/top/ScreenTopBar`, «Отменить» — `undo/UndoCenter`.
 Базовые блоки — в `core:designsystem` `components/` (поля, строки, диалоги, разделы форм, сообщения —
 `design-system.md` §«Компоненты»). Обёртки со строками приложения — `ui/form/`: `EditFooter` (Архив/Удалить),
-`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строка меню — `ui/list/ActionRow`.
+`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `ChoiceDialog` (выбор из списка); строка меню — `ui/list/ActionRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

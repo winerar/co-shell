@@ -36,6 +36,8 @@ import app.coshell.rates.list.RatesRoute
 import app.coshell.settings.SettingsRoute
 import app.coshell.wipe.WipeDataRoute
 import app.coshell.shake.ShakeEffect
+import app.coshell.templates.edit.TemplateEditRoute
+import app.coshell.templates.list.TemplatesRoute
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.PRESET_UNCATEGORIZED
@@ -122,8 +124,22 @@ fun CoShellNavHost(
                             popUpTo<TransactionEditDestination> { inclusive = true }
                         }
                     },
+                    // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
+                    onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
+                    onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
                 )
             }
+        }
+        composable<TemplatesDestination> {
+            TemplatesRoute(
+                onBack = { navController.popBackStack() },
+                onUse = { navController.navigate(TransactionEditDestination(templateId = it)) { launchSingleTop = true } },
+                onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
+                onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+            )
+        }
+        composable<TemplateEditDestination> {
+            TemplateEditRoute(onDone = { navController.popBackStack() })
         }
         composable<AccountsDestination> {
             AccountsRoute(

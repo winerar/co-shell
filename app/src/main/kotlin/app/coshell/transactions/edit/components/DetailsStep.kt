@@ -50,6 +50,7 @@ import app.coshell.ui.format.formatDayMonth
 @Composable
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     var noteOpen by rememberSaveable { mutableStateOf(false) }
+    var saveAsOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         Header(state, actions)
         Column(
@@ -66,7 +67,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
                 big = true,
                 hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
                     stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
-                },
+                } ?: templateHint(state),
                 color = amountColor(state.type),
             )
             CoShellExpandable(state.needsToAmount) {
@@ -120,6 +121,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
                     label = { Text(stringResource(R.string.transaction_receipt_chip)) },
                 )
             }
+            if (!state.isNew && state.savedTemplateName == null) SaveAsTemplateChip(onClick = { saveAsOpen = true })
         }
         CoShellKeypad(
             onKey = actions.onKey,
@@ -129,6 +131,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             modifier = Modifier.padding(horizontal = Spacing.m).padding(bottom = Spacing.m),
         )
     }
+    if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 
 /**
@@ -161,6 +164,8 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
             }
         }
         if (state.isCopy) CopyLabel()
+        state.templateName?.let { TemplatePill(it, onClear = actions.onTemplateClear) }
+        state.savedTemplateName?.let { TemplatePill(it, onClear = null) }
     }
 }
 

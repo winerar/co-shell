@@ -1,4 +1,4 @@
-package app.coshell.importer.wallet.components
+package app.coshell.ui.form
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

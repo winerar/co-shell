@@ -111,4 +111,5 @@
   для NOT NULL → автомиграция; `SyncCodec` игнорирует незнакомые поля, правила Firestore не трогаем. Тест старого JSON — `BudgetDataTest`.
 - (11-11) Число тестов для STATUS — из `agent.sh check` (666), а не `quick` (564: без release-вариантов); `session-end.sh` сверяет с последним прогоном.
 - (11-11) Возврат = доход в категории расходов: `BudgetLedger` его вычитает, но ввести такой в приложении пока нельзя
-  (`SaveTransactionUseCase` → `CATEGORY_TYPE_MISMATCH`), он бывает только в импортированных данных.
+  (`SaveTransactionUseCase` → `CATEGORY_TYPE_MISMATCH`), а импорт Wallet заводит для дохода отдельную категорию доходов —
+  правило пока спит, вопрос о вводе возвратов — #207.

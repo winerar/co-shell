@@ -11,6 +11,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
@@ -32,6 +33,8 @@ internal data class BackupFile(
     val budgets: List<BudgetDto> = emptyList(),
     /** Since schema v2; downloaded rates are not backed up (they can be downloaded again). */
     val manualRates: List<ManualRateDto> = emptyList(),
+    /** Since schema v7. */
+    val templates: List<TemplateDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -146,3 +149,27 @@ internal data class ManualRateDto(val date: String, val from: String, val to: St
 }
 
 internal fun ExchangeRate.toManualDto() = ManualRateDto(date.toString(), from.value, to.value, rate.toPlainString())
+
+/** [amountMinor] is in [currency] (the account's); `null` — the amount is asked every time. */
+@Serializable
+internal data class TemplateDto(
+    val id: String,
+    val name: String,
+    val type: String,
+    val accountId: String,
+    val currency: String,
+    val amountMinor: Long? = null,
+    val categoryId: String? = null,
+    val toAccountId: String? = null,
+    val note: String = "",
+    val sortOrder: Int = 0,
+) {
+    fun toModel() = TransactionTemplate(
+        id, name, TransactionType.valueOf(type), accountId, CurrencyCode(currency),
+        amountMinor?.let { Money(it, CurrencyCode(currency)) }, categoryId, toAccountId, note, sortOrder,
+    )
+}
+
+internal fun TransactionTemplate.toDto() = TemplateDto(
+    id, name, type.name, accountId, currency.value, amount?.amountMinor, categoryId, toAccountId, note, sortOrder,
+)

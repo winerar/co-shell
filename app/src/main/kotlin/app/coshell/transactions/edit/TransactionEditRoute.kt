@@ -13,6 +13,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.TransactionType
+import app.coshell.templates.strip.TemplateStripViewModel
 import kotlinx.datetime.LocalDate
 
 /** Connects [TransactionEditScreen] to its ViewModel. */
@@ -21,6 +22,9 @@ fun TransactionEditRoute(
     onDone: () -> Unit,
     onAddAccount: () -> Unit,
     onDuplicate: (String) -> Unit = {},
+    onAllTemplates: () -> Unit = {},
+    onNewTemplate: () -> Unit = {},
+    templateStrip: TemplateStripViewModel = hiltViewModel(),
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -37,8 +41,10 @@ fun TransactionEditRoute(
         }
         onDone()
     }
+    val strip by templateStrip.state.collectAsStateWithLifecycle()
     TransactionEditScreen(
         state = state,
+        templates = strip,
         actions = TransactionEditActions(
             onAddAccount = onAddAccount,
             onTypeChange = viewModel::onTypeChange,
@@ -61,6 +67,11 @@ fun TransactionEditRoute(
             onDuplicate = { viewModel.transactionId?.let(onDuplicate) },
             onStepChange = viewModel::onStepChange,
             onKeypadTarget = viewModel::onKeypadTarget,
+            onTemplatePick = viewModel::onTemplatePick,
+            onTemplateClear = viewModel::onTemplateClear,
+            onAllTemplates = onAllTemplates,
+            onNewTemplate = onNewTemplate,
+            onSaveAsTemplate = viewModel::saveAsTemplate,
             onKey = { key ->
                 if (key == KeypadKey.Done) saving = true
                 viewModel.onKey(key)
@@ -90,4 +101,9 @@ data class TransactionEditActions(
     val onStepChange: (TransactionEditUiState.EntryStep) -> Unit = {},
     val onKeypadTarget: (TransactionEditUiState.KeypadTarget) -> Unit = {},
     val onKey: (KeypadKey) -> Unit = {},
+    val onTemplatePick: (String) -> Unit = {},
+    val onTemplateClear: () -> Unit = {},
+    val onAllTemplates: () -> Unit = {},
+    val onNewTemplate: () -> Unit = {},
+    val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },
 )

@@ -57,6 +57,7 @@ class TransactionEditViewModel @Inject constructor(
     private val timeZone: TimeZone,
     private val rates: ExchangeRateRepository,
     private val deleteWithUndo: DeleteTransactionWithUndo,
+    private val entryTemplates: EntryTemplates,
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -66,6 +67,11 @@ class TransactionEditViewModel @Inject constructor(
         ?: TransactionType.EXPENSE
 
     private val copyFromId: String? = savedStateHandle[TransactionEditDestination.ARG_COPY_FROM]
+
+    /** Template from the route («Все шаблоны» → tap); applied once after the first load. */
+    private var pendingTemplateId: String? = savedStateHandle[TransactionEditDestination.ARG_TEMPLATE_ID]
+    /** The template the form was filled from; its usage is counted when the operation is saved. */
+    private var templateId: String? = null
 
     private var existing: Transaction? = null
     private var accountsById: Map<String, Account> = emptyMap()
@@ -119,6 +125,8 @@ class TransactionEditViewModel @Inject constructor(
             else -> newForm(base, accountList, recent)
         }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
+        pendingTemplateId?.let { applyTemplate(it) }
+        pendingTemplateId = null
     }
 
     /** A new transaction starts on today and on the account used last. */
@@ -153,6 +161,38 @@ class TransactionEditViewModel @Inject constructor(
         receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
         receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
     )
+
+    // endregion
+
+    // region Templates
+
+    /** A chip of the strip: the same sheet, filled from the template. */
+    fun onTemplatePick(id: String) {
+        if (_state.value.isLoading) return
+        viewModelScope.launch { applyTemplate(id) }
+    }
+
+    /** «✕» on the template pill: back to an empty new operation. */
+    fun onTemplateClear() {
+        templateId = null
+        viewModelScope.launch { load() }
+    }
+
+    private suspend fun applyTemplate(id: String) {
+        val (draft, name) = entryTemplates.draft(id, clock.now(), accountsById, allCategories) ?: return
+        templateId = id
+        _state.update { it.filledFrom(draft, name, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds) }
+    }
+
+    /** «Сохранить как шаблон» for the saved operation (not for unsaved edits in the form). */
+    fun saveAsTemplate(name: String, rememberAmount: Boolean) {
+        val transaction = existing ?: return
+        if (name.isBlank()) return
+        viewModelScope.launch {
+            val saved = entryTemplates.saveAs(transaction, name, rememberAmount)
+            _state.update { it.copy(savedTemplateName = name.trim().takeIf { saved }, templateSaveFailed = !saved) }
+        }
+    }
 
     // endregion
 
@@ -257,7 +297,10 @@ class TransactionEditViewModel @Inject constructor(
         val transaction = buildTransaction(existing, form, dateWithTime(existing?.date ?: clock.now(), current.date, timeZone), ids)
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
-                SaveTransactionUseCase.Result.Saved -> _state.update { it.copy(isDone = true) }
+                SaveTransactionUseCase.Result.Saved -> {
+                    templateId?.let { entryTemplates.used(it) }
+                    _state.update { it.copy(isDone = true) }
+                }
                 is SaveTransactionUseCase.Result.Invalid -> _state.update { it.withError(result.reason) }
             }
         }

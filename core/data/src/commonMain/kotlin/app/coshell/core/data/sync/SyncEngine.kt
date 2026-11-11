@@ -34,7 +34,10 @@ class SyncEngine(
     private val mutex = Mutex()
 
     suspend fun sync(): SyncResult = mutex.withLock {
-        val pulled = remote.pull(cursor = dao.state(CURSOR))
+        // A version that did not know some kind skipped its records and moved the cursor past them:
+        // after an update that adds a kind, read everything once more (the merge is idempotent).
+        val knowsAllKinds = dao.state(KINDS) == KNOWN_KINDS
+        val pulled = remote.pull(cursor = if (knowsAllKinds) dao.state(CURSOR) else null)
         var applied = 0
         // The cursor points right after the last merged record: the next pull reads only newer
         // ones. (It used to be ">= last server time", and every record of the last commit — they
@@ -42,6 +45,7 @@ class SyncEngine(
         pulled.chunked(MERGE_CHUNK).forEach { chunk ->
             applied += dao.merge(chunk.toRows(), CURSOR, chunk.last().cursor)
         }
+        if (!knowsAllKinds) dao.setState(SyncStateEntity(KINDS, KNOWN_KINDS))
         val paused = isPushPaused()
         val pushed = if (paused) 0 else push()
         dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
@@ -69,6 +73,7 @@ class SyncEngine(
             pending.transactions.mapTo(this, SyncCodec::encode)
             pending.budgets.mapTo(this, SyncCodec::encode)
             pending.manualRates.mapTo(this, SyncCodec::encode)
+            pending.templates.mapTo(this, SyncCodec::encode)
         }
         records.chunked(PUSH_CHUNK).forEach { chunk ->
             try {
@@ -91,6 +96,7 @@ class SyncEngine(
             transactions = of(SyncKind.TRANSACTION, SyncCodec::transaction),
             budgets = of(SyncKind.BUDGET, SyncCodec::budget),
             manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate),
+            templates = of(SyncKind.TEMPLATE, SyncCodec::template),
         )
     }
 
@@ -99,6 +105,9 @@ class SyncEngine(
         const val CURSOR = "pull_cursor"
         /** Key in `sync_state`: epoch ms of the last successful sync, shown on the family screen. */
         const val LAST_SYNC = "last_sync"
+        /** Key in `sync_state`: the kinds the last pull understood ([KNOWN_KINDS]). */
+        const val KINDS = "pull_kinds"
+        private val KNOWN_KINDS = SyncKind.entries.joinToString(",") { it.wire }
         // Firestore commits take at most 500 writes; SQLite `IN (...)` lists stay small.
         private const val PUSH_CHUNK = 400
         private const val MERGE_CHUNK = 500

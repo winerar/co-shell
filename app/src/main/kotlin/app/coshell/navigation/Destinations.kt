@@ -90,11 +90,27 @@ data class TransactionEditDestination(
     val type: String = "EXPENSE",
     /** A new operation filled from this one (swipe right in «Операции» — «Дублировать»), dated today. */
     val copyFrom: String? = null,
+    /** A new operation filled from this template (tap in «Все шаблоны»), dated today. */
+    val templateId: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
         const val ARG_TRANSACTION_ID = "transactionId"
         const val ARG_TYPE = "type"
         const val ARG_COPY_FROM = "copyFrom"
+        const val ARG_TEMPLATE_ID = "templateId"
+    }
+}
+
+/** «Все шаблоны»: search, «Часто», groups by type and category (#104). */
+@Serializable
+data object TemplatesDestination
+
+/** Template editor; `templateId == null` creates a new template. */
+@Serializable
+data class TemplateEditDestination(val templateId: String? = null) {
+    companion object {
+        /** SavedStateHandle key of [templateId]; must match the property name. */
+        const val ARG_TEMPLATE_ID = "templateId"
     }
 }

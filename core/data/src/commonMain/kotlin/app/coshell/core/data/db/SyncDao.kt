@@ -17,6 +17,7 @@ data class PulledRows(
     val transactions: List<TransactionEntity> = emptyList(),
     val budgets: List<BudgetEntity> = emptyList(),
     val manualRates: List<ManualRateEntity> = emptyList(),
+    val templates: List<TemplateEntity> = emptyList(),
 )
 
 /** Rows waiting to be sent to the server. */
@@ -26,8 +27,9 @@ data class PendingRows(
     val transactions: List<TransactionEntity>,
     val budgets: List<BudgetEntity>,
     val manualRates: List<ManualRateEntity>,
+    val templates: List<TemplateEntity>,
 ) {
-    val size get() = accounts.size + categories.size + transactions.size + budgets.size + manualRates.size
+    val size get() = accounts.size + categories.size + transactions.size + budgets.size + manualRates.size + templates.size
 }
 
 /** Queries for SyncEngine. Unlike the screen DAOs they see soft-deleted rows too. */
@@ -39,17 +41,18 @@ abstract class SyncDao {
     @Query("SELECT * FROM transactions WHERE pending_sync = 1") abstract suspend fun pendingTransactions(): List<TransactionEntity>
     @Query("SELECT * FROM budgets WHERE pending_sync = 1") abstract suspend fun pendingBudgets(): List<BudgetEntity>
     @Query("SELECT * FROM manual_rates WHERE pending_sync = 1") abstract suspend fun pendingManualRates(): List<ManualRateEntity>
+    @Query("SELECT * FROM templates WHERE pending_sync = 1") abstract suspend fun pendingTemplates(): List<TemplateEntity>
 
     @Query(
         """SELECT (SELECT COUNT(*) FROM accounts WHERE pending_sync = 1) + (SELECT COUNT(*) FROM categories WHERE pending_sync = 1)
            + (SELECT COUNT(*) FROM transactions WHERE pending_sync = 1) + (SELECT COUNT(*) FROM budgets WHERE pending_sync = 1)
-           + (SELECT COUNT(*) FROM manual_rates WHERE pending_sync = 1)""",
+           + (SELECT COUNT(*) FROM manual_rates WHERE pending_sync = 1) + (SELECT COUNT(*) FROM templates WHERE pending_sync = 1)""",
     )
     abstract fun observePendingCount(): Flow<Int>
 
     @Transaction
     open suspend fun pending() = PendingRows(
-        pendingAccounts(), pendingCategories(), pendingTransactions(), pendingBudgets(), pendingManualRates(),
+        pendingAccounts(), pendingCategories(), pendingTransactions(), pendingBudgets(), pendingManualRates(), pendingTemplates(),
     )
 
     // --- clear the flag only if the row was not edited again while it was being sent ---
@@ -63,6 +66,8 @@ abstract class SyncDao {
     abstract suspend fun clearBudget(id: String, updatedAt: Long)
     @Query("UPDATE manual_rates SET pending_sync = 0 WHERE id = :id AND updated_at = :updatedAt")
     abstract suspend fun clearManualRate(id: String, updatedAt: Long)
+    @Query("UPDATE templates SET pending_sync = 0 WHERE id = :id AND updated_at = :updatedAt")
+    abstract suspend fun clearTemplate(id: String, updatedAt: Long)
 
     /**
      * Clears the flags of one pushed chunk in one transaction (#131): row by row, 10 000 imported
@@ -76,6 +81,7 @@ abstract class SyncDao {
             SyncKind.TRANSACTION -> clearTransaction(r.id, r.updatedAt)
             SyncKind.BUDGET -> clearBudget(r.id, r.updatedAt)
             SyncKind.MANUAL_RATE -> clearManualRate(r.id, r.updatedAt)
+            SyncKind.TEMPLATE -> clearTemplate(r.id, r.updatedAt)
         }
     }
 
@@ -85,12 +91,14 @@ abstract class SyncDao {
     @Query("SELECT * FROM transactions WHERE id IN (:ids)") abstract suspend fun transactions(ids: List<String>): List<TransactionEntity>
     @Query("SELECT * FROM budgets WHERE id IN (:ids)") abstract suspend fun budgets(ids: List<String>): List<BudgetEntity>
     @Query("SELECT * FROM manual_rates WHERE id IN (:ids)") abstract suspend fun manualRates(ids: List<String>): List<ManualRateEntity>
+    @Query("SELECT * FROM templates WHERE id IN (:ids)") abstract suspend fun templates(ids: List<String>): List<TemplateEntity>
 
     @Upsert abstract suspend fun upsertAccounts(rows: List<AccountEntity>)
     @Upsert abstract suspend fun upsertCategories(rows: List<CategoryEntity>)
     @Upsert abstract suspend fun upsertTransactions(rows: List<TransactionEntity>)
     @Upsert abstract suspend fun upsertBudgets(rows: List<BudgetEntity>)
     @Upsert abstract suspend fun upsertManualRates(rows: List<ManualRateEntity>)
+    @Upsert abstract suspend fun upsertTemplates(rows: List<TemplateEntity>)
 
     @Query("SELECT COUNT(*) FROM transactions WHERE deleted = 0") abstract suspend fun liveTransactionCount(): Int
 
@@ -116,6 +124,7 @@ abstract class SyncDao {
         upsertTransactions(winners(rows.transactions, transactions(rows.transactions.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertBudgets(winners(rows.budgets, budgets(rows.budgets.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertManualRates(winners(rows.manualRates, manualRates(rows.manualRates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertTemplates(winners(rows.templates, templates(rows.templates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         if (cursor != null) setState(SyncStateEntity(cursorKey, cursor))
         return changed
     }
@@ -126,11 +135,13 @@ abstract class SyncDao {
     @Query("DELETE FROM transactions") abstract suspend fun deleteTransactions()
     @Query("DELETE FROM budgets") abstract suspend fun deleteBudgets()
     @Query("DELETE FROM manual_rates") abstract suspend fun deleteManualRates()
+    @Query("DELETE FROM templates") abstract suspend fun deleteTemplates()
     @Query("DELETE FROM sync_state") abstract suspend fun deleteState()
 
     @Transaction
     open suspend fun wipeSyncedData() {
-        deleteAccounts(); deleteCategories(); deleteTransactions(); deleteBudgets(); deleteManualRates(); deleteState()
+        deleteAccounts(); deleteCategories(); deleteTransactions(); deleteBudgets(); deleteManualRates(); deleteTemplates()
+        deleteState()
     }
 
     /** Marks every row as not yet sent — used when this phone's data must go to a (new) family. */
@@ -139,10 +150,12 @@ abstract class SyncDao {
     @Query("UPDATE transactions SET pending_sync = 1") abstract suspend fun markTransactionsPending()
     @Query("UPDATE budgets SET pending_sync = 1") abstract suspend fun markBudgetsPending()
     @Query("UPDATE manual_rates SET pending_sync = 1") abstract suspend fun markManualRatesPending()
+    @Query("UPDATE templates SET pending_sync = 1") abstract suspend fun markTemplatesPending()
 
     @Transaction
     open suspend fun markAllPending() {
         markAccountsPending(); markCategoriesPending(); markTransactionsPending(); markBudgetsPending(); markManualRatesPending()
+        markTemplatesPending()
         deleteState()
     }
 }

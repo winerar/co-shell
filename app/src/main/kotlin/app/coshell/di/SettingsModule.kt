@@ -4,7 +4,9 @@ import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.settings.ThemeSettings
 import app.coshell.core.domain.shake.ShakeSettings
 import app.coshell.currencies.data.PrefsReportCurrencySettings
+import app.coshell.core.domain.templates.TemplateUsage
 import app.coshell.shake.data.PrefsShakeSettings
+import app.coshell.templates.data.PrefsTemplateUsage
 import app.coshell.theme.data.PrefsThemeSettings
 import dagger.Binds
 import dagger.Module
@@ -23,4 +25,7 @@ interface SettingsModule {
 
     @Binds
     fun bindThemeSettings(impl: PrefsThemeSettings): ThemeSettings
+
+    @Binds
+    fun bindTemplateUsage(impl: PrefsTemplateUsage): TemplateUsage
 }

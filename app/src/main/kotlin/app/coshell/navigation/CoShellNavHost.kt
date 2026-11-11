@@ -27,6 +27,7 @@ import app.coshell.categories.list.CategoriesRoute
 import app.coshell.currencies.list.ReportCurrenciesRoute
 import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
+import app.coshell.feedback.detail.FeedbackDetailRoute
 import app.coshell.home.HomeActions
 import app.coshell.home.HomeRoute
 import app.coshell.more.MoreActions
@@ -168,7 +169,14 @@ fun CoShellNavHost(
             UpdateRoute(onBack = { navController.popBackStack() })
         }
         composable<FeedbackDestination> { entry ->
-            FeedbackRoute(onBack = { navController.popBackStack() }, prefill = entry.toRoute<FeedbackDestination>().prefill)
+            FeedbackRoute(
+                onBack = { navController.popBackStack() },
+                onOpen = { navController.navigate(FeedbackDetailDestination(it)) { launchSingleTop = true } },
+                prefill = entry.toRoute<FeedbackDestination>().prefill,
+            )
+        }
+        composable<FeedbackDetailDestination> { entry ->
+            FeedbackDetailRoute(entry.toRoute<FeedbackDetailDestination>().sentAtMillis, onBack = { navController.popBackStack() })
         }
         composable<RatesDestination> {
             RatesRoute(onBack = { navController.popBackStack() })

@@ -13,3 +13,11 @@ enum class FeedbackKind(@StringRes val label: Int, @StringRes val prompt: Int) {
 
 /** "Ошибка: шторка дёргается" — the text as sent and as kept in the history. */
 fun feedbackMessage(kindLabel: String, text: String): String = "$kindLabel: ${text.trim()}"
+
+/** «Ошибка: текст» → ("Ошибка", "текст"); a text without a short kind in front → (null, text). */
+fun splitFeedbackMessage(message: String): Pair<String?, String> {
+    val kind = message.substringBefore(": ", "")
+    return if (kind.isNotEmpty() && kind.length <= MAX_KIND_LENGTH && '\n' !in kind) kind to message.substringAfter(": ") else null to message
+}
+
+private const val MAX_KIND_LENGTH = 20

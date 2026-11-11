@@ -1,0 +1,13 @@
+// Cloud agent sessions: Maven Central answers Gradle with 429 on big files (Robolectric, #156).
+// Google's mirror of Maven Central goes first; Maven Central and the project's repos stay as fallback.
+// Applied by scripts/agent/gradle.sh (and so check.sh); CI and local builds do not use it.
+def mirror = 'https://maven-central.storage-download.googleapis.com/maven2'
+settingsEvaluated { s ->
+    def first = { r -> def m = r.maven { url = uri(mirror) }; r.remove(m); r.addFirst(m) }
+    s.pluginManagement.repositories(first)
+    s.dependencyResolutionManagement.repositories(first)
+}
+// Robolectric downloads android-all-instrumented itself, past Gradle's repositories.
+allprojects {
+    tasks.withType(Test).configureEach { systemProperty('robolectric.dependency.repo.url', mirror) }
+}

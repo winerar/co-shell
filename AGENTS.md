@@ -11,7 +11,7 @@
 6. Маленькие файлы по одной теме (~200 строк), экран — пакет из блоков: `project-structure.md`.
 7. **Начало сессии:** `scripts/agent/session-start.sh`, затем `owner.md` и `notes.md`. **Конец:**
    чек-лист `workflow.md` + `scripts/agent/session-end.sh`. Узнал новое — в `notes.md`; рутина
-   повторилась — скрипт в `scripts/agent/`; ввёл практику — правило (`workflow.md` §«Самоулучшение»).
+   повторилась — команда в `scripts/agent/agent.sh`; ввёл практику — правило (`workflow.md` §«Самоулучшение»).
 8. **Визуальное — сначала примеры:** любое видимое изменение сначала макетом владельцу, код — после «ок» (`workflow.md`).
 
 ## Карта документации
@@ -20,7 +20,7 @@
 | [docs/STATUS.md](docs/STATUS.md) | **текущее состояние** (передача между сессиями) |
 | [docs/agents/tasks.md](docs/agents/tasks.md) | **задачи — GitHub Issues + доска**: метки статусов, как брать и закрывать |
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
-| [docs/agents/notes.md](docs/agents/notes.md) | **заметки агента**: выясненные факты, грабли, замеры, служебные скрипты |
+| [docs/agents/notes.md](docs/agents/notes.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры, скрипты; облачное окружение (прокси, Maven 429) |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md) | модули, что где лежит, куда класть новое |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md) | сборка, тесты, SDK, CI |
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |

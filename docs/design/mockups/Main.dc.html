@@ -30,22 +30,22 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
 .scroll::-webkit-scrollbar{display:none}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden;">
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden;">
   <div style="position: absolute; inset: 0; padding: 16px; opacity: 0.35;">
     <div style="font-size: 30px; font-weight: 700; margin-top: 8px;">Обзор</div>
-    <div style="margin-top: 16px; height: 140px; border-radius: 16px; background: linear-gradient(135deg, #B8FF2E, #00F0FF);"></div>
+    <div style="margin-top: 16px; height: 140px; border-radius: 16px; background: linear-gradient(135deg, {{co.k_B8FF2E_P}}, {{co.k_00F0FF_i}});"></div>
   </div>
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.6);"></div>
 
-  <div style="position: absolute; left: 0; right: 0; top: 56px; bottom: 0; background: #11170E; border-radius: 28px 28px 0 0; overflow: hidden;">
+  <div style="position: absolute; left: 0; right: 0; top: 56px; bottom: 0; background: {{co.k_11170E_n05}}; border-radius: 28px 28px 0 0; overflow: hidden;">
     <div style="display: flex; justify-content: center; padding-top: 10px;">
-      <div style="width: 36px; height: 4px; border-radius: 2px; background: #4A5444;"></div>
+      <div style="width: 36px; height: 4px; border-radius: 2px; background: {{co.k_4A5444_n28}};"></div>
     </div>
 
     <!-- ШАГ 1: тип и счёт -->
     <div class="step" style="{{step1Style}}">
       <div style="padding: 12px 16px 0;">
-        <div style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: #1B2317;">
+        <div style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: {{co.k_1B2317_n09}};">
           <div class="pill" style="{{pillStyle}}"></div>
           <sc-for list="{{types}}" as="t" hint-placeholder-count="3">
             <button type="button" class="tap" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
@@ -53,28 +53,28 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
         </div>
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px;">
           <span style="font-size: 20px; font-weight: 700;">{{question}}</span>
-          <span style="font-size: 12px; color: #9AA594;">12 счетов</span>
+          <span style="font-size: 12px; color: {{co.k_9AA594_n60}};">12 счетов</span>
         </div>
       </div>
 
       <div class="scroll" style="position: absolute; top: 118px; bottom: 76px; left: 0; right: 0; padding: 0 16px 12px;">
-        <div style="font-size: 12px; font-weight: 600; color: #B8FF2E; letter-spacing: 0.06em; margin: 8px 0;">НЕДАВНИЕ</div>
+        <div style="font-size: 12px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; letter-spacing: 0.06em; margin: 8px 0;">НЕДАВНИЕ</div>
         <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
           <sc-for list="{{recent}}" as="a" hint-placeholder-count="4">
             <button type="button" class="tap" onClick="{{a.pick}}" style="{{a.bigStyle}}">
               <span style="width: 44px; height: 44px; border-radius: 14px; background: {{a.color}}; color: {{a.ink}}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">{{a.ini}}</span>
-              <span style="font-size: 12px; color: #EEF5E6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{a.name}}</span>
+              <span style="font-size: 12px; color: {{co.k_EEF5E6_n93}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{a.name}}</span>
             </button>
           </sc-for>
         </div>
         <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
-          <div style="font-size: 12px; font-weight: 600; color: #9AA594; letter-spacing: 0.06em; margin: 16px 0 8px;">{{g.title}}</div>
+          <div style="font-size: 12px; font-weight: 600; color: {{co.k_9AA594_n60}}; letter-spacing: 0.06em; margin: 16px 0 8px;">{{g.title}}</div>
           <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
             <sc-for list="{{g.items}}" as="a" hint-placeholder-count="3">
               <button type="button" class="tap" onClick="{{a.pick}}" style="{{a.tileStyle}}">
                 <span style="width: 32px; height: 32px; border-radius: 10px; background: {{a.color}}; color: {{a.ink}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">{{a.ini}}</span>
-                <span style="font-size: 13px; font-weight: 600; color: #EEF5E6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{a.name}}</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9AA594; white-space: nowrap;">{{a.bal}}</span>
+                <span style="font-size: 13px; font-weight: 600; color: {{co.k_EEF5E6_n93}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{a.name}}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{co.k_9AA594_n60}}; white-space: nowrap;">{{a.bal}}</span>
               </button>
             </sc-for>
           </div>
@@ -82,9 +82,9 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
       </div>
 
       <div style="position: absolute; left: 16px; right: 16px; bottom: 16px;">
-        <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: #1B2317;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
-          <input type="search" placeholder="Найти счёт" style="flex-grow: 1; background: none; border: none; outline: none; color: #EEF5E6; font-family: inherit; font-size: 15px;">
+        <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: {{co.k_1B2317_n09}};">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_9AA594_n60}}" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+          <input type="search" placeholder="Найти счёт" style="flex-grow: 1; background: none; border: none; outline: none; color: {{co.k_EEF5E6_n93}}; font-family: inherit; font-size: 15px;">
         </label>
       </div>
     </div>
@@ -93,13 +93,13 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
     <div class="step" style="{{step2Style}}">
       <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 0 12px 14px; display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">
-          <button type="button" class="tap" onClick="{{back}}" style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px 0 6px; border-radius: 999px; border: 1px solid #2E382A; background: #161D12; color: #EEF5E6;">
+          <button type="button" class="tap" onClick="{{back}}" style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px 0 6px; border-radius: 999px; border: 1px solid {{co.k_2E382A_n17}}; background: {{co.k_161D12_n07}}; color: {{co.k_EEF5E6_n93}};">
             <span style="width: 34px; height: 34px; border-radius: 11px; background: {{acc.color}}; color: {{acc.ink}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">{{acc.ini}}</span>
             <span style="display: flex; flex-direction: column; align-items: flex-start;">
               <span style="font-size: 14px; font-weight: 600;">{{acc.name}}</span>
-              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9AA594;">{{acc.bal}}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: {{co.k_9AA594_n60}};">{{acc.bal}}</span>
             </span>
-            <span style="color: #9AA594; margin-left: 4px;">▾</span>
+            <span style="color: {{co.k_9AA594_n60}}; margin-left: 4px;">▾</span>
           </button>
           <span style="flex-grow: 1;"></span>
           <span style="font-size: 13px; font-weight: 600; color: {{amountColor}};">{{typeLabel}}</span>
@@ -109,7 +109,7 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
           <span style="font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 700; color: {{amountColor}};">
             <sc-for list="{{digits}}" as="d" hint-placeholder-count="3"><span class="digit">{{d}}</span></sc-for>
           </span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #9AA594;">{{acc.cur}}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: {{co.k_9AA594_n60}};">{{acc.cur}}</span>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;">
@@ -117,7 +117,7 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
             <button type="button" class="tap" onClick="{{c.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 0; background: none; border: none;">
               <span class="tap" style="{{c.ring}}">
                 <span style="width: 40px; height: 40px; border-radius: 50%; background: {{c.color}}; display: flex; align-items: center; justify-content: center;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
                 </span>
               </span>
               <span style="font-size: 12px; color: {{c.text}}; white-space: nowrap;">{{c.name}}</span>
@@ -126,52 +126,110 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
         </div>
 
         <div style="display: flex; gap: 8px; padding: 0 4px;">
-          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #2E382A; background: #1B2317; color: #EEF5E6; font-size: 13px;">Сегодня ▾</button>
-          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #2E382A; background: transparent; color: #C9D3C2; font-size: 13px;">＋ Заметка</button>
-          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #2E382A; background: transparent; color: #C9D3C2; font-size: 13px;">Чек в др. валюте</button>
+          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{co.k_2E382A_n17}}; background: {{co.k_1B2317_n09}}; color: {{co.k_EEF5E6_n93}}; font-size: 13px;">Сегодня ▾</button>
+          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{co.k_2E382A_n17}}; background: transparent; color: {{co.k_C9D3C2_n79}}; font-size: 13px;">＋ Заметка</button>
+          <button type="button" class="tap" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{co.k_2E382A_n17}}; background: transparent; color: {{co.k_C9D3C2_n79}}; font-size: 13px;">Чек в др. валюте</button>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 54px; gap: 6px;">
-          <button type="button" class="key" onClick="{{k.n7}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">7</button>
-          <button type="button" class="key" onClick="{{k.n8}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">8</button>
-          <button type="button" class="key" onClick="{{k.n9}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">9</button>
-          <button type="button" class="key" onClick="{{k.del}}" aria-label="Стереть" style="border: none; border-radius: 16px; background: #2A3326; color: #EEF5E6; font-size: 20px;">⌫</button>
-          <button type="button" class="key" onClick="{{k.n4}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">4</button>
-          <button type="button" class="key" onClick="{{k.n5}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">5</button>
-          <button type="button" class="key" onClick="{{k.n6}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">6</button>
-          <button type="button" class="key" onClick="{{k.plus}}" aria-label="Плюс" style="border: none; border-radius: 16px; background: #2A3326; color: #B8FF2E; font-size: 24px;">+</button>
-          <button type="button" class="key" onClick="{{k.n1}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">1</button>
-          <button type="button" class="key" onClick="{{k.n2}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">2</button>
-          <button type="button" class="key" onClick="{{k.n3}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">3</button>
-          <button type="button" class="key" onClick="{{k.save}}" style="grid-row: span 2; border: none; border-radius: 18px; background: #B8FF2E; color: #0E1F00; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+          <button type="button" class="key" onClick="{{k.n7}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">7</button>
+          <button type="button" class="key" onClick="{{k.n8}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">8</button>
+          <button type="button" class="key" onClick="{{k.n9}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">9</button>
+          <button type="button" class="key" onClick="{{k.del}}" aria-label="Стереть" style="border: none; border-radius: 16px; background: {{co.k_2A3326_n15}}; color: {{co.k_EEF5E6_n93}}; font-size: 20px;">⌫</button>
+          <button type="button" class="key" onClick="{{k.n4}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">4</button>
+          <button type="button" class="key" onClick="{{k.n5}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">5</button>
+          <button type="button" class="key" onClick="{{k.n6}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">6</button>
+          <button type="button" class="key" onClick="{{k.plus}}" aria-label="Плюс" style="border: none; border-radius: 16px; background: {{co.k_2A3326_n15}}; color: {{co.k_B8FF2E_Pi}}; font-size: 24px;">+</button>
+          <button type="button" class="key" onClick="{{k.n1}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">1</button>
+          <button type="button" class="key" onClick="{{k.n2}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">2</button>
+          <button type="button" class="key" onClick="{{k.n3}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">3</button>
+          <button type="button" class="key" onClick="{{k.save}}" style="grid-row: span 2; border: none; border-radius: 18px; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
             Готово
           </button>
-          <button type="button" class="key" onClick="{{k.comma}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">,</button>
-          <button type="button" class="key" onClick="{{k.n0}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 22px; font-family: 'JetBrains Mono', monospace;">0</button>
-          <button type="button" class="key" onClick="{{k.n000}}" style="border: none; border-radius: 16px; background: #1F271B; color: #EEF5E6; font-size: 18px; font-family: 'JetBrains Mono', monospace;">000</button>
+          <button type="button" class="key" onClick="{{k.comma}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">,</button>
+          <button type="button" class="key" onClick="{{k.n0}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 22px; font-family: 'JetBrains Mono', monospace;">0</button>
+          <button type="button" class="key" onClick="{{k.n000}}" style="border: none; border-radius: 16px; background: {{co.k_1F271B_n11}}; color: {{co.k_EEF5E6_n93}}; font-size: 18px; font-family: 'JetBrains Mono', monospace;">000</button>
         </div>
       </div>
     </div>
 
     <sc-if value="{{saved}}" hint-placeholder-val="{{false}}">
-      <div class="pop" style="position: absolute; left: 50%; top: 40%; margin-left: -70px; width: 140px; height: 140px; border-radius: 50%; background: #B8FF2E; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0E1F00; font-weight: 700; gap: 4px;">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+      <div class="pop" style="position: absolute; left: 50%; top: 40%; margin-left: -70px; width: 140px; height: 140px; border-radius: 50%; background: {{co.k_B8FF2E_P}}; display: flex; flex-direction: column; align-items: center; justify-content: center; color: {{co.k_0E1F00_O}}; font-weight: 700; gap: 4px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
         Сохранено
       </div>
     </sc-if>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
+/*co-theme*/var CO_KEYS = ['k_00F0FF_i','k_050805_n00','k_0E1F00_O','k_111611_n05','k_11170E_n05','k_161D12_n07','k_1B2317_n09','k_1F271B_n11','k_1F2A17_n10','k_222B1E_n12','k_2A3326_n15','k_2E382A_n17','k_4A5444_n28','k_9AA594_n60','k_B8FF2E_P','k_B8FF2E_Pi','k_C9D3C2_n79','k_EEF5E6_n93','k_FF5C7F_ew21','k_FF8FA3_ew44','k_FFC46B_ww20'];
+var CO_SPECS = {
+  'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
+  'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
+  'Манго': ['#FF8A3D','#2B0E00','#FF3D7F','#C2185B','#FFC93C','#7A5600','#B6FF3D','#3F7300','#FF4D5E','#C8102E','#160C16','#FFF5EA'],
+  'Ультра': ['#3D7BFF','#000B24','#FF2BD6','#B0008F','#91E668','#2F6B12','#7CFF6B','#2E7A00','#FF3B6B','#C4004A','#07090C','#F4F7FF'],
+  'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
+  'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
+};
+var CO_NOW = { dark: true, pal: 'Вольт' };
+function __coTheme(props) {
+  var s = {};
+  try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }
+  var t = props && props.theme, p = props && props.palette;
+  var dark = t === 'тёмная' ? true : t === 'светлая' ? false : s.dark !== false;
+  var pal = CO_SPECS[p] ? p : CO_SPECS[s.pal] ? s.pal : 'Вольт';
+  CO_NOW = { dark: dark, pal: pal };
+  return CO_NOW;
+}
+function __coRgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function __coHex(c) { return '#' + c.map(function (v) { var x = Math.round(Math.max(0, Math.min(255, v))).toString(16); return x.length < 2 ? '0' + x : x; }).join('').toUpperCase(); }
+function __coMix(a, b, t) { var x = __coRgb(a), y = __coRgb(b); return __coHex([0, 1, 2].map(function (i) { return x[i] + (y[i] - x[i]) * t; })); }
+function __coLight(t) {
+  var pts = [[0, 0], [0.35, 0.3], [0.5, 0.55], [0.62, 0.63], [0.8, 0.8], [0.92, 0.9], [1, 0.95]];
+  for (var i = 1; i < pts.length; i++) if (t <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (t - a[0]) / (b[0] - a[0]); }
+  return 0.95;
+}
+function __co(k) {
+  var m = /^k_([0-9A-F]{6})_(.*)$/.exec(k);
+  if (!m) return k;
+  var orig = '#' + m[1], role = m[2];
+  if (CO_NOW.dark && CO_NOW.pal === 'Вольт') return orig;
+  var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
+  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
+  if (role === 'O') return S[1];
+  if (role === 'Oa' || role === 'Oi') return orig;
+  if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
+  if (neon[role]) return neon[role][0];
+  if (role.length === 2 && role.charAt(1) === 'I' && neon[role.charAt(0)]) return d ? neon[role.charAt(0)][0] : neon[role.charAt(0)][1];
+  var r = role.charAt(0), kind = role.charAt(1), t = parseInt(role.slice(r === 'n' ? 1 : 2), 10) / 100;
+  if (r === 'n') {
+    if (d) return __coMix(bg, '#FFFFFF', t);
+    if (t < 0.012) return bg;
+    if (t <= 0.045 || (t >= 0.065 && t <= 0.075)) return '#FFFFFF'; // cards, bars, sheets: white (owner's light boards)
+    if (t <= 0.35) return __coMix(bg, '#000000', 0.04 + (t - 0.045) * 0.8); // fields, chips, lines
+    return __coMix(bg, '#000000', __coLight(t));
+  }
+  var n = neon[r];
+  if (!n) return orig;
+  if (kind === 't') return d ? __coMix(bg, n[0], t) : __coMix(bg, n[0], Math.min(0.5, t * 0.8));
+  if (kind === 'w') return d ? __coMix(n[0], '#FFFFFF', t) : n[1];
+  return orig;
+}
+function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_KEYS[i]] = __co(CO_KEYS[i]); return o; }
+/*co-theme-end*/
 class Component extends DCLogic {
+  /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
+  componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
   constructor(props) {
     super(props);
     this.state = { step: 1, type: 'exp', acc: 'galicia', cat: 'food', amount: '', saved: false };
   }
   ink(hex) {
     const n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
-    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#111611' : '#FFFFFF';
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? (__co('k_111611_n05')) : '#FFFFFF';
   }
   fmt(s) {
     return s.split(' + ').map((p) => {
@@ -180,7 +238,7 @@ class Component extends DCLogic {
       return f !== undefined ? ii + ',' + f : ii;
     }).join(' + ');
   }
-  renderVals() {
+  __coRender() {
     const s = this.state;
     const A = [
       ['galicia', 'Galicia', 'GA', '#F26E22', '1 250 000 ARS', 'ARS', 'card'],
@@ -199,7 +257,7 @@ class Component extends DCLogic {
     const sel = (id) => id === s.acc;
     const pick = (id) => () => this.setState({ acc: id, step: 2 });
     const tile = (a) => 'display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px;min-height:92px;box-sizing:border-box;border-radius:16px;text-align:left;min-width:0;' +
-      (sel(a.id) ? 'background:#1F2A17;border:2px solid ' + a.color + ';' : 'background:#161D12;border:2px solid #222B1E;');
+      (sel(a.id) ? ('background:' + __co('k_1F2A17_n10') + ';border:2px solid ') + a.color + ';' : ('background:' + __co('k_161D12_n07') + ';border:2px solid ' + __co('k_222B1E_n12') + ';'));
     const big = (a) => 'display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 2px;border-radius:16px;min-width:0;background:none;' +
       (sel(a.id) ? 'border:2px solid ' + a.color + ';' : 'border:2px solid transparent;');
     const withUi = (a) => ({ ...a, pick: pick(a.id), tileStyle: tile(a), bigStyle: big(a) });
@@ -222,14 +280,14 @@ class Component extends DCLogic {
       pct: 'M6 18L18 6M7.5 7.5h.01M16.5 16.5h.01',
       swap: 'M4 8h14l-3-3M20 16H6l3 3'
     };
-    const exp = [['food', 'Продукты', '#A8FF3E', 'cart'], ['cafe', 'Кафе', '#FFC46B', 'cup'], ['taxi', 'Такси', '#F5FF3D', 'car'], ['pharm', 'Аптека', '#FF8FA3', 'pill'], ['home', 'Дом', '#38B6FF', 'house'], ['bakery', 'Пекарня', '#D9A066', 'bread'], ['shop', 'Покупки', '#D36BFF', 'bag'], ['all', 'Все', '#7A8494', 'more']];
+    const exp = [['food', 'Продукты', '#A8FF3E', 'cart'], ['cafe', 'Кафе', (__co('k_FFC46B_ww20')), 'cup'], ['taxi', 'Такси', '#F5FF3D', 'car'], ['pharm', 'Аптека', (__co('k_FF8FA3_ew44')), 'pill'], ['home', 'Дом', '#38B6FF', 'house'], ['bakery', 'Пекарня', '#D9A066', 'bread'], ['shop', 'Покупки', '#D36BFF', 'bag'], ['all', 'Все', '#7A8494', 'more']];
     const inc = [['salary', 'Зарплата', '#2BE4FF', 'case'], ['gift', 'Подарки', '#9D7BFF', 'gift'], ['cb', 'Кэшбэк', '#A8FF3E', 'pct'], ['all', 'Все', '#7A8494', 'more']];
     const tr = [['tr', 'Перевод', '#9D7BFF', 'swap']];
     const list = s.type === 'inc' ? inc : s.type === 'tr' ? tr : exp;
     const cats = list.map(([id, name, color, icon]) => {
       const on = id === s.cat;
       return {
-        name, color, icon: P[icon], text: on ? '#EEF5E6' : '#9AA594',
+        name, color, icon: P[icon], text: on ? (__co('k_EEF5E6_n93')) : (__co('k_9AA594_n60')),
         ring: 'display:flex;padding:3px;border-radius:50%;border:2px solid ' + (on ? color : 'transparent') + ';transform:scale(' + (on ? 1.08 : 1) + ');',
         pick: () => this.setState({ cat: id })
       };
@@ -238,7 +296,7 @@ class Component extends DCLogic {
     const ti = T.findIndex(([id]) => id === s.type);
     const types = T.map(([id, label]) => ({
       label,
-      style: 'position:relative;z-index:1;height:40px;border:none;border-radius:999px;font-size:14px;font-weight:600;background:transparent;color:' + (id === s.type ? '#0E1F00' : '#C9D3C2') + ';',
+      style: 'position:relative;z-index:1;height:40px;border:none;border-radius:999px;font-size:14px;font-weight:600;background:transparent;color:' + (id === s.type ? (__co('k_0E1F00_O')) : (__co('k_C9D3C2_n79'))) + ';',
       pick: () => this.setState({ type: id, cat: id === 'inc' ? 'salary' : id === 'tr' ? 'tr' : 'food' })
     }));
     const add = (t) => () => {
@@ -258,12 +316,12 @@ class Component extends DCLogic {
     const acc = byId(s.acc);
     return {
       types, recent, groups, cats, acc,
-      pillStyle: 'position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);border-radius:999px;background:#B8FF2E;transform:translateX(' + (ti * 100) + '%);',
+      pillStyle: ('position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);border-radius:999px;background:' + __co('k_B8FF2E_P') + ';transform:translateX(') + (ti * 100) + '%);',
       step1Style: 'position:absolute;inset:24px 0 0 0;transform:translateX(' + (s.step === 1 ? '0' : '-30%') + ');opacity:' + (s.step === 1 ? 1 : 0) + ';pointer-events:' + (s.step === 1 ? 'auto' : 'none') + ';',
       step2Style: 'position:absolute;inset:24px 0 0 0;transform:translateX(' + (s.step === 2 ? '0' : '30%') + ');opacity:' + (s.step === 2 ? 1 : 0) + ';pointer-events:' + (s.step === 2 ? 'auto' : 'none') + ';',
       question: s.type === 'inc' ? 'Куда пришло?' : s.type === 'tr' ? 'Откуда перевод?' : 'Откуда списали?',
       typeLabel: T[ti][1],
-      amountColor: s.type === 'exp' ? '#FF5C7F' : s.type === 'inc' ? '#00F0FF' : '#EEF5E6',
+      amountColor: s.type === 'exp' ? (__co('k_FF5C7F_ew21')) : s.type === 'inc' ? (__co('k_00F0FF_i')) : (__co('k_EEF5E6_n93')),
       digits: (sign + shown).split(''),
       back: () => this.setState({ step: 1 }),
       saved: s.saved,

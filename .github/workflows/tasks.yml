@@ -1,4 +1,4 @@
-name: Tasks
+name: "Доска задач: статусы и колонки"
 
 # Keeps the task board true without manual work (docs/agents/tasks.md).
 # Labels: a closed issue loses its `status:*` label. dev is the default branch, so `Fixes #N` in a PR

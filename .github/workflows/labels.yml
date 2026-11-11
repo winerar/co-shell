@@ -1,6 +1,7 @@
-name: Labels
+name: "Метки задач из labels.json"
 
-# Keeps repository labels in sync with .github/labels.json (create or update; nothing is deleted).
+# Keeps repository labels in sync with .github/labels.json: create or update; `from` renames an old
+# label (issues keep it under the new name); `delete: true` removes a retired label.
 # Task workflow and label meanings: docs/agents/tasks.md.
 on:
   push:
@@ -20,9 +21,18 @@ jobs:
       GH_REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v7
-      - name: Create or update labels
+      - name: Create, rename, update or delete labels
         run: |
+          have=$(gh label list --limit 200 --json name -q '.[].name')
           jq -c '.[]' .github/labels.json | while read -r l; do
-            gh label create "$(jq -r .name <<<"$l")" --force \
+            name=$(jq -r .name <<<"$l"); from=$(jq -r '.from // empty' <<<"$l")
+            if [ "$(jq -r '.delete // false' <<<"$l")" = true ]; then
+              ! grep -qxF "$name" <<<"$have" || gh label delete "$name" --yes
+              continue
+            fi
+            if [ -n "$from" ] && grep -qxF "$from" <<<"$have" && ! grep -qxF "$name" <<<"$have"; then
+              gh label edit "$from" --name "$name"
+            fi
+            gh label create "$name" --force \
               --color "$(jq -r .color <<<"$l")" --description "$(jq -r .description <<<"$l")"
           done

@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,15 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.background
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +32,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.components.CoShellTextField
@@ -45,25 +42,18 @@ import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.components.FeedbackResultCard
 import app.coshell.feedback.components.SendButton
 import app.coshell.feedback.components.SentList
+import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Обратная связь» (frequent while the app is young): what it's about (bug / idea / design / other), the
  * text with a fill bar, «Отправить» under the thumb; after sending — a big check, then the sent list.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.feedback_title)) },
-                navigationIcon = {
-                    CoShellIconButton(onClick = actions.onBack) {
-                        Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
-                    }
-                },
-            )
+            ScreenTopBar(stringResource(R.string.feedback_title), onBack = actions.onBack)
         },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
@@ -78,7 +68,7 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
                 ) { sent ->
                     if (sent) Sent(actions.onWriteMore) else Form(state, actions)
                 }
-                SentList(state.history)
+                SentList(state.history, onOpen = actions.onOpen, onRemove = actions.onRemove)
             }
             if (!state.justSent) {
                 Column(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {

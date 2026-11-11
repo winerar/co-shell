@@ -55,7 +55,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 | `<Тема>.kt` (напр. `TransactionForm.kt`) | чистая логика экрана (валидация и т. п.) |
 | `components/<Block>.kt` | по файлу на блок формы (`AmountField`, `DateChips`…) |
 Так устроены все экраны: `accounts/list|edit`, `categories/list|edit`, `transactions/list|edit`, `backup/`, `update/`,
-`feedback/` (+ `data/`: отправка в Firestore REST, сведения о телефоне; решения — `core:domain/feedback/`).
+`feedback/` (+ `data/`: отправка и статус через Firestore REST, «Мои отзывы»; `detail/` — карточка отзыва; решения — `core:domain/feedback/`).
 `shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
 распознавание толчков — `core:domain/shake/ShakeDetector`.
@@ -99,7 +99,7 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 ## Переиспользование (пожелание владельца)
 Если блок повторяется на двух экранах или явно понадобится ещё где-то — делай его универсальным
 компонентом с параметрами, а не копируй. Шторка-редактор — `CoShellSheet` (дизайн-система) + `ui/sheet/EditSheetLayout`
-(закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, «Отменить» — `undo/UndoCenter`.
+(закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, внутреннего экрана — `ui/top/ScreenTopBar`, «Отменить» — `undo/UndoCenter`.
 Базовые блоки — в `core:designsystem` `components/` (поля, строки, диалоги, разделы форм, сообщения —
 `design-system.md` §«Компоненты»). Обёртки со строками приложения — `ui/form/`: `EditFooter` (Архив/Удалить),
 `DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`); строка меню — `ui/list/ActionRow`.

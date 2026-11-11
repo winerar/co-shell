@@ -50,6 +50,10 @@ data object UpdateDestination
 @Serializable
 data class FeedbackDestination(val prefill: String? = null)
 
+/** One sent message by its send time (#157). */
+@Serializable
+data class FeedbackDetailDestination(val sentAtMillis: Long)
+
 @Serializable
 data object RatesDestination
 

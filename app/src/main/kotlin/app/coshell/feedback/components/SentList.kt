@@ -11,27 +11,33 @@ import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.feedback.data.SentFeedback
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import app.coshell.feedback.splitFeedbackMessage
 
-/** «Отправленные»: the latest messages from this phone, so it's clear what was already reported. */
+/** «Мои отзывы» (board Fb157A): text, kind and date, status pill; tap — the card, long press — remove. */
 @Composable
-internal fun SentList(entries: List<SentFeedback>) {
+internal fun SentList(entries: List<SentFeedback>, onOpen: (Long) -> Unit, onRemove: (Long) -> Unit) {
     if (entries.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         Text(
-            stringResource(R.string.feedback_sent_title).uppercase(),
+            stringResource(R.string.feedback_sent_title, entries.size).uppercase(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        val format = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
         entries.forEach { entry ->
+            val (kind, body) = splitFeedbackMessage(entry.text)
+            val date = feedbackDay(entry.sentAtMillis)
             CoShellListRow(
-                title = { Text(entry.text, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                supporting = { Text(Instant.ofEpochMilli(entry.sentAtMillis).atZone(ZoneId.systemDefault()).format(format)) },
+                title = { Text(body, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                supporting = { Text(if (kind != null) "$kind · $date" else date) },
+                trailing = entry.status?.let { { FeedbackStatusChip(it) } },
+                onClick = { onOpen(entry.sentAtMillis) },
+                onLongClick = { onRemove(entry.sentAtMillis) },
             )
         }
+        Text(
+            stringResource(R.string.feedback_sent_note),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }

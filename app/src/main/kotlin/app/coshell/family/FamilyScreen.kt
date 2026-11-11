@@ -6,18 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
-import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.family.components.CheckingBlock
@@ -29,22 +24,14 @@ import app.coshell.family.components.NoAccessBlock
 import app.coshell.family.components.NotConfiguredBlock
 import app.coshell.family.components.OfflineBlock
 import app.coshell.family.components.SignedOutBlock
-import app.coshell.core.designsystem.R as DesignR
+import app.coshell.ui.top.ScreenTopBar
 
 /** «Ещё → Семья и синхронизация»: one block per [FamilyState], then the last action's result. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.family_title)) },
-                navigationIcon = {
-                    CoShellIconButton(onClick = actions.onBack) {
-                        Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
-                    }
-                },
-            )
+            ScreenTopBar(stringResource(R.string.family_title), onBack = actions.onBack)
         },
     ) { padding ->
         Column(

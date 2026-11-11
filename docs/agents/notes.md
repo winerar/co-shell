@@ -8,14 +8,19 @@
 ## Служебные скрипты `scripts/agent/`
 | Скрипт | Когда |
 |---|---|
+| **`agent.sh [команда]`** | **одна точка входа для всего ниже** (без аргументов — список команд по-русски); новый скрипт — сюда же |
+| `gradle.sh <задачи>` | Gradle для агента вместо `./gradlew`: зеркало Maven Central (`maven-mirror.init.gradle`), при 429 — докачка curl-ом и повтор |
 | `session-start.sh` | первая команда сессии: fetch, чужие невлитые ветки, перенос ветки на `origin/dev`, STATUS, доска задач |
 | `tasks.sh [статус…]` | открытые задачи по колонкам (`gh api search/issues`); `tasks.sh next` — одна колонка |
-| `check.sh` | перед коммитом (`check assembleDebug`, краткий вывод); `--quick` — только unit-тесты |
+| `check.sh` | перед коммитом (`check assembleDebug` через `gradle.sh`, краткий вывод); `--quick` — только unit-тесты |
 | `session-end.sh` | перед финальным PR: незакоммиченное/незапушенное, дата и число тестов в STATUS, размеры файлов |
 | `gen-test-backup.py [-o файл]` | тестовый бэкап JSON с большим объёмом данных (~9 тыс. операций за 24 мес., `--months`, `--per-day`, `--seed`); проверен импортом |
 | `sync-dev.sh` | влить `origin/dev` в ветку: «OK» или конфликтующие файлы с подсказками (STATUS, схемы Room) |
 | `build-summary.sh [--ci] <лог>` | краткий отчёт сборки: ошибки, `Tests: N`, упавшие тесты с причиной, lint; его зовут `check.sh` и CI |
 | `gen-flows-board.py [файл]` | перерисовать доску «Воркфлоу» из таблицы потоков в скрипте; потом `h` в `canvas.json` и публикация на холст |
+| `gen-mockups.py` | пересобрать холст дизайна: доски состояний (`mockup_screens_*.py` из кирпичей `mockup_bricks.py`), «Тема макетов», «Настройки», «Предложения», «Воркфлоу»; перевести все доски на темы; записать `canvas.json` (ряды — `LAYOUT`) |
+| `mockup_theme.py <доска>…` | перевести цвета доски (рисуем во «Вольт · тёмная») на токены темы; повторный запуск безопасен |
+| `render-mockups.js <папка> dark\|light <палитра> <доски>…` | локальные PNG досок без холста (упрощённый рантайм: без событий и шрифтов) |
 | `profile-build.sh [задачи]` | где тратится время сборки: самые долгие задачи, итог lint/тестов (~3–5 мин) |
 
 Скрипты CI и для владельца остаются в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
@@ -32,46 +37,7 @@
 - (11-09) `check` в Android-модулях запускает только debug-вариант (release unit-тесты не гоняются).
 
 ## Инструменты окружения
-- (11-09) Время шагов CI без логов: GitHub MCP `actions_list` → `list_workflow_runs` (`resource_id: ci.yml`),
-  затем `list_workflow_jobs` (run id) — у каждого шага `started_at`/`completed_at`.
-- (11-10) `mawk` считает `length` в байтах (кириллица ×2) — длину строк в символах мерить `python3`/`wc -m`.
-- (11-10) `actionlint` без установки: бинарник из релиза `rhysd/actionlint` (v1.7.7) в scratchpad, `actionlint -shellcheck=`.
-- (11-09) `gh` CLI в облачной сессии — только для поиска; всё остальное — GitHub MCP.
-- (11-10) Задачи: `gh api -X GET search/issues -f q='repo:winerar/co-shell is:open label:status:next'` работает
-  (на нём `tasks.sh`). Ветка по умолчанию в репо — **`dev`**: `Fixes #N` закрывает issue при мерже в `dev`.
-  `sub_issue_write` отвечает ~15 КБ JSON — подзадачу создавать `issue_write` с `parent_issue_number`.
-  `issue_write` с `parent_issue_number` не создаёт новые метки (ошибка «label not found»), без него — создаёт серые.
-- (11-09) «Загрузи отзывы»: GitHub MCP `actions_run_trigger` (`run_workflow`, `feedback.yml`, ref `main`) —
-  issue появляются через ~20 с; затем `list_issues` с `labels: [feedback]`, `state: OPEN`.
-- (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
-- (11-09, скрипт 11-10) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — `scripts/agent/m2-mirror.sh
-  <scratchpad> group:artifact:ver` (curl, зеркало googleapis) → `check.sh --init-script <scratchpad>/m2-init.gradle`.
-  Нужен был `org.robolectric:nativeruntime-dist-compat:1.0.19`. Robolectric сам качает `android-all-instrumented`
-  («Failed to fetch maven artifact») — `M2_REPO=~/.m2/repository scripts/agent/m2-mirror.sh <dir> <coord>`
-  (11-10: `org.robolectric:android-all-instrumented:16-robolectric-13921718-i7`).
-- (11-09) Maven Central из облачной сессии отвечает Gradle 429 на большие файлы (Robolectric), повтор не помогает,
-  а curl качает тот же файл без ошибок. Обход без правок репо: jar+pom curl-ом в `<scratchpad>/m2/<group>/<id>/<ver>/`,
-  init-скрипт с `settingsEvaluated { … def m = r.maven{…}; r.remove(m); r.addFirst(m) }` и
-  `check.sh --init-script <файл>` (так прошёл `nativeruntime-dist-compat` 1.0.19). (11-09) curl тоже может
-  получить 429 — повторить через 4 с или с `repo1.maven.org`; init-скрипт — `<scratchpad>/m2-init.gradle`. Если 429 и там — зеркало
-  `maven-central.storage-download.googleapis.com/maven2` (сработало 11-09).
-- (11-10) Robolectric сам качает `android-all-instrumented` и тоже ловит 429 («Failed to fetch maven artifact») —
-  скачать curl-ом (зеркало googleapis) в `~/.m2/repository/org/robolectric/android-all-instrumented/<версия>/` (jar+pom).
-- (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
-  читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
-  `root` — папка, где файлы лежат как `project/<имя>` (скопировать в scratchpad); перед первой публикацией в сессии — `read` без `paths`.
-- (11-10) Варианты на холсте для выбора владельцем: одна доска на вариант (сравнивать рядом), тема — tweak
-  `"dark":{"editor":"boolean"}`, альтернативы внутри доски — `"editor":"enum"` (доски `SyncA–C`, `Wipe`).
-- (11-10) Конструктор с хвостовой лямбдой (`WalletImportUseCase(...) { "id" }`): новый параметр с дефолтом
-  в конце перехватывает лямбду — в тестах передавать `ids = { … }` по имени.
-- (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
-- (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
-  Если тест падает «Failed to fetch maven artifact …android-all-instrumented…» (429) — скачать jar+pom curl-ом
-  с зеркала GCS прямо в `~/.m2/repository/org/robolectric/android-all-instrumented/<ver>/` (сработало 11-09).
-
-- (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,
-  `@Config(qualifiers = "w393dp-h1000dp-xxhdpi")`, `onRoot().captureToImage()` → PNG в scratchpad, `Read` PNG;
-  перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
+Прокси, Maven 429, SDK, холст, GitHub — в [`environment.md`](environment.md).
 
 ## Грабли проекта
 - (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
@@ -120,3 +86,6 @@
   доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с).
 - (11-10) `MainShellSmokeTest`: плашка обновления там не выровнена и лежит слева вверху поверх «✕»/«назад» шапки —
   клик по ним не доходит; выход из режима проверять `onBackPressedDispatcher.onBackPressed()`.
+- (11-11) PR, влитый автослиянием (GITHUB_TOKEN), не закрыл задачу по `Fixes #156`, а закрытие тем же токеном не
+  запускает `tasks.yml` — доска отстала. Теперь `automerge.sh` сам закрывает задачи из `Fixes`, снимает
+  `status:*` и запускает синк доски; `session-end.sh` перечисляет задачи `status:in-progress`.

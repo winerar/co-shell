@@ -4,7 +4,7 @@
 set -uo pipefail
 cd "$(dirname "$0")/../.."
 tasks=("$@"); [ $# -eq 0 ] && tasks=(check assembleDebug)
-./gradlew "${tasks[@]}" --profile --rerun-tasks -q --console=plain >/dev/null 2>&1 || echo "Gradle failed"
+scripts/agent/gradle.sh "${tasks[@]}" --profile --rerun-tasks -q --console=plain >/dev/null 2>&1 || echo "Gradle failed"
 report=$(ls -t build/reports/profile/*.html | head -1)
 python3 - "$report" <<'PY'
 import re, sys

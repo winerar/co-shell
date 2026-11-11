@@ -4,7 +4,8 @@
 - JDK 21 (байткод проекта — Java 17).
 - Android SDK: `platforms;android-37.0`, `build-tools;36.0.0`. Путь — `ANDROID_HOME`
   или `sdk.dir` в `local.properties` (файл не коммитится).
-- Gradle — только через `./gradlew` (версия зафиксирована во wrapper).
+- Gradle — через `./gradlew` (версия зафиксирована во wrapper). **Агент — только через `scripts/agent/agent.sh`**
+  (`check`, `quick`, `test <модуль> [фильтр]`, `gradle <задачи>`): там зеркало Maven Central и автоповтор при 429 (#156).
 
 ## Установка SDK вручную (если setup-скрипт окружения не отработал)
 Нужен доступ к `dl.google.com` (окружение **co-shell**).
@@ -49,7 +50,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 плагин `org.jetbrains.kotlin.android` **не** подключается; нужен только `kotlin.compose` для Compose.
 
 ## CI
-`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → CI → Run workflow).
+`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → «Сборка и тесты (CI)» → Run workflow).
 - PR и `dev`: `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней). Если изменены только
   `docs/` и `*.md` — Gradle пропускается (шаг «Detect code changes»), остаются тесты скриптов.
 - `main` (релиз): lint и тесты **не** повторяются — то же дерево уже проверено в PR `dev` → `main`;

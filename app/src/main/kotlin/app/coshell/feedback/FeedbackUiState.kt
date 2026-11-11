@@ -13,5 +13,5 @@ data class FeedbackUiState(
     val history: List<SentFeedback> = emptyList(),
 ) {
     val canSend get() = text.isNotBlank() && !isSending
-    val justSent get() = result == FeedbackResult.Sent
+    val justSent get() = result is FeedbackResult.Sent
 }

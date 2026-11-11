@@ -19,14 +19,6 @@ def entry_head():
             '<span style="font-size: 13px; font-weight: 600; color: %s;">Расход</span></div>' % (acc_chip(ACC[0]), PINK))
 
 
-def idea3a():
-    order = [CATS[0], CATS[1], CATS[4], CATS[2], CATS[3], CATS[5], CATS[6], CATS[7]]
-    cells = ''.join(cat_cell(n, ic, c, False, DOT_TAG if i < 4 else '<span style="font-size: 10px;">&nbsp;</span>') for i, (n, ic, c) in enumerate(order))
-    grid = '<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;">%s</div>' % cells
-    hint = '<div style="font-size: 12px; color: %s; padding: 0 4px;">Первый ряд — частые для Galicia в это время дня; остальные — как всегда</div>' % MUTED
-    return entry(entry_head() + big_amount('4 500', 'ARS') + hint + grid + chips_row(chip('Сегодня ▾'), chip('＋ Заметка')) + keypad())
-
-
 def idea3b():
     sug = ''.join('<span style="display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px 0 6px; border-radius: 999px; background: %s; border: 1px solid %s; font-size: 14px;">%s%s</span>'
                   % (LIMEPILL if i == 0 else BAR, LIME if i == 0 else LINE2, dot_icon(ic, c, 28), n) for i, (n, ic, c) in enumerate([CATS[0], CATS[1], CATS[4]]))
@@ -57,14 +49,6 @@ def idea4a():
     return tab_screen('Операции', cafe_chips() + total + cafe_list(), 'ops')
 
 
-def idea4b():
-    bar = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 96px; padding: 12px 16px; border-radius: 20px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.45);">'
-           '<div style="display: flex; justify-content: space-between; align-items: baseline;"><span style="font-size: 13px; color: %s;">Итог фильтра · 12 операций</span>%s</div>'
-           '<div style="margin-top: 8px; display: flex; gap: 16px; font-size: 12px; color: %s;"><span>Расход %s</span><span>Доход %s</span><span>≈ 82,10 USD</span></div></div>'
-           % (CHIP, LINE2, MUTED, amount('−84 300', 'ARS', PINK, 18), MUTED, amount('−84 300', '', PINK, 12), amount('0', '', CYAN, 12)))
-    return tab_screen('Операции', cafe_chips() + cafe_list(), 'ops') + bar
-
-
 # ---- 5 · currency shares on «Счета» -----------------------------------------------------------------------------
 
 SHARES = [('USD', 46, LIME), ('ARS', 28, CYAN), ('USDT', 15, VIOLET), ('AMD', 11, YELLOW)]
@@ -88,13 +72,6 @@ def idea5a():
     return tab_screen('Счета', acc_hero(bar + legend) + '<div style="margin-top: 12px;">%s</div>' % segmented(['По типу', 'По валюте', 'Чьи'], 'По типу') + accounts_rows(), 'acc', icon_button('search', 'Поиск'))
 
 
-def idea5b():
-    chips = '<div style="margin-top: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">%s</div>' % ''.join(
-        '<span style="padding: 8px; border-radius: 12px; background: %s; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 12px; color: %s;">%s</span>'
-        '<span style="%s font-size: 15px; font-weight: 700;">%d%%</span><span style="height: 3px; border-radius: 2px; background: %s; width: %d%%;"></span></span>' % (CHIP, MUTED, n, MONO, p, c, max(20, p * 2)) for n, p, c in SHARES)
-    return tab_screen('Счета', acc_hero(chips) + '<div style="margin-top: 12px;">%s</div>' % segmented(['По типу', 'По валюте', 'Чьи'], 'По типу') + accounts_rows(), 'acc', icon_button('search', 'Поиск'))
-
-
 # ---- 6 · quiet sync indicator ------------------------------------------------------------------------------------
 
 def home_with(actions, top_extra=''):
@@ -115,25 +92,11 @@ def idea6a2():
     return home_with(sync_dot(WARN, 'ждут: 3') + icon_button('search', 'Поиск'))
 
 
-def idea6b():
-    av = ('<span style="display: flex; margin-right: 4px;"><span style="width: 34px; height: 34px; border-radius: 50%%; background: %s; color: #1A0533; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;">М</span>'
-          '<span style="width: 34px; height: 34px; margin-left: -6px; border-radius: 50%%; background: %s; color: #002A2E; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;">А</span></span>'
-          % (VIOLET, BG, OK, CYAN, BG, OK))
-    return home_with(av + icon_button('search', 'Поиск'))
-
-
 # ---- 7 · undo instead of dialogs --------------------------------------------------------------------------------
 
 def idea7a():
     rows = [row(a[0], a[4], badge(a[1], a[2], a[3]), amount(a[5], a[6])) for a in ACC[:3]]
     return tab_screen('Счета', acc_hero('') + label('Карты и банки', True, 16) + group(rows), 'acc') + snackbar('Счёт «Старая карта» удалён', bottom=96)
-
-
-def idea7b():
-    body = (field('Название', 'Старая карта') + field('Валюта', 'USD') + field('Начальный баланс', '0,00', mono=True)
-            + '<div style="margin-top: 20px; display: flex; gap: 8px;"><span style="flex: 1;">%s</span><span style="flex: 1;">%s</span></div>' % (button('Отмена', 'outline', None, 0), button('Точно удалить', 'danger', 'trash', 0))
-            + note('Нажали «Удалить» — кнопка спрашивает ещё раз прямо на месте, без окна поверх. Через 4 с вернётся обратно.', 10))
-    return inner_screen('Счёт', body)
 
 
 # ---- 8 · filled text field ------------------------------------------------------------------------------------------
@@ -157,10 +120,6 @@ def idea8a():
     return account_form(lambda l, v, h='', e='', m=False: field(l, v, h, e, m))
 
 
-def idea8b():
-    return account_form(field_above)
-
-
 # ---- 9 · rows in cards ------------------------------------------------------------------------------------------------
 
 SETTINGS_ROWS = [('Валюты отчётов', 'Основная: USD', 'rate'), ('Встряхнуть — новая операция', 'Пока открыто приложение', 'spark'), ('Обновление приложения', 'Версия 1.43 · последняя', 'download')]
@@ -170,14 +129,6 @@ def idea9a():
     rows = group([row(t, s, tile_icon(i), chevron()) for t, s, i in SETTINGS_ROWS])
     fam = group([row('Семья и синхронизация', 'Синхронизировано: 2 мин назад', tile_icon('user', VIOLET), chevron()), row('Резервная копия', 'Автокопия: вчера', tile_icon('download', CYAN), chevron())])
     return inner_screen('Настройки', label('Тема', top=4) + segmented(['Системная', 'Светлая', 'Тёмная'], 'Тёмная', 'lime') + label('Общее') + rows + label('Данные') + fam)
-
-
-def idea9b():
-    def one(t, s, i, col=LIME):
-        return card(row(t, s, tile_icon(i, col), chevron()).replace('{{div}}', ''), extra='margin-top: 8px;')
-    return inner_screen('Настройки', label('Тема', top=4) + segmented(['Системная', 'Светлая', 'Тёмная'], 'Тёмная', 'lime') + label('Общее')
-                        + ''.join(one(*r) for r in SETTINGS_ROWS) + label('Данные') + one('Семья и синхронизация', 'Синхронизировано: 2 мин назад', 'user', VIOLET)
-                        + one('Резервная копия', 'Автокопия: вчера', 'download', CYAN))
 
 
 # ---- 10 · rate sparkline ------------------------------------------------------------------------------------------------
@@ -203,16 +154,6 @@ def idea10a():
     return inner_screen('Курсы валют', note('Загружено: курсы на 11 нояб., источник fawazahmed0/currency-api', 0) + label('Курсы на сегодня') + group(rows))
 
 
-def idea10b():
-    pts = SERIES['ARS'][0]
-    big = card('<div style="display: flex; justify-content: space-between; align-items: baseline;"><b>1 USD = 1 024 ARS</b><span style="%s font-size: 12px; color: %s;">+6,5 %% за 30 дн.</span></div>'
-               '<div style="margin-top: 10px;">%s</div><div style="display: flex; justify-content: space-between; font-size: 11px; color: %s; margin-top: 4px;"><span>12 окт.</span><span>11 нояб.</span></div>'
-               '<div style="margin-top: 8px; display: flex; gap: 8px;">%s</div>'
-               % (MONO, WARN, spark([1 / p * 1e6 for p in pts], LIME, 324, 110), MUTED, chip('7 дн.') + chip('30 дн.', True) + chip('1 год')), pad='14px')
-    rows = [row('1 %s = %s USD' % (c, RATE_TXT[c]), 'на 11 нояб.', badge(c[:2], CHIP, INK, 36, 18), chevron()) for c in ['AMD', 'RUB', 'USDT']]
-    return inner_screen('Курсы валют', label('ARS', True, 4) + big + label('Остальные') + group(rows))
-
-
 # ---- 11 · skip empty import steps ------------------------------------------------------------------------------------
 
 def idea11a():
@@ -224,17 +165,6 @@ def idea11a():
     auto = group([row('Счета: все 9 нашлись у вас', 'Galicia, Ameria, USDT-карта… — той же валюты', svg('check', OK)), row('Переводов без пары нет', 'шаг пропущен', svg('check', OK))])
     return inner_screen('Импорт из Wallet', card(out, pad='10px 14px') + label('Решено автоматически') + auto + note('Открыть любой пропущенный шаг — тап по строке.')) + \
         '<div style="position: absolute; left: 16px; right: 16px; bottom: 24px;">%s</div>' % button('Импортировать 1 287 операций', mt=0)
-
-
-def idea11b():
-    def sec(title, sub, open_=False, inner=''):
-        return card('<div style="display: flex; align-items: center; gap: 10px;"><span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">%s</div>'
-                    '<div style="font-size: 12px; color: %s;">%s</div></span>%s</div>%s' % (title, MUTED, sub, svg('down' if not open_ else 'chev', MUTED, 18), inner), pad='14px', extra='margin-top: 8px;')
-    cats = ('<div style="margin-top: 10px;">%s</div>' % group([row('Restaurants', 'Расход · 96', '', chip('Новая')), row('Еда', 'Расход · 512', '', chip('→ Продукты', True))]))
-    return inner_screen('Импорт из Wallet', '<div style="font-size: 13px; color: %s; margin: 0 4px;">Шаг 2 из 3 · <b style="color: %s;">Проверка</b></div>' % (MUTED, INK)
-                        + sec('1 287 операций', 'с 3 янв. 2024 по 10 нояб. 2026 · 20 уже были') + sec('Счета · 9', 'все сопоставлены')
-                        + sec('Категории · 27', '4 новые — проверьте', True, cats) + sec('Переводы без пары · 0', 'нечего решать')) + \
-        '<div style="position: absolute; left: 16px; right: 16px; bottom: 24px;">%s</div>' % button('Импортировать', mt=0)
 
 
 # ---- 12 · large font ----------------------------------------------------------------------------------------------------
@@ -260,15 +190,15 @@ def idea12(wrap):
     return top + '<div style="padding: 0 16px;">%s</div>' % tag + head + lst + nav('ops')
 
 
-BOARDS = [  # name, title, fn, proposal number
-    ('Idea3A', '3А · Частые — первым рядом сетки', idea3a, 3), ('Idea3B', '3Б · Строка «Обычно здесь» над сеткой (рекомендую)', idea3b, 3),
-    ('Idea4A', '4А · Итог под фильтрами (рекомендую)', idea4a, 4), ('Idea4B', '4Б · Плавающая карточка итога', idea4b, 4),
-    ('Idea5A', '5А · Полоса долей и легенда (рекомендую)', idea5a, 5), ('Idea5B', '5Б · Плитки валют с %', idea5b, 5),
-    ('Idea6A', '6А · Точка «синхронно» (рекомендую)', idea6a, 6), ('Idea6A2', '6А · …и «ждут отправки»', idea6a2, 6), ('Idea6B', '6Б · Аватары семьи с кольцом', idea6b, 6),
-    ('Idea7A', '7А · Удалено сразу, снэкбар «Отменить» (рекомендую)', idea7a, 7), ('Idea7B', '7Б · Подтверждение в самой кнопке', idea7b, 7),
-    ('Idea8A', '8А · Заливка, подпись внутри (рекомендую)', idea8a, 8), ('Idea8B', '8Б · Подпись над полем', idea8b, 8),
-    ('Idea9A', '9А · Группа строк в одной карточке (рекомендую)', idea9a, 9), ('Idea9B', '9Б · Каждая строка — своя карточка', idea9b, 9),
-    ('Idea10A', '10А · Спарклайн в строке (рекомендую)', idea10a, 10), ('Idea10B', '10Б · Большой график выбранной валюты', idea10b, 10),
-    ('Idea11A', '11А · Пустые шаги — «авто» (рекомендую)', idea11a, 11), ('Idea11B', '11Б · 3 шага, секции в «Проверке»', idea11b, 11),
-    ('Idea12A', '12А · Сумма под названием (рекомендую)', lambda: idea12(True), 12), ('Idea12B', '12Б · Сокращать: 1,25 млн', lambda: idea12(False), 12),
+BOARDS = [  # name, title, fn, proposal number — owner's picks (#159, 2026-11-11); other variants removed
+    ('Idea3B', '3Б · Строка «Обычно здесь» над сеткой (выбрано)', idea3b, 3),
+    ('Idea4A', '4А · Итог под фильтрами (выбрано)', idea4a, 4),
+    ('Idea5A', '5А · Полоса долей и легенда (выбрано)', idea5a, 5),
+    ('Idea6A', '6А · Точка «синхронно» (выбрано)', idea6a, 6), ('Idea6A2', '6А · …и «ждут отправки»', idea6a2, 6),
+    ('Idea7A', '7А · Удалено сразу, снэкбар «Отменить» (выбрано)', idea7a, 7),
+    ('Idea8A', '8А · Заливка, подпись внутри (выбрано)', idea8a, 8),
+    ('Idea9A', '9А · Группа строк в одной карточке (выбрано)', idea9a, 9),
+    ('Idea10A', '10А · Спарклайн в строке (выбрано)', idea10a, 10),
+    ('Idea11A', '11А · Пустые шаги — «авто» (выбрано)', idea11a, 11),
+    ('Idea12A', '12А · Сумма под названием (выбрано)', lambda: idea12(True), 12),
 ]

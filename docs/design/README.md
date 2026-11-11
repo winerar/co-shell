@@ -1,48 +1,45 @@
 # Дизайн Co-Shell — всё в одном месте
 
 **Холст:** https://claude.ai/artifact/Kfegn8qM8QEnPKr7HRYpw5 — закреплён в боковой панели claude.ai
-(«Co-Shell — дизайн»). Вкладки вверху холста: **Экраны · Воркфлоу · Компоненты · История решений**.
+(«Co-Shell — дизайн»). Вкладки вверху холста: **Экраны · Воркфлоу · Компоненты · Предложения · История решений**.
 **Правило:** любое визуальное изменение сначала показываем здесь макетом, код — после «ок» владельца
 (`docs/agents/workflow.md` §«Визуальные изменения»).
 
 Макеты живые: кнопка Play на доске — нажимать вкладки, переключатели, шторку.
+**Темы:** доска «Тема макетов» (слева на «Экранах», «Воркфлоу», «Компонентах») перекрашивает весь холст —
+тёмная/светлая × 6 палитр, по формулам `core/designsystem/.../theme/` (`Color.kt`, `PaletteSpecs.kt`). Палитры на
+доске «Настройки» делают то же. Одна доска в другой теме — её Tweaks «Тема», «Палитра».
 
 Холст — источник истины по виду. `mockups/` — копия его файлов в репозитории (читать без сети, видеть
 историю правок в git). Поменял холст → скопируй файлы сюда тем же коммитом, что и код.
 
 ## Экраны → код (`app/src/main/kotlin/app/coshell/`)
-| Доска (`mockups/`) | Экран | Код |
-|---|---|---|
-| `Main` — шторка ввода, 2 шага | Новая операция | `transactions/edit/`, `components/keypad/` |
-| `Operations` | Операции | `transactions/list/` |
-| `Accounts` | Счета (группы, итоги) | `accounts/list/` |
-| `More` | Ещё | `more/` |
-| `Feedback` | Обратная связь | `feedback/` |
-| `Update`, `UpdatePill` | Обновление, пилюля над панелью | `update/`, `update/notice/` |
-| `Colors` | Цвет счёта: банки + палитра | `category/BankColors`, `CategoryPalette` (designsystem) |
-| `Categories`, `CategoryEdit` | Категории, редактор «Категория \| Папка» | `categories/list/`, `categories/edit/` |
-| `AccountEdit` | Редактор счёта | `accounts/edit/` |
-| `Rates` | Курсы валют | `rates/list/` |
-| `ReportCurrencies` | Валюты отчётов | `currencies/` |
-| `Family` | Семья и синхронизация | `family/` |
-| `Backup` | Резервная копия | `backup/` |
-| `Settings` | Настройки, 6 палитр | `settings/`, `theme/` |
-| `SyncA`, `SyncB`, `SyncC` | Ошибка синка на «Обзоре» (#102): сделан **17А** — плашка над балансом | `home/sync/`, `home/components/SyncBanner.kt` |
-| `Wipe` | Стереть все данные (#107): подтверждение **словом** СТЕРЕТЬ | `wipe/`, строка в `settings/` |
-| `Ops112A–C` | #112: строки без свайпов, вкладки листаются свайпом. **Выбран 19В** (владелец 2026-11-10): удержание → выбор нескольких, панель «Дублировать · Удалить · N»; 19А/19Б — отклонены | `transactions/list/` (`Selection`, `SelectionActions`), `ui/bar/BottomBarSlot`, `ui/top/SelectionTopBar`, `navigation/TabSwipe` |
-| `Flows` | Воркфлоу: 16 главных действий по шагам, сверено с кодом 2026-11-10; пунктир — экран без макета | — (карта переходов, `navigation/`); генератор `scripts/agent/gen-flows-board.py` |
-| `Components` | Компоненты и токены | `core/designsystem/` (`components.md`) |
-| `History` | Ссылки на ранние страницы выбора | — |
+Ряды на вкладке «Экраны»: слева основная доска экрана, правее — его состояния.
 
-Нижняя панель (на досках `Operations`, `Accounts`, `More`, `UpdatePill`, `Components`) —
-`CoShellBottomBar` + `navigation/MainBottomBar`: плавающая капсула 64 dp, вкладки без подписей,
+| Ряд | Доски (`mockups/`) | Код |
+|---|---|---|
+| Обзор | `Home`, `HomeEmpty` (первый запуск), `HomeAttention` (нет курса), `HomeSync` (ошибка синка, 17А), `UpdateWhatsNew` | `home/`, `home/sync/`, `update/notice/` |
+| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
+| Шторка ввода | `Main` (шаги 1–2), `EntryTransfer`, `EntryReceipt`, `EntryEdit` (правка, дубль, удалить), `EntryError`, `EntryNoAccounts` | `transactions/edit/`, `components/keypad/` |
+| Счета и «Ещё» | `Accounts`, `AccountsSearch`, `AccountsEmpty`, `More`, `UpdatePill`, `Update` | `accounts/list/`, `more/`, `update/` |
+| Счёт и категории | `AccountEdit`, `AccountEditExisting` (блок валюты, ошибки), `AccountDelete`, `AccountBlocked`, `Colors`, `Categories`, `CategoryEdit`, `CategoryBlocked` | `accounts/edit/`, `categories/`, `category/BankColors` |
+| Курсы и валюты | `Rates`, `RatesRefreshing`, `RatesFailed`, `RatesEmpty`, `RatesManual`, `ReportCurrencies`, `CurrencyAdd` | `rates/list/`, `currencies/` |
+| Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
+| Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
+| Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
+| Воркфлоу | `Flows`: 16 главных действий по шагам; каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
+| Компоненты | `Components` | `core/designsystem/` (`components.md`) |
+| Предложения | `Ideas`: 14 улучшений (сейчас → предлагаю, объём) — ждут выбора владельца | — |
+| История | `History`: ссылки на ранние страницы выбора | — |
+
+Нижняя панель — `CoShellBottomBar` + `navigation/MainBottomBar`: плавающая капсула 64 dp, вкладки без подписей,
 пилюля 44 dp, «+» 52 dp (`Sizes.bottomBar*`).
 
-## Экраны без макета и расхождения (долг, задача winerar/co-shell#115)
-Ревью 2026-11-10 — `review-2026-11-10.md`. Нет доски: **«Обзор»** (есть только `SyncA`), **«Импорт из Wallet»**,
-правка существующей операции, пустые состояния, светлая тема основных досок. Доски `Operations`/`Flows` ещё показывают
-свайпы строк — устарели, верна доска `Ops112C` (19В). Расхождение 19В: при листании вкладок экран лишь «наклоняется»
-за пальцем (¼ пути), соседняя вкладка въезжает после отпускания — вкладки живут в `NavHost`, не в пейджере.
+## Расхождения кода с досками (долг, задача winerar/co-shell#115)
+Ревью 2026-11-10 — `review-2026-11-10.md`. Доски состояний (2026-11-11) нарисованы по коду и строкам
+`strings.xml`, но уже в целевом виде ревью: поле с заливкой (К6), строки в карточках (К4/К5), поиск-пилюля (К2).
+Код к ним ещё не приведён. Расхождение 19В: при листании вкладок экран лишь «наклоняется» за пальцем
+(¼ пути), соседняя вкладка въезжает после отпускания — вкладки живут в `NavHost`, не в пейджере.
 
 ## Ранние страницы (до холста)
 - Новый облик (пружины, палитры, вёрстка): https://claude.ai/artifact/WqocoPvC6g6mLRt31WvcCW
@@ -51,5 +48,15 @@
 
 ## Правила для агента
 - Новый экран или заметная переделка — сначала доска на этом же холсте (не новый артефакт), потом код.
+  Варианты на выбор — одна доска на вариант рядом; **после выбора невыбранные доски удалить**.
+- Доски рисуем только во «Вольт · тёмная» (цвета — `scripts/agent/mockup_bricks.py`), без своих `dark`-tweak;
+  `scripts/agent/mockup_theme.py` переводит цвета в токены темы (повторный запуск безопасен). Цвет, который не должен
+  перекрашиваться (свотчи палитр), — в JS без `#` (`'#' + 'B8FF2E'`).
+- Состояния экранов — из кирпичей в `scripts/agent/mockup_screens_*.py`; `python3 scripts/agent/gen-mockups.py`
+  пишет доски, переводит на темы все доски и `canvas.json` (ряды — `LAYOUT`). Ручные доски (`Main`, `Accounts`…)
+  он не трогает, кроме перевода цветов. Проверить без холста: `node scripts/agent/render-mockups.js <папка> light Манго <доски>`.
+- Публикация: скопировать `mockups/*` в `<scratch>/project/`, `Artifact publish` с `root`, `file_path` = `project/canvas.json`,
+  остальные в `files`, удалённые — `null` (порядок — инструкции типа в ответе `Artifact read`).
+- Общий переключатель темы — `localStorage['coshell-mock-theme']` + событие `storage` (доски — iframe одного источника).
 - Не сделанное из макетов — в `docs/STATUS.md` («Не сделано из мокапов»).
 - Правила токенов и компонентов — `docs/agents/design-system.md`, `components.md`, `motion.md`.

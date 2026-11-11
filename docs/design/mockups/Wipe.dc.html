@@ -84,14 +84,6 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     <button type="button" class="tap" onClick="{{wipe}}" disabled="{{locked}}" style="margin-top: 14px; width: 100%; height: 54px; border-radius: 999px; border: none; background: {{danger}}; color: {{onDanger}}; font-size: 15px; font-weight: 700; opacity: {{btnOpacity}};">Стереть у всей семьи</button>
     <button type="button" class="tap" onClick="{{fillWord}}" style="margin-top: 8px; width: 100%; height: 40px; border: none; background: transparent; color: {{muted}}; font-size: 12px;">(демо: вписать слово)</button>
     </sc-if>
-
-    <sc-if value="{{byHold}}" hint-placeholder-val="{{false}}">
-    <div style="margin: 18px 4px 8px; font-size: 13px; color: {{muted}};">Нажмите и держите кнопку 2 секунды</div>
-    <button type="button" onMouseDown="{{holdStart}}" onMouseUp="{{holdEnd}}" onMouseLeave="{{holdEnd}}" onTouchStart="{{holdStart}}" onTouchEnd="{{holdEnd}}" style="position: relative; overflow: hidden; width: 100%; height: 54px; border-radius: 999px; border: 1px solid {{danger}}; background: transparent; color: {{danger}}; font-size: 15px; font-weight: 700;">
-      <span class="fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: {{holdWidth}}; background: {{dangerBg}};"></span>
-      <span style="position: relative;">Держите — стереть у всей семьи</span>
-    </button>
-    </sc-if>
   </div>
   </sc-if>
 
@@ -106,18 +98,76 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"confirm":{"editor":"enum","options":["слово","удержание"],"default":"слово"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
+/*co-theme*/var CO_KEYS = ['k_050805_n00','k_0E1F00_O','k_10160D_n04','k_14200F_Pt10','k_222B1E_n12','k_2A0D12_et15','k_2B0008_et13','k_5C1C26_et35','k_5C6757_n35','k_5CFFB0_g','k_9AA594_n60','k_B8FF2E_P','k_DCE5D3_n86','k_EEF5E6_n93','k_F2B8C1_ew64','k_F7FBF2_n97','k_FF6B7D_ew25'];
+var CO_SPECS = {
+  'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
+  'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
+  'Манго': ['#FF8A3D','#2B0E00','#FF3D7F','#C2185B','#FFC93C','#7A5600','#B6FF3D','#3F7300','#FF4D5E','#C8102E','#160C16','#FFF5EA'],
+  'Ультра': ['#3D7BFF','#000B24','#FF2BD6','#B0008F','#91E668','#2F6B12','#7CFF6B','#2E7A00','#FF3B6B','#C4004A','#07090C','#F4F7FF'],
+  'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
+  'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
+};
+var CO_NOW = { dark: true, pal: 'Вольт' };
+function __coTheme(props) {
+  var s = {};
+  try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }
+  var t = props && props.theme, p = props && props.palette;
+  var dark = t === 'тёмная' ? true : t === 'светлая' ? false : s.dark !== false;
+  var pal = CO_SPECS[p] ? p : CO_SPECS[s.pal] ? s.pal : 'Вольт';
+  CO_NOW = { dark: dark, pal: pal };
+  return CO_NOW;
+}
+function __coRgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function __coHex(c) { return '#' + c.map(function (v) { var x = Math.round(Math.max(0, Math.min(255, v))).toString(16); return x.length < 2 ? '0' + x : x; }).join('').toUpperCase(); }
+function __coMix(a, b, t) { var x = __coRgb(a), y = __coRgb(b); return __coHex([0, 1, 2].map(function (i) { return x[i] + (y[i] - x[i]) * t; })); }
+function __coLight(t) {
+  var pts = [[0, 0], [0.35, 0.3], [0.5, 0.55], [0.62, 0.63], [0.8, 0.8], [0.92, 0.9], [1, 0.95]];
+  for (var i = 1; i < pts.length; i++) if (t <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (t - a[0]) / (b[0] - a[0]); }
+  return 0.95;
+}
+function __co(k) {
+  var m = /^k_([0-9A-F]{6})_(.*)$/.exec(k);
+  if (!m) return k;
+  var orig = '#' + m[1], role = m[2];
+  if (CO_NOW.dark && CO_NOW.pal === 'Вольт') return orig;
+  var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
+  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
+  if (role === 'O') return S[1];
+  if (role === 'Oa' || role === 'Oi') return orig;
+  if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
+  if (neon[role]) return neon[role][0];
+  if (role.length === 2 && role.charAt(1) === 'I' && neon[role.charAt(0)]) return d ? neon[role.charAt(0)][0] : neon[role.charAt(0)][1];
+  var r = role.charAt(0), kind = role.charAt(1), t = parseInt(role.slice(r === 'n' ? 1 : 2), 10) / 100;
+  if (r === 'n') {
+    if (d) return __coMix(bg, '#FFFFFF', t);
+    if (t < 0.012) return bg;
+    if (t <= 0.045 || (t >= 0.065 && t <= 0.075)) return '#FFFFFF'; // cards, bars, sheets: white (owner's light boards)
+    if (t <= 0.35) return __coMix(bg, '#000000', 0.04 + (t - 0.045) * 0.8); // fields, chips, lines
+    return __coMix(bg, '#000000', __coLight(t));
+  }
+  var n = neon[r];
+  if (!n) return orig;
+  if (kind === 't') return d ? __coMix(bg, n[0], t) : __coMix(bg, n[0], Math.min(0.5, t * 0.8));
+  if (kind === 'w') return d ? __coMix(n[0], '#FFFFFF', t) : n[1];
+  return orig;
+}
+function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_KEYS[i]] = __co(CO_KEYS[i]); return o; }
+/*co-theme-end*/
 class Component extends DCLogic {
+  /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
+  componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
   constructor(props) { super(props); this.state = { step: 0, word: '', hold: false }; this.timer = null; }
-  componentWillUnmount() { clearTimeout(this.timer); }
-  renderVals() {
+  __coWillUnmount() { clearTimeout(this.timer); }
+  __coRender() {
     const s = this.state;
-    const dark = this.props.dark ?? true;
+    const dark = true;
     const T = dark
-      ? { bg: '#050805', ink: '#EEF5E6', muted: '#9AA594', card: '#10160D', line: '#222B1E', accent: '#B8FF2E', onAccent: '#0E1F00', danger: '#FF6B7D', onDanger: '#2B0008', dangerBg: '#2A0D12', dangerLine: '#5C1C26', okc: '#5CFFB0' }
-      : { bg: '#F7FBF2', ink: '#14200F', muted: '#5C6757', card: '#FFFFFF', line: '#DCE5D3', accent: '#B8FF2E', onAccent: '#0E1F00', danger: '#C8203A', onDanger: '#FFFFFF', dangerBg: '#FDE7EA', dangerLine: '#F2B8C1', okc: '#0B7F3D' };
+      ? { bg: (__co('k_050805_n00')), ink: (__co('k_EEF5E6_n93')), muted: (__co('k_9AA594_n60')), card: (__co('k_10160D_n04')), line: (__co('k_222B1E_n12')), accent: (__co('k_B8FF2E_P')), onAccent: (__co('k_0E1F00_O')), danger: (__co('k_FF6B7D_ew25')), onDanger: (__co('k_2B0008_et13')), dangerBg: (__co('k_2A0D12_et15')), dangerLine: (__co('k_5C1C26_et35')), okc: (__co('k_5CFFB0_g')) }
+      : { bg: (__co('k_F7FBF2_n97')), ink: (__co('k_14200F_Pt10')), muted: (__co('k_5C6757_n35')), card: '#FFFFFF', line: (__co('k_DCE5D3_n86')), accent: (__co('k_B8FF2E_P')), onAccent: (__co('k_0E1F00_O')), danger: '#C8203A', onDanger: '#FFFFFF', dangerBg: '#FDE7EA', dangerLine: (__co('k_F2B8C1_ew64')), okc: '#0B7F3D' };
     const ok = s.word.trim().toUpperCase() === 'СТЕРЕТЬ';
-    const byHold = (this.props.confirm ?? 'слово') === 'удержание';
+    const byHold = false;
     return {
       ...T,
       atSettings: s.step === 0, atConfirm: s.step === 1, atDone: s.step === 2,

@@ -21,8 +21,8 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
 .tint{transition:background-color 420ms ease-out,border-color 420ms ease-out,color 420ms ease-out}
 </style>
 </helmet>
-<div style="width: 390px; height: 1240px; box-sizing: border-box; background: #11170E; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; padding: 12px 16px 24px; border-radius: 28px 28px 0 0;">
-  <div style="display: flex; justify-content: center; padding-bottom: 12px;"><div style="width: 36px; height: 4px; border-radius: 2px; background: #4A5444;"></div></div>
+<div style="width: 390px; height: 1240px; box-sizing: border-box; background: {{co.k_11170E_n05}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; padding: 12px 16px 24px; border-radius: 28px 28px 0 0;">
+  <div style="display: flex; justify-content: center; padding-bottom: 12px;"><div style="width: 36px; height: 4px; border-radius: 2px; background: {{co.k_4A5444_n28}};"></div></div>
   <h1 style="margin: 0 0 12px; font-size: 22px; font-weight: 700;">Цвет счёта</h1>
 
   <div class="tint" style="{{cardStyle}}">
@@ -30,40 +30,40 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
       <span class="tint" style="{{badgeStyle}}">{{ini}}</span>
       <span style="display: flex; flex-direction: column;">
         <span style="font-size: 16px; font-weight: 600;">Galicia</span>
-        <span style="font-size: 12px; color: #9AA594;">{{colorName}}</span>
+        <span style="font-size: 12px; color: {{co.k_9AA594_n60}};">{{colorName}}</span>
       </span>
     </span>
-    <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700;">1 250 000 <span style="font-size: 14px; color: #9AA594; font-weight: 500;">ARS</span></span>
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700;">1 250 000 <span style="font-size: 14px; color: {{co.k_9AA594_n60}}; font-weight: 500;">ARS</span></span>
   </div>
 
-  <button type="button" class="tap" onClick="{{suggest}}" style="margin-top: 12px; width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 16px; border: 1px dashed #3D5A16; background: #141C0E; color: #EEF5E6; text-align: left;">
+  <button type="button" class="tap" onClick="{{suggest}}" style="margin-top: 12px; width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 16px; border: 1px dashed {{co.k_3D5A16_Pt33}}; background: {{co.k_141C0E_Pt08}}; color: {{co.k_EEF5E6_n93}}; text-align: left;">
     <span style="width: 28px; height: 28px; border-radius: 9px; background: #F26E22; flex: none;"></span>
     <span style="font-size: 14px; flex-grow: 1;">Похоже на банк Galicia — взять его цвет</span>
-    <span style="font-size: 13px; color: #B8FF2E; font-weight: 600;">Взять</span>
+    <span style="font-size: 13px; color: {{co.k_B8FF2E_Pi}}; font-weight: 600;">Взять</span>
   </button>
 
-  <div style="font-size: 13px; font-weight: 600; color: #B8FF2E; margin: 20px 0 4px;">Банки и приложения</div>
-  <div style="font-size: 12px; color: #9AA594; margin-bottom: 8px;">Оттенки примерные — сверим по логотипам перед кодом</div>
+  <div style="font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; margin: 20px 0 4px;">Банки и приложения</div>
+  <div style="font-size: 12px; color: {{co.k_9AA594_n60}}; margin-bottom: 8px;">Оттенки примерные — сверим по логотипам перед кодом</div>
   <sc-for list="{{banks}}" as="g" hint-placeholder-count="4">
-    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: #9AA594; margin: 12px 0 6px;">{{g.title}}</div>
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: {{co.k_9AA594_n60}}; margin: 12px 0 6px;">{{g.title}}</div>
     <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">
       <sc-for list="{{g.items}}" as="b" hint-placeholder-count="4">
         <button type="button" class="tap" onClick="{{b.pick}}" style="{{b.style}}">
           <span style="width: 36px; height: 36px; border-radius: 11px; background: {{b.color}}; color: {{b.ink}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">{{b.ini}}</span>
-          <span style="font-size: 11px; color: #C9D3C2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{b.name}}</span>
+          <span style="font-size: 11px; color: {{co.k_C9D3C2_n79}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{b.name}}</span>
         </button>
       </sc-for>
     </div>
   </sc-for>
 
-  <div style="font-size: 13px; font-weight: 600; color: #B8FF2E; margin: 22px 0 4px;">Палитра Вольт · 36 цветов</div>
-  <div style="font-size: 12px; color: #9AA594; margin-bottom: 10px;">Общая для счетов и категорий. Точкой отмечены 12 новых</div>
+  <div style="font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; margin: 22px 0 4px;">Палитра Вольт · 36 цветов</div>
+  <div style="font-size: 12px; color: {{co.k_9AA594_n60}}; margin-bottom: 10px;">Общая для счетов и категорий. Точкой отмечены 12 новых</div>
   <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; justify-items: center;">
     <sc-for list="{{palette}}" as="p" hint-placeholder-count="36">
       <button type="button" class="tap" onClick="{{p.pick}}" aria-label="{{p.name}}" style="{{p.ring}}">
         <span style="position: relative; width: 38px; height: 38px; border-radius: 50%; background: {{p.color}}; display: block;">
           <sc-if value="{{p.isNew}}" hint-placeholder-val="{{false}}">
-            <span style="position: absolute; right: -2px; top: -2px; width: 10px; height: 10px; border-radius: 50%; background: #EEF5E6; border: 2px solid #11170E;"></span>
+            <span style="position: absolute; right: -2px; top: -2px; width: 10px; height: 10px; border-radius: 50%; background: {{co.k_EEF5E6_n93}}; border: 2px solid {{co.k_11170E_n05}};"></span>
           </sc-if>
         </span>
       </button>
@@ -71,22 +71,80 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":1240}}'>
+/*co-theme*/var CO_KEYS = ['k_111611_n05','k_11170E_n05','k_141C0E_Pt08','k_1F2A17_n10','k_3D5A16_Pt33','k_4A5444_n28','k_9AA594_n60','k_9BF5D6_gw40','k_B0B8C4_n72','k_B8FF2E_Pi','k_C9D3C2_n79','k_EEF5E6_n93','k_F2D0A4_ww49','k_F4F59A_yw60','k_FF5470_ew15','k_FF8FA3_ew44','k_FFB3D1_ew66','k_FFC46B_ww20'];
+var CO_SPECS = {
+  'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
+  'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
+  'Манго': ['#FF8A3D','#2B0E00','#FF3D7F','#C2185B','#FFC93C','#7A5600','#B6FF3D','#3F7300','#FF4D5E','#C8102E','#160C16','#FFF5EA'],
+  'Ультра': ['#3D7BFF','#000B24','#FF2BD6','#B0008F','#91E668','#2F6B12','#7CFF6B','#2E7A00','#FF3B6B','#C4004A','#07090C','#F4F7FF'],
+  'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
+  'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
+};
+var CO_NOW = { dark: true, pal: 'Вольт' };
+function __coTheme(props) {
+  var s = {};
+  try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }
+  var t = props && props.theme, p = props && props.palette;
+  var dark = t === 'тёмная' ? true : t === 'светлая' ? false : s.dark !== false;
+  var pal = CO_SPECS[p] ? p : CO_SPECS[s.pal] ? s.pal : 'Вольт';
+  CO_NOW = { dark: dark, pal: pal };
+  return CO_NOW;
+}
+function __coRgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function __coHex(c) { return '#' + c.map(function (v) { var x = Math.round(Math.max(0, Math.min(255, v))).toString(16); return x.length < 2 ? '0' + x : x; }).join('').toUpperCase(); }
+function __coMix(a, b, t) { var x = __coRgb(a), y = __coRgb(b); return __coHex([0, 1, 2].map(function (i) { return x[i] + (y[i] - x[i]) * t; })); }
+function __coLight(t) {
+  var pts = [[0, 0], [0.35, 0.3], [0.5, 0.55], [0.62, 0.63], [0.8, 0.8], [0.92, 0.9], [1, 0.95]];
+  for (var i = 1; i < pts.length; i++) if (t <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (t - a[0]) / (b[0] - a[0]); }
+  return 0.95;
+}
+function __co(k) {
+  var m = /^k_([0-9A-F]{6})_(.*)$/.exec(k);
+  if (!m) return k;
+  var orig = '#' + m[1], role = m[2];
+  if (CO_NOW.dark && CO_NOW.pal === 'Вольт') return orig;
+  var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
+  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
+  if (role === 'O') return S[1];
+  if (role === 'Oa' || role === 'Oi') return orig;
+  if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
+  if (neon[role]) return neon[role][0];
+  if (role.length === 2 && role.charAt(1) === 'I' && neon[role.charAt(0)]) return d ? neon[role.charAt(0)][0] : neon[role.charAt(0)][1];
+  var r = role.charAt(0), kind = role.charAt(1), t = parseInt(role.slice(r === 'n' ? 1 : 2), 10) / 100;
+  if (r === 'n') {
+    if (d) return __coMix(bg, '#FFFFFF', t);
+    if (t < 0.012) return bg;
+    if (t <= 0.045 || (t >= 0.065 && t <= 0.075)) return '#FFFFFF'; // cards, bars, sheets: white (owner's light boards)
+    if (t <= 0.35) return __coMix(bg, '#000000', 0.04 + (t - 0.045) * 0.8); // fields, chips, lines
+    return __coMix(bg, '#000000', __coLight(t));
+  }
+  var n = neon[r];
+  if (!n) return orig;
+  if (kind === 't') return d ? __coMix(bg, n[0], t) : __coMix(bg, n[0], Math.min(0.5, t * 0.8));
+  if (kind === 'w') return d ? __coMix(n[0], '#FFFFFF', t) : n[1];
+  return orig;
+}
+function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_KEYS[i]] = __co(CO_KEYS[i]); return o; }
+/*co-theme-end*/
 class Component extends DCLogic {
+  /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
+  componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
   constructor(props) {
     super(props);
     this.state = { color: '#38B6FF', name: 'Синий' };
   }
   ink(hex) {
     const n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
-    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#111611' : '#FFFFFF';
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? (__co('k_111611_n05')) : '#FFFFFF';
   }
   mix(hex, k) {
     const n = parseInt(hex.slice(1), 16), base = [17, 23, 14];
     const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map((v, i) => Math.round(base[i] + (v - base[i]) * k));
     return 'rgb(' + c.join(',') + ')';
   }
-  renderVals() {
+  __coRender() {
     const s = this.state;
     const B = [
       ['АРГЕНТИНА', [['Galicia', 'GA', '#F26E22'], ['Santander', 'SA', '#EC0000'], ['BBVA', 'BB', '#1973B8'], ['Nación', 'BN', '#005AA7'], ['Mercado Pago', 'MP', '#00B1EA'], ['Ualá', 'UA', '#3E4FE0'], ['Naranja X', 'NX', '#FE5000'], ['Brubank', 'BR', '#6A2EE8'], ['Lemon', 'LE', '#00E36B']]],
@@ -100,18 +158,18 @@ class Component extends DCLogic {
         const on = s.color === color;
         return {
           name, ini, color, ink: this.ink(color),
-          style: 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:14px;min-width:0;background:' + (on ? '#1F2A17' : 'transparent') + ';border:2px solid ' + (on ? color : 'transparent') + ';',
+          style: 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:14px;min-width:0;background:' + (on ? (__co('k_1F2A17_n10')) : 'transparent') + ';border:2px solid ' + (on ? color : 'transparent') + ';',
           pick: () => this.setState({ color, name: 'Цвет банка ' + name })
         };
       })
     }));
-    const old = [['#FF5470', 'Красный'], ['#FF4FD8', 'Розовый'], ['#D36BFF', 'Пурпур'], ['#9D7BFF', 'Фиолет'], ['#6E8BFF', 'Индиго'], ['#38B6FF', 'Синий'], ['#2BE4FF', 'Циан'], ['#00E5C0', 'Мята'], ['#4DFF88', 'Зелёный'], ['#A8FF3E', 'Лайм'], ['#F5FF3D', 'Жёлтый'], ['#FFD43B', 'Янтарь'], ['#FFA53D', 'Оранжевый'], ['#FF7A3D', 'Пламя'], ['#FFB38A', 'Персик'], ['#8FB3CC', 'Сталь'], ['#B0B8C4', 'Серебро'], ['#7A8494', 'Графит'], ['#FF8A65', 'Коралл'], ['#E07A5F', 'Терракота'], ['#FF8FA3', 'Роза'], ['#FFC46B', 'Мёд'], ['#D9A066', 'Карамель'], ['#F2D0A4', 'Песок']];
-    const fresh = [['#C9B6FF', 'Лаванда'], ['#9FD8FF', 'Небо'], ['#9BF5D6', 'Морская пена'], ['#F4F59A', 'Лимонный крем'], ['#FFB3D1', 'Румянец'], ['#E89BFF', 'Орхидея'], ['#D6F5FF', 'Лёд'], ['#DFFF00', 'Шартрез'], ['#4D4DFF', 'Ультрамарин'], ['#B5C23A', 'Олива'], ['#C9B27C', 'Хаки'], ['#3DDC97', 'Нефрит']];
+    const old = [[(__co('k_FF5470_ew15')), 'Красный'], ['#FF4FD8', 'Розовый'], ['#D36BFF', 'Пурпур'], ['#9D7BFF', 'Фиолет'], ['#6E8BFF', 'Индиго'], ['#38B6FF', 'Синий'], ['#2BE4FF', 'Циан'], ['#00E5C0', 'Мята'], ['#4DFF88', 'Зелёный'], ['#A8FF3E', 'Лайм'], ['#F5FF3D', 'Жёлтый'], ['#FFD43B', 'Янтарь'], ['#FFA53D', 'Оранжевый'], ['#FF7A3D', 'Пламя'], ['#FFB38A', 'Персик'], ['#8FB3CC', 'Сталь'], [(__co('k_B0B8C4_n72')), 'Серебро'], ['#7A8494', 'Графит'], ['#FF8A65', 'Коралл'], ['#E07A5F', 'Терракота'], [(__co('k_FF8FA3_ew44')), 'Роза'], [(__co('k_FFC46B_ww20')), 'Мёд'], ['#D9A066', 'Карамель'], [(__co('k_F2D0A4_ww49')), 'Песок']];
+    const fresh = [['#C9B6FF', 'Лаванда'], ['#9FD8FF', 'Небо'], [(__co('k_9BF5D6_gw40')), 'Морская пена'], [(__co('k_F4F59A_yw60')), 'Лимонный крем'], [(__co('k_FFB3D1_ew66')), 'Румянец'], ['#E89BFF', 'Орхидея'], ['#D6F5FF', 'Лёд'], ['#DFFF00', 'Шартрез'], ['#4D4DFF', 'Ультрамарин'], ['#B5C23A', 'Олива'], ['#C9B27C', 'Хаки'], ['#3DDC97', 'Нефрит']];
     const palette = old.map((x) => [...x, false]).concat(fresh.map((x) => [...x, true])).map(([color, name, isNew]) => {
       const on = s.color === color;
       return {
         color, name, isNew,
-        ring: 'padding:3px;border-radius:50%;background:none;border:2px solid ' + (on ? '#EEF5E6' : 'transparent') + ';transform:scale(' + (on ? 1.1 : 1) + ');',
+        ring: 'padding:3px;border-radius:50%;background:none;border:2px solid ' + (on ? (__co('k_EEF5E6_n93')) : 'transparent') + ';transform:scale(' + (on ? 1.1 : 1) + ');',
         pick: () => this.setState({ color, name })
       };
     });

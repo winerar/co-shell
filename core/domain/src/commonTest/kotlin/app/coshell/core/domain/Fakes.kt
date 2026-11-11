@@ -1,6 +1,8 @@
 package app.coshell.core.domain
 
+import app.coshell.core.domain.budgets.BudgetRepository
 import app.coshell.core.model.Account
+import app.coshell.core.model.Budget
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -55,4 +57,13 @@ class FakeTemplateRepository : TemplateRepository {
     override suspend fun saveTemplate(template: TransactionTemplate) { items.value += template.id to template }
     override suspend fun deleteTemplate(id: String) { items.value -= id }
     override suspend fun maxSortOrder() = items.value.values.maxOfOrNull { it.sortOrder }
+}
+
+class FakeBudgetRepository : BudgetRepository {
+    val items = MutableStateFlow<Map<String, Budget>>(emptyMap())
+    override fun observeBudgets(): Flow<List<Budget>> = items.map { it.values.toList() }
+    override suspend fun getBudgets() = items.value.values.toList()
+    override suspend fun applyBudgets(save: List<Budget>, deleteIds: List<String>) {
+        items.value = items.value - deleteIds.toSet() + save.associateBy { it.id }
+    }
 }

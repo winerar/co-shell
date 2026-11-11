@@ -17,7 +17,7 @@ import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
-import app.coshell.core.domain.BudgetRepository
+import app.coshell.core.domain.budgets.BudgetRepository
 import app.coshell.core.domain.templates.ApplyTemplateUseCase
 import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase

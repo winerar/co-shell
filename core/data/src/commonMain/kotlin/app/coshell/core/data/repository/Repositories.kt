@@ -5,7 +5,7 @@ import app.coshell.core.data.db.BudgetDao
 import app.coshell.core.data.db.CategoryDao
 import app.coshell.core.data.db.TransactionDao
 import app.coshell.core.domain.AccountRepository
-import app.coshell.core.domain.BudgetRepository
+import app.coshell.core.domain.budgets.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
@@ -19,7 +19,6 @@ import app.coshell.core.model.Transaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.YearMonth
 import kotlin.time.Clock
 
 /**
@@ -130,13 +129,13 @@ class RoomBudgetRepository(
     private val stamper: WriteStamper,
 ) : BudgetRepository {
 
-    override fun observeBudgets(month: YearMonth): Flow<List<Budget>> =
-        budgets.observe(month.toString()).map { list -> list.map { it.toModel() } }
+    override fun observeBudgets(): Flow<List<Budget>> =
+        budgets.observeAll().map { list -> list.map { it.toModel() } }
 
-    override suspend fun saveBudget(budget: Budget) = budgets.upsert(listOf(budget.toEntity(stamper.stamp())))
+    override suspend fun getBudgets(): List<Budget> = budgets.getAll().map { it.toModel() }
 
-    override suspend fun deleteBudget(id: String) {
+    override suspend fun applyBudgets(save: List<Budget>, deleteIds: List<String>) {
         val stamp = stamper.stamp()
-        budgets.markDeleted(id, stamp.now, stamp.by)
+        budgets.apply(save.map { it.toEntity(stamp) }, deleteIds, stamp.now, stamp.by)
     }
 }

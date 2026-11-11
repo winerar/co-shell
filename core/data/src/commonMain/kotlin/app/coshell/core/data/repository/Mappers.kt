@@ -126,16 +126,22 @@ internal fun Transaction.toEntity(stamp: Stamp) = TransactionEntity(
 internal fun BudgetEntity.toModel() = Budget(
     id = id,
     categoryId = categoryId,
-    month = YearMonth.parse(month),
+    startMonth = YearMonth.parse(month),
     limit = Money(limitMinor, CurrencyCode(currency)),
+    note = note?.takeIf { it.isNotBlank() },
+    rollover = rollover,
+    lastMonth = lastMonth?.let { YearMonth.parse(it) },
 )
 
 internal fun Budget.toEntity(stamp: Stamp) = BudgetEntity(
     id = id,
     categoryId = categoryId,
-    month = month.toString(),
+    month = startMonth.toString(),
     limitMinor = limit.amountMinor,
     currency = limit.currency.value,
+    note = note,
+    rollover = rollover,
+    lastMonth = lastMonth?.toString(),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

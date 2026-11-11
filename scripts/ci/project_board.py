@@ -75,13 +75,25 @@ def decide_type(issue, current):
     return want != current, want
 
 
+# Project fields the script creates itself: if one is missing, `field(name:)` answers NOT_FOUND
+# with the rest of the data — not a failure (the board failed on a missing «Тип», 2026-11-11).
+OWN_FIELDS = {"field", "kind"}
+
+
+def fatal_errors(errors):
+    """GraphQL errors that should stop the script: all but NOT_FOUND of a field in [OWN_FIELDS]."""
+    return [e for e in errors or []
+            if not (e.get("type") == "NOT_FOUND" and (e.get("path") or [None])[-1] in OWN_FIELDS)]
+
+
 def graphql(token, query, **variables):
     body = json.dumps({"query": query, "variables": variables}).encode()
     req = urllib.request.Request(f"{API}/graphql", body, {"Authorization": f"bearer {token}"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         data = json.load(resp)
-    if data.get("errors"):
-        sys.exit(f"GraphQL error: {data['errors']}")
+    errors = fatal_errors(data.get("errors"))
+    if errors or not data.get("data"):
+        sys.exit(f"GraphQL error: {errors or data.get('errors')}")
     return data["data"]
 
 

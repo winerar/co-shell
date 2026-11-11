@@ -44,23 +44,36 @@ jobs:
           echo "Commits in dev not in main: $count"
           [ "$count" -gt 0 ] || { echo "::error::Nothing to release: dev has no new commits"; exit 1; }
 
+      # Automerge dispatches CI on dev right after a merge, and ci.yml cancels the older run of the same
+      # ref (concurrency). So a run we wait for may end «cancelled» while a newer one for the same commit
+      # goes on — then wait for the newest run instead of failing (run 9, 2026-11-11).
       - name: CI on dev is green
         run: |
           sha=$(git rev-parse origin/dev)
-          id=$(gh run list --workflow ci.yml --commit "$sha" --limit 1 --json databaseId -q '.[0].databaseId')
+          latest() { gh run list --workflow ci.yml --commit "$sha" --limit 1 --json databaseId -q '.[0].databaseId'; }
+          id=$(latest)
           if [ -z "$id" ]; then
             echo "No CI run for dev ${sha:0:7} — starting one"
             gh workflow run ci.yml --ref dev
             for _ in $(seq 20); do
               sleep 6
-              id=$(gh run list --workflow ci.yml --commit "$sha" --limit 1 --json databaseId -q '.[0].databaseId')
+              id=$(latest)
               [ -n "$id" ] && break
             done
             [ -n "$id" ] || { echo "::error::CI on dev did not start"; exit 1; }
           fi
-          gh run watch "$id" --exit-status >/dev/null || {
-            echo "::error::CI on dev ${sha:0:7} is not green: $(gh run view "$id" --json url -q .url)"; exit 1; }
-          echo "CI on dev ${sha:0:7} is green"
+          for _ in $(seq 5); do
+            gh run watch "$id" >/dev/null || true
+            conclusion=$(gh run view "$id" --json conclusion -q .conclusion)
+            if [ "$conclusion" = success ]; then echo "CI on dev ${sha:0:7} is green"; exit 0; fi
+            if [ "$conclusion" != cancelled ]; then break; fi
+            sleep 10
+            newer=$(latest)
+            [ "$newer" != "$id" ] || break
+            echo "CI run $id was cancelled by a newer run $newer — waiting for it"
+            id=$newer
+          done
+          echo "::error::CI on dev ${sha:0:7} is not green: $(gh run view "$id" --json url -q .url)"; exit 1
 
       - name: Release notes
         env:

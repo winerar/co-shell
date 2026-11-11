@@ -29,7 +29,7 @@
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 16 главных действий по шагам; каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
 | Компоненты | `Components` | `core/designsystem/` (`components.md`) |
-| Предложения | `Ideas`: 14 улучшений (сейчас → предлагаю, объём) — ждут выбора владельца | — |
+| Предложения | `Ideas`: 14 улучшений (сейчас → предлагаю, объём); ниже — варианты `Idea3A…Idea12B` (генератор `mockup_screens_ideas.py`), ждут выбора владельца | — |
 | История | `History`: ссылки на ранние страницы выбора | — |
 
 Нижняя панель — `CoShellBottomBar` + `navigation/MainBottomBar`: плавающая капсула 64 dp, вкладки без подписей,

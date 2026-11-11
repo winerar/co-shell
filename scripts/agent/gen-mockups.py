@@ -19,6 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import mockup_screens_main as main_screens  # noqa: E402
 import mockup_screens_more as more_screens  # noqa: E402
+import mockup_screens_ideas as idea_screens  # noqa: E402
 import mockup_special as special  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
@@ -69,6 +70,9 @@ def main():
         for name, title, fn in mod.BOARDS:
             write(name, board(title.split(' · ', 1)[-1], fn()))
             gen[name] = (title.split(' · ', 1)[-1], False)
+    for name, title, fn, _ in idea_screens.BOARDS:
+        write(name, board(title, fn()))
+        gen[name] = (title, False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
                             ('ThemeSwitchComponents', special.theme_switch, 'Тема макетов'), ('Settings', special.settings, 'Настройки: тема и палитра перекрашивают холст'),
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
@@ -117,6 +121,15 @@ def main():
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
     add('Components', 0, 0, 1280, 1640, 'components')
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
+    numbers = sorted({n for *_, n in idea_screens.BOARDS})
+    for r, n in enumerate(numbers):
+        y = 1900 + r * PITCH_Y
+        names = [b[0] for b in idea_screens.BOARDS if b[3] == n]
+        notes['idea%d' % n] = {'kind': 'title1', 'page': 'ideas', 'text': '%d · %s' % (n, special.IDEAS[n - 1][1]), 'x': 0, 'y': y - 250,
+                               'maxW': max(PITCH_X * len(names) - 80, 1280), 'w': 240}
+        notes['ideaS%d' % n] = {'page': 'ideas', 'text': special.IDEAS[n - 1][3], 'x': len(names) * PITCH_X, 'y': y, 'w': 390}
+        for c, name in enumerate(names):
+            add(name, c * PITCH_X, y, W, H, 'ideas', 28)
     add('History', 0, 0, 1040, 640, 'history')
     canvas = {'v': 3, 'createdOnFiles': old.get('createdOnFiles'), 'title': old.get('title', 'Co-Shell — дизайн'),
               'launch': {'view': 'canvas', 'page': 'screens'},

@@ -100,7 +100,7 @@ def ideas():
                   '<div style="font-size: 13px; line-height: 1.45; color: #9AA594;"><b style="color: #C9D3C2;">Сейчас:</b> %s</div>'
                   '<div style="font-size: 14px; line-height: 1.45;"><b style="color: #B8FF2E;">Предлагаю:</b> %s</div></div>' % (MONO, i, area, size, title, now, prop))
     body = ('<div style="padding: 40px;"><h1 style="margin: 0; font-size: 36px;">Предложения по улучшению</h1>'
-            '<p style="margin: 8px 0 24px; font-size: 15px; color: #9AA594;">Объём: S — до дня, M — 2–3 дня. Скажите номера — сделаю макеты 2–3 вариантов на «Экранах».</p>'
+            '<p style="margin: 8px 0 24px; font-size: 15px; color: #9AA594;">Объём: S — до дня, M — 2–3 дня. Ниже на этой вкладке — макеты вариантов для 3–12 (рекомендация — в названии доски). Выберите букву — переношу на «Экраны» и в код.</p>'
             '<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">%s</div></div>' % cards)
     html = board('Предложения', body)
     return html.replace('width: 390px; height: 844px', 'width: 1280px; height: 1500px').replace('"width":390,"height":844', '"width":1280,"height":1500')

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Works around Maven Central answering Gradle with 429 in cloud sessions (docs/agents/notes.md).
+# Works around Maven Central answering Gradle with 429 in cloud sessions (docs/agents/environment.md).
 # Usage: scripts/agent/m2-mirror.sh <dir> group:artifact:version [...]
 #   Downloads jar+pom of each artifact with curl (Maven Central, then the Google mirror) into <dir>/m2
 #   and writes <dir>/m2-init.gradle, which puts that local repo first.

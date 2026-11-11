@@ -147,7 +147,6 @@
   (platform 37.0, build-tools 36.0.0) и пишет `local.properties` — работает.
 - Сессию создавать **сразу в окружении co-shell** (в Default скрипт не выполняется — тогда SDK вручную,
   `docs/agents/build-and-test.md`).
-- Maven Central из песочницы иногда отвечает 429 на большие файлы (так отпал Robolectric) — повторить позже.
 - Версии: Gradle 9.9.0, AGP 9.5.1, Kotlin 2.4.21, KSP 2.3.13, Hilt 2.60.1, Compose BOM 2026.09.00,
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 

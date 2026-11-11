@@ -46,4 +46,21 @@ class MoneyTest {
         assertEquals(Money(300, rub), total)
         assertTrue(emptyList<Money>().sum(rub).isZero)
     }
+
+    @Test
+    fun `scale multiplies by a fraction and rounds half to even`() {
+        assertEquals(Money(146_667, rub), Money(400_000, rub).scale(11, 30))
+        assertEquals(Money(2, rub), Money(5, rub).scale(1, 2)) // 2.5 → 2
+        assertEquals(Money(4, rub), Money(7, rub).scale(1, 2)) // 3.5 → 4
+        assertEquals(Money(-4, rub), Money(-7, rub).scale(1, 2))
+        assertTrue(Money(100, rub).scale(0, 3).isZero)
+    }
+
+    @Test
+    fun `scale does not overflow midway and rejects bad fractions`() {
+        assertEquals(Money(Long.MAX_VALUE, rub), Money(Long.MAX_VALUE, rub).scale(31, 31))
+        assertFailsWith<ArithmeticException> { Money(Long.MAX_VALUE, rub).scale(2, 1) }
+        assertFailsWith<IllegalArgumentException> { Money(1, rub).scale(1, 0) }
+        assertFailsWith<IllegalArgumentException> { Money(1, rub).scale(-1, 2) }
+    }
 }

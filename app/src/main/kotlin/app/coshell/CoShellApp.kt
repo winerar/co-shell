@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
+import app.coshell.currencies.data.LegacyReportCurrencies
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
@@ -21,6 +22,7 @@ class CoShellApp : Application(), Configuration.Provider {
 
     @Inject lateinit var seedDefaultCategories: SeedDefaultCategoriesUseCase
     @Inject lateinit var family: FamilyService
+    @Inject lateinit var legacyReportCurrencies: LegacyReportCurrencies
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
     /** Lives as long as the process; for short one-off startup work only. */
@@ -36,6 +38,7 @@ class CoShellApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         appScope.launch {
+            legacyReportCurrencies.moveToFamilySettings()
             // In a family the categories come from the server: seeding an empty phone right after
             // joining (before the first sync) would send duplicate default categories to everyone.
             family.load()

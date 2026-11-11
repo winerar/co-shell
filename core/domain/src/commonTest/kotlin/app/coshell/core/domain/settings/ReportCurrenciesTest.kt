@@ -32,4 +32,12 @@ class ReportCurrenciesTest {
         assertEquals(listOf(usd, ars), ReportCurrencies.normalize(listOf(usd, ars, usd)))
         assertEquals(ReportCurrencySettings.DEFAULT, ReportCurrencies.normalize(emptyList()))
     }
+
+    @Test
+    fun `stored text round-trips and broken codes are skipped`() {
+        assertEquals("USD,ARS", ReportCurrencies.encode(listOf(usd, ars, usd)))
+        assertEquals(listOf(usd, ars), ReportCurrencies.decode("USD, ars,??"))
+        assertEquals(ReportCurrencySettings.DEFAULT, ReportCurrencies.decode(null))
+        assertEquals(ReportCurrencySettings.DEFAULT, ReportCurrencies.decode(""))
+    }
 }

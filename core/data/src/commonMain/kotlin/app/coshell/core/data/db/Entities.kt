@@ -131,6 +131,21 @@ data class TemplateEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+/**
+ * One family setting (schema v9, #122): [id] is the key (`report_currencies`, `month_start_day`),
+ * [value] its text form — parsed by `RoomFamilySettings`. Synced like the other rows (`kind` = `setting`).
+ */
+@Serializable
+@Entity(tableName = "settings")
+data class SettingEntity(
+    @PrimaryKey val id: String,
+    val value: String,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+
 /** Sum of transaction effects on one account (one row per account and direction). */
 data class BalanceDelta(
     @ColumnInfo(name = "account_id") val accountId: String,

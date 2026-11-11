@@ -82,7 +82,8 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 (курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
 `components/ManualRateDialog.kt`).
 Валюты отчётов (первая — основная): контракт и правила списка — `core:domain/settings/ReportCurrencies.kt`,
-хранение — `app/.../currencies/data/PrefsReportCurrencySettings`, экран «Ещё → Валюты отчётов» — `currencies/list/`.
+хранение — общие настройки семьи `core:data/repository/RoomFamilySettings` (там же день начала месяца, `MonthStartSettings`;
+перенос старого списка с телефона — `app/.../currencies/data/LegacyReportCurrencies`), экран «Ещё → Валюты отчётов» — `currencies/list/`.
 Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`);
 траты/доход месяца и траты по дням — `core:domain/rates/MonthSpending.kt`, состояние «Обзора» — `home/HomeState.kt`,
 плитки 2×2 — `home/components/HomeTiles`, последние операции — `home/components/RecentCard` (строки — из `transactions/list`).

@@ -28,7 +28,7 @@ import mockup_special as special  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
-PLAN = (tpl_screens, bud_screens, rep_screens)  # rows waiting for the owner's pick: top of «Предложения» (#166)
+PLAN = (tpl_screens, bud_screens, rep_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты» on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
@@ -63,6 +63,9 @@ STICKIES = {  # row index -> sticky text (placed after the row)
 }
 
 PITCH_X, PITCH_Y, W, H = 470, 1240, 390, 844
+for _m in PLAN:
+    STICKIES[len(LAYOUT)] = _m.ROW[2]
+    LAYOUT.append((_m.ROW[1], [b[0] for b in _m.BOARDS]))
 
 
 def write(name, html):
@@ -128,16 +131,8 @@ def main():
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
     add('Components', 0, 0, 1280, 1640, 'components')
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
-    for r, mod in enumerate(PLAN):  # templates / budgets / reports variants first: they wait for the owner
-        key, title, text = mod.ROW
-        y = 1900 + r * PITCH_Y
-        names = [b[0] for b in mod.BOARDS]
-        notes['plan_' + key] = {'kind': 'title1', 'page': 'ideas', 'text': title, 'x': 0, 'y': y - 250, 'maxW': max(PITCH_X * len(names) - 80, 1280), 'w': 240}
-        notes['planS_' + key] = {'page': 'ideas', 'text': text, 'x': len(names) * PITCH_X, 'y': y, 'w': 390}
-        for c, name in enumerate(names):
-            add(name, c * PITCH_X, y, W, H, 'ideas', 28)
     for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # picked feedback variants
-        y = 1900 + (len(PLAN) + r) * PITCH_Y
+        y = 1900 + r * PITCH_Y
         names = [b[0] for b in fb_screens.BOARDS if b[3] == n]
         notes['fb%d' % n] = {'kind': 'title1', 'page': 'ideas', 'text': title, 'x': 0, 'y': y - 250,
                              'maxW': max(PITCH_X * len(names) - 80, 1280), 'w': 240}
@@ -146,7 +141,7 @@ def main():
             add(name, c * PITCH_X, y, W, H, 'ideas', 28)
     numbers = sorted({n for *_, n in idea_screens.BOARDS})
     for r, n in enumerate(numbers):
-        y = 1900 + (len(PLAN) + len(fb_screens.FEEDBACK) + r) * PITCH_Y
+        y = 1900 + (len(fb_screens.FEEDBACK) + r) * PITCH_Y
         names = [b[0] for b in idea_screens.BOARDS if b[3] == n]
         notes['idea%d' % n] = {'kind': 'title1', 'page': 'ideas', 'text': '%d · %s' % (n, special.IDEAS[n - 1][1]), 'x': 0, 'y': y - 250,
                                'maxW': max(PITCH_X * len(names) - 80, 1280), 'w': 240}

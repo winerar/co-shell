@@ -82,3 +82,30 @@ def sheet_page(inner, top=300, under=''):
 
 def toggle_row(title, sub, on):
     return row(title, sub, '', switch(on), min_h=56)
+
+
+MORE_CATS = {'Одежда': ('gift', '#FF8A5C'), 'Спорт': ('spark', OK), 'Кино': ('film', '#5CFFB0'), 'Такси': ('taxi', YELLOW), 'Бензин': ('bus', YELLOW),
+             'Врачи': ('pill', '#FF8FA3'), 'Подписки': ('phone', '#C79BFF'), 'Питомцы': ('house', WARN), 'Ремонт': ('house', CYAN),
+             'Красота': ('spark', '#FF8FA3'), 'Книги': ('school', '#C79BFF'), 'Налоги': ('file', MUTED), 'Банк': ('wallet', MUTED),
+             'Игрушки': ('gift', LIME), 'Доставка': ('cart', WARN), 'Мама': ('user', '#FF8A5C')}
+CAT.update(MORE_CATS)
+
+
+def env_compact(name, spent, limit, cur, state, cap='', indent=False, div=True):
+    """Dense envelope row for long lists: one line + thin bullet; caption only when something is wrong."""
+    frac = float(spent.replace(' ', '')) / float(limit.replace(' ', ''))
+    c = caption(cap, state) if cap else ''
+    return ('<div style="display: flex; gap: 10px; align-items: center; padding: 8px 14px 8px %dpx; %s">%s<div style="flex-grow: 1; min-width: 0;">'
+            '<div style="display: flex; align-items: baseline; gap: 8px;"><span style="flex-grow: 1; font-size: 14px;">%s</span>'
+            '<span style="%s font-size: 12px; white-space: nowrap;">%s<span style="color: %s;"> / %s %s</span></span></div>%s%s</div></div>'
+            % (34 if indent else 14, 'border-top: 1px solid %s;' % DIV if div else '', cat_icon(name, 28), name, MONO, spent, MUTED, limit, cur,
+               bullet(frac, state, h=5, mt=6), c))
+
+
+def folder_head(name, count, spent, limit, cur, state, open_=True, div=True):
+    frac = float(spent.replace(' ', '')) / float(limit.replace(' ', ''))
+    return ('<div style="display: flex; gap: 10px; align-items: center; padding: 10px 14px; %s background: %s;">%s<div style="flex-grow: 1;">'
+            '<div style="display: flex; align-items: baseline; gap: 8px;"><span style="flex-grow: 1; font-size: 14px; font-weight: 600;">%s '
+            '<span style="font-weight: 400; color: %s;">· %d</span></span><span style="%s font-size: 12px;">%s<span style="color: %s;"> / %s %s</span></span></div>%s</div></div>'
+            % ('border-top: 1px solid %s;' % DIV if div else '', BAR, svg('down' if open_ else 'chev', MUTED, 18), name, MUTED, count,
+               MONO, spent, MUTED, limit, cur, bullet(frac, state, h=5, mt=6)))

@@ -1,15 +1,14 @@
-"""Generated boards: reports and charts (#140), «Предложения» sheet. Variant А — one scrolling feed of cards,
-Б — one question per tab (structure / months / income vs spending / capital). Shared: folder drill-down, period sheet.
+"""Generated boards: reports and charts (#140) — owner picked А (2026-11-11, #166): one scrolling feed of cards.
+Boards: feed, all categories (long list), folder drill-down, period sheet.
 Chart choice follows docs/research/reports-and-charts.md (bars from zero, ≤ 6 + «Другое», labels on the chart).
 
-ROW — (key, title, sticky text); BOARDS — (name, title, fn, key).
+ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
 
-ROW = ('rep', 'Отчёты и графики · этап 6б',
-       'Одна валюта на графике (основная, меняется), пересчёт по курсу на день операции. Тап по полосе или столбцу — операции, из которых он сложился. '
-       'Серая черта у полосы — сколько было в прошлом месяце. А — лента карточек: всё главное одной прокруткой. '
-       'Б — вкладки по вопросам: «На что», «По месяцам», «Доходы/расходы», «Капитал»; под графиком — таблица. Рекомендую А для телефона.')
+ROW = ('rep', 'Отчёты',
+       'Выбран А (2026-11-11, #166): лента карточек. Одна валюта на графике (основная, меняется), пересчёт по курсу на день операции. '
+       'Тап по полосе или столбцу — операции, из которых он сложился; «Другое» — все категории списком. Серая черта — прошлый месяц.')
 
 STRUCT = [('Дом', 290, 38, 300), ('Продукты', 121, 16, 180), ('Образование', 120, 16, 160), ('Кафе', 89, 12, 110),
           ('Аптека', 70, 9, 40)]  # name, USD, %, last month USD; + «Другое» 70 (9%) = 760 USD
@@ -59,44 +58,6 @@ def reports_a():
     return tab_page('Отчёты', body, 'rep', REP_TABS)
 
 
-def donut(parts, size=168, stroke=26):
-    r = (size - stroke) / 2
-    circ = 2 * 3.14159 * r
-    segs, off = '', 0
-    for pct, col in parts:
-        ln = circ * pct / 100
-        segs += ('<circle cx="%d" cy="%d" r="%.1f" fill="none" stroke="%s" stroke-width="%d" stroke-dasharray="%.1f %.1f" stroke-dashoffset="%.1f"></circle>'
-                 % (size / 2, size / 2, r, col, stroke, max(ln - 3, 0), circ, -off))
-        off += ln
-    return ('<div style="position: relative; width: %dpx; height: %dpx; margin: 8px auto 0;"><svg width="%d" height="%d" style="transform: rotate(-90deg);">%s</svg>'
-            '<span style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">'
-            '<span style="%s font-size: 22px; font-weight: 700;">760</span><span style="font-size: 12px; color: %s;">USD за ноябрь</span></span></div>'
-            % (size, size, size, size, segs, MONO, MUTED))
-
-
-def tabs_strip(sel):
-    return ('<div style="display: flex; gap: 8px; overflow: hidden; margin: 0 -16px; padding: 0 16px;">%s</div>'
-            % ''.join(chip(t, t == sel) for t in ['На что', 'По месяцам', 'Доходы/расходы', 'Капитал']))
-
-
-def reports_b():
-    parts = [(p, CAT[n][1]) for n, _, p, _ in STRUCT] + [(9, LINE2)]
-    table = group([row(n, '', cat_icon(n, 30), '<span style="%s font-size: 14px;">%d <span style="color: %s;">· %d%%</span></span>' % (MONO, u, MUTED, p), min_h=46)
-                   for n, u, p, _ in STRUCT[:4]])
-    body = tabs_strip('На что') + '<div style="margin-top: 8px;">%s</div>' % month_switch('Ноябрь 2026', 'USD') + donut(parts) + '<div style="margin-top: 12px;">%s</div>' % table
-    return tab_page('Отчёты', body, 'rep', REP_TABS)
-
-
-def reports_b_months():
-    data = MONTHS[:5] + [('ноя*', 1260)]
-    inc = group([row('Средний месяц', 'июнь — октябрь', '', amount('1 270', 'USD', INK, 14), min_h=46),
-                 row('Ноябрь, прогноз', 'по темпу 11 дней', '', amount('≈ 1 260', 'USD', WARN, 14), min_h=46),
-                 row('Самый дорогой', 'сентябрь · ремонт', '', amount('1 410', 'USD', INK, 14), min_h=46)])
-    body = (tabs_strip('По месяцам') + chart_card('Расходы по месяцам', 'пунктир — среднее', columns(data, 150, avg=1270))
-            + note('* ноябрь — прогноз на конец месяца (разовые платежи вроде аренды не умножаются). Сейчас потрачено 760.') + '<div style="margin-top: 10px;">%s</div>' % inc)
-    return tab_page('Отчёты', body, 'rep', REP_TABS)
-
-
 def drill():
     from mockup_screens_main import tx
     bars = chart_card('Дом за ноябрь', '290 USD · 38% трат', ''.join(
@@ -119,10 +80,21 @@ def period_sheet():
     return sheet_page(inner, 260, reports_a())
 
 
+ALL = [('Дом', 290, 38, 300), ('Продукты', 121, 16, 180), ('Образование', 120, 16, 160), ('Кафе', 89, 12, 110), ('Аптека', 70, 9, 40),
+       ('Подписки', 21, 3, 21), ('Такси', 14, 2, 20), ('Спорт', 12, 2, 12), ('Красота', 8, 1, 0), ('Транспорт', 8, 1, 15), ('Доставка', 4, 0, 9),
+       ('Книги', 3, 0, 0)]
+
+
+def all_cats():
+    rows = ''.join('<div style="padding: 0 14px; %s">%s</div>' % ('border-top: 1px solid %s;' % DIV if i else '', hbar(*c)) for i, c in enumerate(ALL))
+    sort = '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % ''.join(chip(t, t == 'По сумме') for t in ['По сумме', 'По росту', 'Папками'])
+    body = search('Найти категорию · 24') + sort + '<div style="margin-top: 12px;">%s</div>' % card(rows)
+    return inner_screen('Все категории · ноябрь', body)
+
+
 BOARDS = [  # name, title, fn, row key
-    ('RepA', 'А · Отчёты: лента карточек (рекомендую)', reports_a, 'rep'),
-    ('RepB', 'Б · Отчёты: вкладка «На что» — кольцо + таблица', reports_b, 'rep'),
-    ('RepB2', 'Б · Отчёты: вкладка «По месяцам»', reports_b_months, 'rep'),
+    ('RepA', 'Отчёты: лента карточек (выбран А)', reports_a, 'rep'),
+    ('RepAll', 'Тап по «Другое»: все 24 категории', all_cats, 'rep'),
     ('RepDrill', 'Тап по «Дом»: из чего сложилось', drill, 'rep'),
     ('RepPeriod', 'Период и валюта — шторка', period_sheet, 'rep'),
 ]

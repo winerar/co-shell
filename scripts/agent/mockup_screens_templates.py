@@ -1,16 +1,14 @@
-"""Generated boards: payment templates (#104), «Предложения» sheet. Variant А — templates in the entry sheet,
-Б — a «Шаблоны» mode inside «Операции». Shared boards: entry filled from a template, «Сохранить как шаблон», editor.
+"""Generated boards: payment templates (#104) — owner picked А (2026-11-11, #166): templates in the «+» sheet.
+Boards: the sheet, all templates (long list), entry filled from a template, «Сохранить как шаблон», editor.
 
-ROW — (key, title, sticky text); BOARDS — (name, title, fn, key).
+ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
 from mockup_screens_main import ACC, keypad, acc_chip, big_amount, chips_row, entry
 
-ROW = ('tpl', 'Шаблоны платежей · отзыв #104',
-       'Шаблон помнит тип, счёт, сумму (можно пустую), категорию и заметку; дата всегда «сегодня», всё можно поправить. '
-       'А — шаблоны прямо в шторке «+»: одна полоса над счетами, доступны с любого экрана. '
-       'Б — режим «Шаблоны» во вкладке «Операции», плитки покрупнее. Рекомендую А: шаблон нужен в момент ввода, лишний переход не нужен. '
-       'Общие для обоих: шторка из шаблона, «Сохранить как шаблон» в правке операции, редактор шаблона.')
+ROW = ('tpl', 'Шаблоны',
+       'Выбран А (2026-11-11, #166): шаблоны — полоса над счетами в шторке «+», «Все 32 ›» — полный список с поиском и группами. '
+       'Шаблон помнит тип, счёт, сумму (можно пустую), категорию, заметку (позже — теги, #129); дата всегда «сегодня», всё можно поправить.')
 
 TPL = [('Испанский', 'Образование', '40 000', 'ARS', 'Galicia'), ('Аренда', 'Аренда', '650', 'USD', 'Наличные'),
        ('Интернет', 'Связь', '18 900', 'ARS', 'Galicia'), ('Кофе', 'Кафе', '', 'ARS', 'USDT-карта'),
@@ -38,22 +36,6 @@ def tpl_in_sheet():
                'Шаблоны</span><span style="font-size: 13px; color: %s;">Все 6 ›</span></div>' % (MUTED, LIME)
              + strip + label('Или счёт', top=16) + accs + '<div style="margin-top: 12px;">%s</div>' % search('Найти счёт'))
     return sheet_page(inner, 150)
-
-
-def tpl_card(name, cat, amt, cur, acc):
-    a = amount(amt, cur, PINK, 15) if amt else '<span style="font-size: 13px; color: %s;">сумма при вводе</span>' % MUTED
-    return ('<div style="padding: 12px; border-radius: 20px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; gap: 8px;">%s'
-            '<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; font-weight: 600;">%s</span>'
-            '<span style="font-size: 12px; color: %s;">%s · %s</span></span>%s</div>' % (CARD, LINE, cat_icon(cat, 36), name, MUTED, cat, acc, a))
-
-
-def tpl_in_ops():
-    grid = ('<div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">%s'
-            '<div style="border-radius: 20px; border: 1.5px dashed %s; display: flex; align-items: center; justify-content: center; gap: 8px; '
-            'min-height: 120px; color: %s; font-size: 14px;">%s Шаблон</div></div>'
-            % (''.join(tpl_card(*t) for t in TPL[:5]), LINE2, MUTED, svg('plus', MUTED, 18)))
-    body = segmented(['Операции', 'Шаблоны'], 'Шаблоны') + grid + note('Тап — шторка с заполненными полями. Удержание — правка, порядок.')
-    return tab_page('Операции', body, 'ops')
 
 
 def tpl_entry():
@@ -85,9 +67,31 @@ def tpl_edit():
     return inner_screen('Шаблон', body)
 
 
+MANY = [('Испанский', 'Образование', '40 000', 'ARS', 'Galicia'), ('Аренда', 'Аренда', '650', 'USD', 'Наличные'),
+        ('Интернет', 'Связь', '18 900', 'ARS', 'Galicia'), ('Кофе', 'Кафе', '', 'ARS', 'USDT-карта'), ('Coto', 'Продукты', '', 'ARS', 'Galicia'),
+        ('Dia', 'Продукты', '', 'ARS', 'Mercado Pago'), ('Свет', 'Коммуналка', '', 'ARS', 'Galicia'), ('Газ', 'Коммуналка', '', 'ARS', 'Galicia'),
+        ('Netflix', 'Подписки', '7 990', 'ARS', 'USDT-карта'), ('Spotify', 'Подписки', '3 490', 'ARS', 'USDT-карта'), ('Такси Cabify', 'Такси', '', 'ARS', 'Mercado Pago'),
+        ('Бассейн', 'Спорт', '45 000', 'ARS', 'Galicia'), ('Ветеринар', 'Питомцы', '', 'ARS', 'Наличные'), ('Перевод маме', 'Мама', '50 000', 'AMD', 'Ameria')]
+
+
+def tpl_row(name, cat, amt, cur, acc):
+    a = amount(amt, cur, INK, 13) if amt else '<span style="font-size: 12px; color: %s;">при вводе</span>' % MUTED
+    return row(name, '%s · %s' % (cat, acc), cat_icon(cat, 32), a, min_h=50)
+
+
+def tpl_all():
+    often = ('<div style="display: flex; gap: 8px; overflow: hidden; margin: 0 -16px; padding: 0 16px;">%s</div>'
+             % ''.join(tpl_chip(n, c, a, cu) for n, c, a, cu, _ in MANY[:3]))
+    body = (search('Найти шаблон · 32') + label('Часто', top=14) + often
+            + '<div style="display: flex; gap: 8px; margin-top: 14px; overflow: hidden;">%s</div>' % ''.join(
+                chip(t, t == 'Все') for t in ['Все', 'Расходы · 27', 'Доходы · 3', 'Переводы · 2'])
+            + label('Расходы · по категориям, А→Я', top=14) + group([tpl_row(*t) for t in MANY[3:14]]))
+    return inner_screen('Шаблоны', body, icon_button('plus', 'Новый шаблон'))
+
+
 BOARDS = [  # name, title, fn, row key
-    ('TplA', 'А · Шаблоны в шторке «+» (рекомендую)', tpl_in_sheet, 'tpl'),
-    ('TplB', 'Б · Шаблоны — режим в «Операциях»', tpl_in_ops, 'tpl'),
+    ('TplA', 'Шторка «+»: шаблоны над счетами (выбран А)', tpl_in_sheet, 'tpl'),
+    ('TplAll', 'Все шаблоны: 32 шт., поиск, группы', tpl_all, 'tpl'),
     ('TplEntry', 'Шторка из шаблона «Испанский»', tpl_entry, 'tpl'),
     ('TplSave', 'Правка операции → «Сохранить как шаблон»', tpl_save, 'tpl'),
     ('TplEdit', 'Редактор шаблона', tpl_edit, 'tpl'),

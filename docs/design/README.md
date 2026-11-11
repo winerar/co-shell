@@ -26,10 +26,13 @@
 | Курсы и валюты | `Rates`, `RatesRefreshing`, `RatesFailed`, `RatesEmpty`, `RatesManual`, `ReportCurrencies`, `CurrencyAdd` | `rates/list/`, `currencies/` |
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
+| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | — (#169, #104); доски — `mockup_screens_{templates,budgets,reports}.py` |
+| Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | — (#167, #103) |
+| Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | — (#168, #140) |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 16 главных действий по шагам; каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
 | Компоненты | `Components` | `core/designsystem/` (`components.md`) |
-| Предложения | Сверху — **ждут выбора (#166, 2026-11-11):** ряды «Шаблоны» (`Tpl*`, #104), «Бюджеты» (`Bud*`, #103), «Отчёты» (`Rep*`, #140) — варианты А/Б главного экрана + общие состояния (генераторы `mockup_screens_templates|budgets|reports.py`, кирпичи `mockup_plan_bricks.py`). Ниже — **макеты по отзывам**, выбрано 2026-11-11: `Fb154*` (#154 + #155, вариант А: вкладки, плитки, «Ещё», настройки), `Fb157*` (#157, вариант А: отзывы со статусом) (генератор `mockup_screens_feedback.py`). Ниже — `Ideas`: 14 улучшений и **выбранные** варианты 3–12 (`Idea3B`, `Idea4A…Idea12A`; выбор #159 от 2026-11-11, генератор `mockup_screens_ideas.py`) | — |
+| Предложения | Сверху — **макеты по отзывам**, выбрано 2026-11-11: `Fb154*` (#154 + #155, вариант А: вкладки, плитки, «Ещё», настройки), `Fb157*` (#157, вариант А: отзывы со статусом) (генератор `mockup_screens_feedback.py`). Ниже — `Ideas`: 14 улучшений и **выбранные** варианты 3–12 (`Idea3B`, `Idea4A…Idea12A`; выбор #159 от 2026-11-11, генератор `mockup_screens_ideas.py`) | — |
 | История | `History`: ссылки на ранние страницы выбора | — |
 
 Нижняя панель — `CoShellBottomBar` + `navigation/MainBottomBar`: плавающая капсула 64 dp, вкладки без подписей,
@@ -47,7 +50,7 @@
 - Иконка (#66): https://claude.ai/artifact/VYVhJ7roxaTLXpaBXhRFYh
 
 ## Правила для агента
-- Новый экран или заметная переделка — сначала доска на этом же холсте (не новый артефакт), потом код.
+- Новый экран или заметная переделка — сначала доска (со списками — и доска на 20–30+ элементов) на этом же холсте (не новый артефакт), потом код.
   Варианты на выбор — одна доска на вариант рядом; **после выбора невыбранные доски удалить**.
 - Доски рисуем только во «Вольт · тёмная» (цвета — `scripts/agent/mockup_bricks.py`), без своих `dark`-tweak;
   `scripts/agent/mockup_theme.py` переводит цвета в токены темы (повторный запуск безопасен). Цвет, который не должен

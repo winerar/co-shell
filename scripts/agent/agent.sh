@@ -30,6 +30,8 @@ usage() {
 
   Данные
     backup [-o файл]      тестовый бэкап на ~9 тыс. операций
+    wallet [строк]        выгрузка Wallet на 10 тыс. строк в scratchpad (импорт на телефоне)
+    scale                 замер на 10 тыс. операций: импорт, список, синк, размер БД (#131)
 TXT
 }
 
@@ -66,6 +68,11 @@ case "$cmd" in
         exec node "$here/render-mockups.js" "$out" dark Вольт "${files[@]}" ;;
     flows) exec python3 "$here/gen-flows-board.py" "$@" ;;
     backup) exec python3 "$here/gen-test-backup.py" "$@" ;;
+    wallet)
+        out="$(scratch)/wallet-${1:-10000}.csv"
+        python3 "$here/gen-wallet-export.py" "$@" >"$out" && echo "$out" ;;
+    scale)
+        "$here/gradle.sh" :core:data:jvmTest --tests '*ImportScaleTest*' --rerun -q --console=plain -i 2>&1 | grep -E 'SCALE|FAILED' ;;
     help|-h|--help) usage ;;
     *) echo "неизвестная команда: $cmd"; echo; usage; exit 2 ;;
 esac

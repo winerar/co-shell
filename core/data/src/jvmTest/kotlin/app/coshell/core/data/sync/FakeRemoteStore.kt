@@ -1,5 +1,7 @@
 package app.coshell.core.data.sync
 
+import app.coshell.core.data.remote.ApiException
+
 /**
  * In-memory server: keeps the last pushed record per key and stamps it with a growing server time.
  * Like Firestore, every record of one push shares one server time; order is (time, key).
@@ -15,6 +17,10 @@ class FakeRemoteStore : RemoteStore {
     var afterPush: suspend () -> Unit = {}
     var pullCalls = 0
         private set
+    var pushCalls = 0
+        private set
+    /** Daily write quota left; a push (one atomic commit) that does not fit fails like Firestore. */
+    var writesLeft = Int.MAX_VALUE
 
     val records: Collection<RemoteRecord> get() = docs.values
 
@@ -31,7 +37,10 @@ class FakeRemoteStore : RemoteStore {
     }
 
     override suspend fun push(records: List<SyncRecord>) {
+        pushCalls++
         if (failNextPush) { failNextPush = false; error("offline") }
+        if (records.size > writesLeft) throw ApiException(429, "RESOURCE_EXHAUSTED", "Quota exceeded.")
+        writesLeft -= records.size
         serverClock += 10
         records.forEach { docs[it.key] = RemoteRecord(it, "%015d %s".format(serverClock, it.key)) }
         afterPush()

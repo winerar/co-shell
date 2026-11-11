@@ -3,12 +3,16 @@ package app.coshell.core.data.sync
 import app.coshell.core.data.db.PulledRows
 import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.data.db.SyncDao
+import app.coshell.core.data.remote.ApiException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.time.Clock
 
-/** What one [SyncEngine.sync] run did. */
-data class SyncResult(val pulled: Int, val applied: Int, val pushed: Int)
+/**
+ * What one [SyncEngine.sync] run did. [pushPaused] — sending was skipped: the daily quota is over
+ * ([QuotaPause]); local edits wait for the reset.
+ */
+data class SyncResult(val pulled: Int, val applied: Int, val pushed: Int, val pushPaused: Boolean = false)
 
 /**
  * Two-way sync of Room with the family's server copy (docs/ARCHITECTURE.md §10).
@@ -19,7 +23,8 @@ data class SyncResult(val pulled: Int, val applied: Int, val pushed: Int)
  *
  * Pull goes first so that a stale offline edit cannot silently overwrite a newer one on the
  * server. Runs are serialized; a failed run leaves rows pending and the cursor where it was,
- * so the next run simply repeats the work (every step is idempotent).
+ * so the next run simply repeats the work (every step is idempotent). A push that runs out of the
+ * daily quota keeps the chunks already sent and pauses sending until the reset ([QuotaPause]).
  */
 class SyncEngine(
     private val dao: SyncDao,
@@ -37,9 +42,23 @@ class SyncEngine(
         pulled.chunked(MERGE_CHUNK).forEach { chunk ->
             applied += dao.merge(chunk.toRows(), CURSOR, chunk.last().cursor)
         }
-        val pushed = push()
+        val paused = isPushPaused()
+        val pushed = if (paused) 0 else push()
         dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
-        SyncResult(pulled = pulled.size, applied = applied, pushed = pushed)
+        SyncResult(pulled = pulled.size, applied = applied, pushed = pushed, pushPaused = paused)
+    }
+
+    /** `true` while the quota pause lasts; an expired pause is cleared. */
+    private suspend fun isPushPaused(): Boolean {
+        val until = dao.state(QuotaPause.KEY)?.toLongOrNull() ?: return false
+        if (clock.now().toEpochMilliseconds() < until) return true
+        dao.setState(SyncStateEntity(QuotaPause.KEY, ""))
+        return false
+    }
+
+    private suspend fun pausePush() {
+        val until = QuotaPause.nextReset(clock.now())
+        dao.setState(SyncStateEntity(QuotaPause.KEY, until.toEpochMilliseconds().toString()))
     }
 
     private suspend fun push(): Int {
@@ -52,18 +71,15 @@ class SyncEngine(
             pending.manualRates.mapTo(this, SyncCodec::encode)
         }
         records.chunked(PUSH_CHUNK).forEach { chunk ->
-            remote.push(chunk)
-            chunk.forEach { clear(it) }
+            try {
+                remote.push(chunk)
+            } catch (e: ApiException) {
+                if (e.isQuotaExceeded) pausePush()
+                throw e
+            }
+            dao.clearSent(chunk)
         }
         return records.size
-    }
-
-    private suspend fun clear(r: SyncRecord) = when (r.kind) {
-        SyncKind.ACCOUNT -> dao.clearAccount(r.id, r.updatedAt)
-        SyncKind.CATEGORY -> dao.clearCategory(r.id, r.updatedAt)
-        SyncKind.TRANSACTION -> dao.clearTransaction(r.id, r.updatedAt)
-        SyncKind.BUDGET -> dao.clearBudget(r.id, r.updatedAt)
-        SyncKind.MANUAL_RATE -> dao.clearManualRate(r.id, r.updatedAt)
     }
 
     private fun List<RemoteRecord>.toRows(): PulledRows {

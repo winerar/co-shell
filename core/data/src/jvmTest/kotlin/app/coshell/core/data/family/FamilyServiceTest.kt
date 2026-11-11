@@ -7,6 +7,11 @@ import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.data.sync.ChangeBell
 import app.coshell.core.data.sync.FakeRemoteStore
 import app.coshell.core.data.sync.SyncEngine
+import app.coshell.core.data.sync.SyncIssue
+import app.coshell.core.data.sync.SyncIssueKind
+import app.coshell.core.data.remote.ApiException
+import kotlin.test.assertFailsWith
+import kotlin.time.Duration.Companion.days
 import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
 import kotlinx.coroutines.test.runTest
@@ -40,7 +45,7 @@ class FamilyServiceTest {
         private val bell = ChangeBell { if (bellDown) error("RTDB down") else rings++ }
         fun service(configured: Boolean = true) = FamilyService(
             configured, auth, FakeFamilyRemote(familyServer, auth), db.syncDao(),
-            SyncEngine(db.syncDao(), records), JsonBackupRepository(db, stamper), clock, bell,
+            SyncEngine(db.syncDao(), records, clock), JsonBackupRepository(db, stamper), clock, bell,
         ) { backups += it }
         val family = service(configured)
         init { phones += this }
@@ -185,5 +190,26 @@ class FamilyServiceTest {
         owner.bellDown = true
         owner.accounts.saveAccount(Account("card", "Карта", usd))
         assertEquals(1, owner.family.sync()!!.pushed)
+    }
+
+    @Test
+    fun `quota banner stays while sending is paused and goes once the edits are sent`() = runTest {
+        val owner = TestPhone()
+        owner.family.signIn("owner"); owner.family.createFamily()
+        owner.family.sync()
+        suspend fun issue() = SyncIssue.decode(owner.db.syncDao().state(SyncIssue.KEY))
+
+        records.writesLeft = 0
+        owner.accounts.saveAccount(Account("cash", "Наличные", usd))
+        assertFailsWith<ApiException> { owner.family.sync() }
+        assertEquals(SyncIssueKind.QUOTA, issue()?.kind)
+
+        assertTrue(owner.family.sync()!!.pushPaused) // a poll during the pause does not hide the banner
+        assertEquals(SyncIssueKind.QUOTA, issue()?.kind)
+
+        records.writesLeft = 20_000
+        owner.now += 1.days
+        assertEquals(1, owner.family.sync()!!.pushed)
+        assertNull(issue())
     }
 }

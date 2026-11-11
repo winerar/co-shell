@@ -62,6 +62,9 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
 `settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
+Шаблоны операций (#169, экранов пока нет — #104): модель `core:model/TransactionTemplate.kt`, логика —
+`core:domain/templates/` (`SaveTemplateUseCase`, `SaveAsTemplateUseCase` — «Сохранить как шаблон», `ApplyTemplateUseCase` →
+`TransactionDraft` с `gaps`), Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`.
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);

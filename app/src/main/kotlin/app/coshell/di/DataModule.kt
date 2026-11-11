@@ -7,6 +7,7 @@ import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
+import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomDataWipeRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
@@ -17,6 +18,10 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.BudgetRepository
+import app.coshell.core.domain.templates.ApplyTemplateUseCase
+import app.coshell.core.domain.templates.SaveAsTemplateUseCase
+import app.coshell.core.domain.templates.SaveTemplateUseCase
+import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DataWipeRepository
 import app.coshell.core.domain.DeleteAccountUseCase
@@ -70,6 +75,22 @@ object DataModule {
     @Provides @Singleton
     fun provideBudgetRepository(db: CoShellDatabase, stamper: WriteStamper): BudgetRepository =
         RoomBudgetRepository(db.budgetDao(), stamper)
+
+    @Provides @Singleton
+    fun provideTemplateRepository(db: CoShellDatabase, stamper: WriteStamper): TemplateRepository =
+        RoomTemplateRepository(db.templateDao(), stamper)
+
+    @Provides
+    fun provideSaveTemplate(accounts: AccountRepository, categories: CategoryRepository, templates: TemplateRepository) =
+        SaveTemplateUseCase(accounts, categories, templates)
+
+    @Provides
+    fun provideSaveAsTemplate(templates: TemplateRepository, save: SaveTemplateUseCase, ids: IdGenerator) =
+        SaveAsTemplateUseCase(templates, save, ids)
+
+    @Provides
+    fun provideApplyTemplate(accounts: AccountRepository, categories: CategoryRepository, templates: TemplateRepository) =
+        ApplyTemplateUseCase(accounts, categories, templates)
 
     @Provides @Singleton
     fun provideExchangeRateRepository(db: CoShellDatabase, stamper: WriteStamper): ExchangeRateRepository =

@@ -104,6 +104,26 @@ data class BudgetEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+/** Operation template (schema v7). [amountMinor] `NULL` — the amount is asked every time. */
+@Serializable
+@Entity(tableName = "templates")
+data class TemplateEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val type: String,
+    @ColumnInfo(name = "account_id") val accountId: String,
+    val currency: String,
+    @ColumnInfo(name = "amount_minor") val amountMinor: Long?,
+    @ColumnInfo(name = "to_account_id") val toAccountId: String?,
+    @ColumnInfo(name = "category_id") val categoryId: String?,
+    val note: String,
+    @ColumnInfo(name = "sort_order") val sortOrder: Int,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+
 /** Sum of transaction effects on one account (one row per account and direction). */
 data class BalanceDelta(
     @ColumnInfo(name = "account_id") val accountId: String,

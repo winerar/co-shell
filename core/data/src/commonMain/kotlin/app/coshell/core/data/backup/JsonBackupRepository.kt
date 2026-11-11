@@ -3,6 +3,7 @@ package app.coshell.core.data.backup
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.CoShellDatabase
+import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
 import app.coshell.core.data.repository.Stamp
 import app.coshell.core.data.repository.WriteStamper
@@ -16,6 +17,7 @@ import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.int
@@ -46,6 +48,7 @@ class JsonBackupRepository(
             transactions = database.transactionDao().getAll().map { it.toModel().toDto() },
             budgets = database.budgetDao().getAll().map { it.toModel().toDto() },
             manualRates = database.rateDao().getAllManual().map { it.toModel().toManualDto() },
+            templates = database.templateDao().getAll().map { it.toModel().toDto() },
         )
         json.encodeToString(BackupFile.serializer(), file)
     }
@@ -75,6 +78,7 @@ class JsonBackupRepository(
                 file.transactions.map { it.toModel() },
                 file.budgets.map { it.toModel() },
                 file.manualRates.map { it.toModel() },
+                file.templates.map { it.toModel() },
             )
         } catch (e: IllegalArgumentException) {
             return BackupImportResult.Corrupted(e.message ?: "invalid record")
@@ -88,16 +92,17 @@ class JsonBackupRepository(
             transactions = local.transactions + models.transactions.map { it.toEntity(stamp) },
             budgets = local.budgets + models.budgets.map { it.toEntity(stamp) },
             manualRates = models.manualRates.map { it.toManualEntity(stamp) },
+            templates = local.templates + models.templates.map { it.toEntity(stamp) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,
-            models.manualRates.size,
+            models.manualRates.size, models.templates.size,
         )
     }
 
     /**
      * Local rows to rewrite so that categories from the backup replace their local duplicates
-     * ([findDuplicateCategories]): duplicates are soft-deleted, and local operations, budgets and
+     * ([findDuplicateCategories]): duplicates are soft-deleted, and local operations, budgets, templates and
      * subcategories that pointed at them move to the backup's category. Rows the backup itself
      * contains are left out — the backup overwrites them anyway.
      */
@@ -108,6 +113,7 @@ class JsonBackupRepository(
         val incomingCategories = models.categories.map { it.id }.toSet()
         val incomingTransactions = models.transactions.map { it.id }.toSet()
         val incomingBudgets = models.budgets.map { it.id }.toSet()
+        val incomingTemplates = models.templates.map { it.id }.toSet()
         fun replacement(categoryId: String?) = categoryId?.let(duplicates::get)
 
         val categories = localCategories.mapNotNull { category ->
@@ -125,7 +131,10 @@ class JsonBackupRepository(
         val budgets = database.budgetDao().getAll()
             .filter { it.id !in incomingBudgets && replacement(it.categoryId) != null }
             .map { it.copy(categoryId = duplicates.getValue(it.categoryId)).touched(stamp) }
-        return LocalRows(categories, transactions, budgets)
+        val templates = database.templateDao().getAll()
+            .filter { it.id !in incomingTemplates && replacement(it.categoryId) != null }
+            .map { it.copy(categoryId = replacement(it.categoryId)).touched(stamp) }
+        return LocalRows(categories, transactions, budgets, templates)
     }
 
     private fun CategoryEntity.touched(stamp: Stamp) =
@@ -137,10 +146,14 @@ class JsonBackupRepository(
     private fun BudgetEntity.touched(stamp: Stamp) =
         copy(updatedAt = stamp.now, updatedBy = stamp.by, pendingSync = true)
 
+    private fun TemplateEntity.touched(stamp: Stamp) =
+        copy(updatedAt = stamp.now, updatedBy = stamp.by, pendingSync = true)
+
     private data class LocalRows(
         val categories: List<CategoryEntity> = emptyList(),
         val transactions: List<TransactionEntity> = emptyList(),
         val budgets: List<BudgetEntity> = emptyList(),
+        val templates: List<TemplateEntity> = emptyList(),
     )
 
     private data class Models(
@@ -149,5 +162,6 @@ class JsonBackupRepository(
         val transactions: List<Transaction>,
         val budgets: List<Budget>,
         val manualRates: List<ExchangeRate>,
+        val templates: List<TransactionTemplate>,
     )
 }

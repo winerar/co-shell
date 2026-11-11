@@ -4,7 +4,9 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
+import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -44,4 +46,13 @@ class FakeTransactionRepository : TransactionRepository {
         items.value.values.count { it.accountId == accountId || it.toAccountId == accountId }
     override suspend fun countForCategory(categoryId: String) =
         items.value.values.count { it.categoryId == categoryId }
+}
+
+class FakeTemplateRepository : TemplateRepository {
+    val items = MutableStateFlow<Map<String, TransactionTemplate>>(emptyMap())
+    override fun observeTemplates(): Flow<List<TransactionTemplate>> = items.map { it.values.sortedBy { t -> t.sortOrder } }
+    override suspend fun getTemplate(id: String) = items.value[id]
+    override suspend fun saveTemplate(template: TransactionTemplate) { items.value += template.id to template }
+    override suspend fun deleteTemplate(id: String) { items.value -= id }
+    override suspend fun maxSortOrder() = items.value.values.maxOfOrNull { it.sortOrder }
 }

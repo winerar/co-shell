@@ -24,4 +24,6 @@ class ApiException(val code: Int, val status: String?, message: String) : Except
     val isNotFound get() = code == 404 || status == "NOT_FOUND"
     val isAlreadyExists get() = code == 409 || status == "ALREADY_EXISTS" || status == "FAILED_PRECONDITION"
     val isUnauthenticated get() = code == 401 || status == "UNAUTHENTICATED"
+    /** Daily free quota is over (Firestore Spark: 20 000 writes, 50 000 reads). */
+    val isQuotaExceeded get() = code == 429 || status == "RESOURCE_EXHAUSTED"
 }

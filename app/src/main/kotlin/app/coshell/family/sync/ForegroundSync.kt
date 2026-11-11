@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
- * Sync while the app is on screen: pull at once when it opens, then every [BASE_MS] while
- * something changes; after a minute of quiet the pause grows to [MAX_MS] (an idle pull costs one
- * Firestore read: 360 an hour per phone at a fixed 10 s, ≈ 60 at the slow pace). A local edit
- * schedules a send and brings back the fast pace. The [bell] stream makes the other phone's edits
- * arrive within seconds; polling is the fallback if the bell is down. Started from
+ * Sync while the app is on screen: pull at once when it opens, then once a minute ([POLL_MS],
+ * owner's choice 2026-11-11: an idle pull costs a Firestore read, 60 an hour per phone). The
+ * [bell] stream makes the other phone's edits arrive within seconds; polling is only the fallback
+ * if the bell is down. A local edit schedules a send (the worker, a second later) and restarts
+ * the minute. Started from
  * [app.coshell.MainActivity] with `repeatOnLifecycle(STARTED)`, so it restarts on every return to
  * the app and stops in the background (the stream too).
  */
@@ -37,13 +37,13 @@ class ForegroundSync(
             dao.observePendingCount().distinctUntilChanged().filter { it > 0 }.collect {
                 if (family.joined != null) {
                     SyncScheduler.syncSoon(context)
-                    wake.trySend(Unit) // the other phone may answer soon: poll fast again
+                    wake.trySend(Unit) // restart the minute from this edit
                 }
             }
         }
         scope.launch { listenToBell { wake.trySend(Unit) } }
         family.refresh()
-        val backoff = PollBackoff(BASE_MS, MAX_MS, FAST_IDLE_RUNS)
+        val backoff = PollBackoff(POLL_MS, POLL_MS, fastIdleRuns = 0)
         pollForever(backoff, wake, onError = { Log.w(TAG, "Foreground sync failed: ${it.message}") }) {
             val result = family.sync()
             result != null && (result.pulled > 0 || result.pushed > 0)
@@ -66,8 +66,6 @@ class ForegroundSync(
 
     private companion object {
         const val TAG = "Sync"
-        const val BASE_MS = 10_000L
-        const val MAX_MS = 60_000L
-        const val FAST_IDLE_RUNS = 6
+        const val POLL_MS = 60_000L
     }
 }

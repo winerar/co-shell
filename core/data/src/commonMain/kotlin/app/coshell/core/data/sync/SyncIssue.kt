@@ -52,7 +52,7 @@ data class SyncIssue(val kind: SyncIssueKind, val since: Instant, val code: Stri
             val kind = when {
                 error.isUnauthenticated -> SyncIssueKind.SIGNED_OUT
                 error.isPermissionDenied -> SyncIssueKind.NO_ACCESS
-                error.code == 429 || error.status == "RESOURCE_EXHAUSTED" -> SyncIssueKind.QUOTA
+                error.isQuotaExceeded -> SyncIssueKind.QUOTA
                 else -> SyncIssueKind.SERVER
             }
             return kind to code

@@ -3,6 +3,7 @@ package app.coshell.core.data.backup
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.CoShellDatabase
+import app.coshell.core.data.db.SettingEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
 import app.coshell.core.data.repository.Stamp
@@ -49,6 +50,7 @@ class JsonBackupRepository(
             budgets = database.budgetDao().getAll().map { it.toModel().toDto() },
             manualRates = database.rateDao().getAllManual().map { it.toModel().toManualDto() },
             templates = database.templateDao().getAll().map { it.toModel().toDto() },
+            settings = database.settingDao().getAll().map { SettingDto(it.id, it.value) },
         )
         json.encodeToString(BackupFile.serializer(), file)
     }
@@ -93,6 +95,8 @@ class JsonBackupRepository(
             budgets = local.budgets + models.budgets.map { it.toEntity(stamp) },
             manualRates = models.manualRates.map { it.toManualEntity(stamp) },
             templates = local.templates + models.templates.map { it.toEntity(stamp) },
+            // Values are parsed leniently on read (a broken one falls back to the default), so no checks here.
+            settings = file.settings.map { SettingEntity(it.key, it.value, stamp.now, stamp.by) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,

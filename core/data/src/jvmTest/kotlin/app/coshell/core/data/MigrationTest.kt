@@ -161,6 +161,26 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `8 to 9 keeps data and adds family settings`() {
+        helper.createDatabase(8).use { v8 ->
+            v8.execSQL(
+                """INSERT INTO budgets (id, category_id, month, limit_minor, currency, note, rollover, last_month,
+                   updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('b1', 'home', '2026-11', 40000000, 'ARS', NULL, 0, NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(9, emptyList()).use { v9 ->
+            assertEquals("home|40000000", v9.single("SELECT category_id || '|' || limit_minor FROM budgets"))
+            v9.execSQL(
+                """INSERT INTO settings (id, value, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('month_start_day', '10', 1, NULL, 0, 1)""",
+            )
+            assertEquals("month_start_day|10", v9.single("SELECT id || '|' || value FROM settings"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

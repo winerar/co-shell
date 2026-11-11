@@ -35,6 +35,8 @@ internal data class BackupFile(
     val manualRates: List<ManualRateDto> = emptyList(),
     /** Since schema v7. */
     val templates: List<TemplateDto> = emptyList(),
+    /** Since schema v9: family settings (#122), key → text value as in the `settings` table. */
+    val settings: List<SettingDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -187,3 +189,7 @@ internal data class TemplateDto(
 internal fun TransactionTemplate.toDto() = TemplateDto(
     id, name, type.name, accountId, currency.value, amount?.amountMinor, categoryId, toAccountId, note, sortOrder,
 )
+
+/** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */
+@Serializable
+internal data class SettingDto(val key: String, val value: String)

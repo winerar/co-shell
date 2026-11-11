@@ -18,8 +18,9 @@ import kotlinx.coroutines.IO
     entities = [
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
+        SettingEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -29,6 +30,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 5, to = 6), // v6: transactions.import_batch_id
         AutoMigration(from = 6, to = 7), // v7: templates
         AutoMigration(from = 7, to = 8), // v8: budgets.note, rollover, last_month
+        AutoMigration(from = 8, to = 9), // v9: settings
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
@@ -38,6 +40,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun budgetDao(): BudgetDao
     abstract fun templateDao(): TemplateDao
+    abstract fun settingDao(): SettingDao
     abstract fun backupDao(): BackupDao
     abstract fun rateDao(): RateDao
     abstract fun syncDao(): SyncDao

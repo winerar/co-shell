@@ -31,6 +31,7 @@ enum class SyncKind(val wire: String) {
     BUDGET("budget"),
     MANUAL_RATE("manualRate"),
     TEMPLATE("template"),
+    SETTING("setting"),
     ;
 
     companion object {

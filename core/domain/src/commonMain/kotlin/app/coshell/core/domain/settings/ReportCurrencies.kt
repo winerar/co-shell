@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Report currencies (ARCHITECTURE §6): totals on "Overview" are shown in each of them; the first
  * one is the **main** currency (also the base of the "Rates" screen). Never empty.
- * Kept on the device for now; moves to the family settings with sync (stage 4).
+ * A family setting: shared by both phones through sync (#122), works without a family too.
  */
 interface ReportCurrencySettings {
     val currencies: Flow<List<CurrencyCode>>
@@ -35,4 +35,11 @@ object ReportCurrencies {
     /** Cleans a stored list: drops duplicates, falls back to [ReportCurrencySettings.DEFAULT] when empty. */
     fun normalize(list: List<CurrencyCode>): List<CurrencyCode> =
         list.distinct().ifEmpty { ReportCurrencySettings.DEFAULT }
+
+    /** Stored form: `"USD,ARS"`. */
+    fun encode(list: List<CurrencyCode>): String = normalize(list).joinToString(",") { it.value }
+
+    /** Reads [encode]d text back; broken codes are skipped, nothing left → the default. */
+    fun decode(stored: String?): List<CurrencyCode> =
+        normalize(stored.orEmpty().split(',').mapNotNull { CurrencyCode.parseOrNull(it.trim()) })
 }

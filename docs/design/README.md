@@ -26,6 +26,9 @@
 | Курсы и валюты | `Rates`, `RatesRefreshing`, `RatesFailed`, `RatesEmpty`, `RatesManual`, `ReportCurrencies`, `CurrencyAdd` | `rates/list/`, `currencies/` |
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
+| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | — (#169, #104); доски — `mockup_screens_{templates,budgets,reports}.py` |
+| Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | — (#167, #103) |
+| Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | — (#168, #140) |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 16 главных действий по шагам; каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
 | Компоненты | `Components` | `core/designsystem/` (`components.md`) |
@@ -47,7 +50,7 @@
 - Иконка (#66): https://claude.ai/artifact/VYVhJ7roxaTLXpaBXhRFYh
 
 ## Правила для агента
-- Новый экран или заметная переделка — сначала доска на этом же холсте (не новый артефакт), потом код.
+- Новый экран или заметная переделка — сначала доска (со списками — и доска на 20–30+ элементов) на этом же холсте (не новый артефакт), потом код.
   Варианты на выбор — одна доска на вариант рядом; **после выбора невыбранные доски удалить**.
 - Доски рисуем только во «Вольт · тёмная» (цвета — `scripts/agent/mockup_bricks.py`), без своих `dark`-tweak;
   `scripts/agent/mockup_theme.py` переводит цвета в токены темы (повторный запуск безопасен). Цвет, который не должен

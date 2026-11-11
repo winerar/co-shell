@@ -21,9 +21,14 @@ import mockup_screens_main as main_screens  # noqa: E402
 import mockup_screens_more as more_screens  # noqa: E402
 import mockup_screens_ideas as idea_screens  # noqa: E402
 import mockup_screens_feedback as fb_screens  # noqa: E402
+import mockup_screens_templates as tpl_screens  # noqa: E402
+import mockup_screens_budgets as bud_screens  # noqa: E402
+import mockup_screens_reports as rep_screens  # noqa: E402
 import mockup_special as special  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
+
+PLAN = (tpl_screens, bud_screens, rep_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты» on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
@@ -58,6 +63,9 @@ STICKIES = {  # row index -> sticky text (placed after the row)
 }
 
 PITCH_X, PITCH_Y, W, H = 470, 1240, 390, 844
+for _m in PLAN:
+    STICKIES[len(LAYOUT)] = _m.ROW[2]
+    LAYOUT.append((_m.ROW[1], [b[0] for b in _m.BOARDS]))
 
 
 def write(name, html):
@@ -71,7 +79,8 @@ def main():
         for name, title, fn in mod.BOARDS:
             write(name, board(title.split(' · ', 1)[-1], fn()))
             gen[name] = (title.split(' · ', 1)[-1], False)
-    for name, title, fn, _ in idea_screens.BOARDS + fb_screens.BOARDS:
+    plan_boards = [b for m in PLAN for b in m.BOARDS]
+    for name, title, fn, _ in idea_screens.BOARDS + fb_screens.BOARDS + plan_boards:
         write(name, board(title, fn()))
         gen[name] = (title, False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
@@ -122,7 +131,7 @@ def main():
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
     add('Components', 0, 0, 1280, 1640, 'components')
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
-    for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # feedback variants first: they wait for the owner
+    for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # picked feedback variants
         y = 1900 + r * PITCH_Y
         names = [b[0] for b in fb_screens.BOARDS if b[3] == n]
         notes['fb%d' % n] = {'kind': 'title1', 'page': 'ideas', 'text': title, 'x': 0, 'y': y - 250,

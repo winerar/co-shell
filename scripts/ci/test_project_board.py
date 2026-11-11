@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
-from project_board import DONE, decide, decide_type, type_of  # noqa: E402
+from project_board import DONE, decide, decide_type, fatal_errors, type_of  # noqa: E402
 
 
 def issue(*labels, open=True, at="2026-11-10T10:00:00Z"):
@@ -69,6 +69,24 @@ class TypeTest(unittest.TestCase):
 
     def test_closed_issue_keeps_type(self):
         self.assertEqual(decide_type(issue(open=False), "Баг"), (False, "Баг"))
+
+
+class FatalErrorsTest(unittest.TestCase):
+    def test_missing_type_field_is_not_fatal(self):
+        error = {"type": "NOT_FOUND", "path": ["user", "projectV2", "kind"],
+                 "message": "Could not resolve to a Unions::ProjectV2FieldConfiguration with the name Тип"}
+        self.assertEqual(fatal_errors([error]), [])
+
+    def test_missing_project_is_fatal(self):
+        error = {"type": "NOT_FOUND", "path": ["user", "projectV2"]}
+        self.assertEqual(fatal_errors([error]), [error])
+
+    def test_other_errors_are_fatal(self):
+        error = {"type": "FORBIDDEN", "path": ["user", "projectV2", "kind"]}
+        self.assertEqual(fatal_errors([error]), [error])
+
+    def test_no_errors(self):
+        self.assertEqual(fatal_errors(None), [])
 
 
 if __name__ == "__main__":

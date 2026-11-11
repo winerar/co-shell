@@ -1,1 +1,1305 @@
-{"v": 3, "createdOnFiles": {"v": 1, "at": "2026-11-09T12:00:00Z"}, "title": "Co-Shell — дизайн", "launch": {"view": "canvas", "page": "screens"}, "pages": [{"id": "screens", "name": "Экраны"}, {"id": "flows", "name": "Воркфлоу"}, {"id": "components", "name": "Компоненты"}, {"id": "history", "name": "История решений"}], "boards": {"Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "1 · Шторка ввода: шаг 1 счёт → шаг 2 сумма и категория", "is_interactive": true, "radius": 28, "page": "screens"}, "Operations.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "2 · Операции", "radius": 28, "page": "screens"}, "Accounts.dc.html": {"x": 940, "y": 0, "w": 390, "h": 844, "title": "3 · Счета (12 счетов, группы)", "is_interactive": true, "radius": 28, "page": "screens"}, "More.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · Ещё", "radius": 28, "page": "screens"}, "Feedback.dc.html": {"x": 0, "y": 1180, "w": 390, "h": 844, "title": "5 · Обратная связь", "is_interactive": true, "radius": 28, "page": "screens"}, "Update.dc.html": {"x": 470, "y": 1180, "w": 390, "h": 844, "title": "6 · Обновление (тапайте кнопку — состояния)", "is_interactive": true, "radius": 28, "page": "screens"}, "Colors.dc.html": {"x": 940, "y": 1180, "w": 390, "h": 1240, "title": "7 · Цвет счёта: банки и приложения + палитра", "is_interactive": true, "radius": 28, "page": "screens"}, "Categories.dc.html": {"x": 0, "y": 2780, "w": 390, "h": 844, "title": "8 · Категории: один «+» для категорий и папок", "radius": 28, "is_interactive": true, "page": "screens"}, "CategoryEdit.dc.html": {"x": 470, "y": 2780, "w": 390, "h": 844, "title": "9 · Редактор: Категория | Папка (тапайте переключатель)", "radius": 28, "is_interactive": true, "page": "screens"}, "AccountEdit.dc.html": {"x": 940, "y": 2780, "w": 390, "h": 844, "title": "10 · Счёт: редактор", "radius": 28, "is_interactive": true, "page": "screens"}, "Rates.dc.html": {"x": 1410, "y": 2780, "w": 390, "h": 844, "title": "11 · Курсы валют", "radius": 28, "page": "screens"}, "ReportCurrencies.dc.html": {"x": 1880, "y": 2780, "w": 390, "h": 844, "title": "12 · Валюты отчётов", "radius": 28, "is_interactive": true, "page": "screens"}, "Family.dc.html": {"x": 0, "y": 4000, "w": 390, "h": 844, "title": "13 · Семья и синхронизация", "radius": 28, "page": "screens"}, "Backup.dc.html": {"x": 470, "y": 4000, "w": 390, "h": 844, "title": "14 · Резервная копия", "radius": 28, "page": "screens"}, "Settings.dc.html": {"x": 940, "y": 4000, "w": 390, "h": 844, "title": "15 · Настройки: 6 палитр (+ Лагуна, Сакура)", "radius": 28, "is_interactive": true, "page": "screens"}, "UpdatePill.dc.html": {"x": 1410, "y": 4000, "w": 390, "h": 844, "title": "16 · Пилюля «есть обновление» → экран обновления", "radius": 28, "is_interactive": true, "page": "screens"}, "Flows.dc.html": {"x": 0, "y": 0, "w": 1840, "h": 2352, "title": "Воркфлоу: главные действия", "page": "flows", "is_interactive": true}, "Components.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 1640, "title": "Компоненты", "page": "components", "is_interactive": true}, "History.dc.html": {"x": 0, "y": 0, "w": 1040, "h": 640, "title": "История решений", "page": "history"}, "SyncA.dc.html": {"x": 0, "y": 5220, "w": 390, "h": 844, "title": "17А · Синк: плашка над балансом (рекомендую)", "radius": 28, "is_interactive": true, "page": "screens"}, "SyncB.dc.html": {"x": 470, "y": 5220, "w": 390, "h": 844, "title": "17Б · Синк: значок в шапке → шторка", "radius": 28, "is_interactive": true, "page": "screens"}, "SyncC.dc.html": {"x": 940, "y": 5220, "w": 390, "h": 844, "title": "17В · Синк: строка в карточке баланса", "radius": 28, "is_interactive": true, "page": "screens"}, "Wipe.dc.html": {"x": 1410, "y": 5220, "w": 390, "h": 844, "title": "18 · Стереть все данные (Tweaks: слово / удержание)", "radius": 28, "is_interactive": true, "page": "screens"}, "Ops112A.dc.html": {"x": 0, "y": 6540, "w": 390, "h": 844, "title": "19А · #112: дубль и удаление — кнопки в шторке операции", "radius": 28, "is_interactive": true, "page": "screens"}, "Ops112B.dc.html": {"x": 470, "y": 6540, "w": 390, "h": 844, "title": "19Б · #112: удержание строки → меню (рекомендую)", "radius": 28, "is_interactive": true, "page": "screens"}, "Ops112C.dc.html": {"x": 940, "y": 6540, "w": 390, "h": 844, "title": "19В · #112: удержание → выбор нескольких", "radius": 28, "is_interactive": true, "page": "screens"}}, "order": ["Main.dc.html", "Operations.dc.html", "Accounts.dc.html", "More.dc.html", "Feedback.dc.html", "Update.dc.html", "Colors.dc.html", "Categories.dc.html", "CategoryEdit.dc.html", "AccountEdit.dc.html", "Rates.dc.html", "ReportCurrencies.dc.html", "Family.dc.html", "Backup.dc.html", "Settings.dc.html", "UpdatePill.dc.html", "Flows.dc.html", "Components.dc.html", "History.dc.html", "SyncA.dc.html", "SyncB.dc.html", "SyncC.dc.html", "Wipe.dc.html", "Ops112A.dc.html", "Ops112B.dc.html", "Ops112C.dc.html"], "notes": {"t": {"x": 0, "y": -260, "text": "Co-Shell · Вольт · экраны", "kind": "title1", "maxW": 1800, "page": "screens"}, "n1": {"x": 0, "y": -150, "text": "Шторка: шаг 1 — тип и счёт (сетка, недавние сверху, поиск внизу под пальцем), шаг 2 — своя клавиатура, сумма и категории над ней. Всё нажимаемое — в нижних 2/3. Тапайте.", "w": 390, "size": "s", "page": "screens"}, "t2": {"x": 0, "y": 930, "text": "Частые экраны и цвета", "kind": "title1", "maxW": 1330, "page": "screens"}, "t3": {"x": 0, "y": 2540, "text": "Остальные экраны", "kind": "title1", "maxW": 2270, "page": "screens"}, "t4": {"x": 0, "y": 3760, "text": "Настройки и обновление", "kind": "title1", "maxW": 1800, "page": "screens"}, "n4": {"x": 1880, "y": 4000, "text": "Обновление вышло, пока приложение открыто: над панелью всплывает пилюля «Версия 43 · Обновить», на «Ещё» — точка. Тап — скачивание сразу начинается и открывается экран обновления с процентами. × — скрыть до следующего запуска. Диалога при запуске больше нет.", "w": 390, "size": "s", "page": "screens"}, "nav": {"x": 470, "y": -150, "text": "Вкладки холста вверху: Экраны · Воркфлоу · Компоненты · История решений. Оглавление в репозитории — docs/design/README.md.", "w": 390, "size": "s", "page": "screens"}, "t5": {"x": 0, "y": 4980, "text": "Отзывы: ошибка синка (#102) и «Стереть всё» (#107) — на выбор", "kind": "title1", "maxW": 1800, "page": "screens"}, "n5": {"x": 1880, "y": 5220, "text": "Синк: плашка появляется, только если синк не проходит дольше 2 минут или есть неотправленные изменения; сама исчезает после удачной синхронизации. «Другая причина →» — только в макете, чтобы посмотреть все 5 текстов. Tweaks → dark: светлая тема.", "w": 390, "size": "s", "page": "screens"}, "t6": {"x": 0, "y": 6300, "text": "Отзыв #112: строки без свайпов, вкладки листаются свайпом — на выбор", "kind": "title1", "maxW": 1800, "page": "screens"}, "n6": {"x": 1410, "y": 6540, "text": "Во всех трёх: тяните экран влево/вправо — соседняя вкладка, пилюля на панели едет за пальцем (Обзор ↔ Операции ↔ Счета ↔ Ещё; «+» пропускается). Тап по строке — шторка операции, вверху «Дублировать» и «Удалить» (удаление со снэкбаром «Отменить»). Различие — быстрый путь: А — только шторка; Б — удержать строку → меню; В — удержать → выбор нескольких и удаление пачкой. Tweaks → dark: светлая тема.", "w": 390, "size": "s", "page": "screens"}}, "designSystems": []}
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-09T12:00:00Z"
+  },
+  "title": "Co-Shell — дизайн",
+  "launch": {
+    "view": "canvas",
+    "page": "screens"
+  },
+  "pages": [
+    {
+      "id": "screens",
+      "name": "Экраны"
+    },
+    {
+      "id": "flows",
+      "name": "Воркфлоу"
+    },
+    {
+      "id": "components",
+      "name": "Компоненты"
+    },
+    {
+      "id": "ideas",
+      "name": "Предложения"
+    },
+    {
+      "id": "history",
+      "name": "История решений"
+    }
+  ],
+  "boards": {
+    "ThemeSwitch.dc.html": {
+      "x": -520,
+      "y": 0,
+      "w": 390,
+      "h": 560,
+      "title": "Тема макетов",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Home.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор",
+      "page": "screens",
+      "radius": 28
+    },
+    "HomeEmpty.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: первый запуск",
+      "page": "screens",
+      "radius": 28
+    },
+    "HomeAttention.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: нет курса",
+      "page": "screens",
+      "radius": 28
+    },
+    "HomeSync.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: ошибка синка (тапайте «Другая причина»)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "UpdateWhatsNew.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "«Что нового» после установки",
+      "page": "screens",
+      "radius": 28
+    },
+    "Operations.dc.html": {
+      "x": 0,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: удержание → выбор, свайп вкладок (тапайте)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "OpsSelect.dc.html": {
+      "x": 470,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: выбор нескольких",
+      "page": "screens",
+      "radius": 28
+    },
+    "OpsUndo.dc.html": {
+      "x": 940,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: удалено, «Отменить»",
+      "page": "screens",
+      "radius": 28
+    },
+    "OpsEmpty.dc.html": {
+      "x": 1410,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: пусто",
+      "page": "screens",
+      "radius": 28
+    },
+    "OpsNothing.dc.html": {
+      "x": 1880,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: ничего не нашлось",
+      "page": "screens",
+      "radius": 28
+    },
+    "Main.dc.html": {
+      "x": 0,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка ввода: шаг 1 счёт → шаг 2 сумма (тапайте)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "EntryTransfer.dc.html": {
+      "x": 470,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: перевод между валютами",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryReceipt.dc.html": {
+      "x": 940,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: чек в другой валюте",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryEdit.dc.html": {
+      "x": 1410,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: правка операции",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryError.dc.html": {
+      "x": 1880,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: не выбрана категория",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryNoAccounts.dc.html": {
+      "x": 2350,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: нет счетов",
+      "page": "screens",
+      "radius": 28
+    },
+    "Accounts.dc.html": {
+      "x": 0,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: 12 счетов, группы",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "AccountsSearch.dc.html": {
+      "x": 470,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: поиск",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountsEmpty.dc.html": {
+      "x": 940,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: пусто",
+      "page": "screens",
+      "radius": 28
+    },
+    "More.dc.html": {
+      "x": 1410,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Ещё",
+      "page": "screens",
+      "radius": 28
+    },
+    "UpdatePill.dc.html": {
+      "x": 1880,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Пилюля «есть обновление»",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Update.dc.html": {
+      "x": 2350,
+      "y": 3720,
+      "w": 390,
+      "h": 844,
+      "title": "Обновление (тапайте кнопку — состояния)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "AccountEdit.dc.html": {
+      "x": 0,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: новый",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "AccountEditExisting.dc.html": {
+      "x": 470,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: правка, ошибки",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountDelete.dc.html": {
+      "x": 940,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: удалить?",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountBlocked.dc.html": {
+      "x": 1410,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: удалить нельзя",
+      "page": "screens",
+      "radius": 28
+    },
+    "Colors.dc.html": {
+      "x": 1880,
+      "y": 4960,
+      "w": 390,
+      "h": 1240,
+      "title": "Цвет счёта: банки + палитра",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Categories.dc.html": {
+      "x": 2350,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Категории",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CategoryEdit.dc.html": {
+      "x": 2820,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Категория | Папка (тапайте)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CategoryBlocked.dc.html": {
+      "x": 3290,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Категория: удалить нельзя",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rates.dc.html": {
+      "x": 0,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Курсы валют",
+      "page": "screens",
+      "radius": 28
+    },
+    "RatesRefreshing.dc.html": {
+      "x": 470,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Курсы: загружаем",
+      "page": "screens",
+      "radius": 28
+    },
+    "RatesFailed.dc.html": {
+      "x": 940,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Курсы: не загрузились",
+      "page": "screens",
+      "radius": 28
+    },
+    "RatesEmpty.dc.html": {
+      "x": 1410,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Курсы: ещё не загружались",
+      "page": "screens",
+      "radius": 28
+    },
+    "RatesManual.dc.html": {
+      "x": 1880,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Курсы: курс вручную",
+      "page": "screens",
+      "radius": 28
+    },
+    "ReportCurrencies.dc.html": {
+      "x": 2350,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Валюты отчётов",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "CurrencyAdd.dc.html": {
+      "x": 2820,
+      "y": 6200,
+      "w": 390,
+      "h": 844,
+      "title": "Валюты отчётов: добавить",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilySignedOut.dc.html": {
+      "x": 0,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: вход",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyNoAccess.dc.html": {
+      "x": 470,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: нет доступа",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyInvited.dc.html": {
+      "x": 940,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: приглашение",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyJoinMode.dc.html": {
+      "x": 1410,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: свои операции на телефоне",
+      "page": "screens",
+      "radius": 28
+    },
+    "Family.dc.html": {
+      "x": 1880,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: в семье",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyInviteSent.dc.html": {
+      "x": 2350,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: приглашение отправлено",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyInviteDialog.dc.html": {
+      "x": 2820,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: пригласить, ошибка адреса",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyOffline.dc.html": {
+      "x": 3290,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: нет связи",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyNotConfigured.dc.html": {
+      "x": 3760,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: не настроено",
+      "page": "screens",
+      "radius": 28
+    },
+    "Settings.dc.html": {
+      "x": 0,
+      "y": 8680,
+      "w": 390,
+      "h": 1060,
+      "title": "Настройки: тема и палитра перекрашивают холст",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Backup.dc.html": {
+      "x": 470,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Резервная копия",
+      "page": "screens",
+      "radius": 28
+    },
+    "BackupAuto.dc.html": {
+      "x": 940,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Копия: автокопия, сохранено",
+      "page": "screens",
+      "radius": 28
+    },
+    "BackupError.dc.html": {
+      "x": 1410,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Копия: ошибка файла",
+      "page": "screens",
+      "radius": 28
+    },
+    "BackupRestore.dc.html": {
+      "x": 1880,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Копия: восстановить?",
+      "page": "screens",
+      "radius": 28
+    },
+    "Wipe.dc.html": {
+      "x": 2350,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Стереть все данные (тапайте)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "WipeFailed.dc.html": {
+      "x": 2820,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Стереть: копия не сохранилась",
+      "page": "screens",
+      "radius": 28
+    },
+    "Feedback.dc.html": {
+      "x": 3290,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Отзыв: написать",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "FeedbackSent.dc.html": {
+      "x": 3760,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Отзыв: отправлено",
+      "page": "screens",
+      "radius": 28
+    },
+    "FeedbackError.dc.html": {
+      "x": 4230,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "Отзыв: не отправилось",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportStart.dc.html": {
+      "x": 0,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: файл",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportError.dc.html": {
+      "x": 470,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: не тот файл",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportSummary.dc.html": {
+      "x": 940,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: что в файле",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportAccounts.dc.html": {
+      "x": 1410,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: счета",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportCategories.dc.html": {
+      "x": 1880,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: категории",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportTransfers.dc.html": {
+      "x": 2350,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: переводы без пары",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportPreview.dc.html": {
+      "x": 2820,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: проверка",
+      "page": "screens",
+      "radius": 28
+    },
+    "ImportDone.dc.html": {
+      "x": 3290,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Импорт: готово",
+      "page": "screens",
+      "radius": 28
+    },
+    "ThemeSwitchFlows.dc.html": {
+      "x": -520,
+      "y": 0,
+      "w": 390,
+      "h": 560,
+      "title": "Тема макетов",
+      "page": "flows",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Flows.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1840,
+      "h": 2352,
+      "title": "Flows",
+      "page": "flows"
+    },
+    "ThemeSwitchComponents.dc.html": {
+      "x": -520,
+      "y": 0,
+      "w": 390,
+      "h": 560,
+      "title": "Тема макетов",
+      "page": "components",
+      "is_interactive": true,
+      "radius": 28
+    },
+    "Components.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 1640,
+      "title": "Components",
+      "page": "components"
+    },
+    "Ideas.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 1500,
+      "title": "Предложения по улучшению",
+      "page": "ideas"
+    },
+    "Idea3A.dc.html": {
+      "x": 0,
+      "y": 1900,
+      "w": 390,
+      "h": 844,
+      "title": "3А · Частые — первым рядом сетки",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea3B.dc.html": {
+      "x": 470,
+      "y": 1900,
+      "w": 390,
+      "h": 844,
+      "title": "3Б · Строка «Обычно здесь» над сеткой (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea4A.dc.html": {
+      "x": 0,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "4А · Итог под фильтрами (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea4B.dc.html": {
+      "x": 470,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "4Б · Плавающая карточка итога",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea5A.dc.html": {
+      "x": 0,
+      "y": 4380,
+      "w": 390,
+      "h": 844,
+      "title": "5А · Полоса долей и легенда (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea5B.dc.html": {
+      "x": 470,
+      "y": 4380,
+      "w": 390,
+      "h": 844,
+      "title": "5Б · Плитки валют с %",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea6A.dc.html": {
+      "x": 0,
+      "y": 5620,
+      "w": 390,
+      "h": 844,
+      "title": "6А · Точка «синхронно» (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea6A2.dc.html": {
+      "x": 470,
+      "y": 5620,
+      "w": 390,
+      "h": 844,
+      "title": "6А · …и «ждут отправки»",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea6B.dc.html": {
+      "x": 940,
+      "y": 5620,
+      "w": 390,
+      "h": 844,
+      "title": "6Б · Аватары семьи с кольцом",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea7A.dc.html": {
+      "x": 0,
+      "y": 6860,
+      "w": 390,
+      "h": 844,
+      "title": "7А · Удалено сразу, снэкбар «Отменить» (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea7B.dc.html": {
+      "x": 470,
+      "y": 6860,
+      "w": 390,
+      "h": 844,
+      "title": "7Б · Подтверждение в самой кнопке",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea8A.dc.html": {
+      "x": 0,
+      "y": 8100,
+      "w": 390,
+      "h": 844,
+      "title": "8А · Заливка, подпись внутри (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea8B.dc.html": {
+      "x": 470,
+      "y": 8100,
+      "w": 390,
+      "h": 844,
+      "title": "8Б · Подпись над полем",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea9A.dc.html": {
+      "x": 0,
+      "y": 9340,
+      "w": 390,
+      "h": 844,
+      "title": "9А · Группа строк в одной карточке (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea9B.dc.html": {
+      "x": 470,
+      "y": 9340,
+      "w": 390,
+      "h": 844,
+      "title": "9Б · Каждая строка — своя карточка",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea10A.dc.html": {
+      "x": 0,
+      "y": 10580,
+      "w": 390,
+      "h": 844,
+      "title": "10А · Спарклайн в строке (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea10B.dc.html": {
+      "x": 470,
+      "y": 10580,
+      "w": 390,
+      "h": 844,
+      "title": "10Б · Большой график выбранной валюты",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea11A.dc.html": {
+      "x": 0,
+      "y": 11820,
+      "w": 390,
+      "h": 844,
+      "title": "11А · Пустые шаги — «авто» (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea11B.dc.html": {
+      "x": 470,
+      "y": 11820,
+      "w": 390,
+      "h": 844,
+      "title": "11Б · 3 шага, секции в «Проверке»",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea12A.dc.html": {
+      "x": 0,
+      "y": 13060,
+      "w": 390,
+      "h": 844,
+      "title": "12А · Сумма под названием (рекомендую)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Idea12B.dc.html": {
+      "x": 470,
+      "y": 13060,
+      "w": 390,
+      "h": 844,
+      "title": "12Б · Сокращать: 1,25 млн",
+      "page": "ideas",
+      "radius": 28
+    },
+    "History.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1040,
+      "h": 640,
+      "title": "History",
+      "page": "history"
+    }
+  },
+  "order": [
+    "ThemeSwitch.dc.html",
+    "Home.dc.html",
+    "HomeEmpty.dc.html",
+    "HomeAttention.dc.html",
+    "HomeSync.dc.html",
+    "UpdateWhatsNew.dc.html",
+    "Operations.dc.html",
+    "OpsSelect.dc.html",
+    "OpsUndo.dc.html",
+    "OpsEmpty.dc.html",
+    "OpsNothing.dc.html",
+    "Main.dc.html",
+    "EntryTransfer.dc.html",
+    "EntryReceipt.dc.html",
+    "EntryEdit.dc.html",
+    "EntryError.dc.html",
+    "EntryNoAccounts.dc.html",
+    "Accounts.dc.html",
+    "AccountsSearch.dc.html",
+    "AccountsEmpty.dc.html",
+    "More.dc.html",
+    "UpdatePill.dc.html",
+    "Update.dc.html",
+    "AccountEdit.dc.html",
+    "AccountEditExisting.dc.html",
+    "AccountDelete.dc.html",
+    "AccountBlocked.dc.html",
+    "Colors.dc.html",
+    "Categories.dc.html",
+    "CategoryEdit.dc.html",
+    "CategoryBlocked.dc.html",
+    "Rates.dc.html",
+    "RatesRefreshing.dc.html",
+    "RatesFailed.dc.html",
+    "RatesEmpty.dc.html",
+    "RatesManual.dc.html",
+    "ReportCurrencies.dc.html",
+    "CurrencyAdd.dc.html",
+    "FamilySignedOut.dc.html",
+    "FamilyNoAccess.dc.html",
+    "FamilyInvited.dc.html",
+    "FamilyJoinMode.dc.html",
+    "Family.dc.html",
+    "FamilyInviteSent.dc.html",
+    "FamilyInviteDialog.dc.html",
+    "FamilyOffline.dc.html",
+    "FamilyNotConfigured.dc.html",
+    "Settings.dc.html",
+    "Backup.dc.html",
+    "BackupAuto.dc.html",
+    "BackupError.dc.html",
+    "BackupRestore.dc.html",
+    "Wipe.dc.html",
+    "WipeFailed.dc.html",
+    "Feedback.dc.html",
+    "FeedbackSent.dc.html",
+    "FeedbackError.dc.html",
+    "ImportStart.dc.html",
+    "ImportError.dc.html",
+    "ImportSummary.dc.html",
+    "ImportAccounts.dc.html",
+    "ImportCategories.dc.html",
+    "ImportTransfers.dc.html",
+    "ImportPreview.dc.html",
+    "ImportDone.dc.html",
+    "ThemeSwitchFlows.dc.html",
+    "Flows.dc.html",
+    "ThemeSwitchComponents.dc.html",
+    "Components.dc.html",
+    "Ideas.dc.html",
+    "Idea3A.dc.html",
+    "Idea3B.dc.html",
+    "Idea4A.dc.html",
+    "Idea4B.dc.html",
+    "Idea5A.dc.html",
+    "Idea5B.dc.html",
+    "Idea6A.dc.html",
+    "Idea6A2.dc.html",
+    "Idea6B.dc.html",
+    "Idea7A.dc.html",
+    "Idea7B.dc.html",
+    "Idea8A.dc.html",
+    "Idea8B.dc.html",
+    "Idea9A.dc.html",
+    "Idea9B.dc.html",
+    "Idea10A.dc.html",
+    "Idea10B.dc.html",
+    "Idea11A.dc.html",
+    "Idea11B.dc.html",
+    "Idea12A.dc.html",
+    "Idea12B.dc.html",
+    "History.dc.html"
+  ],
+  "notes": {
+    "t": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Co-Shell · экраны и состояния",
+      "x": 0,
+      "y": -560,
+      "maxW": 3000,
+      "w": 240
+    },
+    "nav": {
+      "page": "screens",
+      "text": "Вкладки холста: Экраны · Воркфлоу · Компоненты · Предложения · История. Слева — «Тема макетов»: перекрашивает все доски. Оглавление в репозитории — docs/design/README.md.",
+      "x": -520,
+      "y": 600,
+      "w": 390
+    },
+    "row0": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Обзор",
+      "x": 0,
+      "y": -250,
+      "maxW": 2270,
+      "w": 240
+    },
+    "s0": {
+      "page": "screens",
+      "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
+      "x": 2350,
+      "y": 0,
+      "w": 390
+    },
+    "row1": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Операции",
+      "x": 0,
+      "y": 990,
+      "maxW": 2270,
+      "w": 240
+    },
+    "s1": {
+      "page": "screens",
+      "text": "Выбран 19В (2026-11-10): строки без свайпов; удержание — выбор нескольких, панель «Дублировать · Удалить · N». Тяните экран влево/вправо — соседняя вкладка. Тап по строке — шторка операции.",
+      "x": 2350,
+      "y": 1240,
+      "w": 390
+    },
+    "row2": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Новая операция — шторка",
+      "x": 0,
+      "y": 2230,
+      "maxW": 2740,
+      "w": 240
+    },
+    "s2": {
+      "page": "screens",
+      "text": "Шторка: шаг 1 — тип и счёт (недавние сверху, поиск внизу под пальцем), шаг 2 — своя клавиатура, сумма и категории над ней. Всё нажимаемое — в нижних 2/3.",
+      "x": 2820,
+      "y": 2480,
+      "w": 390
+    },
+    "row3": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Счета и «Ещё»",
+      "x": 0,
+      "y": 3470,
+      "maxW": 2740,
+      "w": 240
+    },
+    "s3": {
+      "page": "screens",
+      "text": "Обновление вышло, пока приложение открыто: над панелью пилюля «Версия 43 · Обновить», на «Ещё» — точка. Тап — скачивание и экран обновления. × — до следующего запуска.",
+      "x": 2820,
+      "y": 3720,
+      "w": 390
+    },
+    "row4": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Счёт и категории",
+      "x": 0,
+      "y": 4710,
+      "maxW": 3680,
+      "w": 240
+    },
+    "row5": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Курсы и валюты",
+      "x": 0,
+      "y": 5950,
+      "maxW": 3210,
+      "w": 240
+    },
+    "row6": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Семья и синхронизация",
+      "x": 0,
+      "y": 7190,
+      "maxW": 4150,
+      "w": 240
+    },
+    "row7": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Настройки, копия, стирание, отзыв",
+      "x": 0,
+      "y": 8430,
+      "maxW": 4620,
+      "w": 240
+    },
+    "s7": {
+      "page": "screens",
+      "text": "Палитры на доске «Настройки» перекрашивают весь холст — как в приложении.",
+      "x": 4700,
+      "y": 8680,
+      "w": 390
+    },
+    "row8": {
+      "kind": "title1",
+      "page": "screens",
+      "text": "Импорт из Wallet",
+      "x": 0,
+      "y": 9670,
+      "maxW": 3680,
+      "w": 240
+    },
+    "idea3": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "3 · Подсказка категории",
+      "x": 0,
+      "y": 1650,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS3": {
+      "page": "ideas",
+      "text": "Первые 4 — самые частые для этого счёта и времени дня; остальное как сейчас. Меньше тапов в 80 % записей.",
+      "x": 940,
+      "y": 1900,
+      "w": 390
+    },
+    "idea4": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "4 · Итог фильтра в шапке",
+      "x": 0,
+      "y": 2890,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS4": {
+      "page": "ideas",
+      "text": "При активном фильтре — строка «12 операций · −84 300 ARS ≈ 82 USD» над списком; липкий заголовок дня.",
+      "x": 940,
+      "y": 3140,
+      "w": 390
+    },
+    "idea5": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "5 · Доли валют в герое",
+      "x": 0,
+      "y": 4130,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS5": {
+      "page": "ideas",
+      "text": "Тонкая полоса долей ARS / USD / AMD / USDT под общим балансом, тап — разбивка.",
+      "x": 940,
+      "y": 4380,
+      "w": 390
+    },
+    "idea6": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "6 · Тихий индикатор",
+      "x": 0,
+      "y": 5370,
+      "maxW": 1330,
+      "w": 240
+    },
+    "ideaS6": {
+      "page": "ideas",
+      "text": "Точка у заголовка «Обзора»: зелёная — синхронно, жёлтая — ждут отправки; тап — «Семья».",
+      "x": 1410,
+      "y": 5620,
+      "w": 390
+    },
+    "idea7": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "7 · «Отменить» вместо диалогов",
+      "x": 0,
+      "y": 6610,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS7": {
+      "page": "ideas",
+      "text": "Удалять сразу со снэкбаром «Отменить», как операции; диалог — только когда удалить нельзя.",
+      "x": 940,
+      "y": 6860,
+      "w": 390
+    },
+    "idea8": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "8 · Поле с заливкой (К6)",
+      "x": 0,
+      "y": 7850,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS8": {
+      "page": "ideas",
+      "text": "Одно поле: заливка, рамка 1 dp, радиус 12, подпись внутри — как на всех новых досках.",
+      "x": 940,
+      "y": 8100,
+      "w": 390
+    },
+    "idea9": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "9 · Строки в карточках (К4, К5)",
+      "x": 0,
+      "y": 9090,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS9": {
+      "page": "ideas",
+      "text": "CoShellRowGroup + CoShellSectionLabel: карточка с разделителями и один стиль заголовка.",
+      "x": 940,
+      "y": 9340,
+      "w": 390
+    },
+    "idea10": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "10 · Спарклайн курса",
+      "x": 0,
+      "y": 10330,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS10": {
+      "page": "ideas",
+      "text": "Мини-график за 30 дней в строке валюты и % за месяц — видно, когда менять деньги.",
+      "x": 940,
+      "y": 10580,
+      "w": 390
+    },
+    "idea11": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "11 · Пропускать пустые шаги",
+      "x": 0,
+      "y": 11570,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS11": {
+      "page": "ideas",
+      "text": "Шаги без вопросов (всё сопоставлено) проходятся сами; на «Проверке» — что было решено автоматически.",
+      "x": 940,
+      "y": 11820,
+      "w": 390
+    },
+    "idea12": {
+      "kind": "title1",
+      "page": "ideas",
+      "text": "12 · Крупный шрифт",
+      "x": 0,
+      "y": 12810,
+      "maxW": 1280,
+      "w": 240
+    },
+    "ideaS12": {
+      "page": "ideas",
+      "text": "Доски-проверки с fontScale 1.3: сумма переносится под название, а не обрезается.",
+      "x": 940,
+      "y": 13060,
+      "w": 390
+    }
+  },
+  "noteOrder": [
+    "t",
+    "nav",
+    "row0",
+    "s0",
+    "row1",
+    "s1",
+    "row2",
+    "s2",
+    "row3",
+    "s3",
+    "row4",
+    "row5",
+    "row6",
+    "row7",
+    "s7",
+    "row8",
+    "idea3",
+    "ideaS3",
+    "idea4",
+    "ideaS4",
+    "idea5",
+    "ideaS5",
+    "idea6",
+    "ideaS6",
+    "idea7",
+    "ideaS7",
+    "idea8",
+    "ideaS8",
+    "idea9",
+    "ideaS9",
+    "idea10",
+    "ideaS10",
+    "idea11",
+    "ideaS11",
+    "idea12",
+    "ideaS12"
+  ],
+  "designSystems": [],
+  "attachments": {}
+}

@@ -20,54 +20,112 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
 @keyframes rise{0%{transform:translateY(-8px);opacity:0}100%{transform:none;opacity:1}}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; position: relative; overflow: hidden; padding: 16px 16px 0;">
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden; padding: 16px 16px 0;">
   <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
-    <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EEF5E6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+    <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
     <h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Категории</h1>
   </div>
 
-  <div role="tablist" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: #10160D; border: 1px solid #222B1E;">
+  <div role="tablist" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}};">
     <button type="button" role="tab" class="tap" onClick="{{toExpense}}" style="{{expenseTab}}">Расходы</button>
     <button type="button" role="tab" class="tap" onClick="{{toIncome}}" style="{{incomeTab}}">Доходы</button>
   </div>
 
   <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px; height: 640px; overflow: hidden;">
     <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
-      <div style="border-radius: 16px; background: #10160D; border: 1px solid {{r.border}}; overflow: hidden;">
-        <button type="button" class="tap" onClick="{{r.toggle}}" style="width: 100%; min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: none; background: transparent; color: #EEF5E6; text-align: left;">
+      <div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{r.border}}; overflow: hidden;">
+        <button type="button" class="tap" onClick="{{r.toggle}}" style="width: 100%; min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: none; background: transparent; color: {{co.k_EEF5E6_n93}}; text-align: left;">
           <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: {{r.color}}; display: flex; align-items: center; justify-content: center;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B0F0A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0B0F0A_n02}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg>
           </span>
           <span style="display: flex; flex-direction: column; flex-grow: 1; gap: 2px;">
             <span style="font-size: 16px; font-weight: 600;">{{r.name}}</span>
-            <span style="font-size: 12px; color: #9AA594;">{{r.sub}}</span>
+            <span style="font-size: 12px; color: {{co.k_9AA594_n60}};">{{r.sub}}</span>
           </span>
           <sc-if value="{{r.folder}}" hint-placeholder-val="{{true}}">
-            <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA594" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="transform: rotate({{r.turn}}deg);"><path d="M6 9l6 6 6-6"></path></svg>
+            <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_9AA594_n60}}" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" style="transform: rotate({{r.turn}}deg);"><path d="M6 9l6 6 6-6"></path></svg>
           </sc-if>
         </button>
         <sc-if value="{{r.open}}" hint-placeholder-val="{{false}}">
           <div class="rise" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px 64px;">
             <sc-for list="{{r.kids}}" as="k" hint-placeholder-count="3">
-              <span style="display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px 0 4px; border-radius: 999px; background: #161D12; font-size: 13px;">
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px 0 4px; border-radius: 999px; background: {{co.k_161D12_n07}}; font-size: 13px;">
                 <span style="width: 26px; height: 26px; border-radius: 50%; background: {{r.color}}; opacity: 0.85;"></span>{{k}}
               </span>
             </sc-for>
-            <span style="display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px dashed #2E382A; font-size: 13px; color: #B8FF2E;">+ В папку</span>
+            <span style="display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px dashed {{co.k_2E382A_n17}}; font-size: 13px; color: {{co.k_B8FF2E_Pi}};">+ В папку</span>
           </div>
         </sc-if>
       </div>
     </sc-for>
-    <div style="padding: 6px 4px; font-size: 13px; color: #9AA594;">Показать архивные (2)</div>
+    <div style="padding: 6px 4px; font-size: 13px; color: {{co.k_9AA594_n60}};">Показать архивные (2)</div>
   </div>
 
-  <button type="button" class="tap" style="position: absolute; right: 16px; bottom: 24px; height: 56px; padding: 0 22px 0 18px; border-radius: 999px; border: none; background: #B8FF2E; color: #0E1F00; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E1F00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Добавить</button>
+  <button type="button" class="tap" style="position: absolute; right: 16px; bottom: 24px; height: 56px; padding: 0 22px 0 18px; border-radius: 999px; border: none; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Добавить</button>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
+/*co-theme*/var CO_KEYS = ['k_00F0FF_iI','k_050805_n00','k_0B0F0A_n02','k_0E1F00_O','k_10160D_n04','k_161D12_n07','k_222B1E_n12','k_2E382A_n17','k_3A4A1E_Pt28','k_9AA594_n60','k_B266FF_aI','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93','k_FF8FA3_ew44','k_FFC46B_ww20','k_FFE600_yI'];
+var CO_SPECS = {
+  'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
+  'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
+  'Манго': ['#FF8A3D','#2B0E00','#FF3D7F','#C2185B','#FFC93C','#7A5600','#B6FF3D','#3F7300','#FF4D5E','#C8102E','#160C16','#FFF5EA'],
+  'Ультра': ['#3D7BFF','#000B24','#FF2BD6','#B0008F','#91E668','#2F6B12','#7CFF6B','#2E7A00','#FF3B6B','#C4004A','#07090C','#F4F7FF'],
+  'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
+  'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
+};
+var CO_NOW = { dark: true, pal: 'Вольт' };
+function __coTheme(props) {
+  var s = {};
+  try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }
+  var t = props && props.theme, p = props && props.palette;
+  var dark = t === 'тёмная' ? true : t === 'светлая' ? false : s.dark !== false;
+  var pal = CO_SPECS[p] ? p : CO_SPECS[s.pal] ? s.pal : 'Вольт';
+  CO_NOW = { dark: dark, pal: pal };
+  return CO_NOW;
+}
+function __coRgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function __coHex(c) { return '#' + c.map(function (v) { var x = Math.round(Math.max(0, Math.min(255, v))).toString(16); return x.length < 2 ? '0' + x : x; }).join('').toUpperCase(); }
+function __coMix(a, b, t) { var x = __coRgb(a), y = __coRgb(b); return __coHex([0, 1, 2].map(function (i) { return x[i] + (y[i] - x[i]) * t; })); }
+function __coLight(t) {
+  var pts = [[0, 0], [0.35, 0.3], [0.5, 0.55], [0.62, 0.63], [0.8, 0.8], [0.92, 0.9], [1, 0.95]];
+  for (var i = 1; i < pts.length; i++) if (t <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (t - a[0]) / (b[0] - a[0]); }
+  return 0.95;
+}
+function __co(k) {
+  var m = /^k_([0-9A-F]{6})_(.*)$/.exec(k);
+  if (!m) return k;
+  var orig = '#' + m[1], role = m[2];
+  if (CO_NOW.dark && CO_NOW.pal === 'Вольт') return orig;
+  var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
+  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
+  if (role === 'O') return S[1];
+  if (role === 'Oa' || role === 'Oi') return orig;
+  if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
+  if (neon[role]) return neon[role][0];
+  if (role.length === 2 && role.charAt(1) === 'I' && neon[role.charAt(0)]) return d ? neon[role.charAt(0)][0] : neon[role.charAt(0)][1];
+  var r = role.charAt(0), kind = role.charAt(1), t = parseInt(role.slice(r === 'n' ? 1 : 2), 10) / 100;
+  if (r === 'n') {
+    if (d) return __coMix(bg, '#FFFFFF', t);
+    if (t < 0.012) return bg;
+    if (t <= 0.045 || (t >= 0.065 && t <= 0.075)) return '#FFFFFF'; // cards, bars, sheets: white (owner's light boards)
+    if (t <= 0.35) return __coMix(bg, '#000000', 0.04 + (t - 0.045) * 0.8); // fields, chips, lines
+    return __coMix(bg, '#000000', __coLight(t));
+  }
+  var n = neon[r];
+  if (!n) return orig;
+  if (kind === 't') return d ? __coMix(bg, n[0], t) : __coMix(bg, n[0], Math.min(0.5, t * 0.8));
+  if (kind === 'w') return d ? __coMix(n[0], '#FFFFFF', t) : n[1];
+  return orig;
+}
+function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_KEYS[i]] = __co(CO_KEYS[i]); return o; }
+/*co-theme-end*/
 class Component extends DCLogic {
+  /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
+  componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
   constructor(props) { super(props); this.state = { tab: 'e', open: { food: true } }; }
-  renderVals() {
+  __coRender() {
     const s = this.state;
     const I = {
       cart: 'M3 4h2l2 11h11l2-8H7M9 20a1 1 0 1 0 0-2M17 20a1 1 0 1 0 0-2',
@@ -81,21 +139,21 @@ class Component extends DCLogic {
       chart: 'M4 17l5-5 4 4 7-8'
     };
     const expense = [
-      { id: 'food', name: 'Еда', sub: '4 категории', color: '#B8FF2E', icon: I.cart, kids: ['Продукты', 'Кафе', 'Пекарня', 'Доставка'] },
-      { id: 'home', name: 'Дом', sub: '3 категории', color: '#00F0FF', icon: I.home, kids: ['Аренда', 'Счета', 'Ремонт'] },
-      { id: 'car', name: 'Транспорт', sub: '3 категории', color: '#FFC46B', icon: I.car, kids: ['Такси', 'Бензин', 'Поезд'] },
-      { id: 'h', name: 'Здоровье', sub: 'без папки', color: '#FF8FA3', icon: I.heart },
-      { id: 'g', name: 'Развлечения', sub: 'без папки', color: '#B266FF', icon: I.game },
+      { id: 'food', name: 'Еда', sub: '4 категории', color: (__co('k_B8FF2E_Pi')), icon: I.cart, kids: ['Продукты', 'Кафе', 'Пекарня', 'Доставка'] },
+      { id: 'home', name: 'Дом', sub: '3 категории', color: (__co('k_00F0FF_iI')), icon: I.home, kids: ['Аренда', 'Счета', 'Ремонт'] },
+      { id: 'car', name: 'Транспорт', sub: '3 категории', color: (__co('k_FFC46B_ww20')), icon: I.car, kids: ['Такси', 'Бензин', 'Поезд'] },
+      { id: 'h', name: 'Здоровье', sub: 'без папки', color: (__co('k_FF8FA3_ew44')), icon: I.heart },
+      { id: 'g', name: 'Развлечения', sub: 'без папки', color: (__co('k_B266FF_aI')), icon: I.game },
       { id: 'p', name: 'Отпуск', sub: 'без папки', color: '#FF8A5C', icon: I.plane }
     ];
     const income = [
-      { id: 'sal', name: 'Зарплата', sub: 'без папки', color: '#00F0FF', icon: I.cash },
-      { id: 'side', name: 'Подработки', sub: '2 категории', color: '#B8FF2E', icon: I.chart, kids: ['Фриланс', 'Продажи'] },
-      { id: 'gift', name: 'Подарки', sub: 'без папки', color: '#FFE600', icon: I.gift }
+      { id: 'sal', name: 'Зарплата', sub: 'без папки', color: (__co('k_00F0FF_iI')), icon: I.cash },
+      { id: 'side', name: 'Подработки', sub: '2 категории', color: (__co('k_B8FF2E_Pi')), icon: I.chart, kids: ['Фриланс', 'Продажи'] },
+      { id: 'gift', name: 'Подарки', sub: 'без папки', color: (__co('k_FFE600_yI')), icon: I.gift }
     ];
     const list = s.tab === 'e' ? expense : income;
-    const on = 'height:40px;border-radius:999px;border:none;background:#B8FF2E;color:#0E1F00;font-size:15px;font-weight:600;';
-    const off = 'height:40px;border-radius:999px;border:none;background:transparent;color:#9AA594;font-size:15px;font-weight:500;';
+    const on = ('height:40px;border-radius:999px;border:none;background:' + __co('k_B8FF2E_P') + ';color:' + __co('k_0E1F00_O') + ';font-size:15px;font-weight:600;');
+    const off = ('height:40px;border-radius:999px;border:none;background:transparent;color:' + __co('k_9AA594_n60') + ';font-size:15px;font-weight:500;');
     return {
       expenseTab: s.tab === 'e' ? on : off,
       incomeTab: s.tab === 'i' ? on : off,
@@ -106,7 +164,7 @@ class Component extends DCLogic {
         return {
           name: r.name, sub: r.sub, color: r.color, icon: r.icon, folder, open,
           kids: r.kids || [], turn: open ? 180 : 0,
-          border: open ? '#3A4A1E' : '#222B1E',
+          border: open ? (__co('k_3A4A1E_Pt28')) : (__co('k_222B1E_n12')),
           toggle: () => { if (folder) this.setState({ open: { ...s.open, [r.id]: !s.open[r.id] } }); }
         };
       })

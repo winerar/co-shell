@@ -1,7 +1,7 @@
 """Generated boards: variants for app feedback that needs a design first (GitHub issues, «Предложения» sheet).
 
 FEEDBACK — one row per issue (number, title, sticky text); BOARDS — (name, title, fn, issue number).
-Rows are placed by gen-mockups.py above the proposal variants. After the owner picks, delete the other boards.
+Rows are placed by gen-mockups.py above the proposal variants. Picked (2026-11-11): 154А, 157А.
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_screens_main import tile, tiles
@@ -10,13 +10,11 @@ FEEDBACK = [
     (154, 'Отзывы #154 + #155 · что где лежит: вкладки, плитки, «Ещё», настройки',
      'Частое — во вкладках (выбираете сами), среднее — плитки «Обзора» (тоже выбираете), редкое — в «Ещё» по разделам. '
      'Экран «Настройки» исчезает: его пункты разъезжаются по разделам. Версия и обновление — отдельной заметной карточкой сверху «Ещё». '
-     '«Стереть все данные» — внизу «Резервной копии». Строки 52 dp вместо 60 — меньше прокрутки. Рекомендую А: всё видно одним взглядом, тап — сразу нужный экран. '
-     'Доски «Вкладки и плитки» и «Внешний вид» — общие для А и Б.'),
+     '«Стереть все данные» — внизу «Резервной копии». Строки 52 dp вместо 60 — меньше прокрутки. Выбран А (2026-11-11).'),
     (157, 'Отзыв #157 · отправленные отзывы: что с ними дальше',
-     'Сейчас список отправленных растёт, не открывается и не удаляется. Рекомендую А: у каждого отзыва статус задачи '
+     'Сейчас список отправленных растёт, не открывается и не удаляется. Решение: у каждого отзыва статус задачи '
      '(получен → в работе → сделано в версии N / отложен). Статус пишет обратно в отзыв тот же робот, что делает из отзыва задачу '
-     '(раз в час), — бесплатно, без своих серверов. Тап — карточка отзыва; удержание — убрать из списка. '
-     'Б — проще: без статусов, только последние, «Очистить».'),
+     '(раз в час), — бесплатно, без своих серверов. Тап — карточка отзыва; удержание — убрать из списка. Выбран А (2026-11-11).'),
 ]
 
 VERSION_CARD = ('<div style="margin-top: 4px; display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; border-radius: 20px; '
@@ -43,19 +41,8 @@ def more_list():
     return tab_screen('Ещё', body, 'more')
 
 
-def section_tile(icon, color, title, sub, dot=False):
-    d = '<span style="position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>' % LIME if dot else ''
-    return ('<div style="position: relative; padding: 14px; border-radius: 20px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; gap: 10px; min-height: 120px; box-sizing: border-box;">'
-            '%s%s<span style="font-size: 15px; font-weight: 600;">%s</span><span style="font-size: 12px; line-height: 1.35; color: %s;">%s</span></div>'
-            % (CARD, LINE, d, tile_icon(icon, color), title, MUTED, sub))
 
 
-def more_tiles():
-    grid = ('<div style="margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">%s</div>' % ''.join([
-        section_tile('folder', LIME, 'Деньги', 'категории, курсы, валюты отчётов'), section_tile('user', OK, 'Семья', 'Аня и Миша · синхронно'),
-        section_tile('archive', CYAN, 'Данные', 'копия вчера · импорт из Wallet'), section_tile('spark', VIOLET, 'Внешний вид', 'Вольт · тёмная'),
-        section_tile('list', LIME, 'Вкладки и плитки', 'что под рукой'), section_tile('mail', LIME, 'Обратная связь', '1 ответ', True)]))
-    return tab_screen('Ещё', VERSION_CARD + grid + note('Тап по плитке — раздел со строками (как «Деньги» ниже на доске А).', 14), 'more')
 
 
 def grip():
@@ -134,23 +121,13 @@ def feedback_detail():
     return inner_screen('Отзыв', body)
 
 
-def feedback_simple():
-    sent = group([row('Отправлено 5 отзывов', 'последний — сегодня 10:40', tile_icon('check', OK), svg('down', MUTED, 18), min_h=56)])
-    body = (segmented(['Ошибка', 'Идея', 'Дизайн', 'Другое'], 'Идея')
-            + '<div style="margin-top: 12px; min-height: 180px; padding: 12px 14px; border-radius: 12px; background: %s; border: 1px solid %s; font-size: 15px; color: %s;">Опишите, что случилось или что хочется…</div>' % (FIELD, LINE2, MUTED)
-            + button('Отправить', 'primary', None, 12) + label('Отправленные', top=18) + sent
-            + '<div style="margin-top: 8px; text-align: right; font-size: 14px; color: %s;">Очистить список</div>' % LIME
-            + note('Список свёрнут; хранится 30 дней, потом исчезает сам. Статусов нет.'))
-    return inner_screen('Обратная связь', body)
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Fb154A', 'А · «Ещё»: разделы строками, версия сверху (рекомендую)', more_list, 154),
-    ('Fb154B', 'Б · «Ещё»: плитки разделов', more_tiles, 154),
-    ('Fb154Tabs', 'А и Б · Вкладки и плитки: выбираете сами', tabs_and_tiles, 154),
-    ('Fb154Home', 'А и Б · «Обзор»: правка плиток', home_tiles_edit, 154),
-    ('Fb154Look', 'А и Б · Внешний вид (бывшие «Настройки»)', look, 154),
-    ('Fb157A', 'А · Мои отзывы со статусом (рекомендую)', feedback_status_list, 157),
+    ('Fb154A', 'А · «Ещё»: разделы строками, версия сверху (выбрано)', more_list, 154),
+    ('Fb154Tabs', 'А · Вкладки и плитки: выбираете сами', tabs_and_tiles, 154),
+    ('Fb154Home', 'А · «Обзор»: правка плиток', home_tiles_edit, 154),
+    ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),
+    ('Fb157A', 'А · Мои отзывы со статусом (выбрано)', feedback_status_list, 157),
     ('Fb157A2', 'А · Отзыв подробно: путь до версии', feedback_detail, 157),
-    ('Fb157B', 'Б · Без статусов: свёрнуто, «Очистить»', feedback_simple, 157),
 ]

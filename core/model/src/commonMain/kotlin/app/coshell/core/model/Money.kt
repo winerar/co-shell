@@ -30,6 +30,18 @@ data class Money(
 
     fun abs(): Money = if (isNegative) -this else this
 
+    /**
+     * This amount × [numerator] / [denominator], rounded half to even to the minor unit
+     * (a share of a limit by days, an average over months). The product is 128-bit, so it never overflows midway.
+     */
+    fun scale(numerator: Long, denominator: Long): Money {
+        require(numerator >= 0) { "numerator must not be negative" }
+        require(denominator > 0) { "denominator must be positive" }
+        val magnitude = if (isNegative) negateExact(amountMinor) else amountMinor
+        val result = divRoundHalfEven(mulWide(magnitude, numerator), denominator).toLongExact()
+        return copy(amountMinor = if (isNegative) -result else result)
+    }
+
     override fun compareTo(other: Money): Int {
         requireSameCurrency(other)
         return amountMinor.compareTo(other.amountMinor)

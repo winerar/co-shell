@@ -136,11 +136,25 @@ internal fun Transaction.toDto() = TransactionDto(
 )
 
 @Serializable
-internal data class BudgetDto(val id: String, val categoryId: String, val month: String, val limit: MoneyDto) {
-    fun toModel() = Budget(id, categoryId, YearMonth.parse(month), limit.toModel())
+internal data class BudgetDto(
+    val id: String,
+    val categoryId: String,
+    /** First month of the limit (`YYYY-MM`); the name is kept from the one-month limits of older files. */
+    val month: String,
+    val limit: MoneyDto,
+    /** Since schema v8. */
+    val note: String? = null,
+    val rollover: Boolean = false,
+    val lastMonth: String? = null,
+) {
+    fun toModel() = Budget(
+        id, categoryId, YearMonth.parse(month), limit.toModel(),
+        note?.takeIf { it.isNotBlank() }, rollover, lastMonth?.let { YearMonth.parse(it) },
+    )
 }
 
-internal fun Budget.toDto() = BudgetDto(id, categoryId, month.toString(), limit.toDto())
+internal fun Budget.toDto() =
+    BudgetDto(id, categoryId, startMonth.toString(), limit.toDto(), note, rollover, lastMonth?.toString())
 
 /** `1 from = rate to` on [date] (`YYYY-MM-DD`); [rate] is a plain decimal string, never a JSON number. */
 @Serializable

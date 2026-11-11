@@ -141,6 +141,26 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `7 to 8 turns one-month limits into repeating ones without note, rollover or end`() {
+        helper.createDatabase(7).use { v7 ->
+            v7.execSQL(
+                """INSERT INTO budgets (id, category_id, month, limit_minor, currency, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('b1', 'home', '2026-11', 40000000, 'ARS', 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(8, emptyList()).use { v8 ->
+            assertEquals(
+                "home|2026-11|40000000|no note|0|no end|0",
+                v8.single(
+                    """SELECT category_id || '|' || month || '|' || limit_minor || '|' || IFNULL(note, 'no note') || '|' ||
+                       rollover || '|' || IFNULL(last_month, 'no end') || '|' || pending_sync FROM budgets""",
+                ),
+            )
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

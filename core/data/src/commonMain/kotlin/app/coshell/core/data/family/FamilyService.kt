@@ -162,7 +162,7 @@ class FamilyService(
         val joined = _state.value as? FamilyState.Joined ?: return null
         return try {
             engine.sync().also {
-                clearIssue()
+                if (!it.pushPaused) clearIssue() // paused: the quota banner stays until edits are sent
                 if (it.pushed > 0) ringQuietly()
                 if (joined.family.members.size < 2) refreshMembersThrottled()
             }

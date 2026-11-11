@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import app.coshell.core.data.sync.SyncKind
+import app.coshell.core.data.sync.SyncRecord
 import app.coshell.core.data.sync.Version
 import app.coshell.core.data.sync.remoteWins
 import kotlinx.coroutines.flow.Flow
@@ -61,6 +63,21 @@ abstract class SyncDao {
     abstract suspend fun clearBudget(id: String, updatedAt: Long)
     @Query("UPDATE manual_rates SET pending_sync = 0 WHERE id = :id AND updated_at = :updatedAt")
     abstract suspend fun clearManualRate(id: String, updatedAt: Long)
+
+    /**
+     * Clears the flags of one pushed chunk in one transaction (#131): row by row, 10 000 imported
+     * operations meant 10 000 commits and as many re-counts of [observePendingCount].
+     */
+    @Transaction
+    open suspend fun clearSent(records: List<SyncRecord>) = records.forEach { r ->
+        when (r.kind) {
+            SyncKind.ACCOUNT -> clearAccount(r.id, r.updatedAt)
+            SyncKind.CATEGORY -> clearCategory(r.id, r.updatedAt)
+            SyncKind.TRANSACTION -> clearTransaction(r.id, r.updatedAt)
+            SyncKind.BUDGET -> clearBudget(r.id, r.updatedAt)
+            SyncKind.MANUAL_RATE -> clearManualRate(r.id, r.updatedAt)
+        }
+    }
 
     // --- local versions of incoming rows (including deleted) ---
     @Query("SELECT * FROM accounts WHERE id IN (:ids)") abstract suspend fun accounts(ids: List<String>): List<AccountEntity>

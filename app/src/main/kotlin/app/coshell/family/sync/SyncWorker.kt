@@ -29,7 +29,12 @@ class SyncWorker @AssistedInject constructor(
             Result.success()
         } catch (e: ApiException) {
             Log.w(TAG, "Sync failed: ${e.message}")
-            if (e.isPermissionDenied || runAttemptCount >= MAX_RETRIES) Result.failure() else Result.retry()
+            when {
+                // Quota: sending is paused until the reset (QuotaPause); the hourly run resumes it.
+                e.isQuotaExceeded -> Result.success()
+                e.isPermissionDenied || runAttemptCount >= MAX_RETRIES -> Result.failure()
+                else -> Result.retry()
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Sync failed: ${e.message}")
             if (runAttemptCount >= MAX_RETRIES) Result.failure() else Result.retry()

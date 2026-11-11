@@ -1,6 +1,6 @@
-name: Release
+name: "Релиз: выкатить dev на телефоны"
 
-# Owner's button: Actions → Release → Run workflow. Creates (or updates) the PR dev → main with the
+# Owner's button: Actions → «Релиз: выкатить dev на телефоны» → Run workflow. Creates (or updates) the PR dev → main with the
 # family section of docs/whats-new.md, the merged PRs and `Fixes #N`, merges it and dispatches CI on
 # main, which publishes the build to the phones. A merge made with GITHUB_TOKEN does not trigger push
 # workflows — hence the explicit dispatch. Setup and details: docs/setup/release.md.

@@ -1,4 +1,4 @@
-name: Auto PR
+name: "Черновик PR для ветки агента"
 
 # The first push of an agent branch (claude/*, ccr-*) opens a draft PR into dev, so no session ends
 # without a PR. At the end of the session the agent marks it ready (GitHub MCP update_pull_request,

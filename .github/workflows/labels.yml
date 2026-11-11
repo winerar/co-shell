@@ -1,4 +1,4 @@
-name: Labels
+name: "Метки задач из labels.json"
 
 # Keeps repository labels in sync with .github/labels.json: create or update; `from` renames an old
 # label (issues keep it under the new name); `delete: true` removes a retired label.

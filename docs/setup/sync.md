@@ -18,11 +18,11 @@ Google-аккаунт видит «нет доступа» (правила в `f
 4. GitHub → `co-shell` → **Settings → Secrets and variables → Actions → Variables** →
    **New repository variable**: `GOOGLE_WEB_CLIENT_ID` = этот ID. Он не секретный.
 5. ID вшивается в приложение при сборке. Если релиз уже вышел без него («Семья» пишет «не настроено»),
-   после шагов 1–4 и разделов 2–4 пересобрать: **Actions → CI → Run workflow** → `main` — телефоны
+   после шагов 1–4 и разделов 2–4 пересобрать: **Actions → «Сборка и тесты (CI)» → Run workflow** → `main` — телефоны
    получат обновление с новым номером сборки.
 
 ## 2. Отпечатки ключей подписи (без них Google откажет во входе)
-1. GitHub → **Actions → Signing fingerprints → Run workflow**. В итоге запуска (Summary) будут
+1. GitHub → **Actions → «Отпечатки ключей подписи» → Run workflow**. В итоге запуска (Summary) будут
    SHA-1 и SHA-256 для release (`app.coshell`) и debug (`app.coshell.debug`).
    Debug-отпечаток уже известен: SHA-1 `C4:07:C9:15:C6:2A:BE:6A:E8:1C:4B:B0:D5:98:DF:64:B2:9D:E2:29`.
 2. Firebase → ⚙ **Project settings → General → Your apps**:

@@ -66,7 +66,7 @@ service cloud.firestore {
         allow read: if isMember(fid);
         allow create, update: if isMember(fid)
                     && request.resource.data.keys().hasOnly(['kind', 'id', 'updatedAt', 'updatedBy', 'deleted', 'json', 'serverUpdatedAt'])
-                    && request.resource.data.kind in ['account', 'category', 'transaction', 'budget', 'manualRate']
+                    && request.resource.data.kind in ['account', 'category', 'transaction', 'budget', 'manualRate', 'template']
                     && request.resource.data.id is string
                     && key == request.resource.data.kind + '_' + request.resource.data.id
                     && request.resource.data.updatedAt is int

@@ -120,6 +120,27 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `6 to 7 keeps data and adds templates`() {
+        helper.createDatabase(6).use { v6 ->
+            v6.execSQL(
+                """INSERT INTO accounts (id, name, currency, type, initial_balance_minor, is_shared, owner_member_id,
+                   archived, sort_order, excluded_from_total, color, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('a1', 'Galicia', 'ARS', 'CARD', 5000, 1, NULL, 0, 0, 0, NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(7, emptyList()).use { v7 ->
+            assertEquals("Galicia|5000", v7.single("SELECT name || '|' || initial_balance_minor FROM accounts"))
+            v7.execSQL(
+                """INSERT INTO templates (id, name, type, account_id, currency, amount_minor, to_account_id, category_id,
+                   note, sort_order, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('t1', 'Кофе', 'EXPENSE', 'a1', 'ARS', NULL, NULL, 'c1', '', 0, 1, NULL, 0, 1)""",
+            )
+            assertEquals("Кофе|ask", v7.single("SELECT name || '|' || IFNULL(amount_minor, 'ask') FROM templates"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

@@ -27,6 +27,9 @@ interface WipeDao {
     @Query("UPDATE manual_rates SET deleted = 1, pending_sync = 1, updated_at = :now, updated_by = :by WHERE deleted = 0")
     suspend fun deleteManualRates(now: Long, by: String?)
 
+    @Query("UPDATE templates SET deleted = 1, pending_sync = 1, updated_at = :now, updated_by = :by WHERE deleted = 0")
+    suspend fun deleteTemplates(now: Long, by: String?)
+
     /** Also frees the import ids (deleted rows included): a fresh Wallet import must bring everything back. */
     @Query(
         """UPDATE transactions SET deleted = 1, pending_sync = 1, updated_at = :now, updated_by = :by,
@@ -39,6 +42,7 @@ interface WipeDao {
     suspend fun wipeAll(now: Long, by: String?) {
         deleteTransactions(now, by)
         deleteBudgets(now, by)
+        deleteTemplates(now, by)
         deleteManualRates(now, by)
         deleteCategories(now, by)
         deleteAccounts(now, by)

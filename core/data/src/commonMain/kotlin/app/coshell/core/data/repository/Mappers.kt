@@ -3,6 +3,7 @@ package app.coshell.core.data.repository
 import app.coshell.core.data.db.AccountEntity
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
+import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
@@ -12,6 +13,7 @@ import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import kotlinx.datetime.YearMonth
 import kotlinx.serialization.builtins.ListSerializer
@@ -134,6 +136,34 @@ internal fun Budget.toEntity(stamp: Stamp) = BudgetEntity(
     month = month.toString(),
     limitMinor = limit.amountMinor,
     currency = limit.currency.value,
+    updatedAt = stamp.now,
+    updatedBy = stamp.by,
+)
+
+internal fun TemplateEntity.toModel() = TransactionTemplate(
+    id = id,
+    name = name,
+    type = TransactionType.valueOf(type),
+    accountId = accountId,
+    currency = CurrencyCode(currency),
+    amount = moneyOrNull(amountMinor, currency),
+    categoryId = categoryId,
+    toAccountId = toAccountId,
+    note = note,
+    sortOrder = sortOrder,
+)
+
+internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
+    id = id,
+    name = name,
+    type = type.name,
+    accountId = accountId,
+    currency = currency.value,
+    amountMinor = amount?.amountMinor,
+    toAccountId = toAccountId,
+    categoryId = categoryId,
+    note = note,
+    sortOrder = sortOrder,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

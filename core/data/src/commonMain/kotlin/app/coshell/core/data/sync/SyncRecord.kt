@@ -30,6 +30,7 @@ enum class SyncKind(val wire: String) {
     TRANSACTION("transaction"),
     BUDGET("budget"),
     MANUAL_RATE("manualRate"),
+    TEMPLATE("template"),
     ;
 
     companion object {

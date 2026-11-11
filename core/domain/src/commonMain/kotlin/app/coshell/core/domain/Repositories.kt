@@ -83,6 +83,7 @@ sealed interface BackupImportResult {
         val transactions: Int,
         val budgets: Int,
         val manualRates: Int = 0,
+        val templates: Int = 0,
     ) : BackupImportResult
     data object NotABackup : BackupImportResult
     data class UnsupportedVersion(val version: Int) : BackupImportResult

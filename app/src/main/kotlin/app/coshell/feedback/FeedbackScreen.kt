@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import android.os.Build
+import app.coshell.BuildConfig
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellLinearProgress
@@ -114,6 +116,11 @@ private fun Form(state: FeedbackUiState, actions: FeedbackActions) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        Text(
+            stringResource(R.string.feedback_attached, BuildConfig.VERSION_CODE, deviceName(), Build.VERSION.RELEASE),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
         state.result?.let { FeedbackResultCard(it) }
     }
 }
@@ -145,3 +152,5 @@ private fun Sent(onWriteMore: () -> Unit) {
         CoShellTextButton(onClick = onWriteMore) { Text(stringResource(R.string.feedback_write_more)) }
     }
 }
+
+private fun deviceName() = "${Build.MANUFACTURER.orEmpty().replaceFirstChar { it.uppercase() }} ${Build.MODEL.orEmpty()}".trim()

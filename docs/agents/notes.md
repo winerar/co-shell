@@ -86,3 +86,6 @@
   доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с).
 - (11-10) `MainShellSmokeTest`: плашка обновления там не выровнена и лежит слева вверху поверх «✕»/«назад» шапки —
   клик по ним не доходит; выход из режима проверять `onBackPressedDispatcher.onBackPressed()`.
+- (11-11) PR, влитый автослиянием (GITHUB_TOKEN), не закрыл задачу по `Fixes #156`, а закрытие тем же токеном не
+  запускает `tasks.yml` — доска отстала. Теперь `automerge.sh` сам закрывает задачи из `Fixes`, снимает
+  `status:*` и запускает синк доски; `session-end.sh` перечисляет задачи `status:in-progress`.

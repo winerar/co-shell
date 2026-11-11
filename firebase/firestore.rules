@@ -90,11 +90,13 @@ service cloud.firestore {
       allow delete: if isMember(resource.data.familyId) || (hasVerifiedEmail() && email == myEmail());
     }
 
-    // Feedback form: the app (no sign-in) may only CREATE a well-formed message.
-    // Nobody can read, change or delete them from the app; the GitHub Action reads them
-    // with a service account (bypasses rules) and turns them into issues.
+    // Feedback form: the app (no sign-in) may only CREATE a well-formed message and GET one by its
+    // random id (the phone keeps the ids of its own messages and shows their status, #157).
+    // Nobody can list, change or delete them from the app; the GitHub Action reads them with a
+    // service account (bypasses rules), turns them into issues and writes the issue status back.
     // Fields and limits must match app/.../feedback/data/FeedbackDocument.kt and SendFeedbackUseCase.
     match /feedback/{id} {
+      allow get: if true;
       allow create: if request.resource.data.keys().hasOnly(
                          ['text', 'createdAt', 'appVersion', 'versionCode', 'device', 'os', 'installationId', 'processed'])
                     && request.resource.data.text is string

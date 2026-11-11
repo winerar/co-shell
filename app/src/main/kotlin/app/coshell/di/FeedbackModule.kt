@@ -3,11 +3,13 @@ package app.coshell.di
 import app.coshell.BuildConfig
 import app.coshell.core.domain.feedback.DeviceInfoProvider
 import app.coshell.core.domain.feedback.FeedbackSender
+import app.coshell.core.domain.feedback.FeedbackStatusSource
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.data.AndroidDeviceInfoProvider
 import app.coshell.feedback.data.FeedbackHistory
 import app.coshell.feedback.data.PrefsFeedbackHistory
 import app.coshell.feedback.data.FirestoreFeedbackSender
+import app.coshell.feedback.data.FirestoreFeedbackStatusSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,6 +30,10 @@ interface FeedbackModule {
         @Provides
         fun provideSender(): FeedbackSender =
             FirestoreFeedbackSender(BuildConfig.FIREBASE_PROJECT_ID, BuildConfig.FIREBASE_API_KEY)
+
+        @Provides
+        fun provideStatusSource(): FeedbackStatusSource =
+            FirestoreFeedbackStatusSource(BuildConfig.FIREBASE_PROJECT_ID, BuildConfig.FIREBASE_API_KEY)
 
         @Provides
         fun provideSendFeedback(sender: FeedbackSender, deviceInfo: DeviceInfoProvider, clock: Clock) =

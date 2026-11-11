@@ -6,9 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-/** Connects [FeedbackScreen] to its ViewModel. [prefill] — text to start with (the sync banner's error code). */
+/** Connects [FeedbackScreen] to its ViewModel. [prefill] — text to start with (the sync banner's error code); [onOpen] — a sent message's card. */
 @Composable
-fun FeedbackRoute(onBack: () -> Unit, prefill: String? = null, viewModel: FeedbackViewModel = hiltViewModel()) {
+fun FeedbackRoute(
+    onBack: () -> Unit,
+    onOpen: (Long) -> Unit,
+    prefill: String? = null,
+    viewModel: FeedbackViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(prefill) { prefill?.let(viewModel::prefill) }
     FeedbackScreen(
@@ -19,6 +24,8 @@ fun FeedbackRoute(onBack: () -> Unit, prefill: String? = null, viewModel: Feedba
             onSend = viewModel::send,
             onKind = viewModel::onKind,
             onWriteMore = viewModel::onWriteMore,
+            onOpen = onOpen,
+            onRemove = viewModel::remove,
         ),
     )
 }
@@ -31,4 +38,7 @@ data class FeedbackActions(
     val onSend: (String) -> Unit = {},
     val onKind: (FeedbackKind) -> Unit = {},
     val onWriteMore: () -> Unit = {},
+    /** A sent message by its time: opens its card. */
+    val onOpen: (Long) -> Unit = {},
+    val onRemove: (Long) -> Unit = {},
 )

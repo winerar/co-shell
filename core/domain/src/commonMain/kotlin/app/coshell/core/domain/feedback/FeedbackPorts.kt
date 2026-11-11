@@ -26,6 +26,12 @@ interface FeedbackSender {
     /** False when this build has no destination configured (local builds). */
     val isConfigured: Boolean
 
-    /** Throws on network or server errors. */
-    suspend fun send(report: FeedbackReport)
+    /** Returns the id of the stored message (empty if the destination gives none); throws on network or server errors. */
+    suspend fun send(report: FeedbackReport): String
+}
+
+/** Reads back what happened to a sent message (the robot writes it into the same Firestore document). */
+interface FeedbackStatusSource {
+    /** `null` — the message is unknown or the status can't be read now (offline, quota). */
+    suspend fun status(documentId: String): FeedbackStatus?
 }

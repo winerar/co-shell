@@ -106,3 +106,17 @@ test('records: wrong author, key, kind, client time or deletion are rejected', a
   await assertSucceeds(setDoc(ref, record(owner, { updatedBy: null })));
   await assertFails(deleteDoc(ref));
 });
+
+test('feedback: anyone creates a well-formed message and reads it by id, but cannot list or change it', async () => {
+  const anon = env.unauthenticatedContext().firestore();
+  const message = {
+    text: 'Ошибка: x', createdAt: new Date(), appVersion: '0.1.0', versionCode: 248, device: 'Xiaomi',
+    os: 'Android 16', installationId: 'id', processed: false,
+  };
+  await assertSucceeds(setDoc(doc(anon, 'feedback/f1'), message));
+  await assertFails(setDoc(doc(anon, 'feedback/f2'), { ...message, status: 'done' }));
+  await assertSucceeds(getDoc(doc(anon, 'feedback/f1')));
+  await assertFails(getDocs(collection(anon, 'feedback')));
+  await assertFails(updateDoc(doc(anon, 'feedback/f1'), { text: 'другое' }));
+  await assertFails(deleteDoc(doc(anon, 'feedback/f1')));
+});

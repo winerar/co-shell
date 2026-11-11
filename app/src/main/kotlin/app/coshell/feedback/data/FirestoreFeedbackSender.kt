@@ -7,12 +7,14 @@ import java.net.URL
 import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 /**
  * Adds a document to the Firestore collection `feedback` through the REST API.
  * No Firebase SDK and no sign-in: security rules allow anyone only to *create* a well-formed
  * document there (`firebase/firestore.rules`). [apiKey] is the project's public Web API key.
- * Blank [projectId] or [apiKey] (local builds) means feedback is not configured.
+ * Blank [projectId] or [apiKey] (local builds) means feedback is not configured. Returns the new document's id.
  */
 class FirestoreFeedbackSender(private val projectId: String, private val apiKey: String) : FeedbackSender {
 
@@ -32,6 +34,8 @@ class FirestoreFeedbackSender(private val projectId: String, private val apiKey:
             connection.outputStream.use { it.write(body) }
             val code = connection.responseCode
             check(code == HttpURLConnection.HTTP_OK) { "HTTP $code" }
+            val created = connection.inputStream.bufferedReader().use { it.readText() }
+            runCatching { feedbackDocumentId(Json.parseToJsonElement(created).jsonObject) }.getOrDefault("")
         } finally {
             connection.disconnect()
         }

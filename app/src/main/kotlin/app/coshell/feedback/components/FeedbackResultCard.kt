@@ -10,11 +10,11 @@ import app.coshell.core.designsystem.components.CoShellMessage
 @Composable
 internal fun FeedbackResultCard(result: FeedbackResult) {
     val text = when (result) {
-        FeedbackResult.Sent -> stringResource(R.string.feedback_result_sent)
+        is FeedbackResult.Sent -> stringResource(R.string.feedback_result_sent)
         FeedbackResult.Empty -> stringResource(R.string.feedback_error_empty)
         is FeedbackResult.TooLong -> stringResource(R.string.feedback_error_too_long, result.maxLength)
         FeedbackResult.NotConfigured -> stringResource(R.string.feedback_error_not_configured)
         is FeedbackResult.Failed -> stringResource(R.string.feedback_error_failed)
     }
-    CoShellMessage(text, isError = result != FeedbackResult.Sent)
+    CoShellMessage(text, isError = result !is FeedbackResult.Sent)
 }

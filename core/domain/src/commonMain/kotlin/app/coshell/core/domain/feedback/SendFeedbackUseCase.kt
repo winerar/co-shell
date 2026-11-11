@@ -5,7 +5,8 @@ import kotlin.time.Clock
 
 /** Outcome of [SendFeedbackUseCase]. */
 sealed interface FeedbackResult {
-    data object Sent : FeedbackResult
+    /** [documentId] — where the message is stored, to read its status later (empty if unknown). */
+    data class Sent(val documentId: String = "") : FeedbackResult
     data object Empty : FeedbackResult
     data class TooLong(val maxLength: Int) : FeedbackResult
     /** This build has nowhere to send feedback (local builds). */
@@ -25,8 +26,7 @@ class SendFeedbackUseCase(
         if (trimmed.length > MAX_LENGTH) return FeedbackResult.TooLong(MAX_LENGTH)
         if (!sender.isConfigured) return FeedbackResult.NotConfigured
         return try {
-            sender.send(FeedbackReport(trimmed, clock.now(), deviceInfo.deviceInfo()))
-            FeedbackResult.Sent
+            FeedbackResult.Sent(sender.send(FeedbackReport(trimmed, clock.now(), deviceInfo.deviceInfo())))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

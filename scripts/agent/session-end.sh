@@ -41,6 +41,14 @@ if [ -n "$results" ]; then
     grep -q "всего $total " docs/STATUS.md || bad "STATUS test count differs from the last run ($total)"
 fi
 
+# Task statuses (tasks.md «Конец сессии»): every in-progress issue ends as `Fixes #N` in the PR
+# (automerge closes it) or goes back to status:next / needs-owner with a comment.
+wip=$(timeout 20 gh api -X GET search/issues -f q="repo:winerar/co-shell is:issue is:open label:status:in-progress" \
+    -q '.items[] | "#\(.number) \(.title[0:60])"' 2>/dev/null)
+[ -n "$wip" ] && while read -r line; do
+    warn "in progress: $line — «Fixes» in the PR, or status:next/needs-owner + comment"
+done <<<"$wip"
+
 # Size rules (AGENTS.md «Как поддерживать», project-structure.md «Файлы»).
 [ "$(wc -l <AGENTS.md)" -gt 42 ] && bad "AGENTS.md is $(wc -l <AGENTS.md) lines (limit ~40)"
 for f in docs/agents/*.md; do

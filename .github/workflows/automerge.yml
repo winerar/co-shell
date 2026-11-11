@@ -18,7 +18,8 @@ concurrency:
 permissions:
   contents: write # merge, delete the branch
   pull-requests: write
-  actions: write # dispatch CI on dev after the merge
+  issues: write # close the issues from `Fixes #N` (a GITHUB_TOKEN merge does not)
+  actions: write # dispatch CI and the board sync on dev after the merge
 
 jobs:
   merge:

@@ -5,8 +5,12 @@ import app.coshell.core.domain.feedback.DeviceInfoProvider
 import app.coshell.core.domain.feedback.FeedbackReport
 import app.coshell.core.domain.feedback.FeedbackResult
 import app.coshell.core.domain.feedback.FeedbackSender
+import app.coshell.core.domain.feedback.FeedbackStage
+import app.coshell.core.domain.feedback.FeedbackStatus
+import app.coshell.core.domain.feedback.FeedbackStatusSource
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.feedback.data.InMemoryFeedbackHistory
+import app.coshell.feedback.data.SentFeedback
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -39,6 +43,7 @@ class FeedbackViewModelTest {
         vm.send("Идея")
         assertEquals(listOf("Идея: Итог дня"), sender.sent.map { it.text })
         assertEquals(listOf("Идея: Итог дня"), vm.state.value.history.map { it.text })
+        assertEquals(SentFeedback(clock.now().toEpochMilliseconds(), "Идея: Итог дня", "doc-1", FeedbackStatus(FeedbackStage.SENT)), vm.state.value.history.single())
         assertTrue(vm.state.value.justSent)
         vm.onWriteMore()
         assertFalse(vm.state.value.justSent)
@@ -67,7 +72,7 @@ class FeedbackViewModelTest {
         vm.send()
 
         assertEquals(listOf("Нет итога за день"), sender.sent.map { it.text })
-        assertEquals(FeedbackUiState(text = "", result = FeedbackResult.Sent), vm.state.value.copy(history = emptyList()))
+        assertEquals(FeedbackUiState(text = "", result = FeedbackResult.Sent("doc-1")), vm.state.value.copy(history = emptyList()))
     }
 
     @Test
@@ -84,13 +89,54 @@ class FeedbackViewModelTest {
     }
 }
 
+class FeedbackStatusRefreshTest {
+    @get:Rule val main = MainDispatcherRule()
+
+    private val sendFeedback = SendFeedbackUseCase(FakeSender(), object : DeviceInfoProvider {
+        override suspend fun deviceInfo() = DeviceInfo("0.1.0", 27, "Pixel", "Android 15", "id")
+    }, Clock.System)
+    private val done = FeedbackStatus(FeedbackStage.DONE, 105, doneBuild = 248)
+
+    @Test
+    fun `opening asks only for messages that may still change and keeps the last status on failure`() {
+        val history = InMemoryFeedbackHistory(
+            listOf(
+                SentFeedback(3, "Ошибка: a", "doc-a", FeedbackStatus(FeedbackStage.SENT)),
+                SentFeedback(2, "Идея: b", "doc-b", done),
+                SentFeedback(1, "старый", ""),
+                SentFeedback(0, "Идея: c", "doc-c", FeedbackStatus(FeedbackStage.RECEIVED, 7)),
+            ),
+        )
+        val asked = mutableListOf<String>()
+        val source = object : FeedbackStatusSource {
+            override suspend fun status(documentId: String): FeedbackStatus? {
+                asked += documentId
+                return if (documentId == "doc-a") FeedbackStatus(FeedbackStage.IN_PROGRESS, 160) else null
+            }
+        }
+        val vm = FeedbackViewModel(sendFeedback, history, Clock.System, source)
+        assertEquals(listOf("doc-a", "doc-c"), asked)
+        val stages = vm.state.value.history.map { it.status?.stage }
+        assertEquals(listOf(FeedbackStage.IN_PROGRESS, FeedbackStage.DONE, null, FeedbackStage.RECEIVED), stages)
+    }
+
+    @Test
+    fun `remove takes the message off the list`() {
+        val history = InMemoryFeedbackHistory(listOf(SentFeedback(2, "a", "doc-a", done), SentFeedback(1, "b", "doc-b", done)))
+        val vm = FeedbackViewModel(sendFeedback, history)
+        vm.remove(2)
+        assertEquals(listOf(1L), vm.state.value.history.map { it.sentAtMillis })
+    }
+}
+
 private class FakeSender : FeedbackSender {
     override val isConfigured = true
     var fail = false
     val sent = mutableListOf<FeedbackReport>()
 
-    override suspend fun send(report: FeedbackReport) {
+    override suspend fun send(report: FeedbackReport): String {
         if (fail) error("offline")
         sent += report
+        return "doc-${sent.size}"
     }
 }

@@ -22,6 +22,8 @@ import app.coshell.language.AppLanguage
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.toDesign
+import app.coshell.update.install.InstallEvents
+import app.coshell.update.install.showInstallConfirmations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject lateinit var foregroundSync: ForegroundSync
+    @Inject lateinit var installEvents: InstallEvents
 
     private val themeSettings: ThemeSettingsViewModel by viewModels()
 
@@ -43,6 +46,8 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { coroutineScope { foregroundSync.run(this) } }
         }
+        // The system «install update?» dialog opens from here, not from the install receiver (#153).
+        showInstallConfirmations(installEvents)
         setContent {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
             // already matches the phone's mode), so a chosen theme never flashes the other one.

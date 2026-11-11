@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
- * Receives [PackageInstaller] session status: opens the system confirmation dialog when asked,
+ * Receives [PackageInstaller] session status: passes the system confirmation dialog to the visible activity,
  * reports cancellation and errors. On success the app is restarted by Android, nothing to do.
  */
 @AndroidEntryPoint
@@ -21,11 +21,8 @@ class InstallResultReceiver : BroadcastReceiver() {
         when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
             PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                 val confirm = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent::class.java)
-                if (confirm == null) {
-                    events.emit(InstallOutcome.Failed(null))
-                } else {
-                    context.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                }
+                // The visible activity opens it (InstallEvents): a start from here is blocked on Xiaomi (#153).
+                if (confirm == null) events.emit(InstallOutcome.Failed(null)) else events.confirmation.put(confirm)
             }
             PackageInstaller.STATUS_SUCCESS -> Unit
             PackageInstaller.STATUS_FAILURE_ABORTED -> events.emit(InstallOutcome.Cancelled)

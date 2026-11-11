@@ -55,6 +55,12 @@ data class TransactionEditUiState(
     val recentAccountIds: List<String> = emptyList(),
     /** Which amount the keypad types into. */
     val keypadTarget: KeypadTarget = KeypadTarget.AMOUNT,
+    /** The template this new operation was filled from — the «⚡ Испанский ✕» pill; `null` — none. */
+    val templateName: String? = null,
+    /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */
+    val savedTemplateName: String? = null,
+    /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */
+    val templateSaveFailed: Boolean = false,
 ) {
     data class AccountOption(
         val id: String,

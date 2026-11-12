@@ -4,6 +4,7 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import kotlin.concurrent.Volatile
 import kotlinx.datetime.LocalDate
 
 /** A rate picked for a conversion, with where it came from (for "≈" hints in the UI). */
@@ -28,6 +29,21 @@ data class FoundRate(
  * Each stored rate also serves the opposite direction via [Rate.inverse].
  */
 class RateBook(rates: List<ExchangeRate>, val pivot: CurrencyCode = CurrencyCode("USD")) {
+
+    companion object {
+        @Volatile private var last: Pair<List<ExchangeRate>, RateBook>? = null
+
+        /**
+         * The book of [rates], reused while screens get the very same list (the shared rates flow, #260):
+         * «Обзор», «Счета», «Бюджеты» and the entry form then index thousands of rates once, not each.
+         */
+        fun of(rates: List<ExchangeRate>): RateBook {
+            last?.let { (list, book) -> if (list === rates) return book }
+            return RateBook(rates).also { last = rates to it }
+        }
+
+        private fun key(a: CurrencyCode, b: CurrencyCode) = if (a.value <= b.value) a to b else b to a
+    }
 
     private val byPair: Map<Pair<CurrencyCode, CurrencyCode>, PairRates> =
         rates.groupBy { key(it.from, it.to) }.mapValues { (_, list) -> PairRates(list) }
@@ -89,9 +105,5 @@ class RateBook(rates: List<ExchangeRate>, val pivot: CurrencyCode = CurrencyCode
             }
             return found
         }
-    }
-
-    private companion object {
-        fun key(a: CurrencyCode, b: CurrencyCode) = if (a.value <= b.value) a to b else b to a
     }
 }

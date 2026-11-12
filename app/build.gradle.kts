@@ -70,6 +70,8 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")
+            // Family phones are ARM: the bundled SQLite's x86 copies only served emulators (#264, −1 МБ).
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
             // Only release builds update themselves; the URL comes from CI (public releases repo).
             val updateUrl = providers.environmentVariable("UPDATE_BASE_URL").orNull.orEmpty()
             buildConfigField("String", "UPDATE_BASE_URL", "\"$updateUrl\"")

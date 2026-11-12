@@ -6,8 +6,12 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.family.OtherMembers
+import app.coshell.core.model.Account
+import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Transaction
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -17,7 +21,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -68,33 +74,46 @@ class TransactionsViewModel @Inject constructor(
 
     fun onFilter(change: (ListFilter) -> ListFilter) = filter.update(change)
 
-    val state: StateFlow<TransactionsUiState> = combine(
-        filter.flatMapLatest { f ->
+    /** Rows from Room with what is needed to show and search them; re-queried only when [ListFilter.roomKey] changes. */
+    private class Source(
+        val page: GrowingWindow.Page<Transaction>,
+        val accountList: List<Account>,
+        val accountsById: Map<String, Account>,
+        val categoriesById: Map<String, Category>,
+        val authors: Map<String, String>,
+        val search: SearchIndex,
+    )
+
+    private val source = combine(
+        filter.map { it.roomKey }.distinctUntilChanged().flatMapLatest { key ->
             val day = clock.now().toLocalDateTime(timeZone).date
-            window.observe { limit -> transactions.observeTransactions(f.toRepositoryFilter(limit, day, timeZone)) }
+            window.observe { limit -> transactions.observeTransactions(key.toRepositoryFilter(limit, day, timeZone)) }
         },
-        filter,
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
         otherMembers.names(),
-    ) { page, f, accountList, categoryList, authors ->
+    ) { page, accountList, categoryList, authors ->
         val accountsById = accountList.associateBy { it.id }
         val categoriesById = categoryList.associateBy { it.id }
-        val shown = page.items.filter { f.matches(it, accountsById, categoriesById, moneyFormat) }
+        Source(page, accountList, accountsById, categoriesById, authors, SearchIndex(accountsById, categoriesById, moneyFormat))
+    }
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter) { src, f ->
+        val shown = src.page.items.filter { f.matches(it, src.search) }
         _selection.update { it.keepOnly(shown.mapTo(HashSet()) { t -> t.id }) }
         TransactionsUiState(
-            hasMore = page.hasMore && !f.needsAll,
+            hasMore = src.page.hasMore && !f.needsAll,
             filter = f,
-            accounts = accountList.filter { !it.archived }.map { TransactionsUiState.AccountChoice(it.id, it.name) },
+            accounts = src.accountList.filter { !it.archived }.map { TransactionsUiState.AccountChoice(it.id, it.name) },
             days = buildTransactionDays(
                 transactions = shown,
-                accountsById = accountsById,
-                categoriesById = categoriesById,
+                accountsById = src.accountsById,
+                categoriesById = src.categoriesById,
                 moneyFormat = moneyFormat,
                 timeZone = timeZone,
                 today = clock.now().toLocalDateTime(timeZone).date,
-                authors = authors,
+                authors = src.authors,
             ),
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))
+    }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))
 }

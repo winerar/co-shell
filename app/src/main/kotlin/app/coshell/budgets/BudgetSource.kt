@@ -58,7 +58,7 @@ class BudgetSource @Inject constructor(
         val startDay: Int,
         private val timeZone: TimeZone,
     ) {
-        val book: RateBook by lazy { RateBook(rates) }
+        val book: RateBook by lazy { RateBook.of(rates) }
         val ledger: BudgetLedger by lazy { BudgetLedger(transactions, book, timeZone) }
 
         fun calculator(): BudgetCalculator = BudgetCalculator(budgets, categories, ledger, book, startDay)

@@ -16,6 +16,8 @@ import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.transactions.edit.EntryTemplates
+import app.coshell.ui.StateWork
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -27,11 +29,18 @@ import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-/** Runs `viewModelScope` on an unconfined test dispatcher. */
+/** Runs `viewModelScope` on an unconfined test dispatcher; screen state is built in place ([StateWork]). */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainDispatcherRule : TestWatcher() {
-    override fun starting(description: Description) = Dispatchers.setMain(UnconfinedTestDispatcher())
-    override fun finished(description: Description) = Dispatchers.resetMain()
+    override fun starting(description: Description) {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        StateWork.context = EmptyCoroutineContext
+    }
+
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
+        StateWork.context = Dispatchers.Default
+    }
 }
 
 class FakeAccountRepository : AccountRepository {
@@ -61,8 +70,10 @@ class FakeCategoryRepository : CategoryRepository {
 
 class FakeTransactionRepository : TransactionRepository {
     val items = MutableStateFlow<Map<String, Transaction>>(emptyMap())
+    /** Filters asked for, one per subscription (a new Room query in the real repository). */
+    val queries = mutableListOf<TransactionFilter>()
     override fun observeTransactions(filter: TransactionFilter): Flow<List<Transaction>> =
-        items.map { all -> all.values.sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.id }).let { list -> filter.limit?.let(list::take) ?: list } }
+        items.also { queries += filter }.map { all -> all.values.sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.id }).let { list -> filter.limit?.let(list::take) ?: list } }
     override suspend fun getTransaction(id: String) = items.value[id]
     override suspend fun saveTransaction(transaction: Transaction) { items.value += transaction.id to transaction }
     override suspend fun deleteTransaction(id: String) { items.value -= id }

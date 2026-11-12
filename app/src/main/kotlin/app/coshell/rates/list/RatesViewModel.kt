@@ -13,6 +13,7 @@ import app.coshell.core.model.RateOrigin
 import app.coshell.rates.RatesRefresher
 import app.coshell.rates.RefreshStatus
 import app.coshell.ui.format.formatRate
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -65,6 +66,7 @@ class RatesViewModel @Inject constructor(
         refresher.observe(),
         local,
     ) { (all, base), latest, used, refresh, local -> buildState(all, base, latest, used, refresh, local) }
+        .offMain()
         .stateIn(viewModelScope, SharingStarted.Eagerly, RatesUiState())
 
     private fun buildState(
@@ -77,7 +79,7 @@ class RatesViewModel @Inject constructor(
     ): RatesUiState {
         val manual = all.filter { it.origin == RateOrigin.MANUAL }.sortedByDescending { it.date }
         val currencies = used + manual.flatMap { listOf(it.from, it.to) }
-        val current = RateBook(all).currentRates(currencies, base, today()).map { row ->
+        val current = RateBook.of(all).currentRates(currencies, base, today()).map { row ->
             CurrentRateItem(
                 currency = row.currency.value,
                 rateText = row.found?.let { formatRate(it.rate) },

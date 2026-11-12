@@ -73,7 +73,8 @@
   Maven Central и ловил 429. Теперь с `M2_REPO` init-скрипт не пишется.
 - (11-10) Скриншот экрана для сверки с доской без эмулятора: временный тест Robolectric с
   `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, `qualifiers = "w390dp-h844dp-xxhdpi"`, `MainShell` + экран на данных
-  доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с).
+  доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с). Месяцы по-русски — `@Config(qualifiers = "ru")`;
+  постоянные эталоны — Roborazzi (`build-and-test.md` §«Тесты»).
 - (11-10) `MainShellSmokeTest`: плашка обновления там не выровнена и лежит слева вверху поверх «✕»/«назад» шапки —
   клик по ним не доходит; выход из режима проверять `onBackPressedDispatcher.onBackPressed()`.
 - (11-11) PR, влитый автослиянием (GITHUB_TOKEN), не закрыл задачу по `Fixes #156`, а закрытие тем же токеном не
@@ -100,14 +101,10 @@
   правило пока спит; владелец выбрал ввод возвратов в шторке дохода (#207 → А), работа — #208.
 - (11-11) Новый `kind` синка ломает отправку, пока владелец не опубликует правила: `setting` (#122) поэтому уходит отдельным
   последним пакетом (`SyncEngine.push`), тест — `SettingSyncTest`; `FakeRemoteStore.rejectedKinds` имитирует старые правила.
-- **Скриншот экрана без телефона:** временный Robolectric-тест с `@GraphicsMode(NATIVE)` → `onRoot().captureToImage()` → PNG
-  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November»
-  (`@Config(qualifiers = "ru")` чинит). Постоянные эталоны дизайн-системы — Roborazzi, `build-and-test.md` §«Тесты».
 - (11-12) CI: `BUILD_NUMBER` в PR выбивал кэш всего `:app` (versionCode в BuildConfig) — теперь только на `main` (`ci.md`).
   Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.
 - (11-12) Roborazzi `captureRoboImage(path) { … }` снимает раньше, чем доходит каскад `staggeredEntrance` (на «Обзоре» не было
   «Последних операций») — экраны снимать через `createAndroidComposeRule` + `mainClock.autoAdvance = false` + `advanceTimeBy`.
-  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November».
 - (11-12) Фоновая команда Bash с `cat > файл` без ввода висит вечно (ждёт stdin) — так «застрял» `agent.sh test`; не склеивать.
 - (11-12) Коммит с трейлерами через `-m "...$T"`: `T=$'\n\nCo-Authored-By: …'` — с пустой строкой, иначе трейлеры уйдут в заголовок.
 - (11-12) Прогон, запущенный `GITHUB_TOKEN` (dispatch CI из `auto-pr.yml`), **не порождает `workflow_run`** — автомерж по
@@ -121,4 +118,7 @@
 - (11-12) Публикация холста: `file_path` — абсолютный путь (относительный ищется от рабочей папки, не от `root`); первый publish без `read` всей артефакта отклоняется — сначала `Artifact read` без `path`.
 - (11-12) Тап на кирпичах — `<div style="display: contents" onClick>` (`mockup_logic.tap`); `stroke=` с лаймом — роль `Pi`,
   в светлой теме почти чёрная; неоновую линию задавать `--ring: #…; stroke: var(--ring)` (так `ring()`). JS-ключ `…Color:` — чернила.
+- (11-12) `combine{}.stateIn(viewModelScope)` считает в главном потоке (как и `.map{}` у Room-потока) — нужен `.offMain()` (#258).
+  Release APK: `assets/dexopt/baseline.prof` из одних библиотек; шаблон `HSPLapp/coshell/**;->**(**)**` разворачивает AGP
+  (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).
 - (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.

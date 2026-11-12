@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.TemplateCatalog
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ class TemplatesViewModel @Inject constructor(catalog: TemplateCatalog) : ViewMod
     private val filter = MutableStateFlow<TransactionType?>(null)
 
     val state: StateFlow<TemplatesUiState> = combine(catalog.observe(), query, filter, ::templateList)
+        .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TemplatesUiState(isLoading = true))
 
     fun onQueryChange(value: String) { query.value = value }

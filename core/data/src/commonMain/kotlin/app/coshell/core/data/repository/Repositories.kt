@@ -102,6 +102,8 @@ class RoomTransactionRepository(
             fromMs = filter.from?.toEpochMilliseconds(),
             toMs = filter.to?.toEpochMilliseconds(),
             limit = filter.limit ?: -1,
+            type = filter.type?.name,
+            uncategorized = filter.uncategorized,
         ).map { list -> list.map { it.toModel() } }
 
     override suspend fun getTransaction(id: String): Transaction? = transactions.get(id)?.toModel()

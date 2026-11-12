@@ -60,6 +60,8 @@ data class CategoryEntity(
         Index("date"),
         Index(value = ["import_source", "import_external_id"], unique = true),
         Index("import_batch_id"),
+        // Sync reads `WHERE pending_sync = 1` on every poll and the banner count after every write (#259).
+        Index("pending_sync"),
     ],
 )
 data class TransactionEntity(

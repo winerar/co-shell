@@ -13,6 +13,7 @@ import kotlin.io.path.ExperimentalPathApi
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /** Every schema version must migrate with data intact (docs/agents/database.md §«Миграции»). */
 class MigrationTest {
@@ -181,9 +182,29 @@ class MigrationTest {
         }
     }
 
-    private fun SQLiteConnection.single(sql: String): String =
+    @Test
+    fun `9 to 10 keeps operations and finds pending ones by index`() {
+        helper.createDatabase(9).use { v9 ->
+            v9.execSQL(
+                """INSERT INTO transactions (id, type, account_id, amount_minor, currency, to_account_id, to_amount_minor,
+                   to_currency, category_id, date, note, payee, labels, original_amount_minor, original_currency,
+                   author_member_id, import_source, import_external_id, import_batch_id, updated_at, updated_by, deleted,
+                   pending_sync)
+                   VALUES ('t1', 'EXPENSE', 'a1', 100, 'ARS', NULL, NULL, NULL, 'c1', 1, '', NULL, '[]', NULL, NULL,
+                   NULL, NULL, NULL, NULL, 1, NULL, 0, 1)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(10, emptyList()).use { v10 ->
+            assertEquals("t1", v10.single("SELECT id FROM transactions WHERE pending_sync = 1"))
+            val plan = v10.single("EXPLAIN QUERY PLAN SELECT * FROM transactions WHERE pending_sync = 1", column = 3)
+            assertTrue("index_transactions_pending_sync" in plan, plan)
+        }
+    }
+
+    private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }
-            statement.getText(0)
+            statement.getText(column)
         }
 }

@@ -2,8 +2,8 @@ name: "Черновик PR для ветки агента"
 
 # The first push of an agent branch (claude/*, ccr-*) opens a draft PR into dev, so no session ends
 # without a PR. At the end of the session the agent marks it ready (GitHub MCP update_pull_request,
-# draft: false) and Automerge takes over. A PR created with GITHUB_TOKEN does not trigger CI, so CI
-# is dispatched on the branch here; later pushes trigger it as usual.
+# draft: false): that `ready_for_review` runs CI once, and Automerge takes over. Drafts are not built (#253),
+# so no CI is dispatched here.
 on:
   push:
     branches: ["claude/**", "ccr-*"]
@@ -19,6 +19,9 @@ permissions:
 
 jobs:
   pr:
+    # Only the push that creates the branch (#253): later pushes cost a billed minute each and find the PR open.
+    # A branch pushed first without own commits gets no PR here — the agent opens it itself (workflow.md, «Git»).
+    if: github.event.created
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -53,4 +56,3 @@ jobs:
             fi
             exit 0
           fi
-          gh workflow run ci.yml --ref "$BRANCH"

@@ -123,3 +123,4 @@
 - (11-12) `agent.sh test` берёт короткие имена модулей (`domain`, `data`, `app`), не `core:domain`; фильтр — шаблон Gradle (`'*BudgetLedger*'`).
 - (11-12) Имя теста в обратных кавычках с «ёлочками» не компилируется (`InvalidPathException` на `.class` лямбды в `runTest`) — в именах тестов только ASCII-знаки и кириллица без «».
 - (11-12) `CoShellSheet` вне навигации — в `Dialog(properties = CoShellSheetDialogProperties)` (так шторки фильтров #141); тело шторки — отдельная `ColumnScope`-функция, иначе Roborazzi его не снимет.
+- (11-12) Номер версии (#268): `version_name.py` считает merge-коммиты **первой линии** HEAD — на `main` это релизы (36 до #268), на агентской ветке от `dev` — ~100 (merge PR в dev); локальный вывод не показателен. Клон в облаке мелкий: `git fetch --unshallow`.

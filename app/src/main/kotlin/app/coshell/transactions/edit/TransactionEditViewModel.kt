@@ -7,6 +7,7 @@ import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
+import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
@@ -113,7 +114,8 @@ class TransactionEditViewModel @Inject constructor(
             .filter { !it.archived || it.id == transaction?.categoryId }
 
         val today = clock.now().toLocalDateTime(timeZone).date
-        val recent = transactions.observeTransactions().first()
+        // The newest operations are enough for the last account, the category order and receipt currencies (#149).
+        val recent = transactions.observeTransactions(TransactionFilter(limit = RECENT_OPERATIONS)).first()
         recentCategoryIds = recent.mapNotNull { it.categoryId }.distinct()
         val base = TransactionEditUiState(
             accounts = accountList.map { it.toOption(balances[it.id].orEmpty()) },
@@ -352,5 +354,6 @@ class TransactionEditViewModel @Inject constructor(
 
     private companion object {
         const val RECENT_ACCOUNTS = 4
+        const val RECENT_OPERATIONS = 500
     }
 }

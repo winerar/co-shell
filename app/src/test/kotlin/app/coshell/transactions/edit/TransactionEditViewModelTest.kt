@@ -103,6 +103,13 @@ class TransactionEditViewModelTest {
     }
 
     @Test
+    fun `the editor reads only the newest operations, not the whole history`() = runTest {
+        seed()
+        viewModel().state.value
+        assertEquals(listOf(500), transactions.queries.map { it.limit })
+    }
+
+    @Test
     fun `expense is saved with the chosen category and date`() = runTest {
         seed()
         val vm = viewModel()

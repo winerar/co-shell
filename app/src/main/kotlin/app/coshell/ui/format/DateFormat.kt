@@ -5,6 +5,7 @@ import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.YearMonth
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
 
@@ -13,6 +14,14 @@ fun formatDayMonth(date: LocalDate): String = date.toJavaLocalDate().format(Date
 
 /** "ноябрь" (stand-alone month name) in the phone's locale: "Траты за ноябрь". */
 fun formatMonth(firstDay: LocalDate): String = firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("LLLL"))
+
+/** "Ноябрь 2026" (stand-alone, capitalised) in the phone's locale: the month of «Бюджеты». */
+fun formatMonthYear(month: YearMonth): String =
+    month.firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("LLLL yyyy")).replaceFirstChar { it.titlecase() }
+
+/** "ноября 2026" (genitive in Russian) in the phone's locale: «с ноября 2026». */
+fun formatMonthYearFrom(month: YearMonth): String =
+    month.firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))
 
 /** "8 нояб. 2026" in the phone's locale: periods of imports. */
 fun formatShortDate(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("d MMM yyyy"))

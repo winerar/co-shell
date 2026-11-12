@@ -7,6 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -137,8 +140,7 @@ class MainShellSmokeTest {
 
     @Test
     fun `bar rides away on an inner screen and comes back on return`() {
-        tab(R.string.nav_more)
-        compose.onNodeWithText(string(R.string.settings_title)).performClick()
+        openSettings()
         compose.waitForIdle()
         compose.onNodeWithText(INNER).assertIsDisplayed()
         compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertDoesNotExist()
@@ -158,8 +160,7 @@ class MainShellSmokeTest {
         compose.waitForIdle()
         assertEquals(1, pillTaps)
 
-        tab(R.string.nav_more)
-        compose.onNodeWithText(string(R.string.settings_title)).performClick()
+        openSettings()
         compose.waitForIdle()
         compose.onNodeWithText(pill).assertDoesNotExist()
     }
@@ -187,6 +188,14 @@ class MainShellSmokeTest {
         compose.onRoot().performTouchInput { swipeRight() }
         compose.waitForIdle()
         compose.onNodeWithText(HOME_ACCOUNT).assertIsDisplayed()
+    }
+
+    /** «Ещё» → «Настройки»: the row is below the tiles, so the grid scrolls to it first (it is lazy). */
+    private fun openSettings() {
+        tab(R.string.nav_more)
+        val settings = string(R.string.settings_title)
+        compose.onNode(hasScrollAction()).performScrollToNode(hasText(settings))
+        compose.onNodeWithText(settings).performClick()
     }
 
     private fun tab(@StringRes label: Int) {

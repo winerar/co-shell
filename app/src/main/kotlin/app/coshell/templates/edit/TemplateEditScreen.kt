@@ -23,10 +23,10 @@ import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.templates.edit.components.ChoiceField
 import app.coshell.templates.edit.components.TemplatePickers
 import app.coshell.templates.edit.components.TemplatePicker
 import app.coshell.transactions.edit.components.TypeSelector
+import app.coshell.ui.form.ChoiceField
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteButton
 import app.coshell.ui.top.ScreenTopBar

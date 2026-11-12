@@ -25,9 +25,9 @@ class CheckForUpdateUseCaseTest {
     @Test
     fun `same or older release is up to date`() = runTest {
         source.release = release(10)
-        assertEquals(UpdateCheckResult.UpToDate, check())
+        assertEquals(UpdateCheckResult.UpToDate(current = release(10)), check())
         source.release = release(9)
-        assertEquals(UpdateCheckResult.UpToDate, check(force = true))
+        assertEquals(UpdateCheckResult.UpToDate(current = null), check(force = true))
     }
 
     @Test
@@ -35,10 +35,10 @@ class CheckForUpdateUseCaseTest {
         source.release = release(10)
         check()
         clock.now = start + 59.minutes
-        assertEquals(UpdateCheckResult.CheckedRecently, check())
+        assertEquals(UpdateCheckResult.CheckedRecently(current = release(10)), check())
         assertEquals(1, source.calls)
         clock.now = start + 1.hours
-        assertEquals(UpdateCheckResult.UpToDate, check())
+        assertEquals(UpdateCheckResult.UpToDate(current = release(10)), check())
         assertEquals(2, source.calls)
     }
 
@@ -55,7 +55,7 @@ class CheckForUpdateUseCaseTest {
     fun `known release that is already installed is not reported`() = runTest {
         store.known = release(10)
         store.lastCheck = start
-        assertEquals(UpdateCheckResult.CheckedRecently, check())
+        assertEquals(UpdateCheckResult.CheckedRecently(current = release(10)), check())
     }
 
     @Test
@@ -70,7 +70,7 @@ class CheckForUpdateUseCaseTest {
     fun `clock moved back does not block checks`() = runTest {
         store.lastCheck = start + 5.hours
         source.release = release(10)
-        assertEquals(UpdateCheckResult.UpToDate, check())
+        assertEquals(UpdateCheckResult.UpToDate(current = release(10)), check())
     }
 
     @Test

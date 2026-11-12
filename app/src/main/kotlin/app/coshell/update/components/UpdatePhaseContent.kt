@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
+import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
@@ -41,10 +42,10 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
-            val installed = stringResource(R.string.update_installed, shown.installedVersionName, shown.installedVersionCode)
+            val installed = stringResource(R.string.version_label, shown.installedVersionName, shown.installedVersionCode)
             when (val phase = shown.phase) {
                 UpdatePhase.Checking -> Texts(stringResource(R.string.update_hero_checking), installed)
-                UpdatePhase.UpToDate -> Texts(stringResource(R.string.update_hero_up_to_date), installed)
+                is UpdatePhase.UpToDate -> Texts(stringResource(R.string.update_hero_up_to_date), stringResource(R.string.update_checked_now))
                 UpdatePhase.NotConfigured ->
                     Texts(stringResource(R.string.update_hero_not_configured), stringResource(R.string.update_not_configured))
                 is UpdatePhase.Available -> {
@@ -59,10 +60,7 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
                     stringResource(R.string.update_hero_downloading),
                     stringResource(R.string.update_hero_available_sub, phase.release.versionCode, megabytes(phase.release.sizeBytes)),
                 )
-                is UpdatePhase.Installing -> Texts(
-                    stringResource(R.string.update_hero_installing),
-                    stringResource(if (phase.manualOffered) R.string.update_installing_manual else R.string.update_installing),
-                )
+                is UpdatePhase.Installing -> Texts(stringResource(R.string.update_hero_installing), stringResource(R.string.update_installing))
                 is UpdatePhase.Failed ->
                     Texts(stringResource(R.string.update_hero_failed), stringResource(errorText(phase.error)), isError = true)
             }
@@ -85,26 +83,31 @@ private fun Subtitle(text: String, isError: Boolean = false) = Text(
 )
 
 /**
- * The screen's single action, full width at the bottom (under the thumb): download / allow / retry are the
- * filled main button, «Проверить ещё раз» an outlined one; «Установить вручную» when the install dialog is
- * silent or Android failed (#217); nothing while checking or downloading.
+ * The screen's action, full width at the bottom (under the thumb): download / allow / retry are the filled
+ * main button, «Проверить снова» an outlined one. «Установить вручную» is there right away (#269): a text
+ * button under «Обновить», the outlined button while installing, the main one when Android failed (#217).
+ * Nothing while checking or downloading.
  */
 @Composable
 internal fun UpdateMainAction(state: UpdateUiState, actions: UpdateActions, modifier: Modifier = Modifier) {
     val wide = modifier.fillMaxWidth()
     when (val phase = state.phase) {
-        UpdatePhase.UpToDate ->
+        is UpdatePhase.UpToDate ->
             CoShellOutlinedButton(onClick = actions.onCheck, modifier = wide) { Text(stringResource(R.string.update_check_again)) }
         is UpdatePhase.Available -> if (state.needsInstallPermission) {
             CoShellButton(onClick = actions.onAllowInstall, tactile = Tactile.Primary, modifier = wide) { Text(stringResource(R.string.update_allow_install)) }
         } else {
-            CoShellButton(onClick = actions.onDownload, tactile = Tactile.Primary, modifier = wide) { Text(stringResource(R.string.update_open)) }
+            Column(wide, horizontalAlignment = Alignment.CenterHorizontally) {
+                CoShellButton(onClick = actions.onDownload, tactile = Tactile.Primary, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.update_open))
+                }
+                CoShellTextButton(onClick = actions.onInstallManually) { Text(stringResource(R.string.update_install_manually_link)) }
+            }
         }
-        is UpdatePhase.Installing -> if (phase.manualOffered) {
+        is UpdatePhase.Installing ->
             CoShellOutlinedButton(onClick = actions.onInstallManually, modifier = wide) {
                 Text(stringResource(R.string.update_install_manually))
             }
-        }
         is UpdatePhase.Failed -> if (phase.error == UpdateError.Install && phase.release != null) {
             CoShellButton(onClick = actions.onInstallManually, tactile = Tactile.Primary, modifier = wide) {
                 Text(stringResource(R.string.update_install_manually))

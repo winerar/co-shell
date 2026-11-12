@@ -41,7 +41,7 @@ class FeedbackToIssuesTest(unittest.TestCase):
         body = f.issue_body(f.decode_document(DOCUMENT))
         self.assertTrue(body.startswith("> Не сохраняется заметка\n>\n> При переводе"))
         self.assertIn("| Отправлено (UTC) | 2026-11-08 10:00:00 |", body)
-        self.assertIn("| Версия | 0.1.0 (сборка 27) |", body)
+        self.assertIn("| Версия | 0.1.0 · сборка 27 |", body)
         self.assertIn("| Установка | 01234567 |", body)
         self.assertIn("`feedback/abc123`", body)
 

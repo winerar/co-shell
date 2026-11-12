@@ -19,7 +19,7 @@ import app.coshell.theme.appearanceSummary
 @Composable
 internal fun MoreRoute(
     navController: NavHostController,
-    availableBuild: Int?,
+    availableVersion: String?,
     onStartUpdate: () -> Unit,
     reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
     themeSettings: ThemeSettingsViewModel = hiltViewModel(),
@@ -44,7 +44,7 @@ internal fun MoreRoute(
         state = MoreState(
             versionName = BuildConfig.VERSION_NAME,
             build = BuildConfig.VERSION_CODE,
-            availableBuild = availableBuild,
+            availableVersion = availableVersion,
             mainCurrency = currencies.currencies.firstOrNull(),
             appearance = appearanceSummary(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.VOLT),
         ),

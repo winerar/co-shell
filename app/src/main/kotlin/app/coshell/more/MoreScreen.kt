@@ -32,8 +32,8 @@ import app.coshell.ui.top.tabScroll
 data class MoreState(
     val versionName: String = "",
     val build: Int = 0,
-    /** Build number of a newer release, or null when up to date (unknown counts as up to date). */
-    val availableBuild: Int? = null,
+    /** Version name of a newer release («0.38»), or null when up to date (unknown counts as up to date). */
+    val availableVersion: String? = null,
     val mainCurrency: String? = null,
     /** «Вольт · тёмная» under «Внешний вид». */
     val appearance: String? = null,
@@ -71,7 +71,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                 VersionCard(
                     versionName = state.versionName,
                     build = state.build,
-                    availableBuild = state.availableBuild,
+                    availableVersion = state.availableVersion,
                     onOpen = actions.onOpenUpdate,
                     onUpdate = actions.onStartUpdate,
                     modifier = Modifier.padding(horizontal = Spacing.l).staggeredEntrance(0),
@@ -100,11 +100,11 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.1.0", 247, mainCurrency = "USD", appearance = "Вольт · системная")) }
+    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Вольт · системная")) }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenUpdatePreview() {
-    CoShellTheme(darkTheme = true) { MoreScreen(MoreActions(), MoreState("0.1.0", 247, availableBuild = 248, mainCurrency = "ARS")) }
+    CoShellTheme(darkTheme = true) { MoreScreen(MoreActions(), MoreState("0.37", 400, availableVersion = "0.38", mainCurrency = "ARS")) }
 }

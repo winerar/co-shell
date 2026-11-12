@@ -51,7 +51,7 @@ class UpdateControllerTest {
         assertEquals(release(11), c.available.value)
         source.release = release(10)
         c.checkNow()
-        assertEquals(UpdatePhase.UpToDate, c.phase.value)
+        assertEquals(UpdatePhase.UpToDate(current = release(10)), c.phase.value) // notes of the installed build
         assertNull(c.available.value)
     }
 
@@ -133,23 +133,36 @@ class UpdateControllerTest {
     }
 
     @Test
-    fun `a silent install dialog offers the manual install after a while`() {
+    fun `manual install right from the offer downloads and opens the Android installer (#269)`() {
+        source.release = release(11)
         val c = controller()
-        c.download(release(11))
-        dispatcher.scheduler.advanceTimeBy(UpdateController.MANUAL_OFFER_DELAY.inWholeMilliseconds - 1)
+        c.checkNow()
+        c.installManually()
+        assertEquals(emptyList<File>(), installer.installed) // no session: straight to the installer
+        assertEquals(listOf(File("co-shell-11.apk")), installer.manual)
         assertEquals(UpdatePhase.Installing(release(11)), c.phase.value)
-        dispatcher.scheduler.advanceTimeBy(2)
-        assertEquals(UpdatePhase.Installing(release(11), manualOffered = true), c.phase.value)
-        assertTrue(journal.events.any { it.startsWith("no result") })
+        assertTrue(journal.preferManualInstall)
     }
 
     @Test
-    fun `an answer from Android cancels the manual offer`() {
+    fun `manual install during the session reuses the downloaded file`() {
+        val c = controller()
+        c.download(release(11))
+        c.installManually()
+        assertEquals(listOf(File("co-shell-11.apk")), installer.installed)
+        assertEquals(listOf(File("co-shell-11.apk")), installer.manual)
+        assertEquals(listOf("download 11 started"), journal.events.filter { it.startsWith("download ") })
+    }
+
+    @Test
+    fun `a file of another release is not reused`() {
         val c = controller()
         c.download(release(11))
         events.emit(InstallOutcome.Cancelled)
-        dispatcher.scheduler.advanceTimeBy(UpdateController.MANUAL_OFFER_DELAY.inWholeMilliseconds + 1)
-        assertEquals(UpdatePhase.Available(release(11)), c.phase.value)
+        source.release = release(12)
+        c.checkNow()
+        c.installManually()
+        assertEquals(File("co-shell-12.apk"), installer.manual.last())
     }
 
     @Test
@@ -159,7 +172,7 @@ class UpdateControllerTest {
         events.emit(InstallOutcome.Failed("blocked"))
         c.installManually()
         assertEquals(listOf(File("co-shell-11.apk")), installer.manual)
-        assertEquals(UpdatePhase.Installing(release(11), manualOffered = true), c.phase.value)
+        assertEquals(UpdatePhase.Installing(release(11)), c.phase.value)
         assertTrue(journal.preferManualInstall)
 
         val next = controller()

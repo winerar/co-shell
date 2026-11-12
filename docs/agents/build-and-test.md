@@ -63,7 +63,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 
 ## CI
 Воркфлоу, что где проверяется и почему так быстро — [`ci.md`](ci.md).
-`versionCode` = номер запуска CI на `main` (`BUILD_NUMBER`; локально и в PR — 1, `ci.md`). Debug подписан общим ключом
+`versionCode` = номер запуска CI на `main` (`BUILD_NUMBER`; локально и в PR — 1, `ci.md`); `versionName` = `0.N` по числу релизов (`VERSION_NAME`, там же). Debug подписан общим ключом
 `app/debug.keystore` из репозитория (не секрет), пакет `app.coshell.debug`, название «co-shell debug».
 
 ## Обратная связь

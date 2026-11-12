@@ -1,6 +1,7 @@
 package app.coshell.budgets
 
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.budgets.BudgetCalculator
 import app.coshell.core.domain.budgets.BudgetLedger
@@ -11,6 +12,8 @@ import app.coshell.core.domain.budgets.budgetOperations
 import app.coshell.core.domain.budgets.budgetPeriod
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.reports.ReportDay
+import app.coshell.core.domain.reports.ReportRepository
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Budget
@@ -19,20 +22,26 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Transaction
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
+import kotlinx.datetime.atStartOfDayIn
 
 /**
- * Everything the budget screens compute from (list `budgets/list`, editor `budgets/edit`): limits,
- * categories with archived ones, operations, rates, the main report currency and the month start day.
- * All operations are read: rollover walks back through earlier months, and a family has a few thousand.
+ * Everything the budget screens compute from (list `budgets/list`, editor `budgets/edit`, envelope `budgets/detail`):
+ * limits, categories with archived ones, spending, rates, the main report currency and the month start day.
+ * Spending comes as day sums of the whole history (rollover walks back through earlier months), added up by
+ * SQLite (#262) — the operations themselves are read only for one envelope and one period ([observeEnvelope]).
  */
 class BudgetSource @Inject constructor(
     private val budgets: BudgetRepository,
     private val categories: CategoryRepository,
     private val transactions: TransactionRepository,
+    private val reports: ReportRepository,
     private val rates: ExchangeRateRepository,
     private val reportCurrencies: ReportCurrencySettings,
     private val monthStart: MonthStartSettings,
@@ -40,33 +49,47 @@ class BudgetSource @Inject constructor(
 ) {
     fun observe(): Flow<Snapshot> = combine(
         combine(budgets.observeBudgets(), categories.observeCategories(includeArchived = true), ::Pair),
-        transactions.observeTransactions(),
+        reports.observeAllDays(),
         rates.observeRates(),
         reportCurrencies.currencies,
         monthStart.monthStartDay,
-    ) { (limits, categoryList), operations, rateList, currencies, startDay ->
-        Snapshot(limits, categoryList, operations, rateList, currencies.first(), startDay, timeZone)
+    ) { (limits, categoryList), days, rateList, currencies, startDay ->
+        Snapshot(limits, categoryList, days, rateList, currencies.first(), startDay)
     }
 
-    /** One moment of the data; the ledger and the calculator are built on demand (they index all operations). */
+    /** [observe] with the operations behind the limit on [categoryId] in [month] (the envelope screen), newest first. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeEnvelope(categoryId: String, month: YearMonth): Flow<Envelope> {
+        val periodOperations = monthStart.monthStartDay
+            .distinctUntilChanged()
+            .flatMapLatest { startDay ->
+                val period = budgetPeriod(month, startDay)
+                transactions.observeTransactions(
+                    TransactionFilter(from = period.start.atStartOfDayIn(timeZone), to = period.endExclusive.atStartOfDayIn(timeZone)),
+                )
+            }
+        return combine(observe(), periodOperations) { snapshot, operations ->
+            val ids = budgetCategoryIds(categoryId, snapshot.categories)
+            Envelope(snapshot, budgetOperations(operations, ids, snapshot.period(month), timeZone))
+        }
+    }
+
+    class Envelope(val snapshot: Snapshot, val operations: List<Transaction>)
+
+    /** One moment of the data; the ledger and the calculator are built on demand. */
     class Snapshot(
         val budgets: List<Budget>,
         val categories: List<Category>,
-        private val transactions: List<Transaction>,
+        private val days: List<ReportDay>,
         private val rates: List<ExchangeRate>,
         val mainCurrency: CurrencyCode,
         val startDay: Int,
-        private val timeZone: TimeZone,
     ) {
         val book: RateBook by lazy { RateBook.of(rates) }
-        val ledger: BudgetLedger by lazy { BudgetLedger(transactions, book, timeZone) }
+        val ledger: BudgetLedger by lazy { BudgetLedger(days, book) }
 
         fun calculator(): BudgetCalculator = BudgetCalculator(budgets, categories, ledger, book, startDay)
 
         fun period(month: YearMonth): BudgetPeriod = budgetPeriod(month, startDay)
-
-        /** The operations behind the limit on [categoryId] in [month] (the envelope screen), newest first. */
-        fun operations(categoryId: String, month: YearMonth): List<Transaction> =
-            budgetOperations(transactions, budgetCategoryIds(categoryId, categories), period(month), timeZone)
     }
 }

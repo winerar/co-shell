@@ -8,6 +8,7 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
+import app.coshell.testing.FakeReportRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.coroutines.EmptyCoroutineContext
@@ -53,6 +54,7 @@ class BudgetsViewModelTest {
             noBudgets,
             FakeCategoryRepository(),
             FakeTransactionRepository(),
+            FakeReportRepository(),
             FakeExchangeRateRepository(),
             FakeReportCurrencySettings(),
             monthStart,

@@ -32,7 +32,7 @@
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 16 главных действий по шагам; каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
 | Компоненты | `Components` | `core/designsystem/` (`components.md`) |
-| Предложения | Сверху — **макеты по отзывам**, выбрано 2026-11-11: `Fb154*` (#154 + #155, вариант А: вкладки, плитки, «Ещё», настройки), `Fb157*` (#157, вариант А: отзывы со статусом); **ждут выбора** (2026-11-12): `Fb181*` (папки и категории), `Fb105*` (цвета, замер — `palette-distinct.py`), `Fb173*` (свайп сегментов) (генератор `mockup_screens_feedback.py`). Ниже — `Ideas`: 14 улучшений и **выбранные** варианты 3–12 (`Idea3B`, `Idea4A…Idea12A`; выбор #159 от 2026-11-11, генератор `mockup_screens_ideas.py`) | — |
+| Предложения | Сверху — **макеты по отзывам**, выбрано 2026-11-11: `Fb154*` (#154 + #155, вариант А: вкладки, плитки, «Ещё», настройки), `Fb157*` (#157, вариант А: отзывы со статусом); **ждут выбора** (2026-11-12): `Fb181*` (папки и категории), `Fb105*` (цвета, замер — `palette-distinct.py`), `Fb173*` (свайп сегментов), `Fb141*` (поиск и фильтры операций, `mockup_screens_fb_search.py`) (генератор `mockup_screens_feedback.py`). Ниже — `Ideas`: 14 улучшений и **выбранные** варианты 3–12 (`Idea3B`, `Idea4A…Idea12A`; выбор #159 от 2026-11-11, генератор `mockup_screens_ideas.py`) | — |
 | История | `History`: ссылки на ранние страницы выбора | — |
 
 Нижняя панель — `CoShellBottomBar` + `navigation/MainBottomBar`: плавающая капсула 64 dp, вкладки без подписей,

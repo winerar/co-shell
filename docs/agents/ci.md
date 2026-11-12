@@ -4,11 +4,14 @@
 публикует сборку. Цель — не делать одну и ту же работу дважды (#224).
 
 ## Воркфлоу
-- `ci.yml` — push в `main`/`dev`, PR, вручную (Actions → «Сборка и тесты (CI)» → Run workflow).
-- `auto-pr.yml` — draft PR на первый push агентской ветки; `automerge.yml` — мерж в `dev` после зелёного CI
+- `ci.yml` — push в `main`/`dev`, PR (кроме черновиков: сборка на `ready_for_review`), вручную (Actions → «Сборка и тесты (CI)» → Run workflow).
+  Gradle пропускается, если изменены только `docs/`, `*.md`, `scripts/agent/`.
+- **Минуты Actions** (#251, #253): приватный репозиторий — 2000 мин/мес, каждая задача оплачивается минимум минутой.
+  Не добавляй запусков на каждый push/метку; пропуск — через `if:` у задачи (пропущенная не оплачивается).
+- `auto-pr.yml` — draft PR на push, создающий агентскую ветку (CI не зовёт); `automerge.yml` — мерж в `dev` после зелёного CI
   (логика — `scripts/ci/automerge.sh`); `release.yml` — кнопка релиза (описание — `scripts/release_notes.py`).
 - Автомерж зовут трое: `ready_for_review`/метки (`automerge.yml`), `workflow_run` и **последний шаг зелёного CI ветки**
-  (`CI_GREEN_SHA`). Прогон CI, запущенный ботом (dispatch из `auto-pr.yml`), `workflow_run` не порождает — без шага
+  (`CI_GREEN_SHA`). Прогон CI, запущенный ботом (dispatch), `workflow_run` не порождает — без шага
   PR, снятый с черновика до конца CI, висел (#223, #229).
 - Мерж/PR через `GITHUB_TOKEN` **не запускает** `push`/`pull_request`-workflow — поэтому они вызывают
   `gh workflow run ci.yml` (dispatch разрешён). `workflow_run` и кнопки работают из копии в `main`: правка

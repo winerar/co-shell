@@ -4,6 +4,8 @@ on:
   push:
     branches: [main, dev] # dev: checks only; releases are published from main
   pull_request:
+    # ready_for_review: an agent's draft PR is built once, when the agent marks it ready (#253).
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch: # Actions → «Сборка и тесты (CI)» → Run workflow (e.g. first deploy after adding secrets)
 
 # One group per branch: the dispatch from auto-pr.yml (refs/heads/<branch>) and the pull_request run
@@ -20,6 +22,9 @@ permissions:
 
 jobs:
   build:
+    # Draft PRs are not built: an agent pushes many commits per session, only the last one matters, and every
+    # run costs Actions minutes of the private repo (#253). Marking the PR ready runs CI (ready_for_review).
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -38,7 +43,8 @@ jobs:
         with:
           fetch-depth: 0 # to diff against the base branch (docs-only check below)
 
-      # Docs-only changes (docs/, *.md) skip Gradle on PRs and dev; main always builds (it releases).
+      # Changes only in docs/, *.md and the agent's own scripts (scripts/agent/: not part of the build, not tested
+      # here) skip Gradle on PRs and dev; main always builds (it releases).
       # dev: a merge whose tree equals the PR head that already had a green CI run is not rebuilt —
       # the same files were just checked (automerge merges only after a green run).
       - name: Detect code changes
@@ -57,7 +63,7 @@ jobs:
              && git rev-parse -q --verify "$BASE^{commit}" >/dev/null; then
             changed=$(git diff --name-only "$BASE"...HEAD)
             echo "$changed"
-            if [ -n "$changed" ] && ! echo "$changed" | grep -qvE '^docs/|\.md$'; then code=false; fi
+            if [ -n "$changed" ] && ! echo "$changed" | grep -qvE '^docs/|\.md$|^scripts/agent/'; then code=false; fi
           fi
           echo "code=$code" >> "$GITHUB_OUTPUT"
           echo "Code changed: $code"

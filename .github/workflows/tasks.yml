@@ -7,11 +7,13 @@ name: "Доска задач: статусы и колонки"
 # labels them `status:triage` itself.
 # Board (GitHub Projects, owner's view): scripts/ci/project_board.py — open issues on the board, column
 # follows the `status:*` label, a card the owner moved changes the label. Needs the PROJECT_TOKEN secret.
+# Actions minutes (#253): every job is billed as at least a minute, so one job, and label events only for
+# `status:*` labels (an agent's issue gets 3–4 labels at once); a new issue without a status — the schedule.
 on:
   issues:
-    types: [opened, reopened, closed, labeled, unlabeled]
+    types: [reopened, closed, labeled, unlabeled]
   schedule:
-    - cron: "41 */3 * * *" # picks up cards the owner moved (board moves send no events to the repo)
+    - cron: "41 */6 * * *" # picks up cards the owner moved (board moves send no events to the repo)
   workflow_dispatch:
 
 concurrency:
@@ -27,29 +29,25 @@ env:
   PROJECT_NUMBER: 4
 
 jobs:
-  closed:
-    if: github.event_name == 'issues' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-      N: ${{ github.event.issue.number }}
-    steps:
-      - name: Drop status labels
-        run: |
-          old=$(gh issue view "$N" --json labels -q '[.labels[].name | select(startswith("status:"))] | join(",")')
-          [ -z "$old" ] || gh issue edit "$N" --remove-label "$old"
-
   board:
-    needs: [closed]
-    if: ${{ !cancelled() }}
+    if: >-
+      github.event_name != 'issues' ||
+      !contains(fromJSON('["labeled","unlabeled"]'), github.event.action) ||
+      startsWith(github.event.label.name, 'status:')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
       GITHUB_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      N: ${{ github.event.issue.number }}
     steps:
+      - name: Drop status labels of a closed issue
+        if: github.event_name == 'issues' && github.event.action == 'closed'
+        run: |
+          old=$(gh issue view "$N" --json labels -q '[.labels[].name | select(startswith("status:"))] | join(",")')
+          [ -z "$old" ] || gh issue edit "$N" --remove-label "$old"
       - name: Check setup
         if: env.PROJECT_TOKEN == ''
         run: echo "::warning::PROJECT_TOKEN secret is not set — board not synced (docs/agents/tasks.md)"

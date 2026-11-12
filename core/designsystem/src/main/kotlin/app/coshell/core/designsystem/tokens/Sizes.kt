@@ -54,6 +54,10 @@ object Sizes {
     val buttonIcon = 20.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
     val tabSwipe = 80.dp
+    /** Segment of CoShellSegmented (К3): 40 dp, like the boards. */
+    val segmentHeight = 40.dp
+    /** Gap between the segments' track and the sliding pill. */
+    val segmentInset = 4.dp
     /** Small status pill in a list row («В работе», «Сделано · 248»; #157). */
     val statusChipHeight = 24.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */

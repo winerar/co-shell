@@ -26,19 +26,16 @@ private fun CategoryEditFolderPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CategoryEditExistingPreview() {
-    CoShellTheme {
-        CategoryEditScreen(
-            CategoryEditUiState(
-                isNew = false,
-                name = "Бензин",
-                icon = "fuel",
-                color = 0xFFFFC107,
-                typeLocked = true,
-                parentId = "car",
-                folders = listOf(CategoryEditUiState.Option("car", "Машина")),
-            ),
-            CategoryEditActions(),
-        )
-    }
-}
+private fun CategoryEditExistingPreview() = CoShellTheme { CategoryEditScreen(categoryEditPreviewSample, CategoryEditActions()) }
+
+/** Also the screenshot reference (`ScreensScreenshotTest`): an existing category inside a folder. */
+internal val categoryEditPreviewSample =
+    CategoryEditUiState(
+        isNew = false,
+        name = "Бензин",
+        icon = "fuel",
+        color = 0xFFFFC107,
+        typeLocked = true,
+        parentId = "car",
+        folders = listOf(CategoryEditUiState.Option("car", "Машина")),
+    )

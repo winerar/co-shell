@@ -2,15 +2,25 @@ package app.coshell.screenshots
 
 import android.app.Application
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
+import app.coshell.accounts.edit.AccountEditActions
+import app.coshell.accounts.edit.AccountEditScreen
+import app.coshell.accounts.edit.accountEditPreviewSample
 import app.coshell.accounts.list.AccountsActions
 import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.accountsPreviewSample
 import app.coshell.budgets.list.BudgetsActions
 import app.coshell.budgets.list.BudgetsScreen
 import app.coshell.budgets.list.budgetsPreviewSample
+import app.coshell.categories.edit.CategoryEditActions
+import app.coshell.categories.edit.CategoryEditScreen
+import app.coshell.categories.edit.categoryEditPreviewSample
+import app.coshell.categories.list.CategoriesActions
+import app.coshell.categories.list.CategoriesScreen
+import app.coshell.categories.list.categoriesPreviewSample
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.HomeScreen
 import app.coshell.home.homePreviewSample
@@ -61,10 +71,29 @@ class ScreensScreenshotTest {
     @Test
     fun `budgets dark`() = shot("budgets_dark", dark = true) { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }
 
+    @Test
+    fun `categories light`() = shot("categories_light") { CategoriesScreen(categoriesPreviewSample, CategoriesActions()) }
+
+    @Test
+    fun `categories dark`() = shot("categories_dark", dark = true) { CategoriesScreen(categoriesPreviewSample, CategoriesActions()) }
+
+    @Test
+    fun `category edit light`() = shot("category_edit_light") { CategoryEditScreen(categoryEditPreviewSample, CategoryEditActions()) }
+
+    @Test
+    fun `category edit dark`() = shot("category_edit_dark", dark = true) { CategoryEditScreen(categoryEditPreviewSample, CategoryEditActions()) }
+
+    @Test
+    fun `account edit light`() = shot("account_edit_light") { AccountEditScreen(accountEditPreviewSample, AccountEditActions()) }
+
+    @Test
+    fun `account edit dark`() = shot("account_edit_dark", dark = true) { AccountEditScreen(accountEditPreviewSample, AccountEditActions()) }
+
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
-        compose.setContent { CoShellTheme(darkTheme = dark) { content() } }
+        // Surface: editors have no Scaffold, in the app the window gives them the background.
+        compose.setContent { CoShellTheme(darkTheme = dark) { Surface { content() } } }
         compose.mainClock.advanceTimeBy(SETTLE_MS)
         compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
     }

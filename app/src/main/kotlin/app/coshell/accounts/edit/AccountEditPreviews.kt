@@ -22,18 +22,15 @@ private fun AccountEditNewPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AccountEditExistingPreview() {
-    CoShellTheme {
-        AccountEditScreen(
-            AccountEditUiState(
-                isNew = false,
-                name = "Наличные",
-                currency = "USD",
-                type = AccountType.CASH,
-                initialBalance = "1250,5",
-                currencyLocked = true,
-            ),
-            AccountEditActions(),
-        )
-    }
-}
+private fun AccountEditExistingPreview() = CoShellTheme { AccountEditScreen(accountEditPreviewSample, AccountEditActions()) }
+
+/** Also the screenshot reference (`ScreensScreenshotTest`): an existing cash account with a locked currency. */
+internal val accountEditPreviewSample =
+    AccountEditUiState(
+        isNew = false,
+        name = "Наличные",
+        currency = "USD",
+        type = AccountType.CASH,
+        initialBalance = "1250,5",
+        currencyLocked = true,
+    )

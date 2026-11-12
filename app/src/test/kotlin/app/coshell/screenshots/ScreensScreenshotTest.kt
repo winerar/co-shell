@@ -32,6 +32,15 @@ import app.coshell.categories.list.CategoriesActions
 import app.coshell.categories.list.CategoriesScreen
 import app.coshell.categories.list.categoriesPreviewSample
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.data.family.FamilyState
+import app.coshell.core.model.Family
+import app.coshell.core.model.Member
+import app.coshell.family.FamilyActions
+import app.coshell.family.FamilyScreen
+import app.coshell.family.FamilyUiState
+import app.coshell.rates.list.RatesActions
+import app.coshell.rates.list.RatesScreen
+import app.coshell.rates.list.ratesPreviewSample
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.home.homePreviewSample
@@ -126,6 +135,20 @@ class ScreensScreenshotTest {
     @Test
     fun `backup dark`() = shot("backup_dark", dark = true) { BackupScreen(BackupUiState(), BackupActions()) }
 
+    /** Board `Family`: the hero card with members' avatars, «Синхронизировать сейчас», members, «Пригласить». */
+    @Test
+    fun `family light`() = shot("family_light") { FamilyScreen(familySample, FamilyActions()) }
+
+    @Test
+    fun `family dark`() = shot("family_dark", dark = true) { FamilyScreen(familySample, FamilyActions()) }
+
+    /** Board `Rates`: currency chips, the violet manual-rate card, the dashed «Добавить курс». */
+    @Test
+    fun `rates light`() = shot("rates_light") { RatesScreen(ratesPreviewSample, RatesActions()) }
+
+    @Test
+    fun `rates dark`() = shot("rates_dark", dark = true) { RatesScreen(ratesPreviewSample, RatesActions()) }
+
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
@@ -138,5 +161,10 @@ class ScreensScreenshotTest {
     private companion object {
         const val SETTLE_MS = 3_000L
         val moreSample = MoreState("0.1.0", 247, mainCurrency = "USD", appearance = "Вольт · тёмная")
+        private val me = Member("u1", "Михаил", "m@example.com")
+        val familySample = FamilyUiState(
+            family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),
+            lastSync = "сегодня 12:03",
+        )
     }
 }

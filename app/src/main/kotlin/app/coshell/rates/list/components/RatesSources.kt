@@ -24,6 +24,8 @@ internal fun RatesSources() {
         append(stringResource(R.string.rates_sources))
         append(' ')
         withLink(LinkAnnotation.Url(ATTRIBUTION_URL, linkStyle)) { append(stringResource(R.string.rates_attribution)) }
+        append(". ")
+        append(stringResource(R.string.rates_sources_daily))
     }
     Text(
         text,

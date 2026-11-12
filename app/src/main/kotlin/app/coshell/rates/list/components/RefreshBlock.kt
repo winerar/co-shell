@@ -4,7 +4,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Modifier
 import app.coshell.R
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellMessage
@@ -22,6 +26,7 @@ import app.coshell.core.designsystem.R as DesignR
  */
 @Composable
 internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, onRefresh: () -> Unit) {
+    val tint = LocalAmountPalette.current.income
     StatusCard(
         icon = if (lastDownload == null) DesignR.drawable.ic_currency_exchange else DesignR.drawable.ic_check,
         title = stringResource(if (lastDownload == null) R.string.rates_title else R.string.rates_current),
@@ -30,9 +35,13 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
         } else {
             stringResource(R.string.rates_last_download, formatRateDate(lastDownload.date), sourceLabel(lastDownload.source))
         },
-        tint = LocalAmountPalette.current.income,
+        tint = tint,
         trailing = {
-            CoShellIconButton(onClick = onRefresh, enabled = status != RefreshStatus.Running) {
+            CoShellIconButton(
+                onClick = onRefresh,
+                enabled = status != RefreshStatus.Running,
+                modifier = Modifier.border(Sizes.hairline, tint.copy(alpha = RING_ALPHA), CircleShape),
+            ) {
                 Icon(painterResource(DesignR.drawable.ic_refresh), stringResource(R.string.rates_refresh))
             }
         },
@@ -45,3 +54,5 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
         },
     )
 }
+
+private const val RING_ALPHA = 0.55f

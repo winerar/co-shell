@@ -5,6 +5,7 @@ Rows are placed by gen-mockups.py above the proposal variants. Picked (2026-11-1
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_screens_main import tile, tiles
+import mockup_screens_fb_cats as fb_cats
 
 FEEDBACK = [
     (154, 'Отзывы #154 + #155 · что где лежит: вкладки, плитки, «Ещё», настройки',
@@ -130,4 +131,5 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),
     ('Fb157A', 'А · Мои отзывы со статусом (выбрано)', feedback_status_list, 157),
     ('Fb157A2', 'А · Отзыв подробно: путь до версии', feedback_detail, 157),
-]
+] + fb_cats.BOARDS
+FEEDBACK = FEEDBACK + fb_cats.FEEDBACK

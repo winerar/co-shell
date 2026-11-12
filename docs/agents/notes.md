@@ -111,5 +111,8 @@
 - (11-12) Прогон, запущенный `GITHUB_TOKEN` (dispatch CI из `auto-pr.yml`), **не порождает `workflow_run`** — автомерж по
   завершении CI не срабатывал (#223, #229). Починено шагом в `ci.yml`; висящий PR будит переключение draft → ready (MCP).
 - (11-12) Ветка после автомержа удаляется; следующий push её пересоздаёт и `auto-pr.yml` открывает новый draft PR.
+- (11-12) Roborazzi-витрина `components_*` обрезается высотой экрана Robolectric: новое внизу `ComponentsCatalog` в эталон не
+  попадает — новому компоненту отдельный снимок (так `row_group_*` в `CatalogScreenshotTest`).
+- (11-12) Цвета палитр на досках писать `rgb(…)`: `mockup_theme.py` перекрашивает только `#hex` (так доски #105).
 - (11-12) `agent.sh test <модуль> Feedback` — «No tests found»: фильтр Gradle — шаблон, нужен `'*Feedback*'`. Число `Tests:` в выводе — по
   модулю целиком из старых XML, свой тест проверять по файлу `build/test-results/.../TEST-*<Класс>.xml`.

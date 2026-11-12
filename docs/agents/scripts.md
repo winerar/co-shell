@@ -44,6 +44,7 @@
 | `mockups` (`gen-mockups.py`) | пересобрать холст: доски `mockup_screens_*.py` из `mockup_bricks.py`, темы, `canvas.json` (ряды — `LAYOUT`) |
 | `mockup_theme.py <доска>…` | перевести цвета доски (рисуем во «Вольт · тёмная») на токены темы; повтор безопасен |
 | `render <доски…>` (`render-mockups.js`) | PNG досок без холста в scratchpad (упрощённый рантайм) |
+| `python3 scripts/agent/palette-distinct.py` | различимость цветов категорий (ΔE2000, обе темы), предложение набора; данные для досок #105 |
 | `flows` (`gen-flows-board.py`) | доска «Воркфлоу»; потом `h` в `canvas.json` и публикация |
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |

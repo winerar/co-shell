@@ -12,6 +12,9 @@
 - **Заголовок группы** — `CoShellSectionLabel(text, tone)` (К4, #199): 13 sp / 600, разрядка 0.04 em; `Muted` — серый как
   написано («Тема»), `Accent` — заглавные акцентом («СЕГОДНЯ», «НЕДАВНИЕ»). Без своих отступов; в app — `ui/list/SectionTitle`
   (с отступами экрана), `DayHeader`, `GroupTitle` шторки, «Мои отзывы» — все на нём. Новых заголовков мимо него не делать.
+- **Строки в карточке** — `CoShellRowGroup { row { … } }` (К5, #199): фон `surfaceContainer`, рамка `outlineVariant`, углы 16 dp,
+  линия 1 dp (`surfaceContainerHighest`) между строками; `if` вокруг `row` можно. Длинный `LazyColumn` — `Modifier.rowGroupSegment(
+  RowGroupPosition(i, n))` на каждом элементе (кусок карточки, список остаётся ленивым; так «Курсы»). Служебные экраны — только так.
 - **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
   `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.

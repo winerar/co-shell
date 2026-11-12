@@ -18,9 +18,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.currencies.list.ReportCurrenciesViewModel
@@ -101,35 +103,44 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
             item { ThemeModeRow(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
             item { PaletteRow(selected = state.palette, onSelect = actions.onPaletteChange) }
+            item { SectionTitle(stringResource(R.string.settings_general_section)) }
             item {
-                ActionRow(
-                    icon = DesignR.drawable.ic_payments,
-                    title = stringResource(R.string.report_currencies_title),
-                    subtitle = state.mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
-                    onClick = actions.onReportCurrencies,
-                    opensScreen = true,
-                )
-            }
-            item {
-                CoShellSwitchRow(
-                    leading = { Icon(painterResource(DesignR.drawable.ic_mobile_vibrate), contentDescription = null) },
-                    title = stringResource(R.string.shake_to_add_title),
-                    subtitle = stringResource(R.string.shake_to_add_hint),
-                    checked = state.shakeEnabled,
-                    onCheckedChange = actions.onShakeEnabledChange,
-                )
-            }
-            item {
-                ActionRow(
-                    icon = DesignR.drawable.ic_deployed_code_update,
-                    title = stringResource(R.string.update_title),
-                    subtitle = state.availableUpdate?.let { stringResource(R.string.update_settings_available, it) },
-                    onClick = actions.onUpdate,
-                    opensScreen = true,
-                )
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l)) {
+                    row {
+                        ActionRow(
+                            icon = DesignR.drawable.ic_payments,
+                            title = stringResource(R.string.report_currencies_title),
+                            subtitle = state.mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
+                            onClick = actions.onReportCurrencies,
+                            opensScreen = true,
+                        )
+                    }
+                    row {
+                        CoShellSwitchRow(
+                            leading = { Icon(painterResource(DesignR.drawable.ic_mobile_vibrate), contentDescription = null) },
+                            title = stringResource(R.string.shake_to_add_title),
+                            subtitle = stringResource(R.string.shake_to_add_hint),
+                            checked = state.shakeEnabled,
+                            onCheckedChange = actions.onShakeEnabledChange,
+                        )
+                    }
+                    row {
+                        ActionRow(
+                            icon = DesignR.drawable.ic_deployed_code_update,
+                            title = stringResource(R.string.update_title),
+                            subtitle = state.availableUpdate?.let { stringResource(R.string.update_settings_available, it) },
+                            onClick = actions.onUpdate,
+                            opensScreen = true,
+                        )
+                    }
+                }
             }
             item { SectionTitle(stringResource(R.string.settings_data_section)) }
-            item { WipeDataRow(actions.onWipeData) }
+            item {
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                    row { WipeDataRow(actions.onWipeData) }
+                }
+            }
         }
     }
 }

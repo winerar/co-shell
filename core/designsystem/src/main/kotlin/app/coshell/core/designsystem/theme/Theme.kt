@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import app.coshell.core.designsystem.motion.LocalTactileLight
 import app.coshell.core.designsystem.tokens.CoShellShapes
 
@@ -29,12 +30,22 @@ val LocalAmountPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalett
 val LocalStatusPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Volt, dark = false).status }
 
 /**
- * The main block of a screen («Обзор» total, `CoShellCard(accent = true)`). Light theme: a neon gradient of
- * the palette (issue #62 — "the card from variant C") with dark ink on it; dark theme: no fill
- * ([brush] = null), the card keeps its primary-coloured border.
+ * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(accent = true)`), filled
+ * with a gradient of the palette in both themes. Light: the pastel neon gradient (issue #62) with dark ink; dark:
+ * a deep gradient — neon, income and accent sunk into graphite (issue #249, variant Б) — with light text and the
+ * main amount in neon. [hint] — grey lines, [track] — the empty part of a bar, [expense] and [warning] — overspent and
+ * "careful" over the gradient (the theme's own, pushed further from it so small text keeps 4.5:1).
  */
 @Immutable
-data class HeroPalette(val brush: Brush?, val content: Color, val amount: Color)
+data class HeroPalette(
+    val brush: Brush,
+    val content: Color,
+    val amount: Color,
+    val hint: Color,
+    val track: Color,
+    val expense: Color,
+    val warning: Color,
+)
 
 val LocalHeroPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Volt, dark = false).hero }
 
@@ -93,12 +104,21 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
     val p = palette.spec
     return if (dark) {
         val scheme = darkSchemeOf(p)
+        val stops = heroDarkStops(p)
         ThemeColors(
             scheme = scheme,
             amounts = AmountPalette(p.incomeDark, p.expenseDark, scheme.onSurfaceVariant),
             status = StatusPalette(StatusColors.WarningDark, p.incomeDark),
-            hero = HeroPalette(null, scheme.onSurface, scheme.primary),
-            heroStops = emptyList(),
+            hero = HeroPalette(
+                brush = Brush.linearGradient(stops),
+                content = scheme.onSurface,
+                amount = scheme.primary,
+                hint = lerp(Color.White, p.backgroundDark, HERO_HINT_DARK),
+                track = HERO_TRACK_DARK,
+                expense = lerp(p.expenseDark, Color.White, HERO_ALERT_SHIFT_DARK),
+                warning = StatusColors.WarningDark,
+            ),
+            heroStops = stops,
         )
     } else {
         val scheme = lightSchemeOf(p)
@@ -106,8 +126,29 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
             scheme = scheme,
             amounts = AmountPalette(p.incomeLight, p.expenseLight, scheme.onSurfaceVariant),
             status = StatusPalette(StatusColors.WarningLight, p.incomeLight),
-            hero = HeroPalette(Brush.linearGradient(p.heroLight), scheme.onSurface, scheme.onSurface),
+            hero = HeroPalette(
+                brush = Brush.linearGradient(p.heroLight),
+                content = scheme.onSurface,
+                amount = scheme.onSurface,
+                hint = scheme.onSurfaceVariant,
+                track = scheme.onSurface.copy(alpha = HERO_TRACK_LIGHT_ALPHA),
+                expense = lerp(p.expenseLight, Color.Black, HERO_ALERT_SHIFT_LIGHT),
+                warning = lerp(StatusColors.WarningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT),
+            ),
             heroStops = p.heroLight,
         )
     }
 }
+
+/** Dark hero gradient (variant Б): the neon, income and accent of the palette sunk into its graphite background. */
+internal fun heroDarkStops(p: PaletteSpec): List<Color> = listOf(
+    lerp(p.backgroundDark, p.primary, 0.30f),
+    lerp(p.backgroundDark, p.incomeDark, 0.16f),
+    lerp(p.backgroundDark, p.accentDark, 0.24f),
+)
+
+private val HERO_TRACK_DARK = Color.White.copy(alpha = 0.16f)
+private const val HERO_TRACK_LIGHT_ALPHA = 0.14f
+private const val HERO_HINT_DARK = 0.28f // the theme's grey (0.38) is too dim on the neon stop
+private const val HERO_ALERT_SHIFT_DARK = 0.4f
+private const val HERO_ALERT_SHIFT_LIGHT = 0.2f

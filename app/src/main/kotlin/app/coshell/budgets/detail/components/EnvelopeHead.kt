@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.components.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -30,13 +31,13 @@ import app.coshell.core.designsystem.tokens.Spacing
 internal fun EnvelopeHead(head: Head, modifier: Modifier = Modifier) {
     val envelope = head.envelope
     val alarm = envelope.tone == BulletTone.WARNING || envelope.tone == BulletTone.DANGER
-    CoShellCard(modifier.fillMaxWidth()) {
+    CoShellCard(modifier.fillMaxWidth(), accent = true) {
         Column(Modifier.padding(Spacing.l)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
                 AmountText(
                     head.left,
                     AmountTitleStyle,
-                    color = if (head.over) bulletColor(BulletTone.DANGER) else MaterialTheme.colorScheme.onSurface,
+                    color = if (head.over) bulletColor(BulletTone.DANGER) else LocalHeroPalette.current.amount,
                     modifier = Modifier.weight(1f),
                 )
                 Text(

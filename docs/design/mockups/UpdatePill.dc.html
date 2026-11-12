@@ -27,9 +27,9 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
 <div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden;">
   <div style="padding: 20px 16px 0;">
     <h1 style="margin: 8px 0 14px; font-size: 30px; font-weight: 700;">Обзор</h1>
-    <div style="height: 150px; border-radius: 20px; background: linear-gradient(135deg, {{co.k_B8FF2E_P}}, {{co.k_00F0FF_i}}); padding: 16px; box-sizing: border-box; color: {{co.k_0B0F0A_n02}};">
+    <div style="height: 150px; border-radius: 16px; background: linear-gradient(135deg, {{co.k_314617_H0}}, {{co.k_0E2523_H1}}, {{co.k_271E36_H2}}); padding: 16px; box-sizing: border-box;">
       <div style="font-size: 13px; font-weight: 600;">Общий баланс</div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; margin-top: 8px;">3 412,80 USD</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; margin-top: 8px; color: {{co.k_B8FF2E_Pi}};">3 412,80 USD</div>
     </div>
     <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
       <div style="height: 128px; border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}};"></div>
@@ -84,7 +84,7 @@ button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparen
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
-/*co-theme*/var CO_KEYS = ['k_00F0FF_i','k_050805_n00','k_0B0F0A_n02','k_0E1F00_O','k_10160D_n04','k_161D12_n07','k_1A2117_n09','k_1B2317_n09','k_222B1E_n12','k_9AA594_n60','k_B266FF_a','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93'];
+/*co-theme*/var CO_KEYS = ['k_050805_n00','k_0E1F00_O','k_0E2523_H1','k_10160D_n04','k_161D12_n07','k_1A2117_n09','k_1B2317_n09','k_222B1E_n12','k_271E36_H2','k_314617_H0','k_9AA594_n60','k_B266FF_a','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93'];
 var CO_SPECS = {
   'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
   'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
@@ -92,6 +92,15 @@ var CO_SPECS = {
   'Ультра': ['#3D7BFF','#000B24','#FF2BD6','#B0008F','#91E668','#2F6B12','#7CFF6B','#2E7A00','#FF3B6B','#C4004A','#07090C','#F4F7FF'],
   'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
   'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
+};
+// Hero card gradient per palette: 3 dark stops (heroDarkStops, Oklab lerp in Theme.kt), then the 3 light ones (heroLight).
+var CO_HERO = {
+  'Вольт': ['#314617','#0E2523','#271E36','#B8FF2E','#8CFFA0','#5CF6FF'],
+  'Мохито': ['#2E4727','#162A2B','#2B273D','#91E668','#8FE9C2','#8FE3FF'],
+  'Манго': ['#522E27','#2D2C23','#461A2D','#FFB27A','#FFC2A0','#FFB3CC'],
+  'Ультра': ['#16284A','#17291C','#3A1835','#A9C4FF','#D4C2FF','#FFB3F0'],
+  'Лагуна': ['#12473E','#122E2E','#392721','#7CF2DD','#A8F0FF','#FFD2B8'],
+  'Сакура': ['#4F283C','#23272F','#2D3935','#FFB3D6','#FFD0E4','#C9F7E4']
 };
 var CO_NOW = { dark: true, pal: 'Вольт' };
 function __coTheme(props) {
@@ -119,6 +128,7 @@ function __co(k) {
   var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
   var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
   if (role === 'O') return S[1];
+  if (/^H[0-2]$/.test(role)) return CO_HERO[CO_NOW.pal][(d ? 0 : 3) + parseInt(role.charAt(1), 10)];
   if (role === 'Oa' || role === 'Oi') return orig;
   if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
   if (neon[role]) return neon[role][0];

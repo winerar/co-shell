@@ -47,6 +47,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun importDao(): ImportDao
     abstract fun wipeDao(): WipeDao
     abstract fun integrityDao(): IntegrityDao
+    abstract fun reportDao(): ReportDao
 
     companion object {
         const val FILE_NAME = "coshell.db"

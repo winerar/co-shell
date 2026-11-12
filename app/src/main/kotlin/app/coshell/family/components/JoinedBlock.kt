@@ -3,23 +3,20 @@ package app.coshell.family.components
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.data.family.FamilyState
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.ui.list.SectionTitle
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.family.FamilyActions
 import app.coshell.family.FamilyUiState
-import app.coshell.ui.list.ActionRow
-import app.coshell.ui.hero.StatusCard
-import app.coshell.core.designsystem.category.AccountBadge
-import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.R as DesignR
 
 /** In the family: sync status, members, invitations, sign out. */
@@ -32,32 +29,25 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         state.pending > 0 -> stringResource(R.string.family_synced_pending, state.lastSync, state.pending)
         else -> stringResource(R.string.family_synced_at, state.lastSync)
     }
-    // Family at a glance (mockup 13): who is in, when it last synced, «Синхронизировать сейчас» at hand.
-    StatusCard(
-        icon = DesignR.drawable.ic_group,
-        title = stringResource(R.string.family_budget, joined.family.members.size),
-        subtitle = status,
-        tint = MaterialTheme.colorScheme.secondary,
-        trailing = {
-            CoShellIconButton(onClick = actions.onSyncNow, enabled = !state.isBusy) {
-                Icon(painterResource(DesignR.drawable.ic_sync), stringResource(R.string.family_sync_now))
-            }
-        },
-    )
+    val freshness = when {
+        state.lastSync == null -> SyncFreshness.NEVER
+        state.pending > 0 -> SyncFreshness.PENDING
+        else -> SyncFreshness.SYNCED
+    }
+    FamilyHero(joined.family.members, status, freshness)
+    SyncNowButton(enabled = !state.isBusy, onClick = actions.onSyncNow)
 
     SectionTitle(stringResource(R.string.family_members))
     FamilyRows {
         joined.family.members.forEachIndexed { index, m ->
             row {
-                val tags = listOfNotNull(
-                    stringResource(R.string.family_you).takeIf { m.uid == joined.me.uid },
-                    stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid },
-                )
-                val name = m.name.ifBlank { m.email }
+                val isMe = m.uid == joined.me.uid
+                val owner = stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid }
                 CoShellListRow(
-                    title = name,
-                    subtitle = (listOf(m.email) + tags).joinToString(" · "),
-                    leading = { AccountBadge(name, MemberColors[index % MemberColors.size]) },
+                    title = if (isMe) stringResource(R.string.family_you) else m.name.ifBlank { m.email },
+                    // Me: only the role (my address is mine to know); others: the address they signed in with.
+                    subtitle = if (isMe) owner ?: m.email else listOfNotNull(m.email, owner).joinToString(" · "),
+                    leading = { MemberAvatar(m, index) },
                 )
             }
         }
@@ -66,6 +56,7 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
                 CoShellListRow(
                     title = email,
                     subtitle = stringResource(R.string.family_invite_pending),
+                    leading = { InviteAvatar() },
                     trailing = {
                         CoShellIconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
                             Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.family_invite_cancel))
@@ -75,10 +66,10 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
             }
         }
         row {
-            ActionRow(
-                icon = DesignR.drawable.ic_person_add,
-                title = stringResource(R.string.family_invite),
-                subtitle = stringResource(R.string.family_invite_hint),
+            CoShellListRow(
+                title = { Text(stringResource(R.string.family_invite), color = accentInk()) },
+                supporting = { Text(stringResource(R.string.family_invite_hint)) },
+                leading = { InviteAvatar() },
                 onClick = { inviting = true },
                 enabled = !state.isBusy,
             )
@@ -94,6 +85,3 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         )
     }
 }
-
-/** Avatar colours of members, in join order: violet, cyan, then warm ones (mockup 13). */
-private val MemberColors: List<Long> = listOf(3, 6, 5, 2).map { CategoryPalette.colors[it] }

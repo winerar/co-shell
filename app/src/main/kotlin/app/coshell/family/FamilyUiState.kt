@@ -4,7 +4,7 @@ import app.coshell.core.data.family.FamilyState
 import app.coshell.core.data.sync.SyncIssue
 import app.coshell.core.data.sync.SyncIssueKind
 
-/** «Семья и синхронизация» screen state. */
+/** «Семья» screen state. */
 data class FamilyUiState(
     val family: FamilyState = FamilyState.SignedOut,
     val invites: List<String> = emptyList(),

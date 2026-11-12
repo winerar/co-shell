@@ -16,15 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.dashedBorder
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.accentInk
@@ -88,14 +85,7 @@ private fun NewTemplateTile(withLabel: Boolean, onClick: () -> Unit) {
             .heightIn(min = Sizes.bottomBarAdd)
             .widthIn(min = Sizes.bottomBarAdd)
             .tactileClickable(Tactile.Control, MaterialTheme.shapes.large, onClick = onClick)
-            .drawBehind {
-                val dash = Spacing.xs.toPx()
-                drawRoundRect(
-                    color = line,
-                    cornerRadius = CornerRadius(Radii.large.toPx()),
-                    style = Stroke(Sizes.hairline.toPx() * 1.5f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(dash, dash))),
-                )
-            }
+            .dashedBorder(line, Radii.large)
             .padding(horizontal = Spacing.m),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s, Alignment.CenterHorizontally),

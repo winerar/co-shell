@@ -355,14 +355,15 @@
     <string name="report_currencies_add">Добавить валюту</string>
     <string name="report_currencies_menu_hint">Основная: %1$s</string>
     <string name="rates_current">Курсы на сегодня</string>
-    <string name="rates_current_hint">Тап по строке — задать курс вручную</string>
+    <string name="rates_current_hint">тап — задать вручную</string>
+    <string name="rates_accounts">Валюты ваших счетов</string>
     <string name="rates_line">1 %1$s = %2$s %3$s</string>
     <string name="rates_no_rate">Курса пока нет</string>
     <string name="rates_no_currencies">Здесь появятся курсы валют ваших счетов и операций</string>
     <string name="rates_from_date">на %1$s</string>
     <string name="rates_origin_manual">вручную</string>
     <string name="rates_origin_cross">через USD</string>
-    <string name="rates_last_download">Загружено: курсы на %1$s, источник %2$s</string>
+    <string name="rates_last_download">Загружено %1$s · %2$s</string>
     <string name="rates_never_downloaded">Курсы ещё не загружались — нужен интернет</string>
     <string name="rates_refresh">Обновить сейчас</string>
     <string name="rates_refresh_running">Загружаем курсы…</string>
@@ -371,7 +372,7 @@
     <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет и попробуйте ещё раз</string>
     <string name="rates_manual">Ручные курсы</string>
     <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного курса этой пары</string>
-    <string name="rates_manual_since">с %1$s</string>
+    <string name="rates_manual_since">вручную · с %1$s · важнее загруженного</string>
     <string name="rates_manual_add">Добавить курс</string>
     <string name="rates_manual_title">Курс вручную</string>
     <string name="rates_manual_from">Валюта</string>
@@ -384,6 +385,7 @@
     <string name="rates_manual_delete_title">Удалить ручной курс?</string>
     <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
     <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
+    <string name="rates_sources_daily">Курсы обновляются сами раз в день.</string>
     <string name="rates_attribution">Rates By Exchange Rate API</string>
 
     <string name="account_shared">Общий счёт</string>
@@ -402,7 +404,7 @@
     <string name="auto_backup_disable">Выключить автокопии</string>
 
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
-    <string name="family_title">Семья и синхронизация</string>
+    <string name="family_title">Семья</string>
     <string name="family_menu_hint">Общий бюджет на двух телефонах</string>
     <string name="family_not_configured">Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.</string>
     <string name="family_intro">Войдите через Google, чтобы вести общий бюджет с семьёй. Данные хранятся на телефоне и в облаке Firebase, приложение работает и без интернета. Доступ — только по приглашению.</string>
@@ -418,20 +420,28 @@
     <string name="family_join_hint">На телефон загрузится общий бюджет</string>
     <string name="family_offline">Вы вошли как %1$s. Нет связи с сервером — проверьте интернет.</string>
     <string name="family_sign_out">Выйти</string>
-    <string name="family_sign_out_hint">Данные останутся на телефоне, синхронизация остановится</string>
+    <string name="family_sign_out_hint">Данные останутся, синхронизация остановится</string>
     <string name="family_sync_now">Синхронизировать сейчас</string>
     <string name="family_never_synced">Ещё не синхронизировано</string>
     <string name="family_synced_at">Синхронизировано: %1$s</string>
     <string name="family_synced_pending">Синхронизировано: %1$s · ждут отправки: %2$d</string>
     <string name="family_members">Участники</string>
     <string name="family_account_section">Аккаунт</string>
-    <string name="family_budget">Общий бюджет · участников: %1$d</string>
-    <string name="family_you">вы</string>
+    <string name="family_budget_title">Общий бюджет</string>
+    <plurals name="family_members_count">
+        <item quantity="one">%1$d участник</item>
+        <item quantity="few">%1$d участника</item>
+        <item quantity="many">%1$d участников</item>
+        <item quantity="other">%1$d участника</item>
+    </plurals>
+    <!-- Changes reach the other phone through a live listener — in seconds, not on a timer. -->
+    <string name="family_sync_speed">за 2–3 с</string>
+    <string name="family_you">Вы</string>
     <string name="family_owner">создатель семьи</string>
     <string name="family_invite_pending">Приглашён — ждём входа</string>
     <string name="family_invite_cancel">Отменить приглашение</string>
     <string name="family_invite">Пригласить</string>
-    <string name="family_invite_hint">По адресу Google-аккаунта</string>
+    <string name="family_invite_hint">по адресу Google-аккаунта</string>
     <string name="family_invite_dialog_text">Адрес Google-аккаунта, которым человек войдёт в приложение.</string>
     <string name="family_invite_email">Email</string>
     <string name="family_invite_send">Пригласить</string>

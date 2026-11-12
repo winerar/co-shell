@@ -14,7 +14,7 @@ import kotlinx.datetime.LocalDate
 
 private val nov9 = LocalDate(2026, 11, 9)
 
-private val sample = RatesUiState(
+internal val ratesPreviewSample = RatesUiState(
     isLoading = false,
     current = listOf(
         CurrentRateItem("AMD", "387,15", nov9, isManual = false, viaPivot = false),
@@ -34,13 +34,13 @@ private val sample = RatesUiState(
 @Preview(showBackground = true, heightDp = 900)
 @Composable
 private fun RatesPreview() {
-    CoShellTheme { RatesScreen(sample, RatesActions()) }
+    CoShellTheme { RatesScreen(ratesPreviewSample, RatesActions()) }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun RatesEditorPreview() {
     CoShellTheme {
-        RatesScreen(sample.copy(editor = ManualRateForm("USD", "ARS", "1 450", nov9, nov9)), RatesActions())
+        RatesScreen(ratesPreviewSample.copy(editor = ManualRateForm("USD", "ARS", "1 450", nov9, nov9)), RatesActions())
     }
 }

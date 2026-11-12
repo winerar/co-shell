@@ -48,6 +48,7 @@ import app.coshell.currencies.list.ReportCurrenciesScreen
 import app.coshell.currencies.list.reportCurrenciesPreviewSample
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
+import app.coshell.home.homeBudgetPreviewSample
 import app.coshell.home.homePreviewSample
 import app.coshell.transactions.list.ListFilter
 import app.coshell.transactions.list.components.AccountsChoices
@@ -91,6 +92,15 @@ class ScreensScreenshotTest {
     fun `home attention dark`() = shot("home_attention_dark", dark = true) {
         HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention(missingRates = listOf("VES"), uncategorized = 2)))
     }
+
+    /** Board `BudHome` (#184): the budget tile next to the expenses and «Горит в бюджете». */
+    @Test
+    fun `home budget dark`() = shot("home_budget_dark", dark = true) {
+        HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample)
+    }
+
+    @Test
+    fun `home budget light`() = shot("home_budget_light") { HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample) }
 
     @Test
     fun `transactions light`() = shot("transactions_light") { TransactionsScreen(transactionsPreviewSample) }

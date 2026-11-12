@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.splitAmount
 import app.coshell.core.designsystem.components.CoShellTile
@@ -28,8 +29,8 @@ import app.coshell.ui.format.formatMonth
 
 /**
  * The two tiles of «Обзор» (owner 2026-11-10: «2 плитки, как на 17А»): this month's expenses and, next to it,
- * operations without a category — or «Внимание» while a rate is missing or old (board `HomeAttention`).
- * Both tiles share the taller one's height.
+ * «Внимание» while a rate is missing or old (board `HomeAttention`), else the budget when the month has limits
+ * (board `BudHome`, #184), else operations without a category. Both tiles share the taller one's height.
  */
 @Composable
 internal fun HomeTiles(
@@ -38,12 +39,16 @@ internal fun HomeTiles(
     onRates: () -> Unit,
     onUncategorized: () -> Unit,
     modifier: Modifier = Modifier,
+    budget: BudgetsUiState.Summary? = null,
+    onBudgets: () -> Unit = {},
 ) {
     Row(modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
         val tile = Modifier.weight(1f).fillMaxHeight()
         SpendingTile(state.spending, onTransactions, tile)
         if (state.attention.isRatesIssue) {
             RatesTile(state.attention, onRates, tile)
+        } else if (budget != null) {
+            BudgetTile(budget, onBudgets, tile)
         } else {
             UncategorizedTile(state.attention.uncategorized, onUncategorized, tile)
         }

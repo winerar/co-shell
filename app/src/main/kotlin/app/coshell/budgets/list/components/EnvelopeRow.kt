@@ -20,11 +20,11 @@ import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
 import app.coshell.core.designsystem.category.CategoryBadge
-import app.coshell.core.designsystem.components.BulletTone
-import app.coshell.core.designsystem.components.CoShellBullet
+import app.coshell.core.designsystem.charts.BulletTone
+import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellExpandIcon
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.components.bulletColor
+import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes

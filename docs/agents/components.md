@@ -2,7 +2,8 @@
 
 Что есть и как пользоваться. Общие правила дизайн-системы — `design-system.md`, движение — `motion.md`.
 
-- **Поля** — `CoShellTextField` (подпись, `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
+- **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outlineVariant` → ink в фокусе,
+  радиус 12, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
   после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,

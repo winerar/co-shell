@@ -32,6 +32,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 data class MoreActions(
     val onCategories: () -> Unit = {},
+    val onBudgets: () -> Unit = {},
     val onRates: () -> Unit = {},
     val onFamily: () -> Unit = {},
     val onBackup: () -> Unit = {},
@@ -49,6 +50,7 @@ fun MoreScreen(actions: MoreActions, availableUpdate: Int? = null) {
     ) { padding ->
         val tiles = listOf(
             Tile(DesignR.drawable.ic_category, R.string.categories_title, R.string.categories_menu_hint, CategoryPalette.colors[9], actions.onCategories),
+            Tile(DesignR.drawable.ic_savings, R.string.budgets_title, R.string.budgets_menu_hint, CategoryPalette.colors[1], actions.onBudgets),
             Tile(DesignR.drawable.ic_currency_exchange, R.string.rates_title, R.string.rates_menu_hint, CategoryPalette.colors[6], actions.onRates),
             Tile(DesignR.drawable.ic_group, R.string.family_title, R.string.family_menu_hint, CategoryPalette.colors[3], actions.onFamily),
             Tile(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, R.string.backup_menu_hint, CategoryPalette.colors[11], actions.onBackup),

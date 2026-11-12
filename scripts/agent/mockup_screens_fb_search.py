@@ -10,9 +10,8 @@ FEEDBACK = [
     (141, 'Задача #141 · поиск и фильтры операций (6в)',
      'Общее для всех вариантов: поиск ищет в заметке, получателе, метках, категории, счёте и сумме; сумма — «=4500», «>10000», «1000-5000» '
      '(в любой валюте, по сумме счёта и по чеку), под полем строка «как понял». Фильтры: период (готовые + свой), тип, счёт, категория/папка, кто внёс. '
-     'Итог под фильтрами — 4А (уже выбран), итоги дней — по фильтру. Предлагаю А: у каждого чипа своя шторка с поиском — '
-     'длинные списки (30 категорий, 12 счетов) не мешают, а чипы уже есть в приложении. Б — всё в одной шторке «Фильтры» (больше прокрутки); '
-     'В — фильтры из поиска подсказками (быстро, но надо знать, что печатать).'),
+     'Итог под фильтрами — 4А (уже выбран), итоги дней — по фильтру. Выбран А (2026-11-12): у каждого чипа своя шторка с поиском — '
+     'длинные списки (30 категорий, 12 счетов) не мешают, а чипы уже есть в приложении.'),
 ]
 
 OPS = [  # title, sub (account · payee · labels), amount, cur, kind, icon, colour, second line
@@ -129,42 +128,10 @@ def accounts_sheet_a():
     return over_list(sheet_head('Счёт и кто внёс') + body + sheet_button('Показать 23 операции'), 96)
 
 
-def filters_sheet_b():
-    def sec(title, inner):
-        return label(title, False, 16) + inner
-    wrap = lambda items: '<div style="display: flex; flex-wrap: wrap; gap: 8px;">%s</div>' % ''.join(items)  # noqa: E731
-    body = (sec('Период', wrap([chip('Этот месяц'), chip('Прошлый месяц', True), chip('3 месяца'), chip('Год'), chip('Свой…', icon='calendar')]))
-            + sec('Тип', segmented(['Все', 'Расходы', 'Доходы', 'Переводы'], 'Расходы'))
-            + sec('Кто внёс', segmented(['Все', 'Я', 'Аня'], 'Аня'))
-            + sec('Счета · 2 из 12', wrap([chip('Galicia', True), chip('USDT-карта', True), chip('Mercado Pago'), chip('Ameria'), chip('+ ещё 8')]))
-            + sec('Категории · 3 из 30', wrap([chip('Еда · 3 из 5', True), chip('Дом'), chip('Транспорт'), chip('Дети'), chip('+ ещё 8')]))
-            + sec('Сумма', '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: -12px;">%s%s</div>' % (field('От', '', placeholder=True), field('До', '', placeholder=True))))
-    return scrim(list_b()) + sheet(sheet_head('Фильтры', 'Сбросить все') + '<div style="padding: 0 16px;">%s</div>' % body + sheet_button('Показать 23 операции'), 64)
-
-
-def list_b():
-    btn = ('<span style="height: 36px; padding: 0 14px; border-radius: 999px; background: %s; color: %s; font-size: 13px; font-weight: 600; display: inline-flex; '
-           'align-items: center; gap: 6px; white-space: nowrap;">%sФильтры · 4</span>' % (LIME, ONLIME, svg('list', ONLIME, 16)))
-    head = search('Поиск: заметка, получатель, сумма') + chips(btn, chip('Расходы ✕', True), chip('Еда · 3 ✕', True), chip('Октябрь ✕', True))
-    return tab_screen('Операции', head + total('23 операции', '−184 300', 'ARS', '≈ 182,40 USD · из них 54,30 USDT') + ops_list(DAYS), 'ops')
-
-
-def smart_v():
-    def sug(kind, text, count, icon, col=LIME):
-        return row(text, kind, tile_icon(icon, col), '<span style="%s font-size: 13px; color: %s;">%s</span>' % (MONO, MUTED, count), min_h=56)
-    rows = [sug('Категория', 'Кафе', '42', 'cafe', WARN), sug('Получатель', 'Café Martínez', '12', 'user'), sug('Метка', '#кафе-с-друзьями', '3', 'note', VIOLET),
-            sug('Заметка содержит', '«кафе»', '57', 'search', INK2), sug('Период', 'Октябрь 2026', '—', 'calendar', CYAN), sug('Сумма', '= 500 · в любой валюте', '8', 'rate', CYAN)]
-    head = (search('', 'кафе окт 500') + chips(chip('Расходы ✕', True)) + label('Сделать фильтром', True, 16) + group(rows)
-            + note('Тап — слово становится чипом. Остальное ищется по всем полям, как сейчас.'))
-    return tab_screen('Операции', head, 'ops')
-
-
 BOARDS = [  # name, title, fn, issue number
-    ('Fb141A', 'А · чипы фильтров, у каждого своя шторка (рекомендую)', list_a, 141),
+    ('Fb141A', 'А · чипы фильтров, у каждого своя шторка (выбрано)', list_a, 141),
     ('Fb141ACats', 'А · шторка «Категории»: папки, 30 категорий, поиск', cats_sheet_a, 141),
     ('Fb141APeriod', 'А · шторка «Период»: готовые, стрелки, свой', period_sheet_a, 141),
     ('Fb141AAcc', 'А · шторка «Счёт и кто внёс»: 12 счетов', accounts_sheet_a, 141),
-    ('Fb141AAmount', 'Все варианты · поиск по сумме «3000-5000»', amount_a, 141),
-    ('Fb141B', 'Б · одна шторка «Фильтры» со всем сразу', filters_sheet_b, 141),
-    ('Fb141V', 'В · фильтры из поиска подсказками', smart_v, 141),
+    ('Fb141AAmount', 'А · поиск по сумме «3000-5000»', amount_a, 141),
 ]

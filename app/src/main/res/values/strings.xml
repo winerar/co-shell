@@ -349,9 +349,9 @@
     <string name="rates_menu_hint">Обновляются сами раз в день</string>
 
     <string name="report_currencies_title">Валюты отчётов</string>
-    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Первая — основная: она крупнее, и к ней приведены «Курсы валют».</string>
+    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Тап — сделать основной.</string>
+    <string name="report_currencies_preview">Общий баланс · так будет на «Обзоре»</string>
     <string name="report_currencies_main">Основная</string>
-    <string name="report_currencies_make_main">Нажмите, чтобы сделать основной</string>
     <string name="report_currencies_add">Добавить валюту</string>
     <string name="report_currencies_menu_hint">Основная: %1$s</string>
     <string name="rates_current">Курсы на сегодня</string>

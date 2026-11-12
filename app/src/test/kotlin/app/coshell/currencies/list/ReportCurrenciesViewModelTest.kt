@@ -1,7 +1,11 @@
 package app.coshell.currencies.list
 
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.MoneyFormat
+import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeExchangeRateRepository
+import kotlin.time.Clock
+import kotlinx.datetime.TimeZone
 import app.coshell.testing.FakeReportCurrencySettings
 import app.coshell.testing.MainDispatcherRule
 import org.junit.Assert.assertEquals
@@ -20,7 +24,8 @@ class ReportCurrenciesViewModelTest {
 
     private val settings = FakeReportCurrencySettings()
     private val repo = FakeExchangeRateRepository().apply { used = setOf(usd, ars, amd) }
-    private val vm by lazy { ReportCurrenciesViewModel(settings, repo) }
+    private val accounts = FakeAccountRepository()
+    private val vm by lazy { ReportCurrenciesViewModel(settings, repo, accounts, MoneyFormat.RU, Clock.System, TimeZone.UTC) }
 
     @Test
     fun `add offers used currencies not in the list and appends the chosen one`() {

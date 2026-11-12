@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Co-Shell</string>
 
     <string name="action_save">Сохранить</string>
@@ -21,21 +21,25 @@
     <string name="home_total_hide_breakdown">Скрыть разбивку</string>
     <string name="home_spending_title">Траты за %1$s</string>
     <string name="home_spending_rate_hint">Каждая трата — по курсу на её день</string>
-    <string name="home_accounts">Счета</string>
     <string name="home_spending_tile">Траты</string>
-    <string name="home_income_title">Доход</string>
-    <string name="home_income_none">Пока нет</string>
+    <string name="home_spending_without">без %1$s</string>
+    <string name="home_uncategorized_title">Без категории</string>
+    <!-- The number is shown big above the word, so "one" has no %d. -->
+    <plurals name="home_uncategorized_operations" tools:ignore="ImpliedQuantity">
+        <item quantity="one">операция</item>
+        <item quantity="few">операции</item>
+        <item quantity="many">операций</item>
+        <item quantity="other">операции</item>
+    </plurals>
     <string name="home_attention_title">Внимание</string>
-    <string name="home_attention_ok">Всё в порядке</string>
-    <string name="home_attention_missing_rates">Нет курса: %1$s</string>
-    <string name="home_attention_stale_rates">Курсы от %1$s</string>
+    <string name="home_attention_missing_rates">нет курса %1$s</string>
+    <string name="home_attention_stale_rates">курсы от %1$s</string>
     <plurals name="home_attention_uncategorized">
         <item quantity="one">%1$d операция без категории</item>
         <item quantity="few">%1$d операции без категории</item>
         <item quantity="many">%1$d операций без категории</item>
         <item quantity="other">%1$d операции без категории</item>
     </plurals>
-    <string name="home_accounts_excluded">%1$d не в общем балансе</string>
     <string name="home_recent">Последние операции</string>
     <string name="home_recent_all">Все</string>
     <string name="home_recent_empty">Операций пока нет — нажмите «+» внизу.</string>
@@ -57,6 +61,12 @@
     <string name="account_group_other">Другое</string>
     <string name="picker_recent">Недавние</string>
     <string name="picker_search">Найти счёт</string>
+    <plurals name="picker_account_count">
+        <item quantity="one">%1$d счёт</item>
+        <item quantity="few">%1$d счёта</item>
+        <item quantity="many">%1$d счетов</item>
+        <item quantity="other">%1$d счёта</item>
+    </plurals>
     <string name="search_clear">Очистить поиск</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>
@@ -89,6 +99,7 @@
     <string name="filter_period_last">Прошлый месяц</string>
     <string name="filter_uncategorized">Без категории</string>
     <string name="filter_uncategorized_clear">Убрать фильтр «Без категории»</string>
+    <string name="filter_clear">Убрать фильтр «%1$s»</string>
     <string name="filter_reset">Сбросить фильтры</string>
     <string name="transactions_nothing">Ничего не нашлось</string>
     <string name="action_duplicate">Дублировать</string>

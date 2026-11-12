@@ -13,8 +13,11 @@ import app.coshell.budgets.list.BudgetsScreen
 import app.coshell.budgets.list.budgetsPreviewSample
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.HomeScreen
+import app.coshell.home.HomeUiState
 import app.coshell.home.homePreviewSample
+import app.coshell.transactions.list.ListFilter
 import app.coshell.transactions.list.TransactionsScreen
+import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.transactionsPreviewSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
@@ -43,11 +46,23 @@ class ScreensScreenshotTest {
     @Test
     fun `home dark`() = shot("home_dark", dark = true) { HomeScreen(homePreviewSample) }
 
+    /** Board `HomeAttention`: a missing rate turns the second tile into «Внимание». */
+    @Test
+    fun `home attention dark`() = shot("home_attention_dark", dark = true) {
+        HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention(missingRates = listOf("VES"), uncategorized = 2)))
+    }
+
     @Test
     fun `transactions light`() = shot("transactions_light") { TransactionsScreen(transactionsPreviewSample) }
 
     @Test
     fun `transactions dark`() = shot("transactions_dark", dark = true) { TransactionsScreen(transactionsPreviewSample) }
+
+    /** Board `Operations`: a set filter is a lit chip with ✕. */
+    @Test
+    fun `transactions filtered dark`() = shot("transactions_filtered_dark", dark = true) {
+        TransactionsScreen(transactionsPreviewSample.copy(filter = ListFilter(kind = TransactionsUiState.Kind.EXPENSE)))
+    }
 
     @Test
     fun `accounts light`() = shot("accounts_light") { AccountsScreen(accountsPreviewSample, AccountsActions()) }

@@ -60,12 +60,14 @@ internal fun FilterBar(
                 label = kinds.firstOrNull { it.first == filter.kind && filter.kind != null }?.second ?: stringResource(R.string.filter_type),
                 selected = filter.kind != null,
                 options = kinds.map { (kind, text) -> text to { onFilter { it.copy(kind = kind) } } },
+                onClear = { onFilter { it.copy(kind = null) } },
             )
             FilterMenuChip(
                 label = accounts.firstOrNull { it.id == filter.accountId }?.name ?: stringResource(R.string.filter_account),
                 selected = filter.accountId != null,
                 options = listOf<Pair<String, () -> Unit>>(stringResource(R.string.filter_all_accounts) to { onFilter { it.copy(accountId = null) } }) +
                     accounts.map { a -> a.name to { onFilter { it.copy(accountId = a.id) } } },
+                onClear = { onFilter { it.copy(accountId = null) } },
             )
             val periods = listOf(
                 ListFilter.Period.ALL to stringResource(R.string.filter_period_all),
@@ -76,6 +78,7 @@ internal fun FilterBar(
                 label = if (filter.period == ListFilter.Period.ALL) stringResource(R.string.filter_period) else periods.first { it.first == filter.period }.second,
                 selected = filter.period != ListFilter.Period.ALL,
                 options = periods.map { (period, text) -> text to { onFilter { it.copy(period = period) } } },
+                onClear = { onFilter { it.copy(period = ListFilter.Period.ALL) } },
             )
         }
     }

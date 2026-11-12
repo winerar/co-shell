@@ -13,7 +13,7 @@ core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
   components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью;
               поля (TextFields.kt), строки (ListRow.kt), диалоги (Dialogs.kt), раздел/подсказка/сообщение (FormBlocks.kt),
               ProgressHero — большое кольцо статуса в центре экрана (обновление; позже импорт/синк);
-              CoShellTile — плитка-«бенто» сетки 2×2 (Tile.kt), CoShellMiniBars — мини-столбики (MiniBars.kt)
+              CoShellTile — плитка «Обзора», `tint` — статусная (Tile.kt), CoShellMiniBars — мини-столбики (MiniBars.kt)
   motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
   catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов (@Preview светлая/тёмная)
   category/ CategoryBadge, палитра (18 неоновых + 6 тёплых + 12 пастель/кислота = 36, новые — только в конец:

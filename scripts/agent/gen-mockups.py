@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Regenerate the design canvas boards and layout (docs/design/mockups/).
 
-1. Writes generated boards (state screens, «Тема макетов», «Настройки», «Предложения») from
-   mockup_screens_main.py / mockup_screens_more.py / mockup_special.py — hand-drawn boards (Main, Accounts,
-   Operations…) are left as they are.
+1. Writes every board from bricks (mockup_bricks.py → mockup_parts.py → mockup_screens_*.py, interactivity —
+   mockup_logic.py). No hand-drawn boards: a board edited on the canvas is overwritten — move the change here.
 2. Regenerates the «Воркфлоу» board (gen-flows-board.py).
 3. Runs mockup_theme.py over every board, so all follow the canvas theme switch.
 4. Writes canvas.json: pages and rows from LAYOUT below (keeps `createdOnFiles`).
@@ -25,6 +24,11 @@ import mockup_screens_templates as tpl_screens  # noqa: E402
 import mockup_screens_budgets as bud_screens  # noqa: E402
 import mockup_screens_reports as rep_screens  # noqa: E402
 import mockup_special as special  # noqa: E402
+import mockup_screens_tabs as tab_screens  # noqa: E402
+import mockup_screens_ops as ops_screens  # noqa: E402
+import mockup_screens_forms as form_screens  # noqa: E402
+import mockup_screens_settings as set_screens  # noqa: E402
+import mockup_catalog as catalog  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
@@ -32,15 +36,17 @@ PLAN = (tpl_screens, bud_screens, rep_screens)  # rows «Шаблоны», «Б�
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
-# Hand-drawn boards: titles (interactive ones have working controls).
-HAND = {
+# Main boards of each row: full pages with their own logic (title, interactive) — mockup_screens_{tabs,ops,forms,settings}.py.
+PAGES = {
     'Main': ('Шторка ввода: шаг 1 счёт → шаг 2 сумма (тапайте)', True), 'Operations': ('Операции: удержание → выбор, свайп вкладок (тапайте)', True),
-    'Accounts': ('Счета: 12 счетов, группы', True), 'More': ('Ещё', False), 'HomeSync': ('Обзор: ошибка синка (тапайте «Другая причина»)', True),
-    'Feedback': ('Отзыв: написать', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True),
-    'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории', True), 'CategoryEdit': ('Категория | Папка (тапайте)', True),
-    'AccountEdit': ('Счёт: новый', True), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
+    'Accounts': ('Счета: 12 счетов, группы (тапайте)', True), 'More': ('Ещё', False), 'HomeSync': ('Обзор: ошибка синка (тапайте «Другая причина»)', True),
+    'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True),
+    'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория | Папка (тапайте)', True),
+    'AccountEdit': ('Счёт: новый (тапайте)', True), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
     'Backup': ('Резервная копия', False), 'Wipe': ('Стереть все данные (тапайте)', True),
+    'Components': ('Компоненты: кирпичи макетов → имена в коде', True), 'History': ('История решений', False),
 }
+PAGE_MODULES = (tab_screens, ops_screens, form_screens, set_screens, catalog)
 
 LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew']),
@@ -75,6 +81,10 @@ def write(name, html):
 
 def main():
     gen = {}
+    for mod in PAGE_MODULES:
+        for name, fn in mod.BOARDS:
+            write(name, fn())
+            gen[name] = PAGES[name]
     for mod in (main_screens, more_screens):
         for name, title, fn in mod.BOARDS:
             write(name, board(title.split(' · ', 1)[-1], fn()))
@@ -88,7 +98,7 @@ def main():
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
         write(name, fn())
         gen[name] = (title, name != 'Ideas')
-    subprocess.run([sys.executable, os.path.join(HERE, 'gen-flows-board.py')], check=True)
+    flows_h = int(subprocess.run([sys.executable, os.path.join(HERE, 'gen-flows-board.py')], check=True, capture_output=True, text=True).stdout.split()[-1])
     files = sorted(f for f in os.listdir(OUT) if f.endswith('.dc.html'))
     for f in files:
         p = os.path.join(OUT, f)
@@ -97,8 +107,7 @@ def main():
         with open(p, 'w', encoding='utf-8') as fh:
             fh.write(mockup_theme.convert(src))
 
-    titles = dict(HAND)
-    titles.update(gen)
+    titles = dict(gen, Flows=('Воркфлоу', False))
     canvas_path = os.path.join(OUT, 'canvas.json')
     old = json.load(open(canvas_path, encoding='utf-8'))
     boards, notes, order = {}, {}, []
@@ -127,9 +136,9 @@ def main():
         if r in STICKIES:
             notes['s%d' % r] = {'page': 'screens', 'text': STICKIES[r], 'x': len(names) * PITCH_X, 'y': y, 'w': 390}
     add('ThemeSwitchFlows', -520, 0, W, 560, 'flows', 28)
-    add('Flows', 0, 0, 1840, old['boards'].get('Flows.dc.html', {}).get('h', 2352), 'flows')
+    add('Flows', 0, 0, 1840, flows_h, 'flows')
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
-    add('Components', 0, 0, 1280, 1640, 'components')
+    add('Components', 0, 0, catalog.W, catalog.H, 'components')
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
     for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # picked feedback variants
         y = 1900 + r * PITCH_Y

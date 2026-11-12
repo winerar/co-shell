@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
+import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
 import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellPaletteSwatch
@@ -15,6 +16,11 @@ import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
+import androidx.compose.foundation.layout.Column
+import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellSwitchRow
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -59,6 +65,18 @@ class CatalogScreenshotTest {
     }
 
     @Test
+    fun `segmented dark`() = shot("segmented_dark", dark = true) { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
+
+    @Test
+    fun `segmented light`() = shot("segmented_light") { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
+
+    @Test
+    fun `row group dark`() = shot("row_group_dark", dark = true) { RowGroupSample() }
+
+    @Test
+    fun `row group light`() = shot("row_group_light") { RowGroupSample() }
+
+    @Test
     fun `palettes light`() = shot("palettes_light") {
         Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
             CoShellPalette.entries.forEach { palette ->
@@ -71,4 +89,19 @@ class CatalogScreenshotTest {
         captureRoboImage("src/test/screenshots/$name.png") {
             CoShellTheme(darkTheme = dark) { Surface { content() } }
         }
+}
+
+/** К5: a settings-like group — label, three rows with lines between them, a one-row danger group. */
+@Composable
+private fun RowGroupSample() {
+    Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        CoShellSectionLabel("Общее")
+        CoShellRowGroup {
+            row { CoShellListRow(title = "Валюты отчётов", subtitle = "Основная: USD", onClick = {}) }
+            row { CoShellSwitchRow(title = "Встряхнуть — новая операция", subtitle = "Пока открыто приложение", checked = true, onCheckedChange = {}) }
+            row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
+        }
+        CoShellSectionLabel("Данные")
+        CoShellRowGroup { row { CoShellListRow(title = "Стереть все данные", subtitle = "Сначала — копия", onClick = {}) } }
+    }
 }

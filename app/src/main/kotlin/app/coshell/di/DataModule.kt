@@ -13,12 +13,14 @@ import app.coshell.core.data.repository.RoomDataWipeRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
 import app.coshell.core.data.repository.RoomFamilySettings
 import app.coshell.core.data.repository.RoomImportRepository
+import app.coshell.core.data.repository.RoomReportRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.budgets.BudgetRepository
+import app.coshell.core.domain.reports.ReportRepository
 import app.coshell.core.domain.templates.ApplyTemplateUseCase
 import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase
@@ -47,6 +49,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 @Module
@@ -74,6 +80,11 @@ object DataModule {
     @Provides @Singleton
     fun provideTransactionRepository(db: CoShellDatabase, stamper: WriteStamper): TransactionRepository =
         RoomTransactionRepository(db.transactionDao(), stamper)
+
+    /** Reports (#187): day sums from SQLite in the phone's time zone. */
+    @Provides @Singleton
+    fun provideReportRepository(db: CoShellDatabase, timeZone: TimeZone): ReportRepository =
+        RoomReportRepository(db.reportDao(), timeZone)
 
     @Provides @Singleton
     fun provideBudgetRepository(db: CoShellDatabase, stamper: WriteStamper): BudgetRepository =
@@ -108,7 +119,7 @@ object DataModule {
 
     @Provides @Singleton
     fun provideExchangeRateRepository(db: CoShellDatabase, stamper: WriteStamper): ExchangeRateRepository =
-        RoomExchangeRateRepository(db.rateDao(), stamper)
+        RoomExchangeRateRepository(db.rateDao(), stamper, CoroutineScope(SupervisorJob() + Dispatchers.Default))
 
     @Provides @Singleton
     fun provideImportRepository(db: CoShellDatabase, stamper: WriteStamper): ImportRepository =

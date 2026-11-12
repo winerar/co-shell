@@ -8,6 +8,7 @@ import app.coshell.core.domain.feedback.FeedbackStatusSource
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
 import app.coshell.crash.CrashLog
 import app.coshell.crash.FileCrashLog
+import app.coshell.feedback.InstalledBuild
 import app.coshell.feedback.data.AndroidDeviceInfoProvider
 import app.coshell.feedback.data.AndroidDiagnosticsProvider
 import app.coshell.feedback.data.FeedbackHistory
@@ -39,6 +40,9 @@ interface FeedbackModule {
         @Provides
         fun provideSender(): FeedbackSender =
             FirestoreFeedbackSender(BuildConfig.FIREBASE_PROJECT_ID, BuildConfig.FIREBASE_API_KEY)
+
+        @Provides
+        fun provideInstalledBuild() = InstalledBuild(BuildConfig.VERSION_CODE)
 
         @Provides
         fun provideStatusSource(): FeedbackStatusSource =

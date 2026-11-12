@@ -24,9 +24,12 @@ field '.labels[].name' | grep -qx hold && skip "label hold"
 
 # Any green run of the head commit counts: a commit often has a dispatched run and a pull_request run,
 # and the newest may be an empty or cancelled duplicate (runs 320/321) that would hide the green one.
-runs=$(gh run list --workflow ci.yml --commit "$sha" --limit 20 --json status,conclusion)
-jq -e 'any(.[]; .conclusion == "success")' <<<"$runs" >/dev/null ||
-    skip "CI on ${sha:0:7}: $(jq -r '.[0] // {} | "\(.status // "no run") \(.conclusion // "")"' <<<"$runs")"
+# CI_GREEN_SHA — set by the last step of a green CI run (ci.yml), which is still in progress here.
+if [ "${CI_GREEN_SHA:-}" != "$sha" ]; then
+    runs=$(gh run list --workflow ci.yml --commit "$sha" --limit 20 --json status,conclusion)
+    jq -e 'any(.[]; .conclusion == "success")' <<<"$runs" >/dev/null ||
+        skip "CI on ${sha:0:7}: $(jq -r '.[0] // {} | "\(.status // "no run") \(.conclusion // "")"' <<<"$runs")"
+fi
 
 # GitHub computes mergeability lazily: UNKNOWN right after a push.
 for _ in 1 2 3 4 5 6; do

@@ -43,7 +43,7 @@
   переключатели, вкладки, образцы цвета/иконок), `Surface` (карточки), `Row` (строки списков — без наклона).
   Выбор элемента — короткий «щелчок на место» (`selectionPop`). Рябь Material в наших компонентах выключена.
 - **Правило:** в экранах только `CoShellButton/OutlinedButton/TextButton/IconButton/Fab`, `CoShellFilterChip`,
-  `CoShellSegmentedButton`, `CoShellSwitch`, `CoShellNavigationBarItem`, `CoShellCard(onClick)` и
+  `CoShellSegmented`, `CoShellSwitch`, `CoShellNavigationBarItem`, `CoShellCard(onClick)` и
   `Modifier.tactileClickable/tactileToggleable` (первым в цепочке). Голые Material-кнопки и `clickable`
   ловит тест `app/.../designsystem/TactileRuleTest`. Новый интерактивный компонент — обёрткой в `components/`.
 - **Анимации элементов (Шаг 4 рефакторинга, `docs/research/design-refactor.md`)** — все внутри компонентов:
@@ -55,7 +55,7 @@
   | Ожидание действия (обновление готово) | `Modifier.breathing(active)` | единственная петля: `Motion.breath()` (2,2 с, масштаб 1→1,04) |
   | Поле с новой ошибкой | `Modifier.errorShake(error)` (уже в `CoShellTextField`) | сдвиг вбок пружиной `bouncy` с начальной скоростью ≈ 2 качания |
   | Снэкбар «Отменить» | `components/Snackbar.kt` | выезжает снизу (`Placement`), полоска времени — по часам кадров, не пружина (это таймер) |
-  | Смена темы/палитры | `motion/ThemeReveal.kt` | `LocalThemeReveal.current.change { … }`: старый кадр снимается один раз в картинку, новая тема раскрывается кругом от касания (`spatialSlow`) |
+  | Смена темы/палитры | `motion/ThemeReveal.kt` | `LocalThemeReveal.current.change { … }`: старый кадр снимается один раз в картинку, новая тема раскрывается кругом от касания (`spatialSlow`); смена тёмного режима телефона при «Как в системе» — тем же кругом от низа экрана (`theme/SystemDarkReveal.kt`, активность не пересоздаётся: `configChanges="uiMode"`) |
   | Выбор палитры | `components/PaletteSwatch.kt` | кольцо проявляется (`effects`) + `selectionPop` |
   Обычные кадры ничего не записывают и не анимируют; новое событие — новая короткая анимация. Остальное из
   каталога (перелистывание заголовка дня, мерцание скелетонов, «дотикивание» суммы) — по мере надобности.

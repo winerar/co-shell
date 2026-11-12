@@ -27,8 +27,11 @@ data class ListFilter(
     val isActive: Boolean
         get() = query.isNotBlank() || kind != null || accountId != null || period != Period.ALL || uncategorized
 
-    /** Search, type and «без категории» are checked in memory: they need the whole (period/account-limited) list. */
-    internal val needsAll: Boolean get() = query.isNotBlank() || kind != null || uncategorized
+    /** Only the search is checked in memory, so it needs the whole (Room-filtered) list (#261). */
+    internal val needsAll: Boolean get() = query.isNotBlank()
+
+    /** What goes to Room: a new query runs only when this changes, not on every typed letter (#261). */
+    internal val roomKey: ListFilter get() = ListFilter(query = if (needsAll) "*" else "", kind = kind, accountId = accountId, period = period, uncategorized = uncategorized)
 
     companion object {
         /** What «Внимание» counts: this month's expenses and incomes without a category. */
@@ -36,7 +39,7 @@ data class ListFilter(
     }
 }
 
-/** Account and period go to Room; the page [limit] only when nothing is filtered in memory. */
+/** Account, period, type and «без категории» go to Room; the page [limit] only when nothing is searched in memory. */
 internal fun ListFilter.toRepositoryFilter(limit: Int, today: LocalDate, timeZone: TimeZone): TransactionFilter {
     val bounds = when (period) {
         ListFilter.Period.ALL -> null
@@ -47,20 +50,29 @@ internal fun ListFilter.toRepositoryFilter(limit: Int, today: LocalDate, timeZon
         accountId = accountId,
         from = bounds?.first,
         to = bounds?.second,
+        type = when (kind) {
+            null -> null
+            Kind.EXPENSE -> TransactionType.EXPENSE
+            Kind.INCOME -> TransactionType.INCOME
+            Kind.TRANSFER -> TransactionType.TRANSFER
+        },
+        uncategorized = uncategorized,
         limit = if (needsAll) null else limit,
     )
 }
 
 /**
  * Type and search: the query matches the note, category, account names or the amount, ignoring case and
- * spaces ("32000" finds "32 000,00 ARS").
+ * spaces ("32000" finds "32 000,00 ARS"). Type and «без категории» are also applied by Room; checked here too.
  */
 internal fun ListFilter.matches(
     t: Transaction,
     accountsById: Map<String, Account>,
     categoriesById: Map<String, Category>,
     moneyFormat: MoneyFormat,
-): Boolean {
+): Boolean = matches(t, SearchIndex(accountsById, categoriesById, moneyFormat))
+
+internal fun ListFilter.matches(t: Transaction, index: SearchIndex): Boolean {
     val typeOk = when (kind) {
         null -> true
         Kind.EXPENSE -> t.type == TransactionType.EXPENSE
@@ -70,16 +82,35 @@ internal fun ListFilter.matches(
     if (!typeOk) return false
     if (uncategorized && (t.type == TransactionType.TRANSFER || t.categoryId != null)) return false
     val needle = query.squash()
-    if (needle.isEmpty()) return true
-    val haystack = listOfNotNull(
-        t.note,
-        t.categoryId?.let { categoriesById[it]?.name },
-        accountsById[t.accountId]?.name,
-        t.toAccountId?.let { accountsById[it]?.name },
-        moneyFormat.format(t.amount),
-        t.originalAmount?.let(moneyFormat::format),
-    )
-    return haystack.any { needle in it.squash() }
+    return needle.isEmpty() || needle in index.text(t)
+}
+
+/**
+ * Searchable text of each operation, formatted once per loaded list (#261): each typed letter then only
+ * scans ready strings instead of formatting thousands of amounts again. Used from one flow at a time.
+ */
+internal class SearchIndex(
+    private val accountsById: Map<String, Account>,
+    private val categoriesById: Map<String, Category>,
+    private val moneyFormat: MoneyFormat,
+) {
+    private val texts = HashMap<String, String>()
+
+    fun text(t: Transaction): String = texts.getOrPut(t.id) {
+        listOfNotNull(
+            t.note,
+            t.categoryId?.let { categoriesById[it]?.name },
+            accountsById[t.accountId]?.name,
+            t.toAccountId?.let { accountsById[it]?.name },
+            moneyFormat.format(t.amount),
+            t.originalAmount?.let(moneyFormat::format),
+        ).joinToString(FIELD_BREAK) { it.squash() }
+    }
+
+    private companion object {
+        /** Keeps a query from matching across two fields. */
+        const val FIELD_BREAK = "\u0000"
+    }
 }
 
 private fun String.squash(): String = lowercase().filterNot { it.isWhitespace() }

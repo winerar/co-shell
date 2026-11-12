@@ -16,12 +16,15 @@
 - (11-11) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — **решено автоматикой** (#156): `scripts/agent/gradle.sh`
   (через него `check.sh`, `agent.sh test/quick/affected`) ставит первым зеркало Google (`maven-mirror.init.gradle`, и для Robolectric — `robolectric.dependency.repo.url`),
   а если 429 всё же случился — докачивает файлы curl-ом (`m2-mirror.sh`) в `~/.m2` и повторяет сборку. Вручную ничего не делать.
+  (11-12) Прямой `./gradlew` получил и **403** от зеркала Maven на jar Robolectric — то же лечение: запускать через `gradle.sh`.
 - (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
   читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.
   `root` — папка, где файлы лежат как `project/<имя>` (скопировать в scratchpad); перед первой публикацией в сессии — `read` без `paths`.
 - (11-11) Публикация на холст отказывает, если файлы не читались в этой сессии (даже удаляемые `null`): сначала `Artifact read`
   с `paths` всех трогаемых досок, сверить с `git show HEAD:` (`cmp`), потом publish. Список файлов брать не из `git status --short`:
   похожие доски git показывает как переименование `R old -> new` — старое имя теряется; удаляемые перечислить явно.
+- (11-12) Публикация досок на холст: копии в `<scratch>/canvas/project/`, `root` = `<scratch>/canvas`, `file_path` — абсолютный путь одной доски,
+  `files` — `project/X` → `project/X`; без `file_path` или с путями из `docs/` — отказ.
 - (11-11) Варианты, темы и генератор досок холста — `docs/design/README.md` §«Правила для агента».
 - (11-10) Конструктор с хвостовой лямбдой (`WalletImportUseCase(...) { "id" }`): новый параметр с дефолтом
   в конце перехватывает лямбду — в тестах передавать `ids = { … }` по имени.

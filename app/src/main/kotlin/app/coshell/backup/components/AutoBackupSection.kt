@@ -1,6 +1,10 @@
 package app.coshell.backup.components
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -31,13 +35,17 @@ internal fun AutoBackupSection(state: AutoBackupUiState, onChooseFolder: () -> U
             else -> MaterialTheme.colorScheme.outline
         },
     )
-    ActionRow(
-        icon = DesignR.drawable.ic_folder_open,
-        title = state.folderName?.let { stringResource(R.string.auto_backup_folder, it) }
-            ?: stringResource(R.string.auto_backup_choose),
-        onClick = onChooseFolder,
-    )
-    if (state.enabled) {
-        ActionRow(icon = DesignR.drawable.ic_close, title = stringResource(R.string.auto_backup_disable), onClick = onDisable)
+    CoShellRowGroup(Modifier.padding(horizontal = Spacing.l)) {
+        row {
+            ActionRow(
+                icon = DesignR.drawable.ic_folder_open,
+                title = state.folderName?.let { stringResource(R.string.auto_backup_folder, it) }
+                    ?: stringResource(R.string.auto_backup_choose),
+                onClick = onChooseFolder,
+            )
+        }
+        if (state.enabled) {
+            row { ActionRow(icon = DesignR.drawable.ic_close, title = stringResource(R.string.auto_backup_disable), onClick = onDisable) }
+        }
     }
 }

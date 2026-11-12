@@ -1,0 +1,6 @@
+# Startup profile for the app's own code (#263). Libraries ship theirs (Compose, Room…); without this the
+# app's classes run interpreted on the first launches after every install or update (sideloaded APK,
+# installed by androidx.profileinstaller). AGP expands the wildcards against the release dex.
+# A measured profile from a macrobenchmark replaces this once a phone or emulator is available (#149).
+HSPLapp/coshell/**;->**(**)**
+Lapp/coshell/**;

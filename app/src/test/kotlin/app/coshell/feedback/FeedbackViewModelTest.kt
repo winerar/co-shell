@@ -127,6 +127,26 @@ class FeedbackStatusRefreshTest {
         vm.remove(2)
         assertEquals(listOf(1L), vm.state.value.history.map { it.sentAtMillis })
     }
+
+    @Test
+    fun `done in an installed build two weeks ago leaves the list by itself`() {
+        val now = Instant.parse("2026-11-20T10:00:00Z")
+        val clock = object : Clock {
+            override fun now() = now
+        }
+        val old = done.copy(doneAt = Instant.parse("2026-11-01T10:00:00Z"))
+        val fresh = done.copy(doneAt = Instant.parse("2026-11-15T10:00:00Z"))
+        val history = InMemoryFeedbackHistory(
+            listOf(
+                SentFeedback(4, "старый сделанный", "doc-4", old),
+                SentFeedback(3, "свежий сделанный", "doc-3", fresh),
+                SentFeedback(2, "сделан в новой версии", "doc-2", old.copy(doneBuild = 300)),
+                SentFeedback(1, "отложен", "doc-1", FeedbackStatus(FeedbackStage.LATER, 9)),
+            ),
+        )
+        val vm = FeedbackViewModel(sendFeedback, history, clock, NoFeedbackStatus, InstalledBuild(260))
+        assertEquals(listOf(3L, 2L, 1L), vm.state.value.history.map { it.sentAtMillis })
+    }
 }
 
 private class FakeSender : FeedbackSender {

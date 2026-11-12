@@ -27,6 +27,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 import kotlin.time.Instant
 
 class ExchangeRateRepositoryTest {
@@ -52,6 +53,18 @@ class ExchangeRateRepositoryTest {
         ExchangeRate(date, usd, to, Rate.parse(rate), RateOrigin.DOWNLOADED)
 
     private fun snapshot(date: LocalDate, vararg rates: ExchangeRate) = RatesSnapshot(date, usd, rates.toList(), "test")
+
+    @Test
+    fun `screens share one read and one parsed list of rates`() = runTest {
+        rates.saveManualRate(manual(nov9, usd, ars, "1450"))
+        val shared = RoomExchangeRateRepository(db.rateDao(), stamper, backgroundScope)
+
+        val home = shared.observeRates().first()
+        val accounts = shared.observeRates().first()
+
+        assertEquals(listOf(manual(nov9, usd, ars, "1450")), home)
+        assertSame(home, accounts)
+    }
 
     @Test
     fun `manual rate keeps its exact text and direction`() = runTest {

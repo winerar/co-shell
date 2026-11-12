@@ -25,9 +25,18 @@ import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
-/** A group of the accounts list: header with count and total (tap folds it), the rows in one card below. */
+/**
+ * A group of the accounts list: header with count and total (tap folds it), the rows in one card below.
+ * [muted] — the archive: a grey title instead of the accent.
+ */
 @Composable
-internal fun AccountGroup(group: AccountsUiState.Group, onToggle: () -> Unit, onAccountClick: (String) -> Unit, modifier: Modifier = Modifier) {
+internal fun AccountGroup(
+    group: AccountsUiState.Group,
+    onToggle: () -> Unit,
+    onAccountClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    muted: Boolean = false,
+) {
     Column(modifier) {
         Row(
             modifier = Modifier
@@ -39,7 +48,11 @@ internal fun AccountGroup(group: AccountsUiState.Group, onToggle: () -> Unit, on
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             val title = group.titleRes?.let { stringResource(it) } ?: group.titleText.orEmpty()
-            Text(title.uppercase(), style = MaterialTheme.typography.labelLarge, color = accentInk())
+            Text(
+                title.uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else accentInk(),
+            )
             Text(group.rows.size.toString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.weight(1f))
             group.total?.let { Text(it, style = RateTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant) }

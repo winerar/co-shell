@@ -41,10 +41,11 @@
 ## Дизайн и данные
 | Команда (скрипт) | Что делает |
 |---|---|
-| `mockups` (`gen-mockups.py`) | пересобрать холст: доски `mockup_screens_*.py` из `mockup_bricks.py`, темы, `canvas.json` (ряды — `LAYOUT`) |
+| `mockups` (`gen-mockups.py` + `check-mockups.js`) | пересобрать холст: **все** доски из кирпичей (`mockup_bricks.py` → `mockup_parts.py` → `mockup_screens_*.py`, `mockup_catalog.py`), темы, `canvas.json` (ряды — `LAYOUT`); затем проверка: у каждой `{{дырки}}` есть значение, каждый тап переключает состояние |
 | `mockup_theme.py <доска>…` | перевести цвета доски (рисуем во «Вольт · тёмная») на токены темы; повтор безопасен |
 | `render <доски…>` (`render-mockups.js`) | PNG досок без холста в scratchpad (упрощённый рантайм) |
-| `flows` (`gen-flows-board.py`) | доска «Воркфлоу»; потом `h` в `canvas.json` и публикация |
+| `python3 scripts/agent/palette-distinct.py` | различимость цветов категорий (ΔE2000, обе темы), предложение набора; данные для досок #105 |
+| `flows` (`gen-flows-board.py`) | только доска «Воркфлоу» (таблица `ROWS`); высоту в `canvas.json` ставит `mockups` |
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |

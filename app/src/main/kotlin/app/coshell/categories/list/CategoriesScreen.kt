@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +18,8 @@ import app.coshell.categories.labelRes
 import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
 import app.coshell.core.designsystem.components.CoShellExtendedFab
-import app.coshell.core.designsystem.components.CoShellSegmentedButton
+import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.CategoryType
@@ -46,18 +45,15 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
         },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
-            // Expenses / income as a pill switch (mockup 8), like the theme switch in «Настройки».
+            // Expenses / income: a way of looking at the list — the violet pill (К3).
             val types = CategoryType.entries
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s)) {
-                types.forEachIndexed { index, tabType ->
-                    CoShellSegmentedButton(
-                        selected = state.type == tabType,
-                        onClick = { actions.onSelectType(tabType) },
-                        shape = SegmentedButtonDefaults.itemShape(index, types.size),
-                        label = { Text(stringResource(tabType.labelRes)) },
-                    )
-                }
-            }
+            CoShellSegmented(
+                labels = types.map { stringResource(it.labelRes) },
+                selected = types.indexOf(state.type),
+                onSelect = { actions.onSelectType(types[it]) },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s),
+                tone = SegmentTone.View,
+            )
             if (state.isLoading) return@Column
             LazyColumn(contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
                 groupItems(state, actions)

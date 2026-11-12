@@ -56,10 +56,15 @@ class ColorContrastTest {
 
     @Test
     fun heroCardTextIsReadableOnTheWholeGradient() = themes.forEach { (name, t) ->
-        // Light theme hero card: ink text and grey hints over every stop of the palette gradient.
+        // The hero card (both themes, issue #249): text, hints and state colours over every stop of the gradient.
+        assertEquals("$name hero gradient stops", 3, t.heroStops.size)
         t.heroStops.forEach { stop ->
             assertContrast("$name hero ink on $stop", t.hero.content, stop, 4.5)
-            assertContrast("$name hero hint on $stop", t.scheme.onSurfaceVariant, stop, 4.5)
+            assertContrast("$name hero hint on $stop", t.hero.hint, stop, 4.5)
+            // The main amount is large text (≥ 24 sp): WCAG asks 3.0.
+            assertContrast("$name hero amount on $stop", t.hero.amount, stop, 3.0)
+            assertContrast("$name hero overspent on $stop", t.hero.expense, stop, 4.5)
+            assertContrast("$name hero warning on $stop", t.hero.warning, stop, 4.5)
         }
     }
 

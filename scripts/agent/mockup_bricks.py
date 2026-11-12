@@ -11,6 +11,8 @@ LIME, ONLIME, LIMEPILL = '#B8FF2E', '#0E1F00', '#3A4A1E'
 CYAN, VIOLET, VIOLETPILL, VIOLETINK, PINK, PINKBG, YELLOW = '#00F0FF', '#B266FF', '#2A2240', '#E6D6FF', '#FF5C7F', '#2B0F17', '#FFE600'
 WARN, WARNBG, WARNLINE, OK = '#FFB547', '#2A1E08', '#5A3F10', '#5CFFB0'
 MONO = "font-family: 'JetBrains Mono', monospace;"
+# Hero card (#249, `CoShellCard(accent)`): palette gradient, no border; mockup_theme.py repaints the stops per palette/theme.
+HERO_BG, HERO_HINT = 'linear-gradient(135deg, #314617, #0E2523, #271E36)', '#AFB0AE'
 
 ICON = {
     'back': 'M15 6l-6 6 6 6', 'close': 'M6 6l12 12M18 6L6 18', 'search': 'M20 20l-4-4M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z',
@@ -36,11 +38,11 @@ ICON = {
 
 def svg(name, color=MUTED, size=22, width=1.8):
     return ('<svg width="%d" height="%d" viewBox="0 0 24 24" fill="none" stroke="%s" stroke-width="%s" stroke-linecap="round" '
-            'stroke-linejoin="round" aria-hidden="true"><path d="%s"></path></svg>' % (size, size, color, width, ICON[name]))
+            'stroke-linejoin="round" aria-hidden="true"><path d="%s"></path></svg>' % (size, size, color, width, ICON.get(name, name)))
 
 
-def board(title, body, script=''):
-    return '''<!doctype html>
+def board(title, body, script='', height=844):
+    return ('''<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
@@ -69,7 +71,7 @@ class Component extends DCLogic {
 </script>
 </body>
 </html>
-''' % (title, BG, INK, body, script)
+''' % (title, BG, INK, body, script)).replace('height: 844px', 'height: %dpx' % height).replace('"height":844', '"height":%d' % height)
 
 
 def tab_screen(title, body, active, actions='', bar=True):
@@ -120,6 +122,12 @@ def card(inner, pad='0', radius=16, extra=''):
             % (radius, CARD, LINE, pad, extra, inner))
 
 
+def hero_card(inner, pad='16px', radius=16, extra=''):
+    """The one main block of a screen: gradient of the palette; inside — INK text, HERO_HINT greys, LIME amount."""
+    return ('<div style="border-radius: %dpx; background: %s; overflow: hidden; padding: %s; %s">%s</div>'
+            % (radius, HERO_BG, pad, extra, inner))
+
+
 def group(rows):
     out = []
     for i, r in enumerate(rows):
@@ -166,7 +174,7 @@ def amount(text, cur='', color=INK, size=15):
 
 
 def tx(title, sub, amt, cur, kind, icon, color, second=''):
-    col = {'e': PINK, 'i': CYAN, 't': INK}[kind]
+    col = {'e': PINK, 'i': CYAN, 't': INK}.get(kind, kind)  # or a colour / {{hole}}
     tail = ('<span style="display: flex; flex-direction: column; align-items: flex-end;">%s%s</span>'
             % (amount(amt, cur, col), '<span style="%s font-size: 12px; color: %s;">%s</span>' % (MONO, MUTED, second) if second else ''))
     return ('<div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px;">%s'
@@ -215,19 +223,27 @@ def search(placeholder, value=''):
             % (FIELD, svg('search', MUTED, 20), v, x))
 
 
-def segmented(options, selected, tone='violet'):
+def segmented(options, selected, tone='violet', taps=None):
+    """taps: action holes per option (mockup_logic) — the cells become tap targets."""
     on_bg, on_ink = (LIME, ONLIME) if tone == 'lime' else (VIOLETPILL, VIOLETINK)
-    cells = ''.join('<span style="height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
-                    % ('background: %s; color: %s; font-weight: 600;' % (on_bg, on_ink) if o == selected else 'color: %s;' % INK2, o) for o in options)
+    cells = []
+    for i, o in enumerate(options):
+        st = 'background: %s; color: %s; font-weight: 600;' % (on_bg, on_ink) if o == selected else 'color: %s;' % INK2
+        ev = ' onClick="{{%s}}"' % taps[i] if taps else ''
+        cells.append('<span%s style="height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
+                     % (ev, st, o))
     return ('<div style="display: grid; grid-template-columns: repeat(%d, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: %s;">%s</div>'
-            % (len(options), CHIP, cells))
+            % (len(options), CHIP, ''.join(cells)))
 
 
-def chip(text, on=False, icon=None):
+def chip(text, on=False, icon=None, dot=None, dashed=False):
     st = ('border: none; background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK) if on
-          else 'border: 1px solid %s; background: transparent; color: %s;' % (LINE2, INK))
-    return ('<span style="height: 36px; padding: 0 14px; border-radius: 999px; %s font-size: 13px; display: inline-flex; align-items: center; gap: 6px; '
-            'white-space: nowrap;">%s%s</span>' % (st, svg(icon, MUTED, 16) if icon else '', text))
+          else 'border: 1px %s %s; background: transparent; color: %s;' % ('dashed' if dashed else 'solid', LINE2, INK))
+    lead = svg(icon, MUTED, 16) if icon else ''
+    if dot:
+        lead = '<span style="width: 18px; height: 18px; border-radius: 50%%; background: %s;"></span>' % dot
+    return ('<span style="height: 36px; padding: 0 14px 0 %dpx; border-radius: 999px; %s font-size: 13px; display: inline-flex; align-items: center; gap: 6px; '
+            'white-space: nowrap;">%s%s</span>' % (9 if dot else 14, st, lead, text))
 
 
 def message(text, kind='ok', title=''):

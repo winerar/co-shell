@@ -7,6 +7,7 @@ import app.coshell.core.domain.feedback.FeedbackStage
 import app.coshell.core.domain.feedback.FeedbackStatus
 import app.coshell.core.domain.feedback.FeedbackStatusSource
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
+import app.coshell.core.domain.feedback.isDoneAndSeen
 import app.coshell.feedback.data.FeedbackHistory
 import app.coshell.feedback.data.InMemoryFeedbackHistory
 import app.coshell.feedback.data.SentFeedback
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
 
 /**
  * Sends the typed text with its kind in front; on success clears the field and remembers it, on failure keeps it.
- * «Мои отзывы»: on open asks once for the status of every message that may still change (#157).
+ * «Мои отзывы»: on open asks once for the status of every message that may still change (#157), then drops
+ * the ones done in an installed build two weeks ago (#174; only from this phone, the task stays).
  */
 @HiltViewModel
 class FeedbackViewModel @Inject constructor(
@@ -30,6 +32,7 @@ class FeedbackViewModel @Inject constructor(
     private val history: FeedbackHistory = InMemoryFeedbackHistory(),
     private val clock: Clock = Clock.System,
     private val statuses: FeedbackStatusSource = NoFeedbackStatus,
+    private val installed: InstalledBuild = InstalledBuild(0),
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(FeedbackUiState())
@@ -37,7 +40,17 @@ class FeedbackViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { history.entries.collect { list -> _state.update { it.copy(history = list) } } }
-        viewModelScope.launch { refreshStatuses() }
+        viewModelScope.launch {
+            refreshStatuses()
+            dropDoneAndSeen()
+        }
+    }
+
+    private suspend fun dropDoneAndSeen() {
+        val now = clock.now()
+        history.entries.first()
+            .filter { it.status?.isDoneAndSeen(now, installed.versionCode) == true }
+            .forEach { history.remove(it.sentAtMillis) }
     }
 
     /** One read per message that is not settled yet; a failed read keeps the last known status. */
@@ -86,6 +99,9 @@ class FeedbackViewModel @Inject constructor(
         }
     }
 }
+
+/** The `versionCode` of the app on this phone (`BuildConfig.VERSION_CODE`, given by `FeedbackModule`). */
+data class InstalledBuild(val versionCode: Int)
 
 /** No status anywhere (previews, tests, builds without Firebase). */
 object NoFeedbackStatus : FeedbackStatusSource {

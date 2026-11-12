@@ -74,6 +74,31 @@ class TransactionsViewModelTest {
     }
 
     @Test
+    fun `typing a search filters in memory without new database queries`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        transactions.saveTransaction(Transaction("taxi", TransactionType.EXPENSE, "card", Money(100, ars), now, note = "Такси"))
+        transactions.saveTransaction(Transaction("tea", TransactionType.EXPENSE, "card", Money(200, ars), now, note = "Чай"))
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()),
+        )
+        vm.state.launchIn(backgroundScope)
+        vm.state.first { !it.isLoading }
+
+        listOf("т", "та", "так").forEach { q -> vm.onFilter { it.copy(query = q) } }
+        assertEquals(listOf("taxi"), vm.state.value.days.flatMap { d -> d.rows.map { it.id } })
+        // The page query, then one unlimited query for the whole search — not one per letter.
+        assertEquals(listOf(GrowingWindow.PAGE_SIZE, null), transactions.queries.map { it.limit })
+
+        vm.onFilter { it.copy(kind = TransactionsUiState.Kind.INCOME) }
+        assertEquals(TransactionType.INCOME, transactions.queries.last().type)
+        assertEquals(emptyList<String>(), vm.state.value.days.flatMap { d -> d.rows.map { it.id } })
+    }
+
+    @Test
     fun `selection deletes the chosen rows and ends`() = runTest {
         val ars = CurrencyCode("ARS")
         val now = Instant.fromEpochSeconds(1_794_000_000)

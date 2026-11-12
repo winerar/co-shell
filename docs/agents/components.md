@@ -2,15 +2,24 @@
 
 Что есть и как пользоваться. Общие правила дизайн-системы — `design-system.md`, движение — `motion.md`.
 
-- **Поля** — `CoShellTextField` (подпись, `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
+- **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outlineVariant` → ink в фокусе,
+  радиус 12, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
   после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
+- **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
+  `surfaceContainer`, сегменты 40 dp, одна пилюля скользит к выбранному на `Motion.spatial()` (рисуется в `drawBehind` —
+  смена выбора только перерисовка). `SegmentTone.Choice` — неон `primary` (тип операции, «Категория | Папка», тема,
+  тип категории); `View` — фиолетовая `secondaryContainer` (группировка счетов, «Расходы | Доходы» в «Категориях»).
+  Material `SegmentedButton` не используем. Свайп содержимого под сегментами — #173 (пейджер).
 - **Заголовок группы** — `CoShellSectionLabel(text, tone)` (К4, #199): 13 sp / 600, разрядка 0.04 em; `Muted` — серый как
   написано («Тема»), `Accent` — заглавные акцентом («СЕГОДНЯ», «НЕДАВНИЕ»). Без своих отступов; в app — `ui/list/SectionTitle`
   (с отступами экрана), `DayHeader`, `GroupTitle` шторки, «Мои отзывы» — все на нём. Новых заголовков мимо него не делать.
+- **Строки в карточке** — `CoShellRowGroup { row { … } }` (К5, #199): фон `surfaceContainer`, рамка `outlineVariant`, углы 16 dp,
+  линия 1 dp (`surfaceContainerHighest`) между строками; `if` вокруг `row` можно. Длинный `LazyColumn` — `Modifier.rowGroupSegment(
+  RowGroupPosition(i, n))` на каждом элементе (кусок карточки, список остаётся ленивым; так «Курсы»). Служебные экраны — только так.
 - **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
   `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.

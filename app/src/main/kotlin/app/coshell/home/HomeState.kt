@@ -31,7 +31,7 @@ internal fun buildHomeState(
     timeZone: TimeZone,
     moneyFormat: MoneyFormat,
 ): HomeUiState {
-    val book = RateBook(rates)
+    val book = RateBook.of(rates)
     val balances = accounts.filterNot { it.account.excludedFromTotal }.map { it.balance }
     val totals = book.balanceTotals(balances, currencies, today)
     val spending = book.expenseTotals(monthTransactions, currencies, timeZone)

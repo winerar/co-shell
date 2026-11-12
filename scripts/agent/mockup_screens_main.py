@@ -17,10 +17,10 @@ RECENT = [
 
 
 def balance_hero(total='12 480,00', cur='USD', sub='≈ 15 974 400 ARS · 4 836 000 AMD', extra=''):
-    return card('<div style="font-size: 13px; color: %s;">Общий баланс</div>'
-                '<div style="margin-top: 6px; %s font-size: 34px; font-weight: 700; letter-spacing: -0.5px;">%s <span style="font-size: 18px; color: %s;">%s</span></div>'
-                '<div style="margin-top: 4px; %s font-size: 13px; color: %s;">%s</div>%s' % (MUTED, MONO, total, MUTED, cur, MONO, MUTED, sub, extra),
-                pad='18px 18px 16px', radius=24, extra='margin-top: 8px;')
+    return hero_card('<div style="font-size: 13px;">Общий баланс</div>'
+                     '<div style="margin-top: 6px; %s font-size: 34px; font-weight: 700; letter-spacing: -0.5px; color: %s;">%s <span style="font-size: 18px;">%s</span></div>'
+                     '<div style="margin-top: 4px; %s font-size: 13px;">%s</div>%s' % (MONO, LIME, total, cur, MONO, sub, extra),
+                     pad='18px 18px 16px', radius=16, extra='margin-top: 8px;')
 
 
 def tile(title, value, sub, color=INK, warn=False):

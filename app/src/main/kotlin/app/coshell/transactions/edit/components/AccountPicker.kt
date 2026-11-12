@@ -29,7 +29,7 @@ import app.coshell.accounts.groupByAccountType
 import app.coshell.accounts.groupLabelRes
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileClickable
@@ -93,10 +93,11 @@ internal fun AccountPicker(
             }
         }
         if (choices.size >= SEARCH_FROM) {
-            CoShellTextField(
+            CoShellSearchField(
                 value = query,
                 onValueChange = { query = it },
-                label = stringResource(R.string.picker_search),
+                placeholder = stringResource(R.string.picker_search),
+                clearLabel = stringResource(R.string.search_clear),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l).padding(bottom = Spacing.m),
             )
         }

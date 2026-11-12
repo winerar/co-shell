@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.ListFilter
 import app.coshell.transactions.list.TransactionsUiState
@@ -31,10 +31,11 @@ internal fun FilterBar(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier.padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
-        CoShellTextField(
+        CoShellSearchField(
             value = filter.query,
             onValueChange = { q -> onFilter { it.copy(query = q) } },
-            label = stringResource(R.string.transactions_search),
+            placeholder = stringResource(R.string.transactions_search),
+            clearLabel = stringResource(R.string.search_clear),
             modifier = Modifier.fillMaxWidth(),
         )
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {

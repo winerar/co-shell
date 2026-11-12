@@ -9,10 +9,25 @@ data class TransactionsUiState(
     /** Older transactions exist beyond the loaded page. */
     val hasMore: Boolean = false,
     val filter: ListFilter = ListFilter(),
-    /** Active accounts for the «Счёт» filter chip. */
-    val accounts: List<AccountChoice> = emptyList(),
+    /** What the filter sheets offer: accounts, categories, family members. */
+    val choices: FilterChoices = FilterChoices(),
+    /** Count and net of everything the filter found (4А); null while no filter is set. */
+    val total: Total? = null,
+    /** For the ready-made periods of the «Период» sheet. */
+    val today: LocalDate? = null,
 ) {
-    data class AccountChoice(val id: String, val name: String)
+    /**
+     * «23 операции · −184 300,00 ARS», [detail] under it: «≈ 182,40 USD» or the nets of each currency, one per line.
+     * [amount] is null when nothing nets (only transfers); [tone] — [Kind.EXPENSE] for a minus, [Kind.INCOME] for a plus;
+     * [noRate] — codes of currencies left out of «≈» for lack of any rate ("AMD, RUB").
+     */
+    data class Total(
+        val count: Int,
+        val amount: String? = null,
+        val detail: String? = null,
+        val tone: Kind? = null,
+        val noRate: String? = null,
+    )
 
     data class Day(
         val date: LocalDate,

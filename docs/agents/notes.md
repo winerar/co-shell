@@ -27,7 +27,6 @@
 Прокси, Maven 429, SDK, холст, GitHub — в [`environment.md`](environment.md).
 
 ## Грабли проекта
-- (11-12) Снимок `ComponentsCatalog` обрезан высотой 891 dp: новый блок внизу каталога в эталон не попадает — нужен отдельный `shot(...)` (так `menu_rows_*`).
 - (11-12) Compose `lerp(Color, Color, t)` смешивает в **Oklab**, не в sRGB — подбирать цвета/контраст заранее скриптом с Oklab (как в #249), иначе числа не сойдутся с `ColorContrastTest`.
 - (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
   класса инициализируется раньше `MainDispatcherRule`, и `viewModelScope` молча не работает.
@@ -122,3 +121,5 @@
   (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).
 - (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.
 - (11-12) `agent.sh test` берёт короткие имена модулей (`domain`, `data`, `app`), не `core:domain`; фильтр — шаблон Gradle (`'*BudgetLedger*'`).
+- (11-12) Имя теста в обратных кавычках с «ёлочками» не компилируется (`InvalidPathException` на `.class` лямбды в `runTest`) — в именах тестов только ASCII-знаки и кириллица без «».
+- (11-12) `CoShellSheet` вне навигации — в `Dialog(properties = CoShellSheetDialogProperties)` (так шторки фильтров #141); тело шторки — отдельная `ColumnScope`-функция, иначе Roborazzi его не снимет.

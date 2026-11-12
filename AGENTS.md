@@ -21,7 +21,7 @@
 | [docs/agents/tasks.md](docs/agents/tasks.md) | **задачи — GitHub Issues + доска**: метки статусов, как брать и закрывать |
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
 | [docs/agents/notes.md](docs/agents/notes.md), [scripts.md](docs/agents/scripts.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры; **команды и флоу `agent.sh`**; облачное окружение |
-| [docs/agents/project-structure.md](docs/agents/project-structure.md) | модули, что где лежит, куда класть новое |
+| [docs/agents/project-structure.md](docs/agents/project-structure.md), [feature-map.md](docs/agents/feature-map.md) | модули, куда класть новое; где лежит каждая фича |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется |
 | [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |

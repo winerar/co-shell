@@ -114,3 +114,5 @@
 - (11-12) Roborazzi-витрина `components_*` обрезается высотой экрана Robolectric: новое внизу `ComponentsCatalog` в эталон не
   попадает — новому компоненту отдельный снимок (так `row_group_*` в `CatalogScreenshotTest`).
 - (11-12) Цвета палитр на досках писать `rgb(…)`: `mockup_theme.py` перекрашивает только `#hex` (так доски #105).
+- (11-12) `agent.sh test <модуль> Feedback` — «No tests found»: фильтр Gradle — шаблон, нужен `'*Feedback*'`. Число `Tests:` в выводе — по
+  модулю целиком из старых XML, свой тест проверять по файлу `build/test-results/.../TEST-*<Класс>.xml`.

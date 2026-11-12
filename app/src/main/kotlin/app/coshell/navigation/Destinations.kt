@@ -114,3 +114,31 @@ data class TemplateEditDestination(val templateId: String? = null) {
         const val ARG_TEMPLATE_ID = "templateId"
     }
 }
+
+@Serializable
+data object BudgetsDestination
+
+/** One envelope (#183): the limit on [categoryId] in [year]-[month], its categories and operations. */
+@Serializable
+data class BudgetDetailDestination(val categoryId: String, val year: Int, val month: Int) {
+    companion object {
+        // SavedStateHandle keys; must match the property names.
+        const val ARG_CATEGORY_ID = "categoryId"
+        const val ARG_YEAR = "year"
+        const val ARG_MONTH = "month"
+    }
+}
+
+/**
+ * Limit editor (#103). `categoryId == null` — a new limit; the change applies from [year]-[month] on,
+ * earlier months keep their limit.
+ */
+@Serializable
+data class BudgetEditDestination(val categoryId: String? = null, val year: Int, val month: Int) {
+    companion object {
+        // SavedStateHandle keys; must match the property names.
+        const val ARG_CATEGORY_ID = "categoryId"
+        const val ARG_YEAR = "year"
+        const val ARG_MONTH = "month"
+    }
+}

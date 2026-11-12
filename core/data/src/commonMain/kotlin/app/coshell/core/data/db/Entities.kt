@@ -89,15 +89,22 @@ data class TransactionEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+/**
+ * Limit of a category or a folder. [month] (`YYYY-MM`) is the first month it applies to — the name is
+ * kept from v1, where a limit was for one month (synced fields are never renamed). Schema v8 added
+ * [note], [rollover] and [lastMonth] (`YYYY-MM`, inclusive; `NULL` — no end).
+ */
 @Serializable
 @Entity(tableName = "budgets", indices = [Index("category_id", "month")])
 data class BudgetEntity(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "category_id") val categoryId: String,
-    /** `YYYY-MM`. */
     val month: String,
     @ColumnInfo(name = "limit_minor") val limitMinor: Long,
     val currency: String,
+    val note: String? = null,
+    @ColumnInfo(defaultValue = "0") val rollover: Boolean = false,
+    @ColumnInfo(name = "last_month") val lastMonth: String? = null,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
@@ -118,6 +125,21 @@ data class TemplateEntity(
     @ColumnInfo(name = "category_id") val categoryId: String?,
     val note: String,
     @ColumnInfo(name = "sort_order") val sortOrder: Int,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+
+/**
+ * One family setting (schema v9, #122): [id] is the key (`report_currencies`, `month_start_day`),
+ * [value] its text form — parsed by `RoomFamilySettings`. Synced like the other rows (`kind` = `setting`).
+ */
+@Serializable
+@Entity(tableName = "settings")
+data class SettingEntity(
+    @PrimaryKey val id: String,
+    val value: String,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,

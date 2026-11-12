@@ -3,6 +3,7 @@ package app.coshell.core.data.sync
 import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.createInMemoryCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
+import app.coshell.core.data.repository.RoomFamilySettings
 import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
@@ -20,6 +21,7 @@ class Phone(member: String, server: RemoteStore, startMs: Long) {
     val accounts = RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
     val transactions = RoomTransactionRepository(db.transactionDao(), stamper)
     val templates = RoomTemplateRepository(db.templateDao(), stamper)
+    val settings = RoomFamilySettings(db.settingDao(), stamper)
     val engine = SyncEngine(db.syncDao(), server, clock)
 
     fun tick(ms: Long = 1_000) { nowMs += ms }

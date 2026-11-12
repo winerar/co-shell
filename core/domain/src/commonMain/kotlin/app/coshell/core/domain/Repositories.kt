@@ -2,12 +2,10 @@ package app.coshell.core.domain
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
-import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Transaction
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.YearMonth
 import kotlin.time.Instant
 
 // Repository contracts. Implementations live in core:data (Room). Deletes are soft
@@ -57,12 +55,6 @@ interface TransactionRepository {
     /** Number of live transactions that reference the account (as source or target). */
     suspend fun countForAccount(accountId: String): Int
     suspend fun countForCategory(categoryId: String): Int
-}
-
-interface BudgetRepository {
-    fun observeBudgets(month: YearMonth): Flow<List<Budget>>
-    suspend fun saveBudget(budget: Budget)
-    suspend fun deleteBudget(id: String)
 }
 
 /** Full local backup as JSON (manual now, weekly automatic in stage 4). */

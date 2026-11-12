@@ -11,13 +11,14 @@ import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomDataWipeRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
+import app.coshell.core.data.repository.RoomFamilySettings
 import app.coshell.core.data.repository.RoomImportRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.BackupRepository
-import app.coshell.core.domain.BudgetRepository
+import app.coshell.core.domain.budgets.BudgetRepository
 import app.coshell.core.domain.templates.ApplyTemplateUseCase
 import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase
@@ -36,6 +37,8 @@ import app.coshell.core.domain.WipeAllDataUseCase
 import app.coshell.core.domain.importer.ImportRepository
 import app.coshell.core.domain.importer.wallet.WalletImportUseCase
 import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.settings.MonthStartSettings
+import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.IdGenerator
 import app.coshell.importer.wallet.ImportAccountColors
 import dagger.Module
@@ -75,6 +78,17 @@ object DataModule {
     @Provides @Singleton
     fun provideBudgetRepository(db: CoShellDatabase, stamper: WriteStamper): BudgetRepository =
         RoomBudgetRepository(db.budgetDao(), stamper)
+
+    /** Family settings (#122): synced rows in Room, one object for every setting interface. */
+    @Provides @Singleton
+    fun provideFamilySettings(db: CoShellDatabase, stamper: WriteStamper): RoomFamilySettings =
+        RoomFamilySettings(db.settingDao(), stamper)
+
+    @Provides
+    fun provideReportCurrencySettings(settings: RoomFamilySettings): ReportCurrencySettings = settings
+
+    @Provides
+    fun provideMonthStartSettings(settings: RoomFamilySettings): MonthStartSettings = settings
 
     @Provides @Singleton
     fun provideTemplateRepository(db: CoShellDatabase, stamper: WriteStamper): TemplateRepository =

@@ -35,6 +35,8 @@ internal data class BackupFile(
     val manualRates: List<ManualRateDto> = emptyList(),
     /** Since schema v7. */
     val templates: List<TemplateDto> = emptyList(),
+    /** Since schema v9: family settings (#122), key → text value as in the `settings` table. */
+    val settings: List<SettingDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -136,11 +138,25 @@ internal fun Transaction.toDto() = TransactionDto(
 )
 
 @Serializable
-internal data class BudgetDto(val id: String, val categoryId: String, val month: String, val limit: MoneyDto) {
-    fun toModel() = Budget(id, categoryId, YearMonth.parse(month), limit.toModel())
+internal data class BudgetDto(
+    val id: String,
+    val categoryId: String,
+    /** First month of the limit (`YYYY-MM`); the name is kept from the one-month limits of older files. */
+    val month: String,
+    val limit: MoneyDto,
+    /** Since schema v8. */
+    val note: String? = null,
+    val rollover: Boolean = false,
+    val lastMonth: String? = null,
+) {
+    fun toModel() = Budget(
+        id, categoryId, YearMonth.parse(month), limit.toModel(),
+        note?.takeIf { it.isNotBlank() }, rollover, lastMonth?.let { YearMonth.parse(it) },
+    )
 }
 
-internal fun Budget.toDto() = BudgetDto(id, categoryId, month.toString(), limit.toDto())
+internal fun Budget.toDto() =
+    BudgetDto(id, categoryId, startMonth.toString(), limit.toDto(), note, rollover, lastMonth?.toString())
 
 /** `1 from = rate to` on [date] (`YYYY-MM-DD`); [rate] is a plain decimal string, never a JSON number. */
 @Serializable
@@ -173,3 +189,7 @@ internal data class TemplateDto(
 internal fun TransactionTemplate.toDto() = TemplateDto(
     id, name, type.name, accountId, currency.value, amount?.amountMinor, categoryId, toAccountId, note, sortOrder,
 )
+
+/** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */
+@Serializable
+internal data class SettingDto(val key: String, val value: String)

@@ -54,4 +54,8 @@ object Sizes {
     val statusChipHeight = 24.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
     val timelineDot = 12.dp
+    /** Bullet bar of a budget envelope (CoShellBullet, #103); [bulletLarge] — the month total, [bulletSmall] — a limit inside a folder. */
+    val bullet = 8.dp
+    val bulletLarge = 10.dp
+    val bulletSmall = 5.dp
 }

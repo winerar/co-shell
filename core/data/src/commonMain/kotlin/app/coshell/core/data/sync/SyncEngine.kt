@@ -75,7 +75,10 @@ class SyncEngine(
             pending.manualRates.mapTo(this, SyncCodec::encode)
             pending.templates.mapTo(this, SyncCodec::encode)
         }
-        records.chunked(PUSH_CHUNK).forEach { chunk ->
+        // Settings go in their own last commit (#122): a commit is all-or-nothing, and until the owner
+        // publishes rules that know `setting`, only that commit fails — the budget data still goes through.
+        val settings = pending.settings.map(SyncCodec::encode)
+        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK)).forEach { chunk ->
             try {
                 remote.push(chunk)
             } catch (e: ApiException) {
@@ -84,7 +87,7 @@ class SyncEngine(
             }
             dao.clearSent(chunk)
         }
-        return records.size
+        return records.size + settings.size
     }
 
     private fun List<RemoteRecord>.toRows(): PulledRows {
@@ -97,6 +100,7 @@ class SyncEngine(
             budgets = of(SyncKind.BUDGET, SyncCodec::budget),
             manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate),
             templates = of(SyncKind.TEMPLATE, SyncCodec::template),
+            settings = of(SyncKind.SETTING, SyncCodec::setting),
         )
     }
 

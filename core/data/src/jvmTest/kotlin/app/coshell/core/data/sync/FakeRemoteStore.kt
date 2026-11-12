@@ -21,6 +21,8 @@ class FakeRemoteStore : RemoteStore {
         private set
     /** Daily write quota left; a push (one atomic commit) that does not fit fails like Firestore. */
     var writesLeft = Int.MAX_VALUE
+    /** Kinds the published rules do not know yet: a push with any of them fails as a whole, like Firestore. */
+    var rejectedKinds: Set<SyncKind> = emptySet()
 
     val records: Collection<RemoteRecord> get() = docs.values
 
@@ -39,6 +41,7 @@ class FakeRemoteStore : RemoteStore {
     override suspend fun push(records: List<SyncRecord>) {
         pushCalls++
         if (failNextPush) { failNextPush = false; error("offline") }
+        if (records.any { it.kind in rejectedKinds }) throw ApiException(403, "PERMISSION_DENIED", "Missing or insufficient permissions.")
         if (records.size > writesLeft) throw ApiException(429, "RESOURCE_EXHAUSTED", "Quota exceeded.")
         writesLeft -= records.size
         serverClock += 10

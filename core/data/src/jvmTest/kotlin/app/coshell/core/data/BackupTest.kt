@@ -56,7 +56,11 @@ class BackupTest {
         )
         source.transactions.saveTransaction(transfer)
         source.transactions.saveTransaction(expense)
-        source.budgets.saveBudget(Budget("b", "kids", YearMonth(2026, 11), Money(30_000_00, rub)))
+        source.budgets.applyBudgets(
+            save = listOf(
+                Budget("b", "kids", YearMonth(2026, 11), Money(30_000_00, rub), "Кружки до 10-го", rollover = true, lastMonth = YearMonth(2027, 5)),
+            ),
+        )
         source.transactions.saveTransaction(
             Transaction("gone", TransactionType.EXPENSE, "rub", Money(1, rub), Instant.parse("2026-11-01T00:00:00Z")),
         )
@@ -73,7 +77,7 @@ class BackupTest {
         )
         assertEquals(listOf(expense, transfer), target.transactions.observeTransactions().first())
         assertEquals(source.categories.getCategory("kids"), target.categories.getCategory("kids"))
-        assertEquals(1, target.budgets.observeBudgets(YearMonth(2026, 11)).first().size)
+        assertEquals(source.budgets.getBudgets(), target.budgets.getBudgets())
 
         // Importing the same file again does not duplicate anything.
         target.backup.importJson(json)
@@ -127,7 +131,7 @@ class BackupTest {
                 categoryId = "new-fruit",
             ),
         )
-        target.budgets.saveBudget(Budget("b", "new-food", YearMonth(2026, 11), Money(1000, rub)))
+        target.budgets.applyBudgets(save = listOf(Budget("b", "new-food", YearMonth(2026, 11), Money(1000, rub))))
 
         target.backup.importJson(json)
 
@@ -136,7 +140,7 @@ class BackupTest {
         assertEquals(setOf("old-food", "old-gift-in", "old-fruit", "new-gift-out", "new-veg"), ids)
         assertEquals("old-food", target.categories.getCategory("new-veg")?.parentId)
         assertEquals("old-fruit", target.transactions.getTransaction("t")?.categoryId)
-        assertEquals("old-food", target.budgets.observeBudgets(YearMonth(2026, 11)).first().single().categoryId)
+        assertEquals("old-food", target.budgets.getBudgets().single().categoryId)
 
         // Restoring again changes nothing.
         target.backup.importJson(json)

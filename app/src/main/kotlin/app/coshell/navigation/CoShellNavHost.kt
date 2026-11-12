@@ -15,30 +15,32 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import app.coshell.core.designsystem.components.CoShellSheet
-import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
-import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
-import app.coshell.importer.wallet.WalletImportRoute
+import app.coshell.budgets.detail.BudgetDetailRoute
+import app.coshell.budgets.edit.BudgetEditRoute
+import app.coshell.budgets.list.BudgetsRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
+import app.coshell.core.designsystem.components.CoShellSheet
+import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.currencies.list.ReportCurrenciesRoute
 import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
 import app.coshell.feedback.detail.FeedbackDetailRoute
 import app.coshell.home.HomeActions
 import app.coshell.home.HomeRoute
+import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.rates.list.RatesRoute
 import app.coshell.settings.SettingsRoute
-import app.coshell.wipe.WipeDataRoute
 import app.coshell.shake.ShakeEffect
+import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
-import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.transactions.edit.TransactionEditRoute
 import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
@@ -47,6 +49,8 @@ import app.coshell.update.UpdateRoute
 import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
 import app.coshell.update.notice.UpdatePill
+import app.coshell.wipe.WipeDataRoute
+import kotlinx.datetime.number
 
 @Composable
 fun CoShellNavHost(
@@ -141,6 +145,33 @@ fun CoShellNavHost(
         composable<TemplateEditDestination> {
             TemplateEditRoute(onDone = { navController.popBackStack() })
         }
+        composable<BudgetsDestination> {
+            BudgetsRoute(
+                onBack = { navController.popBackStack() },
+                onEdit = { id, month ->
+                    navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) { launchSingleTop = true }
+                },
+                onOpen = { id, month ->
+                    navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
+                },
+            )
+        }
+        composable<BudgetDetailDestination> {
+            BudgetDetailRoute(
+                onBack = { navController.popBackStack() },
+                onEditLimit = { id, month -> navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) },
+                // A limit inside the folder: its own envelope on top; back returns to the folder.
+                onOpenEnvelope = { id, month -> navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) },
+                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+            )
+        }
+        composable<BudgetEditDestination> {
+            BudgetEditRoute(
+                onDone = { navController.popBackStack() },
+                // A limit inside the folder: its own editor on top; back returns to the folder.
+                onOpenCategory = { id, month -> navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) },
+            )
+        }
         composable<AccountsDestination> {
             AccountsRoute(
                 onAccountClick = { navController.navigate(AccountEditDestination(it)) },
@@ -154,6 +185,7 @@ fun CoShellNavHost(
             MoreScreen(
                 MoreActions(
                     onCategories = { navController.navigate(CategoriesDestination) },
+                    onBudgets = { navController.navigate(BudgetsDestination) },
                     onRates = { navController.navigate(RatesDestination) },
                     onFamily = { navController.navigate(FamilyDestination) },
                     onBackup = { navController.navigate(BackupDestination) },

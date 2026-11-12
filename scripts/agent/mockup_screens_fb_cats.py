@@ -10,9 +10,9 @@ from mockup_bricks import *  # noqa: F401,F403
 
 FEEDBACK = [
     (181, 'Отзыв #181 · категории и папки различимы с первого взгляда',
-     'Правило владельца: разные сущности в одном списке всегда различимы. Предлагаю В: папка — скруглённый квадрат '
+     'Правило владельца: разные сущности в одном списке всегда различимы. Выбран В (2026-11-12): папка — скруглённый квадрат '
      'со значком папки и числом, категория — круг. Форма работает везде, где они встречаются (шторка ввода, лимиты, отчёты), '
-     'а список «Категорий» почти не меняется. А — папка карточкой с вложенными строками; Б — папки становятся заголовками групп.'),
+     'а список «Категорий» почти не меняется.'),
     (105, 'Отзыв #105 · различимость цветов категорий и счетов',
      'Замер ΔE2000 (≥ 10 — различимы рядом): в тёмной теме 5 пар-близнецов, в светлой — 33 (тёмные оттенки пастели сливаются: '
      'blue/sky 2.6, amber/honey 3.6). Предлагаю Б: 24 цвета с разносом ≥ 10 в обеих темах, значок — заливка цветом и тёмный рисунок '
@@ -74,30 +74,6 @@ def cats_square():  # В — shape tells them apart, layout stays
     out += label('Без папки · 6') + group([row(n, '', circle(ic, c), chevron(), min_h=52) for n, ic, c in LOOSE[:4]])
     return cats_screen(out)
 
-
-def cats_nested():  # А — folder card with nested rows and a guide line
-    out = ''
-    for name, icon, col, cats in FOLDERS[:3]:
-        head = row('<b>%s</b>' % name, '%d категорий · 41 200 ARS в ноябре' % len(cats), square(icon, col, None, 40), svg('more', MUTED, 18), min_h=60)
-        kids = ''.join('<div style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px 0 34px; position: relative;">'
-                       '<span style="position: absolute; left: 33px; top: 0; bottom: 0; width: 2px; background: %s;"></span>'
-                       '<span style="width: 14px; height: 2px; background: %s; flex: none;"></span>%s<span style="font-size: 14px; flex-grow: 1;">%s</span>%s</div>'
-                       % (rgbc(col), rgbc(col), circle(icon, col, 26), c, chevron()) for c in cats)
-        out += card(head + '<div style="padding-bottom: 6px;">%s</div>' % kids, extra='margin-bottom: 8px;')
-    return cats_screen(out)
-
-
-def cats_headers():  # Б — folders are group headers (К4) over row cards (К5)
-    out = ''
-    for name, icon, col, cats in FOLDERS[:4]:
-        out += ('<div style="display: flex; align-items: center; gap: 8px; margin: 14px 4px 8px;">%s<span style="font-size: 13px; font-weight: 600; '
-                'letter-spacing: 0.04em; text-transform: uppercase; color: %s; flex-grow: 1;">%s · %d</span>%s</div>'
-                % (square(icon, col, None, 22), INK2, name, len(cats), svg('more', MUTED, 16)))
-        out += group([row(c, '', circle(icon, col, 30), '', min_h=46) for c in cats])
-    return cats_screen(out)
-
-
-# ---- #105 · colour distinctness -------------------------------------------------------------------------------
 
 def _pal():
     with open(_PAL, encoding='utf-8') as f:
@@ -206,9 +182,7 @@ def swipe_b():
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Fb181V', 'В · папка — квадрат с числом, категория — круг (рекомендую)', cats_square, 181),
-    ('Fb181A', 'А · папка карточкой, вложенные строки', cats_nested, 181),
-    ('Fb181B', 'Б · папки — заголовки групп', cats_headers, 181),
+    ('Fb181V', 'В · папка — квадрат с числом, категория — круг (выбрано)', cats_square, 181),
     ('Fb105Now', 'Замер сейчас: пары-близнецы', colors_now, 105),
     ('Fb105B', 'Б · 24 различимых цвета (рекомендую)', colors_24, 105),
     ('Fb105V', 'В · 16 основных + оттенки', colors_16, 105),

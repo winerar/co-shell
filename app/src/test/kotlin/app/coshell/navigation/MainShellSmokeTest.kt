@@ -111,7 +111,7 @@ class MainShellSmokeTest {
 
     @Test
     fun `screen is visible above a bottom bar that hugs the bottom edge`() {
-        compose.onNodeWithText(HOME_ACCOUNT).assertIsDisplayed()
+        compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
         val screen = compose.onRoot().getBoundsInRoot()
         val add = compose.onNodeWithContentDescription(string(R.string.transaction_add)).getBoundsInRoot()
         val height = screen.bottom - screen.top
@@ -128,7 +128,7 @@ class MainShellSmokeTest {
         tab(R.string.nav_more)
         compose.onNodeWithText(string(R.string.categories_title)).assertIsDisplayed()
         tab(R.string.nav_home)
-        compose.onNodeWithText(HOME_ACCOUNT).assertIsDisplayed()
+        compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
     }
 
     @Test
@@ -187,7 +187,7 @@ class MainShellSmokeTest {
         compose.onNodeWithText(TRANSACTION_CATEGORY).assertIsDisplayed()
         compose.onRoot().performTouchInput { swipeRight() }
         compose.waitForIdle()
-        compose.onNodeWithText(HOME_ACCOUNT).assertIsDisplayed()
+        compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
     }
 
     /** «Ещё» → «Настройки»: the row is below the tiles, so the grid scrolls to it first (it is lazy). */
@@ -211,7 +211,8 @@ class MainShellSmokeTest {
     private operator fun Dp.div(n: Int) = Dp(value / n)
 
     private companion object {
-        const val HOME_ACCOUNT = "Домашняя карта"
+        /** Title of the second tile on «Обзор» (no rate issues in [HOME]). */
+        const val HOME_TILE = "Без категории"
         const val TRANSACTION_CATEGORY = "Кафе"
         const val ACCOUNT = "Наличные"
         const val INNER = "Внутренний экран"
@@ -219,7 +220,7 @@ class MainShellSmokeTest {
         val HOME = HomeUiState(
             totals = listOf("1 310,50 USD"),
             rateDate = LocalDate(2026, 11, 9),
-            accounts = listOf(HomeUiState.AccountRow("1", HOME_ACCOUNT, "120 800,50 ₽", isNegative = false)),
+            accounts = listOf(HomeUiState.AccountRow("1", "Домашняя карта", "120 800,50 ₽", isNegative = false)),
         )
         val TRANSACTIONS = TransactionsUiState(
             days = listOf(

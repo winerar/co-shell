@@ -41,6 +41,9 @@ import app.coshell.family.FamilyUiState
 import app.coshell.rates.list.RatesActions
 import app.coshell.rates.list.RatesScreen
 import app.coshell.rates.list.ratesPreviewSample
+import app.coshell.currencies.list.ReportCurrenciesActions
+import app.coshell.currencies.list.ReportCurrenciesScreen
+import app.coshell.currencies.list.reportCurrenciesPreviewSample
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.home.homePreviewSample
@@ -148,6 +151,15 @@ class ScreensScreenshotTest {
 
     @Test
     fun `rates dark`() = shot("rates_dark", dark = true) { RatesScreen(ratesPreviewSample, RatesActions()) }
+
+    /** Board `ReportCurrencies`: the balance preview hero over the list, main currency outlined. */
+    @Test
+    fun `report currencies light`() = shot("report_currencies_light") { ReportCurrenciesScreen(reportCurrenciesPreviewSample, ReportCurrenciesActions()) }
+
+    @Test
+    fun `report currencies dark`() = shot("report_currencies_dark", dark = true) {
+        ReportCurrenciesScreen(reportCurrenciesPreviewSample, ReportCurrenciesActions())
+    }
 
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {

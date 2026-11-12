@@ -7,6 +7,8 @@ data class ReportCurrenciesUiState(
     val currencies: List<String> = emptyList(),
     /** Open "add" dialog, `null` when closed. */
     val adding: AddCurrencyForm? = null,
+    /** The total balance in each of [currencies], main first, as «Обзор» will show it; empty — no accounts. */
+    val preview: List<String> = emptyList(),
 ) {
     val canRemove: Boolean get() = currencies.size > 1
 }

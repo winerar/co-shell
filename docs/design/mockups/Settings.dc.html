@@ -97,7 +97,7 @@ function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_K
 class Component extends DCLogic {
   /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
   componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
-  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; v.coPal = CO_NOW.pal; v.coMode = CO_NOW.dark ? 'тёмная' : 'светлая'; return v; }/*co-hooks-end*/
   __coRender() {
     var s = {};
     try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }

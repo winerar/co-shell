@@ -41,9 +41,9 @@ usage() {
                           намеренной смены вида; PNG — */src/test/screenshots/ (показать владельцу)
 
   Дизайн (холст)
-    mockups               пересобрать доски холста из генераторов
+    mockups               пересобрать доски холста из генераторов + проверка логики тапов
     render <доски…>       PNG досок без холста (тёмная, Вольт) в scratchpad
-    flows                 перерисовать доску «Воркфлоу»
+    flows                 перерисовать только доску «Воркфлоу» (mockups делает это сам)
 
   Данные
     backup [-o файл]      тестовый бэкап на ~9 тыс. операций
@@ -105,7 +105,7 @@ case "$cmd" in
         git status --short core/designsystem/src/test/screenshots app/src/test/screenshots
         [ $status -eq 0 ] && echo "OK: эталоны записаны — проверь PNG и покажи изменения владельцу" || echo "FAILED (exit $status)"
         exit $status ;;
-    mockups) exec python3 "$here/gen-mockups.py" "$@" ;;
+    mockups) python3 "$here/gen-mockups.py" "$@" && exec node "$here/check-mockups.js" docs/design/mockups/*.dc.html ;;
     render)
         out="$(scratch)/shots"; mkdir -p "$out"
         files=(); for b in "$@"; do files+=("docs/design/mockups/${b%.dc.html}.dc.html"); done

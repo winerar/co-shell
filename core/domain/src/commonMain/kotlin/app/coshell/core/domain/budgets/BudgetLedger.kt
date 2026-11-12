@@ -1,9 +1,11 @@
 package app.coshell.core.domain.budgets
 
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.model.Category
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
+import app.coshell.core.model.SystemCategories
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.core.model.isBalanceAdjustment
@@ -26,22 +28,26 @@ fun budgetCategoryIds(categoryId: String, categories: List<Category>): Set<Strin
  * an income put into the same category is a refund and reduces the spending. Transfers and
  * «Корректировка баланса» are not spending. Each operation is converted at the rate of its own day
  * (ARCHITECTURE §6), so a closed month does not change when rates move.
+ *
+ * Counted from day sums ([ReportDay], summed by SQLite — #262), so the budget screens never load the
+ * operations themselves; the constructor from operations sums them the same way (tests, small lists).
  */
-class BudgetLedger(transactions: List<Transaction>, private val book: RateBook, timeZone: TimeZone) {
+class BudgetLedger(days: List<ReportDay>, private val book: RateBook) {
+
+    constructor(transactions: List<Transaction>, book: RateBook, timeZone: TimeZone) :
+        this(transactions.filter { it.countsForBudget }.map { it.toBudgetDay(timeZone) }, book)
 
     private class Entry(val day: LocalDate, val amount: Money, val refund: Boolean)
 
     private val byCategory: Map<String, List<Entry>> = buildMap<String, MutableList<Entry>> {
-        for (t in transactions) {
-            val categoryId = t.categoryId ?: continue
-            if (!t.countsForBudget) continue
-            val entry = Entry(t.date.toLocalDateTime(timeZone).date, t.amount, refund = t.type == TransactionType.INCOME)
-            getOrPut(categoryId) { mutableListOf() } += entry
+        for (d in days) {
+            if (d.type == TransactionType.TRANSFER || SystemCategories.isAdjustment(d.categoryId)) continue
+            getOrPut(d.categoryId) { mutableListOf() } += Entry(d.day, d.amount, refund = d.type == TransactionType.INCOME)
         }
     }
 
     /** Day of the earliest operation with a category, `null` when there are none. */
-    val firstDay: LocalDate? = byCategory.values.flatten().minOfOrNull { it.day }
+    val firstDay: LocalDate? = byCategory.values.minOfOrNull { list -> list.minOf { it.day } }
 
     fun spent(categoryIds: Set<String>, period: BudgetPeriod, currency: CurrencyCode): Spent {
         var sum = Money.zero(currency)
@@ -77,6 +83,9 @@ class BudgetLedger(transactions: List<Transaction>, private val book: RateBook, 
         return total.scale(1, periods.size.toLong()).takeIf { it.isPositive }
     }
 }
+
+private fun Transaction.toBudgetDay(timeZone: TimeZone) =
+    ReportDay(date.toLocalDateTime(timeZone).date, checkNotNull(categoryId), type, amount)
 
 /** Transfers and «Корректировка баланса» are not spending; an income in a category is a refund (see [BudgetLedger]). */
 private val Transaction.countsForBudget: Boolean

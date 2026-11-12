@@ -34,7 +34,7 @@ class BudgetLedger(transactions: List<Transaction>, private val book: RateBook, 
     private val byCategory: Map<String, List<Entry>> = buildMap<String, MutableList<Entry>> {
         for (t in transactions) {
             val categoryId = t.categoryId ?: continue
-            if (t.type == TransactionType.TRANSFER || t.isBalanceAdjustment) continue
+            if (!t.countsForBudget) continue
             val entry = Entry(t.date.toLocalDateTime(timeZone).date, t.amount, refund = t.type == TransactionType.INCOME)
             getOrPut(categoryId) { mutableListOf() } += entry
         }
@@ -77,3 +77,16 @@ class BudgetLedger(transactions: List<Transaction>, private val book: RateBook, 
         return total.scale(1, periods.size.toLong()).takeIf { it.isPositive }
     }
 }
+
+/** Transfers and «Корректировка баланса» are not spending; an income in a category is a refund (see [BudgetLedger]). */
+private val Transaction.countsForBudget: Boolean
+    get() = categoryId != null && type != TransactionType.TRANSFER && !isBalanceAdjustment
+
+/**
+ * The operations behind a limit's numbers (envelope screen, #183): those of [categoryIds] in [period] that
+ * [BudgetLedger] counts — expenses and refunds, newest first.
+ */
+fun budgetOperations(transactions: List<Transaction>, categoryIds: Set<String>, period: BudgetPeriod, timeZone: TimeZone): List<Transaction> =
+    transactions
+        .filter { it.countsForBudget && it.categoryId in categoryIds && it.date.toLocalDateTime(timeZone).date in period }
+        .sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.id })

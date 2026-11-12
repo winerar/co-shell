@@ -43,6 +43,9 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   `scripts/test-rules.sh --kotlin` (+ `FirestoreEmulatorTest`); нужны Node 20+ и Java, эмулятор скачивается
   сам. Поменял `firestore.rules`, `database.rules.json` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
 - Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` (есть шаг в CI).
+- ViewModel с `flowOn(Dispatchers.Default)` в тесте: поток доезжает после `resetMain` и роняет **следующий** тест
+  (`UncaughtExceptionsBeforeTest`). Делай контекст подменяемым — `internal var work = Dispatchers.Default`, `state by lazy`
+  (`BudgetsViewModel`, `WalletImportViewModel`), в тесте `work = EmptyCoroutineContext`.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 
 ## Версии

@@ -6,6 +6,10 @@
     <string name="budgets_new">Новый лимит</string>
     <string name="budgets_previous_month">Прошлый месяц</string>
     <string name="budgets_next_month">Следующий месяц</string>
+    <string name="budgets_settings">Настройки бюджета</string>
+    <string name="budgets_start_hint">Месяц считается с %1$d-го числа. Удобно начинать в день зарплаты; в коротком месяце — с последнего дня.</string>
+    <string name="budgets_start_day">С %1$d-го числа</string>
+    <string name="budgets_start_default">по умолчанию — календарный месяц</string>
     <string name="budgets_period_days">%1$s — %2$s</string>
     <string name="budgets_left">Осталось</string>
     <string name="budgets_over">Перерасход</string>
@@ -42,11 +46,34 @@
     <string name="budgets_caption_ahead_last">обгоняете темп · осталось %1$s</string>
     <string name="budgets_caption_over">перерасход %1$s</string>
     <string name="budgets_caption_idle">не тратили</string>
+    <string name="budgets_caption_paid">оплачено полностью</string>
     <string name="budgets_fold">Свернуть папку</string>
     <string name="budgets_unfold">Развернуть папку</string>
     <string name="budgets_empty_title">Лимитов на этот месяц нет</string>
     <string name="budgets_empty_text">Задайте, сколько готовы тратить в месяц на папку или категорию, — приложение само покажет, сколько осталось, и предупредит, если траты обгоняют темп.</string>
     <string name="budgets_hint">Полоса — сколько потрачено, черта — где стоило бы быть сегодня. Лимит меняется с выбранного месяца, прошлые месяцы остаются как были.</string>
+
+    <!-- Экран конверта (#183) -->
+    <string name="budget_detail_title">%1$s · %2$s</string>
+    <string name="budget_detail_edit">Изменить лимит</string>
+    <string name="budget_detail_left">осталось</string>
+    <string name="budget_detail_over">перерасход</string>
+    <plurals name="budget_detail_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дня</item>
+    </plurals>
+    <string name="budget_detail_spent_of">Потрачено %1$s из %2$s</string>
+    <string name="budget_detail_pace">к сегодня должно быть ≈ %1$s</string>
+    <string name="budget_detail_note">Заметка</string>
+    <string name="budget_detail_categories">Категории</string>
+    <string name="budget_detail_spent">потрачено %1$s</string>
+    <string name="budget_detail_operations">Операции за %1$s</string>
+    <string name="budget_detail_no_operations">Операций по этому лимиту в этом месяце нет.</string>
+    <string name="budget_detail_no_limit_title">Лимита в этом месяце нет</string>
+    <string name="budget_detail_no_limit_text">Его убрали или он начинается с более позднего месяца. Задайте лимит — он будет действовать с этого месяца и дальше.</string>
+    <string name="budget_detail_set_limit">Задать лимит</string>
 
     <!-- Редактор лимита -->
     <string name="budget_edit_title">Лимит</string>

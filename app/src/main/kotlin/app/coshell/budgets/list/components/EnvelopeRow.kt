@@ -128,4 +128,5 @@ internal fun captionText(caption: Caption): String = when (caption) {
     }
     is Caption.Over -> stringResource(R.string.budgets_caption_over, caption.over)
     Caption.Idle -> stringResource(R.string.budgets_caption_idle)
+    Caption.Paid -> stringResource(R.string.budgets_caption_paid)
 }

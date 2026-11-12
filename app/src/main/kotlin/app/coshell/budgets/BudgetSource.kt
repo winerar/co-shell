@@ -6,6 +6,8 @@ import app.coshell.core.domain.budgets.BudgetCalculator
 import app.coshell.core.domain.budgets.BudgetLedger
 import app.coshell.core.domain.budgets.BudgetPeriod
 import app.coshell.core.domain.budgets.BudgetRepository
+import app.coshell.core.domain.budgets.budgetCategoryIds
+import app.coshell.core.domain.budgets.budgetOperations
 import app.coshell.core.domain.budgets.budgetPeriod
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
@@ -62,5 +64,9 @@ class BudgetSource @Inject constructor(
         fun calculator(): BudgetCalculator = BudgetCalculator(budgets, categories, ledger, book, startDay)
 
         fun period(month: YearMonth): BudgetPeriod = budgetPeriod(month, startDay)
+
+        /** The operations behind the limit on [categoryId] in [month] (the envelope screen), newest first. */
+        fun operations(categoryId: String, month: YearMonth): List<Transaction> =
+            budgetOperations(transactions, budgetCategoryIds(categoryId, categories), period(month), timeZone)
     }
 }

@@ -12,7 +12,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,6 +24,7 @@ import app.coshell.R
 import app.coshell.budgets.list.components.BudgetFilterChips
 import app.coshell.budgets.list.components.BudgetSummaryCard
 import app.coshell.budgets.list.components.EnvelopeRow
+import app.coshell.budgets.list.components.MonthStartDialog
 import app.coshell.budgets.list.components.MonthSwitch
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellButton
@@ -32,13 +37,25 @@ import app.coshell.ui.top.ScreenTopBar
 
 /**
  * «Бюджеты» (mockups `BudA`, `BudMany`): month switch, the month total, filter chips on a long list,
- * then the envelopes in one card — folders with their inner limits, which fold. A tap opens the limit editor.
+ * then the envelopes in one card — folders with their inner limits, which fold. A tap opens the envelope (#183).
+ * The gear («Настройки бюджета») picks the day the month starts on (#213).
  */
 @Composable
 fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
+    var settingsOpen by rememberSaveable { mutableStateOf(false) }
+    if (settingsOpen) {
+        MonthStartDialog(state.startDay, onPick = { actions.onStartDayChange(it); settingsOpen = false }, onDismiss = { settingsOpen = false })
+    }
     Scaffold(
         topBar = {
             ScreenTopBar(stringResource(R.string.budgets_title), onBack = actions.onBack) {
+                CoShellIconButton(onClick = { settingsOpen = true }) {
+                    Icon(
+                        painterResource(DesignR.drawable.ic_settings),
+                        stringResource(R.string.budgets_settings),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
                 CoShellIconButton(onClick = { actions.onEdit(null) }) {
                     Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.budgets_new))
                 }
@@ -84,14 +101,14 @@ private fun Envelopes(state: BudgetsUiState, actions: BudgetsActions, modifier: 
                 val expanded = envelope.categoryId !in state.collapsed
                 EnvelopeRow(
                     envelope,
-                    onClick = { actions.onEdit(envelope.categoryId) },
+                    onClick = { actions.onOpen(envelope.categoryId) },
                     expanded = if (foldable) expanded else null,
                     onToggle = { actions.onToggleFolder(envelope.categoryId) },
                 )
                 if (foldable && expanded) {
                     envelope.children.forEach { child ->
                         key(child.categoryId) {
-                            EnvelopeRow(child, onClick = { actions.onEdit(child.categoryId) }, inner = true)
+                            EnvelopeRow(child, onClick = { actions.onOpen(child.categoryId) }, inner = true)
                         }
                     }
                 }

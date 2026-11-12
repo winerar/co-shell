@@ -8,6 +8,8 @@ import kotlinx.datetime.YearMonth
 data class BudgetsUiState(
     val isLoading: Boolean = false,
     val month: YearMonth? = null,
+    /** Day the budget month starts on (family setting, 1..31); the gear changes it. */
+    val startDay: Int = 1,
     /** First and last day of the period when the month does not start on the 1st (payday); `null` — calendar month. */
     val periodDays: Pair<LocalDate, LocalDate>? = null,
     val summary: Summary? = null,
@@ -99,6 +101,8 @@ data class BudgetsUiState(
         data class Over(val over: String) : Caption
         /** «не тратили». */
         data object Idle : Caption
+        /** «оплачено полностью»: spent exactly the limit. */
+        data object Paid : Caption
     }
 
     companion object {

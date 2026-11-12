@@ -44,7 +44,8 @@ enum class SegmentTone { Choice, View }
 /**
  * Single-choice segments (К3): a pill-shaped track with equal segments and one pill that slides to the
  * selected one on the spatial spring. The pill is drawn behind the labels, so a change only redraws — no
- * relayout (performance.md). Swiping the content under it is the pager's job (#173), not this control's.
+ * relayout (performance.md). The track itself can be swiped; to swipe the content under it as well, give
+ * the content [segmentSwipe] with the same [swipe] — the pill then follows the finger (#173).
  */
 @Composable
 fun CoShellSegmented(
@@ -54,23 +55,28 @@ fun CoShellSegmented(
     modifier: Modifier = Modifier,
     tone: SegmentTone = SegmentTone.Choice,
     enabled: Boolean = true,
+    swipe: SegmentSwipe? = null,
 ) {
     val colors = MaterialTheme.colorScheme
     val pill = if (tone == SegmentTone.Choice) colors.primary else colors.secondaryContainer
     val ink = if (tone == SegmentTone.Choice) colors.onPrimary else colors.onSecondaryContainer
     val position by animateFloatAsState(selected.toFloat(), Motion.spatial(), label = "segmentPill")
     val count = labels.size.coerceAtLeast(1)
+    val ownSwipe = rememberSegmentSwipe()
+    val pillSwipe = swipe ?: ownSwipe
     Row(
         modifier = modifier
             .fillMaxWidth()
             .alpha(if (enabled) 1f else DISABLED_ALPHA)
             .background(colors.surfaceContainer, PillShape)
+            .swipeGesture(pillSwipe, selected, labels.size, onSelect, enabled, lean = false)
             .padding(Sizes.segmentInset)
             .drawBehind {
                 val width = size.width / count
+                val at = (position + pillSwipe.pillShift).coerceIn(0f, (count - 1).toFloat())
                 drawRoundRect(
                     color = pill,
-                    topLeft = Offset(width * position, 0f),
+                    topLeft = Offset(width * at, 0f),
                     size = Size(width, size.height),
                     cornerRadius = CornerRadius(size.height / 2f),
                 )

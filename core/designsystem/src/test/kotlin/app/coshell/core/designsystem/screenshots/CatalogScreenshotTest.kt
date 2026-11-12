@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
+import app.coshell.core.designsystem.catalog.ChartsCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
@@ -46,6 +47,13 @@ class CatalogScreenshotTest {
 
     @Test
     fun `components dark`() = shot("components_dark", dark = true) { ComponentsCatalog() }
+
+    /** #168: bars with the past period, columns by month, the ring and bullets. */
+    @Test
+    fun `charts dark`() = shot("charts_dark", dark = true) { ChartsCatalog() }
+
+    @Test
+    fun `charts light`() = shot("charts_light") { ChartsCatalog() }
 
     @Test
     fun `tokens light`() = shot("tokens_light") { TokensCatalog() }

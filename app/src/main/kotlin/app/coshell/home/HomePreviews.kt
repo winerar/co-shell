@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.data.sync.SyncIssueKind
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.budget.HomeBudget
 import app.coshell.home.sync.SyncBannerState

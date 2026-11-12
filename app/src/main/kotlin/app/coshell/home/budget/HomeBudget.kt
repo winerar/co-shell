@@ -5,7 +5,7 @@ import app.coshell.budgets.list.BudgetFilter
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.budgets.list.buildEnvelopes
 import app.coshell.budgets.list.buildSummary
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.domain.budgets.budgetPeriodOf
 import app.coshell.core.model.MoneyFormat
 import kotlinx.datetime.LocalDate

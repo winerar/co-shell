@@ -13,10 +13,10 @@ import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.splitAmount
-import app.coshell.core.designsystem.components.BulletTone
-import app.coshell.core.designsystem.components.CoShellBullet
+import app.coshell.core.designsystem.charts.BulletTone
+import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellTile
-import app.coshell.core.designsystem.components.bulletColor
+import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Spacing
 

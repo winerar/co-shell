@@ -3,7 +3,7 @@ package app.coshell.home.budget
 import app.coshell.budgets.BudgetSource
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType

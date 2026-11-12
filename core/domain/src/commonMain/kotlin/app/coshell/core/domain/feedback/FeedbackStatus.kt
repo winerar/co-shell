@@ -1,5 +1,7 @@
 package app.coshell.core.domain.feedback
 
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 
 /**
@@ -58,4 +60,18 @@ fun feedbackSteps(sentAt: Instant, status: FeedbackStatus?): List<FeedbackStep> 
             }
         }
     }
+}
+
+/** How long «Сделано в версии N» stays in «Мои отзывы» once N is installed (#174). */
+val FEEDBACK_DONE_KEPT: Duration = 14.days
+
+/**
+ * «Мои отзывы» drop the message by themselves (#174): done in a build that is installed already ([installedBuild]
+ * ≥ [FeedbackStatus.doneBuild]) and the status «Сделано» has been shown for [FEEDBACK_DONE_KEPT] since [FeedbackStatus.doneAt].
+ * Postponed, in work and closed messages stay; so does a done one without a date or a build.
+ */
+fun FeedbackStatus.isDoneAndSeen(now: Instant, installedBuild: Int): Boolean {
+    val build = doneBuild ?: return false
+    val at = doneAt ?: return false
+    return stage == FeedbackStage.DONE && installedBuild >= build && now - at >= FEEDBACK_DONE_KEPT
 }

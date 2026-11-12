@@ -10,10 +10,12 @@ import app.coshell.core.domain.budgets.BudgetFixtures.rates
 import app.coshell.core.domain.budgets.BudgetFixtures.tz
 import app.coshell.core.domain.budgets.BudgetFixtures.usd
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.model.Money
 import app.coshell.core.model.SystemCategories
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -135,5 +137,22 @@ class BudgetLedgerTest {
         assertNull(ledger().averageSpent(cafe, november, ars))
         assertNull(ledger(operation("cafe", ars(5_000), 11, 2)).averageSpent(cafe, november, ars))
         assertNull(ledger(operation("rent", ars(5_000), 10, 2)).averageSpent(cafe, november, ars))
+    }
+
+    @Test
+    fun `day sums from SQLite count like the operations themselves`() {
+        val nov3 = LocalDate(2026, 11, 3)
+        val days = listOf(
+            ReportDay(nov3, "cafe", TransactionType.EXPENSE, ars(10_000)),
+            ReportDay(nov3, "cafe", TransactionType.INCOME, ars(4_000)),
+            ReportDay(nov3, "cafe", TransactionType.TRANSFER, ars(7_000)),
+            ReportDay(nov3, SystemCategories.ADJUSTMENT_EXPENSE_ID, TransactionType.EXPENSE, ars(50_000)),
+            ReportDay(LocalDate(2026, 10, 31), "cafe", TransactionType.EXPENSE, ars(1_000)),
+        )
+        val ledger = BudgetLedger(days, RateBook(rates))
+
+        assertEquals(Spent(ars(6_000)), ledger.spent(cafe, budgetPeriod(november), ars))
+        assertEquals(LocalDate(2026, 10, 31), ledger.firstDay)
+        assertNull(BudgetLedger(days.drop(2).take(2), RateBook(rates)).firstDay)
     }
 }

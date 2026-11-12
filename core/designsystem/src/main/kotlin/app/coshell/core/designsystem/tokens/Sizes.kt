@@ -6,6 +6,8 @@ import androidx.compose.ui.unit.dp
 object Sizes {
     /** List row: at least the touch-friendly 56 dp; with a [badge] and Spacing.m above and below it is 64. */
     val rowMinHeight = 56.dp
+    /** Dense menu row («Ещё», #155): a [badgeSmall] with Spacing.s above and below fits in 52. */
+    val rowDenseMinHeight = 52.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
     /** Badge in an editor's header, beside the name: the category as it will look. */
@@ -50,6 +52,13 @@ object Sizes {
     val bottomBarAdd = 52.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */
     val actionBarButton = 48.dp
+    /** A currency code tile in a rates row («USD» on «Курсах валют»). */
+    val currencyChipWidth = 44.dp
+    val currencyChipHeight = 36.dp
+    /** The card-coloured ring that separates overlapping avatars (members on «Семье»). */
+    val avatarRing = 3.dp
+    /** A full-width pill under a hero card («Синхронизировать сейчас»). */
+    val wideButton = 54.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */

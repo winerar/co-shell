@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.currencies.list.components.AddCurrencyDialog
+import app.coshell.currencies.list.components.BalancePreviewCard
 import app.coshell.currencies.list.components.ReportCurrencyRow
 import app.coshell.ui.list.ActionRow
 import app.coshell.ui.top.ScreenTopBar
@@ -35,6 +36,7 @@ fun ReportCurrenciesScreen(state: ReportCurrenciesUiState, actions: ReportCurren
                     modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
                 )
             }
+            item(key = "preview") { BalancePreviewCard(state.preview) }
             itemsIndexed(state.currencies, key = { _, code -> code }) { index, code ->
                 ReportCurrencyRow(
                     code = code,

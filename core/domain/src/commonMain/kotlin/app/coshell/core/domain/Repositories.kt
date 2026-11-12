@@ -35,9 +35,13 @@ interface CategoryRepository {
 }
 
 data class TransactionFilter(
-    /** Matches both the source and the target account of transfers. */
-    val accountId: String? = null,
-    val categoryId: String? = null,
+    /** Only operations of these accounts, as the source or the target of a transfer; null — any account. */
+    val accountIds: Set<String>? = null,
+    /**
+     * Only operations in these categories; null — any. With [uncategorized] the two add up: «Еда» and
+     * «Без категории» show both.
+     */
+    val categoryIds: Set<String>? = null,
     /** Inclusive. */
     val from: Instant? = null,
     /** Exclusive. */
@@ -46,9 +50,20 @@ data class TransactionFilter(
     val type: TransactionType? = null,
     /** Only expenses and incomes without a category. */
     val uncategorized: Boolean = false,
+    /** Who added it ([Transaction.authorMemberId]); null — anyone. */
+    val author: AuthorFilter? = null,
     /** At most this many newest transactions; null — all. The list grows this window while scrolling. */
     val limit: Int? = null,
 )
+
+/** «Кто внёс» of the operations filter (#141). */
+sealed interface AuthorFilter {
+    /** Added on this phone's account: no author, or one that is not among [others]. */
+    data class Me(val others: Set<String>) : AuthorFilter
+
+    /** Added by this family member. */
+    data class Member(val id: String) : AuthorFilter
+}
 
 interface TransactionRepository {
     /** Newest first. */

@@ -1,5 +1,7 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.domain.AuthorFilter
+import app.coshell.core.domain.search.PeriodRange
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -47,28 +49,71 @@ class ListFilterTest {
     }
 
     @Test
-    fun periodAndAccountGoToRoomAndSearchDropsThePage() {
-        val today = LocalDate(2026, 11, 9)
-        val f = ListFilter(accountId = "card", period = ListFilter.Period.LAST_MONTH).toRepositoryFilter(200, today, zone)
-        assertEquals("card", f.accountId)
+    fun searchAlsoFindsPayeeAndLabels() {
+        val tagged = coto.copy(payee = "Café Martínez", labels = listOf("отпуск", "дети"))
+        assertTrue(ListFilter(query = "martínez").hit(tagged))
+        assertTrue(ListFilter(query = "отпуск").hit(tagged))
+        // Two labels are two fields: a query never matches across them.
+        assertFalse(ListFilter(query = "отпускдети").hit(tagged))
+    }
+
+    @Test
+    fun anAmountQueryComparesAmountsInsteadOfText() {
+        assertTrue(ListFilter(query = "=32000").hit())
+        assertTrue(ListFilter(query = "30000-40000").hit())
+        assertFalse(ListFilter(query = ">40000").hit())
+        val paidInUsdt = coto.copy(amount = Money(41_20, CurrencyCode("USDT")), originalAmount = Money(42_000_00, ars))
+        // Either amount may fit: the account's (41,20 USDT) or the receipt's (42 000 ARS).
+        assertTrue(ListFilter(query = "<50").hit(paidInUsdt))
+        assertTrue(ListFilter(query = "=42000").hit(paidInUsdt))
+        assertFalse(ListFilter(query = "100-1000").hit(paidInUsdt))
+    }
+
+    @Test
+    fun accountsAndCategoriesAreCheckedAndAddUp() {
+        assertTrue(ListFilter(accountIds = setOf("card", "cash")).hit())
+        assertFalse(ListFilter(accountIds = setOf("cash")).hit())
+        assertTrue(ListFilter(accountIds = setOf("cash")).hit(coto.copy(type = TransactionType.TRANSFER, categoryId = null, toAccountId = "cash", toAmount = coto.amount)))
+        assertTrue(ListFilter(categoryIds = setOf("food")).hit())
+        assertFalse(ListFilter(categoryIds = setOf("cafe")).hit())
+        assertTrue(ListFilter(categoryIds = setOf("cafe"), uncategorized = true).hit(coto.copy(categoryId = null)))
+    }
+
+    @Test
+    fun everythingButTheTextGoesToRoomAndAnyFilterDropsThePage() {
+        val october = PeriodRange.Preset.LAST_MONTH.range(LocalDate(2026, 11, 9))
+        val f = ListFilter(accountIds = setOf("card"), categoryIds = setOf("food"), period = october, who = ListFilter.Who.Me)
+            .toRepositoryFilter(200, zone, others = setOf("anya"))
+        assertEquals(setOf("card"), f.accountIds)
+        assertEquals(setOf("food"), f.categoryIds)
         assertEquals(LocalDateTime(2026, 10, 1, 0, 0).toInstant(zone), f.from)
         assertEquals(LocalDateTime(2026, 11, 1, 0, 0).toInstant(zone), f.to)
-        assertEquals(200, f.limit)
-        assertNull(ListFilter(query = "x").toRepositoryFilter(200, today, zone).limit)
+        assertEquals(AuthorFilter.Me(setOf("anya")), f.author)
+        assertNull(f.limit)
+        assertEquals(AuthorFilter.Member("anya"), ListFilter(who = ListFilter.Who.Member("anya")).toRepositoryFilter(200, zone).author)
+        assertNull(ListFilter(query = "x").toRepositoryFilter(200, zone).limit)
+        val plain = ListFilter().toRepositoryFilter(200, zone)
+        assertEquals(200, plain.limit)
+        assertNull(plain.accountIds)
+        assertNull(plain.categoryIds)
+    }
+
+    @Test
+    fun theRoomKeyIgnoresTypedLetters() {
+        assertEquals(ListFilter(query = "т").roomKey, ListFilter(query = "так").roomKey)
+        assertTrue(ListFilter(query = "т").roomKey != ListFilter().roomKey)
     }
 
     @Test
     fun uncategorizedKeepsOnlyExpensesAndIncomesWithoutCategory() {
-        val f = ListFilter.UncategorizedThisMonth
+        val today = LocalDate(2026, 11, 9)
+        val f = ListFilter.uncategorizedThisMonth(today)
         assertFalse(f.hit())
         assertTrue(f.hit(coto.copy(categoryId = null)))
         assertTrue(f.hit(coto.copy(type = TransactionType.INCOME, categoryId = null)))
         assertFalse(f.hit(coto.copy(type = TransactionType.TRANSFER, categoryId = null, toAccountId = "cash", toAmount = coto.amount)))
         assertTrue(f.isActive)
-        assertEquals(ListFilter.Period.THIS_MONTH, f.period)
-        // Room filters it (#261), so the list keeps its pages.
-        val room = f.toRepositoryFilter(200, LocalDate(2026, 11, 9), zone)
-        assertTrue(room.uncategorized)
-        assertEquals(200, room.limit)
+        assertEquals(PeriodRange.Preset.THIS_MONTH.range(today), f.period)
+        assertTrue(f.toRepositoryFilter(200, zone).uncategorized)
     }
 }

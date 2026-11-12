@@ -14,8 +14,6 @@
 - (11-12) Кончились минуты Actions: задачи падают за 2–4 с, `runner_id: 0`, логов нет (404), `billable` в API = 0 — это не код, а биллинг (#251).
 - (11-09) Чистая локальная `check assembleDebug` — ~3 мин; CPU по задачам: lint ~26%, KSP `core:data`
   дважды (android + jvm) ~65 с, `mergeExtDexDebug` ~45 с. Тесты выполняются быстро (~50 с суммарно).
-- (11-09) CI до ускорения: PR ~5 мин (из них `check` ~4), релиз на `main` ~10 мин (`check` 3.5 +
-  debug 1.7 + release 4). После PR winerar/co-shell#41 ожидается: правки документации ~1 мин, релиз ~6.
 - (11-09) `gradle/actions/setup-gradle` по умолчанию пишет кэш **только с ветки по умолчанию** (`main`) —
   поэтому `cache-read-only` переопределён, чтобы писал и `dev`.
 - (11-09) Configuration cache в CI сохраняется только с секретом `GRADLE_ENCRYPTION_KEY` (не задан).
@@ -122,3 +120,6 @@
   Release APK: `assets/dexopt/baseline.prof` из одних библиотек; шаблон `HSPLapp/coshell/**;->**(**)**` разворачивает AGP
   (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).
 - (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.
+- (11-12) `agent.sh test` берёт короткие имена модулей (`domain`, `data`, `app`), не `core:domain`; фильтр — шаблон Gradle (`'*BudgetLedger*'`).
+- (11-12) Имя теста в обратных кавычках с «ёлочками» не компилируется (`InvalidPathException` на `.class` лямбды в `runTest`) — в именах тестов только ASCII-знаки и кириллица без «».
+- (11-12) `CoShellSheet` вне навигации — в `Dialog(properties = CoShellSheetDialogProperties)` (так шторки фильтров #141); тело шторки — отдельная `ColumnScope`-функция, иначе Roborazzi его не снимет.

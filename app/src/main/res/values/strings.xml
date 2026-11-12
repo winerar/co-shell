@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Co-Shell</string>
 
     <string name="action_save">Сохранить</string>
@@ -21,21 +21,25 @@
     <string name="home_total_hide_breakdown">Скрыть разбивку</string>
     <string name="home_spending_title">Траты за %1$s</string>
     <string name="home_spending_rate_hint">Каждая трата — по курсу на её день</string>
-    <string name="home_accounts">Счета</string>
     <string name="home_spending_tile">Траты</string>
-    <string name="home_income_title">Доход</string>
-    <string name="home_income_none">Пока нет</string>
+    <string name="home_spending_without">без %1$s</string>
+    <string name="home_uncategorized_title">Без категории</string>
+    <!-- The number is shown big above the word, so "one" has no %d. -->
+    <plurals name="home_uncategorized_operations" tools:ignore="ImpliedQuantity">
+        <item quantity="one">операция</item>
+        <item quantity="few">операции</item>
+        <item quantity="many">операций</item>
+        <item quantity="other">операции</item>
+    </plurals>
     <string name="home_attention_title">Внимание</string>
-    <string name="home_attention_ok">Всё в порядке</string>
-    <string name="home_attention_missing_rates">Нет курса: %1$s</string>
-    <string name="home_attention_stale_rates">Курсы от %1$s</string>
+    <string name="home_attention_missing_rates">нет курса %1$s</string>
+    <string name="home_attention_stale_rates">курсы от %1$s</string>
     <plurals name="home_attention_uncategorized">
         <item quantity="one">%1$d операция без категории</item>
         <item quantity="few">%1$d операции без категории</item>
         <item quantity="many">%1$d операций без категории</item>
         <item quantity="other">%1$d операции без категории</item>
     </plurals>
-    <string name="home_accounts_excluded">%1$d не в общем балансе</string>
     <string name="home_recent">Последние операции</string>
     <string name="home_recent_all">Все</string>
     <string name="home_recent_empty">Операций пока нет — нажмите «+» внизу.</string>
@@ -56,6 +60,12 @@
     <string name="account_group_other">Другое</string>
     <string name="picker_recent">Недавние</string>
     <string name="picker_search">Найти счёт</string>
+    <plurals name="picker_account_count">
+        <item quantity="one">%1$d счёт</item>
+        <item quantity="few">%1$d счёта</item>
+        <item quantity="many">%1$d счетов</item>
+        <item quantity="other">%1$d счёта</item>
+    </plurals>
     <string name="search_clear">Очистить поиск</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>
@@ -74,7 +84,7 @@
     <string name="accounts_grouping_owner">Чьи</string>
     <string name="accounts_total">Всего в общем балансе</string>
     <string name="accounts_search">Поиск счёта</string>
-    <string name="transactions_search">Поиск: заметка, сумма, категория</string>
+    <string name="transactions_search">Поиск: заметка, получатель, сумма</string>
     <string name="filter_type">Тип</string>
     <string name="filter_all_types">Все типы</string>
     <string name="filter_expenses">Расходы</string>
@@ -88,6 +98,7 @@
     <string name="filter_period_last">Прошлый месяц</string>
     <string name="filter_uncategorized">Без категории</string>
     <string name="filter_uncategorized_clear">Убрать фильтр «Без категории»</string>
+    <string name="filter_clear">Убрать фильтр «%1$s»</string>
     <string name="filter_reset">Сбросить фильтры</string>
     <string name="transactions_nothing">Ничего не нашлось</string>
     <string name="action_duplicate">Дублировать</string>
@@ -204,11 +215,12 @@
     <string name="action_ok">OK</string>
 
     <string name="backup_title">Резервная копия</string>
-    <string name="backup_intro">Копия — один файл со всеми счетами, категориями и операциями. Сохраните его на Google Диск или отправьте себе: он пригодится при смене или сбросе телефона.</string>
+    <string name="backup_intro">Копия — один файл со всеми счетами, категориями, операциями и ручными курсами. Пригодится при смене или сбросе телефона.</string>
     <string name="backup_export">Сохранить копию</string>
-    <string name="backup_export_hint">Выберите папку или Google Диск</string>
-    <string name="backup_import">Восстановить из копии</string>
-    <string name="backup_import_hint">Записи из файла добавятся к текущим</string>
+    <string name="backup_export_hint">в папку или на Диск</string>
+    <string name="backup_import">Восстановить</string>
+    <string name="backup_manual">Вручную</string>
+    <string name="backup_import_hint">записи добавятся к текущим</string>
     <string name="backup_import_confirm_title">Восстановить из копии?</string>
     <string name="backup_import_confirm_text">Записи из файла добавятся в приложение, а совпадающие с ними — заменятся версией из файла. Остальные данные останутся как есть.</string>
     <string name="backup_import_confirm">Восстановить</string>
@@ -232,8 +244,15 @@
     <string name="transactions_delete_selected">Удалить · %d</string>
     <string name="transaction_copy_today">Копия · сегодня</string>
     <string name="action_undo">Отменить</string>
-    <string name="settings_title">Настройки</string>
-    <string name="settings_menu_hint">Тема, валюты отчётов, встряхивание, обновление</string>
+    <string name="appearance_title">Внешний вид</string>
+    <string name="appearance_menu_hint">%1$s · %2$s</string>
+    <string name="appearance_input_section">Ввод</string>
+    <string name="more_section_money">Деньги</string>
+    <string name="more_section_family_data">Семья и данные</string>
+    <string name="more_section_app">Приложение</string>
+    <string name="more_version_title">Co-Shell %1$s</string>
+    <string name="more_version_build">Сборка %1$d</string>
+    <string name="more_version_available">Есть сборка %1$d · что нового</string>
     <string name="theme_title">Тема</string>
     <string name="theme_system">Системная</string>
     <string name="theme_light">Светлая</string>
@@ -320,7 +339,6 @@
     <string name="update_open">Обновить</string>
     <string name="update_pill">Версия %1$d · Обновить</string>
     <string name="update_pill_dismiss">Скрыть до следующего запуска</string>
-    <string name="update_settings_available">Доступна версия %1$d</string>
     <string name="crash_notice_title">Приложение закрылось с ошибкой</string>
     <string name="crash_notice_text">Отправить отчёт разработчику? Уйдут только техническое описание ошибки и данные телефона — без сумм и названий.</string>
     <string name="crash_notice_send">Отправить</string>
@@ -332,20 +350,21 @@
     <string name="rates_menu_hint">Обновляются сами раз в день</string>
 
     <string name="report_currencies_title">Валюты отчётов</string>
-    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Первая — основная: она крупнее, и к ней приведены «Курсы валют».</string>
+    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Тап — сделать основной.</string>
+    <string name="report_currencies_preview">Общий баланс · так будет на «Обзоре»</string>
     <string name="report_currencies_main">Основная</string>
-    <string name="report_currencies_make_main">Нажмите, чтобы сделать основной</string>
     <string name="report_currencies_add">Добавить валюту</string>
     <string name="report_currencies_menu_hint">Основная: %1$s</string>
     <string name="rates_current">Курсы на сегодня</string>
-    <string name="rates_current_hint">Тап по строке — задать курс вручную</string>
+    <string name="rates_current_hint">тап — задать вручную</string>
+    <string name="rates_accounts">Валюты ваших счетов</string>
     <string name="rates_line">1 %1$s = %2$s %3$s</string>
     <string name="rates_no_rate">Курса пока нет</string>
     <string name="rates_no_currencies">Здесь появятся курсы валют ваших счетов и операций</string>
     <string name="rates_from_date">на %1$s</string>
     <string name="rates_origin_manual">вручную</string>
     <string name="rates_origin_cross">через USD</string>
-    <string name="rates_last_download">Загружено: курсы на %1$s, источник %2$s</string>
+    <string name="rates_last_download">Загружено %1$s · %2$s</string>
     <string name="rates_never_downloaded">Курсы ещё не загружались — нужен интернет</string>
     <string name="rates_refresh">Обновить сейчас</string>
     <string name="rates_refresh_running">Загружаем курсы…</string>
@@ -354,7 +373,7 @@
     <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет и попробуйте ещё раз</string>
     <string name="rates_manual">Ручные курсы</string>
     <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного курса этой пары</string>
-    <string name="rates_manual_since">с %1$s</string>
+    <string name="rates_manual_since">вручную · с %1$s · важнее загруженного</string>
     <string name="rates_manual_add">Добавить курс</string>
     <string name="rates_manual_title">Курс вручную</string>
     <string name="rates_manual_from">Валюта</string>
@@ -367,6 +386,7 @@
     <string name="rates_manual_delete_title">Удалить ручной курс?</string>
     <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
     <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
+    <string name="rates_sources_daily">Курсы обновляются сами раз в день.</string>
     <string name="rates_attribution">Rates By Exchange Rate API</string>
 
     <string name="account_shared">Общий счёт</string>
@@ -378,14 +398,23 @@
     <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
-    <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
+    <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю, хранятся последние 8.</string>
     <string name="auto_backup_pending">Первая копия скоро появится</string>
-    <string name="auto_backup_last">Последняя копия: %1$s</string>
+    <string name="auto_backup_last">Последняя: %1$s · раз в неделю</string>
     <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
-    <string name="auto_backup_disable">Выключить автокопии</string>
+    <string name="auto_backup_off_title">Автокопия выключена</string>
+    <string name="auto_backup_failed_title">Копия не сохранилась</string>
+    <string name="auto_backup_folder_change">тап — выбрать другую</string>
+    <string name="auto_backup_folder_hint">на телефоне или Google Диске</string>
+    <plurals name="auto_backup_days_left">
+        <item quantity="one">день до копии</item>
+        <item quantity="few">дня до копии</item>
+        <item quantity="many">дней до копии</item>
+        <item quantity="other">дня до копии</item>
+    </plurals>
 
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
-    <string name="family_title">Семья и синхронизация</string>
+    <string name="family_title">Семья</string>
     <string name="family_menu_hint">Общий бюджет на двух телефонах</string>
     <string name="family_not_configured">Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.</string>
     <string name="family_intro">Войдите через Google, чтобы вести общий бюджет с семьёй. Данные хранятся на телефоне и в облаке Firebase, приложение работает и без интернета. Доступ — только по приглашению.</string>
@@ -401,20 +430,28 @@
     <string name="family_join_hint">На телефон загрузится общий бюджет</string>
     <string name="family_offline">Вы вошли как %1$s. Нет связи с сервером — проверьте интернет.</string>
     <string name="family_sign_out">Выйти</string>
-    <string name="family_sign_out_hint">Данные останутся на телефоне, синхронизация остановится</string>
+    <string name="family_sign_out_hint">Данные останутся, синхронизация остановится</string>
     <string name="family_sync_now">Синхронизировать сейчас</string>
     <string name="family_never_synced">Ещё не синхронизировано</string>
     <string name="family_synced_at">Синхронизировано: %1$s</string>
     <string name="family_synced_pending">Синхронизировано: %1$s · ждут отправки: %2$d</string>
     <string name="family_members">Участники</string>
     <string name="family_account_section">Аккаунт</string>
-    <string name="family_budget">Общий бюджет · участников: %1$d</string>
-    <string name="family_you">вы</string>
+    <string name="family_budget_title">Общий бюджет</string>
+    <plurals name="family_members_count">
+        <item quantity="one">%1$d участник</item>
+        <item quantity="few">%1$d участника</item>
+        <item quantity="many">%1$d участников</item>
+        <item quantity="other">%1$d участника</item>
+    </plurals>
+    <!-- Changes reach the other phone through a live listener — in seconds, not on a timer. -->
+    <string name="family_sync_speed">за 2–3 с</string>
+    <string name="family_you">Вы</string>
     <string name="family_owner">создатель семьи</string>
     <string name="family_invite_pending">Приглашён — ждём входа</string>
     <string name="family_invite_cancel">Отменить приглашение</string>
     <string name="family_invite">Пригласить</string>
-    <string name="family_invite_hint">По адресу Google-аккаунта</string>
+    <string name="family_invite_hint">по адресу Google-аккаунта</string>
     <string name="family_invite_dialog_text">Адрес Google-аккаунта, которым человек войдёт в приложение.</string>
     <string name="family_invite_email">Email</string>
     <string name="family_invite_send">Пригласить</string>
@@ -456,10 +493,8 @@
     <string name="sync_banner_ok">Понятно</string>
     <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
     <!-- «Стереть все данные» (board 18, feedback #107) -->
-    <string name="settings_general_section">Общее</string>
-    <string name="settings_data_section">Данные</string>
     <string name="wipe_title">Стереть все данные</string>
-    <string name="wipe_settings_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
+    <string name="wipe_menu_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
     <string name="wipe_family_title">Удалится у всей семьи</string>
     <string name="wipe_family_hint">На обоих телефонах, при следующей синхронизации</string>
     <string name="wipe_count_accounts">счетов</string>

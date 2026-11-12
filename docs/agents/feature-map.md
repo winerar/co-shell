@@ -6,17 +6,24 @@
 `shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
 распознавание толчков — `core:domain/shake/ShakeDetector`.
-`theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModeRow`,
+`theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
-`settings/` — экран «Настройки» (#30); `more/` — меню разделов «Ещё».
+`appearance/` — «Внешний вид» (тема, палитра, встряхивание; бывшие «Настройки», #155); `more/` — «Ещё»: карточка версии
+(`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Бюджеты (#167): модель `core:model/Budget.kt`, логика — `core:domain/budgets/` (`BudgetPlan` — лимит месяца,
 `SaveBudgetUseCase`, `RemoveBudgetUseCase`); Room — `BudgetDao`, `RoomBudgetRepository`. Расчёт (#182): `BudgetPeriod` (месяц по дню
-начала), `BudgetLedger` (потрачено, среднее за 3 мес.), `BudgetProgress` (темп, состояние, прогноз), `BudgetCalculator` (перенос, итог месяца). Экраны (#103) — `app/.../budgets/`: `BudgetSource` (общий снимок данных),
+начала), `BudgetLedger` (потрачено, среднее за 3 мес.), `BudgetProgress` (темп, состояние, прогноз), `BudgetCalculator` (перенос, итог месяца). Экраны (#103) — `app/.../budgets/`: `BudgetSource` (общий снимок: суммы по дням из SQL, #262),
 `list/` («Бюджеты»: `BudgetBoard.kt` — конверты, итог, фильтр; шестерёнка — день начала месяца, #213), `detail/` (экран конверта #183:
-`BudgetDetailBoard.kt` — шапка и категории папки; операции — `budgetOperations` из `BudgetLedger.kt`), `edit/` (редактор лимита,
+`BudgetDetailBoard.kt` — шапка и категории папки; операции периода — `BudgetSource.observeEnvelope`), `edit/` (редактор лимита,
 `BudgetForm.kt`); вход — «Ещё».
 Отчёты (#187, без экранов): `core:domain/reports/` — `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
 `spendingBreakdown` (папки, доли, «Другое»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
+Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
+периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
+(`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: `ListFilter` (что выбрано, что идёт в Room),
+`FilterChoices` (что предлагают шторки, переключение папок), `FilterLabels` (подписи чипов), `FilterTotalText`; чипы и итог —
+`components/FilterBar`, `FilterTotalCard`; шторки — `components/CategoriesSheet`, `PeriodSheet`, `AccountsSheet` (обёртка — `FilterSheet`).
+С фильтром грузятся все подходящие строки (для итога), список показывается страницами в памяти.
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
@@ -38,8 +45,9 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 перенос старого списка с телефона — `app/.../currencies/data/LegacyReportCurrencies`), экран «Ещё → Валюты отчётов» — `currencies/list/`.
 Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`);
 траты/доход месяца и траты по дням — `core:domain/rates/MonthSpending.kt`, состояние «Обзора» — `home/HomeState.kt`,
-плитки 2×2 — `home/components/HomeTiles`, последние операции — `home/components/RecentCard` (строки — из `transactions/list`).
+две плитки (траты за месяц; «Без категории» или «Внимание» при проблеме с курсом) — `home/components/HomeTiles`, последние операции — `home/components/RecentCard` (строки — из `transactions/list`).
 Плашка ошибки синка — `home/sync/` (ViewModel, правила показа) + `home/components/SyncBanner`; причина — `core:data/sync/SyncIssue`.
+«Резервная копия» — `app/.../backup/` (герой-кольцо `components/BackupHero`, автокопия `auto/`, правила `AutoBackupPolicy`).
 «Стереть все данные» — `app/.../wipe/` (экран, копия `WipeBackup`) + `core:domain/DataWipe.kt` + `core:data/db/WipeDao`.
 Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`.
 У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller, «вручную» — #217), `log/` (#216), `UpdateController`

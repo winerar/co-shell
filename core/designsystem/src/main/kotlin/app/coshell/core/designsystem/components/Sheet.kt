@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -157,7 +158,8 @@ fun CoShellSheet(onClosed: () -> Unit, content: @Composable (close: () -> Unit) 
 
 /**
  * Inside of a sheet: [title], scrolling form, and the main action ([actionLabel], «Сохранить») pinned at
- * the bottom across the width — under the thumb and above the keyboard. No back arrow.
+ * the bottom across the width — under the thumb and above the keyboard. No back arrow. [titleAction] — a text
+ * button at the end of the title line («Сбросить» in the filter sheets of «Операции»).
  */
 @Composable
 fun CoShellSheetLayout(
@@ -167,14 +169,17 @@ fun CoShellSheetLayout(
     modifier: Modifier = Modifier,
     actionEnabled: Boolean = true,
     showAction: Boolean = true,
+    titleAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier.imePadding()) {
-        Text(
-            title,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s),
-        )
+        Row(
+            Modifier.fillMaxWidth().padding(start = Spacing.l, end = Spacing.s).padding(bottom = Spacing.s),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            titleAction?.invoke()
+        }
         Column(
             modifier = Modifier
                 .weight(1f, fill = false)

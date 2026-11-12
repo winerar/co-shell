@@ -2,6 +2,10 @@ package app.coshell.core.designsystem.catalog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import app.coshell.core.designsystem.components.CoShellFilterChip
+import app.coshell.core.designsystem.components.CoShellCheckMark
+import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
@@ -13,6 +17,7 @@ import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellBottomBar
@@ -20,6 +25,7 @@ import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellPaletteSwatch
 import app.coshell.core.designsystem.components.CoShellSection
@@ -76,7 +82,24 @@ fun ComponentsCatalog() {
                 row { CoShellSwitchRow(title = "Встряхнуть — новая операция", checked = true, onCheckedChange = {}) }
                 row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
             }
+            CoShellSectionLabel("Деньги")
+            CoShellRowGroup {
+                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Папки, иконки и цвета") }
+                row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
+            }
         }
+    }
+}
+
+/** Check marks of multi-choice sheets (#141): off, on, some of a folder — and filter chips beside them. */
+@Composable
+fun CheckMarkSample() {
+    Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m), verticalAlignment = Alignment.CenterVertically) {
+        CoShellCheckMark(ToggleableState.Off)
+        CoShellCheckMark(ToggleableState.On)
+        CoShellCheckMark(ToggleableState.Indeterminate)
+        CoShellFilterChip(selected = true, onClick = {}, label = { Text("Еда · 3") })
+        CoShellFilterChip(selected = false, onClick = {}, label = { Text("Счёт") })
     }
 }
 

@@ -20,4 +20,7 @@ data class ReportDay(
 interface ReportRepository {
     /** Live day sums of [from] ..< [toExclusive] (days in the phone's time zone). */
     fun observeDays(from: LocalDate, toExclusive: LocalDate): Flow<List<ReportDay>>
+
+    /** Live day sums of the whole history, future-dated operations too — budget rollover walks back through every month (#262). */
+    fun observeAllDays(): Flow<List<ReportDay>>
 }

@@ -48,13 +48,14 @@ class BudgetDetailViewModel @Inject constructor(
     private val format = moneyFormat.copy(trimZeroFraction = true)
 
     val state: StateFlow<BudgetDetailUiState> = combine(
-        source.observe(),
+        source.observeEnvelope(categoryId, month),
         accounts.observeAccounts(includeArchived = true),
         otherMembers.names(),
-    ) { snapshot, accountList, authors ->
+    ) { envelope, accountList, authors ->
+        val snapshot = envelope.snapshot
         val (head, inner) = buildEnvelopeDetail(categoryId, snapshot.calculator().month(month, today), snapshot.categories, snapshot.ledger, today, format)
         val operations = buildTransactionDays(
-            snapshot.operations(categoryId, month),
+            envelope.operations,
             accountList.associateBy { it.id },
             snapshot.categories.associateBy { it.id },
             moneyFormat,

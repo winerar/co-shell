@@ -1,92 +1,110 @@
 package app.coshell.more
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.CoShellMenuRow
+import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.importer.wallet.components.ImportColors
-import app.coshell.more.components.MoreTile
-import app.coshell.ui.list.ActionRow
+import app.coshell.more.components.VersionCard
+import app.coshell.more.components.moreSections
+import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
-import app.coshell.core.designsystem.R as DesignR
 
-// Menu tab: sections of the app (categories, rates, family, backup, feedback) and «Настройки».
-// Device preferences live on the Settings screen (issue #30).
+// Menu tab (board 154А, #155): the version card on top, then the rarely used sections as rows in three groups
+// (Деньги · Семья и данные · Приложение). The former «Настройки» screen is gone: its items live in the groups.
+
+/** What the rows say about their sections; defaults make previews short. */
+data class MoreState(
+    val versionName: String = "",
+    val build: Int = 0,
+    /** Build number of a newer release, or null when up to date (unknown counts as up to date). */
+    val availableBuild: Int? = null,
+    val mainCurrency: String? = null,
+    /** «Вольт · тёмная» under «Внешний вид». */
+    val appearance: String? = null,
+)
 
 data class MoreActions(
     val onCategories: () -> Unit = {},
     val onBudgets: () -> Unit = {},
     val onRates: () -> Unit = {},
+    val onReportCurrencies: () -> Unit = {},
     val onFamily: () -> Unit = {},
     val onBackup: () -> Unit = {},
     val onImport: () -> Unit = {},
+    val onAppearance: () -> Unit = {},
     val onFeedback: () -> Unit = {},
-    val onSettings: () -> Unit = {},
+    /** Tap on the version card: the update screen. */
+    val onOpenUpdate: () -> Unit = {},
+    /** «Обновить» on the card: the download starts right away and the update screen opens. */
+    val onStartUpdate: () -> Unit = {},
 )
 
 @Composable
-fun MoreScreen(actions: MoreActions, availableUpdate: Int? = null) {
+fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
-        val tiles = listOf(
-            Tile(DesignR.drawable.ic_category, R.string.categories_title, R.string.categories_menu_hint, CategoryPalette.colors[9], actions.onCategories),
-            Tile(DesignR.drawable.ic_savings, R.string.budgets_title, R.string.budgets_menu_hint, CategoryPalette.colors[1], actions.onBudgets),
-            Tile(DesignR.drawable.ic_currency_exchange, R.string.rates_title, R.string.rates_menu_hint, CategoryPalette.colors[6], actions.onRates),
-            Tile(DesignR.drawable.ic_group, R.string.family_title, R.string.family_menu_hint, CategoryPalette.colors[3], actions.onFamily),
-            Tile(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, R.string.backup_menu_hint, CategoryPalette.colors[11], actions.onBackup),
-            Tile(DesignR.drawable.ic_download, R.string.import_title, R.string.import_menu_hint, CategoryPalette.colors[ImportColors.MENU], actions.onImport),
-            Tile(DesignR.drawable.ic_feedback, R.string.feedback_title, R.string.feedback_menu_hint, CategoryPalette.colors[18], actions.onFeedback),
-        )
-        // Bento grid of sections (design-refactor Step 5), «Настройки» as a row under it.
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        val sections = moreSections(state, actions)
+        LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Sizes.fabClearance),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.s),
-            verticalArrangement = Arrangement.spacedBy(Spacing.s),
+            contentPadding = PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance),
         ) {
-            itemsIndexed(tiles, key = { _, tile -> tile.title }) { index, tile ->
-                MoreTile(tile.icon, stringResource(tile.title), stringResource(tile.subtitle), tile.color, tile.onClick, Modifier.staggeredEntrance(index))
-            }
-            item(key = "settings", span = { GridItemSpan(maxLineSpan) }) {
-                // The «Ещё» dot leads here: a newer build is named under «Настройки», where the update lives.
-                ActionRow(
-                    icon = DesignR.drawable.ic_settings,
-                    title = stringResource(R.string.settings_title),
-                    subtitle = availableUpdate?.let { stringResource(R.string.update_settings_available, it) }
-                        ?: stringResource(R.string.settings_menu_hint),
-                    onClick = actions.onSettings,
-                    opensScreen = true,
+            item(key = "version") {
+                VersionCard(
+                    versionName = state.versionName,
+                    build = state.build,
+                    availableBuild = state.availableBuild,
+                    onOpen = actions.onOpenUpdate,
+                    onUpdate = actions.onStartUpdate,
+                    modifier = Modifier.padding(horizontal = Spacing.l).staggeredEntrance(0),
                 )
+            }
+            itemsIndexed(sections, key = { _, section -> section.title }) { index, section ->
+                SectionTitle(stringResource(section.title))
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index + 1)) {
+                    section.items.forEach { item ->
+                        row {
+                            CoShellMenuRow(
+                                icon = item.icon,
+                                color = categoryColor(item.color),
+                                title = stringResource(item.title),
+                                subtitle = item.subtitle,
+                                onClick = item.onClick,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-private data class Tile(val icon: Int, val title: Int, val subtitle: Int, val color: Long, val onClick: () -> Unit)
-
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(MoreActions()) }
+    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.1.0", 247, mainCurrency = "USD", appearance = "Вольт · системная")) }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MoreScreenUpdatePreview() {
+    CoShellTheme(darkTheme = true) { MoreScreen(MoreActions(), MoreState("0.1.0", 247, availableBuild = 248, mainCurrency = "ARS")) }
 }

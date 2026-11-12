@@ -79,4 +79,22 @@ class ReportDataTest {
             assertEquals(Money(100, ars), awaitItem().single().amount)
         }
     }
+
+    @Test
+    fun `the whole history is summed by local day, future days too`() = runTest {
+        save(1, 0, "cafe", Money(5, ars))
+        save(1, 23, "cafe", Money(10, ars))
+        save(30, 23, "cafe", Money(7, ars))
+        save(3, 12, "cafe", Money(999, ars), TransactionType.TRANSFER)
+
+        val days = reports.observeAllDays().first()
+
+        assertEquals(
+            setOf(
+                ReportDay(LocalDate(2026, 11, 1), "cafe", TransactionType.EXPENSE, Money(15, ars)),
+                ReportDay(LocalDate(2026, 11, 30), "cafe", TransactionType.EXPENSE, Money(7, ars)),
+            ),
+            days.toSet(),
+        )
+    }
 }

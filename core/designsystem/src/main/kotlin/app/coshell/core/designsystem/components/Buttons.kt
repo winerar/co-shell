@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
@@ -63,12 +65,13 @@ fun coShellButtonColors(): ButtonColors {
     return ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
 }
 
-/** Outlined pill button — secondary actions. */
+/** Outlined pill button — secondary actions. [color] tints the label and the border (the family's violet). */
 @Composable
 fun CoShellOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    color: Color? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
@@ -77,11 +80,17 @@ fun CoShellOutlinedButton(
             onClick = onClick,
             modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
+            colors = color?.let { ButtonDefaults.outlinedButtonColors(contentColor = it) } ?: ButtonDefaults.outlinedButtonColors(),
+            border = color?.let { BorderStroke(1.dp, it.copy(alpha = if (enabled) OUTLINE_TINT_ALPHA else DISABLED_ALPHA)) }
+                ?: ButtonDefaults.outlinedButtonBorder(enabled),
             interactionSource = source,
             content = content,
         )
     }
 }
+
+private const val OUTLINE_TINT_ALPHA = 0.4f
+private const val DISABLED_ALPHA = 0.12f
 
 /** Text button — dialogs, quiet actions. */
 @Composable

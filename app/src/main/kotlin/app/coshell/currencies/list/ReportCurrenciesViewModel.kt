@@ -2,10 +2,15 @@ package app.coshell.currencies.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.settings.ReportCurrencies
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.MoneyFormat
+import kotlin.time.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,12 +26,28 @@ import kotlinx.coroutines.launch
 class ReportCurrenciesViewModel @Inject constructor(
     private val settings: ReportCurrencySettings,
     private val rates: ExchangeRateRepository,
+    accounts: AccountRepository,
+    moneyFormat: MoneyFormat,
+    clock: Clock,
+    timeZone: TimeZone,
 ) : ViewModel() {
 
     private val adding = MutableStateFlow<AddCurrencyForm?>(null)
 
-    val state: StateFlow<ReportCurrenciesUiState> = combine(settings.currencies, adding) { list, form ->
-        ReportCurrenciesUiState(isLoading = false, currencies = list.map { it.value }, adding = form)
+    private val today = clock.todayIn(timeZone)
+
+    val state: StateFlow<ReportCurrenciesUiState> = combine(
+        settings.currencies,
+        adding,
+        accounts.observeAccountsWithBalance(),
+        rates.observeRates(),
+    ) { list, form, accountList, rateList ->
+        ReportCurrenciesUiState(
+            isLoading = false,
+            currencies = list.map { it.value },
+            adding = form,
+            preview = balancePreview(accountList, rateList, list, today, moneyFormat),
+        )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, ReportCurrenciesUiState())
 
     fun openAdd() {

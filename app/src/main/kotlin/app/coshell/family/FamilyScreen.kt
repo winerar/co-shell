@@ -26,7 +26,7 @@ import app.coshell.family.components.OfflineBlock
 import app.coshell.family.components.SignedOutBlock
 import app.coshell.ui.top.ScreenTopBar
 
-/** «Ещё → Семья и синхронизация»: one block per [FamilyState], then the last action's result. */
+/** «Ещё → Семья»: one block per [FamilyState], then the last action's result. */
 @Composable
 fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
     Scaffold(

@@ -16,6 +16,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
+import app.coshell.appearance.AppearanceRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
@@ -35,10 +36,7 @@ import app.coshell.feedback.detail.FeedbackDetailRoute
 import app.coshell.home.HomeActions
 import app.coshell.home.HomeRoute
 import app.coshell.importer.wallet.WalletImportRoute
-import app.coshell.more.MoreActions
-import app.coshell.more.MoreScreen
 import app.coshell.rates.list.RatesRoute
-import app.coshell.settings.SettingsRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.templates.edit.TemplateEditRoute
@@ -100,7 +98,6 @@ fun CoShellNavHost(
             HomeRoute(
                 HomeActions(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
-                    onAccounts = { navController.navigateToTab(TopLevel.ACCOUNTS) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
                     onUncategorized = {
                         navController.navigateToTab(TopLevel.TRANSACTIONS)
@@ -186,28 +183,17 @@ fun CoShellNavHost(
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }
         }
         composable<MoreDestination> {
-            MoreScreen(
-                MoreActions(
-                    onCategories = { navController.navigate(CategoriesDestination) },
-                    onBudgets = { navController.navigate(BudgetsDestination) },
-                    onRates = { navController.navigate(RatesDestination) },
-                    onFamily = { navController.navigate(FamilyDestination) },
-                    onBackup = { navController.navigate(BackupDestination) },
-                    onImport = { navController.navigate(WalletImportDestination) },
-                    onFeedback = { navController.navigate(FeedbackDestination()) },
-                    onSettings = { navController.navigate(SettingsDestination) },
-                ),
-                availableUpdate = updateAvailable?.versionCode,
+            MoreRoute(
+                navController = navController,
+                availableBuild = updateAvailable?.versionCode,
+                onStartUpdate = {
+                    updateAvailable?.let(updates::startUpdate)
+                    navController.navigate(UpdateDestination)
+                },
             )
         }
-        composable<SettingsDestination> {
-            SettingsRoute(
-                onBack = { navController.popBackStack() },
-                onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
-                onUpdate = { navController.navigate(UpdateDestination) },
-                onWipeData = { navController.navigate(WipeDataDestination) },
-                availableUpdate = updateAvailable?.versionCode,
-            )
+        composable<AppearanceDestination> {
+            AppearanceRoute(onBack = { navController.popBackStack() })
         }
         composable<WipeDataDestination> {
             WipeDataRoute(
@@ -240,7 +226,10 @@ fun CoShellNavHost(
             FamilyRoute(onBack = { navController.popBackStack() })
         }
         composable<BackupDestination> {
-            BackupRoute(onBack = { navController.popBackStack() })
+            BackupRoute(
+                onBack = { navController.popBackStack() },
+                onWipeData = { navController.navigate(WipeDataDestination) },
+            )
         }
         composable<WalletImportDestination> {
             WalletImportRoute(onBack = { navController.popBackStack() })

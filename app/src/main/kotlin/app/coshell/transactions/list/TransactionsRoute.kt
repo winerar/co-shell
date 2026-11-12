@@ -29,7 +29,7 @@ fun TransactionsRoute(
             .collectAsStateWithLifecycle()
         LaunchedEffect(uncategorized) {
             if (!uncategorized) return@LaunchedEffect
-            viewModel.onFilter { ListFilter.UncategorizedThisMonth }
+            viewModel.showUncategorizedThisMonth()
             preset[PRESET_UNCATEGORIZED] = false
         }
     }

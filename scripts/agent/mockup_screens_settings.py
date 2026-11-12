@@ -17,9 +17,9 @@ def code_badge(code):
 
 
 def rates():
-    head = card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Курсы на сегодня</div>'
-                '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>' % (dot_icon('check', CYAN, 40), MUTED, icon_button('refresh', 'Обновить', CYAN, True)),
-                pad='12px 12px 12px 14px', radius=20, extra='border-color: %s;' % '#0E4448')
+    head = hero_card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Курсы на сегодня</div>'
+                     '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>' % (dot_icon('check', CYAN, 40), HERO_HINT, icon_button('refresh', 'Обновить', INK, True)),
+                     pad='12px 12px 12px 14px', radius=20)
     lbl = ('<div style="display: flex; margin: 18px 4px 8px; font-size: 13px;"><span style="flex-grow: 1; font-weight: 600; color: %s;">Валюты ваших счетов</span>'
            '<span style="color: %s;">тап — задать вручную</span></div>' % (MUTED, MUTED))
     rows = group([row('<span style="%s">%s</span>' % (MONO, r), s, code_badge(c), amount(d, '', OK if d.startswith('+') else PINK, 12) if d else '') for c, r, s, d in RATES])
@@ -56,11 +56,11 @@ def report_currencies():
 
 def family():
     pair = ('<span style="display: flex;">%s<span style="margin-left: -12px; border-radius: 50%%; box-shadow: 0 0 0 3px %s;">%s</span></span>'
-            % (badge('М', VIOLET, '#1A0533', 52, 26), VIOLETBG, badge('А', CYAN, '#002A2E', 52, 26)))
-    hero = card('<div style="display: flex; align-items: center; gap: 14px;">%s<span><div style="font-size: 20px; font-weight: 700;">Общий бюджет</div>'
+            % (badge('М', VIOLET, '#1A0533', 52, 26), '#314617', badge('А', CYAN, '#002A2E', 52, 26)))
+    hero = hero_card('<div style="display: flex; align-items: center; gap: 14px;">%s<span><div style="font-size: 20px; font-weight: 700;">Общий бюджет</div>'
                 '<div style="font-size: 13px; color: %s;">2 участника</div></span></div><div style="display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px;">'
                 '<span style="width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span><span style="flex-grow: 1;">Синхронизировано: 2 мин назад</span>%s</div>'
-                % (pair, VIOLETINK, OK, amount('раз в 10 с', '', MUTED, 12)), pad='16px', radius=20, extra='background: %s; border-color: %s;' % (VIOLETBG, '#3A2257'))
+                % (pair, HERO_HINT, OK, amount('за 2–3 с', '', HERO_HINT, 12)), pad='16px', radius=20)
     invite = '<span style="width: 40px; height: 40px; border-radius: 50%%; border: 1px dashed %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LINE2, svg('plus', MUTED, 18))
     members = group([row('Вы', 'создатель семьи', badge('М', VIOLET, '#1A0533', 40, 20)), row('Второй участник', 'вошёл · 12 операций за неделю', badge('А', CYAN, '#002A2E', 40, 20)),
                      row('Пригласить', 'по адресу Google-аккаунта', invite, '', LIME)])

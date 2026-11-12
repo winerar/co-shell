@@ -52,7 +52,7 @@ def fit(c, a0, b0):
 # Hero card gradient (#249): Volt dark stops of `heroDarkStops` (Theme.kt) -> roles H0..H2, painted from CO_HERO.
 OVERRIDES = {'314617': 'H0', '0E2523': 'H1', '271E36': 'H2', '3A4A1E': 'Pt28', '2D4A00': 'Pt30', '3F6B00': 'Pt42', '3D5A16': 'Pt33', '3B7A1C': 'Pt45'}
 ON_INKS = {'1A0533': 'Oa', '002A2E': 'Oi', '16003A': 'Oa'}
-KEEP = {'FFFFFF', '000000'}
+KEEP = {'FFFFFF', '000000', '0B0F0A', '1A0A00', '1A1400', '002A3A', '2A1100'}  # + inks on fixed brand / category badges
 
 
 def classify(hexv, ink):
@@ -216,7 +216,7 @@ THEME_PROPS = ('"theme":{"editor":"enum","options":["общая","тёмная",
 
 CLASS_HOOKS = """  /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
   componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
-  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; v.coPal = CO_NOW.pal; v.coMode = CO_NOW.dark ? 'тёмная' : 'светлая'; return v; }/*co-hooks-end*/
 """
 
 SCRIPT = re.compile(r'(<script type="text/x-dc" data-dc-script data-props=\')(.*?)(\'>)(.*?)(</script>)', re.S)

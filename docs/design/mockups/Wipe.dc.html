@@ -11,95 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-button,input{font-family:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.tap{transition:transform 420ms cubic-bezier(.34,1.56,.64,1),background-color 300ms ease-out,opacity 300ms ease-out}
-.tap:active{transform:scale(0.96);transition:transform 90ms ease-out}
-.in{animation:in 360ms cubic-bezier(.2,.9,.3,1)}
-@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
-.fill{transition:width 2000ms linear}
-.pop{animation:pop 520ms cubic-bezier(.34,1.56,.64,1)}
-@keyframes pop{from{transform:scale(0.4);opacity:0}to{transform:none;opacity:1}}
+button,input,textarea{font-family:inherit}
+.spin{animation:spin 900ms linear infinite;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{bg}}; font-family: Onest, system-ui, sans-serif; color: {{ink}}; position: relative; overflow: hidden; padding: 16px 16px 0;">
-
-  <sc-if value="{{atSettings}}" hint-placeholder-val="{{true}}">
-  <div class="in">
-    <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
-      <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
-      <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Настройки</h1>
-    </div>
-    <div style="margin: 12px 4px 8px; font-size: 13px; font-weight: 600; color: {{muted}};">Тема и палитра</div>
-    <div style="height: 120px; border-radius: 16px; background: {{card}}; border: 1px solid {{line}}; display: flex; align-items: center; justify-content: center; font-size: 13px; color: {{muted}};">…как на доске «15 · Настройки»…</div>
-    <div style="margin-top: 12px; border-radius: 16px; background: {{card}}; border: 1px solid {{line}}; overflow: hidden;">
-      <div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 14px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 7h12M6 12h12M6 17h12"></path></svg>
-        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Валюты отчётов</span><span style="font-size: 12px; color: {{muted}};">Основная: USD</span></span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 14px; border-top: 1px solid {{line}};">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
-        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px;">Обновление приложения</span><span style="font-size: 12px; color: {{muted}};">Версия 43 — последняя</span></span>
-      </div>
-    </div>
-    <div style="margin: 20px 4px 8px; font-size: 13px; font-weight: 600; color: {{muted}};">Данные</div>
-    <button type="button" class="tap" onClick="{{toConfirm}}" style="width: 100%; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 14px; border-radius: 16px; background: {{card}}; border: 1px solid {{line}}; color: {{ink}}; text-align: left;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{danger}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"></path></svg>
-      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: {{danger}}; font-weight: 600;">Стереть все данные</span><span style="font-size: 12px; color: {{muted}};">Чтобы загрузить Wallet на чистую. Сначала — копия</span></span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{muted}}" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-    </button>
-    <div style="margin: 10px 4px; font-size: 12px; color: {{muted}};">Тапните строку — откроется подтверждение.</div>
-  </div>
-  </sc-if>
-
-  <sc-if value="{{atConfirm}}" hint-placeholder-val="{{false}}">
-  <div class="in">
-    <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
-      <button type="button" class="tap" onClick="{{back}}" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ink}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
-      <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Стереть все данные</h1>
-    </div>
-
-    <div style="margin-top: 12px; padding: 16px; border-radius: 20px; background: {{dangerBg}}; border: 1px solid {{dangerLine}};">
-      <div style="font-size: 15px; font-weight: 700; color: {{danger}};">Удалится у всей семьи</div>
-      <div style="margin-top: 2px; font-size: 12px; color: {{muted}};">На обоих телефонах, при следующей синхронизации</div>
-      <div style="margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
-        <sc-for list="{{counts}}" as="c" hint-placeholder-count="4">
-          <div style="padding: 10px 12px; border-radius: 14px; background: {{card}};">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700;">{{c.n}}</div>
-            <div style="font-size: 12px; color: {{muted}};">{{c.label}}</div>
-          </div>
-        </sc-for>
-      </div>
-      <div style="margin-top: 12px; font-size: 12px; line-height: 1.4;">Останутся: семья и участники, настройки, тема. Категории по умолчанию появятся заново.</div>
-    </div>
-
-    <div style="margin-top: 10px; display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 16px; background: {{card}}; border: 1px solid {{line}};">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{okc}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg>
-      <span style="display: flex; flex-direction: column; gap: 3px;"><span style="font-size: 14px; font-weight: 600;">Сначала сохраним копию</span><span style="font-size: 12px; color: {{muted}}; line-height: 1.4;">co-shell-2026-11-10.json в «Загрузки». Вернуть — «Ещё → Резервная копия».</span></span>
-    </div>
-
-    <sc-if value="{{byWord}}" hint-placeholder-val="{{true}}">
-    <label for="word" style="display: block; margin: 18px 4px 8px; font-size: 13px; color: {{muted}};">Чтобы подтвердить, введите <b style="color: {{ink}};">СТЕРЕТЬ</b></label>
-    <input id="word" value="{{word}}" onChange="{{type}}" autocomplete="off" placeholder="СТЕРЕТЬ" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid {{inputLine}}; background: {{card}}; color: {{ink}}; font-size: 16px; letter-spacing: 1px; outline: none;">
-    <button type="button" class="tap" onClick="{{wipe}}" disabled="{{locked}}" style="margin-top: 14px; width: 100%; height: 54px; border-radius: 999px; border: none; background: {{danger}}; color: {{onDanger}}; font-size: 15px; font-weight: 700; opacity: {{btnOpacity}};">Стереть у всей семьи</button>
-    <button type="button" class="tap" onClick="{{fillWord}}" style="margin-top: 8px; width: 100%; height: 40px; border: none; background: transparent; color: {{muted}}; font-size: 12px;">(демо: вписать слово)</button>
-    </sc-if>
-  </div>
-  </sc-if>
-
-  <sc-if value="{{atDone}}" hint-placeholder-val="{{false}}">
-  <div class="in" style="height: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 140px; text-align: center;">
-    <span class="pop" style="width: 88px; height: 88px; border-radius: 50%; background: {{accent}}; display: flex; align-items: center; justify-content: center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{onAccent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
-    <h2 style="margin: 24px 0 8px; font-size: 24px;">Данные стёрты</h2>
-    <p style="margin: 0 12px; font-size: 14px; line-height: 1.45; color: {{muted}};">Копия: co-shell-2026-11-10.json в «Загрузках». Второй телефон очистится при следующей синхронизации.</p>
-    <a href="#" onClick="{{reset}}" style="margin-top: 32px; box-sizing: border-box; width: 100%; height: 54px; border-radius: 999px; background: {{accent}}; color: {{onAccent}}; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none;">Импорт из Wallet</a>
-    <button type="button" class="tap" onClick="{{reset}}" style="margin-top: 8px; width: 100%; height: 48px; border-radius: 999px; border: 1px solid {{line}}; background: transparent; color: {{ink}}; font-size: 15px;">Готово</button>
-  </div>
-  </sc-if>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden;">
+<sc-if value="{{is_st_settings}}" hint-placeholder-val="{{false}}"><div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;"><button type="button" aria-label="Назад" style="width: 48px; height: 48px; flex: none; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button><h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Настройки</h1></div><div style="padding: 0 16px;"><div style="margin: 4px 4px 8px; font-size: 13px; font-weight: 600; color: {{co.k_9AA594_n60}};">Общее</div><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 0; "><div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; "><span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{co.k_1B2317_n09}}; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_B8FF2E_Pi}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l5-5 4 4 7-7M14 9h6v6"></path></svg></span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: {{co.k_EEF5E6_n93}};">Валюты отчётов</span><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">Основная: USD</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{co.k_9AA594_n60}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></div><div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; border-top: 1px solid {{co.k_1B2317_n09}};"><span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{co.k_1B2317_n09}}; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_B8FF2E_Pi}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"></path></svg></span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: {{co.k_EEF5E6_n93}};">Обновление приложения</span><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">Версия 43 — последняя</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{co.k_9AA594_n60}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></div></div><div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: {{co.k_9AA594_n60}};">Данные</div><div style="display: contents; cursor: pointer;" onClick="{{go_st_confirm}}"><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 0; "><div style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; "><span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{co.k_2B0F17_et16}}; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_FF5C7F_ew21}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"></path></svg></span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: {{co.k_FF5C7F_ew21}};">Стереть все данные</span><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">Чтобы загрузить Wallet на чистую. Сначала — копия</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{co.k_9AA594_n60}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></div></div></div><p style="margin: 12px 4px 0; font-size: 13px; line-height: 1.45; color: {{co.k_9AA594_n60}};">Тапните строку — откроется подтверждение.</p></div></sc-if><sc-if value="{{is_st_confirm}}" hint-placeholder-val="{{false}}"><div style="display: contents; cursor: pointer;" onClick="{{go_st_settings}}"><div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;"><button type="button" aria-label="Назад" style="width: 48px; height: 48px; flex: none; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button><h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Стереть все данные</h1></div></div><div style="padding: 0 16px;"><div style="margin-top: 12px; display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: {{co.k_2A1E08_yt13}}; border: 1px solid {{co.k_5A3F10_wt33}};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_FFB547_wI}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 16H3zM12 10v4M12 17v.01"></path></svg><span style="display: flex; flex-direction: column; gap: 3px;"><span style="font-size: 14px; font-weight: 600; color: {{co.k_FFB547_wI}};">Удалится у всей семьи</span><span style="font-size: 13px; line-height: 1.4;">На обоих телефонах, при следующей синхронизации</span></span></div><div style="margin-top: 12px;"><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;"><div style="padding: 12px; border-radius: 14px; background: {{co.k_1B2317_n09}};"><div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700;">12</div><div style="font-size: 12px; color: {{co.k_9AA594_n60}};">счетов</div></div><div style="padding: 12px; border-radius: 14px; background: {{co.k_1B2317_n09}};"><div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700;">3 418</div><div style="font-size: 12px; color: {{co.k_9AA594_n60}};">операций</div></div><div style="padding: 12px; border-radius: 14px; background: {{co.k_1B2317_n09}};"><div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700;">46</div><div style="font-size: 12px; color: {{co.k_9AA594_n60}};">категорий</div></div><div style="padding: 12px; border-radius: 14px; background: {{co.k_1B2317_n09}};"><div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700;">8</div><div style="font-size: 12px; color: {{co.k_9AA594_n60}};">ручных курсов</div></div></div></div><p style="margin: 12px 4px 0; font-size: 13px; line-height: 1.45; color: {{co.k_9AA594_n60}};">Останутся: семья и участники, настройки, тема. Категории по умолчанию появятся заново.</p><div style="margin-top: 12px; display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: {{co.k_062224_it12}}; border: 1px solid {{co.k_0E4448_it26}};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_00F0FF_iI}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v.01M12 11v6M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"></path></svg><span style="display: flex; flex-direction: column; gap: 3px;"><span style="font-size: 13px; line-height: 1.4;">Сначала сохраним копию co-shell-2026-11-10.json в «Загрузки». Вернуть — «Ещё → Резервная копия».</span></span></div><div style="display: contents; cursor: pointer;" onClick="{{tg_word}}"><sc-if value="{{on_word}}" hint-placeholder-val="{{false}}"><div style="margin-top: 12px;"><label style="display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 6px 14px; box-sizing: border-box; border-radius: 12px; background: {{co.k_121810_n05}}; border: 1px solid {{co.k_2E382A_n17}};"><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">Чтобы подтвердить, введите</span><span style="font-size: 16px; color: {{co.k_EEF5E6_n93}}; font-family: 'JetBrains Mono', monospace;">СТЕРЕТЬ</span></span></label></div></sc-if><sc-if value="{{off_word}}" hint-placeholder-val="{{false}}"><div style="margin-top: 12px;"><label style="display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 6px 14px; box-sizing: border-box; border-radius: 12px; background: {{co.k_121810_n05}}; border: 1px solid {{co.k_2E382A_n17}};"><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">Чтобы подтвердить, введите</span><span style="font-size: 16px; color: {{co.k_7D8A76_n49}}; font-family: 'JetBrains Mono', monospace;">СТЕРЕТЬ</span></span></label><div style="margin: 6px 4px 0; font-size: 12px; line-height: 1.35; color: {{co.k_9AA594_n60}};">Демо: тапните поле — слово впишется</div></div></sc-if></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><sc-if value="{{on_word}}" hint-placeholder-val="{{false}}"><div style="display: contents; cursor: pointer;" onClick="{{go_st_done}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: none; background: {{co.k_2B0F17_et16}}; color: {{co.k_FF5C7F_ew21}}; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_FF5C7F_ew21}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"></path></svg>Стереть у всей семьи</button></div></sc-if><sc-if value="{{off_word}}" hint-placeholder-val="{{false}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: none; background: {{co.k_2B0F17_et16}}; color: {{co.k_FF5C7F_ew21}}; font-weight: 600; opacity: 0.4; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_FF5C7F_ew21}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"></path></svg>Стереть у всей семьи</button></sc-if></div></sc-if><sc-if value="{{is_st_done}}" hint-placeholder-val="{{false}}"><div style="padding: 0 16px;"><div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 120px;"><span style="width: 88px; height: 88px; border-radius: 50%; background: {{co.k_B8FF2E_P}}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 10px {{co.k_3A4A1E_Pt28}};"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><h2 style="margin: 24px 0 0; font-size: 24px;">Данные стёрты</h2><p style="margin: 8px 12px 0; font-size: 14px; line-height: 1.45; color: {{co.k_9AA594_n60}};">Копия: co-shell-2026-11-10.json в «Загрузках». Второй телефон очистится при следующей синхронизации.</p></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: 1px solid {{co.k_2E382A_n17}}; background: transparent; color: {{co.k_EEF5E6_n93}}; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v4h4"></path></svg>Импорт из Wallet</button><div style="display: contents; cursor: pointer;" onClick="{{go_st_settings}}"><button type="button" style="margin-top: 12px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: none; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">Готово</button></div></div></sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
-/*co-theme*/var CO_KEYS = ['k_050805_n00','k_0E1F00_O','k_10160D_n04','k_14200F_Pt10','k_222B1E_n12','k_2A0D12_et15','k_2B0008_et13','k_5C1C26_et35','k_5C6757_n35','k_5CFFB0_g','k_9AA594_n60','k_B8FF2E_P','k_DCE5D3_n86','k_EEF5E6_n93','k_F2B8C1_ew64','k_F7FBF2_n97','k_FF6B7D_ew25'];
+/*co-theme*/var CO_KEYS = ['k_00F0FF_iI','k_050805_n00','k_062224_it12','k_0E1F00_O','k_0E4448_it26','k_10160D_n04','k_121810_n05','k_1B2317_n09','k_222B1E_n12','k_2A1E08_yt13','k_2B0F17_et16','k_2E382A_n17','k_3A4A1E_Pt28','k_5A3F10_wt33','k_7D8A76_n49','k_9AA594_n60','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93','k_FF5C7F_ew21','k_FFB547_wI'];
 var CO_SPECS = {
   'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
   'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
@@ -167,37 +89,8 @@ function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_K
 class Component extends DCLogic {
   /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
   componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
-  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
-  constructor(props) { super(props); this.state = { step: 0, word: '', hold: false }; this.timer = null; }
-  __coWillUnmount() { clearTimeout(this.timer); }
-  __coRender() {
-    const s = this.state;
-    const dark = true;
-    const T = dark
-      ? { bg: (__co('k_050805_n00')), ink: (__co('k_EEF5E6_n93')), muted: (__co('k_9AA594_n60')), card: (__co('k_10160D_n04')), line: (__co('k_222B1E_n12')), accent: (__co('k_B8FF2E_P')), onAccent: (__co('k_0E1F00_O')), danger: (__co('k_FF6B7D_ew25')), onDanger: (__co('k_2B0008_et13')), dangerBg: (__co('k_2A0D12_et15')), dangerLine: (__co('k_5C1C26_et35')), okc: (__co('k_5CFFB0_g')) }
-      : { bg: (__co('k_F7FBF2_n97')), ink: (__co('k_14200F_Pt10')), muted: (__co('k_5C6757_n35')), card: '#FFFFFF', line: (__co('k_DCE5D3_n86')), accent: (__co('k_B8FF2E_P')), onAccent: (__co('k_0E1F00_O')), danger: '#C8203A', onDanger: '#FFFFFF', dangerBg: '#FDE7EA', dangerLine: (__co('k_F2B8C1_ew64')), okc: '#0B7F3D' };
-    const ok = s.word.trim().toUpperCase() === 'СТЕРЕТЬ';
-    const byHold = false;
-    return {
-      ...T,
-      atSettings: s.step === 0, atConfirm: s.step === 1, atDone: s.step === 2,
-      byWord: !byHold, byHold,
-      counts: [{ n: '12', label: 'счетов' }, { n: '3 418', label: 'операций' }, { n: '46', label: 'категорий' }, { n: '8', label: 'ручных курсов' }],
-      word: s.word,
-      locked: !ok,
-      btnOpacity: ok ? 1 : 0.35,
-      inputLine: ok ? T.danger : T.line,
-      holdWidth: s.hold ? '100%' : '0%',
-      toConfirm: () => this.setState({ step: 1, word: '' }),
-      back: () => this.setState({ step: 0 }),
-      type: (e) => this.setState({ word: e.target.value }),
-      fillWord: () => this.setState({ word: 'СТЕРЕТЬ' }),
-      wipe: () => { if (ok) this.setState({ step: 2 }); },
-      holdStart: () => { this.setState({ hold: true }); clearTimeout(this.timer); this.timer = setTimeout(() => this.setState({ step: 2, hold: false }), 2000); },
-      holdEnd: () => { if (this.state.step === 1) { clearTimeout(this.timer); this.setState({ hold: false }); } },
-      reset: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ step: 0, word: '' }); }
-    };
-  }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; v.coPal = CO_NOW.pal; v.coMode = CO_NOW.dark ? 'тёмная' : 'светлая'; return v; }/*co-hooks-end*/
+  __coRender() { const s = this.state || {}; return {go_st_confirm: () => this.setState({ st: 'confirm' }), go_st_done: () => this.setState({ st: 'done' }), go_st_settings: () => this.setState({ st: 'settings' }), is_st_confirm: (s.st === undefined ? 'settings' : s.st) === 'confirm', is_st_done: (s.st === undefined ? 'settings' : s.st) === 'done', is_st_settings: (s.st === undefined ? 'settings' : s.st) === 'settings', off_word: !(s.word === undefined ? false : s.word), on_word: !!(s.word === undefined ? false : s.word), tg_word: () => this.setState({ word: !(s.word === undefined ? false : s.word) })}; }
 }
 </script>
 </body>

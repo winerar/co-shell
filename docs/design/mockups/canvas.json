@@ -194,7 +194,7 @@
       "y": 3720,
       "w": 390,
       "h": 844,
-      "title": "Счета: 12 счетов, группы",
+      "title": "Счета: 12 счетов, группы (тапайте)",
       "page": "screens",
       "is_interactive": true,
       "radius": 28
@@ -251,7 +251,7 @@
       "y": 4960,
       "w": 390,
       "h": 844,
-      "title": "Счёт: новый",
+      "title": "Счёт: новый (тапайте)",
       "page": "screens",
       "is_interactive": true,
       "radius": 28
@@ -298,7 +298,7 @@
       "y": 4960,
       "w": 390,
       "h": 844,
-      "title": "Категории",
+      "title": "Категории (тапайте)",
       "page": "screens",
       "is_interactive": true,
       "radius": 28
@@ -537,7 +537,7 @@
       "y": 8680,
       "w": 390,
       "h": 844,
-      "title": "Отзыв: написать",
+      "title": "Отзыв: написать (тапайте)",
       "page": "screens",
       "is_interactive": true,
       "radius": 28
@@ -781,8 +781,8 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 2352,
-      "title": "Flows",
+      "h": 2748,
+      "title": "Воркфлоу",
       "page": "flows"
     },
     "ThemeSwitchComponents.dc.html": {
@@ -799,9 +799,10 @@
       "x": 0,
       "y": 0,
       "w": 1280,
-      "h": 1640,
-      "title": "Components",
-      "page": "components"
+      "h": 1960,
+      "title": "Компоненты: кирпичи макетов → имена в коде",
+      "page": "components",
+      "is_interactive": true
     },
     "Ideas.dc.html": {
       "x": 0,
@@ -1104,7 +1105,7 @@
       "y": 0,
       "w": 1040,
       "h": 640,
-      "title": "History",
+      "title": "История решений",
       "page": "history"
     }
   },

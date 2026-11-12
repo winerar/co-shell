@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Regenerate the «Воркфлоу» board (docs/design/mockups/Flows.dc.html) from the ROWS table below.
 
-Usage: scripts/agent/gen-flows-board.py [out.html]. Then bump its `h` in canvas.json if the row count changed
-(printed) and publish both files to the design canvas (docs/design/README.md).
+Drawn with mockup_bricks (board, colours) like every other board, so it follows the canvas theme too.
+Usage: scripts/agent/gen-flows-board.py [out.html] — gen-mockups.py runs it and places the board.
 """
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from mockup_bricks import BG, BAR, CARD, INK, MUTED, MUTED2, LIME, ONLIME, LIMEPILL, LINE, WARNLINE, board  # noqa: E402
 
 # kind: p — step without a board, l — opens a board (href), g — lime («+» and its answer), n — no board yet (dashed)
 ROWS = [
@@ -18,22 +21,22 @@ ROWS = [
     ]),
     ("Новая операция", "Одна шторка, всё под большим пальцем; встряхнуть телефон — тоже", True, [
         ("«+» на панели", "или встряхнуть на вкладке", None, "g"),
-        ("Шаг 1", "счёт: недавние, группы, поиск", "Main.dc.html", "l"),
+        ("Шаг 1", "счёт: шаблоны, недавние, группы", "Main.dc.html", "l"),
         ("Шаг 2", "тип, сумма, категория", "Main.dc.html", "l"),
-        ("Чек в др. валюте", "по желанию: ARS → списано USDT", "Main.dc.html", "l"),
-        ("«Готово»", "на клавиатуре", None, "p"),
+        ("Чек в др. валюте", "по желанию: ARS → списано USDT", "EntryReceipt.dc.html", "l"),
+        ("«Готово»", "на клавиатуре; на доске — тосты", "Main.dc.html", "l"),
         ("«+» → ✓", "тёплая вспышка", None, "g"),
     ]),
     ("Удаление", "Ничего не теряется сразу. Строки без свайпов (#112, 19В)", True, [
         ("Операции", "удержать строку", "Operations.dc.html", "l"),
         ("Выбор нескольких", "тапами по строкам", "OpsSelect.dc.html", "l"),
-        ("«Удалить · N»", "панель вместо навигации", "OpsSelect.dc.html", "l"),
+        ("«Удалить · N»", "панель вместо навигации", "Operations.dc.html", "l"),
         ("Снэкбар", "«Отменить», полоска времени", "OpsUndo.dc.html", "l"),
     ]),
     ("Дубль", "Повтор покупки: из шторки или пачкой", True, [
         ("Операции", "тап по строке", "Operations.dc.html", "l"),
         ("Шторка операции", "«Дублировать» вверху", "EntryEdit.dc.html", "l"),
-        ("Копия · сегодня", "та же сумма и категория", "Main.dc.html", "l"),
+        ("Копия · сегодня", "та же сумма и категория", "Operations.dc.html", "l"),
         ("Сохранить", "", None, "p"),
     ]),
     ("Без категории", "Плитка «Внимание» ведёт к тому, что надо поправить", True, [
@@ -48,6 +51,7 @@ ROWS = [
         ("Курсы валют", "загружены раз в день", "Rates.dc.html", "l"),
         ("Тап по валюте", "или «+ Добавить курс»", "Rates.dc.html", "l"),
         ("Ручной курс", "важнее загруженного", "RatesManual.dc.html", "l"),
+        ("Валюты отчётов", "тап — основная на «Обзоре»", "ReportCurrencies.dc.html", "l"),
     ]),
     ("Счёт", "Цвет — от банка или из палитры", True, [
         ("Счета", "«+» или тап по счёту", "Accounts.dc.html", "l"),
@@ -115,6 +119,27 @@ ROWS = [
         ("Палитра", "6 карточек", "Settings.dc.html", "l"),
         ("Применено", "сразу; на холсте — переключатель «Тема макетов»", None, "p"),
     ]),
+    ("Шаблоны", "Частые покупки в один тап (выбран А)", True, [
+        ("«+» на панели", "", None, "g"),
+        ("Полоса шаблонов", "над счетами в шторке", "TplA.dc.html", "l"),
+        ("Шторка из шаблона", "сумма и категория уже есть", "TplEntry.dc.html", "l"),
+        ("«Готово»", "", None, "p"),
+        ("Из операции", "«Сохранить как шаблон»", "TplSave.dc.html", "l"),
+        ("Все шаблоны", "32 шт., поиск, правка", "TplAll.dc.html", "l"),
+    ]),
+    ("Бюджеты", "Конверты на месяц — план (#167)", True, [
+        ("Первый запуск", "лимиты из прошлых месяцев", "BudFirst.dc.html", "l"),
+        ("Конверты", "сколько осталось", "BudA.dc.html", "l"),
+        ("Конверт", "категории, операции", "BudDetail.dc.html", "l"),
+        ("Лимит", "сумма, подлимиты, перенос", "BudEdit.dc.html", "l"),
+        ("«Обзор»", "плитка «горит»", "BudHome.dc.html", "l"),
+    ]),
+    ("Отчёты", "Куда ушли деньги — план (#168)", True, [
+        ("Отчёты", "лента карточек", "RepA.dc.html", "l"),
+        ("Период и валюта", "шторка", "RepPeriod.dc.html", "l"),
+        ("Тап по категории", "из чего сложилось", "RepDrill.dc.html", "l"),
+        ("«Другое»", "все 24 категории", "RepAll.dc.html", "l"),
+    ]),
 ]
 
 TOP0, STEP, BAND_H, X0, DX, W, H = 184, 132, 112, 300, 256, 196, 76
@@ -127,10 +152,8 @@ NODE = ("position: absolute; left: {x}px; top: {y}px; width: 196px; height: 76px
 
 def node(x, y, title, sub, href, kind):
     lime = kind == "g"
-    bg, ink, subc = ("#B8FF2E", "#0E1F00", "#2D4A00") if lime else ("#161D12", "#EEF5E6", "#9AA594")
-    border = {"g": "none", "l": "1px solid #3A4A1E", "p": "1px solid #222B1E", "n": "1px dashed #8A7A3A"}[kind]
-    if lime and href:
-        border = "none"
+    bg, ink, subc = (LIME, ONLIME, "#2D4A00") if lime else (BAR, INK, MUTED)
+    border = {"g": "none", "l": "1px solid %s" % LIMEPILL, "p": "1px solid %s" % LINE, "n": "1px dashed %s" % WARNLINE}[kind]
     style = NODE.format(x=x, y=y, bg=bg, ink=ink, border=border)
     inner = f"<b>{title}</b>" + (f'<br><span style="font-size: 12px; color: {subc};">{sub}</span>' if sub else "")
     tag = "a" if href else "div"
@@ -138,67 +161,31 @@ def node(x, y, title, sub, href, kind):
     return f'<{tag} {attr}style="{style}"><span>{inner}</span></{tag}>'
 
 
-arrow_id = 0
-
-
 def arrow(x, y):
-    global arrow_id
-    arrow_id += 1
-    return (f'<svg width="59" height="8" viewBox="0 0 59 8" preserveAspectRatio="none" style="position: absolute; '
-            f'left: {x}px; top: {y}px; width: 59px; height: 8px; overflow: visible; fill: none; stroke: #7D8A76; '
-            f'stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-{arrow_id}" '
-            f'orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" '
-            f'fill="#7D8A76" stroke="none" style="stroke: none; fill: #7D8A76; fill: context-stroke"/></marker></defs>'
-            f'<path d="M 0 4 L 55 4" marker-end="url(#dc-arrow-head-filled-{arrow_id})"></path></svg>')
+    return (f'<svg width="59" height="10" viewBox="0 0 59 10" aria-hidden="true" style="position: absolute; left: {x}px; top: {y - 1}px;">'
+            f'<path d="M1 5H52M48 1l5 4-5 4" fill="none" stroke="{MUTED2}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>')
 
 
 bands, arrows, nodes, labels = [], [], [], []
 for i, (title, sub, chain, steps) in enumerate(ROWS):
     top = TOP0 + STEP * i
-    bg = "#0E140B" if i % 2 == 0 else "#0A0F08"
-    bands.append(f'<div style="position: absolute; left: 32px; top: {top}px; width: 1776px; height: {BAND_H}px; border-radius: 20px; background: {bg};"></div>')
-    labels.append(f'<div style="position: absolute; left: 64px; top: {top + 24}px; width: 196px; font-size: 18px; line-height: 24px; font-weight: 700; color: #EEF5E6;">{title}</div>')
-    labels.append(f'<div style="position: absolute; left: 64px; top: {top + 52}px; width: 196px; font-size: 13px; line-height: 18px; color: #9AA594;">{sub}</div>')
+    bands.append(f'<div style="position: absolute; left: 32px; top: {top}px; width: 1776px; height: {BAND_H}px; border-radius: 20px; background: {CARD if i % 2 == 0 else "#0A0F08"};"></div>')
+    labels.append(f'<div style="position: absolute; left: 64px; top: {top + 24}px; width: 196px; font-size: 18px; line-height: 24px; font-weight: 700;">{title}</div>')
+    labels.append(f'<div style="position: absolute; left: 64px; top: {top + 52}px; width: 196px; font-size: 13px; line-height: 18px; color: {MUTED};">{sub}</div>')
     assert len(steps) <= 6, title
-    for k, (t, s, href, kind) in enumerate(steps):
+    for k, (t, st, href, kind) in enumerate(steps):
         x = X0 + DX * k
-        nodes.append(node(x, top + 16, t, s, href, kind))
+        nodes.append(node(x, top + 16, t, st, href, kind))
         if chain and k:
             arrows.append(arrow(x - 60, top + 50))
 
-head = """<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<title>Воркфлоу</title>
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<style>
-body{margin:0}
-a{color:#B8FF2E}a:hover{color:#D6FF7A}
-</style>
-</helmet>
-"""
-body = [f'<div style="position: relative; width: 1840px; height: {height}px; background: #050805; font-family: Onest, system-ui, sans-serif; color: #EEF5E6; overflow: hidden;">']
-body += bands + arrows + nodes + labels
-body.append('<div style="position: absolute; left: 64px; top: 56px; font-size: 34px; line-height: 40px; font-weight: 700; color: #EEF5E6;">Воркфлоу: как проходят главные действия</div>')
-body.append('<div style="position: absolute; left: 64px; top: 108px; width: 1500px; font-size: 15px; line-height: 22px; color: #9AA594;">'
-            'Карточки с зелёной рамкой открывают макет экрана (кнопка Play). Лайм — «+» и его ответ после сохранения. '
-            'Пунктир — экран есть в приложении, но макета ещё нет (задача «интерфейс 1 в 1 к мокапам»). Сверено с кодом 10 ноября.</div>')
-body.append("</div>")
-tail = f"""</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{{"$preview":{{"width":1840,"height":{height}}}}}'>
-class Component extends DCLogic {{
-  renderVals() {{ return {{}}; }}
-}}
-</script>
-</body>
-</html>
-"""
+text = (f'<div style="position: absolute; left: 64px; top: 56px; font-size: 34px; line-height: 40px; font-weight: 700;">Воркфлоу: как проходят главные действия</div>'
+        f'<div style="position: absolute; left: 64px; top: 108px; width: 1500px; font-size: 15px; line-height: 22px; color: {MUTED};">'
+        'Карточки с зелёной рамкой открывают макет экрана (кнопка Play; главные доски рядов живые — тапайте). Лайм — «+» и его ответ после сохранения. '
+        'Пунктир — экран есть в приложении, но макета ещё нет. Сверено с кодом 10 ноября, с макетами — 12 ноября.</div>')
+body = "\n".join(bands + arrows + nodes + labels) + text
+html = board("Воркфлоу", f'<div style="position: relative; width: 1840px; height: {height}px; background: {BG};">{body}</div>', height=height)
+html = html.replace("width: 390px; height: %dpx" % height, "width: 1840px; height: %dpx" % height).replace('"width":390,"height":%d' % height, '"width":1840,"height":%d' % height)
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "../../docs/design/mockups/Flows.dc.html")
-open(out, "w").write(head + "\n".join(body) + "\n" + tail)
+open(out, "w").write(html.replace("{{div}}", ""))
 print("height", height)

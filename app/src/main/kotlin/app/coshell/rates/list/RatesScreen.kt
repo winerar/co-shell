@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.rates.list.components.AddRateButton
 import app.coshell.rates.list.components.CurrentRateRow
 import app.coshell.rates.list.components.ManualRateDialog
 import app.coshell.rates.list.components.ManualRateRow
@@ -23,9 +24,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
 import app.coshell.ui.form.ConfirmDialog
-import app.coshell.ui.list.ActionRow
 import app.coshell.ui.top.ScreenTopBar
-import app.coshell.core.designsystem.R as DesignR
 
 /** "More → Rates": today's rates, "Update now", manual rates, sources. */
 @Composable
@@ -40,7 +39,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             item(key = "refresh") { RefreshBlock(state.lastDownload, state.refresh, actions.onRefresh) }
             item(key = "current-header") {
                 RatesSectionHeader(
-                    stringResource(R.string.rates_current),
+                    stringResource(R.string.rates_accounts),
                     stringResource(R.string.rates_current_hint).takeIf { state.current.isNotEmpty() },
                 )
             }
@@ -56,13 +55,13 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             }
 
             item(key = "manual-header") {
-                RatesSectionHeader(stringResource(R.string.rates_manual), stringResource(R.string.rates_manual_hint))
+                RatesSectionHeader(stringResource(R.string.rates_manual))
             }
             items(state.manual, key = { "manual-${it.rate.date}-${it.rate.from}-${it.rate.to}" }) { item ->
                 ManualRateRow(item, onClick = { actions.onManualClick(item) }, onDelete = { actions.onManualDelete(item) })
             }
             item(key = "manual-add") {
-                ActionRow(DesignR.drawable.ic_add, stringResource(R.string.rates_manual_add), actions.onAddManual)
+                AddRateButton(actions.onAddManual)
             }
             item(key = "sources") { RatesSources() }
         }

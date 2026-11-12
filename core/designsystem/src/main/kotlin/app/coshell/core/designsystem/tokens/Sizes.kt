@@ -52,6 +52,13 @@ object Sizes {
     val bottomBarAdd = 52.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */
     val actionBarButton = 48.dp
+    /** A currency code tile in a rates row («USD» on «Курсах валют»). */
+    val currencyChipWidth = 44.dp
+    val currencyChipHeight = 36.dp
+    /** The card-coloured ring that separates overlapping avatars (members on «Семье»). */
+    val avatarRing = 3.dp
+    /** A full-width pill under a hero card («Синхронизировать сейчас»). */
+    val wideButton = 54.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */

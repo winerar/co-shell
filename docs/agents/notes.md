@@ -117,3 +117,5 @@
   последним пакетом (`SyncEngine.push`), тест — `SettingSyncTest`; `FakeRemoteStore.rejectedKinds` имитирует старые правила.
 - **Скриншот экрана без телефона:** временный Robolectric-тест с `@GraphicsMode(NATIVE)` → `onRoot().captureToImage()` → PNG
   в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November».
+- (11-12) Фоновая команда Bash с `cat > файл` без ввода висит вечно (ждёт stdin) — так «застрял» `agent.sh test`; не склеивать.
+- (11-12) Коммит с трейлерами через `-m "...$T"`: `T=$'\n\nCo-Authored-By: …'` — с пустой строкой, иначе трейлеры уйдут в заголовок.

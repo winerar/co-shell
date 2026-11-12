@@ -10,6 +10,7 @@ import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.backup.BackupActions
 import app.coshell.backup.BackupScreen
 import app.coshell.backup.BackupUiState
+import app.coshell.backup.auto.AutoBackupUiState
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
@@ -173,6 +174,12 @@ class ScreensScreenshotTest {
     @Test
     fun `backup dark`() = shot("backup_dark", dark = true) { BackupScreen(BackupUiState(), BackupActions()) }
 
+    @Test
+    fun `backup auto dark`() = shot("backup_auto_dark", dark = true) { BackupScreen(BackupUiState(), BackupActions(), backupAutoSample) }
+
+    @Test
+    fun `backup auto light`() = shot("backup_auto_light") { BackupScreen(BackupUiState(), BackupActions(), backupAutoSample) }
+
     /** Board `Family`: the hero card with members' avatars, «Синхронизировать сейчас», members, «Пригласить». */
     @Test
     fun `family light`() = shot("family_light") { FamilyScreen(familySample, FamilyActions()) }
@@ -215,3 +222,5 @@ class ScreensScreenshotTest {
         )
     }
 }
+
+private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

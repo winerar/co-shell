@@ -18,6 +18,8 @@ import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.wipe.components.WipeDataRow
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
+import app.coshell.backup.components.BackupHero
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.backup.components.BackupMessageCard
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellLinearProgress
@@ -27,7 +29,7 @@ import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
-/** "More → Backup": explanation, "Save a copy", "Restore from a copy", and the last result. */
+/** «Ещё → Резервная копия»: the weekly copy (ring, folder, switch), manual save/restore, the last result, the wipe. */
 @Composable
 fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupUiState = AutoBackupUiState()) {
     Scaffold(
@@ -39,10 +41,16 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
             modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
-            // Mockup 14: the automatic copy first (is the family's data safe?), manual copy as two tiles under it.
+            // Board Backup: the countdown to the next automatic copy first (is the family's data safe?),
+            // its folder and switch, then «Вручную» — two tiles.
+            BackupHero(auto, Modifier.padding(top = Spacing.s))
             AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
+            CoShellSectionLabel(
+                stringResource(R.string.backup_manual),
+                Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.m),
+            )
             Row(
-                Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
+                Modifier.padding(horizontal = Spacing.l),
                 horizontalArrangement = Arrangement.spacedBy(Spacing.s),
             ) {
                 MoreTile(

@@ -9,7 +9,7 @@ import app.coshell.transactions.list.TransactionsUiState.RelativeDay
 import app.coshell.transactions.list.TransactionsUiState.Row
 import kotlinx.datetime.LocalDate
 
-private val Sample =
+internal val transactionsPreviewSample =
     TransactionsUiState(
         days = listOf(
             Day(
@@ -31,14 +31,14 @@ private val Sample =
 @Preview(showBackground = true)
 @Composable
 private fun TransactionsPreview() {
-    CoShellTheme { TransactionsScreen(Sample) }
+    CoShellTheme { TransactionsScreen(transactionsPreviewSample) }
 }
 
 /** Mockup 19В: two rows chosen by a long press. */
 @Preview(showBackground = true)
 @Composable
 private fun TransactionsSelectionPreview() {
-    CoShellTheme { TransactionsScreen(Sample, selection = Selection(setOf("1", "3"))) }
+    CoShellTheme { TransactionsScreen(transactionsPreviewSample, selection = Selection(setOf("1", "3"))) }
 }
 
 @Preview(showBackground = true)

@@ -26,7 +26,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSegmentedButton
 import app.coshell.core.designsystem.components.CoShellTextButton
-import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -111,10 +111,11 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
 private fun Header(state: AccountsUiState, actions: AccountsActions) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellExpandable(state.searchOpen) {
-            CoShellTextField(
+            CoShellSearchField(
                 value = state.query,
                 onValueChange = actions.onQuery,
-                label = stringResource(R.string.accounts_search),
+                placeholder = stringResource(R.string.accounts_search),
+                clearLabel = stringResource(R.string.search_clear),
                 modifier = Modifier.fillMaxWidth(),
             )
         }

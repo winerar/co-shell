@@ -57,6 +57,7 @@
     <string name="account_group_other">Другое</string>
     <string name="picker_recent">Недавние</string>
     <string name="picker_search">Найти счёт</string>
+    <string name="search_clear">Очистить поиск</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>
     <string name="picker_to_income">Куда пришло?</string>

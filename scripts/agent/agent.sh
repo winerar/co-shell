@@ -37,8 +37,8 @@ usage() {
                           (модули: model, domain, data, ds — designsystem, app)
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
-    shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem) после намеренной
-                          смены вида; PNG — core/designsystem/src/test/screenshots/ (показать владельцу)
+    shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem и экраны app) после
+                          намеренной смены вида; PNG — */src/test/screenshots/ (показать владельцу)
 
   Дизайн (холст)
     mockups               пересобрать доски холста из генераторов
@@ -93,12 +93,16 @@ case "$cmd" in
     profile) exec "$here/profile-build.sh" "$@" ;;
     shots)
         # The record task alone; verify from gradle.properties is switched off for this run.
-        if [ $# -gt 0 ]; then set -- --tests "$1"; fi
+        # A filter goes to both modules (`--tests` binds to the task before it); no match in one is fine.
+        tasks=()
+        for t in :core:designsystem:recordRoborazziDebug :app:recordRoborazziDebug; do
+            tasks+=("$t"); [ $# -gt 0 ] && tasks+=(--tests "$1")
+        done
         log=$(mktemp)
-        "$here/gradle.sh" :core:designsystem:recordRoborazziDebug -Proborazzi.test.verify=false "$@" -q --console=plain >"$log" 2>&1
+        "$here/gradle.sh" "${tasks[@]}" -Proborazzi.test.verify=false -q --console=plain >"$log" 2>&1
         status=$?
         "$here/build-summary.sh" "$log"; rm -f "$log"
-        git status --short core/designsystem/src/test/screenshots
+        git status --short core/designsystem/src/test/screenshots app/src/test/screenshots
         [ $status -eq 0 ] && echo "OK: эталоны записаны — проверь PNG и покажи изменения владельцу" || echo "FAILED (exit $status)"
         exit $status ;;
     mockups) exec python3 "$here/gen-mockups.py" "$@" ;;

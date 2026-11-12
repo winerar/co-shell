@@ -1,5 +1,7 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.core.designsystem.components.SectionTone
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +31,7 @@ import app.coshell.accounts.groupByAccountType
 import app.coshell.accounts.groupLabelRes
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileClickable
@@ -93,10 +95,11 @@ internal fun AccountPicker(
             }
         }
         if (choices.size >= SEARCH_FROM) {
-            CoShellTextField(
+            CoShellSearchField(
                 value = query,
                 onValueChange = { query = it },
-                label = stringResource(R.string.picker_search),
+                placeholder = stringResource(R.string.picker_search),
+                clearLabel = stringResource(R.string.search_clear),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l).padding(bottom = Spacing.m),
             )
         }
@@ -106,12 +109,8 @@ internal fun AccountPicker(
 private const val RECENT_SLOTS = 4
 
 @Composable
-private fun GroupTitle(text: String, accent: Boolean = false) = Text(
-    text.uppercase(),
-    style = MaterialTheme.typography.labelMedium,
-    color = if (accent) accentInk() else MaterialTheme.colorScheme.onSurfaceVariant,
-    modifier = Modifier.padding(top = Spacing.s),
-)
+private fun GroupTitle(text: String, accent: Boolean = false) =
+    CoShellSectionLabel(text, Modifier.padding(top = Spacing.s), tone = if (accent) SectionTone.Accent else SectionTone.Muted)
 
 @Composable
 private fun RecentTile(account: AccountOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {

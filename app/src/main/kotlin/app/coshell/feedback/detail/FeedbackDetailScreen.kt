@@ -1,5 +1,6 @@
 package app.coshell.feedback.detail
 
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,12 +46,7 @@ fun FeedbackDetailScreen(entry: SentFeedback?, currentBuild: Int, onBack: () -> 
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             Message(entry)
-            Text(
-                stringResource(R.string.feedback_detail_progress).uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = Spacing.s),
-            )
+            CoShellSectionLabel(stringResource(R.string.feedback_detail_progress), Modifier.padding(top = Spacing.s))
             if (entry.documentId.isEmpty()) {
                 Text(
                     stringResource(R.string.feedback_detail_no_status),

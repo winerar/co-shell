@@ -51,7 +51,10 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   `core/designsystem/src/test/screenshots/*.png` в git; обычный `check` их **сравнивает** (`roborazzi.test.verify` в
   `gradle.properties`), расхождение = упавший тест + `build/outputs/roborazzi/*_compare.png` (в CI — артефакт `reports`).
   Намеренно поменял вид → `agent.sh shots` (перезапись), посмотри PNG, приложи к PR. Новый компонент → в каталог или
-  отдельный `shot(...)`. Набор маленький: ~1,5 с на снимок. Экраны `app` — #226.
+  отдельный `shot(...)`. Набор маленький: ~1,5 с на снимок.
+- **Скриншоты экранов** (#226) — `app/.../screenshots/ScreensScreenshotTest.kt`: Обзор, Операции, Счета, Бюджеты на
+  образцах из `*Previews.kt` (`internal val …PreviewSample`), обе темы; эталоны — `app/src/test/screenshots/`.
+  Часы Compose стоят и проматываются на 3 с (каскад появления блоков доходит до конца). `agent.sh shots` пишет оба модуля.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 
 ## Версии

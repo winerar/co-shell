@@ -28,7 +28,10 @@ android {
     testOptions {
         // Screenshot tests (Robolectric, NATIVE graphics) render the real fonts, icons and themes.
         unitTests.isIncludeAndroidResources = true
-        unitTests.all { it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED") }
+        unitTests.all {
+            it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
+            it.filter.isFailOnNoMatchingTests = false // `agent.sh shots <filter>` runs both modules
+        }
     }
 }
 

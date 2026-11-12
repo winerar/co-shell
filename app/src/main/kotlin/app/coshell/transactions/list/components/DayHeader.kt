@@ -1,5 +1,7 @@
 package app.coshell.transactions.list.components
 
+import app.coshell.core.designsystem.components.SectionTone
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -12,11 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.TransactionsUiState.Day
 import app.coshell.transactions.list.TransactionsUiState.Kind
@@ -33,7 +33,7 @@ internal fun DayHeader(day: Day) {
         RelativeDay.TODAY -> stringResource(R.string.transaction_date_today)
         RelativeDay.YESTERDAY -> stringResource(R.string.transaction_date_yesterday)
         RelativeDay.OTHER -> dayTitle(day.date.toJavaLocalDate(), LocalDate.now().year, LocalConfiguration.current.locales[0])
-    }.uppercase()
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,14 +42,7 @@ internal fun DayHeader(day: Day) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.m),
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = accentInk(),
-            modifier = Modifier.weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        CoShellSectionLabel(text, Modifier.weight(1f), tone = SectionTone.Accent)
         day.total?.let { total ->
             Text(
                 total,

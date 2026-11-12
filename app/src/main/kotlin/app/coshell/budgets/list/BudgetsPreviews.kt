@@ -33,12 +33,15 @@ private val summary = BudgetsUiState.Summary(
     tone = BulletTone.WARNING, daysLeft = 19, forecast = BudgetsUiState.Forecast("1 260 USD", "80 USD"),
 )
 
+internal val budgetsPreviewSample =
+    BudgetsUiState(month = YearMonth(2026, 11), summary = summary, envelopes = sample, counts = envelopeCounts(sample))
+
 @Preview(showBackground = true, heightDp = 1100)
 @Composable
 private fun BudgetsPreview() {
     CoShellTheme {
         BudgetsScreen(
-            BudgetsUiState(month = YearMonth(2026, 11), summary = summary, envelopes = sample, counts = envelopeCounts(sample)),
+            budgetsPreviewSample,
             BudgetsActions(),
         )
     }

@@ -109,7 +109,7 @@
 - Структура кода: экраны — пакеты из маленьких файлов, общие блоки — компоненты `core:designsystem` (`project-structure.md`).
 - **Ветки:** работа → PR в `dev`; релиз (мерж `dev` → `main`) — **только по команде владельца**; рабочие ветки — **от `dev`**
   (сессии клонируют `main` — перейти на `dev`, `workflow.md` §«Git»).
-- CI (`build-and-test.md` §CI): правки только `docs/`/`*.md` — без Gradle; на `main` lint и тесты не повторяются; кэш пишет и `dev`.
+- CI (`ci.md`): правки только `docs/`/`*.md` — без Gradle; на `main` lint и тесты не повторяются; `dev` после мержа проверенного дерева не пересобирает; `BUILD_NUMBER` только на `main` (#224).
 - CI на `dev` — только проверки; на каждый мерж в `main`: debug → Releases приватного репозитория (`co-shell-debug.apk`);
   подписанный release → релиз `build-<N>` публичного `winerar/co-shell-releases` (`co-shell-<N>.apk` +
   `version.json`). **Работает с 2026-11-08** (сборка 27): `…/co-shell-releases/releases/latest/download/version.json`

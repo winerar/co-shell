@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Auto-merge of agent PRs into dev (.github/workflows/automerge.yml). Needs GH_TOKEN and GH_REPO.
 #   scripts/ci/automerge.sh <pr-number | head-branch>
-# Merges only when: base dev, head claude/* or ccr-*, not a draft, no `hold` label, the latest CI run
-# on the head commit succeeded. After the merge CI is dispatched on dev (a GITHUB_TOKEN merge does
+# Merges only when: base dev, head claude/* or ccr-*, not a draft, no `hold` label, a CI run on the head
+# commit succeeded. After the merge CI is dispatched on dev (a GITHUB_TOKEN merge does
 # not trigger push workflows). A conflicting PR gets one comment with the fix.
 # A GITHUB_TOKEN merge also does not close the issues named by `Fixes #N`, and an issue closed with
 # GITHUB_TOKEN does not trigger tasks.yml — so the script closes them, drops their `status:*` labels
@@ -22,8 +22,11 @@ case "$head" in claude/* | ccr-*) ;; *) skip "branch $head is not an agent branc
 [ "$(field .isDraft)" = false ] || skip "draft (agent marks it ready at the end of the session)"
 field '.labels[].name' | grep -qx hold && skip "label hold"
 
-run=$(gh run list --workflow ci.yml --commit "$sha" --limit 1 --json status,conclusion -q '.[0] | "\(.status) \(.conclusion)"')
-[ "$run" = "completed success" ] || skip "CI on ${sha:0:7}: ${run:-no run}"
+# Any green run of the head commit counts: a commit often has a dispatched run and a pull_request run,
+# and the newest may be an empty or cancelled duplicate (runs 320/321) that would hide the green one.
+runs=$(gh run list --workflow ci.yml --commit "$sha" --limit 20 --json status,conclusion)
+jq -e 'any(.[]; .conclusion == "success")' <<<"$runs" >/dev/null ||
+    skip "CI on ${sha:0:7}: $(jq -r '.[0] // {} | "\(.status // "no run") \(.conclusion // "")"' <<<"$runs")"
 
 # GitHub computes mergeability lazily: UNKNOWN right after a push.
 for _ in 1 2 3 4 5 6; do

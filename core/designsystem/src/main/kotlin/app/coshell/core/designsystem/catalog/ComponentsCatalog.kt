@@ -25,6 +25,8 @@ import app.coshell.core.designsystem.components.CoShellPaletteSwatch
 import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
+import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellSearchField
@@ -53,6 +55,7 @@ fun ComponentsCatalog() {
             CoShellMessage("Копия сохранена", isError = false)
             CoShellMessage("Нет сети", isError = true)
             CoShellButton(onClick = {}) { Text("Сохранить") }
+            SegmentedSample()
         }
         CoShellCard(Modifier.padding(horizontal = Spacing.l)) {
             CoShellListRow(
@@ -74,6 +77,15 @@ fun ComponentsCatalog() {
                 row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
             }
         }
+    }
+}
+
+/** К3: the neon pill for a choice (type of operation), the violet one for a view mode (grouping of accounts). */
+@Composable
+fun SegmentedSample() {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        CoShellSegmented(listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {})
+        CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {}, tone = SegmentTone.View)
     }
 }
 

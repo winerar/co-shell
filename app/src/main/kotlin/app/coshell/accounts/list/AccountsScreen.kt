@@ -12,8 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,11 +19,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountGroup
-import app.coshell.accounts.list.components.AccountRow
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.components.CoShellSegmentedButton
-import app.coshell.core.designsystem.components.CoShellTextButton
+import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.motion.listItemMotion
@@ -90,18 +87,16 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
                 AccountGroup(group, { actions.onToggleGroup(group.key) }, actions.onAccountClick, listItemMotion())
             }
             if (state.archived.isEmpty()) return@LazyColumn
-            item(key = "archived-toggle") {
-                CoShellTextButton(onClick = actions.onToggleArchived) {
-                    Text(
-                        stringResource(
-                            if (state.showArchived) R.string.accounts_hide_archived else R.string.accounts_show_archived,
-                            state.archived.size,
-                        ),
-                    )
-                }
-            }
-            if (state.showArchived) {
-                items(state.archived, key = { it.id }) { AccountRow(it, actions.onAccountClick, listItemMotion()) }
+            // The archive folds like the other groups (board «Счета»: «Архив · 2»), muted and without a total.
+            item(key = "archived") {
+                val archive = AccountsUiState.Group(
+                    key = "archived",
+                    titleRes = R.string.accounts_archive,
+                    rows = state.archived,
+                    total = null,
+                    expanded = state.showArchived,
+                )
+                AccountGroup(archive, actions.onToggleArchived, actions.onAccountClick, listItemMotion(), muted = true)
             }
         }
     }
@@ -131,16 +126,12 @@ private fun Header(state: AccountsUiState, actions: AccountsActions) {
             if (state.canGroupByOwner) add(AccountGrouping.OWNER to R.string.accounts_grouping_owner)
         }
         if (state.active.size > 1) {
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                options.forEachIndexed { index, (grouping, label) ->
-                    CoShellSegmentedButton(
-                        selected = state.grouping == grouping,
-                        onClick = { actions.onGrouping(grouping) },
-                        shape = SegmentedButtonDefaults.itemShape(index, options.size),
-                        label = { Text(stringResource(label)) },
-                    )
-                }
-            }
+            CoShellSegmented(
+                labels = options.map { stringResource(it.second) },
+                selected = options.indexOfFirst { it.first == state.grouping },
+                onSelect = { actions.onGrouping(options[it].first) },
+                tone = SegmentTone.View,
+            )
         }
     }
 }

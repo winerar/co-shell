@@ -121,3 +121,4 @@
 - (11-12) Публикация холста: `file_path` — абсолютный путь (относительный ищется от рабочей папки, не от `root`); первый publish без `read` всей артефакта отклоняется — сначала `Artifact read` без `path`.
 - (11-12) Тап на кирпичах — `<div style="display: contents" onClick>` (`mockup_logic.tap`); `stroke=` с лаймом — роль `Pi`,
   в светлой теме почти чёрная; неоновую линию задавать `--ring: #…; stroke: var(--ring)` (так `ring()`). JS-ключ `…Color:` — чернила.
+- (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.

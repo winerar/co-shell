@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
+import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
 import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellPaletteSwatch
@@ -62,6 +63,12 @@ class CatalogScreenshotTest {
             onAdd = {},
         )
     }
+
+    @Test
+    fun `segmented dark`() = shot("segmented_dark", dark = true) { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
+
+    @Test
+    fun `segmented light`() = shot("segmented_light") { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
 
     @Test
     fun `row group dark`() = shot("row_group_dark", dark = true) { RowGroupSample() }

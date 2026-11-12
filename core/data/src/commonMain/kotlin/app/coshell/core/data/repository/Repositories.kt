@@ -7,6 +7,7 @@ import app.coshell.core.data.db.TransactionDao
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.budgets.BudgetRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.AuthorFilter
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.model.Account
@@ -97,13 +98,25 @@ class RoomTransactionRepository(
 
     override fun observeTransactions(filter: TransactionFilter): Flow<List<Transaction>> =
         transactions.observe(
-            accountId = filter.accountId,
-            categoryId = filter.categoryId,
+            anyAccount = filter.accountIds == null,
+            accountIds = filter.accountIds.orEmpty().toList(),
+            anyCategory = filter.categoryIds == null && !filter.uncategorized,
+            categoryIds = filter.categoryIds.orEmpty().toList(),
+            uncategorized = filter.uncategorized,
             fromMs = filter.from?.toEpochMilliseconds(),
             toMs = filter.to?.toEpochMilliseconds(),
             limit = filter.limit ?: -1,
             type = filter.type?.name,
-            uncategorized = filter.uncategorized,
+            authorMode = when (filter.author) {
+                null -> 0
+                is AuthorFilter.Me -> 1
+                is AuthorFilter.Member -> 2
+            },
+            authorIds = when (val a = filter.author) {
+                null -> emptyList()
+                is AuthorFilter.Me -> a.others.toList()
+                is AuthorFilter.Member -> listOf(a.id)
+            },
         ).map { list -> list.map { it.toModel() } }
 
     override suspend fun getTransaction(id: String): Transaction? = transactions.get(id)?.toModel()

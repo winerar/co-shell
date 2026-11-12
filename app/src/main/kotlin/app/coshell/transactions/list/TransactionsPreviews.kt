@@ -7,6 +7,7 @@ import app.coshell.transactions.list.TransactionsUiState.Day
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.RelativeDay
 import app.coshell.transactions.list.TransactionsUiState.Row
+import app.coshell.core.domain.search.PeriodRange
 import kotlinx.datetime.LocalDate
 
 internal val transactionsPreviewSample =
@@ -27,6 +28,49 @@ internal val transactionsPreviewSample =
             ),
         ),
     )
+
+/** Board `Fb141A`: food categories, October, Аня — and the total under the chips (4А). */
+internal val transactionsFilterChoices = FilterChoices(
+    accounts = listOf(
+        FilterChoices.AccountChoice("galicia", "Galicia", "ARS", 0xFFF26E22),
+        FilterChoices.AccountChoice("mp", "Mercado Pago", "ARS", 0xFF00B1EA),
+        FilterChoices.AccountChoice("ameria", "Ameria", "AMD", null),
+        FilterChoices.AccountChoice("usdt", "USDT-карта", "USDT", 0xFF26A17B),
+        FilterChoices.AccountChoice("cash", "Наличные USD", "USD", null),
+    ),
+    expenseCategories = listOf(
+        FilterChoices.CategoryChoice(
+            "food", "Еда", "cart", null,
+            children = listOf(
+                FilterChoices.CategoryChoice("shop", "Продукты", "cart", null),
+                FilterChoices.CategoryChoice("bakery", "Пекарня", "cart", null),
+                FilterChoices.CategoryChoice("delivery", "Доставка", "cart", null),
+                FilterChoices.CategoryChoice("cafe", "Кафе", "cafe", null),
+                FilterChoices.CategoryChoice("sweets", "Сладкое", "cart", null),
+            ),
+        ),
+        FilterChoices.CategoryChoice(
+            "home", "Дом", "home", null,
+            children = listOf(FilterChoices.CategoryChoice("rent", "Аренда", "home", null), FilterChoices.CategoryChoice("power", "Свет", "home", null)),
+        ),
+        FilterChoices.CategoryChoice("taxi", "Такси", "taxi", null),
+        FilterChoices.CategoryChoice("pharmacy", "Аптека", "pill", null),
+    ),
+    incomeCategories = listOf(FilterChoices.CategoryChoice("salary", "Зарплата", "work", null)),
+    members = listOf(FilterChoices.MemberChoice("anya", "Аня")),
+)
+
+internal val transactionsFilteredSample = transactionsPreviewSample.copy(
+    filter = ListFilter(
+        kind = Kind.EXPENSE,
+        categoryIds = setOf("shop", "bakery", "delivery"),
+        period = PeriodRange.Preset.LAST_MONTH.range(LocalDate(2026, 11, 12)),
+        who = ListFilter.Who.Member("anya"),
+    ),
+    choices = transactionsFilterChoices,
+    total = TransactionsUiState.Total(23, "-184 300,00 ARS", "≈ -182,40 USD", Kind.EXPENSE),
+    today = LocalDate(2026, 11, 12),
+)
 
 @Preview(showBackground = true)
 @Composable

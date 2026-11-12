@@ -6,6 +6,10 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.family.OtherMembers
+import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.search.filterTotal
+import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
@@ -41,11 +45,14 @@ class TransactionsViewModel @Inject constructor(
     accounts: AccountRepository,
     categories: CategoryRepository,
     otherMembers: OtherMembers,
-    moneyFormat: MoneyFormat,
-    clock: Clock,
-    timeZone: TimeZone,
+    private val moneyFormat: MoneyFormat,
+    private val clock: Clock,
+    private val timeZone: TimeZone,
     private val deleteWithUndo: DeleteTransactionWithUndo,
+    rates: ExchangeRateRepository,
+    reportCurrencies: ReportCurrencySettings,
 ) : ViewModel() {
+
 
     private val _selection = MutableStateFlow(Selection())
 
@@ -69,49 +76,79 @@ class TransactionsViewModel @Inject constructor(
     private val window = GrowingWindow()
     private val filter = MutableStateFlow(ListFilter())
 
-    /** The screen nears the end of the list: load the next page. */
-    fun loadMore() = window.loadMore()
+    /** Rows shown while a filter is set: everything is loaded for the total, the list still grows by pages. */
+    private val shownLimit = MutableStateFlow(GrowingWindow.PAGE_SIZE)
 
-    fun onFilter(change: (ListFilter) -> ListFilter) = filter.update(change)
+    /** The screen nears the end of the list: load the next page. */
+    fun loadMore() {
+        if (filter.value.needsAll) shownLimit.update { it + GrowingWindow.PAGE_SIZE } else window.loadMore()
+    }
+
+    fun onFilter(change: (ListFilter) -> ListFilter) = filter.update { old ->
+        change(old).also { new -> if (new.roomKey != old.roomKey) shownLimit.value = GrowingWindow.PAGE_SIZE }
+    }
+
+    /** «Обзор» → «Внимание»: this month's operations without a category. */
+    fun showUncategorizedThisMonth() = onFilter { ListFilter.uncategorizedThisMonth(today()) }
+
+    private fun today() = clock.now().toLocalDateTime(timeZone).date
 
     /** Rows from Room with what is needed to show and search them; re-queried only when [ListFilter.roomKey] changes. */
     private class Source(
         val page: GrowingWindow.Page<Transaction>,
         val accountList: List<Account>,
         val accountsById: Map<String, Account>,
+        val categoryList: List<Category>,
         val categoriesById: Map<String, Category>,
         val authors: Map<String, String>,
         val search: SearchIndex,
     )
 
+    private val authors = otherMembers.names()
+
     private val source = combine(
-        filter.map { it.roomKey }.distinctUntilChanged().flatMapLatest { key ->
-            val day = clock.now().toLocalDateTime(timeZone).date
-            window.observe { limit -> transactions.observeTransactions(key.toRepositoryFilter(limit, day, timeZone)) }
-        },
+        combine(filter.map { it.roomKey }.distinctUntilChanged(), authors) { key, names -> key to names.keys }
+            .distinctUntilChanged()
+            .flatMapLatest { (key, others) ->
+                if (key.needsAll) {
+                    transactions.observeTransactions(key.toRepositoryFilter(GrowingWindow.PAGE_SIZE, timeZone, others))
+                        .map { GrowingWindow.Page(it, hasMore = false) }
+                } else {
+                    window.observe { limit -> transactions.observeTransactions(key.toRepositoryFilter(limit, timeZone, others)) }
+                }
+            },
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
-        otherMembers.names(),
-    ) { page, accountList, categoryList, authors ->
+        authors,
+    ) { page, accountList, categoryList, names ->
         val accountsById = accountList.associateBy { it.id }
         val categoriesById = categoryList.associateBy { it.id }
-        Source(page, accountList, accountsById, categoriesById, authors, SearchIndex(accountsById, categoriesById, moneyFormat))
+        Source(page, accountList, accountsById, categoryList, categoriesById, names, SearchIndex(accountsById, categoriesById, moneyFormat))
     }
 
-    val state: StateFlow<TransactionsUiState> = combine(source, filter) { src, f ->
-        val shown = src.page.items.filter { f.matches(it, src.search) }
+    /** Rates and the main report currency, for the total (4А); the book is rebuilt only when rates change. */
+    private val money = combine(rates.observeRates().map { RateBook.of(it) }, reportCurrencies.currencies) { book, currencies ->
+        book to currencies.firstOrNull()
+    }
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money) { src, f, limit, (book, main) ->
+        val matching = src.page.items.filter { f.matches(it, src.search) }
+        val shown = if (f.needsAll) matching.take(limit) else matching
         _selection.update { it.keepOnly(shown.mapTo(HashSet()) { t -> t.id }) }
+        val today = today()
         TransactionsUiState(
-            hasMore = src.page.hasMore && !f.needsAll,
+            hasMore = if (f.needsAll) matching.size > limit else src.page.hasMore,
             filter = f,
-            accounts = src.accountList.filter { !it.archived }.map { TransactionsUiState.AccountChoice(it.id, it.name) },
+            choices = buildFilterChoices(src.accountList, src.categoryList, src.authors, f),
+            total = if (f.isActive) book.filterTotal(matching, main, timeZone).toUi(moneyFormat) else null,
+            today = today,
             days = buildTransactionDays(
                 transactions = shown,
                 accountsById = src.accountsById,
                 categoriesById = src.categoriesById,
                 moneyFormat = moneyFormat,
                 timeZone = timeZone,
-                today = clock.now().toLocalDateTime(timeZone).date,
+                today = today,
                 authors = src.authors,
             ),
         )

@@ -18,6 +18,12 @@
 `BudgetForm.kt`); вход — «Ещё».
 Отчёты (#187, без экранов): `core:domain/reports/` — `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
 `spendingBreakdown` (папки, доли, «Другое»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
+Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
+периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
+(`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: `ListFilter` (что выбрано, что идёт в Room),
+`FilterChoices` (что предлагают шторки, переключение папок), `FilterLabels` (подписи чипов), `FilterTotalText`; чипы и итог —
+`components/FilterBar`, `FilterTotalCard`; шторки — `components/CategoriesSheet`, `PeriodSheet`, `AccountsSheet` (обёртка — `FilterSheet`).
+С фильтром грузятся все подходящие строки (для итога), список показывается страницами в памяти.
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),

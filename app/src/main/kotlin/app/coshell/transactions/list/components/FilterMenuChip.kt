@@ -51,3 +51,24 @@ internal fun FilterMenuChip(label: String, selected: Boolean, options: List<Pair
         }
     }
 }
+
+/** A filter chip that opens its own sheet (#141, variant А): ▾ while unset, ✕ ([onClear]) while set. */
+@Composable
+internal fun FilterSheetChip(label: String, selected: Boolean, onClick: () -> Unit, onClear: () -> Unit) {
+    CoShellFilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(label) },
+        trailingIcon = {
+            if (selected) {
+                Icon(
+                    painterResource(DesignR.drawable.ic_close),
+                    contentDescription = stringResource(R.string.filter_clear, label),
+                    modifier = Modifier.tactileClickable(Tactile.Control, CircleShape, onClick = onClear),
+                )
+            } else {
+                Icon(painterResource(DesignR.drawable.ic_keyboard_arrow_down), contentDescription = null)
+            }
+        },
+    )
+}

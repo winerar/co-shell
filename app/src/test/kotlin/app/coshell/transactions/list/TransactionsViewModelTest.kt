@@ -10,6 +10,8 @@ import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
+import app.coshell.testing.FakeExchangeRateRepository
+import app.coshell.testing.FakeReportCurrencySettings
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
@@ -35,7 +37,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
         )
         vm.state.launchIn(backgroundScope)
         assertEquals(emptyList<TransactionsUiState.Day>(), vm.state.first { !it.isLoading }.days)
@@ -61,7 +63,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
         )
         vm.state.launchIn(backgroundScope)
         val first = vm.state.first { !it.isLoading }
@@ -83,7 +85,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -99,6 +101,39 @@ class TransactionsViewModelTest {
     }
 
     @Test
+    fun `a set filter loads everything for its total and still shows a page at a time`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        val total = GrowingWindow.PAGE_SIZE + 5
+        repeat(total) { i ->
+            transactions.saveTransaction(
+                Transaction("t$i", TransactionType.EXPENSE, "card", Money(100_00, ars), Instant.fromEpochSeconds(now.epochSeconds - i * 3_600L)),
+            )
+        }
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+        )
+        vm.state.launchIn(backgroundScope)
+        vm.state.first { !it.isLoading }
+        assertEquals(null, vm.state.value.total)
+
+        vm.onFilter { it.copy(kind = TransactionsUiState.Kind.EXPENSE) }
+        val filtered = vm.state.first { it.total != null }
+        assertEquals(null, transactions.queries.last().limit)
+        assertEquals(total, filtered.total?.count)
+        assertEquals(MoneyFormat.RU.format(Money(-total * 100_00L, ars)), filtered.total?.amount)
+        assertEquals(GrowingWindow.PAGE_SIZE, filtered.days.sumOf { it.rows.size })
+        assertEquals(true, filtered.hasMore)
+
+        vm.loadMore()
+        val all = vm.state.first { it.days.sumOf { d -> d.rows.size } == total }
+        assertEquals(false, all.hasMore)
+    }
+
+    @Test
     fun `selection deletes the chosen rows and ends`() = runTest {
         val ars = CurrencyCode("ARS")
         val now = Instant.fromEpochSeconds(1_794_000_000)
@@ -107,7 +142,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }

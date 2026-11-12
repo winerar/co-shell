@@ -1,5 +1,6 @@
 package app.coshell.feedback.components
 
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -18,11 +19,7 @@ import app.coshell.feedback.splitFeedbackMessage
 internal fun SentList(entries: List<SentFeedback>, onOpen: (Long) -> Unit, onRemove: (Long) -> Unit) {
     if (entries.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        Text(
-            stringResource(R.string.feedback_sent_title, entries.size).uppercase(),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        CoShellSectionLabel(stringResource(R.string.feedback_sent_title, entries.size))
         entries.forEach { entry ->
             val (kind, body) = splitFeedbackMessage(entry.text)
             val date = feedbackDay(entry.sentAtMillis)

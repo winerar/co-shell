@@ -27,6 +27,8 @@ import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellSearchField
+import app.coshell.core.designsystem.components.CoShellSectionLabel
+import app.coshell.core.designsystem.components.SectionTone
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellPalette
@@ -39,6 +41,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 fun ComponentsCatalog() {
     Column(Modifier.padding(vertical = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
         Column(Modifier.padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+            CoShellSectionLabel("Тема")
+            CoShellSectionLabel("Сегодня", tone = SectionTone.Accent)
             CoShellSearchField(value = "", onValueChange = {}, placeholder = "Поиск: заметка, сумма, категория", clearLabel = "Очистить")
             CoShellSearchField(value = "ga", onValueChange = {}, placeholder = "Поиск счёта", clearLabel = "Очистить")
             CoShellTextField(value = "Карта", onValueChange = {}, label = "Название")

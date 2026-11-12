@@ -1,5 +1,7 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.core.designsystem.components.SectionTone
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -107,12 +109,8 @@ internal fun AccountPicker(
 private const val RECENT_SLOTS = 4
 
 @Composable
-private fun GroupTitle(text: String, accent: Boolean = false) = Text(
-    text.uppercase(),
-    style = MaterialTheme.typography.labelMedium,
-    color = if (accent) accentInk() else MaterialTheme.colorScheme.onSurfaceVariant,
-    modifier = Modifier.padding(top = Spacing.s),
-)
+private fun GroupTitle(text: String, accent: Boolean = false) =
+    CoShellSectionLabel(text, Modifier.padding(top = Spacing.s), tone = if (accent) SectionTone.Accent else SectionTone.Muted)
 
 @Composable
 private fun RecentTile(account: AccountOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {

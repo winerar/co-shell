@@ -49,7 +49,7 @@ class UpdateViewModelTest {
     @Test
     fun `up to date, not configured and failed check`() {
         source.release = release(10)
-        assertEquals(UpdatePhase.UpToDate, vm().state.value.phase)
+        assertEquals(UpdatePhase.UpToDate(current = release(10)), vm().state.value.phase)
         source.release = null
         assertEquals(UpdatePhase.NotConfigured, vm().state.value.phase)
         source.error = IOException("offline")

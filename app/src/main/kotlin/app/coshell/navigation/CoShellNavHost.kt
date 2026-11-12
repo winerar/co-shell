@@ -185,7 +185,7 @@ fun CoShellNavHost(
         composable<MoreDestination> {
             MoreRoute(
                 navController = navController,
-                availableBuild = updateAvailable?.versionCode,
+                availableVersion = updateAvailable?.versionName,
                 onStartUpdate = {
                     updateAvailable?.let(updates::startUpdate)
                     navController.navigate(UpdateDestination)

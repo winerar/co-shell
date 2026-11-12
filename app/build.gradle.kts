@@ -19,7 +19,8 @@ android {
         targetSdk = 37
         // CI passes its run number so every build is newer than the previous one (needed for updates).
         versionCode = providers.environmentVariable("BUILD_NUMBER").orNull?.toInt() ?: 1
-        versionName = "0.1.0"
+        // Release builds: 0.N, N = releases so far (scripts/ci/version_name.py, only on main); others — "0.0".
+        versionName = providers.environmentVariable("VERSION_NAME").orNull ?: "0.0"
         buildConfigField("String", "UPDATE_BASE_URL", "\"\"")
         // Feedback form → Firestore (docs/setup/feedback.md). Not secrets: the Web API key is public
         // by design, access is limited by Firestore rules. Empty locally → the form says "not configured".

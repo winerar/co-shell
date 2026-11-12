@@ -166,7 +166,7 @@ class ScreensScreenshotTest {
     fun `more light`() = shot("more_light") { MoreScreen(MoreActions(), moreSample) }
 
     @Test
-    fun `more update dark`() = shot("more_update_dark", dark = true) { MoreScreen(MoreActions(), moreSample.copy(availableBuild = 248)) }
+    fun `more update dark`() = shot("more_update_dark", dark = true) { MoreScreen(MoreActions(), moreSample.copy(availableVersion = "0.38")) }
 
     @Test
     fun `appearance dark`() = shot("appearance_dark", dark = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK), AppearanceActions()) }
@@ -214,7 +214,7 @@ class ScreensScreenshotTest {
 
     private companion object {
         const val SETTLE_MS = 3_000L
-        val moreSample = MoreState("0.1.0", 247, mainCurrency = "USD", appearance = "Вольт · тёмная")
+        val moreSample = MoreState("0.37", 400, mainCurrency = "USD", appearance = "Вольт · тёмная")
         private val me = Member("u1", "Михаил", "m@example.com")
         val familySample = FamilyUiState(
             family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),

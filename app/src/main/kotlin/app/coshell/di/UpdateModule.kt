@@ -1,5 +1,6 @@
 package app.coshell.di
 
+import android.content.Context
 import app.coshell.BuildConfig
 import app.coshell.core.domain.update.CheckForUpdateUseCase
 import app.coshell.core.domain.update.InstalledVersion
@@ -20,9 +21,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,8 +40,14 @@ interface UpdateModule {
     @Binds fun bindJournal(impl: PrefsUpdateJournal): UpdateJournal
 
     companion object {
+        /** Installed when Android last updated the package — «установлена 12 ноября» on the update screen (#268). */
         @Provides
-        fun provideInstalledVersion() = InstalledVersion(BuildConfig.VERSION_CODE, BuildConfig.VERSION_NAME)
+        fun provideInstalledVersion(@ApplicationContext context: Context) = InstalledVersion(
+            versionCode = BuildConfig.VERSION_CODE,
+            versionName = BuildConfig.VERSION_NAME,
+            installedAt = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime }
+                .getOrNull()?.takeIf { it > 0 }?.let(Instant::fromEpochMilliseconds),
+        )
 
         /** Empty in local builds: CI sets `UPDATE_BASE_URL` (see build-and-test.md §Самообновление). */
         @Provides

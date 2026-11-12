@@ -8,9 +8,10 @@ import kotlin.time.Duration.Companion.hours
 /** Outcome of [CheckForUpdateUseCase]. */
 sealed interface UpdateCheckResult {
     data class Available(val release: AppRelease) : UpdateCheckResult
-    data object UpToDate : UpdateCheckResult
+    /** [current] — the installed build as the server describes it (its notes), when the server's latest is it. */
+    data class UpToDate(val current: AppRelease? = null) : UpdateCheckResult
     /** Automatic check skipped (the last one was less than [CheckForUpdateUseCase.interval] ago), nothing newer known. */
-    data object CheckedRecently : UpdateCheckResult
+    data class CheckedRecently(val current: AppRelease? = null) : UpdateCheckResult
     /** This build has no update server configured (local builds). */
     data object NotConfigured : UpdateCheckResult
     data class Failed(val reason: String) : UpdateCheckResult
@@ -47,7 +48,7 @@ class CheckForUpdateUseCase(
         return if (release.versionCode > installed.versionCode) {
             UpdateCheckResult.Available(release)
         } else {
-            UpdateCheckResult.UpToDate
+            UpdateCheckResult.UpToDate(release.takeIf { it.versionCode == installed.versionCode })
         }
     }
 
@@ -56,7 +57,7 @@ class CheckForUpdateUseCase(
         return if (known != null && known.versionCode > installed.versionCode) {
             UpdateCheckResult.Available(known)
         } else {
-            UpdateCheckResult.CheckedRecently
+            UpdateCheckResult.CheckedRecently(known?.takeIf { it.versionCode == installed.versionCode })
         }
     }
 }

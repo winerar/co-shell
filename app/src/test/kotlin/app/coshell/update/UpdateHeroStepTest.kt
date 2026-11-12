@@ -20,7 +20,7 @@ class UpdateHeroStepTest {
     @Test
     fun `ring fills with the download and is full when up to date`() {
         assertEquals(HeroRing.Progress(0.4f), UpdatePhase.Downloading(release, 0.4f).heroRing)
-        assertEquals(HeroRing.Progress(1f), UpdatePhase.UpToDate.heroRing)
+        assertEquals(HeroRing.Progress(1f), UpdatePhase.UpToDate().heroRing)
         assertEquals(HeroRing.Idle, UpdatePhase.Available(release).heroRing)
         assertEquals(HeroRing.Idle, UpdatePhase.Failed(UpdateError.Check).heroRing)
     }

@@ -80,7 +80,7 @@ def issue_body(feedback):
     created = feedback.get("createdAt", "?").replace("T", " ").split(".")[0].rstrip("Z")
     rows = [
         ("Отправлено (UTC)", created),
-        ("Версия", f"{feedback.get('appVersion', '?')} (сборка {feedback.get('versionCode', '?')})"),
+        ("Версия", f"{feedback.get('appVersion', '?')} · сборка {feedback.get('versionCode', '?')}"),
         ("Телефон", feedback.get("device", "?")),
         ("Система", feedback.get("os", "?")),
         ("Установка", str(feedback.get("installationId", "?"))[:8]),

@@ -38,13 +38,13 @@ import app.coshell.core.designsystem.R as DesignR
 internal fun VersionCard(
     versionName: String,
     build: Int,
-    availableBuild: Int?,
+    availableVersion: String?,
     onOpen: () -> Unit,
     onUpdate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val accent = MaterialTheme.colorScheme.primary
-    val available = availableBuild != null
+    val available = availableVersion != null
     CoShellCard(modifier = modifier, tint = if (available) accent else null, onClick = onOpen) {
         Row(
             Modifier.fillMaxWidth().padding(Spacing.m),
@@ -68,16 +68,16 @@ internal fun VersionCard(
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
                 Text(
-                    stringResource(R.string.more_version_title, versionName),
+                    stringResource(R.string.more_version_title),
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    if (availableBuild != null) {
-                        stringResource(R.string.more_version_available, availableBuild)
+                    if (availableVersion != null) {
+                        stringResource(R.string.more_version_available, availableVersion)
                     } else {
-                        stringResource(R.string.more_version_build, build)
+                        stringResource(R.string.version_label, versionName, build)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

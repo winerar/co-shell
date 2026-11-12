@@ -45,6 +45,18 @@ class FeedbackToIssuesTest(unittest.TestCase):
         self.assertIn("| Установка | 01234567 |", body)
         self.assertIn("`feedback/abc123`", body)
 
+    def test_technical_lines_go_into_details(self):
+        text = "Не ставится" + f.DIAGNOSTICS_MARKER + "installer: miui\nstatus 3"
+        body = f.issue_body({"text": text, "_id": "x"})
+        self.assertIn("> Не ставится", body)
+        self.assertNotIn("> installer", body)
+        self.assertIn("<details><summary>Технические данные</summary>", body)
+        self.assertIn("installer: miui\nstatus 3", body)
+        self.assertEqual(f.split_text(text)[0], "Не ставится")
+
+    def test_no_details_without_technical_lines(self):
+        self.assertNotIn("<details>", f.issue_body({"text": "Просто текст", "_id": "x"}))
+
     def test_oldest_first(self):
         items = [{"createdAt": "2026-11-08T10:00:00Z"}, {"createdAt": "2026-11-07T10:00:00Z"}]
         self.assertEqual([i["createdAt"][:10] for i in f.oldest_first(items)], ["2026-11-07", "2026-11-08"])

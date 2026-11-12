@@ -12,4 +12,10 @@ interface ApkInstaller {
 
     /** Starts the install; the result arrives through [InstallEvents]. */
     suspend fun install(file: File)
+
+    /**
+     * Opens [file] in the Android installer, the way a browser does (#217): the fallback when the
+     * [install] dialog never shows (Xiaomi). Android reports nothing back; on success the app restarts.
+     */
+    fun installManually(file: File)
 }

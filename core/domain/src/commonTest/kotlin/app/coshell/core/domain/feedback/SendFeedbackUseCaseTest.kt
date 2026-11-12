@@ -20,6 +20,16 @@ class SendFeedbackUseCaseTest {
     }
 
     @Test
+    fun `adds technical lines and survives their failure`() = runTest {
+        val withLines = SendFeedbackUseCase(sender, FakeDeviceInfoProvider(device), FixedClock(now)) { listOf("status 3") }
+        withLines("text")
+        assertEquals(listOf("status 3"), sender.sent.last().diagnostics)
+        val broken = SendFeedbackUseCase(sender, FakeDeviceInfoProvider(device), FixedClock(now)) { error("no access") }
+        assertEquals(FeedbackResult.Sent("doc-1"), broken("text"))
+        assertEquals(listOf("diagnostics failed: IllegalStateException"), sender.sent.last().diagnostics)
+    }
+
+    @Test
     fun `refuses blank text`() = runTest {
         assertEquals(FeedbackResult.Empty, send(" \n "))
         assertTrue(sender.sent.isEmpty())

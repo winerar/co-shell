@@ -59,8 +59,10 @@ internal fun UpdatePhaseContent(state: UpdateUiState, actions: UpdateActions, mo
                     stringResource(R.string.update_hero_downloading),
                     stringResource(R.string.update_hero_available_sub, phase.release.versionCode, megabytes(phase.release.sizeBytes)),
                 )
-                is UpdatePhase.Installing ->
-                    Texts(stringResource(R.string.update_hero_installing), stringResource(R.string.update_installing))
+                is UpdatePhase.Installing -> Texts(
+                    stringResource(R.string.update_hero_installing),
+                    stringResource(if (phase.manualOffered) R.string.update_installing_manual else R.string.update_installing),
+                )
                 is UpdatePhase.Failed ->
                     Texts(stringResource(R.string.update_hero_failed), stringResource(errorText(phase.error)), isError = true)
             }
@@ -84,7 +86,8 @@ private fun Subtitle(text: String, isError: Boolean = false) = Text(
 
 /**
  * The screen's single action, full width at the bottom (under the thumb): download / allow / retry are the
- * filled main button, «Проверить ещё раз» an outlined one; nothing while checking, downloading, installing.
+ * filled main button, «Проверить ещё раз» an outlined one; «Установить вручную» when the install dialog is
+ * silent or Android failed (#217); nothing while checking or downloading.
  */
 @Composable
 internal fun UpdateMainAction(state: UpdateUiState, actions: UpdateActions, modifier: Modifier = Modifier) {
@@ -97,11 +100,22 @@ internal fun UpdateMainAction(state: UpdateUiState, actions: UpdateActions, modi
         } else {
             CoShellButton(onClick = actions.onDownload, tactile = Tactile.Primary, modifier = wide) { Text(stringResource(R.string.update_open)) }
         }
-        is UpdatePhase.Failed -> CoShellButton(
-            onClick = if (phase.release != null) actions.onDownload else actions.onCheck,
-            tactile = Tactile.Primary,
-            modifier = wide,
-        ) { Text(stringResource(R.string.update_retry)) }
+        is UpdatePhase.Installing -> if (phase.manualOffered) {
+            CoShellOutlinedButton(onClick = actions.onInstallManually, modifier = wide) {
+                Text(stringResource(R.string.update_install_manually))
+            }
+        }
+        is UpdatePhase.Failed -> if (phase.error == UpdateError.Install && phase.release != null) {
+            CoShellButton(onClick = actions.onInstallManually, tactile = Tactile.Primary, modifier = wide) {
+                Text(stringResource(R.string.update_install_manually))
+            }
+        } else {
+            CoShellButton(
+                onClick = if (phase.release != null) actions.onDownload else actions.onCheck,
+                tactile = Tactile.Primary,
+                modifier = wide,
+            ) { Text(stringResource(R.string.update_retry)) }
+        }
         else -> Unit
     }
 }

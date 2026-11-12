@@ -21,6 +21,7 @@ fun UpdateRoute(onBack: () -> Unit, viewModel: UpdateViewModel = hiltViewModel()
             onCheck = viewModel::checkNow,
             onDownload = viewModel::downloadAndInstall,
             onAllowInstall = viewModel::openInstallPermissionSettings,
+            onInstallManually = viewModel::installManually,
         ),
     )
 }
@@ -31,4 +32,6 @@ data class UpdateActions(
     val onCheck: () -> Unit = {},
     val onDownload: () -> Unit = {},
     val onAllowInstall: () -> Unit = {},
+    /** «Установить вручную»: the Android installer when its dialog did not appear (#217). */
+    val onInstallManually: () -> Unit = {},
 )

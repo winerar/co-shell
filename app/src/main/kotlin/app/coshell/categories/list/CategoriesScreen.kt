@@ -20,6 +20,8 @@ import app.coshell.categories.list.components.groupItems
 import app.coshell.core.designsystem.components.CoShellExtendedFab
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.SegmentTone
+import app.coshell.core.designsystem.components.rememberSegmentSwipe
+import app.coshell.core.designsystem.components.segmentSwipe
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.CategoryType
@@ -44,15 +46,19 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
             )
         },
     ) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding)) {
-            // Expenses / income: a way of looking at the list — the violet pill (К3).
-            val types = CategoryType.entries
+        // Expenses / income: a way of looking at the list — the violet pill (К3); the list swipes too (#173).
+        val types = CategoryType.entries
+        val selected = types.indexOf(state.type)
+        val onSelect = { index: Int -> actions.onSelectType(types[index]) }
+        val swipe = rememberSegmentSwipe()
+        Column(Modifier.fillMaxSize().padding(padding).segmentSwipe(swipe, selected, types.size, onSelect)) {
             CoShellSegmented(
                 labels = types.map { stringResource(it.labelRes) },
-                selected = types.indexOf(state.type),
-                onSelect = { actions.onSelectType(types[it]) },
+                selected = selected,
+                onSelect = onSelect,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s),
                 tone = SegmentTone.View,
+                swipe = swipe,
             )
             if (state.isLoading) return@Column
             LazyColumn(contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {

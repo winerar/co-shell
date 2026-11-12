@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
@@ -14,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.TransactionsUiState
@@ -32,7 +32,7 @@ internal fun RecentCard(
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(R.string.home_recent), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+            CoShellSectionLabel(stringResource(R.string.home_recent), Modifier.weight(1f).padding(start = Spacing.xs))
             if (rows.isNotEmpty()) CoShellTextButton(onClick = onAll) { Text(stringResource(R.string.home_recent_all) + " →") }
         }
         if (rows.isEmpty()) {

@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.components.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -28,7 +29,7 @@ import app.coshell.core.designsystem.tokens.Spacing
  */
 @Composable
 internal fun BudgetSummaryCard(summary: BudgetsUiState.Summary, modifier: Modifier = Modifier) {
-    CoShellCard(modifier.fillMaxWidth()) {
+    CoShellCard(modifier.fillMaxWidth(), accent = true) {
         Column(Modifier.padding(Spacing.l)) { SummaryContent(summary) }
     }
 }
@@ -53,7 +54,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
     AmountText(
         summary.left,
         AmountTitleStyle,
-        color = if (summary.over) bulletColor(BulletTone.DANGER) else MaterialTheme.colorScheme.onSurface,
+        color = if (summary.over) bulletColor(BulletTone.DANGER) else LocalHeroPalette.current.amount,
         modifier = Modifier.padding(top = Spacing.xs),
     )
     Text(

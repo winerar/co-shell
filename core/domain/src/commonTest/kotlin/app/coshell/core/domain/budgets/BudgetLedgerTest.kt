@@ -63,6 +63,23 @@ class BudgetLedgerTest {
     }
 
     @Test
+    fun `the operations of a limit are its counted ones in the period, newest first`() {
+        val rent = operation("rent", ars(300_000), 11, 3)
+        val refund = operation("utilities", ars(2_000), 11, 20, type = TransactionType.INCOME)
+        val light = operation("utilities", ars(9_000), 11, 30, hour = 23)
+        val all = listOf(
+            rent, light, refund,
+            operation("rent", ars(300_000), 10, 31, hour = 23),
+            operation("home", ars(7_000), 11, 4, type = TransactionType.TRANSFER),
+            operation("cafe", ars(5_000), 11, 4),
+        )
+
+        val shown = budgetOperations(all, budgetCategoryIds("home", categories), budgetPeriod(november), tz)
+
+        assertEquals(listOf(light, refund, rent), shown)
+    }
+
+    @Test
     fun `each operation is converted at the rate of its own day`() {
         val ledger = ledger(
             operation("cafe", ars(10_000), 11, 2), // 1000 ARS per USD

@@ -18,6 +18,7 @@ import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
+import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
 import app.coshell.categories.edit.CategoryEditRoute
@@ -150,6 +151,18 @@ fun CoShellNavHost(
                 onEdit = { id, month ->
                     navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                 },
+                onOpen = { id, month ->
+                    navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
+                },
+            )
+        }
+        composable<BudgetDetailDestination> {
+            BudgetDetailRoute(
+                onBack = { navController.popBackStack() },
+                onEditLimit = { id, month -> navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) },
+                // A limit inside the folder: its own envelope on top; back returns to the folder.
+                onOpenEnvelope = { id, month -> navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) },
+                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
             )
         }
         composable<BudgetEditDestination> {

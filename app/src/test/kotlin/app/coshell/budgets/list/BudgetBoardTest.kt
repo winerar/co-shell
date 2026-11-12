@@ -156,6 +156,15 @@ class BudgetBoardTest {
     }
 
     @Test
+    fun `spending exactly the limit early in the month is paid, not ahead of pace`() {
+        val rent = listOf(limit("rent", ars(280_000)))
+        val paid = BudgetCalculator(rent, categories, BudgetLedger(operations, book, tz), book)
+        val envelope = buildEnvelopes(paid.month(month, today), categories, format).single()
+        assertEquals(Caption.Paid, envelope.caption)
+        assertEquals(BulletTone.NORMAL, envelope.tone)
+    }
+
+    @Test
     fun `a filter with nothing left falls back to all`() {
         val state = BudgetsUiState(envelopes = envelopes(), filter = BudgetFilter.IDLE)
         assertEquals(listOf("gifts"), state.visible.map { it.categoryId })

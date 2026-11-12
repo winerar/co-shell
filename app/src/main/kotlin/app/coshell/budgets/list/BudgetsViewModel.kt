@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.budgets.BudgetSource
 import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.model.MoneyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.YearMonth
@@ -27,10 +31,12 @@ import kotlinx.datetime.todayIn
  * «Бюджеты»: the limits of the chosen month against what was spent (the calculator — [BudgetSource]),
  * the month total in the main report currency, the filter chips and folded folders. Opens on the
  * current budget month (by the family's start day); arrows go to any month before or after.
+ * The gear changes the start day (#213) — a family setting, synced to the other phone.
  */
 @HiltViewModel
 class BudgetsViewModel @Inject constructor(
-    source: BudgetSource,
+    private val source: BudgetSource,
+    private val monthStart: MonthStartSettings,
     moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
@@ -44,21 +50,27 @@ class BudgetsViewModel @Inject constructor(
     private val filter = MutableStateFlow(BudgetFilter.ALL)
     private val collapsed = MutableStateFlow<Set<String>>(emptySet())
 
-    private val board = combine(source.observe(), chosenMonth) { snapshot, chosen ->
+    /** Where the board is computed (it indexes all operations); tests run it in place. Read once, on first [state]. */
+    internal var work: CoroutineContext = Dispatchers.Default
+
+    private fun board(): Flow<BudgetsUiState> = combine(source.observe(), chosenMonth) { snapshot, chosen ->
         val month = chosen ?: budgetPeriodOf(today, snapshot.startDay).month
         val calculator = snapshot.calculator()
         val period = snapshot.period(month)
         val envelopes = buildEnvelopes(calculator.month(month, today), snapshot.categories, format)
         BudgetsUiState(
             month = month,
+            startDay = snapshot.startDay,
             periodDays = (period.start to period.lastDay).takeIf { period.start.day != 1 },
             summary = if (envelopes.isEmpty()) null else buildSummary(calculator.summary(month, today, snapshot.mainCurrency), today, format),
             envelopes = envelopes,
             counts = envelopeCounts(envelopes),
         )
-    }.flowOn(Dispatchers.Default)
+    }.flowOn(work)
 
-    val state: StateFlow<BudgetsUiState> = combine(board, filter, collapsed) { base, chosenFilter, folded ->
+    val state: StateFlow<BudgetsUiState> by lazy { stateFlow() }
+
+    private fun stateFlow(): StateFlow<BudgetsUiState> = combine(board(), filter, collapsed) { base, chosenFilter, folded ->
         // A filter that emptied (the last «горит» limit calmed down) would hide everything with no chip to leave it.
         val shown = chosenFilter.takeIf { it == BudgetFilter.ALL || (base.counts[it] ?: 0) > 0 } ?: BudgetFilter.ALL
         base.copy(filter = shown, collapsed = folded)
@@ -69,6 +81,11 @@ class BudgetsViewModel @Inject constructor(
     fun onNextMonth() = shiftMonth(1)
 
     fun onFilterChange(value: BudgetFilter) { filter.value = value }
+
+    /** [day] — 1..31; the shown month stays, its days follow the new start. */
+    fun onStartDayChange(day: Int) {
+        viewModelScope.launch { monthStart.setMonthStartDay(day) }
+    }
 
     fun onToggleFolder(categoryId: String) = collapsed.update { if (categoryId in it) it - categoryId else it + categoryId }
 

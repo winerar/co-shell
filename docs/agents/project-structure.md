@@ -65,7 +65,9 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 Бюджеты (#167): модель `core:model/Budget.kt`, логика — `core:domain/budgets/` (`BudgetPlan` — лимит месяца,
 `SaveBudgetUseCase`, `RemoveBudgetUseCase`); Room — `BudgetDao`, `RoomBudgetRepository`. Расчёт (#182): `BudgetPeriod` (месяц по дню
 начала), `BudgetLedger` (потрачено, среднее за 3 мес.), `BudgetProgress` (темп, состояние, прогноз), `BudgetCalculator` (перенос, итог месяца). Экраны (#103) — `app/.../budgets/`: `BudgetSource` (общий снимок данных),
-`list/` («Бюджеты»: `BudgetBoard.kt` — конверты, итог, фильтр), `edit/` (редактор лимита, `BudgetForm.kt`); вход — «Ещё».
+`list/` («Бюджеты»: `BudgetBoard.kt` — конверты, итог, фильтр; шестерёнка — день начала месяца, #213), `detail/` (экран конверта #183:
+`BudgetDetailBoard.kt` — шапка и категории папки; операции — `budgetOperations` из `BudgetLedger.kt`), `edit/` (редактор лимита,
+`BudgetForm.kt`); вход — «Ещё».
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),

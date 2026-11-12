@@ -21,14 +21,18 @@ import kotlinx.datetime.LocalDate
 internal fun buildEnvelopes(progress: List<BudgetProgress>, categories: List<Category>, format: MoneyFormat): List<Envelope> {
     val byId = categories.associateBy { it.id }
     val limited = progress.map { it.budget.categoryId }.toSet()
-    val folderSizes = categories.filter { it.parentId != null && !it.archived }.groupingBy { it.parentId!! }.eachCount()
+    val folderSizes = folderSizes(categories)
     val (inner, top) = progress.partition { byId[it.budget.categoryId]?.parentId in limited }
     val innerByFolder = inner.groupBy { byId[it.budget.categoryId]?.parentId }
     return top.map { item ->
         val id = item.budget.categoryId
-        envelope(item, byId[id], folderSizes[id], format, innerByFolder[id].orEmpty().map { envelope(it, byId[it.budget.categoryId], null, format) }.sorted())
+        buildEnvelope(item, byId[id], folderSizes[id], format, innerByFolder[id].orEmpty().map { buildEnvelope(it, byId[it.budget.categoryId], null, format) }.sorted())
     }.sorted()
 }
+
+/** Number of live subcategories of each folder: «папка · 3 категории». */
+internal fun folderSizes(categories: List<Category>): Map<String, Int> =
+    categories.filter { it.parentId != null && !it.archived }.groupingBy { it.parentId!! }.eachCount()
 
 /** Counts for the filter chips: every envelope, inner ones too. */
 internal fun envelopeCounts(envelopes: List<Envelope>): Map<BudgetFilter, Int> {
@@ -64,7 +68,8 @@ internal fun buildSummary(summary: BudgetMonthSummary, today: LocalDate, format:
     )
 }
 
-private fun envelope(item: BudgetProgress, category: Category?, folderSize: Int?, format: MoneyFormat, children: List<Envelope> = emptyList()): Envelope {
+/** One limit as a row; also the head of the envelope screen (`budgets/detail`). */
+internal fun buildEnvelope(item: BudgetProgress, category: Category?, folderSize: Int?, format: MoneyFormat, children: List<Envelope> = emptyList()): Envelope {
     val tone = tone(item)
     return Envelope(
         categoryId = item.budget.categoryId,
@@ -86,7 +91,10 @@ private fun envelope(item: BudgetProgress, category: Category?, folderSize: Int?
     )
 }
 
-private fun tone(item: BudgetProgress): BulletTone = when (item.state) {
+/** Spent exactly the limit (rent paid in one go) — done, not «ahead of pace». */
+private fun BudgetProgress.paid(): Boolean = left.isZero && spent.isPositive
+
+private fun tone(item: BudgetProgress): BulletTone = if (item.paid()) BulletTone.NORMAL else when (item.state) {
     BudgetState.OVER -> BulletTone.DANGER
     BudgetState.FAST -> BulletTone.WARNING
     BudgetState.OK -> if (item.spent.isZero) BulletTone.IDLE else BulletTone.NORMAL
@@ -96,18 +104,18 @@ private fun caption(item: BudgetProgress, tone: BulletTone, format: MoneyFormat)
     BulletTone.DANGER -> Caption.Over(format.format(item.left.abs()))
     BulletTone.WARNING -> Caption.Ahead(format.format(item.left), item.daysLeft)
     BulletTone.IDLE -> Caption.Idle
-    BulletTone.NORMAL -> Caption.Left(format.format(item.left), item.perDay?.let(format::format))
+    BulletTone.NORMAL -> if (item.paid()) Caption.Paid else Caption.Left(format.format(item.left), item.perDay?.let(format::format))
 }
 
 /** Spent over the limit, 0…∞ (the bar caps it); a limit that is zero or less after carrying over is full. */
-private fun fraction(spent: Money, of: Money): Float = when {
+internal fun fraction(spent: Money, of: Money): Float = when {
     of.isPositive -> spent.amountMinor.toFloat() / of.amountMinor
     spent.isPositive -> 1f
     else -> 0f
 }
 
 /** «310 000» — the number without the code, as in «310 000 / 400 000 ARS». */
-private fun MoneyFormat.number(money: Money): String =
+internal fun MoneyFormat.number(money: Money): String =
     formatNumber(money.amountMinor, Currencies.info(money.currency).fractionDigits)
 
 private val severity = listOf(BulletTone.DANGER, BulletTone.WARNING, BulletTone.NORMAL, BulletTone.IDLE)

@@ -100,7 +100,6 @@ fun CoShellNavHost(
             HomeRoute(
                 HomeActions(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
-                    onAccounts = { navController.navigateToTab(TopLevel.ACCOUNTS) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
                     onUncategorized = {
                         navController.navigateToTab(TopLevel.TRANSACTIONS)

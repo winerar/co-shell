@@ -136,7 +136,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
 
 /**
  * The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. On the right:
- * «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
+ * «Расход»/«Доход» for a new one, «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
  */
 @Composable
 private fun Header(state: TransactionEditUiState, actions: TransactionEditActions) {
@@ -155,6 +155,10 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
             state.toAccount?.let { AccountChip(it) { actions.onStepChange(EntryStep.TO_ACCOUNT) } }
         }
         Spacer(Modifier.weight(1f))
+        // Which kind of operation this is, in its colour (board `Main`, step 2): the type switch stays on step 1.
+        if (state.isNew && !state.isCopy && !state.isTransfer && state.templateName == null && state.savedTemplateName == null) {
+            Text(stringResource(state.type.labelRes), style = MaterialTheme.typography.labelLarge, color = amountColor(state.type))
+        }
         if (!state.isNew) {
             CoShellIconButton(onClick = actions.onDuplicate) {
                 Icon(painterResource(DesignR.drawable.ic_content_copy), contentDescription = stringResource(R.string.action_duplicate))

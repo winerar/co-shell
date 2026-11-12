@@ -15,13 +15,13 @@ internal val homePreviewSample = HomeUiState(
     byCurrency = listOf("105 800,50 RUB", "150,00 USD"),
     spending = HomeUiState.MonthSpending(
         month = LocalDate(2026, 11, 1),
-        totals = listOf("412,30 USD", "598 000,00 ARS"),
+        totals = listOf("412,30\u00A0USD", "598 000,00\u00A0ARS"),
         missing = emptyList(),
         daily = listOf(1200L, 0, 5400, 800, 3000, 0, 0, 9900, 2500) + List(21) { 0L },
         today = 8,
     ),
     income = HomeUiState.MonthTotals(listOf("2 000,00 USD", "2 900 000,00 ARS")),
-    attention = HomeUiState.Attention(missingRates = listOf("RUB"), uncategorized = 2),
+    attention = HomeUiState.Attention(uncategorized = 14),
     accounts = listOf(
         HomeUiState.AccountRow("1", "Карта", "120 800,50 RUB", isNegative = false),
         HomeUiState.AccountRow("2", "Кредитка", "-15 000,00 RUB", isNegative = true, excludedFromTotal = true),

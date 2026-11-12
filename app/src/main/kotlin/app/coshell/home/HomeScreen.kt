@@ -32,12 +32,11 @@ import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
-/** Everything «Обзор» can open: the other tabs, the rates screen, an operation, a new account. */
+/** Everything «Обзор» can open: «Операции», the rates screen, an operation, a new account. */
 data class HomeActions(
     val onTransactions: () -> Unit = {},
-    val onAccounts: () -> Unit = {},
     val onRates: () -> Unit = {},
-    /** «Внимание» → «Операции» with the «Без категории · Этот месяц» filter. */
+    /** «Без категории» → «Операции» with the «Без категории · Этот месяц» filter. */
     val onUncategorized: () -> Unit = {},
     val onTransactionClick: (String) -> Unit = {},
     val onAddAccount: () -> Unit = {},
@@ -64,7 +63,7 @@ fun HomeRoute(
 }
 
 /**
- * «Обзор» (design-refactor Step 5): hero card with the total, bento tiles 2×2, the latest operations.
+ * «Обзор» (boards `Home`, `HomeAttention`): hero card with the total, two tiles, the latest operations.
  * Blocks come in as a short cascade the first time the tab shows (Step 4).
  */
 @Composable
@@ -102,7 +101,6 @@ fun HomeScreen(
                 HomeTiles(
                     state,
                     onTransactions = actions.onTransactions,
-                    onAccounts = actions.onAccounts,
                     onRates = actions.onRates,
                     onUncategorized = actions.onUncategorized,
                     modifier = Modifier.staggeredEntrance(1),

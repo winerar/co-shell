@@ -24,11 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.accounts.groupByAccountType
 import app.coshell.accounts.groupLabelRes
+import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellSearchField
@@ -64,7 +67,14 @@ internal fun AccountPicker(
     val choices = accounts.filter { it.id != excludeId }
     val found = if (query.isBlank()) choices else choices.filter { it.name.contains(query.trim(), ignoreCase = true) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
-        Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = Spacing.l))
+        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.Bottom) {
+            Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+            Text(
+                pluralStringResource(R.plurals.picker_account_count, choices.size, choices.size),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         Column(
             Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
@@ -78,7 +88,7 @@ internal fun AccountPicker(
                 }
             }
             groupByAccountType(found) { it.type }.forEach { (type, items) ->
-                GroupTitle(stringResource(type.groupLabelRes))
+                GroupTitle(stringResource(type.groupLabelRes).uppercase())
                 items.chunked(COLUMNS).forEach { line ->
                     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                         line.forEach { AccountTile(it, it.id == selectedId, Modifier.weight(1f)) { onSelect(it.id) } }
@@ -132,33 +142,38 @@ private fun RecentTile(account: AccountOption, selected: Boolean, modifier: Modi
 
 @Composable
 private fun AccountTile(account: AccountOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
-    val ring by animateColorAsState(ringColor(account, selected), Motion.effects(), label = "tileRing")
+    val ring by animateColorAsState(
+        ringColor(account, selected, idle = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)),
+        Motion.effects(),
+        label = "tileRing",
+    )
     val shape = MaterialTheme.shapes.large
     Column(
         modifier = modifier
             .heightIn(min = Sizes.accountTile)
             .tactileClickable(Tactile.Control, shape, onClick = onClick)
             .selectionPop(selected)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh, shape)
+            .background(if (selected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainer, shape)
             .border(Sizes.selectionRing, ring, shape)
             .padding(Spacing.m),
         verticalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
         AccountBadge(account.name, account.color, size = Sizes.badgeSmall)
         Text(account.name, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(
+        // A long balance shrinks to fit the tile instead of losing its currency to «…» (board `Main`).
+        AmountText(
             account.balance.ifEmpty { account.currency },
-            style = RateTextStyle,
+            RateTextStyle.copy(fontSize = 12.sp, lineHeight = 16.sp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            minFontSize = 8.sp,
         )
     }
 }
 
+/** Recent tiles have no frame until picked; grid tiles keep a soft one. */
 @Composable
-private fun ringColor(account: AccountOption, selected: Boolean): Color = when {
-    !selected -> Color.Transparent
+private fun ringColor(account: AccountOption, selected: Boolean, idle: Color = Color.Transparent): Color = when {
+    !selected -> idle
     account.color != null -> categoryColor(account.color)
     else -> accentInk()
 }

@@ -29,6 +29,7 @@
 Прокси, Maven 429, SDK, холст, GitHub — в [`environment.md`](environment.md).
 
 ## Грабли проекта
+- (11-12) Снимок `ComponentsCatalog` обрезан высотой 891 dp: новый блок внизу каталога в эталон не попадает — нужен отдельный `shot(...)` (так `menu_rows_*`).
 - (11-12) Compose `lerp(Color, Color, t)` смешивает в **Oklab**, не в sRGB — подбирать цвета/контраст заранее скриптом с Oklab (как в #249), иначе числа не сойдутся с `ColorContrastTest`.
 - (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
   класса инициализируется раньше `MainDispatcherRule`, и `viewModelScope` молча не работает.

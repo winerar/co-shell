@@ -17,6 +17,7 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.buildTransactionDays
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -76,6 +77,7 @@ class HomeViewModel @Inject constructor(
     }
 
     val state: StateFlow<HomeUiState> = combine(money, recent) { home, rows -> home.copy(recent = rows) }
+        .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState(isLoading = true))
 
     internal fun buildState(

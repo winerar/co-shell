@@ -5,6 +5,7 @@ import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionType
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 
@@ -41,6 +42,10 @@ data class TransactionFilter(
     val from: Instant? = null,
     /** Exclusive. */
     val to: Instant? = null,
+    /** Only operations of this type. */
+    val type: TransactionType? = null,
+    /** Only expenses and incomes without a category. */
+    val uncategorized: Boolean = false,
     /** At most this many newest transactions; null — all. The list grows this window while scrolling. */
     val limit: Int? = null,
 )

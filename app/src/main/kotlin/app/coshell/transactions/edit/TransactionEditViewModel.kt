@@ -26,6 +26,7 @@ import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -86,8 +88,9 @@ class TransactionEditViewModel @Inject constructor(
     init {
         viewModelScope.launch { load() }
         viewModelScope.launch {
-            rates.observeRates().collect { list ->
-                converter = CurrencyConverter(RateBook(list))
+            // Parsing and indexing every known rate is heavy: off the main thread (#258).
+            rates.observeRates().map { list -> CurrencyConverter(RateBook.of(list)) }.offMain().collect { built ->
+                converter = built
                 if (!_state.value.isLoading) updateForm { it }
             }
         }

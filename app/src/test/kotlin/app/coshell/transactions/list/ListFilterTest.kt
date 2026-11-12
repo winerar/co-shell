@@ -66,7 +66,9 @@ class ListFilterTest {
         assertFalse(f.hit(coto.copy(type = TransactionType.TRANSFER, categoryId = null, toAccountId = "cash", toAmount = coto.amount)))
         assertTrue(f.isActive)
         assertEquals(ListFilter.Period.THIS_MONTH, f.period)
-        // Checked in memory, so Room must return the whole month, not a page.
-        assertNull(f.toRepositoryFilter(200, LocalDate(2026, 11, 9), zone).limit)
+        // Room filters it (#261), so the list keeps its pages.
+        val room = f.toRepositoryFilter(200, LocalDate(2026, 11, 9), zone)
+        assertTrue(room.uncategorized)
+        assertEquals(200, room.limit)
     }
 }

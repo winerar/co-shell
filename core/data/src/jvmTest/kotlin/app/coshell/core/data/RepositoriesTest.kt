@@ -134,6 +134,22 @@ class RepositoriesTest {
     }
 
     @Test
+    fun `filters by type and by missing category in SQL, keeping the page limit`() = runTest {
+        transactions.saveTransaction(Transaction("food", TransactionType.EXPENSE, "a", Money(1, usd), day(1), categoryId = "food"))
+        transactions.saveTransaction(Transaction("bare", TransactionType.EXPENSE, "a", Money(1, usd), day(2)))
+        transactions.saveTransaction(Transaction("salary", TransactionType.INCOME, "a", Money(1, usd), day(3)))
+        transactions.saveTransaction(
+            Transaction("move", TransactionType.TRANSFER, "b", Money(1, usd), day(4), toAccountId = "a", toAmount = Money(1, usd)),
+        )
+        suspend fun ids(filter: TransactionFilter) = transactions.observeTransactions(filter).first().map { it.id }
+
+        assertEquals(listOf("bare", "food"), ids(TransactionFilter(type = TransactionType.EXPENSE)))
+        assertEquals(listOf("move"), ids(TransactionFilter(type = TransactionType.TRANSFER)))
+        assertEquals(listOf("salary", "bare"), ids(TransactionFilter(uncategorized = true)))
+        assertEquals(listOf("salary"), ids(TransactionFilter(uncategorized = true, limit = 1)))
+    }
+
+    @Test
     fun `limit returns only the newest transactions`() = runTest {
         (1..5).forEach { transactions.saveTransaction(Transaction("$it", TransactionType.EXPENSE, "a", Money(1, usd), day(it))) }
         assertEquals(listOf("5", "4"), transactions.observeTransactions(TransactionFilter(limit = 2)).first().map { it.id })

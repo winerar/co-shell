@@ -107,7 +107,6 @@
   Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.
 - (11-12) Roborazzi `captureRoboImage(path) { … }` снимает раньше, чем доходит каскад `staggeredEntrance` (на «Обзоре» не было
   «Последних операций») — экраны снимать через `createAndroidComposeRule` + `mainClock.autoAdvance = false` + `advanceTimeBy`.
-  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November».
 - (11-12) Фоновая команда Bash с `cat > файл` без ввода висит вечно (ждёт stdin) — так «застрял» `agent.sh test`; не склеивать.
 - (11-12) Коммит с трейлерами через `-m "...$T"`: `T=$'\n\nCo-Authored-By: …'` — с пустой строкой, иначе трейлеры уйдут в заголовок.
 - (11-12) Прогон, запущенный `GITHUB_TOKEN` (dispatch CI из `auto-pr.yml`), **не порождает `workflow_run`** — автомерж по
@@ -121,3 +120,6 @@
 - (11-12) Публикация холста: `file_path` — абсолютный путь (относительный ищется от рабочей папки, не от `root`); первый publish без `read` всей артефакта отклоняется — сначала `Artifact read` без `path`.
 - (11-12) Тап на кирпичах — `<div style="display: contents" onClick>` (`mockup_logic.tap`); `stroke=` с лаймом — роль `Pi`,
   в светлой теме почти чёрная; неоновую линию задавать `--ring: #…; stroke: var(--ring)` (так `ring()`). JS-ключ `…Color:` — чернила.
+- (11-12) `combine{}.stateIn(viewModelScope)` считает в главном потоке (как и `.map{}` у Room-потока) — нужен `.offMain()` (#258).
+  Release APK: `assets/dexopt/baseline.prof` из одних библиотек; шаблон `HSPLapp/coshell/**;->**(**)**` разворачивает AGP
+  (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).

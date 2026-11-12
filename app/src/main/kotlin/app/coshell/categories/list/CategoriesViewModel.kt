@@ -7,6 +7,7 @@ import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.model.buildCategoryTree
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,7 @@ class CategoriesViewModel @Inject constructor(categories: CategoryRepository) : 
 
     val state: StateFlow<CategoriesUiState> =
         combine(categories.observeCategories(includeArchived = true), ui) { all, ui -> buildState(all, ui) }
+            .offMain()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CategoriesUiState(isLoading = true))
 
     fun selectType(type: CategoryType) = ui.update { it.copy(type = type) }

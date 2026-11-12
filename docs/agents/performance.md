@@ -21,6 +21,10 @@
 - Суммы, итоги, группировки считает **SQL** (агрегаты), а не загрузка всех строк в память.
 - Длинные списки — постранично: `GrowingWindow` (`TransactionFilter.limit`) + `LoadMoreEffect` у `LazyColumn`.
 - `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), …)` — потоки не работают в фоне.
+- **Перед `stateIn` — `.offMain()`** (`ui/StateWork.kt`, #258): иначе `combine`/`map` и маппинг Room идут в главном
+  потоке. В тестах `MainDispatcherRule` делает его синхронным.
+- Курсы: `observeRates()` — один общий поток на приложение (#260), книга — `RateBook.of(list)`, не `RateBook(list)`.
+- Фильтры списков — в SQL; в памяти только поиск по тексту, и Room перезапрашивается лишь при смене SQL-части (#261).
 - Без утечек: никаких ссылок на `Activity`/`Context` в синглтонах и ViewModel.
 
 ## Compose: меньше перерисовок
@@ -43,8 +47,9 @@
 - Уважать системную настройку «Убрать анимации» (масштаб анимации 0).
 
 ## Как проверять
-- Baseline Profile (модуль `:baselineprofile`, `androidx.profileinstaller`) — ускоряет запуск и
-  первую прокрутку на 20–40%; генерировать перед релизами (ROADMAP, «Производительность»).
+- Профиль запуска: `app/src/main/baseline-prof.txt` — шаблон на весь `app/coshell/**` (#263), библиотеки дают свои;
+  ставит `profileinstaller`. Замеренный профиль (макробенчмарк) — когда будет эмулятор/телефон (#149).
+- Размер (2026-11-12): release APK 5,5 МБ (было 8,0); ~2,5 МБ — встроенный SQLite (arm64 + armv7, #264).
 - Отчёты компилятора Compose (`composeCompiler { reportsDestination }`) — искать нестабильные классы.
 - На телефоне: «Для разработчиков → Профилировать HWUI → столбцы», Android Studio Profiler (память).
 - Объём: `scripts/agent/agent.sh scale` — импорт/список/синк/размер БД на 10 000 операций (`ImportScaleTest`,

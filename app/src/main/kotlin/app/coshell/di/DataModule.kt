@@ -49,6 +49,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
@@ -116,7 +119,7 @@ object DataModule {
 
     @Provides @Singleton
     fun provideExchangeRateRepository(db: CoShellDatabase, stamper: WriteStamper): ExchangeRateRepository =
-        RoomExchangeRateRepository(db.rateDao(), stamper)
+        RoomExchangeRateRepository(db.rateDao(), stamper, CoroutineScope(SupervisorJob() + Dispatchers.Default))
 
     @Provides @Singleton
     fun provideImportRepository(db: CoShellDatabase, stamper: WriteStamper): ImportRepository =

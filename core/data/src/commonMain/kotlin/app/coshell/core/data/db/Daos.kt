@@ -59,11 +59,21 @@ interface TransactionDao {
            AND (:categoryId IS NULL OR category_id = :categoryId)
            AND (:fromMs IS NULL OR date >= :fromMs)
            AND (:toMs IS NULL OR date < :toMs)
+           AND (:type IS NULL OR type = :type)
+           AND (NOT :uncategorized OR (type != 'TRANSFER' AND category_id IS NULL))
            ORDER BY date DESC, id DESC
            LIMIT :limit""",
     )
     /** [limit] -1 means no limit (SQLite). */
-    fun observe(accountId: String?, categoryId: String?, fromMs: Long?, toMs: Long?, limit: Int): Flow<List<TransactionEntity>>
+    fun observe(
+        accountId: String?,
+        categoryId: String?,
+        fromMs: Long?,
+        toMs: Long?,
+        limit: Int,
+        type: String? = null,
+        uncategorized: Boolean = false,
+    ): Flow<List<TransactionEntity>>
 
     @Query("SELECT * FROM transactions WHERE id = :id AND deleted = 0")
     suspend fun get(id: String): TransactionEntity?

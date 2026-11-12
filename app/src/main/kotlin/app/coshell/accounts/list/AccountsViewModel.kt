@@ -13,6 +13,7 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -37,7 +38,10 @@ internal data class AccountsView(
 )
 
 /** Main report currency, rates and today — for «≈ … USD» next to balances and group totals. */
-internal data class Conversion(val rates: List<ExchangeRate>, val main: CurrencyCode, val today: LocalDate)
+/** Built once per rates change, not on every search keystroke or folded group (#258). */
+internal class Conversion(rates: List<ExchangeRate>, val main: CurrencyCode, val today: LocalDate) {
+    val book = RateBook.of(rates)
+}
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
@@ -60,7 +64,7 @@ class AccountsViewModel @Inject constructor(
     val state: StateFlow<AccountsUiState> =
         combine(accounts.observeAccountsWithBalance(includeArchived = true), view, otherMembers.names(), conversion) { list, v, others, c ->
             buildState(list, v.showArchived, others, v, c)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccountsUiState(isLoading = true))
+        }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccountsUiState(isLoading = true))
 
     fun toggleArchived() = view.update { it.copy(showArchived = !it.showArchived) }
 
@@ -81,12 +85,11 @@ class AccountsViewModel @Inject constructor(
         view: AccountsView = AccountsView(showArchived = showArchived),
         conversion: Conversion? = null,
     ): AccountsUiState {
-        val book = conversion?.let { RateBook(it.rates) }
         val convert = { sums: List<Money> ->
-            if (book == null || conversion == null || sums.isEmpty()) {
+            if (conversion == null || sums.isEmpty()) {
                 null
             } else {
-                book.balanceTotals(sums, listOf(conversion.main), conversion.today).first()
+                conversion.book.balanceTotals(sums, listOf(conversion.main), conversion.today).first()
                     .takeIf { it.missing.isEmpty() }
                     ?.let { "≈ " + moneyFormat.format(it.sum) }
             }

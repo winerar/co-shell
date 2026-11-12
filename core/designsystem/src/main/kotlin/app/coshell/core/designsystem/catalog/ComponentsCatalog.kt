@@ -25,6 +25,7 @@ import app.coshell.core.designsystem.components.CoShellPaletteSwatch
 import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
+import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -64,6 +65,14 @@ fun ComponentsCatalog() {
             )
             CoShellSwitchRow(title = "Учитывать в общем балансе", checked = true, onCheckedChange = {})
             CoShellListRow(title = "Резервная копия", subtitle = "Недоступно", enabled = false, onClick = {})
+        }
+        Column(Modifier.padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            CoShellSectionLabel("Общее")
+            CoShellRowGroup {
+                row { CoShellListRow(title = "Валюты отчётов", subtitle = "Основная: USD", onClick = {}) }
+                row { CoShellSwitchRow(title = "Встряхнуть — новая операция", checked = true, onCheckedChange = {}) }
+                row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
+            }
         }
     }
 }

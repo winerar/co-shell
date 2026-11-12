@@ -18,6 +18,10 @@ import app.coshell.rates.list.components.ManualRateRow
 import app.coshell.rates.list.components.RatesSectionHeader
 import app.coshell.rates.list.components.RatesSources
 import app.coshell.rates.list.components.RefreshBlock
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.designsystem.components.RowGroupPosition
+import app.coshell.core.designsystem.components.rowGroupSegment
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.list.ActionRow
 import app.coshell.ui.top.ScreenTopBar
@@ -43,8 +47,12 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             if (state.current.isEmpty() && !state.isLoading) {
                 item(key = "current-empty") { MutedLine(stringResource(R.string.rates_no_currencies)) }
             }
-            items(state.current, key = { "current-${it.currency}" }) { item ->
-                CurrentRateRow(item, state.base) { actions.onCurrentClick(item) }
+            // К5: today's rates in one card; each lazy item draws its own piece of it.
+            itemsIndexed(state.current, key = { _, it -> "current-${it.currency}" }) { index, item ->
+                val position = RowGroupPosition(index, state.current.size)
+                Box(Modifier.padding(horizontal = Spacing.l).rowGroupSegment(position)) {
+                    CurrentRateRow(item, state.base) { actions.onCurrentClick(item) }
+                }
             }
 
             item(key = "manual-header") {

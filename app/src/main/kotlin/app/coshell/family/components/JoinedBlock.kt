@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.ui.list.SectionTitle
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.family.FamilyActions
 import app.coshell.family.FamilyUiState
@@ -44,38 +45,47 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         },
     )
 
-    FamilySectionTitle(stringResource(R.string.family_members))
-    joined.family.members.forEachIndexed { index, m ->
-        val tags = listOfNotNull(
-            stringResource(R.string.family_you).takeIf { m.uid == joined.me.uid },
-            stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid },
-        )
-        val name = m.name.ifBlank { m.email }
-        CoShellListRow(
-            title = name,
-            subtitle = (listOf(m.email) + tags).joinToString(" · "),
-            leading = { AccountBadge(name, MemberColors[index % MemberColors.size]) },
-        )
+    SectionTitle(stringResource(R.string.family_members))
+    FamilyRows {
+        joined.family.members.forEachIndexed { index, m ->
+            row {
+                val tags = listOfNotNull(
+                    stringResource(R.string.family_you).takeIf { m.uid == joined.me.uid },
+                    stringResource(R.string.family_owner).takeIf { m.uid == joined.family.ownerUid },
+                )
+                val name = m.name.ifBlank { m.email }
+                CoShellListRow(
+                    title = name,
+                    subtitle = (listOf(m.email) + tags).joinToString(" · "),
+                    leading = { AccountBadge(name, MemberColors[index % MemberColors.size]) },
+                )
+            }
+        }
+        state.invites.forEach { email ->
+            row {
+                CoShellListRow(
+                    title = email,
+                    subtitle = stringResource(R.string.family_invite_pending),
+                    trailing = {
+                        CoShellIconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
+                            Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.family_invite_cancel))
+                        }
+                    },
+                )
+            }
+        }
+        row {
+            ActionRow(
+                icon = DesignR.drawable.ic_person_add,
+                title = stringResource(R.string.family_invite),
+                subtitle = stringResource(R.string.family_invite_hint),
+                onClick = { inviting = true },
+                enabled = !state.isBusy,
+            )
+        }
     }
-    state.invites.forEach { email ->
-        CoShellListRow(
-            title = email,
-            subtitle = stringResource(R.string.family_invite_pending),
-            trailing = {
-                CoShellIconButton(onClick = { actions.onCancelInvite(email) }, enabled = !state.isBusy) {
-                    Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.family_invite_cancel))
-                }
-            },
-        )
-    }
-    ActionRow(
-        icon = DesignR.drawable.ic_person_add,
-        title = stringResource(R.string.family_invite),
-        subtitle = stringResource(R.string.family_invite_hint),
-        onClick = { inviting = true },
-        enabled = !state.isBusy,
-    )
-    SignOutRow(state.isBusy, actions.onSignOut)
+    SectionTitle(stringResource(R.string.family_account_section))
+    FamilyRows { row { SignOutRow(state.isBusy, actions.onSignOut) } }
 
     if (inviting) {
         InviteDialog(

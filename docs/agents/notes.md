@@ -14,8 +14,6 @@
 - (11-12) Кончились минуты Actions: задачи падают за 2–4 с, `runner_id: 0`, логов нет (404), `billable` в API = 0 — это не код, а биллинг (#251).
 - (11-09) Чистая локальная `check assembleDebug` — ~3 мин; CPU по задачам: lint ~26%, KSP `core:data`
   дважды (android + jvm) ~65 с, `mergeExtDexDebug` ~45 с. Тесты выполняются быстро (~50 с суммарно).
-- (11-09) CI до ускорения: PR ~5 мин (из них `check` ~4), релиз на `main` ~10 мин (`check` 3.5 +
-  debug 1.7 + release 4). После PR winerar/co-shell#41 ожидается: правки документации ~1 мин, релиз ~6.
 - (11-09) `gradle/actions/setup-gradle` по умолчанию пишет кэш **только с ветки по умолчанию** (`main`) —
   поэтому `cache-read-only` переопределён, чтобы писал и `dev`.
 - (11-09) Configuration cache в CI сохраняется только с секретом `GRADLE_ENCRYPTION_KEY` (не задан).

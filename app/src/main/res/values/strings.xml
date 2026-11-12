@@ -215,11 +215,12 @@
     <string name="action_ok">OK</string>
 
     <string name="backup_title">Резервная копия</string>
-    <string name="backup_intro">Копия — один файл со всеми счетами, категориями и операциями. Сохраните его на Google Диск или отправьте себе: он пригодится при смене или сбросе телефона.</string>
+    <string name="backup_intro">Копия — один файл со всеми счетами, категориями, операциями и ручными курсами. Пригодится при смене или сбросе телефона.</string>
     <string name="backup_export">Сохранить копию</string>
-    <string name="backup_export_hint">Выберите папку или Google Диск</string>
-    <string name="backup_import">Восстановить из копии</string>
-    <string name="backup_import_hint">Записи из файла добавятся к текущим</string>
+    <string name="backup_export_hint">в папку или на Диск</string>
+    <string name="backup_import">Восстановить</string>
+    <string name="backup_manual">Вручную</string>
+    <string name="backup_import_hint">записи добавятся к текущим</string>
     <string name="backup_import_confirm_title">Восстановить из копии?</string>
     <string name="backup_import_confirm_text">Записи из файла добавятся в приложение, а совпадающие с ними — заменятся версией из файла. Остальные данные останутся как есть.</string>
     <string name="backup_import_confirm">Восстановить</string>
@@ -397,11 +398,20 @@
     <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
-    <string name="auto_backup_off">Выключено. Выберите папку (на телефоне или Google Диске) — копия будет сохраняться туда каждую неделю, хранятся последние 8.</string>
+    <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю, хранятся последние 8.</string>
     <string name="auto_backup_pending">Первая копия скоро появится</string>
-    <string name="auto_backup_last">Последняя копия: %1$s</string>
+    <string name="auto_backup_last">Последняя: %1$s · раз в неделю</string>
     <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
-    <string name="auto_backup_disable">Выключить автокопии</string>
+    <string name="auto_backup_off_title">Автокопия выключена</string>
+    <string name="auto_backup_failed_title">Копия не сохранилась</string>
+    <string name="auto_backup_folder_change">тап — выбрать другую</string>
+    <string name="auto_backup_folder_hint">на телефоне или Google Диске</string>
+    <plurals name="auto_backup_days_left">
+        <item quantity="one">день до копии</item>
+        <item quantity="few">дня до копии</item>
+        <item quantity="many">дней до копии</item>
+        <item quantity="other">дня до копии</item>
+    </plurals>
 
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
     <string name="family_title">Семья</string>

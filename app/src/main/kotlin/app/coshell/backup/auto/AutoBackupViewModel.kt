@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.ui.format.formatDayMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import kotlinx.datetime.toLocalDateTime
 
 /** «Резервная копия → Автоматически раз в неделю». */
@@ -20,6 +22,8 @@ data class AutoBackupUiState(
     /** «9 ноября», `null` — no automatic copy yet. */
     val lastBackup: String? = null,
     val lastFailed: Boolean = false,
+    /** Days until the next weekly copy (ring «дней до копии»), `null` — off or no copy yet. */
+    val daysLeft: Int? = null,
 )
 
 @HiltViewModel
@@ -28,6 +32,7 @@ class AutoBackupViewModel @Inject constructor(
     private val writer: FolderBackupWriter,
     private val control: AutoBackupScheduler,
     private val timeZone: TimeZone,
+    private val clock: Clock,
 ) : ViewModel() {
 
     val state: StateFlow<AutoBackupUiState> = settings.config.map { it.toUi() }
@@ -47,10 +52,14 @@ class AutoBackupViewModel @Inject constructor(
         control.disable()
     }
 
-    private fun AutoBackupConfig.toUi() = AutoBackupUiState(
-        enabled = folderUri != null,
-        folderName = folderName,
-        lastBackup = lastBackupAtMs?.let { formatDayMonth(Instant.fromEpochMilliseconds(it).toLocalDateTime(timeZone).date) },
-        lastFailed = lastFailed,
-    )
+    private fun AutoBackupConfig.toUi(): AutoBackupUiState {
+        val last = lastBackupAtMs?.let { Instant.fromEpochMilliseconds(it).toLocalDateTime(timeZone).date }
+        return AutoBackupUiState(
+            enabled = folderUri != null,
+            folderName = folderName,
+            lastBackup = last?.let(::formatDayMonth),
+            lastFailed = lastFailed,
+            daysLeft = if (folderUri != null) AutoBackupPolicy.daysUntilNext(last, clock.todayIn(timeZone)) else null,
+        )
+    }
 }

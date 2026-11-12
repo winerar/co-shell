@@ -11,6 +11,8 @@ LIME, ONLIME, LIMEPILL = '#B8FF2E', '#0E1F00', '#3A4A1E'
 CYAN, VIOLET, VIOLETPILL, VIOLETINK, PINK, PINKBG, YELLOW = '#00F0FF', '#B266FF', '#2A2240', '#E6D6FF', '#FF5C7F', '#2B0F17', '#FFE600'
 WARN, WARNBG, WARNLINE, OK = '#FFB547', '#2A1E08', '#5A3F10', '#5CFFB0'
 MONO = "font-family: 'JetBrains Mono', monospace;"
+# Hero card (#249, `CoShellCard(accent)`): palette gradient, no border; mockup_theme.py repaints the stops per palette/theme.
+HERO_BG, HERO_HINT = 'linear-gradient(135deg, #314617, #0E2523, #271E36)', '#AFB0AE'
 
 ICON = {
     'back': 'M15 6l-6 6 6 6', 'close': 'M6 6l12 12M18 6L6 18', 'search': 'M20 20l-4-4M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z',
@@ -118,6 +120,12 @@ def label(text, accent=False, top=18):
 def card(inner, pad='0', radius=16, extra=''):
     return ('<div style="border-radius: %dpx; background: %s; border: 1px solid %s; overflow: hidden; padding: %s; %s">%s</div>'
             % (radius, CARD, LINE, pad, extra, inner))
+
+
+def hero_card(inner, pad='16px', radius=16, extra=''):
+    """The one main block of a screen: gradient of the palette; inside — INK text, HERO_HINT greys, LIME amount."""
+    return ('<div style="border-radius: %dpx; background: %s; overflow: hidden; padding: %s; %s">%s</div>'
+            % (radius, HERO_BG, pad, extra, inner))
 
 
 def group(rows):

@@ -24,11 +24,11 @@ ENV = [  # name, spent, limit, cur, state, caption, sub
 def summary(compact=False):
     big = ('<div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-size: 13px; color: %s;">Осталось</span><span style="flex-grow: 1;"></span>'
            '<span style="font-size: 12px; color: %s;">потрачено 640 из 1 180 USD</span></div>'
-           '<div style="margin-top: 4px; %s font-size: %dpx; font-weight: 700;">540 <span style="font-size: 16px; color: %s;">USD</span></div>'
-           % (MUTED, MUTED, MONO, 26 if compact else 34, MUTED))
+           '<div style="margin-top: 4px; %s font-size: %dpx; font-weight: 700; color: %s;">540 <span style="font-size: 16px;">USD</span></div>'
+           % (HERO_HINT, HERO_HINT, MONO, 26 if compact else 34, LIME))
     fc = ('<div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s'
           'К концу месяца при таком темпе ≈ 1 260 USD — на 80 больше плана</div>' % (WARN, svg('rate', WARN, 16)))
-    return card(big + bullet(640 / 1180, 'fast', h=10, mt=12) + fc, pad='16px', radius=24, extra='margin-top: 4px;')
+    return hero_card(big + bullet(640 / 1180, 'fast', h=10, mt=12) + fc, pad='16px', extra='margin-top: 4px;')
 
 
 def gear():
@@ -55,10 +55,10 @@ def budget_edit():
 
 def envelope_detail():
     from mockup_screens_main import tx
-    top = card('<div style="display: flex; align-items: baseline; justify-content: space-between;"><span style="%s font-size: 26px; font-weight: 700;">90 000 '
-               '<span style="font-size: 14px; color: %s;">ARS</span></span><span style="font-size: 12px; color: %s;">осталось · 19 дней</span></div>'
-               % (MONO, MUTED, MUTED) + bullet(310 / 400, 'fast', h=10, mt=12)
-               + caption('Потрачено 310 000 из 400 000 · к сегодня должно быть ≈ 147 000', 'fast'), pad='16px', radius=20)
+    top = hero_card('<div style="display: flex; align-items: baseline; justify-content: space-between;"><span style="%s font-size: 26px; font-weight: 700; color: %s;">90 000 '
+                    '<span style="font-size: 14px;">ARS</span></span><span style="font-size: 12px; color: %s;">осталось · 19 дней</span></div>'
+                    % (MONO, LIME, HERO_HINT) + bullet(310 / 400, 'fast', h=10, mt=12)
+                    + caption('Потрачено 310 000 из 400 000 · к сегодня должно быть ≈ 147 000', 'fast'), pad='16px')
     cats = card(env_row('Аренда', '280 000', '280 000', 'ARS', 'ok', 'оплачено полностью', 'без своего лимита', div=False)
                 + env_row('Коммуналка', '30 000', '70 000', 'ARS', 'ok', 'осталось 40 000'))
     nt = message('Аренда 280 000 до 5-го, свет и газ ~60 000', 'info', 'Заметка')

@@ -68,6 +68,15 @@ var CO_SPECS = {
   'Лагуна': ['#2EE6C5','#00261F','#FF6B5C','#B8321F','#FFD27A','#735200','#7CF8FF','#006A78','#FF4D8D','#C2185B','#04100F','#F0FFFB'],
   'Сакура': ['#FF7AB8','#33001A','#7CF2C4','#00704F','#B9A4FF','#5B3FD0','#6BE4FF','#006A87','#FF4D5E','#C8102E','#120A10','#FFF4F8']
 };
+// Hero card gradient per palette: 3 dark stops (heroDarkStops, Oklab lerp in Theme.kt), then the 3 light ones (heroLight).
+var CO_HERO = {
+  'Вольт': ['#314617','#0E2523','#271E36','#B8FF2E','#8CFFA0','#5CF6FF'],
+  'Мохито': ['#2E4727','#162A2B','#2B273D','#91E668','#8FE9C2','#8FE3FF'],
+  'Манго': ['#522E27','#2D2C23','#461A2D','#FFB27A','#FFC2A0','#FFB3CC'],
+  'Ультра': ['#16284A','#17291C','#3A1835','#A9C4FF','#D4C2FF','#FFB3F0'],
+  'Лагуна': ['#12473E','#122E2E','#392721','#7CF2DD','#A8F0FF','#FFD2B8'],
+  'Сакура': ['#4F283C','#23272F','#2D3935','#FFB3D6','#FFD0E4','#C9F7E4']
+};
 var CO_NOW = { dark: true, pal: 'Вольт' };
 function __coTheme(props) {
   var s = {};
@@ -94,6 +103,7 @@ function __co(k) {
   var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
   var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
   if (role === 'O') return S[1];
+  if (/^H[0-2]$/.test(role)) return CO_HERO[CO_NOW.pal][(d ? 0 : 3) + parseInt(role.charAt(1), 10)];
   if (role === 'Oa' || role === 'Oi') return orig;
   if (role === 'Pi') return d ? S[0] : __coMix('#000000', bg, 0.1);
   if (neon[role]) return neon[role][0];

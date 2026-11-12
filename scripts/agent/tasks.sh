@@ -24,6 +24,11 @@ for s in "${statuses[@]}"; do
     echo "== $s ($(wc -l <<<"$items"))"
     if [ "$s" = backlog ] && [ $# -eq 0 ]; then head -8 <<<"$items"; else echo "$items"; fi
 done
+if [ $# -gt 0 ]; then # columns not asked for — one line of counts
+    hidden=$(jq -r '.l[] | select(startswith("status:")) | ltrimstr("status:")' <<<"$json" | sort | uniq -c |
+        while read -r n s; do [[ " ${statuses[*]} " == *" $s "* ]] || printf '%s %s · ' "$s" "$n"; done)
+    [ -z "$hidden" ] || echo "(не показаны: ${hidden% · })"
+fi
 none=$(jq -r "select([.l[] | startswith(\"status:\")] | any | not) | $row" <<<"$json")
 [ -z "$none" ] || { echo "== без статуса — разметить"; echo "$none"; }
 untyped=$(jq -r "select(.l | (index(\"status:triage\") or any(startswith(\"type:\"))) | not) | $row" <<<"$json")

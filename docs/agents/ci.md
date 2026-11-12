@@ -7,6 +7,9 @@
 - `ci.yml` — push в `main`/`dev`, PR, вручную (Actions → «Сборка и тесты (CI)» → Run workflow).
 - `auto-pr.yml` — draft PR на первый push агентской ветки; `automerge.yml` — мерж в `dev` после зелёного CI
   (логика — `scripts/ci/automerge.sh`); `release.yml` — кнопка релиза (описание — `scripts/release_notes.py`).
+- Автомерж зовут трое: `ready_for_review`/метки (`automerge.yml`), `workflow_run` и **последний шаг зелёного CI ветки**
+  (`CI_GREEN_SHA`). Прогон CI, запущенный ботом (dispatch из `auto-pr.yml`), `workflow_run` не порождает — без шага
+  PR, снятый с черновика до конца CI, висел (#223, #229).
 - Мерж/PR через `GITHUB_TOKEN` **не запускает** `push`/`pull_request`-workflow — поэтому они вызывают
   `gh workflow run ci.yml` (dispatch разрешён). `workflow_run` и кнопки работают из копии в `main`: правка
   `automerge.sh`/`automerge.yml`/`release.yml` действует после релиза.

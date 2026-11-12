@@ -15,7 +15,8 @@ concurrency:
 permissions:
   contents: write # publish releases
   actions: write # dev: look up the CI run of the merged PR head, dispatch warm-cache.yml
-  pull-requests: write # failure summary comment on the PR
+  pull-requests: write # failure summary comment on the PR; automerge of agent PRs
+  issues: write # automerge closes the issues from `Fixes #N`
 
 jobs:
   build:
@@ -201,6 +202,17 @@ jobs:
           [ -z "$id" ] || gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$id" \
             -f body="<!-- ci-summary -->
           ✓ CI зелёный на ${{ github.event.pull_request.head.sha }} (прошлая ошибка исправлена)." >/dev/null
+
+      # A run started by GITHUB_TOKEN (the dispatch from auto-pr.yml) fires no workflow_run, so automerge.yml
+      # never hears that it finished: a PR marked ready while CI was running stayed open (#223, #229).
+      # The green run hands the PR to the same script itself; it skips drafts, `hold`, non-agent branches.
+      - name: Merge the agent PR into dev
+        if: success() && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CI_GREEN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: bash scripts/ci/automerge.sh "${{ github.head_ref || github.ref_name }}" || echo "::warning::automerge failed"
 
       - name: Upload reports on failure
         if: failure()

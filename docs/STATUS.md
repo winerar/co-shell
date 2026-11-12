@@ -105,11 +105,11 @@
   проседают, наклоняются к пальцу, ловят блик и пружинят; выбор — «щелчок на место». Правило — `TactileRuleTest`.
   **Не проверено на телефоне** — сила наклона/блика может потребовать подстройки (`motion/Tactile.kt`).
 - Название приложения для пользователя — **Co-Shell** (`app_name`; отзыв winerar/co-shell#32).
-- Тесты: всего 697 (+ Python-скрипты) — всё зелёное; `check assembleDebug` проходит; release с R8 и подписью собирается локально.
+- Тесты: всего 703 (+ Python-скрипты) — всё зелёное; `check assembleDebug` проходит; release с R8 и подписью собирается локально.
 - Структура кода: экраны — пакеты из маленьких файлов, общие блоки — компоненты `core:designsystem` (`project-structure.md`).
 - **Ветки:** работа → PR в `dev`; релиз (мерж `dev` → `main`) — **только по команде владельца**; рабочие ветки — **от `dev`**
   (сессии клонируют `main` — перейти на `dev`, `workflow.md` §«Git»).
-- CI (`build-and-test.md` §CI): правки только `docs/`/`*.md` — без Gradle; на `main` lint и тесты не повторяются; кэш пишет и `dev`.
+- CI (`ci.md`): правки только `docs/`/`*.md` — без Gradle; на `main` lint и тесты не повторяются; `dev` после мержа проверенного дерева не пересобирает; `BUILD_NUMBER` только на `main` (#224).
 - CI на `dev` — только проверки; на каждый мерж в `main`: debug → Releases приватного репозитория (`co-shell-debug.apk`);
   подписанный release → релиз `build-<N>` публичного `winerar/co-shell-releases` (`co-shell-<N>.apk` +
   `version.json`). **Работает с 2026-11-08** (сборка 27): `…/co-shell-releases/releases/latest/download/version.json`
@@ -141,7 +141,8 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-12, `ccr-7a13beb5-5lv7od`. **Скрипты агента** (`docs/agents/scripts.md`): флоу `agent.sh ship` (check → коммит → push),
-`update` (влить dev → тесты затронутых → push), `finish` (check → дата/тесты в STATUS → push → `end`); новые `affected`, `issue N`,
-`doc <файл> <раздел>`, `changes`, `push` (повтор), `stamp`. `start` короче в ~6 раз (только свежие ветки, без бэклога);
-`quick`/`test ds` теперь гоняют `core:designsystem`; число тестов — только из полного прогона (`test-count.sh`).
+2026-11-12, `ccr-8ed75ac6-wkn37e`. **Ускорение CI** (#224, `docs/agents/ci.md`): `BUILD_NUMBER` только на `main` (раньше выбивал
+кэш всего `:app` на каждом PR), `dev` после мержа проверенного дерева не пересобирает (`scripts/ci/tree-already-checked.sh`,
+кэш — фоновый `warm-cache.yml`), одна группа `concurrency` на ветку, `main` — debug+release одним вызовом, `automerge.sh` — любой
+зелёный прогон. **Скриншот-тесты** (#225): Roborazzi в `core:designsystem`, 6 эталонов, `agent.sh shots`; экраны — #226 (бэклог).
+`automerge.sh` и `warm-cache.yml` (dispatch) заработают после ближайшего релиза — они берутся из `main`.

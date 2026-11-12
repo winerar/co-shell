@@ -99,4 +99,7 @@
 - (11-11) Новый `kind` синка ломает отправку, пока владелец не опубликует правила: `setting` (#122) поэтому уходит отдельным
   последним пакетом (`SyncEngine.push`), тест — `SettingSyncTest`; `FakeRemoteStore.rejectedKinds` имитирует старые правила.
 - **Скриншот экрана без телефона:** временный Robolectric-тест с `@GraphicsMode(NATIVE)` → `onRoot().captureToImage()` → PNG
-  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November».
+  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November»
+  (`@Config(qualifiers = "ru")` чинит). Постоянные эталоны дизайн-системы — Roborazzi, `build-and-test.md` §«Тесты».
+- (11-12) CI: `BUILD_NUMBER` в PR выбивал кэш всего `:app` (versionCode в BuildConfig) — теперь только на `main` (`ci.md`).
+  Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.

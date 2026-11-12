@@ -42,10 +42,16 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - Правила Firestore и Realtime Database (`database.test.js`) и сквозной синк двух телефонов — в эмуляторе: `scripts/test-rules.sh` (правила) или
   `scripts/test-rules.sh --kotlin` (+ `FirestoreEmulatorTest`); нужны Node 20+ и Java, эмулятор скачивается
   сам. Поменял `firestore.rules`, `database.rules.json` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
-- Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` (есть шаг в CI).
+- Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` и то же для `-s scripts/ci` (шаг в CI).
 - ViewModel с `flowOn(Dispatchers.Default)` в тесте: поток доезжает после `resetMain` и роняет **следующий** тест
   (`UncaughtExceptionsBeforeTest`). Делай контекст подменяемым — `internal var work = Dispatchers.Default`, `state by lazy`
   (`BudgetsViewModel`, `WalletImportViewModel`), в тесте `work = EmptyCoroutineContext`.
+- **Скриншот-тесты** (#225) — Roborazzi на Robolectric (JVM, без эмулятора), `core/designsystem/.../screenshots/`:
+  каталоги компонентов и токенов, нижняя панель, палитры; светлая и тёмная тема, `ru`, 411 dp, xhdpi. Эталоны —
+  `core/designsystem/src/test/screenshots/*.png` в git; обычный `check` их **сравнивает** (`roborazzi.test.verify` в
+  `gradle.properties`), расхождение = упавший тест + `build/outputs/roborazzi/*_compare.png` (в CI — артефакт `reports`).
+  Намеренно поменял вид → `agent.sh shots` (перезапись), посмотри PNG, приложи к PR. Новый компонент → в каталог или
+  отдельный `shot(...)`. Набор маленький: ~1,5 с на снимок. Экраны `app` — #226.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 
 ## Версии
@@ -53,23 +59,8 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 плагин `org.jetbrains.kotlin.android` **не** подключается; нужен только `kotlin.compose` для Compose.
 
 ## CI
-`.github/workflows/ci.yml`: на push в `main` и `dev`, на PR и вручную (Actions → «Сборка и тесты (CI)» → Run workflow).
-- PR и `dev`: `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней). Если изменены только
-  `docs/` и `*.md` — Gradle пропускается (шаг «Detect code changes»), остаются тесты скриптов.
-- `main` (релиз): lint и тесты **не** повторяются — то же дерево уже проверено в PR `dev` → `main`;
-  только сборки APK. В `assembleRelease` выключен lintVital (`lint.checkReleaseBuilds = false`).
-- `android-all` для Robolectric кэшируется отдельно (`~/.m2/repository/org/robolectric`, `actions/cache`).
-- Кэш Gradle пишут `main` и `dev` (PR в `dev` стартуют с тёплым кэшем). Необязательный секрет
-  `GRADLE_ENCRYPTION_KEY` (`openssl rand -base64 16`) включает сохранение configuration cache.
-- На push в `main` — GitHub Release `build-<N>` с `co-shell-debug.apk` (и `co-shell.apk`, если включено
-  самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
-- Упавший `check` пишет короткую сводку (`scripts/agent/build-summary.sh --ci`) в summary джоба и одним
-  комментарием `<!-- ci-summary -->` в PR (обновляется; после зелёного — «исправлено»).
-- `auto-pr.yml` (draft PR на первый push агентской ветки), `automerge.yml` (мерж в `dev` после зелёного CI,
-  логика — `scripts/ci/automerge.sh`), `release.yml` (кнопка релиза, описание — `scripts/release_notes.py`).
-  Мерж/PR через `GITHUB_TOKEN` **не запускает** `push`/`pull_request`-workflow — поэтому они вызывают
-  `gh workflow run ci.yml` (dispatch разрешён). `workflow_run` и кнопки работают из копии в `main`.
-`versionCode` = номер запуска CI (`BUILD_NUMBER`, локально 1). Debug подписан общим ключом
+Воркфлоу, что где проверяется и почему так быстро — [`ci.md`](ci.md).
+`versionCode` = номер запуска CI на `main` (`BUILD_NUMBER`; локально и в PR — 1, `ci.md`). Debug подписан общим ключом
 `app/debug.keystore` из репозитория (не секрет), пакет `app.coshell.debug`, название «co-shell debug».
 
 ## Обратная связь

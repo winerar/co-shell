@@ -1,6 +1,7 @@
 package app.coshell.feedback.data
 
 import app.coshell.core.domain.feedback.FeedbackReport
+import app.coshell.core.domain.feedback.storedText
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -13,7 +14,7 @@ import kotlinx.serialization.json.putJsonObject
  */
 internal fun feedbackDocument(report: FeedbackReport): JsonObject = buildJsonObject {
     putJsonObject("fields") {
-        string("text", report.text)
+        string("text", report.storedText())
         putJsonObject("createdAt") { put("timestampValue", report.createdAt.toString()) }
         string("appVersion", report.device.appVersion)
         putJsonObject("versionCode") { put("integerValue", report.device.versionCode.toString()) }

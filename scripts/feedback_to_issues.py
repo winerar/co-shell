@@ -50,6 +50,23 @@ def decode_document(document):
     return fields
 
 
+# Must match DIAGNOSTICS_MARKER in core/domain/.../feedback/FeedbackText.kt (#216).
+DIAGNOSTICS_MARKER = "\n\n--- tech ---\n"
+
+
+def split_text(text):
+    """User's words and the technical lines the app appends after the marker."""
+    user, _, tech = text.partition(DIAGNOSTICS_MARKER)
+    return user, tech
+
+
+def tech_details(tech):
+    if not tech.strip():
+        return ""
+    # A tilde fence: a backtick fence in the data cannot close it.
+    return f"<details><summary>Технические данные</summary>\n\n~~~~\n{tech}\n~~~~\n\n</details>\n\n"
+
+
 def issue_title(text):
     first_line = next((line.strip() for line in text.splitlines() if line.strip()), "Без текста")
     if len(first_line) > TITLE_LENGTH:
@@ -58,7 +75,8 @@ def issue_title(text):
 
 
 def issue_body(feedback):
-    quoted = "\n".join(f"> {line}" if line else ">" for line in feedback.get("text", "").splitlines())
+    user_text, tech = split_text(feedback.get("text", ""))
+    quoted = "\n".join(f"> {line}" if line else ">" for line in user_text.splitlines())
     created = feedback.get("createdAt", "?").replace("T", " ").split(".")[0].rstrip("Z")
     rows = [
         ("Отправлено (UTC)", created),
@@ -72,6 +90,7 @@ def issue_body(feedback):
     return (
         f"{quoted}\n\n"
         f"| | |\n|---|---|\n{table}\n\n"
+        f"{tech_details(tech)}"
         "_Создано автоматически из формы «Ещё → Обратная связь»._"
     )
 
@@ -123,7 +142,7 @@ def unprocessed_feedback(project, token):
 
 def create_issue(repo, token, feedback):
     url = f"https://api.github.com/repos/{repo}/issues"
-    body = {"title": issue_title(feedback.get("text", "")), "body": issue_body(feedback), "labels": LABELS}
+    body = {"title": issue_title(split_text(feedback.get("text", ""))[0]), "body": issue_body(feedback), "labels": LABELS}
     issue = request("POST", url, token, body, {"Accept": "application/vnd.github+json"})
     return issue["number"]
 

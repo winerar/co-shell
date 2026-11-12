@@ -26,6 +26,8 @@ import app.coshell.categories.list.CategoriesRoute
 import app.coshell.core.designsystem.components.CoShellSheet
 import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.crash.notice.CrashNotice
+import app.coshell.crash.notice.CrashNoticeViewModel
 import app.coshell.currencies.list.ReportCurrenciesRoute
 import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
@@ -57,6 +59,7 @@ fun CoShellNavHost(
     navController: NavHostController = rememberNavController(),
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
+    crashes: CrashNoticeViewModel = hiltViewModel(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -64,6 +67,7 @@ fun CoShellNavHost(
     UndoSnackbarEffect(snackbar)
 
     UpdateNoticeEffects(updates)
+    CrashNotice(crashes)
     val updatePill by updates.pill.collectAsStateWithLifecycle()
     val updateAvailable by updates.available.collectAsStateWithLifecycle()
 

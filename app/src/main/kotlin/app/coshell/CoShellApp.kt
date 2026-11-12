@@ -6,12 +6,15 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
+import app.coshell.crash.CrashLog
+import app.coshell.crash.CrashRecorder
 import app.coshell.currencies.data.LegacyReportCurrencies
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +27,7 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var family: FamilyService
     @Inject lateinit var legacyReportCurrencies: LegacyReportCurrencies
     @Inject lateinit var workerFactory: HiltWorkerFactory
+    @Inject lateinit var crashLog: CrashLog
 
     /** Lives as long as the process; for short one-off startup work only. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -37,6 +41,7 @@ class CoShellApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        CrashRecorder(crashLog, Clock.System, BuildConfig.VERSION_CODE).install()
         appScope.launch {
             legacyReportCurrencies.moveToFamilySettings()
             // In a family the categories come from the server: seeding an empty phone right after

@@ -5,6 +5,7 @@ import app.coshell.core.domain.update.ReleaseSource
 import app.coshell.core.domain.update.UpdateStateStore
 import app.coshell.update.data.ApkDownloader
 import app.coshell.update.install.ApkInstaller
+import app.coshell.update.log.UpdateJournal
 import java.io.File
 import kotlin.time.Instant
 
@@ -49,4 +50,13 @@ class FakeApkInstaller : ApkInstaller {
     override fun canInstall() = allowed
     override fun openInstallPermissionSettings() { settingsOpened++ }
     override suspend fun install(file: File) { installed += file }
+    val manual = mutableListOf<File>()
+    override fun installManually(file: File) { manual += file }
+}
+
+class FakeUpdateJournal : UpdateJournal {
+    val events = mutableListOf<String>()
+    override fun add(event: String) { events += event }
+    override fun lines() = events.toList()
+    override var preferManualInstall = false
 }

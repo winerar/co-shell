@@ -14,6 +14,8 @@ import app.coshell.update.data.PrefsUpdateStateStore
 import app.coshell.update.install.ApkInstaller
 import app.coshell.update.install.InstallEvents
 import app.coshell.update.install.PackageInstallerApkInstaller
+import app.coshell.update.log.PrefsUpdateJournal
+import app.coshell.update.log.UpdateJournal
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -32,6 +34,7 @@ interface UpdateModule {
     @Binds fun bindStateStore(impl: PrefsUpdateStateStore): UpdateStateStore
     @Binds fun bindDownloader(impl: CacheApkDownloader): ApkDownloader
     @Binds fun bindInstaller(impl: PackageInstallerApkInstaller): ApkInstaller
+    @Binds fun bindJournal(impl: PrefsUpdateJournal): UpdateJournal
 
     companion object {
         @Provides
@@ -58,7 +61,10 @@ interface UpdateModule {
             downloader: ApkDownloader,
             installer: ApkInstaller,
             events: InstallEvents,
-        ) = UpdateController(check, store, downloader, installer, events, CoroutineScope(SupervisorJob() + Dispatchers.Default))
+            journal: UpdateJournal,
+        ) = UpdateController(
+            check, store, downloader, installer, events, CoroutineScope(SupervisorJob() + Dispatchers.Default), journal,
+        )
 
         @Provides
         fun provideWhatsNew(store: UpdateStateStore, installed: InstalledVersion) = WhatsNewUseCase(store, installed)

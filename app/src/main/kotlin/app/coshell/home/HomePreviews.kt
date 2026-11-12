@@ -2,12 +2,16 @@ package app.coshell.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.data.sync.SyncIssueKind
+import app.coshell.core.designsystem.components.BulletTone
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.home.budget.HomeBudget
 import app.coshell.home.sync.SyncBannerState
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.Row
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
 
 internal val homePreviewSample = HomeUiState(
     totals = listOf("1 310,50 USD", "1 900 225,00 ARS"),
@@ -33,6 +37,31 @@ internal val homePreviewSample = HomeUiState(
         Row("t3", Kind.TRANSFER, null, "Карта → Наличные", "", "100,00 USD"),
     ),
 )
+
+/** Board `BudHome`: 540 of 1 180 USD left, «Кафе» over, «Дом» ahead of pace. */
+internal val homeBudgetPreviewSample = HomeBudget(
+    month = YearMonth(2026, 11),
+    summary = BudgetsUiState.Summary(
+        left = "540\u00A0USD", over = false, spent = "640", planned = "1 180\u00A0USD", fraction = 640f / 1180, pace = 0.37f,
+        tone = BulletTone.WARNING, daysLeft = 19, forecast = null,
+    ),
+    hot = listOf(
+        BudgetsUiState.Envelope(
+            "cafe", "Кафе", "local_cafe", 0xFFFF7043, null, "95 000", "80 000\u00A0ARS", 95f / 80, 0.37f, BulletTone.DANGER,
+            BudgetsUiState.Caption.Over("15 000\u00A0ARS"),
+        ),
+        BudgetsUiState.Envelope(
+            "home", "Дом", "home", 0xFF26C6DA, 3, "310 000", "400 000\u00A0ARS", 310f / 400, 0.37f, BulletTone.WARNING,
+            BudgetsUiState.Caption.Ahead("90 000\u00A0ARS", 19),
+        ),
+    ),
+)
+
+@Preview(showBackground = true, heightDp = 900)
+@Composable
+private fun HomeBudgetPreview() {
+    CoShellTheme(darkTheme = true) { HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample) }
+}
 
 @Preview(showBackground = true, heightDp = 900)
 @Composable

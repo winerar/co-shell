@@ -100,4 +100,14 @@
     <string name="budget_remove_confirm_title">Убрать лимит?</string>
     <string name="budget_remove_confirm_text">Лимита не будет с %1$s и дальше. В прошлых месяцах он останется.</string>
     <string name="budget_save_failed">Не получилось сохранить: категорию убрали в архив или удалили на другом телефоне.</string>
+    <!-- «Обзор» (#184, доска BudHome): плитка бюджета и «Горит в бюджете». -->
+    <string name="home_budget_title">Бюджет</string>
+    <plurals name="home_budget_title_days">
+        <item quantity="one">Бюджет · %d день</item>
+        <item quantity="few">Бюджет · %d дня</item>
+        <item quantity="many">Бюджет · %d дней</item>
+        <item quantity="other">Бюджет · %d дня</item>
+    </plurals>
+    <string name="home_budget_over">перерасход</string>
+    <string name="home_budget_hot">Горит в бюджете</string>
 </resources>

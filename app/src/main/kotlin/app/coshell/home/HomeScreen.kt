@@ -21,7 +21,10 @@ import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.home.budget.HomeBudget
+import app.coshell.home.budget.HomeBudgetViewModel
 import app.coshell.home.components.HomeTiles
+import app.coshell.home.components.HotBudgets
 import app.coshell.home.components.RecentCard
 import app.coshell.home.components.SyncBanner
 import app.coshell.home.components.SyncBannerActions
@@ -31,6 +34,7 @@ import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import kotlinx.datetime.YearMonth
 
 /** Everything «Обзор» can open: «Операции», the rates screen, an operation, a new account. */
 data class HomeActions(
@@ -43,6 +47,9 @@ data class HomeActions(
     /** Sync banner: «Войти» → «Семья», «Отзыв» → feedback with the error code typed in. */
     val onFamily: () -> Unit = {},
     val onFeedback: (prefill: String) -> Unit = {},
+    /** The budget tile → «Бюджеты»; an envelope of «Горит в бюджете» → its screen in the current budget month. */
+    val onBudgets: () -> Unit = {},
+    val onBudget: (categoryId: String, month: YearMonth) -> Unit = { _, _ -> },
 )
 
 @Composable
@@ -50,8 +57,10 @@ fun HomeRoute(
     actions: HomeActions,
     viewModel: HomeViewModel = hiltViewModel(),
     syncViewModel: SyncBannerViewModel = hiltViewModel(),
+    budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
@@ -59,12 +68,13 @@ fun HomeRoute(
         onFeedback = actions.onFeedback,
         onDismiss = syncViewModel::dismiss,
     )
-    HomeScreen(state, actions, sync, syncActions)
+    // Both counts in before the blocks show: the budget tile takes the place of «Без категории».
+    HomeScreen(if (budget == null) HomeUiState(isLoading = true) else state, actions, sync, syncActions, budget?.budget)
 }
 
 /**
- * «Обзор» (boards `Home`, `HomeAttention`): hero card with the total, two tiles, the latest operations.
- * Blocks come in as a short cascade the first time the tab shows (Step 4).
+ * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`): hero card with the total, two tiles, «Горит в бюджете»
+ * when some limit needs a look, the latest operations. Blocks come in as a short cascade the first time the tab shows (Step 4).
  */
 @Composable
 fun HomeScreen(
@@ -72,6 +82,7 @@ fun HomeScreen(
     actions: HomeActions = HomeActions(),
     sync: SyncBannerState? = null,
     syncActions: SyncBannerActions = SyncBannerActions(),
+    budget: HomeBudget? = null,
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -104,10 +115,17 @@ fun HomeScreen(
                     onRates = actions.onRates,
                     onUncategorized = actions.onUncategorized,
                     modifier = Modifier.staggeredEntrance(1),
+                    budget = budget?.summary,
+                    onBudgets = actions.onBudgets,
                 )
             }
+            budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
+                item(key = "hot") {
+                    HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = Modifier.staggeredEntrance(2))
+                }
+            }
             item {
-                RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, Modifier.staggeredEntrance(2))
+                RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, Modifier.staggeredEntrance(3))
             }
         }
     }

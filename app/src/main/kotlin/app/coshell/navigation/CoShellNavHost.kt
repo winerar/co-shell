@@ -108,6 +108,10 @@ fun CoShellNavHost(
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
                     onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
                     onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
+                    onBudgets = { navController.navigate(BudgetsDestination) { launchSingleTop = true } },
+                    onBudget = { id, month ->
+                        navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
+                    },
                 ),
             )
         }

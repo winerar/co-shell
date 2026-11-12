@@ -103,3 +103,5 @@
   (`@Config(qualifiers = "ru")` чинит). Постоянные эталоны дизайн-системы — Roborazzi, `build-and-test.md` §«Тесты».
 - (11-12) CI: `BUILD_NUMBER` в PR выбивал кэш всего `:app` (versionCode в BuildConfig) — теперь только на `main` (`ci.md`).
   Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.
+- (11-12) Roborazzi `captureRoboImage(path) { … }` снимает раньше, чем доходит каскад `staggeredEntrance` (на «Обзоре» не было
+  «Последних операций») — экраны снимать через `createAndroidComposeRule` + `mainClock.autoAdvance = false` + `advanceTimeBy`.

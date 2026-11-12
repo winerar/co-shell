@@ -10,6 +10,8 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeRight
 import app.coshell.core.designsystem.theme.CoShellTheme
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -50,6 +52,21 @@ class SegmentedTest {
         assertEquals(listOf(2), picked)
         compose.onNodeWithText("Чьи").assertIsSelected()
         compose.onNodeWithText("По типу").assertIsNotSelected()
+    }
+
+    @Test
+    fun `dragging the pill to the right selects the next segment`() {
+        compose.onNodeWithText("По типу").performTouchInput { swipeRight(startX = centerX, endX = centerX + 400f) }
+
+        assertEquals(listOf(1), picked)
+        compose.onNodeWithText("По валюте").assertIsSelected()
+    }
+
+    @Test
+    fun `a short drag selects nothing`() {
+        compose.onNodeWithText("По типу").performTouchInput { swipeRight(startX = centerX, endX = centerX + 40f) }
+
+        assertEquals(emptyList<Int>(), picked)
     }
 
     private companion object {

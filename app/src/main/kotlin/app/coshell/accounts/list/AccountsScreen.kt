@@ -22,7 +22,10 @@ import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.SegmentSwipe
 import app.coshell.core.designsystem.components.SegmentTone
+import app.coshell.core.designsystem.components.rememberSegmentSwipe
+import app.coshell.core.designsystem.components.segmentSwipe
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.motion.listItemMotion
@@ -53,6 +56,15 @@ data class AccountsActions(
 @Composable
 fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
     val scroll = rememberTabScrollBehavior()
+    val groupings = groupingOptions(state)
+    val swipe = rememberSegmentSwipe()
+    val grouping = Grouping(
+        options = groupings,
+        selected = groupings.indexOfFirst { it.first == state.grouping },
+        onSelect = { actions.onGrouping(groupings[it].first) },
+        swipe = swipe,
+        visible = state.active.size > 1,
+    )
     Scaffold(
         topBar = {
             TabTopBar(stringResource(R.string.accounts_title), scroll) {
@@ -67,7 +79,9 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            // The groupings swipe like tabs (#173); from the first or last one the swipe goes to the next tab.
+            modifier = Modifier.fillMaxSize().padding(padding)
+                .segmentSwipe(swipe, grouping.selected, groupings.size, grouping.onSelect, enabled = grouping.visible),
             contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Sizes.fabClearance),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
@@ -82,7 +96,7 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
                 }
                 return@LazyColumn
             }
-            item(key = "header") { Header(state, actions) }
+            item(key = "header") { Header(state, actions, grouping) }
             items(state.groups, key = { it.key }) { group ->
                 AccountGroup(group, { actions.onToggleGroup(group.key) }, actions.onAccountClick, listItemMotion())
             }
@@ -103,7 +117,7 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
 }
 
 @Composable
-private fun Header(state: AccountsUiState, actions: AccountsActions) {
+private fun Header(state: AccountsUiState, actions: AccountsActions, grouping: Grouping) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellExpandable(state.searchOpen) {
             CoShellSearchField(
@@ -120,18 +134,29 @@ private fun Header(state: AccountsUiState, actions: AccountsActions) {
                 AmountText(total, style = AmountTitleStyle)
             }
         }
-        val options = buildList {
-            add(AccountGrouping.TYPE to R.string.accounts_grouping_type)
-            add(AccountGrouping.CURRENCY to R.string.accounts_grouping_currency)
-            if (state.canGroupByOwner) add(AccountGrouping.OWNER to R.string.accounts_grouping_owner)
-        }
-        if (state.active.size > 1) {
+        if (grouping.visible) {
             CoShellSegmented(
-                labels = options.map { stringResource(it.second) },
-                selected = options.indexOfFirst { it.first == state.grouping },
-                onSelect = { actions.onGrouping(options[it].first) },
+                labels = grouping.options.map { stringResource(it.second) },
+                selected = grouping.selected,
+                onSelect = grouping.onSelect,
                 tone = SegmentTone.View,
+                swipe = grouping.swipe,
             )
         }
     }
+}
+
+/** The grouping switch, shared by the header (the pill) and the list (the swipe). */
+private class Grouping(
+    val options: List<Pair<AccountGrouping, Int>>,
+    val selected: Int,
+    val onSelect: (Int) -> Unit,
+    val swipe: SegmentSwipe,
+    val visible: Boolean,
+)
+
+private fun groupingOptions(state: AccountsUiState): List<Pair<AccountGrouping, Int>> = buildList {
+    add(AccountGrouping.TYPE to R.string.accounts_grouping_type)
+    add(AccountGrouping.CURRENCY to R.string.accounts_grouping_currency)
+    if (state.canGroupByOwner) add(AccountGrouping.OWNER to R.string.accounts_grouping_owner)
 }

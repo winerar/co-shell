@@ -105,3 +105,6 @@
   Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.
 - (11-12) Roborazzi `captureRoboImage(path) { … }` снимает раньше, чем доходит каскад `staggeredEntrance` (на «Обзоре» не было
   «Последних операций») — экраны снимать через `createAndroidComposeRule` + `mainClock.autoAdvance = false` + `advanceTimeBy`.
+  в scratchpad (образец — сессия #103); тест не коммитить. Локаль в Robolectric английская — месяцы будут «November».
+- (11-12) Фоновая команда Bash с `cat > файл` без ввода висит вечно (ждёт stdin) — так «застрял» `agent.sh test`; не склеивать.
+- (11-12) Коммит с трейлерами через `-m "...$T"`: `T=$'\n\nCo-Authored-By: …'` — с пустой строкой, иначе трейлеры уйдут в заголовок.

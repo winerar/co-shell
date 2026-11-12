@@ -1,12 +1,13 @@
 package app.coshell.core.data.sync
 
 import app.coshell.core.data.db.PulledRows
-import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.data.db.SyncDao
+import app.coshell.core.data.db.SyncStateEntity
+import app.coshell.core.data.integrity.IntegrityCheck
 import app.coshell.core.data.remote.ApiException
+import kotlin.time.Clock
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.time.Clock
 
 /**
  * What one [SyncEngine.sync] run did. [pushPaused] — sending was skipped: the daily quota is over
@@ -30,6 +31,8 @@ class SyncEngine(
     private val dao: SyncDao,
     private val remote: RemoteStore,
     private val clock: Clock = Clock.System,
+    /** Run after every successful sync; its findings are kept under [INTEGRITY] (#219). */
+    private val integrity: IntegrityCheck? = null,
 ) {
     private val mutex = Mutex()
 
@@ -49,7 +52,17 @@ class SyncEngine(
         val paused = isPushPaused()
         val pushed = if (paused) 0 else push()
         dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
+        recordIntegrity()
         SyncResult(pulled = pulled.size, applied = applied, pushed = pushed, pushPaused = paused)
+    }
+
+    /** After a sync — the moment edits of the other phone arrive — notes what does not hang together. */
+    private suspend fun recordIntegrity() {
+        val problems = integrity?.run() ?: return
+        val summary = problems.joinToString("; ") { it.describe() }
+        val previous = dao.state(INTEGRITY)?.substringAfter('|', "")
+        // The time is when these problems were first seen: unchanged findings keep it.
+        if (previous != summary) dao.setState(SyncStateEntity(INTEGRITY, "${clock.now().toEpochMilliseconds()}|$summary"))
     }
 
     /** `true` while the quota pause lasts; an expired pause is cleared. */
@@ -109,6 +122,8 @@ class SyncEngine(
         const val CURSOR = "pull_cursor"
         /** Key in `sync_state`: epoch ms of the last successful sync, shown on the family screen. */
         const val LAST_SYNC = "last_sync"
+        /** Key in `sync_state`: `<first seen ms>|<problems, «; »-separated>`, empty list — consistent (#219). */
+        const val INTEGRITY = "integrity"
         /** Key in `sync_state`: the kinds the last pull understood ([KNOWN_KINDS]). */
         const val KINDS = "pull_kinds"
         private val KNOWN_KINDS = SyncKind.entries.joinToString(",") { it.wire }

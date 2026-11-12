@@ -14,11 +14,24 @@ data class DeviceInfo(
     val installationId: String,
 )
 
-/** One message from the feedback form as it is sent. */
-data class FeedbackReport(val text: String, val createdAt: Instant, val device: DeviceInfo)
+/**
+ * One message from the feedback form as it is sent. [diagnostics] — technical lines (update journal,
+ * firmware, sync state; #216), no amounts or personal data.
+ */
+data class FeedbackReport(
+    val text: String,
+    val createdAt: Instant,
+    val device: DeviceInfo,
+    val diagnostics: List<String> = emptyList(),
+)
 
 interface DeviceInfoProvider {
     suspend fun deviceInfo(): DeviceInfo
+}
+
+/** Technical lines attached to every message, e.g. `installer: com.miui.packageinstaller`. */
+fun interface DiagnosticsProvider {
+    suspend fun diagnostics(): List<String>
 }
 
 /** Delivers a report to the developers (Firestore `feedback` → GitHub issue, see ROADMAP). */

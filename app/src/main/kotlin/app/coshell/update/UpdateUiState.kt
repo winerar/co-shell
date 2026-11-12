@@ -19,8 +19,11 @@ sealed interface UpdatePhase {
     data class Available(val release: AppRelease) : UpdatePhase
     /** [progress] is 0..1. */
     data class Downloading(val release: AppRelease, val progress: Float) : UpdatePhase
-    /** The system install dialog is open (or about to be). */
-    data class Installing(val release: AppRelease) : UpdatePhase
+    /**
+     * The system install dialog is open (or about to be). [manualOffered] — no result for a while, so the
+     * screen offers «Установить вручную» in case the dialog never appeared (Xiaomi, #217).
+     */
+    data class Installing(val release: AppRelease, val manualOffered: Boolean = false) : UpdatePhase
     /** [release] is set when the failure happened after the check, so "retry" downloads again. */
     data class Failed(val error: UpdateError, val release: AppRelease? = null) : UpdatePhase
 }

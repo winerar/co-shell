@@ -38,4 +38,6 @@ class UpdateViewModel @Inject constructor(
     fun openInstallPermissionSettings() = controller.openInstallPermissionSettings()
 
     fun downloadAndInstall() = controller.download()
+
+    fun installManually() = controller.installManually()
 }

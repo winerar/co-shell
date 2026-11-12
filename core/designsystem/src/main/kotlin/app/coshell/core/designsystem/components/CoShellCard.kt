@@ -50,7 +50,7 @@ fun CoShellCard(
     val colors = if (fill != null) {
         CardDefaults.outlinedCardColors(containerColor = Color.Transparent, contentColor = hero.content)
     } else {
-        CardDefaults.outlinedCardColors(containerColor = tint?.let { tintedCardFill(it) } ?: MaterialTheme.colorScheme.surface)
+        CardDefaults.outlinedCardColors(containerColor = tint?.copy(alpha = TINT_ALPHA)?.compositeOver(MaterialTheme.colorScheme.surface) ?: MaterialTheme.colorScheme.surface)
     }
     val filled = if (fill != null) Modifier.background(fill, shape) else Modifier
     val body: @Composable ColumnScope.() -> Unit = if (accent) ({ HeroColors { content() } }) else content
@@ -73,9 +73,6 @@ fun CoShellCard(
 }
 
 /** Strength of a [CoShellCard] tint: enough to tell accounts apart, text keeps its contrast. */
-/** The fill of a [CoShellCard] with `tint` — for things that must blend into it (a ring around an avatar). */
-@Composable
-fun tintedCardFill(tint: Color): Color = tint.copy(alpha = TINT_ALPHA).compositeOver(MaterialTheme.colorScheme.surface)
 
 private const val TINT_ALPHA = 0.12f
 

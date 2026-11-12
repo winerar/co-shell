@@ -1,7 +1,6 @@
 package app.coshell.family.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -26,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
-import app.coshell.core.designsystem.components.tintedCardFill
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
@@ -43,11 +45,11 @@ internal enum class SyncFreshness { SYNCED, PENDING, NEVER }
  */
 @Composable
 internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFreshness) {
-    val tint = MaterialTheme.colorScheme.secondary
-    CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), tint = tint) {
+    // A hero: the palette's gradient, as every hero card (owner 2026-11-12, #277).
+    CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), accent = true) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
-                StackedAvatars(members, ring = tintedCardFill(tint))
+                StackedAvatars(members)
                 Column {
                     Text(
                         stringResource(R.string.family_budget_title),
@@ -93,17 +95,22 @@ internal fun SyncNowButton(enabled: Boolean, onClick: () -> Unit) {
     }
 }
 
+/**
+ * Avatars overlapping; each one cuts a ring out of the one under it, so the card's gradient shows through
+ * (an offscreen layer: [BlendMode.Clear] erases the avatars, not the card).
+ */
 @Composable
-private fun StackedAvatars(members: List<Member>, ring: Color) {
-    Row {
+private fun StackedAvatars(members: List<Member>) {
+    Row(Modifier.graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }) {
         members.take(MAX_STACKED).forEachIndexed { index, member ->
-            val shift = if (index == 0) Modifier else Modifier.offset(x = -Spacing.m * index)
-            MemberAvatar(
-                member,
-                index,
-                size = Sizes.badgeLarge,
-                modifier = shift.border(Sizes.avatarRing, ring, CircleShape).padding(Sizes.avatarRing),
-            )
+            val shift = if (index == 0) {
+                Modifier
+            } else {
+                Modifier.offset(x = -Spacing.m * index).drawBehind {
+                    drawCircle(Color.Black, radius = size.minDimension / 2 + Sizes.avatarRing.toPx(), blendMode = BlendMode.Clear)
+                }
+            }
+            MemberAvatar(member, index, size = Sizes.badgeLarge, modifier = shift)
         }
     }
 }

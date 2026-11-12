@@ -6,6 +6,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Sizes
@@ -40,7 +41,7 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
             CoShellIconButton(
                 onClick = onRefresh,
                 enabled = status != RefreshStatus.Running,
-                modifier = Modifier.border(Sizes.hairline, tint.copy(alpha = RING_ALPHA), CircleShape),
+                modifier = Modifier.border(Sizes.hairline, MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = RING_ALPHA), CircleShape),
             ) {
                 Icon(painterResource(DesignR.drawable.ic_refresh), stringResource(R.string.rates_refresh))
             }
@@ -55,4 +56,4 @@ internal fun RefreshBlock(lastDownload: DownloadInfo?, status: RefreshStatus, on
     )
 }
 
-private const val RING_ALPHA = 0.55f
+private const val RING_ALPHA = 0.4f

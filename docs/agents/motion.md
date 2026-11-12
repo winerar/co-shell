@@ -43,7 +43,7 @@
   переключатели, вкладки, образцы цвета/иконок), `Surface` (карточки), `Row` (строки списков — без наклона).
   Выбор элемента — короткий «щелчок на место» (`selectionPop`). Рябь Material в наших компонентах выключена.
 - **Правило:** в экранах только `CoShellButton/OutlinedButton/TextButton/IconButton/Fab`, `CoShellFilterChip`,
-  `CoShellSegmentedButton`, `CoShellSwitch`, `CoShellNavigationBarItem`, `CoShellCard(onClick)` и
+  `CoShellSegmented`, `CoShellSwitch`, `CoShellNavigationBarItem`, `CoShellCard(onClick)` и
   `Modifier.tactileClickable/tactileToggleable` (первым в цепочке). Голые Material-кнопки и `clickable`
   ловит тест `app/.../designsystem/TactileRuleTest`. Новый интерактивный компонент — обёрткой в `components/`.
 - **Анимации элементов (Шаг 4 рефакторинга, `docs/research/design-refactor.md`)** — все внутри компонентов:

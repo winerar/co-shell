@@ -2,13 +2,10 @@ package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SingleChoiceSegmentedButtonRowScope
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.smoothResize
@@ -39,29 +36,6 @@ fun CoShellFilterChip(
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             interactionSource = source,
-        )
-    }
-}
-
-/** One segment of a single-choice row (type of operation, theme). */
-@Composable
-fun SingleChoiceSegmentedButtonRowScope.CoShellSegmentedButton(
-    selected: Boolean,
-    onClick: () -> Unit,
-    shape: Shape,
-    label: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val source = remember { MutableInteractionSource() }
-    NoRipple {
-        SegmentedButton(
-            selected = selected,
-            onClick = onClick,
-            shape = shape,
-            modifier = modifier.tactile(source, Tactile.Control, shape).selectionPop(selected),
-            interactionSource = source,
-            icon = {}, // no filled check mark: icons are outlined only (code-style.md)
-            label = label,
         )
     }
 }

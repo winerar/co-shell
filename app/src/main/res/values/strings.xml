@@ -47,8 +47,7 @@
     <string name="accounts_title">Счета</string>
     <string name="accounts_add">Добавить счёт</string>
     <string name="accounts_empty">Счетов пока нет. Нажмите «+», чтобы добавить первый.</string>
-    <string name="accounts_show_archived">Показать архивные (%1$d)</string>
-    <string name="accounts_hide_archived">Скрыть архивные (%1$d)</string>
+    <string name="accounts_archive">Архив</string>
 
     <string name="account_group_card">Карты и банки</string>
     <string name="account_group_crypto">Крипто</string>

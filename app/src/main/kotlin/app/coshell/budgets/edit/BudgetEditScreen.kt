@@ -10,8 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +29,7 @@ import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMessage
-import app.coshell.core.designsystem.components.CoShellSegmentedButton
+import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.components.CoShellTextField
@@ -138,14 +136,9 @@ fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
 @Composable
 private fun KindSelector(selected: BudgetKind, onSelect: (BudgetKind) -> Unit) {
     val kinds = BudgetKind.entries
-    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-        kinds.forEachIndexed { index, kind ->
-            CoShellSegmentedButton(
-                selected = kind == selected,
-                onClick = { onSelect(kind) },
-                shape = SegmentedButtonDefaults.itemShape(index, kinds.size),
-                label = { Text(stringResource(if (kind == BudgetKind.FOLDER) R.string.budget_kind_folder else R.string.budget_kind_category)) },
-            )
-        }
-    }
+    CoShellSegmented(
+        labels = kinds.map { stringResource(if (it == BudgetKind.FOLDER) R.string.budget_kind_folder else R.string.budget_kind_category) },
+        selected = kinds.indexOf(selected),
+        onSelect = { onSelect(kinds[it]) },
+    )
 }

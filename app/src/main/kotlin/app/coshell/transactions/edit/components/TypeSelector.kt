@@ -2,30 +2,23 @@ package app.coshell.transactions.edit.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellSegmentedButton
+import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.model.TransactionType
 
 /** Expense / income / transfer switch at the top of the form. */
 @Composable
 internal fun TypeSelector(selected: TransactionType, onSelect: (TransactionType) -> Unit, modifier: Modifier = Modifier) {
     val types = TransactionType.entries
-    SingleChoiceSegmentedButtonRow(modifier.fillMaxWidth()) {
-        types.forEachIndexed { index, type ->
-            CoShellSegmentedButton(
-                selected = type == selected,
-                onClick = { onSelect(type) },
-                shape = SegmentedButtonDefaults.itemShape(index, types.size),
-                label = { Text(stringResource(type.labelRes)) },
-            )
-        }
-    }
+    CoShellSegmented(
+        labels = types.map { stringResource(it.labelRes) },
+        selected = types.indexOf(selected),
+        onSelect = { onSelect(types[it]) },
+        modifier = modifier.fillMaxWidth(),
+    )
 }
 
 @get:StringRes

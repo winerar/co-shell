@@ -9,7 +9,7 @@ core/data/              KMP (android + jvm для тестов): Room, DAO, ре
                         sync/ (SyncEngine), remote/ (Firestore REST), auth/ (Firebase Auth REST), family/
 core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
 scripts/                скрипты CI и инструменты (иконки, файлы обновлений, отзывы → issues) + test_*.py
-scripts/agent/          служебные скрипты агента (начало/конец сессии, check.sh, профиль) — notes.md
+scripts/agent/          служебные скрипты агента: agent.sh — вход, flow.sh — флоу — scripts.md
 scripts/ci/             логика workflow (automerge.sh); release_notes.py — в scripts/ (тесты рядом)
 firebase/               firestore.rules (вставляются в консоль вручную), rules-test/ (тесты правил, Node)
 docs/                   ARCHITECTURE.md, ROADMAP.md, agents/*.md, setup/ (шаги для владельца),
@@ -93,10 +93,10 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 Плашка ошибки синка — `home/sync/` (ViewModel, правила показа) + `home/components/SyncBanner`; причина — `core:data/sync/SyncIssue`.
 «Стереть все данные» — `app/.../wipe/` (экран, копия `WipeBackup`) + `core:domain/DataWipe.kt` + `core:data/db/WipeDao`.
 Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`.
-У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller), `UpdateController`
+У `update/` ещё `data/` (version.json, загрузка, SHA-256), `install/` (PackageInstaller, «вручную» — #217), `log/` (#216), `UpdateController`
 (синглтон: проверка/скачивание/установка, живёт дольше экрана) и `notice/` (пилюля над панелью, точка на «Ещё»,
-«Что нового»; подключены в `CoShellNavHost`); решения — в `core:domain/update/`.
-Общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
+«Что нового»; подключены в `CoShellNavHost`); решения — в `core:domain/update/`. Сбои — `crash/` (#218); тех. данные отзыва — `feedback/data/AndroidDiagnosticsProvider`; целостность — `core:data/integrity/`;
+общее для фичи (напр. `AccountTypeLabel.kt`) лежит в `<feature>/`.
 Импорт из Wallet (этап 5): разбор CSV — `core:domain/importer/csv/CsvReader` (общий RFC 4180), формат Wallet —
 `core:domain/importer/wallet/` (`WalletCsvParser` → `WalletRecord`/ошибки с номером строки, `WalletTransferMatcher`,
 `WalletSummary`); образец для тестов — `WalletSamples` (копия `docs/samples/wallet-export-sample.csv`).

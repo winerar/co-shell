@@ -38,6 +38,10 @@ object Sizes {
     val hairline = 1.dp
     /** Floating notice pill over the bottom bar (CoShellNoticePill): a touch-friendly 48 dp. */
     val pillHeight = 48.dp
+    /** Search pill above a list (CoShellSearchField): 48 dp, like the boards. */
+    val searchHeight = 48.dp
+    /** Magnifier and «✕» inside the search pill. */
+    val searchIcon = 20.dp
     /** Floating bottom bar capsule (mockups: 64 high, 16 from the screen edges). */
     val bottomBarHeight = 64.dp
     /** Active tab's pill inside the bar. */

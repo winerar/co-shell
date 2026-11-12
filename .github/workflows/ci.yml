@@ -6,12 +6,15 @@ on:
   pull_request:
   workflow_dispatch: # Actions → «Сборка и тесты (CI)» → Run workflow (e.g. first deploy after adding secrets)
 
+# One group per branch: the dispatch from auto-pr.yml (refs/heads/<branch>) and the pull_request run
+# (refs/pull/N/merge) of the same commit used to run side by side; now the newer one cancels the older.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 permissions:
   contents: write # publish releases
+  actions: write # dev: look up the CI run of the merged PR head, dispatch warm-cache.yml
   pull-requests: write # failure summary comment on the PR
 
 jobs:
@@ -35,13 +38,21 @@ jobs:
           fetch-depth: 0 # to diff against the base branch (docs-only check below)
 
       # Docs-only changes (docs/, *.md) skip Gradle on PRs and dev; main always builds (it releases).
+      # dev: a merge whose tree equals the PR head that already had a green CI run is not rebuilt —
+      # the same files were just checked (automerge merges only after a green run).
       - name: Detect code changes
         id: changes
         env:
           BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           code=true
-          if [ "$GITHUB_REF" != refs/heads/main ] && [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] \
+          if [ "$GITHUB_REF" = refs/heads/dev ] && scripts/ci/tree-already-checked.sh; then
+            code=false
+            # PRs start from the Gradle cache that dev writes: refresh it without holding this run.
+            gh workflow run warm-cache.yml --ref dev || echo "::warning::could not dispatch warm-cache.yml"
+          elif [ "$GITHUB_REF" != refs/heads/main ] && [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] \
              && git rev-parse -q --verify "$BASE^{commit}" >/dev/null; then
             changed=$(git diff --name-only "$BASE"...HEAD)
             echo "$changed"
@@ -65,7 +76,9 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Script tests
-        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*.py'
+          python3 -m unittest discover -s scripts/ci -p 'test_*.py'
 
       # main: the same tree was already checked by the dev → main PR, so lint and tests are skipped.
       # Robolectric (MainShellSmokeTest) downloads android-all (~160 MB) into ~/.m2 at test time,
@@ -81,15 +94,32 @@ jobs:
       - name: Lint, unit tests and debug APK
         if: steps.changes.outputs.code == 'true' && github.ref != 'refs/heads/main'
         # The log goes to build.log for the failure summary below (scripts/agent/build-summary.sh).
+        # No BUILD_NUMBER here: versionCode goes into BuildConfig and the manifest, and a new number every
+        # run made every :app task (compile, ksp, hilt, tests, lint) miss the build cache — 88 of 144 tasks
+        # ran on a scripts-only PR (run 320). PR APKs get versionCode 1; main still numbers its builds.
         run: ./gradlew check assembleDebug --console=plain 2>&1 | tee build.log; exit "${PIPESTATUS[0]}"
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
 
-      - name: Build debug APK
+      # main: debug and signed release in ONE Gradle call — with the configuration cache their tasks run
+      # in parallel (two calls ran them one after another: 2:00 + 3:47, run 318).
+      - name: Build APKs (main)
         if: github.ref == 'refs/heads/main'
-        run: ./gradlew assembleDebug
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          tasks=(assembleDebug)
+          if [ "$SELF_UPDATE" = true ]; then
+            export RELEASE_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
+            export UPDATE_BASE_URL="https://github.com/$RELEASES_REPO/releases/latest/download"
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
+            tasks+=(assembleRelease)
+          fi
+          ./gradlew "${tasks[@]}" --console=plain 2>&1 | tee build.log; status=${PIPESTATUS[0]}
+          rm -f "$RUNNER_TEMP/release.jks"
+          exit "$status"
 
       - name: Upload debug APK
         if: steps.changes.outputs.code == 'true'
@@ -99,20 +129,9 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
 
-      - name: Build signed release APK
+      - name: Update files
         if: env.SELF_UPDATE == 'true'
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: |
-          export RELEASE_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
-          export UPDATE_BASE_URL="https://github.com/$RELEASES_REPO/releases/latest/download"
-          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
-          ./gradlew assembleRelease
-          rm "$RELEASE_KEYSTORE_FILE"
           version_name=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
           python3 scripts/make-update-files.py app/build/outputs/apk/release/app-release.apk \
             "${{ github.run_number }}" "$version_name" docs/whats-new.md \
@@ -191,3 +210,4 @@ jobs:
           path: |
             **/build/reports/
             **/build/test-results/
+            **/build/outputs/roborazzi/

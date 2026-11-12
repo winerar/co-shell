@@ -18,8 +18,10 @@ private fun AccountsScreenPreview() = CoShellTheme(darkTheme = false) { Accounts
 private fun AccountsScreenDarkPreview() = CoShellTheme(darkTheme = true) { Accounts() }
 
 @Composable
-private fun Accounts() = AccountsScreen(
-    state = AccountsUiState(
+private fun Accounts() = AccountsScreen(state = accountsPreviewSample, actions = AccountsActions())
+
+internal val accountsPreviewSample =
+    AccountsUiState(
         active = listOf(galicia, credit, cash),
         total = "≈ 1 303,00 USD",
         groups = listOf(
@@ -27,6 +29,4 @@ private fun Accounts() = AccountsScreen(
             AccountsUiState.Group("TYPE:CASH", titleText = "Наличные", rows = listOf(cash), total = "≈ 83,00 USD", expanded = false),
         ),
         archived = listOf(AccountsUiState.Row("4", "Старая карта", AccountType.CARD, "0,00 RUB", false)),
-    ),
-    actions = AccountsActions(),
-)
+    )

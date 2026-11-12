@@ -57,6 +57,7 @@
     <string name="account_group_other">Другое</string>
     <string name="picker_recent">Недавние</string>
     <string name="picker_search">Найти счёт</string>
+    <string name="search_clear">Очистить поиск</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>
     <string name="picker_to_income">Куда пришло?</string>
@@ -252,7 +253,7 @@
     <string name="palette_sakura">Сакура</string>
     <string name="palette_sakura_hint">розовый и мята</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает.</string>
-    <string name="feedback_attached">Приложим: версия %1$d · %2$s · Android %3$s</string>
+    <string name="feedback_attached">Приложим: версия %1$d · %2$s · Android %3$s · журнал обновления и тех. данные (без сумм)</string>
     <string name="feedback_text_label">Сообщение</string>
     <string name="feedback_counter">%1$d / %2$d</string>
     <string name="feedback_kind_bug">Ошибка</string>
@@ -310,15 +311,21 @@
     <string name="update_installing">Подтвердите установку в окне Android. Приложение перезапустится, данные сохранятся.</string>
     <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из Co-Shell. Включите его один раз и вернитесь сюда.</string>
     <string name="update_allow_install">Разрешить установку</string>
+    <string name="update_installing_manual">Окно Android не появилось? Нажмите «Установить вручную» — откроется установщик Android, как для файла из браузера.</string>
+    <string name="update_install_manually">Установить вручную</string>
     <string name="update_retry">Повторить</string>
     <string name="update_error_check">Не удалось проверить обновления. Проверьте интернет.</string>
     <string name="update_error_download">Не удалось скачать обновление. Проверьте интернет и повторите.</string>
     <string name="update_error_checksum">Скачанный файл повреждён — устанавливать его нельзя. Повторите загрузку.</string>
-    <string name="update_error_install">Android не установил обновление.</string>
+    <string name="update_error_install">Android не установил обновление. Попробуйте установщик Android — так ставится файл из браузера.</string>
     <string name="update_open">Обновить</string>
     <string name="update_pill">Версия %1$d · Обновить</string>
     <string name="update_pill_dismiss">Скрыть до следующего запуска</string>
     <string name="update_settings_available">Доступна версия %1$d</string>
+    <string name="crash_notice_title">Приложение закрылось с ошибкой</string>
+    <string name="crash_notice_text">Отправить отчёт разработчику? Уйдут только техническое описание ошибки и данные телефона — без сумм и названий.</string>
+    <string name="crash_notice_send">Отправить</string>
+    <string name="crash_notice_skip">Не надо</string>
     <string name="update_whats_new_title">Что нового в %1$s</string>
     <string name="update_whats_new_ok">Понятно</string>
     <!-- More → Rates -->
@@ -417,7 +424,11 @@
     <string name="family_join_keep">Добавить в семью</string>
     <string name="family_msg_sign_in_failed">Не удалось войти через Google. Попробуйте ещё раз.</string>
     <string name="family_msg_exists">Семья уже создана. Попросите её участника пригласить вас.</string>
-    <string name="family_msg_network">Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.</string>
+    <string name="family_msg_network">Нет интернета. Проверьте связь и попробуйте ещё раз.</string>
+    <string name="family_msg_signed_out">Вход в Google истёк. Войдите снова — ничего не потеряно.</string>
+    <string name="family_msg_no_access">Сервер не пускает в семью. Отправьте отзыв — в нём будет код ошибки %1$s.</string>
+    <string name="family_msg_quota">Бесплатный лимит Firebase на сегодня закончился. Попробуйте завтра.</string>
+    <string name="family_msg_server">Сервер ответил ошибкой (%1$s). Это не у вас — попробуйте через минуту.</string>
     <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
     <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google этим адресом.</string>
     <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>

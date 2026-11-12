@@ -8,6 +8,7 @@ import app.coshell.core.data.auth.FirebaseAuthApi
 import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.SyncDao
 import app.coshell.core.data.family.FamilyService
+import app.coshell.core.data.integrity.IntegrityCheck
 import app.coshell.core.data.remote.FirestoreClient
 import app.coshell.core.data.remote.FirestoreFamilyRemote
 import app.coshell.core.data.remote.FirestoreRemoteStore
@@ -71,8 +72,11 @@ object SyncModule {
     fun provideSyncDao(db: CoShellDatabase): SyncDao = db.syncDao()
 
     @Provides @Singleton
-    fun provideSyncEngine(dao: SyncDao, client: FirestoreClient, clock: Clock): SyncEngine =
-        SyncEngine(dao, FirestoreRemoteStore(client, FamilyRemote.FAMILY_ID), clock)
+    fun provideSyncEngine(dao: SyncDao, client: FirestoreClient, clock: Clock, integrity: IntegrityCheck): SyncEngine =
+        SyncEngine(dao, FirestoreRemoteStore(client, FamilyRemote.FAMILY_ID), clock, integrity)
+
+    @Provides
+    fun provideIntegrityCheck(db: CoShellDatabase): IntegrityCheck = IntegrityCheck(db.integrityDao())
 
     @Provides @Singleton
     fun provideFamilyService(

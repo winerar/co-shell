@@ -12,6 +12,7 @@ import app.coshell.family.data.GoogleSignInResult
 import app.coshell.ui.format.formatDayTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -104,9 +105,12 @@ class FamilyViewModel @Inject constructor(
         local.update { it.copy(invites = invites.map { invite -> invite.email }.sorted()) }
     }
 
-    /** Runs [action]; a network or server error becomes a message and `null`. */
+    /** Runs [action]; a network or server error becomes a message naming its cause (#124) and `null`. */
     private suspend fun <T> network(action: suspend () -> T): T? =
-        runCatching { action() }.onFailure { message(FamilyMessage.NetworkError) }.getOrNull()
+        runCatching { action() }.onFailure { e ->
+            if (e is CancellationException) throw e
+            message(FamilyMessage.failed(e))
+        }.getOrNull()
 
     private fun message(m: FamilyMessage) = local.update { it.copy(message = m) }
 

@@ -25,6 +25,8 @@ class UpdateControllerTest {
     private val downloader = FakeApkDownloader()
     private val installer = FakeApkInstaller()
     private val events = InstallEvents()
+    private val journal = FakeUpdateJournal()
+    private val dispatcher = UnconfinedTestDispatcher()
     private val installed = InstalledVersion(10, "0.1.0")
     private val clock = object : Clock {
         override fun now() = Instant.parse("2026-11-08T10:00:00Z")
@@ -36,7 +38,8 @@ class UpdateControllerTest {
         downloader,
         installer,
         events,
-        CoroutineScope(UnconfinedTestDispatcher()),
+        CoroutineScope(dispatcher),
+        journal,
     )
 
     @Test
@@ -127,5 +130,48 @@ class UpdateControllerTest {
         c.download()
         events.emit(InstallOutcome.Failed("conflict"))
         assertEquals(UpdatePhase.Failed(UpdateError.Install, release(11)), c.phase.value)
+    }
+
+    @Test
+    fun `a silent install dialog offers the manual install after a while`() {
+        val c = controller()
+        c.download(release(11))
+        dispatcher.scheduler.advanceTimeBy(UpdateController.MANUAL_OFFER_DELAY.inWholeMilliseconds - 1)
+        assertEquals(UpdatePhase.Installing(release(11)), c.phase.value)
+        dispatcher.scheduler.advanceTimeBy(2)
+        assertEquals(UpdatePhase.Installing(release(11), manualOffered = true), c.phase.value)
+        assertTrue(journal.events.any { it.startsWith("no result") })
+    }
+
+    @Test
+    fun `an answer from Android cancels the manual offer`() {
+        val c = controller()
+        c.download(release(11))
+        events.emit(InstallOutcome.Cancelled)
+        dispatcher.scheduler.advanceTimeBy(UpdateController.MANUAL_OFFER_DELAY.inWholeMilliseconds + 1)
+        assertEquals(UpdatePhase.Available(release(11)), c.phase.value)
+    }
+
+    @Test
+    fun `manual install opens the Android installer and is used for later updates`() {
+        val c = controller()
+        c.download(release(11))
+        events.emit(InstallOutcome.Failed("blocked"))
+        c.installManually()
+        assertEquals(listOf(File("co-shell-11.apk")), installer.manual)
+        assertEquals(UpdatePhase.Installing(release(11), manualOffered = true), c.phase.value)
+        assertTrue(journal.preferManualInstall)
+
+        val next = controller()
+        next.download(release(12))
+        assertEquals(listOf(File("co-shell-11.apk")), installer.installed) // no new session
+        assertEquals(File("co-shell-12.apk"), installer.manual.last())
+    }
+
+    @Test
+    fun `the journal records the steps of an attempt`() {
+        val c = controller()
+        c.download(release(11))
+        assertEquals(listOf("download 11 started", "downloaded 0 bytes, checksum ok"), journal.events)
     }
 }

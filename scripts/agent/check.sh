@@ -8,7 +8,7 @@ cd "$(dirname "$0")/../.."
 tasks=(check assembleDebug)
 if [ "${1:-}" = "--quick" ]; then
     shift
-    tasks=(:core:model:jvmTest :core:domain:jvmTest :core:data:jvmTest :app:testDebugUnitTest)
+    tasks=(:core:model:jvmTest :core:domain:jvmTest :core:data:jvmTest :core:designsystem:testDebugUnitTest :app:testDebugUnitTest)
 fi
 
 log=$(mktemp)

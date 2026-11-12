@@ -28,6 +28,15 @@
         <receiver
             android:name=".update.install.InstallResultReceiver"
             android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.updates"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/update_paths" />
+        </provider>
         <!-- WorkManager is created on demand with Hilt workers (CoShellApp.workManagerConfiguration). -->
         <provider
             android:name="androidx.startup.InitializationProvider"

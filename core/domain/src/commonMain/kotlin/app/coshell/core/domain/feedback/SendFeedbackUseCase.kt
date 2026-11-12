@@ -14,11 +14,12 @@ sealed interface FeedbackResult {
     data class Failed(val reason: String) : FeedbackResult
 }
 
-/** Trims the text, checks its length, adds [DeviceInfo] and sends it. */
+/** Trims the text, checks its length, adds [DeviceInfo] and technical lines and sends it. */
 class SendFeedbackUseCase(
     private val sender: FeedbackSender,
     private val deviceInfo: DeviceInfoProvider,
     private val clock: Clock,
+    private val diagnostics: DiagnosticsProvider = DiagnosticsProvider { emptyList() },
 ) {
     suspend operator fun invoke(text: String): FeedbackResult {
         val trimmed = text.trim()
@@ -26,12 +27,21 @@ class SendFeedbackUseCase(
         if (trimmed.length > MAX_LENGTH) return FeedbackResult.TooLong(MAX_LENGTH)
         if (!sender.isConfigured) return FeedbackResult.NotConfigured
         return try {
-            FeedbackResult.Sent(sender.send(FeedbackReport(trimmed, clock.now(), deviceInfo.deviceInfo())))
+            FeedbackResult.Sent(sender.send(FeedbackReport(trimmed, clock.now(), deviceInfo.deviceInfo(), technicalLines())))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             FeedbackResult.Failed(e.message ?: e::class.simpleName.orEmpty())
         }
+    }
+
+    /** Missing technical data must never stop a message. */
+    private suspend fun technicalLines(): List<String> = try {
+        diagnostics.diagnostics()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        listOf("diagnostics failed: ${e::class.simpleName}")
     }
 
     companion object {

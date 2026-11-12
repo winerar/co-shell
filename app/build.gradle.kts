@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.roborazzi)
 }
 
 fun env(name: String): String = providers.environmentVariable(name).orNull.orEmpty()
@@ -89,7 +90,10 @@ android {
         // Robolectric smoke tests (MainShellSmokeTest) read the app's strings and themes.
         unitTests.isIncludeAndroidResources = true
         // Robolectric reaches into JDK internals (FileDescriptor) — JDK 17+ must export them.
-        unitTests.all { it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED") }
+        unitTests.all {
+            it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
+            it.filter.isFailOnNoMatchingTests = false // `agent.sh shots <filter>` runs both modules
+        }
     }
 
     lint {
@@ -97,6 +101,12 @@ android {
         checkReleaseBuilds = false
         ignoreTestSources = true // tests are not shipped; saves the lintAnalyze*Test tasks
     }
+}
+
+// Screenshot references of the key screens (#226), compared in every `check` like core:designsystem's.
+// Re-record after a deliberate visual change: `scripts/agent/agent.sh shots`.
+roborazzi {
+    outputDir.set(file("src/test/screenshots"))
 }
 
 dependencies {
@@ -125,6 +135,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
     testImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
 }

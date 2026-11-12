@@ -23,7 +23,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.components.TemplateChip
@@ -53,10 +53,11 @@ fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
         }
         LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
             item(key = "search") {
-                CoShellTextField(
+                CoShellSearchField(
                     value = state.query,
                     onValueChange = actions.onQueryChange,
-                    label = stringResource(R.string.templates_search, state.total),
+                    placeholder = stringResource(R.string.templates_search, state.total),
+                    clearLabel = stringResource(R.string.search_clear),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
                 )
             }

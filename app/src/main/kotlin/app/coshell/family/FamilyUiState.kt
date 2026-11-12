@@ -1,6 +1,8 @@
 package app.coshell.family
 
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.data.sync.SyncIssue
+import app.coshell.core.data.sync.SyncIssueKind
 
 /** «Семья и синхронизация» screen state. */
 data class FamilyUiState(
@@ -22,8 +24,14 @@ sealed interface FamilyMessage {
 
     data object SignInFailed : FamilyMessage
     data object FamilyExists : FamilyMessage
-    data object NetworkError : FamilyMessage
+    /** An action failed; [kind] says why, as on the sync banner of «Обзора» (#124); [code] — server's answer. */
+    data class ActionFailed(val kind: SyncIssueKind, val code: String? = null) : FamilyMessage
     data object InvalidEmail : FamilyMessage
     data class InviteSent(val email: String) : FamilyMessage { override val isError get() = false }
     data class Synced(val received: Int, val sent: Int) : FamilyMessage { override val isError get() = false }
+
+    companion object {
+        /** The message for a failed action: network, sign-in, access, quota or server (#124). */
+        fun failed(error: Throwable): ActionFailed = SyncIssue.classify(error).let { (kind, code) -> ActionFailed(kind, code) }
+    }
 }

@@ -7,6 +7,8 @@ import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.core.content.FileProvider
+import app.coshell.update.log.UpdateJournal
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -19,6 +21,8 @@ import kotlinx.coroutines.withContext
  */
 class PackageInstallerApkInstaller @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val events: InstallEvents,
+    private val journal: UpdateJournal,
 ) : ApkInstaller {
 
     override fun canInstall(): Boolean = context.packageManager.canRequestPackageInstalls()
@@ -57,5 +61,20 @@ class PackageInstallerApkInstaller @Inject constructor(
             )
             session.commit(pending.intentSender)
         }
+        journal.add("session $sessionId committed, ${file.length()} bytes")
+    }
+
+    override fun installManually(file: File) {
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.updates", file)
+        val intent = Intent(Intent.ACTION_VIEW)
+            .setDataAndType(uri, APK_MIME)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        // Opened by the visible activity, like the session dialog: a start from the background is blocked on Xiaomi.
+        events.confirmation.put(intent)
+        journal.add("manual install: installer intent queued")
+    }
+
+    private companion object {
+        const val APK_MIME = "application/vnd.android.package-archive"
     }
 }

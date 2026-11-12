@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller
 import androidx.core.content.IntentCompat
+import app.coshell.update.log.UpdateJournal
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -16,9 +17,12 @@ import javax.inject.Inject
 class InstallResultReceiver : BroadcastReceiver() {
 
     @Inject lateinit var events: InstallEvents
+    @Inject lateinit var journal: UpdateJournal
 
     override fun onReceive(context: Context, intent: Intent) {
-        when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
+        val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)
+        journal.add("status $status ${intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE).orEmpty()}".trimEnd())
+        when (status) {
             PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                 val confirm = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent::class.java)
                 // The visible activity opens it (InstallEvents): a start from here is blocked on Xiaomi (#153).

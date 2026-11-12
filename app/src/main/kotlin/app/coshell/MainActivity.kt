@@ -8,7 +8,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
@@ -21,6 +20,7 @@ import app.coshell.family.sync.ForegroundSync
 import app.coshell.language.AppLanguage
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.theme.ThemeSettingsViewModel
+import app.coshell.theme.rememberRevealedSystemDark
 import app.coshell.theme.toDesign
 import app.coshell.update.install.InstallEvents
 import app.coshell.update.install.showInstallConfirmations
@@ -55,17 +55,18 @@ class MainActivity : ComponentActivity() {
             // already matches the phone's mode), so a chosen theme never flashes the other one.
             val mode by themeSettings.mode.collectAsStateWithLifecycle()
             val palette by themeSettings.palette.collectAsStateWithLifecycle()
-            val systemDark = isSystemInDarkTheme()
-            val darkTheme = mode?.isDark(systemDark) ?: return@setContent
-            val design = palette?.toDesign() ?: return@setContent
-            // Status/navigation bar icons follow the app theme, not only the phone's mode.
-            DisposableEffect(darkTheme) {
-                val style = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { darkTheme }
-                enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
-                onDispose {}
-            }
-            // A theme or palette switch opens as a circle from the tapped control (motion/ThemeReveal).
+            // A theme or palette switch opens as a circle from the tapped control (motion/ThemeReveal);
+            // so does the phone's own dark-mode switch with «Как в системе» (#230, SystemDarkReveal).
             ThemeRevealHost {
+                val systemDark = rememberRevealedSystemDark(mode)
+                val darkTheme = mode?.isDark(systemDark) ?: return@ThemeRevealHost
+                val design = palette?.toDesign() ?: return@ThemeRevealHost
+                // Status/navigation bar icons follow the app theme, not only the phone's mode.
+                DisposableEffect(darkTheme) {
+                    val style = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { darkTheme }
+                    enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
+                    onDispose {}
+                }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {
                     CoShellNavHost()
                 }

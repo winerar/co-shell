@@ -9,6 +9,8 @@
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
+- **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
+  («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
   `surfaceContainer`, сегменты 40 dp, одна пилюля скользит к выбранному на `Motion.spatial()` (рисуется в `drawBehind` —
   смена выбора только перерисовка). `SegmentTone.Choice` — неон `primary` (тип операции, «Категория | Папка», тема,
@@ -33,7 +35,8 @@
   `CoShellDialog` (маленькая форма, содержимое прокручивается). Редакторы — не диалоги, а шторки.
 - **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`
   (итог действия: блок на ступень светлее фона или контейнер ошибки).
-- **Шторка и панель** — `CoShellSheet` + `CoShellSheetLayout` (действие закреплено внизу), `CoShellBottomBar`
+- **Шторка и панель** — `CoShellSheet` + `CoShellSheetLayout` (действие закреплено внизу, `titleAction` — текст-кнопка
+  в строке заголовка, «Сбросить» в фильтрах; вне навигации — внутри `Dialog(properties = CoShellSheetDialogProperties)`), `CoShellBottomBar`
   (`CoShellTab`: иконка, подпись, выбрана, `badge` — неоновая точка «есть новое»; «+» в середине, `addConfirm` —
   галочка после сохранения) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
   строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).

@@ -55,24 +55,34 @@ interface CategoryDao {
 interface TransactionDao {
     @Query(
         """SELECT * FROM transactions WHERE deleted = 0
-           AND (:accountId IS NULL OR account_id = :accountId OR to_account_id = :accountId)
-           AND (:categoryId IS NULL OR category_id = :categoryId)
+           AND (:anyAccount OR account_id IN (:accountIds) OR to_account_id IN (:accountIds))
+           AND (:anyCategory OR category_id IN (:categoryIds)
+                OR (:uncategorized AND type != 'TRANSFER' AND category_id IS NULL))
            AND (:fromMs IS NULL OR date >= :fromMs)
            AND (:toMs IS NULL OR date < :toMs)
            AND (:type IS NULL OR type = :type)
-           AND (NOT :uncategorized OR (type != 'TRANSFER' AND category_id IS NULL))
+           AND (:authorMode = 0
+                OR (:authorMode = 1 AND (author_member_id IS NULL OR author_member_id NOT IN (:authorIds)))
+                OR (:authorMode = 2 AND author_member_id IN (:authorIds)))
            ORDER BY date DESC, id DESC
            LIMIT :limit""",
     )
-    /** [limit] -1 means no limit (SQLite). */
+    /**
+     * [limit] -1 means no limit (SQLite). Lists are ignored while their `any…` flag is set; [authorMode]:
+     * 0 — anyone, 1 — not one of [authorIds] (or no author), 2 — one of [authorIds].
+     */
     fun observe(
-        accountId: String?,
-        categoryId: String?,
+        anyAccount: Boolean,
+        accountIds: List<String>,
+        anyCategory: Boolean,
+        categoryIds: List<String>,
+        uncategorized: Boolean,
         fromMs: Long?,
         toMs: Long?,
         limit: Int,
         type: String? = null,
-        uncategorized: Boolean = false,
+        authorMode: Int = 0,
+        authorIds: List<String> = emptyList(),
     ): Flow<List<TransactionEntity>>
 
     @Query("SELECT * FROM transactions WHERE id = :id AND deleted = 0")

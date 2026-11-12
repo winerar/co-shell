@@ -7,6 +7,7 @@ import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
+import app.coshell.core.domain.AuthorFilter
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -124,8 +125,8 @@ class RepositoriesTest {
             Transaction("3", TransactionType.TRANSFER, "b", Money(1, usd), day(3), toAccountId = "a", toAmount = Money(1, usd)),
         )
         assertEquals(listOf("3", "2", "1"), transactions.observeTransactions().first().map { it.id })
-        assertEquals(listOf("3", "1"), transactions.observeTransactions(TransactionFilter(accountId = "a")).first().map { it.id })
-        assertEquals(listOf("2", "1"), transactions.observeTransactions(TransactionFilter(categoryId = "food")).first().map { it.id })
+        assertEquals(listOf("3", "1"), transactions.observeTransactions(TransactionFilter(accountIds = setOf("a"))).first().map { it.id })
+        assertEquals(listOf("2", "1"), transactions.observeTransactions(TransactionFilter(categoryIds = setOf("food"))).first().map { it.id })
         assertEquals(
             listOf("2"),
             transactions.observeTransactions(TransactionFilter(from = day(2), to = day(3))).first().map { it.id },
@@ -147,6 +148,34 @@ class RepositoriesTest {
         assertEquals(listOf("move"), ids(TransactionFilter(type = TransactionType.TRANSFER)))
         assertEquals(listOf("salary", "bare"), ids(TransactionFilter(uncategorized = true)))
         assertEquals(listOf("salary"), ids(TransactionFilter(uncategorized = true, limit = 1)))
+    }
+
+    @Test
+    fun `several accounts and categories, no category adds up, empty sets find nothing`() = runTest {
+        transactions.saveTransaction(Transaction("food", TransactionType.EXPENSE, "a", Money(1, usd), day(1), categoryId = "food"))
+        transactions.saveTransaction(Transaction("cafe", TransactionType.EXPENSE, "b", Money(1, usd), day(2), categoryId = "cafe"))
+        transactions.saveTransaction(Transaction("bare", TransactionType.EXPENSE, "c", Money(1, usd), day(3)))
+        transactions.saveTransaction(
+            Transaction("move", TransactionType.TRANSFER, "c", Money(1, usd), day(4), toAccountId = "b", toAmount = Money(1, usd)),
+        )
+        suspend fun ids(filter: TransactionFilter) = transactions.observeTransactions(filter).first().map { it.id }
+
+        assertEquals(listOf("move", "cafe", "food"), ids(TransactionFilter(accountIds = setOf("a", "b"))))
+        assertEquals(listOf("cafe", "food"), ids(TransactionFilter(categoryIds = setOf("food", "cafe"))))
+        assertEquals(listOf("bare", "food"), ids(TransactionFilter(categoryIds = setOf("food"), uncategorized = true)))
+        assertEquals(emptyList(), ids(TransactionFilter(accountIds = emptySet())))
+        assertEquals(listOf("cafe"), ids(TransactionFilter(accountIds = setOf("b"), categoryIds = setOf("cafe", "food"))))
+    }
+
+    @Test
+    fun `filters by who added it`() = runTest {
+        transactions.saveTransaction(Transaction("mine", TransactionType.EXPENSE, "a", Money(1, usd), day(1), authorMemberId = "me"))
+        transactions.saveTransaction(Transaction("anya", TransactionType.EXPENSE, "a", Money(1, usd), day(2), authorMemberId = "anya"))
+        suspend fun ids(filter: TransactionFilter) = transactions.observeTransactions(filter).first().map { it.id }
+
+        assertEquals(listOf("anya"), ids(TransactionFilter(author = AuthorFilter.Member("anya"))))
+        assertEquals(listOf("mine"), ids(TransactionFilter(author = AuthorFilter.Me(others = setOf("anya")))))
+        assertEquals(listOf("anya", "mine"), ids(TransactionFilter(author = AuthorFilter.Me(others = emptySet()))))
     }
 
     @Test

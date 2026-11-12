@@ -2,6 +2,10 @@ package app.coshell.core.designsystem.catalog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import app.coshell.core.designsystem.components.CoShellFilterChip
+import app.coshell.core.designsystem.components.CoShellCheckMark
+import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
@@ -84,6 +88,18 @@ fun ComponentsCatalog() {
                 row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
             }
         }
+    }
+}
+
+/** Check marks of multi-choice sheets (#141): off, on, some of a folder — and filter chips beside them. */
+@Composable
+fun CheckMarkSample() {
+    Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m), verticalAlignment = Alignment.CenterVertically) {
+        CoShellCheckMark(ToggleableState.Off)
+        CoShellCheckMark(ToggleableState.On)
+        CoShellCheckMark(ToggleableState.Indeterminate)
+        CoShellFilterChip(selected = true, onClick = {}, label = { Text("Еда · 3") })
+        CoShellFilterChip(selected = false, onClick = {}, label = { Text("Счёт") })
     }
 }
 

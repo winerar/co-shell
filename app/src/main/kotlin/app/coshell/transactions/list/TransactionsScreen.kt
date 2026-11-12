@@ -73,7 +73,7 @@ fun TransactionsScreen(
             contentPadding = PaddingValues(bottom = Sizes.fabClearance),
         ) {
             if (state.days.isNotEmpty() || state.filter.isActive) {
-                item(key = "filters") { FilterBar(state.filter, state.accounts, actions.onFilter, Modifier.padding(bottom = Spacing.s)) }
+                item(key = "filters") { FilterBar(state, actions.onFilter, Modifier.padding(bottom = Spacing.s)) }
             }
             if (state.days.isEmpty()) {
                 item(key = "empty") { EmptyState(filtered = state.filter.isActive, onReset = { actions.onFilter { ListFilter() } }) }

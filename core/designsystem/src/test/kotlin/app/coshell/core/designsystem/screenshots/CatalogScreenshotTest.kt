@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
+import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
@@ -78,6 +79,12 @@ class CatalogScreenshotTest {
 
     @Test
     fun `row group light`() = shot("row_group_light") { RowGroupSample() }
+
+    @Test
+    fun `check marks dark`() = shot("check_marks_dark", dark = true) { CheckMarkSample() }
+
+    @Test
+    fun `check marks light`() = shot("check_marks_light") { CheckMarkSample() }
 
     @Test
     fun `menu rows dark`() = shot("menu_rows_dark", dark = true) { MenuRowsSample() }

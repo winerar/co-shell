@@ -122,3 +122,4 @@
   Release APK: `assets/dexopt/baseline.prof` из одних библиотек; шаблон `HSPLapp/coshell/**;->**(**)**` разворачивает AGP
   (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).
 - (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.
+- (11-12) `agent.sh test` берёт короткие имена модулей (`domain`, `data`, `app`), не `core:domain`; фильтр — шаблон Gradle (`'*BudgetLedger*'`).

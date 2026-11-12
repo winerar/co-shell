@@ -20,7 +20,7 @@ behind=$(git rev-list --count HEAD..origin/dev)
 [ "$behind" -gt 0 ] && warn "origin/dev is $behind commits ahead — merge it before the PR"
 
 today=$(date +%F)
-grep -q "^\*\*Обновлено:\*\* $today" docs/STATUS.md || bad "docs/STATUS.md «Обновлено» is not $today"
+grep -q "^\*\*Обновлено:\*\* $today" docs/STATUS.md || bad "docs/STATUS.md «Обновлено» is not $today — agent.sh stamp"
 git diff --quiet origin/dev -- docs/STATUS.md && bad "docs/STATUS.md not changed in this branch"
 # STATUS is read at every session start: keep it short (workflow.md «Сессии ИИ-агента»).
 long=$(python3 -c 'import sys; print(*[i for i, l in enumerate(open(sys.argv[1], encoding="utf-8"), 1) if len(l) > 501], end=" ")' docs/STATUS.md)
@@ -34,12 +34,9 @@ if [ "$(top HEAD)" = "$(top origin/main)" ] && ! git diff --quiet origin/main --
     warn "docs/whats-new.md top section is already released — add a new dated section if the family will notice this change"
 fi
 
-# Test count in STATUS vs the last test run (scripts/agent/check.sh leaves the XML results).
-results=$(find . -path '*/build/test-results/*' -name 'TEST-*.xml' -not -path './.gradle/*' 2>/dev/null)
-if [ -n "$results" ]; then
-    total=$(cat $results | grep -o '<testsuite [^>]*tests="[0-9]*"' | grep -o 'tests="[0-9]*"' | grep -o '[0-9]*' | paste -sd+ | bc)
-    grep -q "всего $total " docs/STATUS.md || bad "STATUS test count differs from the last run ($total)"
-fi
+# Test count in STATUS vs the last full test run (partial runs are skipped by test-count.sh).
+total=$(scripts/agent/test-count.sh 2>/dev/null)
+[ -n "$total" ] && ! grep -q "всего $total " docs/STATUS.md && bad "STATUS test count differs from the last run ($total) — agent.sh stamp"
 
 # Task statuses (tasks.md «Конец сессии»): every in-progress issue ends as `Fixes #N` in the PR
 # (automerge closes it) or goes back to status:next / needs-owner with a comment.

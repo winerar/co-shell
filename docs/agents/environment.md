@@ -14,7 +14,7 @@
   issue появляются через ~20 с; затем `list_issues` с `labels: [source:app]`, `state: OPEN`.
 - (11-09) Долгую сборку — в фон (`run_in_background`), дождаться — `until grep -q …; do sleep 3; done` в фоне.
 - (11-11) Maven Central отвечает Gradle 429 на большие jar (Robolectric) — **решено автоматикой** (#156): `scripts/agent/gradle.sh`
-  (через него `check.sh`, `agent.sh test/quick`) ставит первым зеркало Google (`maven-mirror.init.gradle`, и для Robolectric — `robolectric.dependency.repo.url`),
+  (через него `check.sh`, `agent.sh test/quick/affected`) ставит первым зеркало Google (`maven-mirror.init.gradle`, и для Robolectric — `robolectric.dependency.repo.url`),
   а если 429 всё же случился — докачивает файлы curl-ом (`m2-mirror.sh`) в `~/.m2` и повторяет сборку. Вручную ничего не делать.
 - (11-10) Холст дизайна (`docs/design/README.md`) — артефакт типа Design: файлы `project/*.dc.html` + `canvas.json`;
   читать `Artifact read` с `paths`, публиковать с `root` (порядок — инструкции типа в ответе `read`). Вкладки = `pages`.

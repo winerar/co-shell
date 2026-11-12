@@ -9,17 +9,32 @@ usage() {
     cat <<'TXT'
 Команды агента (scripts/agent/agent.sh <команда> [аргументы]):
 
+  Флоу (цепочки шагов; стоп на первой ошибке)
+    ship -m "Msg" [-m …] [--quick|--affected|--no-check]
+                          проверка (полная) → git add -A → коммит → push с повтором
+    update                влить origin/dev → тесты затронутых модулей → push
+    finish [-m "Msg"] [--no-check]
+                          проверка → дата и число тестов в STATUS → коммит → push → чек-лист end
+
   Сессия
-    start                 начало сессии: свежий dev, чужие ветки, STATUS, доска задач
+    start [--all]         начало: свежие чужие ветки (--all — все), перенос на dev, STATUS, задачи без бэклога
     end                   конец сессии: что не закоммичено/не запушено, STATUS, размеры файлов
-    tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage…)
+    tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage, backlog)
+    issue <N> [строк]     одна задача: заголовок, метки, описание (дешевле MCP)
     sync                  влить origin/dev в текущую ветку, показать конфликты
+    push                  push текущей ветки с повтором при сетевых ошибках (2–16 с)
+    stamp                 STATUS: «Обновлено» = сегодня, «всего N» тестов из последнего прогона
+    changes               что в ветке относительно dev: коммиты и файлы (кратко)
+
+  Чтение (экономия токенов)
+    doc <файл> [раздел]   один раздел Markdown (без раздела — список заголовков с номерами строк)
 
   Сборка и тесты (Gradle — только так: зеркало Maven и автоповтор при 429)
     check                 перед коммитом: lint + все тесты + debug APK, краткий отчёт
     quick                 только unit-тесты всех модулей (для итераций)
+    affected [--list]     unit-тесты только затронутых в ветке модулей и зависящих от них
     test <модуль> [фильтр] тесты одного модуля, напр.: test app '*UpdateControllerTest'
-                          (модули: model, domain, data, app)
+                          (модули: model, domain, data, ds — designsystem, app)
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
 
@@ -41,14 +56,27 @@ cmd="${1:-help}"; [ $# -gt 0 ] && shift
 case "$cmd" in
     start) exec "$here/session-start.sh" "$@" ;;
     end) exec "$here/session-end.sh" "$@" ;;
+    ship | update | finish) exec "$here/flow.sh" "$cmd" "$@" ;;
     tasks) exec "$here/tasks.sh" "$@" ;;
+    issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;
+    push) exec "$here/push.sh" "$@" ;;
+    stamp) exec "$here/stamp-status.sh" "$@" ;;
+    changes)
+        git fetch -q origin dev 2>/dev/null
+        echo "== commits not in dev ($(git rev-list --no-merges --count origin/dev..HEAD)), behind dev: $(git rev-list --count HEAD..origin/dev)"
+        git log --no-merges --format='  %h %s' origin/dev..HEAD | head -15
+        echo "== files"; git diff --stat=100 origin/dev...HEAD | tail -25
+        [ -z "$(git status --porcelain)" ] || { echo "== not committed"; git status --short | head -20; } ;;
+    doc) exec "$here/section.sh" "$@" ;;
+    affected) exec "$here/affected.sh" "$@" ;;
     check) exec "$here/check.sh" "$@" ;;
     quick) exec "$here/check.sh" --quick "$@" ;;
     test)
-        module="${1:?модуль: model, domain, data, app}"; shift
+        module="${1:?модуль: model, domain, data, ds, app}"; shift
         case "$module" in
             model|domain|data) task=":core:$module:jvmTest" ;;
+            ds|designsystem) task=":core:designsystem:testDebugUnitTest" ;;
             app) task=":app:testDebugUnitTest" ;;
             *) echo "неизвестный модуль: $module"; exit 2 ;;
         esac

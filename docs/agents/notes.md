@@ -14,8 +14,6 @@
 - (11-12) Кончились минуты Actions: задачи падают за 2–4 с, `runner_id: 0`, логов нет (404), `billable` в API = 0 — это не код, а биллинг (#251).
 - (11-09) Чистая локальная `check assembleDebug` — ~3 мин; CPU по задачам: lint ~26%, KSP `core:data`
   дважды (android + jvm) ~65 с, `mergeExtDexDebug` ~45 с. Тесты выполняются быстро (~50 с суммарно).
-- (11-09) CI до ускорения: PR ~5 мин (из них `check` ~4), релиз на `main` ~10 мин (`check` 3.5 +
-  debug 1.7 + release 4). После PR winerar/co-shell#41 ожидается: правки документации ~1 мин, релиз ~6.
 - (11-09) `gradle/actions/setup-gradle` по умолчанию пишет кэш **только с ветки по умолчанию** (`main`) —
   поэтому `cache-read-only` переопределён, чтобы писал и `dev`.
 - (11-09) Configuration cache в CI сохраняется только с секретом `GRADLE_ENCRYPTION_KEY` (не задан).
@@ -29,6 +27,7 @@
 Прокси, Maven 429, SDK, холст, GitHub — в [`environment.md`](environment.md).
 
 ## Грабли проекта
+- (11-12) Снимок `ComponentsCatalog` обрезан высотой 891 dp: новый блок внизу каталога в эталон не попадает — нужен отдельный `shot(...)` (так `menu_rows_*`).
 - (11-12) Compose `lerp(Color, Color, t)` смешивает в **Oklab**, не в sRGB — подбирать цвета/контраст заранее скриптом с Oklab (как в #249), иначе числа не сойдутся с `ColorContrastTest`.
 - (11-10) ViewModel, который в `init {}` запускает корутину, в тесте создавать `by lazy` (или в `@Before`): поле
   класса инициализируется раньше `MainDispatcherRule`, и `viewModelScope` молча не работает.

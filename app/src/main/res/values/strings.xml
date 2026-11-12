@@ -243,8 +243,15 @@
     <string name="transactions_delete_selected">Удалить · %d</string>
     <string name="transaction_copy_today">Копия · сегодня</string>
     <string name="action_undo">Отменить</string>
-    <string name="settings_title">Настройки</string>
-    <string name="settings_menu_hint">Тема, валюты отчётов, встряхивание, обновление</string>
+    <string name="appearance_title">Внешний вид</string>
+    <string name="appearance_menu_hint">%1$s · %2$s</string>
+    <string name="appearance_input_section">Ввод</string>
+    <string name="more_section_money">Деньги</string>
+    <string name="more_section_family_data">Семья и данные</string>
+    <string name="more_section_app">Приложение</string>
+    <string name="more_version_title">Co-Shell %1$s</string>
+    <string name="more_version_build">Сборка %1$d</string>
+    <string name="more_version_available">Есть сборка %1$d · что нового</string>
     <string name="theme_title">Тема</string>
     <string name="theme_system">Системная</string>
     <string name="theme_light">Светлая</string>
@@ -331,7 +338,6 @@
     <string name="update_open">Обновить</string>
     <string name="update_pill">Версия %1$d · Обновить</string>
     <string name="update_pill_dismiss">Скрыть до следующего запуска</string>
-    <string name="update_settings_available">Доступна версия %1$d</string>
     <string name="crash_notice_title">Приложение закрылось с ошибкой</string>
     <string name="crash_notice_text">Отправить отчёт разработчику? Уйдут только техническое описание ошибки и данные телефона — без сумм и названий.</string>
     <string name="crash_notice_send">Отправить</string>
@@ -467,10 +473,8 @@
     <string name="sync_banner_ok">Понятно</string>
     <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
     <!-- «Стереть все данные» (board 18, feedback #107) -->
-    <string name="settings_general_section">Общее</string>
-    <string name="settings_data_section">Данные</string>
     <string name="wipe_title">Стереть все данные</string>
-    <string name="wipe_settings_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
+    <string name="wipe_menu_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
     <string name="wipe_family_title">Удалится у всей семьи</string>
     <string name="wipe_family_hint">На обоих телефонах, при следующей синхронизации</string>
     <string name="wipe_count_accounts">счетов</string>

@@ -1,5 +1,15 @@
 package app.coshell.screenshots
 
+import app.coshell.more.MoreActions
+import app.coshell.more.MoreScreen
+import app.coshell.more.MoreState
+import app.coshell.appearance.AppearanceActions
+import app.coshell.appearance.AppearanceScreen
+import app.coshell.appearance.AppearanceState
+import app.coshell.core.domain.settings.ThemeMode
+import app.coshell.backup.BackupActions
+import app.coshell.backup.BackupScreen
+import app.coshell.backup.BackupUiState
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
@@ -104,6 +114,18 @@ class ScreensScreenshotTest {
     @Test
     fun `account edit dark`() = shot("account_edit_dark", dark = true) { AccountEditScreen(accountEditPreviewSample, AccountEditActions()) }
 
+    @Test
+    fun `more light`() = shot("more_light") { MoreScreen(MoreActions(), moreSample) }
+
+    @Test
+    fun `more update dark`() = shot("more_update_dark", dark = true) { MoreScreen(MoreActions(), moreSample.copy(availableBuild = 248)) }
+
+    @Test
+    fun `appearance dark`() = shot("appearance_dark", dark = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK), AppearanceActions()) }
+
+    @Test
+    fun `backup dark`() = shot("backup_dark", dark = true) { BackupScreen(BackupUiState(), BackupActions()) }
+
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
@@ -115,5 +137,6 @@ class ScreensScreenshotTest {
 
     private companion object {
         const val SETTLE_MS = 3_000L
+        val moreSample = MoreState("0.1.0", 247, mainCurrency = "USD", appearance = "Вольт · тёмная")
     }
 }

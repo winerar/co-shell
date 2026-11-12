@@ -6,6 +6,8 @@ import androidx.compose.ui.unit.dp
 object Sizes {
     /** List row: at least the touch-friendly 56 dp; with a [badge] and Spacing.m above and below it is 64. */
     val rowMinHeight = 56.dp
+    /** Dense menu row («Ещё», #155): a [badgeSmall] with Spacing.s above and below fits in 52. */
+    val rowDenseMinHeight = 52.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
     /** Badge in an editor's header, beside the name: the category as it will look. */

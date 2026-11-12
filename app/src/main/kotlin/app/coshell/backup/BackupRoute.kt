@@ -12,6 +12,7 @@ import app.coshell.backup.auto.AutoBackupViewModel
 @Composable
 fun BackupRoute(
     onBack: () -> Unit,
+    onWipeData: () -> Unit = {},
     viewModel: BackupViewModel = hiltViewModel(),
     auto: AutoBackupViewModel = hiltViewModel(),
 ) {
@@ -37,6 +38,7 @@ fun BackupRoute(
             onCancelImport = viewModel::cancelImport,
             onChooseAutoFolder = { pickFolder.launch(null) },
             onDisableAuto = auto::disable,
+            onWipeData = onWipeData,
         ),
     )
 }
@@ -50,4 +52,6 @@ data class BackupActions(
     val onCancelImport: () -> Unit = {},
     val onChooseAutoFolder: () -> Unit = {},
     val onDisableAuto: () -> Unit = {},
+    /** «Стереть все данные» at the bottom (moved here from «Настройки», #155). */
+    val onWipeData: () -> Unit = {},
 )

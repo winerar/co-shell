@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.wipe.components.WipeDataRow
 import app.coshell.backup.auto.AutoBackupUiState
 import app.coshell.backup.components.AutoBackupSection
 import app.coshell.backup.components.BackupMessageCard
@@ -70,6 +72,10 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s),
             )
+            // Board 154А: the wipe sits under the copy — make a copy first, then start clean.
+            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.s, bottom = Spacing.l)) {
+                row { WipeDataRow(actions.onWipeData) }
+            }
         }
     }
 

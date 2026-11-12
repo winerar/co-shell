@@ -101,9 +101,9 @@ class MainShellSmokeTest {
                     }
                     composable<AccountsDestination> { AccountsScreen(ACCOUNTS, AccountsActions()) }
                     composable<MoreDestination> {
-                        MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
+                        MoreScreen(MoreActions(onAppearance = { nav.navigate(AppearanceDestination) }))
                     }
-                    composable<SettingsDestination> { Text(INNER, Modifier.clickable { nav.popBackStack() }) }
+                    composable<AppearanceDestination> { Text(INNER, Modifier.clickable { nav.popBackStack() }) }
                 }
             }
         }
@@ -140,7 +140,7 @@ class MainShellSmokeTest {
 
     @Test
     fun `bar rides away on an inner screen and comes back on return`() {
-        openSettings()
+        openAppearance()
         compose.waitForIdle()
         compose.onNodeWithText(INNER).assertIsDisplayed()
         compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertDoesNotExist()
@@ -160,7 +160,7 @@ class MainShellSmokeTest {
         compose.waitForIdle()
         assertEquals(1, pillTaps)
 
-        openSettings()
+        openAppearance()
         compose.waitForIdle()
         compose.onNodeWithText(pill).assertDoesNotExist()
     }
@@ -190,10 +190,10 @@ class MainShellSmokeTest {
         compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
     }
 
-    /** «Ещё» → «Настройки»: the row is below the tiles, so the grid scrolls to it first (it is lazy). */
-    private fun openSettings() {
+    /** «Ещё» → «Внешний вид»: the row is near the bottom, so the list scrolls to it first (it is lazy). */
+    private fun openAppearance() {
         tab(R.string.nav_more)
-        val settings = string(R.string.settings_title)
+        val settings = string(R.string.appearance_title)
         compose.onNode(hasScrollAction()).performScrollToNode(hasText(settings))
         compose.onNodeWithText(settings).performClick()
     }

@@ -119,3 +119,5 @@
 - (11-12) `agent.sh test <модуль> Feedback` — «No tests found»: фильтр Gradle — шаблон, нужен `'*Feedback*'`. Число `Tests:` в выводе — по
   модулю целиком из старых XML, свой тест проверять по файлу `build/test-results/.../TEST-*<Класс>.xml`.
 - (11-12) Публикация холста: `file_path` — абсолютный путь (относительный ищется от рабочей папки, не от `root`); первый publish без `read` всей артефакта отклоняется — сначала `Artifact read` без `path`.
+- (11-12) Тап на кирпичах — `<div style="display: contents" onClick>` (`mockup_logic.tap`); `stroke=` с лаймом — роль `Pi`,
+  в светлой теме почти чёрная; неоновую линию задавать `--ring: #…; stroke: var(--ring)` (так `ring()`). JS-ключ `…Color:` — чернила.

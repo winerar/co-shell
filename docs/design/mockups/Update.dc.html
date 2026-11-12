@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>Обновление приложения</title>
+<title>Обновление</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,81 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-:root{
---spatial:linear(0,0.06 2.4%,0.22 5.3%,0.5 10.5%,0.74 16%,0.89 21.5%,0.97 27%,1.01 33%,1.02 40%,1.01 50%,1);
---bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);
-}
-button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.tap{transition:transform 520ms var(--bouncy),background-color 300ms ease-out,color 300ms ease-out}
-.tap:active{transform:scale(0.95);transition:transform 90ms ease-out}
-.arc{transition:stroke-dashoffset 420ms var(--spatial),stroke 300ms ease-out}
-.pop{animation:pop 600ms var(--bouncy)}
-@keyframes pop{0%{transform:scale(0.4);opacity:0}100%{transform:scale(1);opacity:1}}
-.spin{animation:spin 1600ms linear infinite;transform-origin:50% 50%}
+button,input,textarea{font-family:inherit}
+.spin{animation:spin 900ms linear infinite;transform-origin:50% 50%}
 @keyframes spin{to{transform:rotate(360deg)}}
-.breath{animation:breath 2200ms ease-in-out infinite}
-@keyframes breath{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-.rise{animation:rise 520ms var(--spatial)}
-@keyframes rise{0%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}
 </style>
 </helmet>
-<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden; padding: 16px 16px 0;">
-  <div style="display: flex; align-items: center; gap: 4px; margin: 4px -8px 0;">
-    <button type="button" class="tap" aria-label="Назад" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
-    <h1 style="margin: 0; font-size: 22px; font-weight: 700;">Обновление</h1>
-  </div>
-
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 0 8px;">
-    <div class="{{ringClass}}" style="position: relative; width: 210px; height: 210px;">
-      <svg width="210" height="210" viewBox="0 0 210 210" aria-hidden="true" style="position: absolute; inset: 0; transform: rotate(-90deg);">
-        <circle cx="105" cy="105" r="92" fill="none" stroke="{{co.k_1A2117_n09}}" stroke-width="12"></circle>
-        <circle class="arc" cx="105" cy="105" r="92" fill="none" stroke="{{arcColor}}" stroke-width="12" stroke-linecap="round" stroke-dasharray="578" stroke-dashoffset="{{offset}}"></circle>
-      </svg>
-      <sc-if value="{{isChecking}}" hint-placeholder-val="{{false}}">
-        <svg class="spin" width="210" height="210" viewBox="0 0 210 210" aria-hidden="true" style="position: absolute; inset: 0;">
-          <circle cx="105" cy="105" r="92" fill="none" stroke="{{co.k_B8FF2E_Pi}}" stroke-width="12" stroke-linecap="round" stroke-dasharray="120 458"></circle>
-        </svg>
-      </sc-if>
-      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
-        <sc-if value="{{showPct}}" hint-placeholder-val="{{false}}">
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 44px; font-weight: 700;">{{pct}}<span style="font-size: 20px; color: {{co.k_9AA594_n60}};">%</span></span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{co.k_9AA594_n60}};">{{mb}} из 8,1 МБ</span>
-        </sc-if>
-        <sc-if value="{{showIcon}}" hint-placeholder-val="{{true}}">
-          <span class="pop" style="width: 84px; height: 84px; border-radius: 50%; background: {{iconBg}}; display: flex; align-items: center; justify-content: center;">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="{{iconInk}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{iconPath}}"></path></svg>
-          </span>
-        </sc-if>
-      </div>
-    </div>
-    <div class="rise" style="font-size: 22px; font-weight: 700; margin-top: 10px;">{{title}}</div>
-    <div style="font-size: 14px; color: {{co.k_9AA594_n60}};">{{subtitle}}</div>
-  </div>
-
-  <div style="margin-top: 14px; padding: 14px 16px; border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}};">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-      <span style="font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}};">Что нового в версии 42</span>
-      <span style="font-size: 12px; color: {{co.k_9AA594_n60}};">10 ноября</span>
-    </div>
-    <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: {{co.k_DDE5D6_n86}}; line-height: 1.35;">
-      <li>Новая шторка ввода: сначала счёт, своя клавиатура</li>
-      <li>Счета группами, поиск по счетам</li>
-      <li>Цвета банков и приложений для счетов</li>
-    </ul>
-  </div>
-
-  <div style="display: flex; justify-content: space-between; padding: 12px 4px 0; font-size: 12px; color: {{co.k_9AA594_n60}};">
-    <span>Установлена: 41 · 9 ноября</span>
-    <span>Проверка: {{checked}}</span>
-  </div>
-
-  <div style="position: absolute; left: 16px; right: 16px; bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
-    <button type="button" class="tap" onClick="{{act}}" style="{{btnStyle}}">{{btn}}</button>
-  </div>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden;">
+<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;"><button type="button" aria-label="Назад" style="width: 48px; height: 48px; flex: none; border-radius: 50%; border: none; background: transparent; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button><h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">Обновление</h1></div><sc-if value="{{is_st_avail}}" hint-placeholder-val="{{false}}"><div style="padding: 16px 16px 0;"><div style="position: relative; width: 168px; height: 168px; margin: 0 auto;"><svg width="168" height="168" aria-hidden="true"><circle cx="84" cy="84" r="79" fill="none" stroke="{{co.k_2E382A_n17}}" stroke-width="10"></circle><circle cx="84" cy="84" r="79" fill="none" style="--ring: {{co.k_B8FF2E_P}}; stroke: var(--ring);" stroke-width="10" stroke-linecap="round" stroke-dasharray="496.371 496.371" transform="rotate(-90 84 84)"></circle></svg><div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;"><span style="width: 84px; height: 84px; border-radius: 50%; background: {{co.k_B8FF2E_P}}; display: flex; align-items: center; justify-content: center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"></path></svg></span></div></div><h2 style="margin: 22px 0 0; text-align: center; font-size: 22px;">Доступна версия 42</h2><div style="text-align: center; margin-top: 4px; font-size: 13px; color: {{co.k_9AA594_n60}};">8,1 МБ · вышла сегодня</div><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 14px; margin-top: 20px;"><div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: {{co.k_B8FF2E_Pi}};">Что нового в версии 42</b><span style="color: {{co.k_9AA594_n60}};">10 ноября</span></div><ul style="margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.45;"><li>Новая шторка ввода: сначала счёт, своя клавиатура</li><li>Счета группами, поиск по счетам</li><li>Цвета банков и приложений для счетов</li></ul></div><div style="display: flex; justify-content: space-between; margin: 12px 4px 0; font-size: 12px; color: {{co.k_9AA594_n60}};"><span>Установлена: 41 · 9 ноября</span><span>Проверка: только что</span></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><div style="display: contents; cursor: pointer;" onClick="{{go_st_load}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: none; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">Скачать и установить</button></div></div></sc-if><sc-if value="{{is_st_load}}" hint-placeholder-val="{{false}}"><div style="padding: 16px 16px 0;"><div style="display: contents; cursor: pointer;" onClick="{{go_st_ready}}"><div style="position: relative; width: 168px; height: 168px; margin: 0 auto;"><svg width="168" height="168" aria-hidden="true"><circle cx="84" cy="84" r="79" fill="none" stroke="{{co.k_2E382A_n17}}" stroke-width="10"></circle><circle cx="84" cy="84" r="79" fill="none" style="--ring: {{co.k_B8FF2E_P}}; stroke: var(--ring);" stroke-width="10" stroke-linecap="round" stroke-dasharray="223.367 496.371" transform="rotate(-90 84 84)"></circle></svg><div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700;">45 %</span><span style="font-size: 12px; color: {{co.k_9AA594_n60}};">3,6 из 8,1 МБ</span></div></div></div><h2 style="margin: 22px 0 0; text-align: center; font-size: 22px;">Скачиваем…</h2><div style="text-align: center; margin-top: 4px; font-size: 13px; color: {{co.k_9AA594_n60}};">Можно выйти — продолжится в фоне. Тапните кольцо — загрузится</div><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 14px; margin-top: 20px;"><div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: {{co.k_B8FF2E_Pi}};">Что нового в версии 42</b><span style="color: {{co.k_9AA594_n60}};">10 ноября</span></div><ul style="margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.45;"><li>Новая шторка ввода: сначала счёт, своя клавиатура</li><li>Счета группами, поиск по счетам</li><li>Цвета банков и приложений для счетов</li></ul></div><div style="display: flex; justify-content: space-between; margin: 12px 4px 0; font-size: 12px; color: {{co.k_9AA594_n60}};"><span>Установлена: 41 · 9 ноября</span><span>Проверка: только что</span></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><div style="display: contents; cursor: pointer;" onClick="{{go_st_avail}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: 1px solid {{co.k_2E382A_n17}}; background: transparent; color: {{co.k_EEF5E6_n93}}; display: flex; align-items: center; justify-content: center; gap: 8px;">Отменить</button></div></div></sc-if><sc-if value="{{is_st_ready}}" hint-placeholder-val="{{false}}"><div style="padding: 16px 16px 0;"><div style="position: relative; width: 168px; height: 168px; margin: 0 auto;"><svg width="168" height="168" aria-hidden="true"><circle cx="84" cy="84" r="79" fill="none" stroke="{{co.k_2E382A_n17}}" stroke-width="10"></circle><circle cx="84" cy="84" r="79" fill="none" style="--ring: {{co.k_B8FF2E_P}}; stroke: var(--ring);" stroke-width="10" stroke-linecap="round" stroke-dasharray="496.371 496.371" transform="rotate(-90 84 84)"></circle></svg><div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;"><span style="width: 84px; height: 84px; border-radius: 50%; background: {{co.k_B8FF2E_P}}; display: flex; align-items: center; justify-content: center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{co.k_0E1F00_O}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span></div></div><h2 style="margin: 22px 0 0; text-align: center; font-size: 22px;">Готово к установке</h2><div style="text-align: center; margin-top: 4px; font-size: 13px; color: {{co.k_9AA594_n60}};">Версия 42 · 8,1 МБ</div><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 14px; margin-top: 20px;"><div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: {{co.k_B8FF2E_Pi}};">Что нового в версии 42</b><span style="color: {{co.k_9AA594_n60}};">10 ноября</span></div><ul style="margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.45;"><li>Новая шторка ввода: сначала счёт, своя клавиатура</li><li>Счета группами, поиск по счетам</li><li>Цвета банков и приложений для счетов</li></ul></div><div style="display: flex; justify-content: space-between; margin: 12px 4px 0; font-size: 12px; color: {{co.k_9AA594_n60}};"><span>Установлена: 41 · 9 ноября</span><span>Проверка: только что</span></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><div style="display: contents; cursor: pointer;" onClick="{{go_st_latest}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: none; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;">Установить</button></div></div></sc-if><sc-if value="{{is_st_latest}}" hint-placeholder-val="{{false}}"><div style="padding: 16px 16px 0;"><div style="position: relative; width: 168px; height: 168px; margin: 0 auto;"><svg width="168" height="168" aria-hidden="true"><circle cx="84" cy="84" r="79" fill="none" stroke="{{co.k_2E382A_n17}}" stroke-width="10"></circle><circle cx="84" cy="84" r="79" fill="none" style="--ring: {{co.k_B8FF2E_P}}; stroke: var(--ring);" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 496.371" transform="rotate(-90 84 84)"></circle></svg><div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;"><span style="width: 84px; height: 84px; border-radius: 50%; background: {{co.k_1B2317_n09}}; display: flex; align-items: center; justify-content: center;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{co.k_B8FF2E_Pi}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span></div></div><h2 style="margin: 22px 0 0; text-align: center; font-size: 22px;">У вас последняя версия</h2><div style="text-align: center; margin-top: 4px; font-size: 13px; color: {{co.k_9AA594_n60}};">Версия 42 установлена</div><div style="border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}}; overflow: hidden; padding: 14px; margin-top: 20px;"><div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: {{co.k_B8FF2E_Pi}};">Что нового в версии 42</b><span style="color: {{co.k_9AA594_n60}};">10 ноября</span></div><ul style="margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.45;"><li>Новая шторка ввода: сначала счёт, своя клавиатура</li><li>Счета группами, поиск по счетам</li><li>Цвета банков и приложений для счетов</li></ul></div><div style="display: flex; justify-content: space-between; margin: 12px 4px 0; font-size: 12px; color: {{co.k_9AA594_n60}};"><span>Установлена: 41 · 9 ноября</span><span>Проверка: только что</span></div></div><div style="position: absolute; left: 16px; right: 16px; bottom: 24px;"><div style="display: contents; cursor: pointer;" onClick="{{go_st_avail}}"><button type="button" style="margin-top: 0px; width: 100%; height: 54px; border-radius: 999px; font-size: 16px; border: 1px solid {{co.k_2E382A_n17}}; background: transparent; color: {{co.k_EEF5E6_n93}}; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{co.k_EEF5E6_n93}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"></path></svg>Проверить ещё раз</button></div></div></sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":844}}'>
-/*co-theme*/var CO_KEYS = ['k_002A2E_it16','k_00F0FF_i','k_00F0FF_iI','k_050805_n00','k_0E1F00_O','k_10160D_n04','k_1A2117_n09','k_1D2A0B_Pt14','k_222B1E_n12','k_2E382A_n17','k_9AA594_n60','k_B8FF2E_P','k_B8FF2E_Pi','k_DDE5D6_n86','k_EEF5E6_n93'];
+/*co-theme*/var CO_KEYS = ['k_050805_n00','k_0E1F00_O','k_10160D_n04','k_1B2317_n09','k_222B1E_n12','k_2E382A_n17','k_9AA594_n60','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93'];
 var CO_SPECS = {
   'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
   'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
@@ -153,46 +89,8 @@ function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_K
 class Component extends DCLogic {
   /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
   componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
-  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
-  constructor(props) {
-    super(props);
-    this.state = { st: 'avail', p: 0 };
-  }
-  __coWillUnmount() { clearInterval(this.t); clearTimeout(this.c); }
-  download() {
-    this.setState({ st: 'down', p: 0 });
-    clearInterval(this.t);
-    this.t = setInterval(() => {
-      const p = Math.min(100, this.state.p + 4 + Math.random() * 6);
-      if (p >= 100) { clearInterval(this.t); this.setState({ st: 'ready', p: 100 }); } else this.setState({ p });
-    }, 160);
-  }
-  __coRender() {
-    const s = this.state;
-    const C = 578;
-    const check = 'M5 12l5 5 9-10', arrow = 'M12 4v12M6 11l6 6 6-6M5 20h14', box = 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8';
-    const V = {
-      avail: { title: 'Доступна версия 42', sub: '8,1 МБ · вышла сегодня', btn: 'Скачать и установить', off: 0, color: (__co('k_B8FF2E_Pi')), icon: arrow, bg: (__co('k_B8FF2E_P')), ink: (__co('k_0E1F00_O')), ring: 'breath', act: () => this.download() },
-      down: { title: 'Скачиваем…', sub: 'Можно выйти — продолжится в фоне', btn: 'Отменить', off: C * (1 - s.p / 100), color: (__co('k_B8FF2E_Pi')), act: () => { clearInterval(this.t); this.setState({ st: 'avail', p: 0 }); } },
-      ready: { title: 'Готово к установке', sub: 'Android попросит подтвердить', btn: 'Установить', off: 0, color: (__co('k_00F0FF_iI')), icon: box, bg: (__co('k_00F0FF_i')), ink: (__co('k_002A2E_it16')), ring: '', act: () => { this.setState({ st: 'checking' }); this.c = setTimeout(() => this.setState({ st: 'latest' }), 1400); } },
-      checking: { title: 'Проверяем…', sub: 'Ищем новую версию', btn: 'Проверяем…', off: C, color: (__co('k_1A2117_n09')), ring: '', act: () => {} },
-      latest: { title: 'У вас последняя версия', sub: 'Версия 42 установлена', btn: 'Проверить ещё раз', off: 0, color: (__co('k_2E382A_n17')), icon: check, bg: (__co('k_1D2A0B_Pt14')), ink: (__co('k_B8FF2E_P')), ring: '', act: () => { this.setState({ st: 'checking' }); this.c = setTimeout(() => this.setState({ st: 'avail', p: 0 }), 1400); } }
-    }[s.st];
-    const primary = s.st === 'avail' || s.st === 'ready';
-    return {
-      title: V.title, subtitle: V.sub, btn: V.btn, act: V.act,
-      offset: String(V.off), arcColor: V.color,
-      ringClass: V.ring || '',
-      isChecking: s.st === 'checking',
-      showPct: s.st === 'down',
-      showIcon: !!V.icon,
-      iconPath: V.icon || '', iconBg: V.bg || 'transparent', iconInk: V.ink || '#000',
-      pct: String(Math.round(s.p)),
-      mb: (8.1 * s.p / 100).toFixed(1).replace('.', ','),
-      checked: s.st === 'latest' ? 'только что' : '2 мин назад',
-      btnStyle: 'width:100%;height:56px;border-radius:999px;font-size:17px;font-weight:600;' + (primary ? ('border:none;background:' + __co('k_B8FF2E_P') + ';color:' + __co('k_0E1F00_O') + ';') : ('border:1px solid ' + __co('k_2E382A_n17') + ';background:transparent;color:' + __co('k_B8FF2E_Pi') + ';'))
-    };
-  }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; v.coPal = CO_NOW.pal; v.coMode = CO_NOW.dark ? 'тёмная' : 'светлая'; return v; }/*co-hooks-end*/
+  __coRender() { const s = this.state || {}; return {go_st_avail: () => this.setState({ st: 'avail' }), go_st_latest: () => this.setState({ st: 'latest' }), go_st_load: () => this.setState({ st: 'load' }), go_st_ready: () => this.setState({ st: 'ready' }), is_st_avail: (s.st === undefined ? 'avail' : s.st) === 'avail', is_st_latest: (s.st === undefined ? 'avail' : s.st) === 'latest', is_st_load: (s.st === undefined ? 'avail' : s.st) === 'load', is_st_ready: (s.st === undefined ? 'avail' : s.st) === 'ready'}; }
 }
 </script>
 </body>

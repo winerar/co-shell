@@ -11,68 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-:root{
---spatial:linear(0,0.06 2.4%,0.22 5.3%,0.5 10.5%,0.74 16%,0.89 21.5%,0.97 27%,1.01 33%,1.02 40%,1.01 50%,1);
---bouncy:linear(0,0.009,0.035 2.1%,0.141,0.281 6.7%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);
-}
-button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.tap{transition:transform 520ms var(--bouncy),border-color 260ms ease-out,box-shadow 260ms ease-out,background-color 260ms ease-out}
-.tap:active{transform:scale(0.9);transition:transform 80ms ease-out}
-.tint{transition:background-color 420ms ease-out,border-color 420ms ease-out,color 420ms ease-out}
+button,input,textarea{font-family:inherit}
+.spin{animation:spin 900ms linear infinite;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </helmet>
-<div style="width: 390px; height: 1240px; box-sizing: border-box; background: {{co.k_11170E_n05}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; padding: 12px 16px 24px; border-radius: 28px 28px 0 0;">
-  <div style="display: flex; justify-content: center; padding-bottom: 12px;"><div style="width: 36px; height: 4px; border-radius: 2px; background: {{co.k_4A5444_n28}};"></div></div>
-  <h1 style="margin: 0 0 12px; font-size: 22px; font-weight: 700;">Цвет счёта</h1>
-
-  <div class="tint" style="{{cardStyle}}">
-    <span style="display: flex; align-items: center; gap: 12px;">
-      <span class="tint" style="{{badgeStyle}}">{{ini}}</span>
-      <span style="display: flex; flex-direction: column;">
-        <span style="font-size: 16px; font-weight: 600;">Galicia</span>
-        <span style="font-size: 12px; color: {{co.k_9AA594_n60}};">{{colorName}}</span>
-      </span>
-    </span>
-    <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700;">1 250 000 <span style="font-size: 14px; color: {{co.k_9AA594_n60}}; font-weight: 500;">ARS</span></span>
-  </div>
-
-  <button type="button" class="tap" onClick="{{suggest}}" style="margin-top: 12px; width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border-radius: 16px; border: 1px dashed {{co.k_3D5A16_Pt33}}; background: {{co.k_141C0E_Pt08}}; color: {{co.k_EEF5E6_n93}}; text-align: left;">
-    <span style="width: 28px; height: 28px; border-radius: 9px; background: #F26E22; flex: none;"></span>
-    <span style="font-size: 14px; flex-grow: 1;">Похоже на банк Galicia — взять его цвет</span>
-    <span style="font-size: 13px; color: {{co.k_B8FF2E_Pi}}; font-weight: 600;">Взять</span>
-  </button>
-
-  <div style="font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; margin: 20px 0 4px;">Банки и приложения</div>
-  <div style="font-size: 12px; color: {{co.k_9AA594_n60}}; margin-bottom: 8px;">Оттенки примерные — сверим по логотипам перед кодом</div>
-  <sc-for list="{{banks}}" as="g" hint-placeholder-count="4">
-    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: {{co.k_9AA594_n60}}; margin: 12px 0 6px;">{{g.title}}</div>
-    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">
-      <sc-for list="{{g.items}}" as="b" hint-placeholder-count="4">
-        <button type="button" class="tap" onClick="{{b.pick}}" style="{{b.style}}">
-          <span style="width: 36px; height: 36px; border-radius: 11px; background: {{b.color}}; color: {{b.ink}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">{{b.ini}}</span>
-          <span style="font-size: 11px; color: {{co.k_C9D3C2_n79}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{b.name}}</span>
-        </button>
-      </sc-for>
-    </div>
-  </sc-for>
-
-  <div style="font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; margin: 22px 0 4px;">Палитра Вольт · 36 цветов</div>
-  <div style="font-size: 12px; color: {{co.k_9AA594_n60}}; margin-bottom: 10px;">Общая для счетов и категорий. Точкой отмечены 12 новых</div>
-  <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; justify-items: center;">
-    <sc-for list="{{palette}}" as="p" hint-placeholder-count="36">
-      <button type="button" class="tap" onClick="{{p.pick}}" aria-label="{{p.name}}" style="{{p.ring}}">
-        <span style="position: relative; width: 38px; height: 38px; border-radius: 50%; background: {{p.color}}; display: block;">
-          <sc-if value="{{p.isNew}}" hint-placeholder-val="{{false}}">
-            <span style="position: absolute; right: -2px; top: -2px; width: 10px; height: 10px; border-radius: 50%; background: {{co.k_EEF5E6_n93}}; border: 2px solid {{co.k_11170E_n05}};"></span>
-          </sc-if>
-        </span>
-      </button>
-    </sc-for>
-  </div>
+<div style="width: 390px; height: 1240px; box-sizing: border-box; background: {{co.k_050805_n00}}; font-family: Onest, system-ui, sans-serif; color: {{co.k_EEF5E6_n93}}; position: relative; overflow: hidden;">
+<div style="position: absolute; inset: 0; background: {{co.k_050805_n00}};"><div style="position: absolute; left: 0; right: 0; top: 8px; bottom: 0; background: {{co.k_11170E_n05}}; border-radius: 28px 28px 0 0; overflow: hidden;"><div style="display: flex; justify-content: center; padding-top: 10px;"><div style="width: 36px; height: 4px; border-radius: 2px; background: {{co.k_4A5444_n28}};"></div></div><div style="padding: 4px 16px 0;"><h2 style="margin: 4px 0 12px; font-size: 20px;">Цвет счёта</h2><div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: {{cardBg}}; border: 1px solid {{cardLine}};"><div style="display: flex; align-items: center; gap: 12px;"><span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: {{color}}; color: {{colorInk}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">GA</span><span><div style="font-size: 16px; font-weight: 600;">Galicia</div><div style="font-size: 12px; color: {{co.k_9AA594_n60}};">{{name}}</div></span></div><span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; color: {{co.k_EEF5E6_n93}}; white-space: nowrap;">1 250 000 <span style="color: {{co.k_9AA594_n60}}; font-size: 19px;">ARS</span></span></div><div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; background: {{co.k_10160D_n04}}; border: 1px solid {{co.k_222B1E_n12}};"><span style="width: 20px; height: 20px; border-radius: 50%; background: #F26E22;"></span><span style="flex-grow: 1; font-size: 13px;">Похоже на банк Galicia — взять его цвет</span><div style="display: contents; cursor: pointer;" onClick="{{suggest}}"><span style="flex: none; height: 24px; padding: 0 10px; border-radius: 999px; background: {{co.k_B8FF2E_P}}; color: {{co.k_0E1F00_O}}; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; white-space: nowrap;">Взять</span></div></div><div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; letter-spacing: 0.04em; text-transform: uppercase;">Банки и приложения</div><p style="margin: 0px 4px 0; font-size: 13px; line-height: 1.45; color: {{co.k_9AA594_n60}};">Оттенки примерные — сверим по логотипам перед кодом</p><sc-for list="{{banks}}" as="g" hint-placeholder-count="4"><div style="margin: 12px 4px 8px; font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; letter-spacing: 0.04em; text-transform: uppercase;">{{g.title}}</div><div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;"><sc-for list="{{g.items}}" as="b" hint-placeholder-count="6"><div style="display: contents; cursor: pointer;" onClick="{{b.pick}}"><span style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 2px; border-radius: 14px; min-width: 0; {{b.cell}}"><span style="width: 34px; height: 34px; flex: none; border-radius: 10px; background: {{b.color}}; color: {{b.ink}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">{{b.ini}}</span><span style="font-size: 10px; color: {{co.k_9AA594_n60}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{b.name}}</span></span></div></sc-for></div></sc-for><div style="margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: {{co.k_B8FF2E_Pi}}; letter-spacing: 0.04em; text-transform: uppercase;">Палитра Вольт · 36 цветов</div><p style="margin: 0px 4px 0; font-size: 13px; line-height: 1.45; color: {{co.k_9AA594_n60}};">Общая для счетов и категорий. Точкой отмечены 12 новых</p><div style="margin-top: 10px;"><div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; justify-items: center;"><sc-for list="{{palette}}" as="p" hint-placeholder-count="36"><div style="display: contents; cursor: pointer;" onClick="{{p.pick}}"><span style="position: relative; display: inline-flex; padding: 2px; border-radius: 50%; {{p.ring}}"><span style="width: 36px; height: 36px; border-radius: 50%; background: {{p.color}};"></span><sc-if value="{{p.isNew}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background: {{co.k_EEF5E6_n93}}; border: 2px solid {{co.k_11170E_n05}};"></span></sc-if></span></div></sc-for></div></div></div></div></div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["общая","тёмная","светлая"],"default":"общая","section":"Тема"},"palette":{"editor":"enum","options":["общая","Вольт","Мохито","Манго","Ультра","Лагуна","Сакура"],"default":"общая","section":"Тема"},"$preview":{"width":390,"height":1240}}'>
-/*co-theme*/var CO_KEYS = ['k_111611_n05','k_11170E_n05','k_141C0E_Pt08','k_1F2A17_n10','k_3D5A16_Pt33','k_4A5444_n28','k_9AA594_n60','k_9BF5D6_gw40','k_B0B8C4_n72','k_B8FF2E_Pi','k_C9D3C2_n79','k_EEF5E6_n93','k_F2D0A4_ww49','k_F4F59A_yw60','k_FF5470_ew15','k_FF8FA3_ew44','k_FFB3D1_ew66','k_FFC46B_ww20'];
+/*co-theme*/var CO_KEYS = ['k_050805_n00','k_0E1F00_O','k_10160D_n04','k_11170E_n05','k_222B1E_n12','k_4A5444_n28','k_9AA594_n60','k_B8FF2E_P','k_B8FF2E_Pi','k_EEF5E6_n93'];
 var CO_SPECS = {
   'Вольт': ['#B8FF2E','#0E1F00','#B266FF','#7A2BD6','#FFE600','#6E6200','#00F0FF','#00708A','#FF2E63','#D1004B','#050805','#F9FFE9'],
   'Мохито': ['#91E668','#122A06','#A77BFF','#6236E0','#38D9FF','#00709E','#38D9FF','#00709E','#FF5C7A','#D6004A','#0B0F0C','#F7FBF2'],
@@ -140,56 +89,18 @@ function __coMap() { var o = {}; for (var i = 0; i < CO_KEYS.length; i++) o[CO_K
 class Component extends DCLogic {
   /*co-hooks*/componentDidMount() { var self = this; this.__coL = function (e) { if (!e || !e.key || e.key === 'coshell-mock-theme') self.forceUpdate(); }; try { window.addEventListener('storage', this.__coL); } catch (e) {} if (this.__coDidMount) this.__coDidMount(); }
   componentWillUnmount() { try { window.removeEventListener('storage', this.__coL); } catch (e) {} if (this.__coWillUnmount) this.__coWillUnmount(); }
-  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; return v; }/*co-hooks-end*/
-  constructor(props) {
-    super(props);
-    this.state = { color: '#38B6FF', name: 'Синий' };
-  }
-  ink(hex) {
-    const n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
-    return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? (__co('k_111611_n05')) : '#FFFFFF';
-  }
-  mix(hex, k) {
-    const n = parseInt(hex.slice(1), 16), base = [17, 23, 14];
-    const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map((v, i) => Math.round(base[i] + (v - base[i]) * k));
-    return 'rgb(' + c.join(',') + ')';
-  }
+  renderVals() { __coTheme(this.props); var v = this.__coRender(); v.co = __coMap(); v.coDark = CO_NOW.dark; v.coPal = CO_NOW.pal; v.coMode = CO_NOW.dark ? 'тёмная' : 'светлая'; return v; }/*co-hooks-end*/
   __coRender() {
-    const s = this.state;
-    const B = [
-      ['АРГЕНТИНА', [['Galicia', 'GA', '#F26E22'], ['Santander', 'SA', '#EC0000'], ['BBVA', 'BB', '#1973B8'], ['Nación', 'BN', '#005AA7'], ['Mercado Pago', 'MP', '#00B1EA'], ['Ualá', 'UA', '#3E4FE0'], ['Naranja X', 'NX', '#FE5000'], ['Brubank', 'BR', '#6A2EE8'], ['Lemon', 'LE', '#00E36B']]],
-      ['АРМЕНИЯ', [['Ameria', 'AM', '#B01E2F'], ['Inecobank', 'IN', '#0096D6'], ['Ardshinbank', 'AR', '#004B93'], ['ACBA', 'AC', '#00843D'], ['IDBank', 'ID', '#E4002B'], ['Evocabank', 'EV', '#6D2C91']]],
-      ['РОССИЯ', [['Сбер', 'СБ', '#21A038'], ['Т-Банк', 'Т', '#FFDD2D'], ['Альфа', 'А', '#EF3124'], ['ВТБ', 'ВТБ', '#0A2896'], ['Ozon Банк', 'OZ', '#005BFF'], ['Райффайзен', 'Р', '#FEE600']]],
-      ['КРИПТО И КОШЕЛЬКИ', [['Binance', 'BN', '#F0B90B'], ['Bybit', 'BY', '#F7A600'], ['Tether', '₮', '#26A17B'], ['Wise', 'W', '#9FE870'], ['PayPal', 'PP', '#003087'], ['Payoneer', 'PY', '#FF4800'], ['Revolut', 'R', '#0075EB']]]
-    ];
-    const banks = B.map(([title, items]) => ({
-      title,
-      items: items.map(([name, ini, color]) => {
-        const on = s.color === color;
-        return {
-          name, ini, color, ink: this.ink(color),
-          style: 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:14px;min-width:0;background:' + (on ? (__co('k_1F2A17_n10')) : 'transparent') + ';border:2px solid ' + (on ? color : 'transparent') + ';',
-          pick: () => this.setState({ color, name: 'Цвет банка ' + name })
-        };
-      })
-    }));
-    const old = [[(__co('k_FF5470_ew15')), 'Красный'], ['#FF4FD8', 'Розовый'], ['#D36BFF', 'Пурпур'], ['#9D7BFF', 'Фиолет'], ['#6E8BFF', 'Индиго'], ['#38B6FF', 'Синий'], ['#2BE4FF', 'Циан'], ['#00E5C0', 'Мята'], ['#4DFF88', 'Зелёный'], ['#A8FF3E', 'Лайм'], ['#F5FF3D', 'Жёлтый'], ['#FFD43B', 'Янтарь'], ['#FFA53D', 'Оранжевый'], ['#FF7A3D', 'Пламя'], ['#FFB38A', 'Персик'], ['#8FB3CC', 'Сталь'], [(__co('k_B0B8C4_n72')), 'Серебро'], ['#7A8494', 'Графит'], ['#FF8A65', 'Коралл'], ['#E07A5F', 'Терракота'], [(__co('k_FF8FA3_ew44')), 'Роза'], [(__co('k_FFC46B_ww20')), 'Мёд'], ['#D9A066', 'Карамель'], [(__co('k_F2D0A4_ww49')), 'Песок']];
-    const fresh = [['#C9B6FF', 'Лаванда'], ['#9FD8FF', 'Небо'], [(__co('k_9BF5D6_gw40')), 'Морская пена'], [(__co('k_F4F59A_yw60')), 'Лимонный крем'], [(__co('k_FFB3D1_ew66')), 'Румянец'], ['#E89BFF', 'Орхидея'], ['#D6F5FF', 'Лёд'], ['#DFFF00', 'Шартрез'], ['#4D4DFF', 'Ультрамарин'], ['#B5C23A', 'Олива'], ['#C9B27C', 'Хаки'], ['#3DDC97', 'Нефрит']];
-    const palette = old.map((x) => [...x, false]).concat(fresh.map((x) => [...x, true])).map(([color, name, isNew]) => {
-      const on = s.color === color;
-      return {
-        color, name, isNew,
-        ring: 'padding:3px;border-radius:50%;background:none;border:2px solid ' + (on ? (__co('k_EEF5E6_n93')) : 'transparent') + ';transform:scale(' + (on ? 1.1 : 1) + ');',
-        pick: () => this.setState({ color, name })
-      };
-    });
+    const s = this.state, color = s.color || '#' + '38B6FF', name = s.name || 'Синий', bg = __co('k_050805_n00');
+    const ink = (c) => { const n = parseInt(c.slice(1), 16), l = (0.299 * (n >> 16 & 255) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255; return l > 0.6 ? '#' + '0B0F0A' : '#FFFFFF'; };
+    const B = [["АРГЕНТИНА", [["Galicia", "GA", "F26E22"], ["Santander", "SA", "EC0000"], ["BBVA", "BB", "1973B8"], ["Nación", "BN", "005AA7"], ["Mercado Pago", "MP", "00B1EA"], ["Ualá", "UA", "3E4FE0"], ["Naranja X", "NX", "FE5000"], ["Brubank", "BR", "6A2EE8"], ["Lemon", "LE", "00E36B"]]], ["АРМЕНИЯ", [["Ameria", "AM", "B01E2F"], ["Inecobank", "IN", "0096D6"], ["Ardshinbank", "AR", "004B93"], ["ACBA", "AC", "00843D"], ["IDBank", "ID", "E4002B"], ["Evocabank", "EV", "6D2C91"]]], ["РОССИЯ", [["Сбер", "СБ", "21A038"], ["Т-Банк", "Т", "FFDD2D"], ["Альфа", "А", "EF3124"], ["ВТБ", "ВТБ", "0A2896"], ["Ozon Банк", "OZ", "005BFF"], ["Райффайзен", "Р", "FEE600"]]], ["КРИПТО И КОШЕЛЬКИ", [["Binance", "BN", "F0B90B"], ["Bybit", "BY", "F7A600"], ["Tether", "₮", "26A17B"], ["Wise", "W", "9FE870"], ["PayPal", "PP", "003087"], ["Payoneer", "PY", "FF4800"], ["Revolut", "R", "0075EB"]]]], P = [["FF5470", "Красный", false], ["FF4FD8", "Розовый", false], ["D36BFF", "Пурпур", false], ["9D7BFF", "Фиолет", false], ["6E8BFF", "Индиго", false], ["38B6FF", "Синий", false], ["2BE4FF", "Циан", false], ["00E5C0", "Мята", false], ["4DFF88", "Зелёный", false], ["A8FF3E", "Лайм", false], ["F5FF3D", "Жёлтый", false], ["FFD43B", "Янтарь", false], ["FFA53D", "Оранжевый", false], ["FF7A3D", "Пламя", false], ["FFB38A", "Персик", false], ["8FB3CC", "Сталь", false], ["B0B8C4", "Серебро", false], ["7A8494", "Графит", false], ["FF8A65", "Коралл", false], ["E07A5F", "Терракота", false], ["FF8FA3", "Роза", false], ["FFC46B", "Мёд", false], ["D9A066", "Карамель", false], ["F2D0A4", "Песок", false], ["C9B6FF", "Лаванда", true], ["9FD8FF", "Небо", true], ["9BF5D6", "Морская пена", true], ["F4F59A", "Лимонный крем", true], ["FFB3D1", "Румянец", true], ["E89BFF", "Орхидея", true], ["D6F5FF", "Лёд", true], ["DFFF00", "Шартрез", true], ["4D4DFF", "Ультрамарин", true], ["B5C23A", "Олива", true], ["C9B27C", "Хаки", true], ["3DDC97", "Нефрит", true]];
     return {
-      banks, palette,
-      colorName: s.name,
-      ini: 'GA',
-      cardStyle: 'display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:' + this.mix(s.color, 0.16) + ';border:1px solid ' + this.mix(s.color, 0.45) + ';',
-      badgeStyle: 'width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:' + s.color + ';color:' + this.ink(s.color) + ';',
-      suggest: () => this.setState({ color: '#F26E22', name: 'Цвет банка Galicia' })
+      banks: B.map((g) => ({ title: g[0], items: g[1].map((b) => ({ name: b[0], ini: b[1], color: '#' + b[2], ink: ink('#' + b[2]),
+        cell: 'border: 2px solid ' + (color === '#' + b[2] ? '#' + b[2] : 'transparent') + ';', pick: () => this.setState({ color: '#' + b[2], name: 'Цвет банка ' + b[0] }) })) })),
+      palette: P.map((p) => ({ color: '#' + p[0], isNew: p[2], ring: 'border: 2px solid ' + (color === '#' + p[0] ? __co('k_EEF5E6_n93') : 'transparent') + ';',
+        pick: () => this.setState({ color: '#' + p[0], name: p[1] }) })),
+      name, color, colorInk: ink(color), cardBg: __coMix(bg, color, 0.16), cardLine: __coMix(bg, color, 0.45),
+      suggest: () => this.setState({ color: '#' + 'F26E22', name: 'Цвет банка Galicia' })
     };
   }
 }

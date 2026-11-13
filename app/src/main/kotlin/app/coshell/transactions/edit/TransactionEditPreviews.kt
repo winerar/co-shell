@@ -33,9 +33,35 @@ internal val refundPreviewSample = TransactionEditUiState(
     accountId = "card",
     categories = previewCategories,
     categoryId = "cafe",
+    frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
     openFolderId = "food",
     date = today,
     today = today,
+)
+
+private val previewTagOptions = listOf(
+    TagOption("mercado libre", "Mercado Libre", 0xFFFFE600L, 16),
+    TagOption("аня", "Аня", 0xFFFF6FB5L, 61),
+    TagOption("аптека", "аптека", 0xFFFF7A59L, 9),
+    TagOption("испанский", "Испанский", 0xFFFF9F43L, 24),
+    TagOption("миша", "Миша", 0xFF4D9FFFL, 48),
+    TagOption("на двоих", "на двоих", 0xFFB8F33AL, 30),
+    TagOption("отпуск", "отпуск", 0xFF2EE6C5L, 19),
+)
+
+/** Tags in the sheet (#293, board Fb129A): «Испанский» and «Аня» on, recent ones in the row, «Все 7». */
+internal val tagsPreviewSample = TransactionEditUiState(
+    amount = "18 000",
+    accounts = previewAccounts,
+    accountId = "card",
+    categories = previewCategories,
+    categoryId = "cafe",
+    frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
+    openFolderId = "food",
+    date = today,
+    today = today,
+    tagIds = listOf("испанский", "аня"),
+    tags = TagChoices(previewTagOptions, recentIds = listOf("испанский", "аня", "миша", "на двоих", "отпуск")),
 )
 
 @Preview(showBackground = true, heightDp = 900)
@@ -49,6 +75,7 @@ private fun ExpensePreview() {
                 accountId = "card",
                 categories = previewCategories,
                 categoryId = "cafe",
+                frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
                 openFolderId = "food",
                 date = today,
                 today = today,
@@ -95,12 +122,19 @@ private fun ReceiptInOtherCurrencyPreview() {
                 receiptCurrencies = listOf("ARS", "USD", "EUR"),
                 categories = previewCategories,
                 categoryId = "home",
+                frequentCategories = frequentCategories(previewCategories, emptyList(), "home"),
                 date = today,
                 today = today,
             ),
             TransactionEditActions(),
         )
     }
+}
+
+@Preview(showBackground = true, heightDp = 844, widthDp = 390)
+@Composable
+private fun NoScrollWorstCasePreview() {
+    CoShellTheme { TransactionEditScreen(entrySheetSample, TransactionEditActions()) }
 }
 
 @Preview(showBackground = true)

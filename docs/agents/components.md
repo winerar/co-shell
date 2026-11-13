@@ -9,6 +9,11 @@
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
+- **Секции форм** (#290) — `CoShellFormSection(title, trailing)`: карточка-сущность с подписью капсом; справа — `CoShellSectionLink`
+  («+ Чек», «В шаблон») или текст. Внутри — `CoShellDetailTile(icon, label, value, empty)` (плитка 40 dp) и `CoShellCheckTile` (галочка словами),
+  `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
+  В app (`ui/form`, `ui/sheet`): `IconStrip`/`ColorStrip` (одна строка + «Все 52»/«+29»), `IconColorSheet` (все иконки и цвета,
+  `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
@@ -40,6 +45,10 @@
   (`CoShellTab`: иконка, подпись, выбрана, `badge` — неоновая точка «есть новое»; «+» в середине, `addConfirm` —
   галочка после сохранения) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
   строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).
+  **Тег** — `CoShellTagPill(name, color)` (точка + имя в пилюле цвета тега, ≤ 132 dp), `CoShellTagMore(n)` — «+N»,
+  `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.
+  Тег-переключатель — `CoShellTagChip(name, color, selected, onClick, removeLabel)` (34 dp; вкл — заливка цвета тега, «✕» — в
+  выбранных), `CoShellTagMoreChip(label)` — пунктирная «Все N» (#293, строка в шторке ввода и шторка «Теги»).
 - **Кнопка «Добавить»** — `CoShellExtendedFab` (пилюля с иконкой и словом): одна кнопка добавления на экран списка
   (категории и папки — одной, вид выбирается в редакторе). **Карточка палитры** — `CoShellPaletteCard`.
   Карточка состояния служебного экрана (курсы, автокопия) — `app/.../ui/hero/StatusCard`. **Все карточки-герои —

@@ -10,6 +10,7 @@ import mockup_screens_fb_search as fb_search
 import mockup_screens_fb_nov12 as fb_nov12
 import mockup_screens_fb_tags as fb_tags
 import mockup_screens_fb_more as fb_more
+import mockup_screens_fb_290 as fb_290
 
 FEEDBACK = [
     (154, 'Отзывы #154 + #155 · что где лежит: вкладки, плитки, «Ещё», настройки',
@@ -135,5 +136,5 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),
     ('Fb157A', 'А · Мои отзывы со статусом (выбрано)', feedback_status_list, 157),
     ('Fb157A2', 'А · Отзыв подробно: путь до версии', feedback_detail, 157),
-] + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS
-FEEDBACK = fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK
+] + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS + fb_290.BOARDS
+FEEDBACK = fb_290.FEEDBACK + fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK

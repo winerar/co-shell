@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Теги операций (#129): строка в шторке ввода и шторка «Теги» (#293, доски Fb129A, Fb129Pick). -->
+<resources>
+    <string name="tags_all">Все %1$d</string>
+    <string name="tags_add">＋ Тег</string>
+    <string name="tags_sheet_title">Теги</string>
+    <string name="tags_sheet_done">Готово</string>
+    <string name="tags_search">Найти или создать тег</string>
+    <string name="tags_remove">Убрать тег</string>
+    <string name="tags_new">Новый тег — название и цвет</string>
+    <string name="tags_new_named">Новый тег «%1$s»</string>
+    <string name="tags_recent">Недавние</string>
+    <string name="tags_all_by_name">Все · %1$d · по алфавиту</string>
+    <string name="tags_nothing">Нет такого тега — создайте новый</string>
+    <string name="tags_empty">Тегов пока нет. Тег — цветная метка операции: «отпуск», «Аня», «на двоих».</string>
+    <string name="tags_new_title">Новый тег</string>
+    <string name="tags_name">Название</string>
+    <string name="tags_create">Создать</string>
+</resources>

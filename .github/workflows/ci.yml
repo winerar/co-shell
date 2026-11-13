@@ -67,6 +67,13 @@ jobs:
           fi
           echo "code=$code" >> "$GITHUB_OUTPUT"
           echo "Code changed: $code"
+          # Firebase rules: emulator tests on the PR, then deploy on the merge into dev (docs/agents/ci.md).
+          rules=false
+          if [ "$GITHUB_REF" = refs/heads/dev ]; then range=HEAD^1
+          elif [ "$GITHUB_EVENT_NAME" = pull_request ]; then range="$BASE...HEAD"; else range=; fi
+          if [ -n "$range" ] && scripts/ci/rules-changed.sh "$range"; then rules=true; fi
+          echo "rules=$rules" >> "$GITHUB_OUTPUT"
+          echo "Rules changed: $rules"
 
       - uses: actions/setup-java@v6
         if: steps.changes.outputs.code == 'true'
@@ -86,6 +93,17 @@ jobs:
         run: |
           python3 -m unittest discover -s scripts -p 'test_*.py'
           python3 -m unittest discover -s scripts/ci -p 'test_*.py'
+
+      # Before the automerge step below: a PR with broken rules is not merged.
+      - name: Firebase rules tests (emulator)
+        if: steps.changes.outputs.rules == 'true'
+        run: scripts/test-rules.sh
+
+      - name: Deploy Firebase rules (dev)
+        if: steps.changes.outputs.rules == 'true' && github.ref == 'refs/heads/dev' && github.event_name != 'pull_request'
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: scripts/ci/deploy-rules.sh
 
       # main: the same tree was already checked by the dev → main PR, so lint and tests are skipped.
       # Robolectric (MainShellSmokeTest) downloads android-all (~160 MB) into ~/.m2 at test time,

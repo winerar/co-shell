@@ -1,5 +1,8 @@
 package app.coshell.testing
 
+import app.coshell.core.domain.tags.SaveTagUseCase
+import app.coshell.core.domain.tags.TagRepository
+import app.coshell.transactions.edit.EntryTags
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionFilter
@@ -110,3 +113,5 @@ fun fakeEntryTemplates(
     usage,
     SaveAsTemplateUseCase(templates, SaveTemplateUseCase(accounts, categories, templates), IdGenerator { "tpl-new" }),
 )
+
+fun fakeEntryTags(tags: TagRepository = FakeTagRepository()) = EntryTags(tags, SaveTagUseCase(tags, IdGenerator { "tag-new" }))

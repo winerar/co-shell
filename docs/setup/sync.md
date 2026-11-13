@@ -36,6 +36,11 @@ Google Cloud Console → **APIs & Services → Credentials** → ключ Web AP
 Без ограничений — тоже работает. «Application restrictions: Android apps» не ставить.
 
 ## 4. Обновить правила Firestore
+**Теперь автоматически:** после мержа изменения `firebase/` в `dev` CI сам публикует `firestore.rules` и
+`database.rules.json` (шаг «Deploy Firebase rules», ключ — секрет `FIREBASE_SERVICE_ACCOUNT` с ролями
+Firebase Rules Admin и Firebase Realtime Database Admin). Ошибка `403 … caller does not have permission` —
+у аккаунта из лога шага (строка `Service account: …`) нет этих ролей **в этом проекте**: IAM → ✏ у этого адреса.
+Вручную — только если этот шаг упал:
 1. Открыть https://console.firebase.google.com/project/_/firestore/rules (спросит проект — **co-shell**;
    или Firebase → **Build → Firestore Database → Rules**).
 2. В редакторе выделить всё (Ctrl+A / ⌘A) и удалить.
@@ -44,9 +49,9 @@ Google Cloud Console → **APIs & Services → Credentials** → ключ Web AP
    (последняя — winerar/co-shell#210).
 4. **Publish** → вверху появится «Rules published». Ошибка — текст ошибки в задачу, старые правила продолжат работать.
 Правила для отзывов в файле остались, добавились семья, приглашения и записи бюджета.
-**Публиковать заново после каждого изменения файла** (последнее — 2026-11-11: вид записей `setting` для общих настроек семьи, #122;
-без этого настройки — валюты отчётов, день начала месяца — не дойдут до второго телефона, а на «Обзоре» будет плашка ошибки синка;
-остальные правки отправляются как обычно).
+Публиковать заново нужно после каждого изменения файла (последнее — 2026-11-13: вид записей `tag` для тегов операций, #129;
+без этого теги не дойдут до второго телефона, а на «Обзоре» будет плашка ошибки синка; операции и остальное отправляются как обычно.
+Раньше — 2026-11-11: `setting`, общие настройки семьи, #122).
 Проверка правил агентом — `scripts/test-rules.sh` (эмулятор).
 
 ## 5. Порядок на телефонах (после релиза)
@@ -63,7 +68,8 @@ Google Cloud Console → **APIs & Services → Credentials** → ключ Web AP
 Без этого раздела всё работает, просто медленнее (опрос раз в 10–60 с).
 1. Firebase → **Build → Realtime Database → Create Database** → расположение **United States
    (us-central1)** → **Start in locked mode** → **Enable**.
-2. Вкладка **Rules** → заменить всё содержимым `firebase/database.rules.json` → **Publish**.
+2. Вкладка **Rules** → заменить всё содержимым `firebase/database.rules.json` → **Publish**
+   (дальше CI публикует их сам, как в разделе 4).
 3. Если выбрали другое расположение: скопировать адрес базы сверху на вкладке **Data**
    (вида `https://…firebasedatabase.app`) → GitHub → **Variables** → `FIREBASE_DATABASE_URL` = адрес →
    пересобрать (как в шаге 1.5). Для us-central1 переменная не нужна.

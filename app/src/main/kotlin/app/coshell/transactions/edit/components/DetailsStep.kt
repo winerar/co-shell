@@ -43,94 +43,23 @@ import app.coshell.ui.form.DateChips
 import app.coshell.ui.format.formatDayMonth
 
 /**
- * Step 2 of the entry sheet, built bottom-up for one thumb: the keypad with «Готово» at the bottom, the
- * date/note/receipt chips over it, the categories and the big amount above; the chosen account sits on top
- * as a chip — a tap goes back to the picker.
+ * Step 2 of the entry sheet — one screen, no scrolling (#290, owner picked А, board `Fb290A`): the chosen account
+ * as a chip on top (a tap goes back to the picker), then one card per entity — «Сумма» (with the receipt line),
+ * «Категория · частые», «Детали» 2×2 — and the keypad with «Готово» at the bottom, under the thumb.
+ * A very short screen still scrolls the cards rather than cut them.
  */
 @Composable
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
-    var noteOpen by rememberSaveable { mutableStateOf(false) }
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
         Header(state, actions)
         Column(
-            Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.l),
-            verticalArrangement = Arrangement.spacedBy(Spacing.m),
+            Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.m),
+            verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs),
         ) {
-            AmountSlot(
-                label = if (state.hasReceipt) stringResource(R.string.transaction_amount_debited) else null,
-                text = state.amount,
-                currency = state.account?.currency,
-                active = state.keypadTarget == KeypadTarget.AMOUNT,
-                error = state.amountError,
-                onClick = { actions.onKeypadTarget(KeypadTarget.AMOUNT) },
-                big = true,
-                hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
-                    stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
-                } ?: templateHint(state),
-                color = amountColor(state.type, state.refund),
-            )
-            CoShellExpandable(state.needsToAmount) {
-                AmountSlot(
-                    label = stringResource(R.string.transaction_to_amount),
-                    text = state.toAmount,
-                    currency = state.toAccount?.currency,
-                    active = state.keypadTarget == KeypadTarget.TO_AMOUNT,
-                    error = state.toAmountError,
-                    onClick = { actions.onKeypadTarget(KeypadTarget.TO_AMOUNT) },
-                    hint = state.toAccount?.let { stringResource(R.string.transaction_to_amount_hint, it.name) },
-                )
-            }
-            CoShellExpandable(state.hasReceipt) { ReceiptFields(state, actions) }
-            CoShellExpandable(!state.isTransfer) {
-                Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                    CategoryGrid(state.categories, state.categoryId, state.openFolderId, actions.onCategorySelect)
-                    CoShellExpandable(state.refund) { RefundHint(state.categoryName) }
-                    if (state.categoryError) {
-                        Text(
-                            stringResource(R.string.transaction_category_required),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                    }
-                }
-            }
-            CoShellExpandable(noteOpen || state.note.isNotEmpty()) {
-                CoShellTextField(
-                    value = state.note,
-                    onValueChange = actions.onNoteChange,
-                    label = stringResource(R.string.transaction_note),
-                    singleLine = false,
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                )
-            }
-        }
-        Row(
-            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.l),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.s),
-        ) {
-            // First: after the three date chips it would sit off screen (board Fb208C puts it after «Сегодня ▾»).
-            if (state.type == TransactionType.EXPENSE) {
-                CoShellFilterChip(
-                    selected = state.refund,
-                    onClick = { actions.onRefundToggle(!state.refund) },
-                    label = { Text(stringResource(R.string.transaction_refund_chip)) },
-                )
-            }
-            DateChips(state.date, state.today, state.dateMillisUtc, actions.onDateSelect, actions.onDatePicked)
-            CoShellFilterChip(
-                selected = noteOpen || state.note.isNotEmpty(),
-                onClick = { noteOpen = !noteOpen },
-                label = { Text(stringResource(R.string.transaction_note_add)) },
-            )
-            if (!state.isTransfer) {
-                CoShellFilterChip(
-                    selected = state.receiptEnabled,
-                    onClick = { actions.onReceiptToggle(!state.receiptEnabled) },
-                    label = { Text(stringResource(R.string.transaction_receipt_chip)) },
-                )
-            }
-            if (!state.isNew && state.savedTemplateName == null) SaveAsTemplateChip(onClick = { saveAsOpen = true })
+            AmountBlock(state, actions, amountColor(state.type, state.refund))
+            CoShellExpandable(!state.isTransfer) { CategoryBlock(state, actions) }
+            DetailsBlock(state, actions, onSaveAsTemplate = { saveAsOpen = true })
         }
         CoShellKeypad(
             onKey = actions.onKey,
@@ -195,16 +124,6 @@ private fun CopyLabel() {
         style = MaterialTheme.typography.labelLarge,
         color = colors.onSecondaryContainer,
         modifier = Modifier.background(colors.secondaryContainer, PillShape).padding(horizontal = Spacing.m, vertical = Spacing.xs + Spacing.xxs),
-    )
-}
-
-/** «Возврат: деньги пришли на счёт, траты «Кафе» уменьшатся» (board Fb208C). */
-@Composable
-private fun RefundHint(categoryName: String?) {
-    Text(
-        categoryName?.let { stringResource(R.string.transaction_refund_hint, it) } ?: stringResource(R.string.transaction_refund_hint_pick),
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 }
 

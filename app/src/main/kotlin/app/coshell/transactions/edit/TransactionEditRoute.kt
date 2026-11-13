@@ -73,6 +73,8 @@ fun TransactionEditRoute(
             onAllTemplates = onAllTemplates,
             onNewTemplate = onNewTemplate,
             onSaveAsTemplate = viewModel::saveAsTemplate,
+            onTagToggle = viewModel::onTagToggle,
+            onTagCreate = viewModel::onTagCreate,
             onKey = { key ->
                 if (key == KeypadKey.Done) saving = true
                 viewModel.onKey(key)
@@ -109,4 +111,7 @@ data class TransactionEditActions(
     val onAllTemplates: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },
+    /** A tag pill or a row of the «Теги» sheet (#293). */
+    val onTagToggle: (String) -> Unit = {},
+    val onTagCreate: (name: String, color: Long?) -> Unit = { _, _ -> },
 )

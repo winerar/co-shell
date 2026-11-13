@@ -202,6 +202,29 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `10 to 11 keeps operation labels and adds tags`() {
+        helper.createDatabase(10).use { v10 ->
+            v10.execSQL(
+                """INSERT INTO transactions (id, type, account_id, amount_minor, currency, to_account_id, to_amount_minor,
+                   to_currency, category_id, date, note, payee, labels, original_amount_minor, original_currency,
+                   author_member_id, import_source, import_external_id, import_batch_id, updated_at, updated_by, deleted,
+                   pending_sync)
+                   VALUES ('t1', 'EXPENSE', 'a1', 100, 'ARS', NULL, NULL, NULL, 'c1', 1, '', NULL, '["Аня"]', NULL, NULL,
+                   NULL, NULL, NULL, NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(11, emptyList()).use { v11 ->
+            assertEquals("[\"Аня\"]", v11.single("SELECT labels FROM transactions"))
+            v11.execSQL(
+                """INSERT INTO tags (id, name, color, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('аня', 'Аня', NULL, 1, NULL, 0, 1)""",
+            )
+            assertEquals("аня|Аня", v11.single("SELECT id || '|' || name FROM tags"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

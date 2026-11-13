@@ -148,6 +148,22 @@ data class SettingEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+/**
+ * Operation tag (schema v11, #129): name + colour. Operations reference it from `transactions.labels`
+ * (`TagIds.of`), so the table has no link column. Synced (`kind` = `tag`).
+ */
+@Serializable
+@Entity(tableName = "tags")
+data class TagEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val color: Long? = null,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+
 /** Sum of transaction effects on one account (one row per account and direction). */
 data class BalanceDelta(
     @ColumnInfo(name = "account_id") val accountId: String,

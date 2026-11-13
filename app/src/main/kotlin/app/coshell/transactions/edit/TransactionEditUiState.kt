@@ -32,6 +32,8 @@ data class TransactionEditUiState(
     val toAccountId: String? = null,
     /** Top-level categories of the current type with their subcategories. */
     val categories: List<CategoryGroup> = emptyList(),
+    /** The grid «Категория · частые» ([frequentCategories]); the rest are in the «Все категории» sheet. */
+    val frequentCategories: List<CategoryItem> = emptyList(),
     val categoryId: String? = null,
     /** Folder whose subcategories are shown: the selected folder or the folder of the selected subcategory. */
     val openFolderId: String? = null,
@@ -66,6 +68,10 @@ data class TransactionEditUiState(
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */
     val templateSaveFailed: Boolean = false,
+    /** Chosen tags (#293): ids, in the order they were picked; saved into `Transaction.labels`. */
+    val tagIds: List<String> = emptyList(),
+    /** Every live tag and the recent ones — the pill row and the «Теги» sheet. */
+    val tags: TagChoices = TagChoices(),
 ) {
     data class AccountOption(
         val id: String,

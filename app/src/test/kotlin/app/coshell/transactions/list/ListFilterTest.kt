@@ -8,6 +8,7 @@ import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.list.TransactionsUiState.Kind
@@ -115,5 +116,25 @@ class ListFilterTest {
         assertTrue(f.isActive)
         assertEquals(PeriodRange.Preset.THIS_MONTH.range(today), f.period)
         assertTrue(f.toRepositoryFilter(200, zone).uncategorized)
+    }
+
+    @Test
+    fun tagFilterKeepsOperationsWithAnyChosenTagAndStaysOutOfRoom() {
+        val tagged = coto.copy(labels = listOf("Испанский", "Аня"))
+        assertTrue(ListFilter(tagIds = setOf("аня")).hit(tagged))
+        assertTrue(ListFilter(tagIds = setOf("кот", "испанский")).hit(tagged))
+        assertFalse(ListFilter(tagIds = setOf("кот")).hit(tagged))
+        assertFalse(ListFilter(tagIds = setOf("аня")).hit(coto))
+        assertTrue(ListFilter(tagIds = setOf("аня")).isActive)
+        // Another tag choice must not re-query Room.
+        assertEquals(ListFilter(tagIds = setOf("аня")).roomKey, ListFilter(tagIds = setOf("кот", "миша")).roomKey)
+    }
+
+    @Test
+    fun searchFindsATagByNameWhenTheLabelIsAnId() {
+        val id = "0f8fad5b-d9cb-469f-a165-70867728950e"
+        val index = SearchIndex(accounts, categories, MoneyFormat.RU, mapOf(id to Tag(id, "Барилоче")))
+        assertTrue(ListFilter(query = "барил").matches(coto.copy(labels = listOf(id)), index))
+        assertFalse(ListFilter(query = "барил").matches(coto.copy(id = "2"), index))
     }
 }

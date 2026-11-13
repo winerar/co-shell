@@ -18,6 +18,7 @@ import app.coshell.core.model.CategoryType
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.tagIds
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
 import app.coshell.core.designsystem.components.keypad.AmountKeys
@@ -62,6 +63,7 @@ class TransactionEditViewModel @Inject constructor(
     private val rates: ExchangeRateRepository,
     private val deleteWithUndo: DeleteTransactionWithUndo,
     private val entryTemplates: EntryTemplates,
+    private val entryTags: EntryTags,
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -78,6 +80,8 @@ class TransactionEditViewModel @Inject constructor(
     private var templateId: String? = null
 
     private var existing: Transaction? = null
+    /** Labels of the edited or copied operation: references the form does not change keep their form. */
+    private var sourceLabels: List<String> = emptyList()
     private var accountsById: Map<String, Account> = emptyMap()
     private var allCategories: List<Category> = emptyList()
     private var recentCategoryIds: List<String> = emptyList()
@@ -96,6 +100,9 @@ class TransactionEditViewModel @Inject constructor(
                 if (!_state.value.isLoading) updateForm { it }
             }
         }
+        viewModelScope.launch {
+            entryTags.observe().offMain().collect { choices -> _state.update { it.copy(tags = choices) } }
+        }
     }
 
     // region Loading
@@ -104,6 +111,7 @@ class TransactionEditViewModel @Inject constructor(
         val transaction = transactionId?.let { transactions.getTransaction(it) }
         existing = transaction
         val template = copyFromId?.let { transactions.getTransaction(it) }
+        sourceLabels = (transaction ?: template)?.labels.orEmpty()
         val used = setOfNotNull(transaction?.accountId, transaction?.toAccountId, template?.accountId, template?.toAccountId)
         // Archived accounts and categories are hidden unless the edited transaction uses them.
         val withBalances = accounts.observeAccountsWithBalance(includeArchived = true).first()
@@ -123,6 +131,7 @@ class TransactionEditViewModel @Inject constructor(
             recentAccountIds = recent.map { it.accountId }.distinct().filter { it in accountsById }.take(RECENT_ACCOUNTS),
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
+            tags = _state.value.tags,
         )
         val loaded = when {
             transaction != null -> formOf(transaction, base)
@@ -173,6 +182,7 @@ class TransactionEditViewModel @Inject constructor(
         receiptEnabled = transaction.originalAmount != null,
         receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
         receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
+        tagIds = transaction.tagIds,
     )
 
     // endregion
@@ -273,6 +283,19 @@ class TransactionEditViewModel @Inject constructor(
 
     fun onNoteChange(value: String) = _state.update { it.copy(note = value) }
 
+    /** A pill in the row or a row of the «Теги» sheet: on ↔ off. */
+    fun onTagToggle(id: String) = _state.update {
+        it.copy(tagIds = if (id in it.tagIds) it.tagIds - id else it.tagIds + id)
+    }
+
+    /** «Новый тег»: created (or found by name) and chosen at once. */
+    fun onTagCreate(name: String, color: Long?) {
+        viewModelScope.launch {
+            val id = entryTags.create(name, color) ?: return@launch
+            _state.update { if (id in it.tagIds) it else it.copy(tagIds = it.tagIds + id) }
+        }
+    }
+
     /** Turning the receipt on preselects the last receipt currency that differs from the account's. */
     fun onReceiptToggle(enabled: Boolean) = updateForm {
         val currency = it.receiptCurrency.ifEmpty { it.receiptCurrencyChoices.firstOrNull().orEmpty() }
@@ -310,7 +333,8 @@ class TransactionEditViewModel @Inject constructor(
             }
             is FormResult.Valid -> result.form
         }
-        val transaction = buildTransaction(existing, form, dateWithTime(existing?.date ?: clock.now(), current.date, timeZone), ids)
+        val date = dateWithTime(existing?.date ?: clock.now(), current.date, timeZone)
+        val transaction = buildTransaction(existing, form, date, ids, sourceLabels)
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
                 SaveTransactionUseCase.Result.Saved -> {

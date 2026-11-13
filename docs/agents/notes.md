@@ -112,4 +112,9 @@
 - (11-12) Анимации появления на `Animatable` + `LaunchedEffect` (графики `charts/`, `CoShellMiniBars`) в Roborazzi `captureRoboImage` доходят до конца — эталон снят с полными столбцами.
 - (11-13) `agent.sh ship` в фоне (дольше 2 мин) проверяет **рабочую папку**: если параллельно писать код, check ловит полуготовые файлы и коммит не делается — либо ждать, либо коммитить вместе.
 - (11-13) Опрос владельца по макетам — `agent.sh poll` (PNG через `render-mockups.js`); БД опроса читается `ArtifactData list` без `user`-capability.
+- (11-13) `SearchIndex` («Операции») кэширует текст по `id` операции — в тесте две операции с одним id дают текст первой; разные id.
+- (11-13) `stamp-status.sh` менял любое «всего N » в STATUS (так «всего 3 места» стало «930») — теперь только в строке «- Тесты:».
+- (11-13) «Без прокрутки» (#290): над шторкой ≈102 dp (статус-бар ~30 + отступ `CoShellSheet` 24 + ручка 48), клавиатура 248 dp — телефону владельца
+  (393×873 dp) на карточки остаётся ≈400 dp. Проверять эталоном с `padding(top = 102.dp)` (`EntrySheetScreenshotTest`); `CoShellTextButton`/`IconButton` в подписи раздувают строку до 48 dp — там `CoShellSectionLink`; `CoShellFilterChip`/`CoShellSwitchRow` в карточке формы — тоже 48+ dp: там `CoShellChoicePill`/`CoShellSwitchLine` (так «Счёт» влез).
 - Синхронизация и Firebase — `notes-sync.md`.
+- (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.

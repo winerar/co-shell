@@ -11,7 +11,8 @@ import javax.inject.Inject
 
 /**
  * Receives [PackageInstaller] session status: passes the system confirmation dialog to the visible activity,
- * reports cancellation and errors. On success the app is restarted by Android, nothing to do.
+ * reports cancellation and errors. On success Android only kills the old process; it does not reopen the app,
+ * and since Android 14 the installer callback may not start an activity from the background (#299).
  */
 @AndroidEntryPoint
 class InstallResultReceiver : BroadcastReceiver() {

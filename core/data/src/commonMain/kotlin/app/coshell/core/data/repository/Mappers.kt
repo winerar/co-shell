@@ -3,6 +3,7 @@ package app.coshell.core.data.repository
 import app.coshell.core.data.db.AccountEntity
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
+import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
 import app.coshell.core.model.Account
@@ -12,6 +13,7 @@ import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
@@ -91,7 +93,7 @@ internal fun TransactionEntity.toModel() = Transaction(
     toAmount = moneyOrNull(toAmountMinor, toCurrency),
     note = note,
     payee = payee,
-    labels = Json.decodeFromString(labelsSerializer, labels),
+    labels = decodeLabels(labels),
     originalAmount = moneyOrNull(originalAmountMinor, originalCurrency),
     authorMemberId = authorMemberId,
     importSource = importSource,
@@ -176,3 +178,10 @@ internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
 
 private fun moneyOrNull(minor: Long?, currency: String?): Money? =
     if (minor != null && currency != null) Money(minor, CurrencyCode(currency)) else null
+
+internal fun TagEntity.toModel() = Tag(id = id, name = name, color = color)
+
+internal fun Tag.toEntity(stamp: Stamp) = TagEntity(id = id, name = name, color = color, updatedAt = stamp.now, updatedBy = stamp.by)
+
+/** `transactions.labels` (a JSON array of strings) as a list. */
+internal fun decodeLabels(json: String): List<String> = Json.decodeFromString(labelsSerializer, json)

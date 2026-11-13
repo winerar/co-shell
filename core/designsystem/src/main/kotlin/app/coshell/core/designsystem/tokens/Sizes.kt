@@ -14,6 +14,8 @@ object Sizes {
     val badgeLarge = 56.dp
     /** Subcategory badge inside an open folder. */
     val badgeSmall = 32.dp
+    /** Colour dot of a one-line strip and the «Иконка и цвет» sheet (#290): nine fit across a form card. */
+    val swatch = 28.dp
     /** Ring around the selected swatch or icon. */
     val selectionRing = 2.dp
     /** Space under the last list item so a floating button doesn't cover it: FAB 56 + margins 16 + 16. */

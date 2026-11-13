@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 
-/** Editor inside a `CoShellSheet`: title, form and «Сохранить» pinned at the bottom (`CoShellSheetLayout`). */
+/** Editor inside a `CoShellSheet`: title (with [titleAction] — e.g. `EditTitleActions`), form and «Сохранить» pinned at the bottom (`CoShellSheetLayout`). */
 @Composable
 fun EditSheetLayout(
     title: String,
@@ -15,6 +15,7 @@ fun EditSheetLayout(
     modifier: Modifier = Modifier,
     saveEnabled: Boolean = true,
     showSave: Boolean = true,
+    titleAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) = CoShellSheetLayout(
     title = title,
@@ -23,5 +24,6 @@ fun EditSheetLayout(
     modifier = modifier,
     actionEnabled = saveEnabled,
     showAction = showSave,
+    titleAction = titleAction,
     content = content,
 )

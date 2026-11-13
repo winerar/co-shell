@@ -2,12 +2,15 @@ package app.coshell.transactions.list
 
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.search.FilterTotal
+import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Tag
 import app.coshell.transactions.list.FilterChoices.CategoryChoice
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import org.junit.Assert.assertEquals
@@ -85,5 +88,19 @@ class FilterChoicesTest {
         val transfers = FilterTotal(2, emptyList(), null).toUi(f)
         assertEquals(2, transfers.count)
         assertNull(transfers.amount)
+    }
+
+    @Test
+    fun tagChoicesAreUsedTagsByNameWithCounts() {
+        val at = kotlin.time.Instant.fromEpochSeconds(0)
+        val tags = listOf(Tag("миша", "Миша"), Tag("аня", "Аня", 0xFFFF7AB8), Tag("кот", "кот"))
+        val usage = mapOf("миша" to TagUsage("Миша", 2, at), "аня" to TagUsage("Аня", 5, at))
+        val plain = buildFilterChoices(emptyList(), emptyList(), emptyMap(), ListFilter(), tags, usage).tags
+        assertEquals(listOf("Аня" to 5, "Миша" to 2), plain.map { it.name to it.count })
+        assertEquals(0xFFFF7AB8, plain[0].color)
+        assertEquals(CategoryPalette.forKey("миша"), plain[1].color)
+        // An unused tag stays while chosen, so the filter never hides itself.
+        val chosen = buildFilterChoices(emptyList(), emptyList(), emptyMap(), ListFilter(tagIds = setOf("кот")), tags, usage).tags
+        assertEquals(listOf("Аня", "кот", "Миша"), chosen.map { it.name })
     }
 }

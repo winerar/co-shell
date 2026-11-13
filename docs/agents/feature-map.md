@@ -16,6 +16,11 @@
 `list/` («Бюджеты»: `BudgetBoard.kt` — конверты, итог, фильтр; шестерёнка — день начала месяца, #213), `detail/` (экран конверта #183:
 `BudgetDetailBoard.kt` — шапка и категории папки; операции периода — `BudgetSource.observeEnvelope`), `edit/` (редактор лимита,
 `BudgetForm.kt`); вход — «Ещё».
+Теги при вводе (#293): `transactions/edit/EntryTags.kt` (список, недавние, создание, `mergeLabels` — сохранение в `labels`),
+`components/TagPickerSheet` (шторка «Теги», открывается плиткой «Теги»), `NewTagDialog`.
+Шторка ввода без прокрутки (#290, доска `Fb290A`): шаг 2 — `components/DetailsStep` из карточек `AmountBlock` (сумма, строка чека,
+валюта — `ReceiptCurrencySheet`), `CategoryBlock` (частые — `frequentCategories` в `CategoryOptions.kt`, «Все» — `AllCategoriesSheet`
+по полкам `categoryShelves`), `DetailsBlock` (плитки 2×2; шторки даты и заметки — `DetailSheets.kt`); образец — `EntrySheetSamples.kt`.
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
 Отчёты (#187, без экранов): `core:domain/reports/` — `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
 `spendingBreakdown` (папки, доли, «Другое»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
@@ -23,13 +28,16 @@
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: `ListFilter` (что выбрано, что идёт в Room),
 `FilterChoices` (что предлагают шторки, переключение папок), `FilterLabels` (подписи чипов), `FilterTotalText`; чипы и итог —
-`components/FilterBar`, `FilterTotalCard`; шторки — `components/CategoriesSheet`, `PeriodSheet`, `AccountsSheet` (обёртка — `FilterSheet`).
+`components/FilterBar`, `FilterTotalCard`; шторки — `components/CategoriesSheet`, `PeriodSheet`, `AccountsSheet`, `TagsSheet` (обёртка — `FilterSheet`).
+Теги в списке (#294): пилюли строки — `TransactionDays` (`Row.tags`, `moreTags`; удалённые не видны), фильтр `ListFilter.tagIds` — только в памяти (в Room не идёт).
 С фильтром грузятся все подходящие строки (для итога), список показывается страницами в памяти.
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
 `components/` (чип, полоса), `strip/` (полоса в шторке «+»), `list/` («Все шаблоны»), `edit/` (редактор), `data/PrefsTemplateUsage`;
 в шторке операции — `transactions/edit/EntryTemplates.kt` и `components/TemplateBits.kt` (пилюля, «Сохранить как шаблон»).
+Теги операций (#129): модель и ссылки — `core:model/Tag.kt` (`Tag`, `TagIds`, `Transaction.tagIds`), логика — `core:domain/tags/`
+(`SaveTagUseCase`, `EnsureLabelTagsUseCase`, `TagRanking` — недавние/частые/поиск), Room — `db/TagDao.kt`, `repository/RoomTagRepository.kt`.
 Курсы валют: тип `Rate` и `ExchangeRate` — `core:model`; поиск курса и пересчёт (`RateBook`,
 `CurrencyConverter`) и загрузка с перебором источников (`RatesSource`, `RatesProvider`) — `core:domain/rates/`;
 источники и разбор JSON — `core:data/rates/` (`CurrencyApiSource`, `OpenErApiSource`, порт `HttpGet`);

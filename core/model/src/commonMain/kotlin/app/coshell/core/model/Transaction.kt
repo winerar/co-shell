@@ -26,6 +26,7 @@ data class Transaction(
     val toAmount: Money? = null,
     val note: String = "",
     val payee: String? = null,
+    /** Tag references: ids of [Tag]s or names from Wallet, both resolved by [TagIds.of] (see [tagIds]). */
     val labels: List<String> = emptyList(),
     /** What the receipt said when paid in a currency other than the account's. */
     val originalAmount: Money? = null,

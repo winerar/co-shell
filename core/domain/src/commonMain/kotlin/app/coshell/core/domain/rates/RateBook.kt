@@ -25,7 +25,8 @@ data class FoundRate(
  *    manual rate (so a hand-set rate, e.g. "blue" ARS, is not overwritten by downloads);
  * 2. a downloaded rate on the date, else the nearest earlier date;
  * 3. a cross rate through [pivot] (USD) with the same rules for both legs;
- * 4. only if nothing earlier exists: the nearest later rate (direct, then cross).
+ * 4. only if nothing earlier exists: the nearest later rate (direct, then cross; a cross leg that has an
+ *    earlier rate keeps it, only the leg without one takes the later rate).
  * Each stored rate also serves the opposite direction via [Rate.inverse].
  */
 class RateBook(rates: List<ExchangeRate>, val pivot: CurrencyCode = CurrencyCode("USD")) {
@@ -65,8 +66,8 @@ class RateBook(rates: List<ExchangeRate>, val pivot: CurrencyCode = CurrencyCode
 
     private fun cross(from: CurrencyCode, to: CurrencyCode, date: LocalDate, allowLater: Boolean): FoundRate? {
         if (from == pivot || to == pivot) return null
-        val first = direct(from, pivot, date, allowLater) ?: return null
-        val second = direct(pivot, to, date, allowLater) ?: return null
+        val first = leg(from, pivot, date, allowLater) ?: return null
+        val second = leg(pivot, to, date, allowLater) ?: return null
         return FoundRate(
             rate = first.rate * second.rate,
             date = minOf(first.date, second.date),
@@ -74,6 +75,10 @@ class RateBook(rates: List<ExchangeRate>, val pivot: CurrencyCode = CurrencyCode
             viaPivot = true,
         )
     }
+
+    /** One leg of a cross rate: an earlier rate if there is one; a later one only when [allowLater] (each leg on its own). */
+    private fun leg(from: CurrencyCode, to: CurrencyCode, date: LocalDate, allowLater: Boolean): FoundRate? =
+        direct(from, to, date, allowLater = false) ?: if (allowLater) direct(from, to, date, allowLater = true) else null
 
     /** Rates of one unordered pair, sorted by date; lookups are binary searches. */
     private class PairRates(all: List<ExchangeRate>) {

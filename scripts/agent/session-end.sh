@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
 # End-of-session checklist as a script (docs/agents/workflow.md «Конец сессии»). Prints only problems
 # (✗) and reminders; run before the final PR. Exit code 1 if something must be fixed.
+#   session-end.sh --pre   only the doc rules (✗, no reminders, no git state, no network): `finish` runs it
+#                          before the slow check so a too-long STATUS stops the flow in a second, not after 5 min
 set -uo pipefail
 cd "$(dirname "$0")/../.."
+pre=0; [ "${1:-}" = "--pre" ] && pre=1
 fail=0
 bad() { echo "✗ $*"; fail=1; }
-warn() { echo "! $*"; }
+warn() { [ $pre -eq 1 ] || echo "! $*"; }
 
-[ -n "$(git status --porcelain)" ] && bad "uncommitted changes: $(git status --porcelain | wc -l) files"
-git fetch -q origin 2>/dev/null
-branch=$(git rev-parse --abbrev-ref HEAD)
-if git rev-parse -q --verify "origin/$branch" >/dev/null; then
-    ahead=$(git rev-list --count "origin/$branch..HEAD")
-    [ "$ahead" -gt 0 ] && bad "$ahead commits not pushed to origin/$branch"
-else
-    bad "branch $branch is not pushed"
+if [ $pre -eq 0 ]; then
+    [ -n "$(git status --porcelain)" ] && bad "uncommitted changes: $(git status --porcelain | wc -l) files"
+    git fetch -q origin 2>/dev/null
+    branch=$(git rev-parse --abbrev-ref HEAD)
+    if git rev-parse -q --verify "origin/$branch" >/dev/null; then
+        ahead=$(git rev-list --count "origin/$branch..HEAD")
+        [ "$ahead" -gt 0 ] && bad "$ahead commits not pushed to origin/$branch"
+    else
+        bad "branch $branch is not pushed"
+    fi
+    behind=$(git rev-list --count HEAD..origin/dev)
+    [ "$behind" -gt 0 ] && warn "origin/dev is $behind commits ahead — merge it before the PR"
 fi
-behind=$(git rev-list --count HEAD..origin/dev)
-[ "$behind" -gt 0 ] && warn "origin/dev is $behind commits ahead — merge it before the PR"
 
 today=$(date +%F)
 grep -q "^\*\*Обновлено:\*\* $today" docs/STATUS.md || bad "docs/STATUS.md «Обновлено» is not $today — agent.sh stamp"
@@ -40,9 +45,9 @@ total=$(scripts/agent/test-count.sh 2>/dev/null)
 
 # Task statuses (tasks.md «Конец сессии»): every in-progress issue ends as `Fixes #N` in the PR
 # (automerge closes it) or goes back to status:next / needs-owner with a comment.
-wip=$(timeout 20 gh api -X GET search/issues -f q="repo:winerar/co-shell is:issue is:open label:status:in-progress" \
+[ $pre -eq 0 ] && wip=$(timeout 20 gh api -X GET search/issues -f q="repo:winerar/co-shell is:issue is:open label:status:in-progress" \
     -q '.items[] | "#\(.number) \(.title[0:60])"' 2>/dev/null)
-[ -n "$wip" ] && while read -r line; do
+[ -n "${wip:-}" ] && while read -r line; do
     warn "in progress: $line — «Fixes» in the PR, or status:next/needs-owner + comment"
 done <<<"$wip"
 
@@ -51,8 +56,9 @@ done <<<"$wip"
 for f in docs/agents/*.md; do
     n=$(wc -l <"$f"); [ "$n" -gt 125 ] && bad "$f is $n lines (limit ~120) — split it"
 done
-find app core -name '*.kt' -path '*/src/*' -not -path '*/build/*' -exec wc -l {} + | grep -v ' total$' |
+[ $pre -eq 0 ] && find app core -name '*.kt' -path '*/src/*' -not -path '*/build/*' -exec wc -l {} + | grep -v ' total$' |
     awk '$1 > 220 {print "! " $2 " is " $1 " lines (aim ~200)"}'
 
-[ $fail -eq 0 ] && echo "OK: session-end checks passed (now: mark the draft PR into dev ready — automerge — and report to the owner)"
+[ $fail -eq 0 ] && [ $pre -eq 1 ] && echo "OK: doc rules"
+[ $fail -eq 0 ] && [ $pre -eq 0 ] && echo "OK: session-end checks passed (now: mark the draft PR into dev ready — automerge — and report to the owner)"
 exit $fail

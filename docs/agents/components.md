@@ -9,6 +9,8 @@
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
+- **Секции форм** (#290) — `CoShellFormSection(title, trailing)`: карточка-сущность с подписью капсом; справа — `CoShellSectionLink`
+  («+ Чек», «В шаблон») или текст. Внутри — `CoShellDetailTile(icon, label, value, empty)` (плитка 40 dp) и `CoShellCheckTile` (галочка словами).
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля

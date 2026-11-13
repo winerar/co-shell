@@ -32,6 +32,8 @@ data class TransactionEditUiState(
     val toAccountId: String? = null,
     /** Top-level categories of the current type with their subcategories. */
     val categories: List<CategoryGroup> = emptyList(),
+    /** The grid «Категория · частые» ([frequentCategories]); the rest are in the «Все категории» sheet. */
+    val frequentCategories: List<CategoryItem> = emptyList(),
     val categoryId: String? = null,
     /** Folder whose subcategories are shown: the selected folder or the folder of the selected subcategory. */
     val openFolderId: String? = null,
@@ -115,9 +117,6 @@ data class TransactionEditUiState(
 
     /** Chips without the account's own currency (a receipt in it makes no sense). */
     val receiptCurrencyChoices: List<String> get() = receiptCurrencies.filter { it != account?.currency }
-
-    /** Pills under the categories: chosen ones picked in the sheet, then the recent tags ([buildTagRow]). */
-    val tagRow: List<TagOption> get() = buildTagRow(tags, tagIds)
 
     val isToday: Boolean get() = date == today
     val isYesterday: Boolean get() = date == today.minus(1, DateTimeUnit.DAY)

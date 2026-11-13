@@ -114,4 +114,6 @@
 - (11-13) Опрос владельца по макетам — `agent.sh poll` (PNG через `render-mockups.js`); БД опроса читается `ArtifactData list` без `user`-capability.
 - (11-13) `SearchIndex` («Операции») кэширует текст по `id` операции — в тесте две операции с одним id дают текст первой; разные id.
 - (11-13) `stamp-status.sh` менял любое «всего N » в STATUS (так «всего 3 места» стало «930») — теперь только в строке «- Тесты:».
+- (11-13) «Без прокрутки» (#290): над шторкой ≈102 dp (статус-бар ~30 + отступ `CoShellSheet` 24 + ручка 48), клавиатура 248 dp — телефону владельца
+  (393×873 dp) на карточки остаётся ≈400 dp. Проверять эталоном с `padding(top = 102.dp)` (`EntrySheetScreenshotTest`); `CoShellTextButton`/`IconButton` в подписи раздувают строку до 48 dp — там `CoShellSectionLink`.
 - Синхронизация и Firebase — `notes-sync.md`.

@@ -53,18 +53,6 @@ internal fun tagChoices(tags: List<Tag>, usage: Map<String, TagUsage>) = TagChoi
 )
 
 /**
- * The pill row of the sheet (board `Fb129A`: three pills and «Все N» fit the width): chosen tags that are not
- * among the recent ones first (picked in the sheet), then the recent ones. Every chosen tag is shown; the rest of
- * [ROW_TAGS] places go to the recent ones. Ids without a live tag are skipped.
- */
-internal fun buildTagRow(choices: TagChoices, selected: List<String>): List<TagOption> {
-    val byId = choices.options.associateBy { it.id }
-    val all = (selected.filter { it !in choices.recentIds } + choices.recentIds).distinct().mapNotNull { byId[it] }
-    var free = ROW_TAGS - all.count { it.id in selected }
-    return all.filter { it.id in selected || free-- > 0 }
-}
-
-/**
  * Labels to save: [original] references that stay chosen keep their form (a Wallet label «Mercado Libre» is not
  * rewritten to its id), newly chosen tags are added by id. A reference to a deleted tag stays chosen because the
  * form starts with every resolved id of the operation — it is never shown, so never dropped.
@@ -82,7 +70,6 @@ internal fun searchTags(options: List<TagOption>, query: String): List<TagOption
     return TagRanking.search(options.map { Tag(it.id, it.name) }, query).mapNotNull { byId[it.id] }
 }
 
-/** How many recent tags are known; the sheet shows the first [RECENT_IN_SHEET] of them, the row — up to [ROW_TAGS]. */
+/** How many recent tags are known; the «Теги» sheet shows the first [RECENT_IN_SHEET] of them. */
 internal const val RECENT_TAGS = 8
 internal const val RECENT_IN_SHEET = 4
-private const val ROW_TAGS = 3

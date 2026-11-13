@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.size
 import app.coshell.core.designsystem.components.ProgressHero
 import app.coshell.core.designsystem.theme.AmountTitleStyle
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.update.UpdatePhase
 import app.coshell.core.designsystem.R as DesignR
@@ -45,7 +46,7 @@ internal fun UpdateHero(phase: UpdatePhase, modifier: Modifier = Modifier) {
             val tint = when (step) {
                 UpdateHeroStep.Available -> colors.onPrimaryContainer
                 UpdateHeroStep.Failed -> colors.error
-                UpdateHeroStep.UpToDate -> colors.primary
+                UpdateHeroStep.UpToDate -> accentInk() // neon on the light grey disc is unreadable (#287)
                 else -> colors.onSurfaceVariant
             }
             Icon(painterResource(step.icon), contentDescription = null, tint = tint, modifier = Modifier.size(Sizes.heroIcon))

@@ -5,6 +5,7 @@ import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.ManualRateEntity
 import app.coshell.core.data.db.SettingEntity
+import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
 import kotlinx.serialization.json.Json
@@ -34,6 +35,8 @@ object SyncCodec {
         SyncRecord(SyncKind.TEMPLATE, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
     fun encode(e: SettingEntity) =
         SyncRecord(SyncKind.SETTING, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+    fun encode(e: TagEntity) =
+        SyncRecord(SyncKind.TAG, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
 
     // Decoded rows come from the server, so they are not pending.
     fun account(r: SyncRecord) = json.decodeFromString<AccountEntity>(r.json).copy(pendingSync = false)
@@ -43,4 +46,5 @@ object SyncCodec {
     fun manualRate(r: SyncRecord) = json.decodeFromString<ManualRateEntity>(r.json).copy(pendingSync = false)
     fun template(r: SyncRecord) = json.decodeFromString<TemplateEntity>(r.json).copy(pendingSync = false)
     fun setting(r: SyncRecord) = json.decodeFromString<SettingEntity>(r.json).copy(pendingSync = false)
+    fun tag(r: SyncRecord) = json.decodeFromString<TagEntity>(r.json).copy(pendingSync = false)
 }

@@ -7,6 +7,7 @@ import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
+import app.coshell.core.data.repository.RoomTagRepository
 import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomDataWipeRepository
@@ -25,6 +26,9 @@ import app.coshell.core.domain.templates.ApplyTemplateUseCase
 import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase
 import app.coshell.core.domain.templates.TemplateRepository
+import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
+import app.coshell.core.domain.tags.SaveTagUseCase
+import app.coshell.core.domain.tags.TagRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DataWipeRepository
 import app.coshell.core.domain.DeleteAccountUseCase
@@ -105,6 +109,16 @@ object DataModule {
     fun provideTemplateRepository(db: CoShellDatabase, stamper: WriteStamper): TemplateRepository =
         RoomTemplateRepository(db.templateDao(), stamper)
 
+    @Provides @Singleton
+    fun provideTagRepository(db: CoShellDatabase, stamper: WriteStamper): TagRepository =
+        RoomTagRepository(db.tagDao(), stamper)
+
+    @Provides
+    fun provideSaveTag(tags: TagRepository, ids: IdGenerator) = SaveTagUseCase(tags, ids)
+
+    @Provides
+    fun provideEnsureLabelTags(tags: TagRepository) = EnsureLabelTagsUseCase(tags)
+
     @Provides
     fun provideSaveTemplate(accounts: AccountRepository, categories: CategoryRepository, templates: TemplateRepository) =
         SaveTemplateUseCase(accounts, categories, templates)
@@ -131,7 +145,9 @@ object DataModule {
         imports: ImportRepository,
         categories: CategoryRepository,
         ids: IdGenerator,
-    ): WalletImportUseCase = WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors)
+        ensureLabelTags: EnsureLabelTagsUseCase,
+    ): WalletImportUseCase =
+        WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors, ensureLabelTags)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =

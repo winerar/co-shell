@@ -90,8 +90,10 @@ class SyncEngine(
         }
         // Settings go in their own last commit (#122): a commit is all-or-nothing, and until the owner
         // publishes rules that know `setting`, only that commit fails — the budget data still goes through.
+        // Tags (#129) likewise, after the settings: the rules learnt `tag` later than `setting`.
         val settings = pending.settings.map(SyncCodec::encode)
-        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK)).forEach { chunk ->
+        val tags = pending.tags.map(SyncCodec::encode)
+        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK)).forEach { chunk ->
             try {
                 remote.push(chunk)
             } catch (e: ApiException) {
@@ -100,7 +102,7 @@ class SyncEngine(
             }
             dao.clearSent(chunk)
         }
-        return records.size + settings.size
+        return records.size + settings.size + tags.size
     }
 
     private fun List<RemoteRecord>.toRows(): PulledRows {
@@ -114,6 +116,7 @@ class SyncEngine(
             manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate),
             templates = of(SyncKind.TEMPLATE, SyncCodec::template),
             settings = of(SyncKind.SETTING, SyncCodec::setting),
+            tags = of(SyncKind.TAG, SyncCodec::tag),
         )
     }
 

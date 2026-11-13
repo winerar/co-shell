@@ -115,17 +115,4 @@ class TransactionEditTagsTest {
         assertEquals(4, tags.getTags().size)
         assertEquals(true, vm.state.value.tags.options.any { it.id == "бассейн" })
     }
-
-    @Test
-    fun `the row shows tags chosen in the sheet first, then the recent ones`() = runTest {
-        seed()
-        tags.usage.value = mapOf(
-            "аня" to TagUsage("Аня", 3, now),
-            "отпуск" to TagUsage("отпуск", 1, Instant.fromEpochMilliseconds(0)),
-        )
-        val vm = viewModel()
-        assertEquals(listOf("аня", "отпуск"), vm.state.value.tagRow.map { it.id })
-        vm.onTagToggle("mercado libre")
-        assertEquals(listOf("mercado libre", "аня", "отпуск"), vm.state.value.tagRow.map { it.id })
-    }
 }

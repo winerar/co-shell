@@ -33,6 +33,7 @@ internal val refundPreviewSample = TransactionEditUiState(
     accountId = "card",
     categories = previewCategories,
     categoryId = "cafe",
+    frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
     openFolderId = "food",
     date = today,
     today = today,
@@ -55,6 +56,7 @@ internal val tagsPreviewSample = TransactionEditUiState(
     accountId = "card",
     categories = previewCategories,
     categoryId = "cafe",
+    frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
     openFolderId = "food",
     date = today,
     today = today,
@@ -73,6 +75,7 @@ private fun ExpensePreview() {
                 accountId = "card",
                 categories = previewCategories,
                 categoryId = "cafe",
+                frequentCategories = frequentCategories(previewCategories, emptyList(), "cafe"),
                 openFolderId = "food",
                 date = today,
                 today = today,
@@ -119,12 +122,19 @@ private fun ReceiptInOtherCurrencyPreview() {
                 receiptCurrencies = listOf("ARS", "USD", "EUR"),
                 categories = previewCategories,
                 categoryId = "home",
+                frequentCategories = frequentCategories(previewCategories, emptyList(), "home"),
                 date = today,
                 today = today,
             ),
             TransactionEditActions(),
         )
     }
+}
+
+@Preview(showBackground = true, heightDp = 844, widthDp = 390)
+@Composable
+private fun NoScrollWorstCasePreview() {
+    CoShellTheme { TransactionEditScreen(entrySheetSample, TransactionEditActions()) }
 }
 
 @Preview(showBackground = true)

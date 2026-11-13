@@ -38,7 +38,9 @@ Google Cloud Console → **APIs & Services → Credentials** → ключ Web AP
 ## 4. Обновить правила Firestore
 **Теперь автоматически:** после мержа изменения `firebase/` в `dev` CI сам публикует `firestore.rules` и
 `database.rules.json` (шаг «Deploy Firebase rules», ключ — секрет `FIREBASE_SERVICE_ACCOUNT` с ролями
-Firebase Rules Admin и Firebase Realtime Database Admin). Вручную — только если этот шаг упал:
+Firebase Rules Admin и Firebase Realtime Database Admin). Ошибка `403 … caller does not have permission` —
+у аккаунта из лога шага (строка `Service account: …`) нет этих ролей **в этом проекте**: IAM → ✏ у этого адреса.
+Вручную — только если этот шаг упал:
 1. Открыть https://console.firebase.google.com/project/_/firestore/rules (спросит проект — **co-shell**;
    или Firebase → **Build → Firestore Database → Rules**).
 2. В редакторе выделить всё (Ctrl+A / ⌘A) и удалить.

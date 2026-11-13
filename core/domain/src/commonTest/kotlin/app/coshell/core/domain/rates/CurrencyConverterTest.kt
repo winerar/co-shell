@@ -86,6 +86,15 @@ class CurrencyConverterTest {
     }
 
     @Test
+    fun `cross leg with only an earlier rate keeps it while the other leg takes a later one`() {
+        // EUR is known only from a hand-set rate on Nov 1, RUB only from Nov 5: on Nov 3 the cross still works.
+        val result = converter(rate(1, eur, usd, "1.25", manual = true)).convert(Money(100, eur), rub, day(3))!!
+        assertEquals(Money(10_000, rub), result.money)
+        assertTrue(result.rate.viaPivot)
+        assertEquals(day(1), result.rate.date)
+    }
+
+    @Test
     fun `unknown pair gives null and totals list what is missing`() {
         val c = converter()
         assertNull(c.convert(Money(100, eur), ars, day(5)))

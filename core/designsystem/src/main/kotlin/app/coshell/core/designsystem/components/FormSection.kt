@@ -1,6 +1,8 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -24,8 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.selectionPop
+import app.coshell.core.designsystem.motion.tactileToggleable
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -122,6 +127,52 @@ fun CoShellCheckTile(
             )
         }
     }
+}
+
+/**
+ * A yes/no line inside a [CoShellFormSection] (#290, «Баланс» of an account): [title] with one quiet [subtitle] line
+ * and a switch; the whole line toggles. Thinner than `CoShellSwitchRow`, which is a full settings row.
+ */
+@Composable
+fun CoShellSwitchLine(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier.fillMaxWidth().heightIn(min = TILE_HEIGHT).tactileToggleable(value = checked, onValueChange = onCheckedChange),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Spacing.m),
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        CoShellSwitch(checked = checked, onCheckedChange = null)
+    }
+}
+
+/**
+ * A small choice pill for a few options in a form card (#290, «Тип» of an account): five fit on one line where
+ * filter chips need two. The chosen one is filled, the rest are outlined.
+ */
+@Composable
+fun CoShellChoicePill(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val shape = CircleShape
+    val colors = MaterialTheme.colorScheme
+    Text(
+        text,
+        style = MaterialTheme.typography.labelMedium,
+        color = if (selected) colors.onSecondaryContainer else colors.onSurfaceVariant,
+        maxLines = 1,
+        modifier = modifier
+            .tactileClickable(Tactile.Control, shape, role = Role.RadioButton, onClick = onClick)
+            .selectionPop(selected)
+            .then(if (selected) Modifier.background(colors.secondaryContainer, shape) else Modifier.border(Sizes.hairline, colors.outlineVariant, shape))
+            .padding(horizontal = Spacing.s, vertical = Spacing.s - Spacing.xxs),
+    )
 }
 
 @Composable

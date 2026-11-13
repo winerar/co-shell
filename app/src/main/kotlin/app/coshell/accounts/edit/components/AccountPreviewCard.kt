@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,12 +23,11 @@ import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Motion
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
  * The account as a card at the top of its editor (mockup 10): its colour, name, type and starting balance
- * change live while the form is filled. Out of the total balance — the card fades.
+ * change live while the form is filled. Out of the total balance — the card fades. Compact (#290): the form fits.
  */
 @Composable
 internal fun AccountPreviewCard(state: AccountEditUiState, modifier: Modifier = Modifier) {
@@ -42,8 +40,7 @@ internal fun AccountPreviewCard(state: AccountEditUiState, modifier: Modifier = 
             .fillMaxWidth()
             .alpha(alpha)
             .background(fill, MaterialTheme.shapes.extraLarge)
-            .heightIn(min = Sizes.tileMinHeight)
-            .padding(Spacing.l),
+            .padding(horizontal = Spacing.l, vertical = Spacing.m),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
@@ -63,7 +60,7 @@ internal fun AccountPreviewCard(state: AccountEditUiState, modifier: Modifier = 
             style = AmountTitleStyle,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(top = Spacing.l),
+            modifier = Modifier.padding(top = Spacing.s),
         )
     }
 }

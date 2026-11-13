@@ -161,19 +161,23 @@ private fun SheetLayoutPreview() = CoShellTheme(darkTheme = false) {
     }
 }
 
-/** All palettes side by side, as in «Настройки → Тема», in each palette's own colours. */
+/** All palettes four in a row, as in «Внешний вид», in each palette's own colours. */
 @Composable
 private fun PalettesRow(selected: CoShellPalette) {
-    Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
-        CoShellPalette.entries.forEach { palette ->
-            CoShellPaletteSwatch(palette, palette.name, selected = palette == selected, onClick = {})
+    Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        CoShellPalette.entries.chunked(4).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+                row.forEach { palette ->
+                    CoShellPaletteSwatch(palette, palette.name, selected = palette == selected, onClick = {})
+                }
+            }
         }
     }
 }
 
 @Preview(name = "Palettes · light", showBackground = true)
 @Composable
-private fun PalettesLightPreview() = CoShellTheme(darkTheme = false) { Surface { PalettesRow(CoShellPalette.Volt) } }
+private fun PalettesLightPreview() = CoShellTheme(darkTheme = false) { Surface { PalettesRow(CoShellPalette.Lime) } }
 
 @Preview(name = "Palettes · dark · Mango", showBackground = true)
 @Composable

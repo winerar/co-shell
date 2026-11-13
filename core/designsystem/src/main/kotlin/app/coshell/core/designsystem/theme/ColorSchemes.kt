@@ -95,5 +95,5 @@ internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
 }
 
 /** The default palette's schemes — previews and tests that do not care about the palette. */
-internal val CoShellLightColors = lightSchemeOf(CoShellPalette.Volt.spec)
-internal val CoShellDarkColors = darkSchemeOf(CoShellPalette.Volt.spec)
+internal val CoShellLightColors = lightSchemeOf(CoShellPalette.Lime.spec)
+internal val CoShellDarkColors = darkSchemeOf(CoShellPalette.Lime.spec)

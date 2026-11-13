@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.lerp
 
 // Neon palettes (owner's choice, design-questions §2 and §9): a few colours per palette ([PaletteSpec]),
 // the neutrals are derived from its background so each palette keeps its own tint (graphite with a hint
-// of green for Volt, eggplant for Mango…). No glow. WCAG contrast — `ColorContrastTest`, every palette.
+// of green for Lime, eggplant for Mango…). No glow. WCAG contrast — `ColorContrastTest`, every palette.
 
 /** Neutral ladder of one theme: background, blocks a step lighter (dark) or darker (light), lines, text. */
 internal data class Neutrals(

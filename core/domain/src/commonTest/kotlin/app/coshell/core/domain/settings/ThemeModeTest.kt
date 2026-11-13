@@ -26,9 +26,27 @@ class ThemeModeTest {
     }
 
     @Test
-    fun paletteParseFallsBackToVolt() {
+    fun paletteParseFallsBackToLime() {
         assertEquals(ThemePalette.MANGO, ThemePalette.parse("MANGO"))
-        assertEquals(ThemePalette.VOLT, ThemePalette.parse(null))
-        assertEquals(ThemePalette.VOLT, ThemePalette.parse("MINT"))
+        assertEquals(ThemePalette.PEACH, ThemePalette.parse("PEACH"))
+        assertEquals(ThemePalette.LIME, ThemePalette.parse(null))
+        assertEquals(ThemePalette.LIME, ThemePalette.parse("MINT"))
+    }
+
+    @Test
+    fun paletteSavedBeforeFruitNamesIsKept() {
+        // #271: the phone keeps its choice after the rename; Мохито became the violet Маракуйя.
+        assertEquals(ThemePalette.LIME, ThemePalette.parse("VOLT"))
+        assertEquals(ThemePalette.PASSIONFRUIT, ThemePalette.parse("MOJITO"))
+        assertEquals(ThemePalette.BILBERRY, ThemePalette.parse("ULTRA"))
+        assertEquals(ThemePalette.FEIJOA, ThemePalette.parse("LAGOON"))
+        assertEquals(ThemePalette.PITAYA, ThemePalette.parse("SAKURA"))
+    }
+
+    @Test
+    fun sevenJuicyAndSevenSoft() {
+        val groups = ThemePalette.entries.groupBy { it.group }
+        assertEquals(7, groups.getValue(PaletteGroup.JUICY).size)
+        assertEquals(7, groups.getValue(PaletteGroup.SOFT).size)
     }
 }

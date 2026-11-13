@@ -46,7 +46,7 @@ internal fun MoreRoute(
             build = BuildConfig.VERSION_CODE,
             availableVersion = availableVersion,
             mainCurrency = currencies.currencies.firstOrNull(),
-            appearance = appearanceSummary(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.VOLT),
+            appearance = appearanceSummary(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME),
         ),
     )
 }

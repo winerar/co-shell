@@ -58,6 +58,13 @@ class FilterLabelsTest {
         assertEquals("Ноябрь 2025", FilterLabels.period(Preset.THIS_MONTH.range(today).shifted(-12), today, ru))
         assertEquals("2025", FilterLabels.period(Preset.LAST_YEAR.range(today), today, ru))
         assertEquals("Сент – нояб", FilterLabels.period(Preset.THREE_MONTHS.range(today), today, ru))
+        // Another year: no dot left inside, and a period across New Year names both years.
+        assertEquals("Сент – нояб 2025", FilterLabels.period(Preset.THREE_MONTHS.range(today).shifted(-4), today, ru))
+        assertEquals("Дек 2024 – февр 2025", FilterLabels.period(Preset.THREE_MONTHS.range(today).shifted(-7), today, ru))
+        assertEquals(
+            "28 дек. 2025 – 3 янв. 2026",
+            FilterLabels.period(PeriodRange.days(LocalDate(2025, 12, 28), LocalDate(2026, 1, 3)), today, ru),
+        )
         assertEquals("1 нояб. – 7 нояб.", FilterLabels.period(PeriodRange.days(LocalDate(2026, 11, 1), LocalDate(2026, 11, 7)), today, ru))
         assertEquals("3 окт. 2025", FilterLabels.period(PeriodRange.days(LocalDate(2025, 10, 3), LocalDate(2025, 10, 3)), today, ru))
     }

@@ -61,18 +61,20 @@ internal object FilterLabels {
     fun period(range: PeriodRange, today: LocalDate, locale: Locale): String {
         fun fmt(day: LocalDate, pattern: String) = day.toJavaLocalDate().format(DateTimeFormatter.ofPattern(pattern, locale))
         val sameYear = range.start.year == today.year && range.lastDay.year == today.year
+        // A period across New Year names the year at both ends: «нояб. 2024 – янв. 2025», not «нояб. – янв. 2025».
+        val startYear = if (range.start.year != range.lastDay.year) " yyyy" else ""
         return when (range.step) {
             PeriodRange.Step.MONTH -> fmt(range.start, if (sameYear) "LLLL" else "LLLL yyyy").replaceFirstChar { it.titlecase(locale) }
             PeriodRange.Step.YEAR -> range.start.year.toString()
             PeriodRange.Step.THREE_MONTHS -> {
-                val from = fmt(range.start, "LLL").trimEnd('.').replaceFirstChar { it.titlecase(locale) }
-                val to = fmt(range.lastDay, if (sameYear) "LLL" else "LLL yyyy").trimEnd('.')
+                val from = fmt(range.start, "LLL$startYear").replace(".", "").replaceFirstChar { it.titlecase(locale) }
+                val to = fmt(range.lastDay, if (sameYear) "LLL" else "LLL yyyy").replace(".", "")
                 "$from – $to"
             }
             PeriodRange.Step.DAYS -> {
                 val yearPattern = if (sameYear) "" else " yyyy"
                 if (range.start == range.lastDay) fmt(range.start, "d MMM$yearPattern")
-                else "${fmt(range.start, "d MMM")} – ${fmt(range.lastDay, "d MMM$yearPattern")}"
+                else "${fmt(range.start, "d MMM$startYear")} – ${fmt(range.lastDay, "d MMM$yearPattern")}"
             }
         }
     }

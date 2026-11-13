@@ -1,4 +1,4 @@
-package app.coshell.core.designsystem.components
+package app.coshell.core.designsystem.charts
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas

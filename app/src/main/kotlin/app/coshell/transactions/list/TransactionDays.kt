@@ -2,6 +2,7 @@ package app.coshell.transactions.list
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
@@ -101,6 +102,7 @@ private fun Transaction.toRow(
             note = note,
             amount = "+" + moneyFormat.format(amount),
             secondaryAmount = originalAmount?.let(moneyFormat::format),
+            refund = category?.type == CategoryType.EXPENSE,
         )
         TransactionType.TRANSFER -> {
             val target = toAccountId?.let { accountsById[it]?.name } ?: UNKNOWN

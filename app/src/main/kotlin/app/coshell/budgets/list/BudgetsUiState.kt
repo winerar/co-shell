@@ -1,6 +1,6 @@
 package app.coshell.budgets.list
 
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 

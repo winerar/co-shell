@@ -5,7 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.budgets.detail.BudgetDetailUiState.Inner
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.transactions.list.TransactionsUiState
 import kotlinx.datetime.YearMonth

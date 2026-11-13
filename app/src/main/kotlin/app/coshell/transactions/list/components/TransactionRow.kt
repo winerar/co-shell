@@ -9,13 +9,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
@@ -46,10 +52,21 @@ internal fun TransactionRow(
         Motion.effects(),
         label = "rowSelected",
     )
+    val refundLabel = stringResource(R.string.transaction_refund_row)
+    val income = LocalAmountPalette.current.income
+    val subtitle = remember(row, refundLabel, income) {
+        buildAnnotatedString {
+            if (row.refund) {
+                withStyle(SpanStyle(color = income)) { append(refundLabel) }
+                append(" · ")
+            }
+            append(listOfNotNull(row.subtitle, row.author, row.note.ifBlank { null }).joinToString(" · "))
+        }
+    }
+    val title = row.titleText()
     CoShellListRow(
-        title = row.titleText(),
-        subtitle = listOfNotNull(row.subtitle, row.author, row.note.ifBlank { null }).joinToString(" · "),
-        subtitleMaxLines = 1,
+        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = { Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leading = {
             Crossfade(selected, animationSpec = Motion.effects(), label = "rowBadge") { checked ->
                 if (checked) CheckBadge() else RowBadge(row)

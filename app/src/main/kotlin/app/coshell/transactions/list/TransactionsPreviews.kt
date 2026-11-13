@@ -18,6 +18,7 @@ internal val transactionsPreviewSample =
                 RelativeDay.TODAY,
                 listOf(
                     Row("1", Kind.EXPENSE, "Кафе", "Карта", "кофе", "-4 500,00 ARS"),
+                    Row("4", Kind.INCOME, "Кафе", "Карта", "", "+1 200,00 ARS", refund = true),
                     Row("2", Kind.TRANSFER, null, "Наличные → Карта", "", "100,00 USD", "+120 000,00 ARS"),
                 ),
             ),

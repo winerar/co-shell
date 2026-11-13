@@ -11,6 +11,8 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.monthBounds
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.AccountWithBalance
+import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.MoneyFormat
@@ -56,7 +58,10 @@ class HomeViewModel @Inject constructor(
         transactions.observeTransactions(monthBounds(today, timeZone).let { (from, to) -> TransactionFilter(from = from, to = to) }),
         rates.observeRates(),
         reportCurrencies.currencies,
-    ) { list, monthItems, all, currencies -> buildState(list, monthItems, all, currencies, today) }
+        categories.observeCategories(includeArchived = true),
+    ) { list, monthItems, all, currencies, categoryList ->
+        buildState(list, monthItems, all, currencies, today, categoryList.expenseIds())
+    }
 
     /** The newest operations, formatted by the same rules as the Transactions tab. */
     private val recent: Flow<List<TransactionsUiState.Row>> = combine(
@@ -86,5 +91,9 @@ class HomeViewModel @Inject constructor(
         rates: List<ExchangeRate>,
         currencies: List<CurrencyCode>,
         today: LocalDate,
-    ): HomeUiState = buildHomeState(accounts, monthTransactions, rates, currencies, today, timeZone, moneyFormat)
+        expenseCategoryIds: Set<String> = emptySet(),
+    ): HomeUiState = buildHomeState(accounts, monthTransactions, rates, currencies, today, timeZone, moneyFormat, expenseCategoryIds)
 }
+
+/** Ids of expense categories: an income in one of them is a refund (#208). */
+internal fun List<Category>.expenseIds(): Set<String> = filter { it.type == CategoryType.EXPENSE }.mapTo(HashSet()) { it.id }

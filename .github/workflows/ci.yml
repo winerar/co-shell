@@ -108,6 +108,11 @@ jobs:
 
       # main: debug and signed release in ONE Gradle call — with the configuration cache their tasks run
       # in parallel (two calls ran them one after another: 2:00 + 3:47, run 318).
+      # Version name 0.N: N = merges into main, i.e. releases (#268); like BUILD_NUMBER, only on main.
+      - name: Version name (main)
+        if: github.ref == 'refs/heads/main'
+        run: echo "VERSION_NAME=$(python3 scripts/ci/version_name.py)" | tee -a "$GITHUB_ENV"
+
       - name: Build APKs (main)
         if: github.ref == 'refs/heads/main'
         env:
@@ -139,10 +144,13 @@ jobs:
       - name: Update files
         if: env.SELF_UPDATE == 'true'
         run: |
-          version_name=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
+          # History for «Прошлые версии» (#284): the previous release's releases.json; none yet → starts empty.
+          curl -fsSL "https://github.com/$RELEASES_REPO/releases/latest/download/releases.json" -o prev-releases.json \
+            || echo '[]' > prev-releases.json
           python3 scripts/make-update-files.py app/build/outputs/apk/release/app-release.apk \
-            "${{ github.run_number }}" "$version_name" docs/whats-new.md \
-            "https://github.com/$RELEASES_REPO/releases/download/build-${{ github.run_number }}" update-files
+            "${{ github.run_number }}" "$VERSION_NAME" docs/whats-new.md \
+            "https://github.com/$RELEASES_REPO/releases/download/build-${{ github.run_number }}" update-files \
+            prev-releases.json
           cp app/build/outputs/apk/release/app-release.apk co-shell.apk
 
       # The app reads .../releases/latest/download/version.json from the public releases repo.

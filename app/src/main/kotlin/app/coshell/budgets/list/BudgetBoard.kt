@@ -2,7 +2,7 @@ package app.coshell.budgets.list
 
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.domain.budgets.BudgetMonthSummary
 import app.coshell.core.domain.budgets.BudgetProgress
 import app.coshell.core.domain.budgets.BudgetState

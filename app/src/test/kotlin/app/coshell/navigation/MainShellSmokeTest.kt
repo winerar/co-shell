@@ -152,7 +152,7 @@ class MainShellSmokeTest {
 
     @Test
     fun `update pill floats over the bar on tabs and hides on inner screens`() {
-        val pill = string(R.string.update_pill).replace("%1\$d", "43")
+        val pill = string(R.string.update_pill).replace("%1\$s", "0.1.43").replace("%2\$d", "43")
         compose.onNodeWithText(pill).assertIsDisplayed()
         val bar = compose.onNodeWithContentDescription(string(R.string.transaction_add)).getBoundsInRoot()
         assertTrue("pill must sit above the bar", compose.onNodeWithText(pill).getBoundsInRoot().bottom <= bar.top)

@@ -137,6 +137,19 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `a refund into an expense category lowers spending and is not income`() {
+        val items = listOf(
+            Transaction("t1", TransactionType.EXPENSE, "a", Money(10_000_00, ars), nov9.atStartOfDayIn(TimeZone.UTC), categoryId = "cafe"),
+            Transaction("t2", TransactionType.INCOME, "a", Money(4_000_00, ars), nov9.atStartOfDayIn(TimeZone.UTC), categoryId = "cafe"),
+        )
+
+        val state = viewModel.buildState(accounts, items, rates, listOf(ars), nov9, expenseCategoryIds = setOf("cafe"))
+
+        assertEquals(listOf(MoneyFormat.RU.format(Money(6_000_00, ars))), state.spending!!.totals)
+        assertEquals(listOf(MoneyFormat.RU.format(Money(0, ars))), state.income!!.totals)
+    }
+
+    @Test
     fun `daily bars are in the main currency with today marked`() {
         val items = listOf(
             Transaction("t1", TransactionType.EXPENSE, "a", Money(2_000_00, ars), LocalDate(2026, 11, 2).atStartOfDayIn(TimeZone.UTC)),

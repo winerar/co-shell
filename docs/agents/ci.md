@@ -27,6 +27,9 @@
 
 - **`BUILD_NUMBER` только на `main`.** Он попадает в `versionCode` (BuildConfig, манифест); новый номер на каждом прогоне
   выбивал из кэша все задачи `:app` (88 из 144 на PR только со скриптами, run 320). APK из PR — `versionCode` 1.
+- **`VERSION_NAME` тоже только на `main`** (#268): `0.N`, N = merge-коммиты первой линии `main` = релизы
+  (`scripts/ci/version_name.py`, нужен `fetch-depth: 0`); мажор и сдвиг — `version.properties` (1.0 — по слову владельца:
+  `major=1`, `minorOffset` = текущее число). Локально и в PR — `0.0`.
 - «Не все тесты» обеспечивает build cache: задачи неизменённых модулей приходят FROM-CACHE (кэш пишут `main` и `dev`,
   PR стартуют с тёплым). Делить `check` на группы вручную не нужно — Gradle и так гонит модули параллельно.
 - Release unit-тесты не запускаются (`check` берёт только debug), lintVital выключен (`lint.checkReleaseBuilds = false`).

@@ -14,10 +14,10 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
-import app.coshell.core.designsystem.components.BulletTone
-import app.coshell.core.designsystem.components.CoShellBullet
+import app.coshell.core.designsystem.charts.BulletTone
+import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellCard
-import app.coshell.core.designsystem.components.bulletColor
+import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Sizes

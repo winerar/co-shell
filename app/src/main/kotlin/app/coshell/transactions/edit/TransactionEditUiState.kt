@@ -14,6 +14,11 @@ data class TransactionEditUiState(
     /** A copy of another operation («Дублировать»): the header says «Копия · сегодня». */
     val isCopy: Boolean = false,
     val type: TransactionType = TransactionType.EXPENSE,
+    /**
+     * «↩ Возврат» on an expense (#208, board Fb208C): money came back for a purchase. Saved as an income in the
+     * chosen expense category; the sheet keeps the expense categories and shows the amount in the income colour.
+     */
+    val refund: Boolean = false,
     /** Amount as typed, in the currency of [accountId]. */
     val amount: String = "",
     /** [amount] was filled from the receipt by the rate ([withDebitSuggestion]), not typed. */
@@ -77,6 +82,10 @@ data class TransactionEditUiState(
     enum class EntryStep { ACCOUNT, TO_ACCOUNT, DETAILS }
 
     enum class KeypadTarget { AMOUNT, TO_AMOUNT, RECEIPT }
+
+    /** Name of the chosen category (or subcategory), for the refund hint. */
+    val categoryName: String?
+        get() = categoryId?.let { id -> categories.firstNotNullOfOrNull { g -> (listOf(g.item) + g.children).firstOrNull { it.id == id } }?.name }
 
     data class CategoryItem(val id: String, val name: String, val icon: String? = null, val color: Long? = null)
 

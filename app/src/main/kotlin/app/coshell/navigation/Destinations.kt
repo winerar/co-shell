@@ -46,6 +46,10 @@ data object FamilyDestination
 @Serializable
 data object UpdateDestination
 
+/** «Прошлые версии» from the update screen (#284). */
+@Serializable
+data object PastReleasesDestination
+
 /** [prefill] — text typed in for the user (the sync banner's error code). */
 @Serializable
 data class FeedbackDestination(val prefill: String? = null)

@@ -20,7 +20,11 @@ class UpdateViewModel @Inject constructor(
     installed: InstalledVersion,
 ) : ViewModel() {
 
-    private val initial = UpdateUiState(installedVersionName = installed.versionName, installedVersionCode = installed.versionCode)
+    private val initial = UpdateUiState(
+        installedVersionName = installed.versionName,
+        installedVersionCode = installed.versionCode,
+        installedAt = installed.installedAt,
+    )
 
     val state: StateFlow<UpdateUiState> =
         combine(controller.phase, controller.needsInstallPermission) { phase, needsPermission ->

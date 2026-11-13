@@ -64,8 +64,15 @@
   Цвет бренда хранится как есть и не перекрашивается темой; не должен совпадать со swatch палитры (тест).
   Оттенки примерные; Ameria — зелёный, сверить с сайтом (из песочницы сайт недоступен).
 - **Прогресс** — `CoShellLinearProgress()` (бесконечная) и `CoShellLinearProgress(progress)` (заполнение плывёт пружиной).
-- **«Пуля» бюджета** — `CoShellBullet(fraction, tone, mark)`: заполнение = потрачено/лимит, черта = темп на сегодня;
-  `BulletTone` NORMAL/WARNING/DANGER/IDLE, цвет для текста того же состояния — `bulletColor`; высоты `Sizes.bullet*`.
+- **Графики** — `charts/` (#168, доска `RepA`; витрина `catalog/ChartsCatalog`, эталоны `charts_*`). Масштаб один на график:
+  `ChartScale.of(значения + призраки).of(v)` → 0..1, столбцы и полосы от нуля. Появление — один раз (`rememberChartEntrance`,
+  `Motion.spatialSlow`), смена чисел — `Motion.spatial`; анимированное значение читаем только в отрисовке/размещении.
+  - `CoShellBarRow(label, value, fraction, color, share, ghost, ghostDescription, leading, onClick)` — полоса категории, серая черта — прошлый период.
+  - `CoShellColumns(List<ChartColumn>, selected, average, onSelect)` — столбцы по месяцам: выбранный — акцент, число над столбцом,
+    призрак — пунктирный контур, `average` — пунктир поперёк; TalkBack — `ChartColumn.description`.
+  - `CoShellDonut(slices, description) { центр }` — кольцо ≤ `DONUT_MAX_SLICES` + «Другое» (хвост группирует вызывающий), дуги — `donutArcs`.
+  - **«Пуля» бюджета** — `CoShellBullet(fraction, tone, mark)`: заполнение = потрачено/лимит, черта = темп на сегодня;
+    `BulletTone` NORMAL/WARNING/DANGER/IDLE, цвет для текста того же состояния — `bulletColor`; высоты `Sizes.bullet*`.
   Дорожка нейтральная в обеих темах. Остальные графики — #168.
 - **Панель действий** — `CoShellActionBar` (`components/ActionBar.kt`): та же капсула и пружина, что у нижней
   панели, но с кнопками (режим выбора 19В). Экран ставит её вместо вкладок через `ui/bar/ReplaceBottomBar`;

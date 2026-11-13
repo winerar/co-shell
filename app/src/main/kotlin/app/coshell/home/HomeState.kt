@@ -30,12 +30,14 @@ internal fun buildHomeState(
     today: LocalDate,
     timeZone: TimeZone,
     moneyFormat: MoneyFormat,
+    /** Expense categories: an income in one of them is a refund (#208) — off the spending, not income. */
+    expenseCategoryIds: Set<String> = emptySet(),
 ): HomeUiState {
     val book = RateBook.of(rates)
     val balances = accounts.filterNot { it.account.excludedFromTotal }.map { it.balance }
     val totals = book.balanceTotals(balances, currencies, today)
-    val spending = book.expenseTotals(monthTransactions, currencies, timeZone)
-    val income = book.incomeTotals(monthTransactions, currencies, timeZone)
+    val spending = book.expenseTotals(monthTransactions, currencies, timeZone, expenseCategoryIds)
+    val income = book.incomeTotals(monthTransactions, currencies, timeZone, expenseCategoryIds)
     val byCurrency = balances.groupBy { it.currency }.map { (currency, items) -> moneyFormat.format(items.sum(currency)) }
     val rateDate = totals.mapNotNull { it.rateDate }.minOrNull()
     val missing = totals.firstOrNull()?.missing.orEmpty().map { it.value }
@@ -52,7 +54,7 @@ internal fun buildHomeState(
             missing = spendingMissing,
             converted = monthTransactions.any { t -> t.type == TransactionType.EXPENSE && !t.isBalanceAdjustment && currencies.any { it != t.amount.currency } },
             daily = currencies.firstOrNull()
-                ?.let { main -> book.dailyExpenses(monthTransactions, main, today, timeZone).map { it.amountMinor } }
+                ?.let { main -> book.dailyExpenses(monthTransactions, main, today, timeZone, expenseCategoryIds).map { it.amountMinor } }
                 .orEmpty(),
             today = today.day - 1,
         ),

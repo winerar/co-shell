@@ -1,7 +1,7 @@
 package app.coshell.budgets.list
 
 import app.coshell.budgets.list.BudgetsUiState.Caption
-import app.coshell.core.designsystem.components.BulletTone
+import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.domain.budgets.BudgetCalculator
 import app.coshell.core.domain.budgets.BudgetLedger
 import app.coshell.core.domain.rates.RateBook

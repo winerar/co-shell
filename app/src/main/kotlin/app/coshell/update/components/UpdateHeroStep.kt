@@ -9,7 +9,7 @@ internal enum class UpdateHeroStep { Checking, UpToDate, NotConfigured, Availabl
 internal val UpdatePhase.heroStep: UpdateHeroStep
     get() = when (this) {
         UpdatePhase.Checking -> UpdateHeroStep.Checking
-        UpdatePhase.UpToDate -> UpdateHeroStep.UpToDate
+        is UpdatePhase.UpToDate -> UpdateHeroStep.UpToDate
         UpdatePhase.NotConfigured -> UpdateHeroStep.NotConfigured
         is UpdatePhase.Available -> UpdateHeroStep.Available
         is UpdatePhase.Downloading -> UpdateHeroStep.Downloading
@@ -21,7 +21,7 @@ internal val UpdatePhase.heroRing: HeroRing
     get() = when (this) {
         UpdatePhase.Checking, is UpdatePhase.Installing -> HeroRing.Busy
         is UpdatePhase.Downloading -> HeroRing.Progress(progress)
-        UpdatePhase.UpToDate -> HeroRing.Progress(1f)
+        is UpdatePhase.UpToDate -> HeroRing.Progress(1f)
         else -> HeroRing.Idle
     }
 

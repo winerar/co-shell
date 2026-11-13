@@ -22,5 +22,5 @@ interface UpdateStateStore {
     suspend fun setPendingRelease(release: AppRelease?)
 }
 
-/** Version of the running app (from BuildConfig). */
-data class InstalledVersion(val versionCode: Int, val versionName: String)
+/** Version of the running app (from BuildConfig); [installedAt] — when this build was installed, if known. */
+data class InstalledVersion(val versionCode: Int, val versionName: String, val installedAt: Instant? = null)

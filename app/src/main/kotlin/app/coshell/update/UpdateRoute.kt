@@ -8,7 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 /** Connects [UpdateScreen] to its ViewModel. */
 @Composable
-fun UpdateRoute(onBack: () -> Unit, viewModel: UpdateViewModel = hiltViewModel()) {
+fun UpdateRoute(onBack: () -> Unit, onPastReleases: () -> Unit, viewModel: UpdateViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     LifecycleResumeEffect(viewModel) {
         viewModel.refreshInstallPermission()
@@ -22,6 +22,7 @@ fun UpdateRoute(onBack: () -> Unit, viewModel: UpdateViewModel = hiltViewModel()
             onDownload = viewModel::downloadAndInstall,
             onAllowInstall = viewModel::openInstallPermissionSettings,
             onInstallManually = viewModel::installManually,
+            onPastReleases = onPastReleases,
         ),
     )
 }
@@ -34,4 +35,6 @@ data class UpdateActions(
     val onAllowInstall: () -> Unit = {},
     /** «Установить вручную»: the Android installer when its dialog did not appear (#217). */
     val onInstallManually: () -> Unit = {},
+    /** «Прошлые версии» (#284). */
+    val onPastReleases: () -> Unit = {},
 )

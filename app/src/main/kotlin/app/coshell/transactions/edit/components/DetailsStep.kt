@@ -68,7 +68,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
                 hint = state.suggestedRateDate?.takeIf { state.amountSuggested }?.let {
                     stringResource(R.string.transaction_amount_suggested, formatDayMonth(it))
                 } ?: templateHint(state),
-                color = amountColor(state.type),
+                color = amountColor(state.type, state.refund),
             )
             CoShellExpandable(state.needsToAmount) {
                 AmountSlot(
@@ -85,6 +85,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             CoShellExpandable(!state.isTransfer) {
                 Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                     CategoryGrid(state.categories, state.categoryId, state.openFolderId, actions.onCategorySelect)
+                    CoShellExpandable(state.refund) { RefundHint(state.categoryName) }
                     if (state.categoryError) {
                         Text(
                             stringResource(R.string.transaction_category_required),
@@ -108,6 +109,14 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.l),
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
+            // First: after the three date chips it would sit off screen (board Fb208C puts it after «Сегодня ▾»).
+            if (state.type == TransactionType.EXPENSE) {
+                CoShellFilterChip(
+                    selected = state.refund,
+                    onClick = { actions.onRefundToggle(!state.refund) },
+                    label = { Text(stringResource(R.string.transaction_refund_chip)) },
+                )
+            }
             DateChips(state.date, state.today, state.dateMillisUtc, actions.onDateSelect, actions.onDatePicked)
             CoShellFilterChip(
                 selected = noteOpen || state.note.isNotEmpty(),
@@ -157,7 +166,11 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
         Spacer(Modifier.weight(1f))
         // Which kind of operation this is, in its colour (board `Main`, step 2): the type switch stays on step 1.
         if (state.isNew && !state.isCopy && !state.isTransfer && state.templateName == null && state.savedTemplateName == null) {
-            Text(stringResource(state.type.labelRes), style = MaterialTheme.typography.labelLarge, color = amountColor(state.type))
+            Text(
+                if (state.refund) stringResource(R.string.transaction_refund_label) else stringResource(state.type.labelRes),
+                style = MaterialTheme.typography.labelLarge,
+                color = amountColor(state.type, state.refund),
+            )
         }
         if (!state.isNew) {
             CoShellIconButton(onClick = actions.onDuplicate) {
@@ -185,9 +198,20 @@ private fun CopyLabel() {
     )
 }
 
+/** «Возврат: деньги пришли на счёт, траты «Кафе» уменьшатся» (board Fb208C). */
 @Composable
-private fun amountColor(type: TransactionType) = when (type) {
-    TransactionType.EXPENSE -> LocalAmountPalette.current.expense
+private fun RefundHint(categoryName: String?) {
+    Text(
+        categoryName?.let { stringResource(R.string.transaction_refund_hint, it) } ?: stringResource(R.string.transaction_refund_hint_pick),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** A refund is money coming in: the income colour, though the sheet is on «Расход» (#208). */
+@Composable
+private fun amountColor(type: TransactionType, refund: Boolean = false) = when (type) {
+    TransactionType.EXPENSE -> if (refund) LocalAmountPalette.current.income else LocalAmountPalette.current.expense
     TransactionType.INCOME -> LocalAmountPalette.current.income
     TransactionType.TRANSFER -> MaterialTheme.colorScheme.onSurface
 }

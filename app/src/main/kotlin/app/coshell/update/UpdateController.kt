@@ -14,10 +14,7 @@ import app.coshell.update.log.UpdateJournal
 import java.io.File
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,9 +35,8 @@ class UpdateController(
     private val scope: CoroutineScope,
     private val journal: UpdateJournal = NoUpdateJournal,
 ) {
-    /** The verified APK of the current attempt, for «Установить вручную». */
-    private var apk: File? = null
-    private var manualOfferJob: Job? = null
+    /** The verified APK of the current attempt and its release, for «Установить вручную». */
+    private var apk: Pair<AppRelease, File>? = null
 
     private val _phase = MutableStateFlow<UpdatePhase>(UpdatePhase.Checking)
     val phase: StateFlow<UpdatePhase> = _phase.asStateFlow()
@@ -57,7 +53,6 @@ class UpdateController(
         scope.launch {
             installEvents.outcomes.collect { outcome ->
                 val release = _phase.value.release ?: return@collect
-                manualOfferJob?.cancel()
                 _phase.value = when (outcome) {
                     InstallOutcome.Cancelled -> UpdatePhase.Available(release)
                     is InstallOutcome.Failed -> UpdatePhase.Failed(UpdateError.Install, release)
@@ -77,7 +72,7 @@ class UpdateController(
     suspend fun autoCheck() {
         when (val result = check()) {
             is UpdateCheckResult.Available -> _available.value = result.release
-            UpdateCheckResult.UpToDate -> _available.value = null
+            is UpdateCheckResult.UpToDate -> _available.value = null
             else -> Unit
         }
     }
@@ -90,12 +85,13 @@ class UpdateController(
             val result = check(force = true)
             when (result) {
                 is UpdateCheckResult.Available -> _available.value = result.release
-                UpdateCheckResult.UpToDate -> _available.value = null
+                is UpdateCheckResult.UpToDate -> _available.value = null
                 else -> Unit
             }
             _phase.value = when (result) {
                 is UpdateCheckResult.Available -> UpdatePhase.Available(result.release)
-                UpdateCheckResult.UpToDate, UpdateCheckResult.CheckedRecently -> UpdatePhase.UpToDate
+                is UpdateCheckResult.UpToDate -> UpdatePhase.UpToDate(result.current)
+                is UpdateCheckResult.CheckedRecently -> UpdatePhase.UpToDate(result.current)
                 UpdateCheckResult.NotConfigured -> UpdatePhase.NotConfigured
                 is UpdateCheckResult.Failed -> UpdatePhase.Failed(UpdateError.Check)
             }
@@ -141,13 +137,12 @@ class UpdateController(
                 return@launch run { _phase.value = UpdatePhase.Failed(UpdateError.Download, release) }
             }
             journal.add("downloaded ${file.length()} bytes, checksum ok")
-            apk = file
+            apk = release to file
             store.setPendingRelease(release)
             _phase.value = UpdatePhase.Installing(release)
             if (journal.preferManualInstall) return@launch openInstaller(release, file)
             try {
                 installer.install(file)
-                offerManualLater(release)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -157,40 +152,28 @@ class UpdateController(
         }
     }
 
-    /** «Установить вручную»: the Android installer with the downloaded APK; remembered for next time. */
+    /**
+     * «Установить вручную» (offered right away, #269): the Android installer with the downloaded APK;
+     * remembered for next time. Before the download (under «Обновить») it downloads, then opens the installer.
+     */
     fun installManually() {
         val release = _phase.value.release ?: return
+        if (_phase.value is UpdatePhase.Downloading) return
         journal.preferManualInstall = true
         // No APK in this process (the app was restarted): download again, it then opens the installer.
-        val file = apk ?: return download(release)
+        val file = apk?.takeIf { it.first == release }?.second ?: return download(release)
         openInstaller(release, file)
     }
 
     private fun openInstaller(release: AppRelease, file: File) {
-        manualOfferJob?.cancel()
         // Android tells nothing back here, so the button stays: a closed installer can be opened again.
-        _phase.value = UpdatePhase.Installing(release, manualOffered = true)
+        _phase.value = UpdatePhase.Installing(release)
+        journal.add("manual install opened")
         try {
             installer.installManually(file)
         } catch (e: IllegalArgumentException) {
             journal.add("manual install failed: ${e.message}")
             _phase.value = UpdatePhase.Failed(UpdateError.Install, release)
         }
-    }
-
-    private fun offerManualLater(release: AppRelease) {
-        manualOfferJob?.cancel()
-        manualOfferJob = scope.launch {
-            delay(MANUAL_OFFER_DELAY)
-            if (_phase.value == UpdatePhase.Installing(release)) {
-                journal.add("no result after ${MANUAL_OFFER_DELAY.inWholeSeconds} s: manual install offered")
-                _phase.value = UpdatePhase.Installing(release, manualOffered = true)
-            }
-        }
-    }
-
-    companion object {
-        /** Long enough to read the system dialog; a dialog that never appeared shows up as silence. */
-        val MANUAL_OFFER_DELAY = 15.seconds
     }
 }

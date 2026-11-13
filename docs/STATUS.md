@@ -117,8 +117,8 @@
   `version.json`). **Работает с 2026-11-08** (сборка 27): `…/co-shell-releases/releases/latest/download/version.json`
   отдаётся без входа. Секреты заданы: 4 ключа подписи + `RELEASES_TOKEN` (fine-grained PAT, срок —
   записан у владельца; истечёт → шаг «Publish update» упадёт, токен перевыпустить).
-- Firebase-проект владельца создан (для этапа 4); секрет `FIREBASE_SERVICE_ACCOUNT` и переменная
-  `FIREBASE_PROJECT_ID` сейчас не используются. Hosting не подошёл: на Spark запрещены APK.
+- Firebase-проект владельца создан; секрет `FIREBASE_SERVICE_ACCOUNT` (роли: Cloud Datastore User, Firebase Rules Admin,
+  Firebase Realtime Database Admin) — отзывы и **автопубликация правил** из CI на `dev`. Hosting не подошёл: на Spark запрещены APK.
 - Репозиторий `co-shell` **приватный**.
 
 ## В работе

@@ -40,6 +40,14 @@
   группа, новый прогон отменяет старый. Раньше группы были `refs/heads/…` и `refs/pull/N/merge` и шли параллельно.
 - `automerge.sh` и `release.yml` считают коммит зелёным, если **есть** успешный прогон (отменённые и пустые дубли не мешают).
 
+## Правила Firebase
+- Изменение `firebase/{firestore.rules,database.rules.json,firebase.json,rules-test/}` или `scripts/ci/deploy-rules.sh`
+  (`scripts/ci/rules-changed.sh`): в PR — `scripts/test-rules.sh` (эмулятор, до шага автомержа), на `dev` после мержа —
+  тесты и `scripts/ci/deploy-rules.sh` (секрет `FIREBASE_SERVICE_ACCOUNT`). Firestore обязателен, RTDB — warning, если базы нет.
+- Отдельный workflow не годится: мерж через `GITHUB_TOKEN` не запускает `push`. Два мержа подряд отменяют прогон
+  первого (concurrency) — его правила не опубликуются; перезапустить упавший/отменённый прогон на `dev` (Re-run).
+  Владельцу в консоль ходить не нужно; ручной путь — `docs/setup/sync.md` §4.
+
 ## Кэши и секреты
 - `warm-cache.yml` — `check assembleDebug` на `dev` с записью кэша, когда CI на `dev` пропустил Gradle; кнопка релиза
   его не ждёт. Dispatch работает, только когда файл уже есть в `main` (до релиза — предупреждение в логе).

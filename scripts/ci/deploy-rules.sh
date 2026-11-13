@@ -12,6 +12,8 @@ trap 'rm -f "$key"' EXIT
 printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$key"
 export GOOGLE_APPLICATION_CREDENTIALS="$key"
 project=${FIREBASE_PROJECT_ID:-$(jq -r .project_id "$key")}
+# 403 "caller does not have permission" → give this account the roles above in this project (docs/setup/sync.md §4).
+echo "Service account: $(jq -r .client_email "$key"), project: $project"
 cd "$(dirname "$0")/../../firebase"
 deploy() { npx --yes firebase-tools@14.11.0 deploy --only "$1" --project "$project" --non-interactive; }
 deploy firestore:rules

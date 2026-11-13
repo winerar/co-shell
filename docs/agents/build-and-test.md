@@ -79,6 +79,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - CI: `assembleRelease` (ключ из секрета во временный файл,
   `UPDATE_BASE_URL=https://github.com/<owner>/co-shell-releases/releases/latest/download`) →
   `scripts/make-update-files.py` → `update-files/` → `gh release create` в **публичном** `co-shell-releases`.
+  Рядом с `version.json` — `releases.json`: прошлый (скачан из последнего релиза) + новый выпуск, последние 20 — «Прошлые версии» (#284).
 - Firebase Hosting не подходит: на Spark запрещены исполняемые файлы, в т.ч. `.apk`.
 - Локально release без ключа собирается неподписанным и с пустым `UPDATE_BASE_URL` (экран «не настроено»).
   Проверить R8/подпись: `keytool -genkeypair` во временный файл и те же переменные окружения.

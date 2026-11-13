@@ -44,6 +44,7 @@
 | `mockups` (`gen-mockups.py` + `check-mockups.js`) | пересобрать холст: **все** доски из кирпичей (`mockup_bricks.py` → `mockup_parts.py` → `mockup_screens_*.py`, `mockup_catalog.py`), темы, `canvas.json` (ряды — `LAYOUT`); затем проверка: у каждой `{{дырки}}` есть значение, каждый тап переключает состояние |
 | `mockup_theme.py <доска>…` | перевести цвета доски (рисуем во «Вольт · тёмная») на токены темы; повтор безопасен |
 | `render <доски…>` (`render-mockups.js`) | PNG досок без холста в scratchpad (упрощённый рантайм) |
+| `poll <spec.json>` (`poll-page.py` + `poll-template.html`) | опрос владельца по макетам: варианты-радио с превью досок, «рекомендую», поле правок; ответы — в БД артефакта (`workflow.md` §«Визуальные изменения») |
 | `python3 scripts/agent/palette-distinct.py` | различимость цветов категорий (ΔE2000, обе темы), предложение набора; данные для досок #105 |
 | `flows` (`gen-flows-board.py`) | только доска «Воркфлоу» (таблица `ROWS`); высоту в `canvas.json` ставит `mockups` |
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |

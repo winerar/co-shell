@@ -49,7 +49,7 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             Spacer(Modifier.height(Spacing.xl))
             UpdateHero(state.phase)
             UpdatePhaseContent(state, actions)
-            UpdateDetails(state)
+            UpdateDetails(state, onPastReleases = actions.onPastReleases)
         }
     }
 }

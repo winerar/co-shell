@@ -140,8 +140,8 @@
     <string name="categories_title">Категории</string>
     <string name="categories_add">Добавить</string>
     <string name="category_kind_category">Категория</string>
-    <string name="category_kind_folder">Папка</string>
-    <string name="categories_add_to_folder">Добавить в папку</string>
+    <string name="category_kind_folder">Группа</string>
+    <string name="categories_add_to_folder">Добавить в группу</string>
     <string name="categories_expand">Развернуть</string>
     <string name="categories_collapse">Свернуть</string>
     <string name="categories_show_archived">Показать архивные (%1$d)</string>
@@ -157,7 +157,7 @@
     <string name="category_type_income">Доходы</string>
 
     <string name="category_edit_title_new">Новая категория</string>
-    <string name="category_edit_title_new_folder">Новая папка</string>
+    <string name="category_edit_title_new_folder">Новая группа</string>
     <string name="category_edit_title">Категория</string>
     <string name="category_name">Название</string>
     <string name="category_name_error">Введите название</string>
@@ -171,19 +171,19 @@
     <string name="color_none">Без цвета</string>
     <string name="category_type_locked">Категория уже используется или содержит подкатегории — тип изменить нельзя</string>
     <string name="category_section_what">Что это</string>
-    <string name="category_folder_inside">Внутри папки</string>
+    <string name="category_folder_inside">Внутри группы</string>
     <string name="category_children_pick">Выбрать</string>
     <string name="category_children_none">Пока пусто — отметьте категории</string>
-    <string name="category_folder">Папка</string>
-    <string name="category_folder_none">Без папки</string>
-    <string name="category_children">Категории в папке</string>
-    <string name="category_children_hint">Отметьте категории, которые нужно сложить сюда. Сама папка тоже может выбираться в операциях.</string>
-    <string name="category_error_parent_not_found">Папка не найдена — выберите другую</string>
-    <string name="category_error_parent_nested">Папки не вкладываются друг в друга</string>
-    <string name="category_error_parent_type">Папка должна быть того же типа</string>
-    <string name="category_error_has_children">В этой категории есть подкатегории — её нельзя положить в папку</string>
+    <string name="category_folder">Группа</string>
+    <string name="category_folder_none">Без группы</string>
+    <string name="category_children">Категории в группе</string>
+    <string name="category_children_hint">Отметьте категории, которые нужно сложить сюда. Сама группа тоже может выбираться в операциях.</string>
+    <string name="category_error_parent_not_found">Группа не найдена — выберите другую</string>
+    <string name="category_error_parent_nested">Группы не вкладываются друг в друга</string>
+    <string name="category_error_parent_type">Группа должна быть того же типа</string>
+    <string name="category_error_has_children">В этой категории есть подкатегории — её нельзя положить в группу</string>
     <string name="category_delete_confirm_title">Удалить категорию?</string>
-    <string name="category_delete_confirm_text">Категория без операций будет удалена. Если это папка, её подкатегории останутся без папки.</string>
+    <string name="category_delete_confirm_text">Категория без операций будет удалена. Если это группа, её подкатегории останутся без группы.</string>
     <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
     <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе операций она больше не появится.</string>
     <string name="transaction_add">Добавить операцию</string>
@@ -239,7 +239,7 @@
     <string name="backup_error_write">Не удалось записать файл. Попробуйте другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
-    <string name="categories_menu_hint">Папки, иконки и цвета</string>
+    <string name="categories_menu_hint">Группы, иконки и цвета</string>
     <string name="backup_menu_hint">Сохранить или восстановить данные</string>
     <string name="feedback_menu_hint">Сообщить об ошибке или предложить идею</string>
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
@@ -608,5 +608,5 @@
     <string name="transaction_categories_all_title">Все категории · %1$d</string>
     <string name="transaction_categories_search">Найти категорию</string>
     <string name="transaction_categories_nothing">Ничего не нашлось</string>
-    <string name="transaction_categories_no_folder">Без папки</string>
+    <string name="transaction_categories_no_folder">Без группы</string>
 </resources>

@@ -9,8 +9,18 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-/** New transaction from the form, or [existing] updated; edits keep fields the form does not show (payee, labels, import info…). */
-internal fun buildTransaction(existing: Transaction?, form: ValidForm, date: Instant, ids: IdGenerator): Transaction {
+/**
+ * New transaction from the form, or [existing] updated; edits keep fields the form does not show (payee, import info…).
+ * Labels: the chosen tags merged into [sourceLabels] — those of the edited or copied operation ([mergeLabels]).
+ */
+internal fun buildTransaction(
+    existing: Transaction?,
+    form: ValidForm,
+    date: Instant,
+    ids: IdGenerator,
+    sourceLabels: List<String> = existing?.labels.orEmpty(),
+): Transaction {
+    val labels = mergeLabels(sourceLabels, form.tagIds)
     val base = existing ?: return Transaction(
         id = ids.newId(),
         type = form.type,
@@ -22,6 +32,7 @@ internal fun buildTransaction(existing: Transaction?, form: ValidForm, date: Ins
         categoryId = form.categoryId,
         note = form.note,
         originalAmount = form.originalAmount,
+        labels = labels,
     )
     return base.copy(
         type = form.type,
@@ -33,6 +44,7 @@ internal fun buildTransaction(existing: Transaction?, form: ValidForm, date: Ins
         date = date,
         note = form.note,
         originalAmount = form.originalAmount,
+        labels = labels,
     )
 }
 

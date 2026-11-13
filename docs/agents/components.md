@@ -42,6 +42,8 @@
   строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).
   **Тег** — `CoShellTagPill(name, color)` (точка + имя в пилюле цвета тега, ≤ 132 dp), `CoShellTagMore(n)` — «+N»,
   `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.
+  Тег-переключатель — `CoShellTagChip(name, color, selected, onClick, removeLabel)` (34 dp; вкл — заливка цвета тега, «✕» — в
+  выбранных), `CoShellTagMoreChip(label)` — пунктирная «Все N» (#293, строка в шторке ввода и шторка «Теги»).
 - **Кнопка «Добавить»** — `CoShellExtendedFab` (пилюля с иконкой и словом): одна кнопка добавления на экран списка
   (категории и папки — одной, вид выбирается в редакторе). **Карточка палитры** — `CoShellPaletteCard`.
   Карточка состояния служебного экрана (курсы, автокопия) — `app/.../ui/hero/StatusCard`. **Все карточки-герои —

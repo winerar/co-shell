@@ -17,6 +17,8 @@ internal data class ValidForm(
     val note: String,
     /** What the receipt said, when paid in another currency than the account's. */
     val originalAmount: Money? = null,
+    /** Chosen tag ids (#293). */
+    val tagIds: List<String> = emptyList(),
 )
 
 /** Field errors shown when the form is invalid. */
@@ -86,6 +88,7 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
             categoryId = categoryId,
             note = form.note.trim(),
             originalAmount = receipt.money,
+            tagIds = form.tagIds,
         ),
     )
 }

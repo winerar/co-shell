@@ -118,3 +118,4 @@
   (393×873 dp) на карточки остаётся ≈400 dp. Проверять эталоном с `padding(top = 102.dp)` (`EntrySheetScreenshotTest`); `CoShellTextButton`/`IconButton` в подписи раздувают строку до 48 dp — там `CoShellSectionLink`; `CoShellFilterChip`/`CoShellSwitchRow` в карточке формы — тоже 48+ dp: там `CoShellChoicePill`/`CoShellSwitchLine` (так «Счёт» влез).
 - Синхронизация и Firebase — `notes-sync.md`.
 - (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.
+- Интерфейс: «папка» категорий называется **«группа»** (владелец, #315, 2026-11-13); в коде по-прежнему `folder`. «Папка» осталась только у резервной копии (папка на диске).

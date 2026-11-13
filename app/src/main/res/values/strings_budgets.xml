@@ -29,10 +29,10 @@
     <string name="budgets_filter_in_plan">В плане · %1$d</string>
     <string name="budgets_filter_idle">Без трат · %1$d</string>
     <plurals name="budgets_folder">
-        <item quantity="one">папка · %d категория</item>
-        <item quantity="few">папка · %d категории</item>
-        <item quantity="many">папка · %d категорий</item>
-        <item quantity="other">папка · %d категории</item>
+        <item quantity="one">группа · %d категория</item>
+        <item quantity="few">группа · %d категории</item>
+        <item quantity="many">группа · %d категорий</item>
+        <item quantity="other">группа · %d категории</item>
     </plurals>
     <string name="budgets_carried">перенос %1$s</string>
     <string name="budgets_caption_left">осталось %1$s</string>
@@ -47,10 +47,10 @@
     <string name="budgets_caption_over">перерасход %1$s</string>
     <string name="budgets_caption_idle">не тратили</string>
     <string name="budgets_caption_paid">оплачено полностью</string>
-    <string name="budgets_fold">Свернуть папку</string>
-    <string name="budgets_unfold">Развернуть папку</string>
+    <string name="budgets_fold">Свернуть группу</string>
+    <string name="budgets_unfold">Развернуть группу</string>
     <string name="budgets_empty_title">Лимитов на этот месяц нет</string>
-    <string name="budgets_empty_text">Задайте, сколько готовы тратить в месяц на папку или категорию, — приложение само покажет, сколько осталось, и предупредит, если траты обгоняют темп.</string>
+    <string name="budgets_empty_text">Задайте, сколько готовы тратить в месяц на группу или категорию, — приложение само покажет, сколько осталось, и предупредит, если траты обгоняют темп.</string>
     <string name="budgets_hint">Полоса — сколько потрачено, черта — где стоило бы быть сегодня. Лимит меняется с выбранного месяца, прошлые месяцы остаются как были.</string>
 
     <!-- Экран конверта (#183) -->
@@ -77,10 +77,10 @@
 
     <!-- Редактор лимита -->
     <string name="budget_edit_title">Лимит</string>
-    <string name="budget_kind_folder">Папка</string>
+    <string name="budget_kind_folder">Группа</string>
     <string name="budget_kind_category">Категория</string>
     <string name="budget_what">На что</string>
-    <string name="budget_choose_folder">Выберите папку</string>
+    <string name="budget_choose_folder">Выберите группу</string>
     <string name="budget_choose_category">Выберите категорию</string>
     <string name="budget_no_folders">Папок с категориями расходов пока нет — создайте в «Ещё → Категории» или задайте лимит на категорию.</string>
     <string name="budget_category_error">Выберите, на что лимит</string>
@@ -88,7 +88,7 @@
     <string name="budget_amount_error">Введите сумму больше нуля</string>
     <string name="budget_average">В среднем за 3 месяца — %1$s</string>
     <string name="budget_currency">Валюта лимита</string>
-    <string name="budget_inside">Внутри папки · необязательно</string>
+    <string name="budget_inside">Внутри группы · необязательно</string>
     <string name="budget_inside_limit">лимит %1$s</string>
     <string name="budget_inside_none">без своего лимита</string>
     <string name="budget_inside_add">＋ лимит</string>

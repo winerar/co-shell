@@ -51,16 +51,6 @@ def types_a():
     return editor_top(body)
 
 
-def types_b():
-    def tline(n, sub, icon, on=False):
-        mark = svg('check', LIME, 20, 2.4) if on else ''
-        return row(n, sub, '<span style="width: 36px; height: 36px; border-radius: 11px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
-                   % (CHIP, svg(icon, LIME if on else MUTED, 20)), mark, min_h=52)
-    body = (field('Название', 'Galicia Visa') + label('Свои деньги') + group([tline(n, s, i) for n, s, i in OWN if n != 'Другое'])
-            + label('Долги · не входят в общий баланс') + group([tline(n, s, i, n == 'Кредитная карта') for n, s, i in DEBTS]))
-    return top_bar('Тип счёта', 'back') + '<div style="padding: 0 16px;">%s</div>' % body
-
-
 def credit_row(name, ini, col, ink, debt, limit, cur, frac):
     bar = ('<div style="margin-top: 6px; height: 4px; border-radius: 2px; background: %s; overflow: hidden;"><div style="width: %d%%; height: 100%%; background: %s;"></div></div>'
            % (LINE2, round(frac * 100), WARN if frac > 0.6 else LIME))
@@ -105,18 +95,6 @@ def sec(text):
 
 
 INC = [('Зарплата', 'salary', CYAN), ('Подарки', 'gift', VIOLET), ('Кэшбэк', 'chart', LIME), ('Другое', 'more', MUTED)]
-
-
-def refund_a():
-    return entry(segmented(['Расход', 'Доход', 'Перевод'], 'Доход', 'lime') + head('Доход', CYAN) + big_amount('+4 500', 'ARS', CYAN, 44)
-                 + sec('Доходы') + mini_cats(INC) + sec('↩ Возврат в категорию расходов') + mini_cats(CATS[:4], 'Кафе')
-                 + chips_row(chip('Сегодня ▾'), chip('＋ Заметка')) + keypad())
-
-
-def refund_b():
-    hint = '<div style="font-size: 12px; color: %s; padding: 0 4px; margin-top: -6px;">Вернём в траты категории: в бюджете «Кафе» станет на 4 500 меньше</div>' % MUTED
-    return entry(segmented(['Расход', 'Доход', 'Перевод', 'Возврат'], 'Возврат', 'lime') + head('Возврат', CYAN) + big_amount('+4 500', 'ARS', CYAN, 44)
-                 + mini_cats(CATS, 'Кафе') + hint + chips_row(chip('Сегодня ▾'), chip('＋ Заметка')) + keypad())
 
 
 def refund_c():
@@ -166,25 +144,10 @@ def versions_a():
     return inner_screen('Прошлые версии', body)
 
 
-def versions_b():
-    def block(v, d, items, mine=False):
-        dot = '<span style="position: absolute; left: -21px; top: 4px; width: 10px; height: 10px; border-radius: 50%%; background: %s;"></span>' % (LIME if mine else LINE2)
-        return ('<div style="position: relative; padding: 0 0 12px;">%s<div style="display: flex; gap: 8px; align-items: baseline;"><span style="%s font-size: 15px; font-weight: 700; '
-                'color: %s;">%s</span><span style="font-size: 12px; color: %s;">%s%s</span></div><div style="font-size: 13px; line-height: 1.5; color: %s;">%s</div></div>'
-                % (dot, MONO, LIME if mine else INK, v, MUTED, d, ' · у вас' if mine else '', INK2, '<br>'.join('— ' + t for t in items)))
-    lane = ''.join(block(v, d, it, i == 0) for i, (v, d, it) in enumerate(VERSIONS[:7]))
-    body = (label('Ноябрь', True, 4) + '<div style="margin-left: 22px; padding-left: 0; border-left: 2px solid %s;"><div style="padding-left: 18px;">%s</div></div>' % (LINE2, lane))
-    return inner_screen('Прошлые версии', body)
-
-
 BOARDS = [  # name, title, fn, issue number
-    ('Fb180A', 'А: сетка из 10 типов; у кредитки — лимит', types_a, 180),
-    ('Fb180B', 'Б: «Свои деньги» и «Долги» (рекомендую)', types_b, 180),
+    ('Fb180A', 'А: сетка из 10 типов; у кредитки — лимит (выбрано)', types_a, 180),
     ('Fb180List', 'Общее: «Счета» — сбережения и долги с «доступно»', accounts_types, 180),
-    ('Fb208A', 'А: в «Доходе» раздел «Возврат в категорию»', refund_a, 208),
-    ('Fb208B', 'Б: четвёртая вкладка «Возврат»', refund_b, 208),
-    ('Fb208C', 'В: чип «↩ Возврат» в шторке расхода (рекомендую)', refund_c, 208),
+    ('Fb208C', 'В: чип «↩ Возврат» в шторке расхода (выбрано)', refund_c, 208),
     ('Fb208Show', 'Общее: возврат в конверте бюджета и в списке', refund_show, 208),
-    ('Fb284A', 'А: карточки версий, тап раскрывает (рекомендую)', versions_a, 284),
-    ('Fb284B', 'Б: лента — все пункты сразу', versions_b, 284),
+    ('Fb284A', 'А: карточки версий, тап раскрывает (выбрано)', versions_a, 284),
 ]

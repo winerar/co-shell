@@ -17,11 +17,11 @@ import app.coshell.update.UpdateUiState
  * what is in it, and on the install step a hint that «Установить вручную» is there right away.
  */
 @Composable
-internal fun UpdateDetails(state: UpdateUiState, modifier: Modifier = Modifier) {
+internal fun UpdateDetails(state: UpdateUiState, modifier: Modifier = Modifier, onPastReleases: () -> Unit = {}) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         when (val phase = state.phase) {
             is UpdatePhase.UpToDate -> {
-                InstalledVersionCard(state.installedVersionName, state.installedVersionCode, state.installedAt)
+                InstalledVersionCard(state.installedVersionName, state.installedVersionCode, state.installedAt, onPastReleases = onPastReleases)
                 phase.current?.notes?.takeIf { it.isNotBlank() }?.let {
                     ReleaseCard(stringResource(R.string.update_this_version_title), it)
                 }

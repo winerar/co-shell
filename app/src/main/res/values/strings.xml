@@ -322,6 +322,13 @@
     <string name="update_version_build">сборка %1$d</string>
     <string name="update_version_installed_on">установлена\n%1$s</string>
     <string name="update_this_version_title">Что в этой версии</string>
+    <string name="update_past_title">Прошлые версии</string>
+    <string name="update_past_row">Прошлые версии и что в них было</string>
+    <string name="update_past_hint">Последние выпуски · тап раскрывает</string>
+    <string name="update_past_installed">у вас</string>
+    <string name="update_past_error">Не удалось загрузить список версий. Проверьте интернет.</string>
+    <string name="update_past_retry">Повторить</string>
+    <string name="update_past_empty">Список версий пока пуст: он появится со следующим обновлением.</string>
     <string name="update_install_manually_link">Не ставится? Установить вручную</string>
     <string name="update_hero_checking">Ищем обновления…</string>
     <string name="update_hero_up_to_date">У вас последняя версия</string>

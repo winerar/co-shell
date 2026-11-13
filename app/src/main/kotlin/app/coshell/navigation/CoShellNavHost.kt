@@ -46,6 +46,7 @@ import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
 import app.coshell.update.UpdateRoute
+import app.coshell.update.past.PastReleasesRoute
 import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
 import app.coshell.update.notice.UpdatePill
@@ -208,7 +209,13 @@ fun CoShellNavHost(
             )
         }
         composable<UpdateDestination> {
-            UpdateRoute(onBack = { navController.popBackStack() })
+            UpdateRoute(
+                onBack = { navController.popBackStack() },
+                onPastReleases = { navController.navigate(PastReleasesDestination) { launchSingleTop = true } },
+            )
+        }
+        composable<PastReleasesDestination> {
+            PastReleasesRoute(onBack = { navController.popBackStack() })
         }
         composable<FeedbackDestination> { entry ->
             FeedbackRoute(

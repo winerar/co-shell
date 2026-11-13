@@ -144,9 +144,13 @@ jobs:
       - name: Update files
         if: env.SELF_UPDATE == 'true'
         run: |
+          # History for «Прошлые версии» (#284): the previous release's releases.json; none yet → starts empty.
+          curl -fsSL "https://github.com/$RELEASES_REPO/releases/latest/download/releases.json" -o prev-releases.json \
+            || echo '[]' > prev-releases.json
           python3 scripts/make-update-files.py app/build/outputs/apk/release/app-release.apk \
             "${{ github.run_number }}" "$VERSION_NAME" docs/whats-new.md \
-            "https://github.com/$RELEASES_REPO/releases/download/build-${{ github.run_number }}" update-files
+            "https://github.com/$RELEASES_REPO/releases/download/build-${{ github.run_number }}" update-files \
+            prev-releases.json
           cp app/build/outputs/apk/release/app-release.apk co-shell.apk
 
       # The app reads .../releases/latest/download/version.json from the public releases repo.

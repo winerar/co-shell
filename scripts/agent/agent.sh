@@ -43,6 +43,7 @@ usage() {
   Дизайн (холст)
     mockups               пересобрать доски холста из генераторов + проверка логики тапов
     render <доски…>       PNG досок без холста (тёмная, Вольт) в scratchpad
+    poll <spec.json>      страница-опрос «выбери вариант» для владельца → scratchpad/poll (workflow.md)
     flows                 перерисовать только доску «Воркфлоу» (mockups делает это сам)
 
   Данные
@@ -110,6 +111,7 @@ case "$cmd" in
         out="$(scratch)/shots"; mkdir -p "$out"
         files=(); for b in "$@"; do files+=("docs/design/mockups/${b%.dc.html}.dc.html"); done
         exec node "$here/render-mockups.js" "$out" dark Вольт "${files[@]}" ;;
+    poll) exec python3 "$here/poll-page.py" "$1" "$(scratch)/poll" ;;
     flows) exec python3 "$here/gen-flows-board.py" "$@" ;;
     backup) exec python3 "$here/gen-test-backup.py" "$@" ;;
     wallet)

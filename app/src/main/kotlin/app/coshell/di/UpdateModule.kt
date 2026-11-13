@@ -4,6 +4,7 @@ import android.content.Context
 import app.coshell.BuildConfig
 import app.coshell.core.domain.update.CheckForUpdateUseCase
 import app.coshell.core.domain.update.InstalledVersion
+import app.coshell.core.domain.update.ReleaseHistorySource
 import app.coshell.core.domain.update.ReleaseSource
 import app.coshell.core.domain.update.UpdateStateStore
 import app.coshell.core.domain.update.WhatsNewUseCase
@@ -52,6 +53,10 @@ interface UpdateModule {
         /** Empty in local builds: CI sets `UPDATE_BASE_URL` (see build-and-test.md §Самообновление). */
         @Provides
         fun provideReleaseSource(): ReleaseSource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL)
+
+        /** `releases.json` next to `version.json`: «Прошлые версии» (#284). */
+        @Provides
+        fun provideReleaseHistorySource(): ReleaseHistorySource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL)
 
         @Provides
         fun provideCheckForUpdate(

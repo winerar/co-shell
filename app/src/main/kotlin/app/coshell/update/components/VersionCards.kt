@@ -5,16 +5,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
+import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Spacing
@@ -42,9 +47,18 @@ internal fun VersionCompareCard(installedName: String, installedCode: Int, relea
     }
 }
 
-/** «Ваша версия 0.37 · сборка 400 · установлена 12 ноября» (board Fb268B). */
+/**
+ * «Ваша версия 0.37 · сборка 400 · установлена 12 ноября» (board Fb268B); under a line — «Прошлые версии ›» (#284),
+ * when [onPastReleases] is set.
+ */
 @Composable
-internal fun InstalledVersionCard(name: String, code: Int, installedAt: Instant?, modifier: Modifier = Modifier) {
+internal fun InstalledVersionCard(
+    name: String,
+    code: Int,
+    installedAt: Instant?,
+    modifier: Modifier = Modifier,
+    onPastReleases: (() -> Unit)? = null,
+) {
     CoShellCard(modifier.fillMaxWidth()) {
         Row(Modifier.padding(Spacing.l), verticalAlignment = Alignment.CenterVertically) {
             VersionColumn(stringResource(R.string.update_version_yours), name, code, Modifier.weight(1f))
@@ -57,6 +71,20 @@ internal fun InstalledVersionCard(name: String, code: Int, installedAt: Instant?
                 )
             }
         }
+        onPastReleases?.let { PastReleasesRow(it) }
+    }
+}
+
+@Composable
+private fun PastReleasesRow(onClick: () -> Unit) {
+    val muted = MaterialTheme.colorScheme.onSurfaceVariant
+    HorizontalDivider(Modifier.padding(horizontal = Spacing.l), color = MaterialTheme.colorScheme.outlineVariant)
+    Row(
+        Modifier.fillMaxWidth().tactileClickable(onClick = onClick).padding(horizontal = Spacing.l, vertical = Spacing.m),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(stringResource(R.string.update_past_row), style = MaterialTheme.typography.bodyMedium, color = muted, modifier = Modifier.weight(1f))
+        Icon(painterResource(DesignR.drawable.ic_chevron_right), contentDescription = null, tint = muted)
     }
 }
 

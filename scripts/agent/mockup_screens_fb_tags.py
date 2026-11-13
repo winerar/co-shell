@@ -64,13 +64,6 @@ def entry_a():
                  + chips_row(chip('Сегодня ▾'), chip('＋ Заметка'), chip('Получатель', False, 'user')) + keypad())
 
 
-def entry_b():
-    chip_tags = ('<span style="height: 36px; padding: 0 12px; border-radius: 999px; background: %s; color: %s; font-size: 13px; font-weight: 600; '
-                 'display: inline-flex; align-items: center; gap: 6px;">%s Испанский, Аня</span>' % (VIOLETPILL, VIOLETINK, svg(TAG_ICON, VIOLETINK, 16)))
-    return entry(head_expense() + big_amount('18 000', 'ARS') + cat_grid('Подарки')
-                 + chips_row(chip('Сегодня ▾'), chip_tags, chip('＋ Заметка'), chip('Получатель', False, 'user')) + keypad())
-
-
 def pick_sheet():
     def line(n, c, uses, on):
         mark = (('<span style="width: 22px; height: 22px; border-radius: 7px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
@@ -130,10 +123,6 @@ def ops_a():
     return ops_with('pills')
 
 
-def ops_b():
-    return ops_with('dots')
-
-
 def manage():
     def line(n, c, u):
         return ('<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 14px; border-top: 1px solid %s;">'
@@ -147,10 +136,8 @@ def manage():
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Fb129A', 'А: строка недавних тегов в шторке, «Все 34» — поиск (рекомендую)', entry_a, 129),
+    ('Fb129A', 'А: строка недавних тегов в шторке, «Все 34» — поиск (выбрано)', entry_a, 129),
     ('Fb129AOps', 'А: в списке — пилюли под названием (до 2 + «+N»)', ops_a, 129),
-    ('Fb129B', 'Б: один чип «Теги» рядом с датой и заметкой', entry_b, 129),
-    ('Fb129BOps', 'Б: в списке — точки с названием в строке получателя', ops_b, 129),
     ('Fb129Pick', 'Общее: шторка тегов — поиск, недавние, все 34, создать', pick_sheet, 129),
     ('Fb129All', 'Общее: «Ещё → Теги» — список, цвет, объединить', manage, 129),
 ]

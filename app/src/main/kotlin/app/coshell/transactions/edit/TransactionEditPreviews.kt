@@ -25,6 +25,19 @@ private val previewCategories = listOf(
 
 private val today = LocalDate(2026, 11, 8)
 
+/** «↩ Возврат» on (#208, board Fb208C): 4 500 ARS back into «Кафе». */
+internal val refundPreviewSample = TransactionEditUiState(
+    amount = "4 500",
+    refund = true,
+    accounts = previewAccounts,
+    accountId = "card",
+    categories = previewCategories,
+    categoryId = "cafe",
+    openFolderId = "food",
+    date = today,
+    today = today,
+)
+
 @Preview(showBackground = true, heightDp = 900)
 @Composable
 private fun ExpensePreview() {

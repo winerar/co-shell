@@ -59,6 +59,8 @@ data class TransactionsUiState(
         val color: Long? = null,
         /** Who added it — only for the other family member's operations. */
         val author: String? = null,
+        /** An income in an expense category (#208): «↩ возврат» before the account, the amount in the income colour. */
+        val refund: Boolean = false,
     )
 
     enum class Kind { EXPENSE, INCOME, TRANSFER }

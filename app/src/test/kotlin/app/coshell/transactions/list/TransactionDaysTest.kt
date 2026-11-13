@@ -46,6 +46,17 @@ class TransactionDaysTest {
     }
 
     @Test
+    fun `an income in an expense category is marked as a refund`() {
+        val rows = build(
+            Transaction("r", TransactionType.INCOME, "card", Money(4_500_00, ars), at(8, 9), categoryId = "cafe"),
+            Transaction("i", TransactionType.INCOME, "card", Money(100, ars), at(8, 10)),
+        ).single().rows.associateBy { it.id }
+        assertEquals(true, rows.getValue("r").refund)
+        assertEquals(Kind.INCOME, rows.getValue("r").kind)
+        assertEquals(false, rows.getValue("i").refund)
+    }
+
+    @Test
     fun `groups by local day newest first with relative labels`() {
         val days = build(
             Transaction("a", TransactionType.EXPENSE, "card", Money(100, ars), at(6, 10)),

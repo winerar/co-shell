@@ -109,4 +109,10 @@ class SaveTransactionUseCaseTest {
         val tx = Transaction("t", TransactionType.EXPENSE, "usd", Money(1, usd), date, categoryId = "salary")
         assertEquals(Result.Invalid(Reason.CATEGORY_TYPE_MISMATCH), save(tx))
     }
+
+    @Test
+    fun `accepts an income in an expense category as a refund`() = runTest {
+        val tx = Transaction("t", TransactionType.INCOME, "usd", Money(1, usd), date, categoryId = "food")
+        assertEquals(Result.Saved, save(tx))
+    }
 }

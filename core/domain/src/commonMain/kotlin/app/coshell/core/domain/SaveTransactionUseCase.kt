@@ -49,7 +49,7 @@ class SaveTransactionUseCase(
             val category = categories.getCategory(categoryId) ?: return invalid(Reason.CATEGORY_NOT_FOUND)
             val expected = when (transaction.type) {
                 TransactionType.EXPENSE -> CategoryType.EXPENSE
-                TransactionType.INCOME -> CategoryType.INCOME
+                TransactionType.INCOME -> null // income category, or an expense one: a refund (#208)
                 TransactionType.TRANSFER -> null // transfers may carry any category (e.g. fees)
             }
             if (expected != null && category.type != expected) return invalid(Reason.CATEGORY_TYPE_MISMATCH)

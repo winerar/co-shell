@@ -84,7 +84,7 @@
     <string name="accounts_grouping_owner">Чьи</string>
     <string name="accounts_total">Всего в общем балансе</string>
     <string name="accounts_search">Поиск счёта</string>
-    <string name="transactions_search">Поиск: заметка, получатель, сумма</string>
+    <string name="transactions_search">Поиск: заметка, тег, сумма</string>
     <string name="filter_type">Тип</string>
     <string name="filter_all_types">Все типы</string>
     <string name="filter_expenses">Расходы</string>

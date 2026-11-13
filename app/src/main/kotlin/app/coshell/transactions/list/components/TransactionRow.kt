@@ -3,8 +3,11 @@ package app.coshell.transactions.list.components
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -27,10 +30,13 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellTagMore
+import app.coshell.core.designsystem.components.CoShellTagPill
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.Row as RowState
 import app.coshell.core.designsystem.R as DesignR
@@ -66,7 +72,16 @@ internal fun TransactionRow(
     val title = row.titleText()
     CoShellListRow(
         title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        supporting = { Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = {
+            if (row.tags.isEmpty()) {
+                Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            } else {
+                Column {
+                    Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    RowTags(row)
+                }
+            }
+        },
         leading = {
             Crossfade(selected, animationSpec = Motion.effects(), label = "rowBadge") { checked ->
                 if (checked) CheckBadge() else RowBadge(row)
@@ -84,6 +99,19 @@ internal fun TransactionRow(
         onLongClick = { onLongClick(row.id) },
         containerColor = container,
     )
+}
+
+/** Up to two tag pills and «+N» under the account line (board `Fb129AOps`). */
+@Composable
+private fun RowTags(row: RowState) {
+    Row(
+        Modifier.padding(top = Spacing.xs),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        row.tags.forEach { CoShellTagPill(it.name, it.color) }
+        if (row.moreTags > 0) CoShellTagMore(row.moreTags)
+    }
 }
 
 /** Badge of a chosen row: a solid circle of the accent with a dark check mark, as in mockup 19В. */

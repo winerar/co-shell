@@ -43,4 +43,12 @@ class CategoryPaletteTest {
         assertEquals(imported, CategoryPalette.normalize(imported))
         assertEquals(imported, CategoryPalette.display(imported, dark = false))
     }
+
+    @Test
+    fun forKeyIsStableAndFromThePalette() {
+        assertEquals(CategoryPalette.forKey("аня"), CategoryPalette.forKey("аня"))
+        val picked = listOf("аня", "миша", "отпуск", "испанский", "кот", "работа").map(CategoryPalette::forKey)
+        assert(picked.all { it in CategoryPalette.colors })
+        assert(picked.toSet().size > 1) { "different tags should not all share one colour" }
+    }
 }

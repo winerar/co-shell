@@ -72,6 +72,19 @@ object CategoryPalette {
     /** Palette value for [color]: a pre-neon colour becomes its neon swatch; anything else is kept. */
     fun normalize(color: Long): Long = byStored[color]?.stored ?: color
 
+    /**
+     * A palette colour picked from [key] (a tag id): the same on every phone and every run — FNV-1a, not
+     * `String.hashCode`, so the rule does not depend on the platform. Used where no colour was chosen (#129).
+     */
+    fun forKey(key: String): Long {
+        var hash = 0x811C9DC5L
+        key.forEach { ch ->
+            hash = hash xor ch.code.toLong()
+            hash = (hash * 0x01000193L) and 0xFFFFFFFFL
+        }
+        return colors[(hash % colors.size).toInt()]
+    }
+
     /** ARGB to draw [color] with in the given theme; colours outside the palette are drawn as stored. */
     fun display(color: Long, dark: Boolean): Long {
         val swatch = byStored[color] ?: return color

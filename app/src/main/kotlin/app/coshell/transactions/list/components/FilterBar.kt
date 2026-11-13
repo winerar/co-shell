@@ -33,11 +33,11 @@ import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.core.designsystem.R as DesignR
 
 /** Which filter sheet is open. */
-private enum class OpenSheet { CATEGORIES, PERIOD, ACCOUNTS }
+private enum class OpenSheet { CATEGORIES, TAGS, PERIOD, ACCOUNTS }
 
 /**
  * Top of «Операции» (#141, variant А): the search field (with a line on how an amount query was understood),
- * the filter chips — type, category, period, account, who — each with its own sheet, and the total of what
+ * the filter chips — type, category, tag (#294), period, account, who — each with its own sheet, and the total of what
  * was found (4А) while any filter is set.
  */
 @Composable
@@ -79,6 +79,14 @@ internal fun FilterBar(
                 onClick = { open = OpenSheet.CATEGORIES },
                 onClear = { onFilter { it.copy(categoryIds = emptySet(), uncategorized = false) } },
             )
+            if (choices.tags.isNotEmpty() || filter.tagIds.isNotEmpty()) {
+                FilterSheetChip(
+                    label = FilterLabels.tags(filter, choices) ?: stringResource(R.string.filter_tag),
+                    selected = filter.tagIds.isNotEmpty(),
+                    onClick = { open = OpenSheet.TAGS },
+                    onClear = { onFilter { it.copy(tagIds = emptySet()) } },
+                )
+            }
             val period = filter.period
             FilterSheetChip(
                 label = if (period != null && state.today != null) FilterLabels.period(period, state.today, locale) else stringResource(R.string.filter_period),
@@ -105,6 +113,7 @@ internal fun FilterBar(
     val close = { open = null }
     when (open) {
         OpenSheet.CATEGORIES -> CategoriesSheet(filter, choices, count, onFilter, close)
+        OpenSheet.TAGS -> TagsSheet(filter, choices, count, onFilter, close)
         OpenSheet.PERIOD -> state.today?.let { PeriodSheet(filter, it, count, onFilter, close) }
         OpenSheet.ACCOUNTS -> AccountsSheet(filter, choices, count, onFilter, close)
         null -> Unit

@@ -75,14 +75,6 @@ internal fun templateHint(state: TransactionEditUiState): String? = when {
     else -> stringResource(R.string.template_hint_amount)
 }
 
-@Composable
-internal fun SaveAsTemplateChip(onClick: () -> Unit) = CoShellFilterChip(
-    selected = false,
-    onClick = onClick,
-    label = { Text(stringResource(R.string.template_save_as_chip)) },
-    leadingIcon = { Icon(painterResource(DesignR.drawable.ic_bolt), null, Modifier.size(Sizes.tileIcon)) },
-)
-
 /**
  * «Сохранить как шаблон» over the editor of a saved operation (mockup `TplSave`): a name and whether to
  * remember the amount. Closes itself once the template is saved.

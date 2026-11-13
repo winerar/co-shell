@@ -30,15 +30,6 @@ class EntryTagsTest {
     }
 
     @Test
-    fun `the row keeps three places but never hides a chosen tag`() {
-        val options = (1..6).map { TagOption("$it", "t$it", 0) }
-        val choices = TagChoices(options, recentIds = listOf("1", "2", "3", "4"))
-        assertEquals(listOf("1", "2", "3"), buildTagRow(choices, emptyList()).map { it.id })
-        assertEquals(listOf("1", "2", "4"), buildTagRow(choices, listOf("4")).map { it.id })
-        assertEquals(listOf("5", "6", "4"), buildTagRow(choices, listOf("5", "6", "4")).map { it.id })
-    }
-
-    @Test
     fun `search finds by part of the name, starting matches first`() {
         val options = listOf(TagOption("1", "бассейн", 0), TagOption("2", "Аня", 0), TagOption("3", "сейф", 0))
         assertEquals(listOf("3", "1"), searchTags(options, "сей").map { it.id })

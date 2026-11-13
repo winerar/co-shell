@@ -75,8 +75,6 @@
     <string name="keypad_done">Готово</string>
     <string name="keypad_backspace">Стереть</string>
     <string name="transaction_change_account">Сменить счёт</string>
-    <string name="transaction_note_add">Заметка</string>
-    <string name="transaction_receipt_chip">Чек в другой валюте</string>
     <string name="accounts_group_shared">Общие</string>
     <string name="accounts_group_mine">Мои</string>
     <string name="accounts_grouping_type">По типу</string>
@@ -184,11 +182,7 @@
     <string name="transaction_to_amount">Сумма зачисления</string>
     <string name="transaction_amount_debited">Списано со счёта</string>
     <string name="transaction_amount_suggested">По курсу на %1$s — поправьте по выписке банка</string>
-    <string name="transaction_receipt_toggle">Чек в другой валюте</string>
     <string name="transaction_receipt_currency">Валюта чека</string>
-    <string name="transaction_receipt_amount">Сумма по чеку</string>
-    <string name="transaction_receipt_hint">Сколько было в чеке</string>
-    <string name="transaction_receipt_rate">Курс покупки: %1$s</string>
     <string name="transaction_receipt_explain">Баланс счёта меняется на списанную сумму, сумма чека сохраняется для отчётов.</string>
     <string name="transaction_receipt_currency_invalid">Код валюты: 3–10 латинских букв или цифр</string>
     <string name="transaction_receipt_currency_same">Совпадает с валютой счёта — выключите «Чек в другой валюте»</string>
@@ -204,7 +198,6 @@
     <string name="transaction_to_account_same">Счета должны быть разными</string>
     <string name="transaction_category">Категория</string>
     <string name="transaction_category_required">Выберите категорию</string>
-    <string name="transaction_category_folder">В папке «%1$s»</string>
     <string name="transaction_no_categories">Категорий этого типа нет. Добавьте их в разделе «Ещё → Категории».</string>
     <string name="transaction_date">Дата</string>
     <string name="transaction_date_today">Сегодня</string>
@@ -321,7 +314,6 @@
     <string name="update_version_yours">Ваша версия</string>
     <string name="update_version_build">сборка %1$d</string>
     <string name="update_version_installed_on">установлена\n%1$s</string>
-    <string name="transaction_refund_chip">↩ Возврат</string>
     <string name="transaction_refund_label">Расход → возврат</string>
     <string name="transaction_refund_hint">Возврат: деньги пришли на счёт, траты «%1$s» уменьшатся</string>
     <string name="transaction_refund_hint_pick">Возврат: выберите категорию покупки — её траты уменьшатся</string>
@@ -578,4 +570,26 @@
     <string name="template_category_none">Не выбрана — спросим при вводе</string>
     <string name="template_delete_confirm_title">Удалить шаблон?</string>
     <string name="template_delete_confirm_text">Операции, созданные из него, останутся.</string>
+    <!-- Entry sheet without scrolling (#290) -->
+    <string name="entry_section_amount">Сумма</string>
+    <string name="entry_section_amount_debited">Сумма · списано</string>
+    <string name="entry_section_category">Категория</string>
+    <string name="entry_section_category_frequent">Категория · частые</string>
+    <string name="entry_section_details">Детали</string>
+    <string name="entry_receipt_add">+ Чек</string>
+    <string name="entry_receipt">Чек</string>
+    <string name="entry_receipt_remove">Убрать чек</string>
+    <string name="entry_note_empty">Без заметки</string>
+    <string name="entry_tags">Теги</string>
+    <string name="entry_tags_count">Теги · %1$d</string>
+    <string name="entry_tags_empty">Без тегов</string>
+    <string name="entry_refund_title">Это возврат</string>
+    <string name="entry_refund_subtitle">вернули на счёт</string>
+    <string name="entry_date_today">Сегодня, %1$s</string>
+    <string name="entry_date_yesterday">Вчера, %1$s</string>
+    <string name="transaction_categories_all">Все</string>
+    <string name="transaction_categories_all_title">Все категории · %1$d</string>
+    <string name="transaction_categories_search">Найти категорию</string>
+    <string name="transaction_categories_nothing">Ничего не нашлось</string>
+    <string name="transaction_categories_no_folder">Без папки</string>
 </resources>

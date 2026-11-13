@@ -17,7 +17,10 @@
 `BudgetDetailBoard.kt` — шапка и категории папки; операции периода — `BudgetSource.observeEnvelope`), `edit/` (редактор лимита,
 `BudgetForm.kt`); вход — «Ещё».
 Теги при вводе (#293): `transactions/edit/EntryTags.kt` (список, недавние, создание, `mergeLabels` — сохранение в `labels`),
-`components/TagRow` (строка под категориями), `TagPickerSheet` (шторка «Теги»), `NewTagDialog`.
+`components/TagPickerSheet` (шторка «Теги», открывается плиткой «Теги»), `NewTagDialog`.
+Шторка ввода без прокрутки (#290, доска `Fb290A`): шаг 2 — `components/DetailsStep` из карточек `AmountBlock` (сумма, строка чека,
+валюта — `ReceiptCurrencySheet`), `CategoryBlock` (частые — `frequentCategories` в `CategoryOptions.kt`, «Все» — `AllCategoriesSheet`
+по полкам `categoryShelves`), `DetailsBlock` (плитки 2×2; шторки даты и заметки — `DetailSheets.kt`); образец — `EntrySheetSamples.kt`.
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
 Отчёты (#187, без экранов): `core:domain/reports/` — `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
 `spendingBreakdown` (папки, доли, «Другое»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.

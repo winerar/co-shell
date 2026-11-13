@@ -4,39 +4,71 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 /**
- * Colour palettes of the app (owner's choice 2026-11-09, design-questions §9). Picked in
- * «Настройки → Тема»; each has a light and a dark variant. [Volt] — the acid one — is the default.
- * Working names in the design docs: A+ «Кислота» = Volt, A «Лайм-ночь» = Mojito, B «Закат» = Mango,
- * C «Электрик» = Ultra; Lagoon and Sakura were added on the owner's pick 2026-11-09. Specs — `PaletteSpecs.kt`.
+ * Colour palettes of the app, named after fruits (#271, owner's choice 2026-11-12); picked in «Внешний вид → Тема»,
+ * each with a light and a dark variant. Seven juicy (neon; the former Вольт, Мохито, Манго, Ультра, Лагуна, Сакура
+ * renamed — Мохито became the violet [Passionfruit] — plus [Lemon]) and seven soft (pastel). [Lime] is the default.
+ * Specs — `PaletteSpecs.kt` (juicy), `PaletteSpecsSoft.kt` (soft).
  */
 enum class CoShellPalette {
-    /** Acid lime #B8FF2E, cyan income, violet accent, acid-yellow warmth. Default. */
-    Volt,
+    /** Acid lime #B8FF2E, cyan income, violet accent, acid-yellow warmth. Default (was «Вольт»). */
+    Lime,
 
-    /** Soft lime #91E668, violet accent, sky-blue income. */
-    Mojito,
+    /** Violet #A66BFF with the yellow of the pulp, sky-blue income (replaces «Мохито»). */
+    Passionfruit,
 
     /** Warm sunset: mango #FF8A3D, raspberry accent, gold. */
     Mango,
 
-    /** Cold neon: electric blue #3D7BFF, magenta accent, lime. */
-    Ultra,
+    /** Cold neon: electric blue #3D7BFF, magenta accent, lime (was «Ультра»). */
+    Bilberry,
 
-    /** Sea and sun: turquoise #2EE6C5, coral accent, sand. */
-    Lagoon,
+    /** Sea and sun: turquoise #2EE6C5, coral accent, sand (was «Лагуна»). */
+    Feijoa,
 
-    /** Soft and light: pink #FF7AB8, mint accent, lavender. */
-    Sakura,
+    /** Pink #FF7AB8, mint accent, lavender (was «Сакура»). */
+    Pitaya,
+
+    /** Sunny yellow #FFE14D, indigo accent, lime. */
+    Lemon,
+
+    /** Soft: peach #FFB38A, lavender, mint income. */
+    Peach,
+
+    /** Soft: lychee pink #F4A7C0, sage, sky income. */
+    Lychee,
+
+    /** Soft: melon #EDD27E, lilac, green income. */
+    Melon,
+
+    /** Soft: blueberry #A3BFFA, peach accent, mint income. */
+    Blueberry,
+
+    /** Soft: plum #C3A6F0, pear green, teal income. */
+    Plum,
+
+    /** Soft: pear #C8E39A, lilac, sky income. */
+    Pear,
+
+    /** Soft: gooseberry #9EE6CF, pink accent, blue income. */
+    Gooseberry,
     ;
 
     internal val spec: PaletteSpec
         get() = when (this) {
-            Volt -> VoltSpec
-            Mojito -> MojitoSpec
+            Lime -> LimeSpec
+            Passionfruit -> PassionfruitSpec
             Mango -> MangoSpec
-            Ultra -> UltraSpec
-            Lagoon -> LagoonSpec
-            Sakura -> SakuraSpec
+            Bilberry -> BilberrySpec
+            Feijoa -> FeijoaSpec
+            Pitaya -> PitayaSpec
+            Lemon -> LemonSpec
+            Peach -> PeachSpec
+            Lychee -> LycheeSpec
+            Melon -> MelonSpec
+            Blueberry -> BlueberrySpec
+            Plum -> PlumSpec
+            Pear -> PearSpec
+            Gooseberry -> GooseberrySpec
         }
 }
 

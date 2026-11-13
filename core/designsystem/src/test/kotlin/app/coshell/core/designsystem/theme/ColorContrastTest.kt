@@ -34,8 +34,8 @@ class ColorContrastTest {
     }
 
     @Test
-    fun voltIsTheAcidDefault() {
-        // Owner's choice 2026-11-09: palette A+ «Кислота» (#B8FF2E) is the default, a fill with dark ink.
+    fun limeIsTheAcidDefault() {
+        // Owner's choice 2026-11-09: palette A+ «Кислота» (#B8FF2E, now «Лайм», #271) is the default, a fill with dark ink.
         assertEquals(Color(0xFFB8FF2E), CoShellLightColors.primary)
         assertEquals(Color(0xFFB8FF2E), CoShellDarkColors.primaryContainer)
     }

@@ -20,11 +20,13 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.domain.settings.PaletteGroup
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.PaletteGrid
+import app.coshell.theme.components.titleRes
 import app.coshell.theme.components.ThemeModePicker
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.ScreenTopBar
@@ -32,7 +34,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Ещё → Внешний вид» (board Fb154Look, #155; the former «Настройки» without the items that moved to «Ещё»):
- * theme, palette, and the shake gesture — the preferences of this phone, not of the family.
+ * theme, the fruit palettes (juicy and soft rows, #271), and the shake gesture — the preferences of this phone, not of the family.
  */
 @Composable
 fun AppearanceRoute(
@@ -46,7 +48,7 @@ fun AppearanceRoute(
     // Theme and palette open as a circle from the tapped control (design-refactor Step 4).
     val reveal = LocalThemeReveal.current
     AppearanceScreen(
-        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.VOLT, shakeEnabled),
+        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeEnabled),
         actions = AppearanceActions(
             onBack = onBack,
             onThemeModeChange = { mode -> if (mode != themeMode) reveal.change { themeSettings.setMode(mode) } },
@@ -58,7 +60,7 @@ fun AppearanceRoute(
 
 data class AppearanceState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val palette: ThemePalette = ThemePalette.VOLT,
+    val palette: ThemePalette = ThemePalette.LIME,
     val shakeEnabled: Boolean = true,
 )
 
@@ -77,8 +79,10 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
             item { SectionTitle(stringResource(R.string.theme_title)) }
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
-            item { SectionTitle(stringResource(R.string.palette_title)) }
-            item { PaletteGrid(selected = state.palette, onSelect = actions.onPaletteChange) }
+            PaletteGroup.entries.forEach { group ->
+                item { SectionTitle(stringResource(group.titleRes)) }
+                item { PaletteGrid(group, selected = state.palette, onSelect = actions.onPaletteChange) }
+            }
             item { SectionTitle(stringResource(R.string.appearance_input_section)) }
             item {
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {

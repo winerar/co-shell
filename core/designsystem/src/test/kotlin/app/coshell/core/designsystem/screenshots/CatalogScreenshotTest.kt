@@ -102,9 +102,13 @@ class CatalogScreenshotTest {
 
     @Test
     fun `palettes light`() = shot("palettes_light") {
-        Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
-            CoShellPalette.entries.forEach { palette ->
-                CoShellPaletteSwatch(palette, palette.name, selected = palette == CoShellPalette.Volt, onClick = {})
+        Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+            CoShellPalette.entries.chunked(4).forEach { row ->
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+                    row.forEach { palette ->
+                        CoShellPaletteSwatch(palette, palette.name, selected = palette == CoShellPalette.Lime, onClick = {})
+                    }
+                }
             }
         }
     }

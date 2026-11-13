@@ -20,7 +20,7 @@ class ThemeSettingsViewModelTest {
             this.mode.value = mode
         }
 
-        override val palette = MutableStateFlow(ThemePalette.VOLT)
+        override val palette = MutableStateFlow(ThemePalette.LIME)
         override suspend fun setPalette(palette: ThemePalette) {
             this.palette.value = palette
         }
@@ -39,7 +39,7 @@ class ThemeSettingsViewModelTest {
     @Test
     fun `shows the saved palette and saves a change`() = runTest {
         val vm = ThemeSettingsViewModel(settings)
-        vm.palette.first { it == ThemePalette.VOLT }
+        vm.palette.first { it == ThemePalette.LIME }
 
         vm.setPalette(ThemePalette.MANGO)
         vm.palette.first { it == ThemePalette.MANGO }

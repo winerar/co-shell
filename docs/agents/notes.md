@@ -117,3 +117,4 @@
 - (11-13) «Без прокрутки» (#290): над шторкой ≈102 dp (статус-бар ~30 + отступ `CoShellSheet` 24 + ручка 48), клавиатура 248 dp — телефону владельца
   (393×873 dp) на карточки остаётся ≈400 dp. Проверять эталоном с `padding(top = 102.dp)` (`EntrySheetScreenshotTest`); `CoShellTextButton`/`IconButton` в подписи раздувают строку до 48 dp — там `CoShellSectionLink`.
 - Синхронизация и Firebase — `notes-sync.md`.
+- (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.

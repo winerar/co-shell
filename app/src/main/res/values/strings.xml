@@ -321,6 +321,11 @@
     <string name="update_version_yours">Ваша версия</string>
     <string name="update_version_build">сборка %1$d</string>
     <string name="update_version_installed_on">установлена\n%1$s</string>
+    <string name="transaction_refund_chip">↩ Возврат</string>
+    <string name="transaction_refund_label">Расход → возврат</string>
+    <string name="transaction_refund_hint">Возврат: деньги пришли на счёт, траты «%1$s» уменьшатся</string>
+    <string name="transaction_refund_hint_pick">Возврат: выберите категорию покупки — её траты уменьшатся</string>
+    <string name="transaction_refund_row">↩ возврат</string>
     <string name="update_this_version_title">Что в этой версии</string>
     <string name="update_past_title">Прошлые версии</string>
     <string name="update_past_row">Прошлые версии и что в них было</string>

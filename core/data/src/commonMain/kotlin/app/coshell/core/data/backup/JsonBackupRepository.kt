@@ -17,6 +17,7 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.ExchangeRate
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import kotlinx.serialization.SerializationException
@@ -51,6 +52,7 @@ class JsonBackupRepository(
             manualRates = database.rateDao().getAllManual().map { it.toModel().toManualDto() },
             templates = database.templateDao().getAll().map { it.toModel().toDto() },
             settings = database.settingDao().getAll().map { SettingDto(it.id, it.value) },
+            tags = database.tagDao().getAll().map { it.toModel().toDto() },
         )
         json.encodeToString(BackupFile.serializer(), file)
     }
@@ -81,6 +83,7 @@ class JsonBackupRepository(
                 file.budgets.map { it.toModel() },
                 file.manualRates.map { it.toModel() },
                 file.templates.map { it.toModel() },
+                file.tags.map { it.toModel() },
             )
         } catch (e: IllegalArgumentException) {
             return BackupImportResult.Corrupted(e.message ?: "invalid record")
@@ -97,10 +100,11 @@ class JsonBackupRepository(
             templates = local.templates + models.templates.map { it.toEntity(stamp) },
             // Values are parsed leniently on read (a broken one falls back to the default), so no checks here.
             settings = file.settings.map { SettingEntity(it.key, it.value, stamp.now, stamp.by) },
+            tags = models.tags.map { it.toEntity(stamp) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,
-            models.manualRates.size, models.templates.size,
+            models.manualRates.size, models.templates.size, models.tags.size,
         )
     }
 
@@ -167,5 +171,6 @@ class JsonBackupRepository(
         val budgets: List<Budget>,
         val manualRates: List<ExchangeRate>,
         val templates: List<TransactionTemplate>,
+        val tags: List<Tag>,
     )
 }

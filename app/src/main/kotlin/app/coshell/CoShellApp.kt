@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
+import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
 import app.coshell.crash.CrashLog
 import app.coshell.crash.CrashRecorder
 import app.coshell.currencies.data.LegacyReportCurrencies
@@ -25,6 +26,7 @@ class CoShellApp : Application(), Configuration.Provider {
 
     @Inject lateinit var seedDefaultCategories: SeedDefaultCategoriesUseCase
     @Inject lateinit var family: FamilyService
+    @Inject lateinit var ensureLabelTags: EnsureLabelTagsUseCase
     @Inject lateinit var legacyReportCurrencies: LegacyReportCurrencies
     @Inject lateinit var workerFactory: HiltWorkerFactory
     @Inject lateinit var crashLog: CrashLog
@@ -48,6 +50,8 @@ class CoShellApp : Application(), Configuration.Provider {
             // joining (before the first sync) would send duplicate default categories to everyone.
             family.load()
             if (family.joined == null) seedDefaultCategories()
+            // Wallet labels become tags (#129); new ones after an import are picked up on the next start.
+            ensureLabelTags()
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
         }

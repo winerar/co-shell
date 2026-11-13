@@ -10,6 +10,7 @@ import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
@@ -37,6 +38,8 @@ internal data class BackupFile(
     val templates: List<TemplateDto> = emptyList(),
     /** Since schema v9: family settings (#122), key → text value as in the `settings` table. */
     val settings: List<SettingDto> = emptyList(),
+    /** Since schema v11: operation tags (#129); operations reference them from `labels`. */
+    val tags: List<TagDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -193,3 +196,11 @@ internal fun TransactionTemplate.toDto() = TemplateDto(
 /** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */
 @Serializable
 internal data class SettingDto(val key: String, val value: String)
+
+/** Operation tag (#129): [color] — ARGB, `null` — picked on screen. */
+@Serializable
+internal data class TagDto(val id: String, val name: String, val color: Long? = null) {
+    fun toModel() = Tag(id, name, color)
+}
+
+internal fun Tag.toDto() = TagDto(id, name, color)

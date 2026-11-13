@@ -142,4 +142,36 @@ class MonthSpendingTest {
         assertEquals(money(0, usd), book.incomeTotals(items, listOf(usd), tz).single().sum)
         assertEquals(money(5, usd), book.dailyExpenses(items, usd, day(9), tz)[1])
     }
+
+    private fun income(id: String, amount: Money, d: Int, category: String?) =
+        Transaction(id, TransactionType.INCOME, "acc", amount, at(d), categoryId = category)
+
+    @Test
+    fun `a refund into an expense category is taken off spending and is not income`() {
+        val items = listOf(
+            expense("1", money(10_000, ars), 2),
+            income("2", money(4_000, ars), 3, category = "cafe"),
+            income("3", money(50_000, ars), 3, category = "salary"),
+        )
+        val cats = setOf("cafe")
+
+        assertEquals(money(6_000, ars), book.expenseTotals(items, listOf(ars), tz, cats).single().sum)
+        assertEquals(money(50_000, ars), book.incomeTotals(items, listOf(ars), tz, cats).single().sum)
+        // Without the expense categories known it is a plain income, as before.
+        assertEquals(money(10_000, ars), book.expenseTotals(items, listOf(ars), tz).single().sum)
+    }
+
+    @Test
+    fun `daily bars take refunds off their day but never below zero`() {
+        val items = listOf(
+            expense("1", money(10_000, ars), 2),
+            income("2", money(4_000, ars), 2, category = "cafe"),
+            income("3", money(9_000, ars), 4, category = "cafe"),
+        )
+
+        val days = book.dailyExpenses(items, ars, day(1), tz, setOf("cafe"))
+
+        assertEquals(money(6_000, ars), days[1])
+        assertEquals(Money.zero(ars), days[3])
+    }
 }

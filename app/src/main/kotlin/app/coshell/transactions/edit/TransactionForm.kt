@@ -78,7 +78,7 @@ internal fun validateForm(form: TransactionEditUiState, accountsById: Map<String
     }
     return FormResult.Valid(
         ValidForm(
-            type = form.type,
+            type = if (form.refund && form.type == TransactionType.EXPENSE) TransactionType.INCOME else form.type,
             account = account,
             amount = money,
             toAccount = toAccount.takeIf { form.isTransfer },

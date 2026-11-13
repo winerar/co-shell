@@ -57,6 +57,7 @@ fun TransactionEditRoute(
             onDatePicked = viewModel::onDatePicked,
             onNoteChange = viewModel::onNoteChange,
             onReceiptToggle = viewModel::onReceiptToggle,
+            onRefundToggle = viewModel::onRefundToggle,
             onReceiptCurrencyChange = viewModel::onReceiptCurrencyChange,
             onReceiptAmountChange = viewModel::onReceiptAmountChange,
             onSave = {
@@ -93,6 +94,8 @@ data class TransactionEditActions(
     val onDatePicked: (Long) -> Unit = {},
     val onNoteChange: (String) -> Unit = {},
     val onReceiptToggle: (Boolean) -> Unit = {},
+    /** «↩ Возврат» on an expense (#208). */
+    val onRefundToggle: (Boolean) -> Unit = {},
     val onReceiptCurrencyChange: (String) -> Unit = {},
     val onReceiptAmountChange: (String) -> Unit = {},
     val onSave: () -> Unit = {},

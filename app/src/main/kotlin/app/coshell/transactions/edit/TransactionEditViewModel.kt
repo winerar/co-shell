@@ -14,6 +14,7 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
@@ -151,7 +152,14 @@ class TransactionEditViewModel @Inject constructor(
         )
     }
 
-    private fun formOf(transaction: Transaction, base: TransactionEditUiState) = base.copy(
+    private fun formOf(transaction: Transaction, base: TransactionEditUiState): TransactionEditUiState {
+        // An income in an expense category is a refund (#208): edited as an expense with «↩ Возврат» on.
+        val refund = transaction.type == TransactionType.INCOME &&
+            allCategories.any { it.id == transaction.categoryId && it.type == CategoryType.EXPENSE }
+        return formFields(transaction, base).copy(type = if (refund) TransactionType.EXPENSE else transaction.type, refund = refund)
+    }
+
+    private fun formFields(transaction: Transaction, base: TransactionEditUiState) = base.copy(
         isNew = false,
         step = TransactionEditUiState.EntryStep.DETAILS,
         type = transaction.type,
@@ -204,8 +212,11 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, categoryError = false, toAccountError = null).withCategoryOptions(allCategories, recentCategoryIds)
+        it.copy(type = type, refund = false, categoryError = false, toAccountError = null).withCategoryOptions(allCategories, recentCategoryIds)
     }
+
+    /** «↩ Возврат» chip of an expense (#208): the same category, the sign flips. */
+    fun onRefundToggle(enabled: Boolean) = _state.update { it.copy(refund = enabled && it.type == TransactionType.EXPENSE) }
 
     fun onAmountChange(value: String) = _state.update {
         it.copy(amount = value, amountError = null, amountSuggested = false, suggestedRateDate = null)

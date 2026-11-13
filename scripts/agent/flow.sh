@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # Flows: routines that always run one after another, as one command with short output (agent.sh calls these).
 # Each step prints one block; the flow stops at the first failure and says which step failed.
-#   flow.sh ship -m "Add X" [-m "trailer…"] [--quick|--affected|--no-check]
+#   flow.sh ship -m "Add X" [-m "trailer…"] [--quick|--affected|--no-check] [--recheck]
 #       check (full by default) → git add -A → commit → push with retries
 #   flow.sh update
 #       merge origin/dev (sync-dev.sh) → tests of touched modules (affected.sh) → push
-#   flow.sh finish [-m "Docs: STATUS after X"] [--no-check]
-#       full check → STATUS date and test count (stamp-status.sh) → commit → push → session-end.sh
+#   flow.sh finish [-m "Docs: STATUS after X"] [--no-check] [--recheck]
+#       doc rules (session-end.sh --pre) → STATUS date and test count (stamp-status.sh) → full check
+#       → commit → push → session-end.sh
+# check/quick are skipped when the same files (or the same plus docs only) already passed (check-cache.sh);
+# --recheck forces the run.
 # Commit messages: English imperative (workflow.md «Git»); pass attribution trailers as extra -m.
 set -uo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -16,7 +19,7 @@ step() { echo "── $*"; }
 die() { echo "✗ flow stopped at: $*"; exit 1; }
 
 # Parse -m messages and the check mode shared by ship/finish.
-msgs=(); mode=full
+msgs=(); mode=full; recheck=0
 parse() {
     while [ $# -gt 0 ]; do
         case "$1" in
@@ -24,12 +27,18 @@ parse() {
             --quick) mode=quick; shift ;;
             --affected) mode=affected; shift ;;
             --no-check) mode=none; shift ;;
+            --recheck) recheck=1; shift ;;
             *) die "unknown argument $1" ;;
         esac
     done
 }
 
 run_check() {
+    local why
+    if [ "$recheck" -eq 0 ] && { [ "$mode" = full ] || [ "$mode" = quick ]; } &&
+        why=$("$here/check-cache.sh" fresh "$mode"); then
+        step "check skipped: $why (--recheck to run)"; return
+    fi
     case "$mode" in
         full) step "check (lint + tests + APK)"; "$here/check.sh" || die "check" ;;
         quick) step "check --quick (unit tests)"; "$here/check.sh" --quick || die "check --quick" ;;
@@ -60,8 +69,10 @@ case "$cmd" in
     finish)
         parse "$@"
         [ ${#msgs[@]} -gt 0 ] || msgs=(-m "Docs: STATUS for $(date +%F)")
-        run_check
         step "STATUS facts"; "$here/stamp-status.sh"
+        step "doc rules"; "$here/session-end.sh" --pre || die "doc rules (fix ✗, then: agent.sh finish)"
+        run_check
+        "$here/stamp-status.sh" >/dev/null # the check may have changed the test count
         commit_all
         step "push"; "$here/push.sh" || die "push"
         step "session-end checklist"; "$here/session-end.sh" || die "session-end (fix ✗, then: agent.sh finish)" ;;

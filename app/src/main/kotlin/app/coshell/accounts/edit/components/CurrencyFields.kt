@@ -4,6 +4,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CodeKeyboard
 import app.coshell.core.designsystem.components.CoShellTextField
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material3.Text
@@ -13,13 +14,12 @@ import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellSection
 
-/** Currency: suggestion chips plus a code field; both disabled once the account has transactions. */
+/** Currency sheet body: suggestion chips plus a code field; both disabled once the account has transactions. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun CurrencySection(state: AccountEditUiState, onCurrencyChange: (String) -> Unit) {
-    CoShellSection(stringResource(R.string.account_currency)) {
+internal fun CurrencyFields(state: AccountEditUiState, onCurrencyChange: (String) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         if (!state.currencyLocked) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                 state.suggestedCurrencies.forEach { code ->

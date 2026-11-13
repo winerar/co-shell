@@ -10,20 +10,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.window.Dialog
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellSheet
-import app.coshell.core.designsystem.components.CoShellSheetDialogProperties
-import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.ui.form.DateChips
+import app.coshell.ui.sheet.FormSheet
 
 /** «Дата» tile → «Сегодня · Вчера · Другая дата»; a quick chip picks and closes, the calendar too. */
 @Composable
 internal fun DateSheet(state: TransactionEditUiState, actions: TransactionEditActions, onClosed: () -> Unit) {
-    SmallSheet(stringResource(R.string.transaction_date), onClosed) { close ->
+    FormSheet(stringResource(R.string.transaction_date), onClosed) { close ->
         DateChips(
             state.date,
             state.today,
@@ -44,7 +41,7 @@ internal fun DateSheet(state: TransactionEditUiState, actions: TransactionEditAc
 @Composable
 internal fun NoteSheet(note: String, onChange: (String) -> Unit, onClosed: () -> Unit) {
     val focus = remember { FocusRequester() }
-    SmallSheet(stringResource(R.string.transaction_note), onClosed) {
+    FormSheet(stringResource(R.string.transaction_note), onClosed) {
         CoShellTextField(
             value = note,
             onValueChange = onChange,
@@ -55,13 +52,4 @@ internal fun NoteSheet(note: String, onChange: (String) -> Unit, onClosed: () ->
         )
     }
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
-}
-
-@Composable
-private fun SmallSheet(title: String, onClosed: () -> Unit, content: @Composable (close: () -> Unit) -> Unit) {
-    Dialog(onDismissRequest = onClosed, properties = CoShellSheetDialogProperties) {
-        CoShellSheet(onClosed = onClosed) { close ->
-            CoShellSheetLayout(title = title, actionLabel = stringResource(R.string.keypad_done), onAction = close) { content(close) }
-        }
-    }
 }

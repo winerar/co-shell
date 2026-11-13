@@ -2,6 +2,7 @@ package app.coshell.transactions.edit
 
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.testing.FakeTemplateUsage
+import app.coshell.testing.fakeEntryTags
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.model.TransactionTemplate
@@ -88,6 +89,7 @@ class TransactionEditViewModelTest {
         rates = FakeExchangeRateRepository(),
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories, templates, usage),
+        entryTags = fakeEntryTags(),
     )
 
     @Test

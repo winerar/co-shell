@@ -66,6 +66,10 @@ data class TransactionEditUiState(
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */
     val templateSaveFailed: Boolean = false,
+    /** Chosen tags (#293): ids, in the order they were picked; saved into `Transaction.labels`. */
+    val tagIds: List<String> = emptyList(),
+    /** Every live tag and the recent ones — the pill row and the «Теги» sheet. */
+    val tags: TagChoices = TagChoices(),
 ) {
     data class AccountOption(
         val id: String,
@@ -111,6 +115,9 @@ data class TransactionEditUiState(
 
     /** Chips without the account's own currency (a receipt in it makes no sense). */
     val receiptCurrencyChoices: List<String> get() = receiptCurrencies.filter { it != account?.currency }
+
+    /** Pills under the categories: chosen ones picked in the sheet, then the recent tags ([buildTagRow]). */
+    val tagRow: List<TagOption> get() = buildTagRow(tags, tagIds)
 
     val isToday: Boolean get() = date == today
     val isYesterday: Boolean get() = date == today.minus(1, DateTimeUnit.DAY)

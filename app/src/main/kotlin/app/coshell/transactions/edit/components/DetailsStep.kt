@@ -95,6 +95,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
                     }
                 }
             }
+            TagRow(state, actions)
             CoShellExpandable(noteOpen || state.note.isNotEmpty()) {
                 CoShellTextField(
                     value = state.note,

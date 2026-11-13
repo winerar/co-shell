@@ -6,6 +6,7 @@ import app.coshell.core.domain.search.PeriodRange.Preset
 import app.coshell.transactions.list.FilterChoices.AccountChoice
 import app.coshell.transactions.list.FilterChoices.CategoryChoice
 import app.coshell.transactions.list.FilterChoices.MemberChoice
+import app.coshell.transactions.list.FilterChoices.TagChoice
 import java.util.Locale
 import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertEquals
@@ -66,5 +67,14 @@ class FilterLabelsTest {
         assertEquals(listOf("3 000", "5 000"), FilterLabels.amountBounds(AmountQuery.parse("3000-5000")!!))
         assertEquals(listOf("41,20"), FilterLabels.amountBounds(AmountQuery.parse("=41,2")!!))
         assertEquals(listOf("1 000 000"), FilterLabels.amountBounds(AmountQuery.parse(">1000000")!!))
+    }
+
+    @Test
+    fun tagChipShowsTheFirstNameAndTheCount() {
+        val tags = choices.copy(tags = listOf(TagChoice("аня", "Аня", 0, 3), TagChoice("кот", "кот", 0, 1), TagChoice("миша", "Миша", 0, 2)))
+        assertNull(FilterLabels.tags(ListFilter(), tags))
+        assertEquals("# кот", FilterLabels.tags(ListFilter(tagIds = setOf("кот")), tags))
+        assertEquals("# Аня · 2", FilterLabels.tags(ListFilter(tagIds = setOf("миша", "аня")), tags))
+        assertNull(FilterLabels.tags(ListFilter(tagIds = setOf("deleted")), tags))
     }
 }

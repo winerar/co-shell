@@ -1,8 +1,11 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
+import app.coshell.core.model.Tag
 import app.coshell.core.model.buildCategoryTree
 
 /** What the filter sheets of «Операции» list (#141, boards `Fb141ACats`, `Fb141AAcc`). */
@@ -13,6 +16,8 @@ data class FilterChoices(
     val incomeCategories: List<CategoryChoice> = emptyList(),
     /** Other family members for «Кто внёс»; empty — the row is hidden. */
     val members: List<MemberChoice> = emptyList(),
+    /** Tags on live operations, by name (#294); unused ones only while chosen. Empty — the «# Тег» chip is hidden. */
+    val tags: List<TagChoice> = emptyList(),
 ) {
     data class AccountChoice(val id: String, val name: String, val currency: String, val color: Long?)
 
@@ -29,6 +34,9 @@ data class FilterChoices(
     }
 
     data class MemberChoice(val id: String, val name: String)
+
+    /** [count] — live operations with the tag; [color] — a stored palette value. */
+    data class TagChoice(val id: String, val name: String, val color: Long, val count: Int)
 
     /**
      * [chosen] after a tap on [choice]: a folder switches itself with all its categories; a category switches
@@ -66,6 +74,8 @@ internal fun buildFilterChoices(
     categories: List<Category>,
     authors: Map<String, String>,
     filter: ListFilter,
+    tags: List<Tag> = emptyList(),
+    tagUsage: Map<String, TagUsage> = emptyMap(),
 ): FilterChoices {
     fun tree(type: CategoryType) = buildCategoryTree(
         categories.filter { it.type == type && (!it.archived || it.id in filter.categoryIds) },
@@ -85,5 +95,9 @@ internal fun buildFilterChoices(
         expenseCategories = tree(CategoryType.EXPENSE),
         incomeCategories = tree(CategoryType.INCOME),
         members = authors.map { (id, name) -> FilterChoices.MemberChoice(id, name) }.sortedBy { it.name },
+        tags = tags
+            .filter { (tagUsage[it.id]?.count ?: 0) > 0 || it.id in filter.tagIds }
+            .sortedBy { it.name.lowercase() }
+            .map { FilterChoices.TagChoice(it.id, it.name, it.color ?: CategoryPalette.forKey(it.id), tagUsage[it.id]?.count ?: 0) },
     )
 }

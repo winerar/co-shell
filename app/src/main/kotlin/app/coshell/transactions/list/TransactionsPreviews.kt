@@ -17,7 +17,11 @@ internal val transactionsPreviewSample =
                 LocalDate(2026, 11, 8),
                 RelativeDay.TODAY,
                 listOf(
-                    Row("1", Kind.EXPENSE, "Кафе", "Карта", "кофе", "-4 500,00 ARS"),
+                    Row(
+                        "1", Kind.EXPENSE, "Кафе", "Карта", "кофе", "-4 500,00 ARS",
+                        tags = listOf(TransactionsUiState.RowTag("Испанский", 0xFFFF8A65), TransactionsUiState.RowTag("Аня", 0xFFFFB3D1)),
+                        moreTags = 1,
+                    ),
                     Row("4", Kind.INCOME, "Кафе", "Карта", "", "+1 200,00 ARS", refund = true),
                     Row("2", Kind.TRANSFER, null, "Наличные → Карта", "", "100,00 USD", "+120 000,00 ARS"),
                 ),
@@ -59,6 +63,16 @@ internal val transactionsFilterChoices = FilterChoices(
     ),
     incomeCategories = listOf(FilterChoices.CategoryChoice("salary", "Зарплата", "work", null)),
     members = listOf(FilterChoices.MemberChoice("anya", "Аня")),
+    tags = listOf(
+        FilterChoices.TagChoice("аня", "Аня", 0xFFFFB3D1, 61),
+        FilterChoices.TagChoice("барилоче", "Барилоче", 0xFF9BF5D6, 12),
+        FilterChoices.TagChoice("доставка", "доставка", 0xFF9FD8FF, 27),
+        FilterChoices.TagChoice("испанский", "Испанский", 0xFFFF8A65, 24),
+        FilterChoices.TagChoice("кот", "кот", 0xFFFFC46B, 14),
+        FilterChoices.TagChoice("миша", "Миша", 0xFF7A7AFF, 48),
+        FilterChoices.TagChoice("на двоих", "на двоих", 0xFFDFFF00, 33),
+        FilterChoices.TagChoice("отпуск", "отпуск", 0xFF3DDC97, 19),
+    ),
 )
 
 internal val transactionsFilteredSample = transactionsPreviewSample.copy(

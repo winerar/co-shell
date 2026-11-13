@@ -2,8 +2,10 @@ package app.coshell.transactions.list
 
 import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.DeleteTransactionWithUndo
@@ -12,6 +14,7 @@ import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
+import app.coshell.testing.FakeTagRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
@@ -27,6 +30,7 @@ import org.junit.Test
 
 class TransactionsViewModelTest {
     @get:Rule val main = MainDispatcherRule()
+    private val tags = FakeTagRepository()
 
     @Test
     fun `list follows the repository`() = runTest {
@@ -37,7 +41,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         assertEquals(emptyList<TransactionsUiState.Day>(), vm.state.first { !it.isLoading }.days)
@@ -63,7 +67,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         val first = vm.state.first { !it.isLoading }
@@ -85,7 +89,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -114,7 +118,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -142,7 +146,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(),
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -155,5 +159,29 @@ class TransactionsViewModelTest {
         assertEquals(false, vm.selection.value.active)
         val left = vm.state.first { it.days.sumOf { d -> d.rows.size } == 1 }
         assertEquals(listOf("c"), left.days.single().rows.map { it.id })
+    }
+
+    @Test
+    fun `rows show live tags and the tag filter keeps operations with them`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        tags.saveTag(Tag("аня", "Аня", color = 0xFFFF7AB8))
+        tags.usage.value = mapOf("аня" to TagUsage("Аня", 1, now))
+        val transactions = FakeTransactionRepository()
+        transactions.saveTransaction(Transaction("t1", TransactionType.EXPENSE, "card", Money(100, ars), now, labels = listOf("Аня", "gone")))
+        transactions.saveTransaction(Transaction("t2", TransactionType.EXPENSE, "card", Money(200, ars), now))
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+        )
+        vm.state.launchIn(backgroundScope)
+        val row = vm.state.first { !it.isLoading }.days.single().rows.first { it.id == "t1" }
+        assertEquals(listOf(TransactionsUiState.RowTag("Аня", 0xFFFF7AB8)), row.tags)
+        assertEquals(listOf("аня"), vm.state.value.choices.tags.map { it.id })
+
+        vm.onFilter { it.copy(tagIds = setOf("аня")) }
+        assertEquals(listOf("t1"), vm.state.first { it.filter.tagIds.isNotEmpty() }.days.flatMap { d -> d.rows.map { it.id } })
+        assertEquals(1, vm.state.value.total?.count)
     }
 }

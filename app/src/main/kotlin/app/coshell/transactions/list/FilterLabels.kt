@@ -40,6 +40,14 @@ internal object FilterLabels {
         return if (filter.accountIds.size == 1) first else "$first · ${filter.accountIds.size}"
     }
 
+    /** One tag — «# Испанский»; more — the first by name and the count («# Аня · 3»). Chosen tags since deleted are skipped. */
+    fun tags(filter: ListFilter, choices: FilterChoices): String? {
+        if (filter.tagIds.isEmpty()) return null
+        val chosen = choices.tags.filter { it.id in filter.tagIds }
+        val first = chosen.firstOrNull()?.name ?: return null
+        return if (chosen.size == 1) "# $first" else "# $first · ${chosen.size}"
+    }
+
     fun who(filter: ListFilter, choices: FilterChoices, me: String): String? = when (val w = filter.who) {
         null -> null
         ListFilter.Who.Me -> me

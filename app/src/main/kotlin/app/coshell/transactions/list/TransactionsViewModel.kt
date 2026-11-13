@@ -10,9 +10,12 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.search.filterTotal
 import app.coshell.core.domain.settings.ReportCurrencySettings
+import app.coshell.core.domain.tags.TagRepository
+import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.ui.offMain
@@ -51,8 +54,8 @@ class TransactionsViewModel @Inject constructor(
     private val deleteWithUndo: DeleteTransactionWithUndo,
     rates: ExchangeRateRepository,
     reportCurrencies: ReportCurrencySettings,
+    tags: TagRepository,
 ) : ViewModel() {
-
 
     private val _selection = MutableStateFlow(Selection())
 
@@ -101,8 +104,16 @@ class TransactionsViewModel @Inject constructor(
         val categoryList: List<Category>,
         val categoriesById: Map<String, Category>,
         val authors: Map<String, String>,
+        val tags: Tags,
         val search: SearchIndex,
     )
+
+    /** Live tags, by id, and how operations use them — for pills, the «# Тег» sheet and search. */
+    private class Tags(val list: List<Tag>, val usage: Map<String, TagUsage>) {
+        val byId: Map<String, Tag> = list.associateBy { it.id }
+    }
+
+    private val tagInfo = combine(tags.observeTags(), tags.observeUsage(), ::Tags)
 
     private val authors = otherMembers.names()
 
@@ -120,10 +131,14 @@ class TransactionsViewModel @Inject constructor(
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
         authors,
-    ) { page, accountList, categoryList, names ->
+        tagInfo,
+    ) { page, accountList, categoryList, names, tagState ->
         val accountsById = accountList.associateBy { it.id }
         val categoriesById = categoryList.associateBy { it.id }
-        Source(page, accountList, accountsById, categoryList, categoriesById, names, SearchIndex(accountsById, categoriesById, moneyFormat))
+        Source(
+            page, accountList, accountsById, categoryList, categoriesById, names, tagState,
+            SearchIndex(accountsById, categoriesById, moneyFormat, tagState.byId),
+        )
     }
 
     /** Rates and the main report currency, for the total (4А); the book is rebuilt only when rates change. */
@@ -139,7 +154,7 @@ class TransactionsViewModel @Inject constructor(
         TransactionsUiState(
             hasMore = if (f.needsAll) matching.size > limit else src.page.hasMore,
             filter = f,
-            choices = buildFilterChoices(src.accountList, src.categoryList, src.authors, f),
+            choices = buildFilterChoices(src.accountList, src.categoryList, src.authors, f, src.tags.list, src.tags.usage),
             total = if (f.isActive) book.filterTotal(matching, main, timeZone).toUi(moneyFormat) else null,
             today = today,
             days = buildTransactionDays(
@@ -150,6 +165,7 @@ class TransactionsViewModel @Inject constructor(
                 timeZone = timeZone,
                 today = today,
                 authors = src.authors,
+                tagsById = src.tags.byId,
             ),
         )
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))

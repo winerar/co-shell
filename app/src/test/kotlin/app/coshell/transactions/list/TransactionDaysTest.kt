@@ -1,11 +1,13 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.list.TransactionsUiState.Kind
@@ -154,5 +156,23 @@ class TransactionDaysTest {
             Transaction("t", TransactionType.TRANSFER, "card", Money(1_00, ars), at(8, 11), toAccountId = "cash", toAmount = Money(1, usd)),
         ).single()
         assertNull(transfers.total)
+    }
+
+    @Test
+    fun `shows two live tags and counts the rest, skipping deleted ones`() {
+        val tags = listOf(Tag("аня", "Аня", 0xFFFF7AB8), Tag("кот", "кот"), Tag("отпуск", "отпуск", 0xFF2EE6C5), Tag("миша", "Миша", 0xFF3D9BFF))
+            .associateBy { it.id }
+        val items = listOf(
+            Transaction("many", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 9), labels = listOf("Аня", "deleted", "кот", "отпуск", "Миша")),
+            Transaction("gone", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 10), labels = listOf("deleted")),
+        )
+        val rows = buildTransactionDays(items, accounts, categories, MoneyFormat.RU, zone, today, tagsById = tags).single().rows.associateBy { it.id }
+        val many = rows.getValue("many")
+        assertEquals(listOf("Аня", "кот"), many.tags.map { it.name })
+        assertEquals(0xFFFF7AB8, many.tags[0].color)
+        assertEquals(CategoryPalette.forKey("кот"), many.tags[1].color)
+        assertEquals(2, many.moreTags)
+        assertEquals(emptyList<TransactionsUiState.RowTag>(), rows.getValue("gone").tags)
+        assertEquals(0, rows.getValue("gone").moreTags)
     }
 }

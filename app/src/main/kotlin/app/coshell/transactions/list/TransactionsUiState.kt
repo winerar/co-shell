@@ -61,7 +61,16 @@ data class TransactionsUiState(
         val author: String? = null,
         /** An income in an expense category (#208): «↩ возврат» before the account, the amount in the income colour. */
         val refund: Boolean = false,
+        /** Up to [MAX_ROW_TAGS] live tags under the account line (#129, board `Fb129AOps`); [moreTags] — how many others. */
+        val tags: List<RowTag> = emptyList(),
+        val moreTags: Int = 0,
     )
+
+    /** A tag pill: [color] — a stored palette value (chosen, or picked from the tag id). */
+    data class RowTag(val name: String, val color: Long)
 
     enum class Kind { EXPENSE, INCOME, TRANSFER }
 }
+
+/** Pills shown on one row; the rest is «+N». */
+internal const val MAX_ROW_TAGS = 2

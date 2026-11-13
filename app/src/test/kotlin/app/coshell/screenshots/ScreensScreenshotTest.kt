@@ -54,6 +54,7 @@ import app.coshell.transactions.list.ListFilter
 import app.coshell.transactions.list.components.AccountsChoices
 import app.coshell.transactions.list.components.CategoriesChoices
 import app.coshell.transactions.list.components.PeriodChoices
+import app.coshell.transactions.list.components.TagsChoices
 import app.coshell.transactions.list.transactionsFilterChoices
 import app.coshell.transactions.list.transactionsFilteredSample
 import app.coshell.transactions.list.TransactionsScreen
@@ -140,6 +141,11 @@ class ScreensScreenshotTest {
     @Test
     fun `filter accounts sheet dark`() = shot("filter_accounts_dark", dark = true) {
         Column { AccountsChoices(ListFilter(accountIds = setOf("galicia", "usdt"), who = ListFilter.Who.Member("anya")), transactionsFilterChoices) {} }
+    }
+
+    @Test
+    fun `filter tags sheet light`() = shot("filter_tags_light") {
+        Column { TagsChoices(ListFilter(tagIds = setOf("аня", "испанский")), transactionsFilterChoices) {} }
     }
 
     @Test

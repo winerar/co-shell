@@ -100,7 +100,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Вольт · системная")) }
+    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · системная")) }
 }
 
 @Preview(showBackground = true)

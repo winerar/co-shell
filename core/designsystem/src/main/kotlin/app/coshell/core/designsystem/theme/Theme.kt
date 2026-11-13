@@ -25,9 +25,9 @@ data class AmountPalette(val income: Color, val expense: Color, val transfer: Co
 @Immutable
 data class StatusPalette(val warning: Color, val success: Color)
 
-val LocalAmountPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Volt, dark = false).amounts }
+val LocalAmountPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Lime, dark = false).amounts }
 
-val LocalStatusPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Volt, dark = false).status }
+val LocalStatusPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Lime, dark = false).status }
 
 /**
  * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(accent = true)`), filled
@@ -47,20 +47,20 @@ data class HeroPalette(
     val warning: Color,
 )
 
-val LocalHeroPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Volt, dark = false).hero }
+val LocalHeroPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Lime, dark = false).hero }
 
 /** Whether [CoShellTheme] is dark — e.g. to pick a category color's variant. */
 val LocalDarkTheme = staticCompositionLocalOf { false }
 
 /**
- * App theme: one of the own neon [CoShellPalette]s (default — acid [CoShellPalette.Volt]), light and dark.
+ * App theme: one of the own neon [CoShellPalette]s (default — acid [CoShellPalette.Lime]), light and dark.
  * Wallpaper colors (Material You) are not used — the app looks the same on both family phones. [darkTheme] comes from the theme setting
  * (system / light / dark).
  */
 @Composable
 fun CoShellTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    palette: CoShellPalette = CoShellPalette.Volt,
+    palette: CoShellPalette = CoShellPalette.Lime,
     content: @Composable () -> Unit,
 ) {
     val colors = remember(palette, darkTheme) { themeColorsFor(palette, darkTheme) }

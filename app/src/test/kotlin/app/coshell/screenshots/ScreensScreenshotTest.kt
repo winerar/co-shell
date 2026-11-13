@@ -6,6 +6,8 @@ import app.coshell.more.MoreState
 import app.coshell.appearance.AppearanceActions
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
+import app.coshell.core.domain.settings.ThemePalette
+import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.backup.BackupActions
 import app.coshell.backup.BackupScreen
@@ -188,6 +190,11 @@ class ScreensScreenshotTest {
     fun `appearance dark`() = shot("appearance_dark", dark = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK), AppearanceActions()) }
 
     @Test
+    fun `appearance peach light`() = shot("appearance_peach_light", palette = CoShellPalette.Peach) {
+        AppearanceScreen(AppearanceState(ThemeMode.LIGHT, ThemePalette.PEACH), AppearanceActions())
+    }
+
+    @Test
     fun `backup dark`() = shot("backup_dark", dark = true) { BackupScreen(BackupUiState(), BackupActions()) }
 
     @Test
@@ -220,17 +227,17 @@ class ScreensScreenshotTest {
     }
 
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
-    private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
+    private fun shot(name: String, dark: Boolean = false, palette: CoShellPalette = CoShellPalette.Lime, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
         // Surface: editors have no Scaffold, in the app the window gives them the background.
-        compose.setContent { CoShellTheme(darkTheme = dark) { Surface { content() } } }
+        compose.setContent { CoShellTheme(darkTheme = dark, palette = palette) { Surface { content() } } }
         compose.mainClock.advanceTimeBy(SETTLE_MS)
         compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
     }
 
     private companion object {
         const val SETTLE_MS = 3_000L
-        val moreSample = MoreState("0.37", 400, mainCurrency = "USD", appearance = "Вольт · тёмная")
+        val moreSample = MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · тёмная")
         private val me = Member("u1", "Михаил", "m@example.com")
         val familySample = FamilyUiState(
             family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),

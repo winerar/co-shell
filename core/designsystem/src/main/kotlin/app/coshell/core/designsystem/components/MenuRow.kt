@@ -64,7 +64,7 @@ private const val ICON_WASH = 0.16f
 private fun MenuRowPreview() {
     CoShellTheme {
         CoShellRowGroup {
-            row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Папки, иконки и цвета") }
+            row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
             row { CoShellMenuRow(R.drawable.ic_group, categoryColor(CategoryPalette.colors[3]), "Семья", {}, subtitle = "Общий бюджет на двух телефонах") }
         }
     }

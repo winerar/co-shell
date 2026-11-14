@@ -54,10 +54,10 @@
     <string name="filter_tags_nothing">Нет такого тега</string>
 
     <!-- Поиск по сумме: как приложение поняло запрос -->
-    <string name="amount_hint_exact">Сумма ровно %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_range">Сумма от %1$s до %2$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_more">Сумма больше %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_at_least">Сумма от %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_less">Сумма меньше %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_at_most">Сумма до %1$s — в любой валюте, по счёту и по чеку</string>
+    <string name="amount_hint_exact">Сумма ровно %1$s — в любой валюте, по счёту и по сумме покупки</string>
+    <string name="amount_hint_range">Сумма от %1$s до %2$s — в любой валюте, по счёту и по сумме покупки</string>
+    <string name="amount_hint_more">Сумма больше %1$s — в любой валюте, по счёту и по сумме покупки</string>
+    <string name="amount_hint_at_least">Сумма от %1$s — в любой валюте, по счёту и по сумме покупки</string>
+    <string name="amount_hint_less">Сумма меньше %1$s — в любой валюте, по счёту и по сумме покупки</string>
+    <string name="amount_hint_at_most">Сумма до %1$s — в любой валюте, по счёту и по сумме покупки</string>
 </resources>

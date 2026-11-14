@@ -57,7 +57,7 @@ fun ComponentsCatalog() {
             CoShellTextField(value = "Карта", onValueChange = {}, label = "Название")
             CoShellTextField(value = "US", onValueChange = {}, label = "Код валюты", error = "Три латинские буквы")
             CoShellAmountField(value = "1 049,69", onValueChange = {}, label = "Сумма", currency = "USD", hint = "Списано со счёта")
-            CoShellSection("Тип", error = null) { CoShellHint("Тип папки — тип её подкатегорий") }
+            CoShellSection("Тип", error = null) { CoShellHint("Тип подкатегорий — как у родительской") }
             CoShellMessage("Копия сохранена", isError = false)
             CoShellMessage("Нет сети", isError = true)
             CoShellButton(onClick = {}) { Text("Сохранить") }
@@ -78,13 +78,13 @@ fun ComponentsCatalog() {
         Column(Modifier.padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
             CoShellSectionLabel("Общее")
             CoShellRowGroup {
-                row { CoShellListRow(title = "Валюты отчётов", subtitle = "Основная: USD", onClick = {}) }
+                row { CoShellListRow(title = "Валюты итогов", subtitle = "Основная: USD", onClick = {}) }
                 row { CoShellSwitchRow(title = "Встряхнуть — новая операция", checked = true, onCheckedChange = {}) }
                 row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
             }
             CoShellSectionLabel("Деньги")
             CoShellRowGroup {
-                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Папки, иконки и цвета") }
+                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
                 row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
             }
         }

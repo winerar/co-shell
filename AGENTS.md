@@ -23,7 +23,7 @@
 | [docs/agents/notes.md](docs/agents/notes.md) (+ [notes-sync.md](docs/agents/notes-sync.md)), [scripts.md](docs/agents/scripts.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры; **команды и флоу `agent.sh`**; облачное окружение |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md), [feature-map.md](docs/agents/feature-map.md) | модули, куда класть новое; где лежит каждая фича |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется |
-| [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
+| [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |

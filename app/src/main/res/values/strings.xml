@@ -130,7 +130,7 @@
     <string name="account_banks">Банки и приложения</string>
     <string name="account_included_in_total_short">Выключите для долгов и чужих денег</string>
     <string name="account_shared_short">Выключите для личного счёта</string>
-    <string name="account_initial_balance_error">Не похоже на сумму</string>
+    <string name="account_initial_balance_error">Введите сумму цифрами</string>
     <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой</string>
     <string name="account_delete_confirm_title">Удалить счёт?</string>
     <string name="account_delete_confirm_text">Счёт удалится навсегда.</string>
@@ -199,17 +199,17 @@
     <string name="transaction_receipt_currency">Валюта покупки</string>
     <string name="transaction_receipt_explain">Баланс меняется на списанную сумму, сумма покупки — для отчётов.</string>
     <string name="transaction_receipt_currency_invalid">3–10 латинских букв или цифр, например USD</string>
-    <string name="transaction_receipt_currency_same">Совпадает с валютой счёта — уберите сумму покупки</string>
+    <string name="transaction_receipt_currency_same">Это валюта счёта — сумму покупки можно убрать</string>
     <string name="transaction_to_amount_hint">Сколько пришло на «%1$s». Курс посчитается сам.</string>
     <string name="transaction_amount_required">Введите сумму</string>
-    <string name="transaction_amount_invalid">Не похоже на сумму</string>
+    <string name="transaction_amount_invalid">Введите сумму цифрами</string>
     <string name="transaction_amount_fraction">Слишком много знаков после запятой</string>
-    <string name="transaction_amount_not_positive">Сумма должна быть больше нуля</string>
+    <string name="transaction_amount_not_positive">Введите сумму больше нуля</string>
     <string name="transaction_account">Счёт</string>
     <string name="transaction_from_account">Со счёта</string>
     <string name="transaction_to_account">На счёт</string>
     <string name="transaction_account_required">Выберите счёт</string>
-    <string name="transaction_to_account_same">Счета должны быть разными</string>
+    <string name="transaction_to_account_same">Выберите два разных счёта</string>
     <string name="transaction_category">Категория</string>
     <string name="transaction_category_required">Выберите категорию</string>
     <string name="transaction_no_categories">Категорий этого типа нет. Добавьте их в «Ещё → Категории».</string>
@@ -235,7 +235,7 @@
     <string name="backup_result_imported">Восстановлено: счетов — %1$d, категорий — %2$d, операций — %3$d.</string>
     <string name="backup_error_not_backup">Это не резервная копия Co-Shell.</string>
     <string name="backup_error_version">Копия из более новой версии. Обновите приложение.</string>
-    <string name="backup_error_corrupted">Файл копии повреждён — ничего не изменено.</string>
+    <string name="backup_error_corrupted">Файл копии повреждён — ваши данные не тронуты.</string>
     <string name="backup_error_write">Не удалось сохранить файл. Выберите другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
@@ -299,7 +299,7 @@
     <string name="feedback_status_done">Сделано</string>
     <string name="feedback_status_done_build">Сделано · %1$d</string>
     <string name="feedback_status_later">Отложено</string>
-    <string name="feedback_status_closed">Закрыт</string>
+    <string name="feedback_status_closed">Оставили как есть</string>
     <string name="feedback_detail_title">Отзыв</string>
     <string name="feedback_detail_progress">Что происходит</string>
     <string name="feedback_detail_remove">Убрать из списка</string>
@@ -313,14 +313,14 @@
     <string name="feedback_step_done_update">обновитесь, чтобы увидеть</string>
     <string name="feedback_step_done_next">выйдет в следующей сборке</string>
     <string name="feedback_step_later">Отложено — вернёмся позже</string>
-    <string name="feedback_step_closed">Закрыт без изменений</string>
+    <string name="feedback_step_closed">Решили оставить как есть</string>
     <string name="feedback_sent_explain">Статус появится в списке отзывов в течение нескольких часов.</string>
     <string name="feedback_write_more">Написать ещё</string>
     <string name="update_downloaded_mb">%1$s из %2$s МБ</string>
     <string name="feedback_send">Отправить</string>
     <string name="feedback_result_sent">Спасибо! Сообщение отправлено.</string>
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>
-    <string name="feedback_error_too_long">Слишком длинно: не больше %1$d символов.</string>
+    <string name="feedback_error_too_long">Чуть короче, пожалуйста: до %1$d символов.</string>
     <string name="feedback_error_not_configured">В этой сборке отправка не настроена.</string>
     <string name="feedback_error_failed">Не отправилось. Проверьте интернет — текст сохранён.</string>
     <string name="update_title">Обновление</string>
@@ -351,7 +351,7 @@
     <string name="update_hero_available_sub">Сборка %1$d · %2$s МБ</string>
     <string name="update_hero_downloading">Скачиваем</string>
     <string name="update_hero_installing">Устанавливаем</string>
-    <string name="update_hero_failed">Не получилось</string>
+    <string name="update_hero_failed">Обновить не получилось</string>
     <string name="update_check_again">Проверить снова</string>
     <string name="update_not_configured">В этой сборке обновления не настроены.</string>
     <string name="update_installing">Подтвердите установку в окне Android. Данные сохранятся.</string>
@@ -409,7 +409,7 @@
     <string name="rates_manual_rate">Курс</string>
     <string name="rates_manual_date">Действует с</string>
     <string name="rates_manual_currency_error">3–10 латинских букв или цифр, например USD</string>
-    <string name="rates_manual_same_error">Нужны две разные валюты</string>
+    <string name="rates_manual_same_error">Выберите две разные валюты</string>
     <string name="rates_manual_rate_error">Введите число больше нуля</string>
     <string name="rates_manual_delete_title">Удалить ручной курс?</string>
     <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
@@ -429,7 +429,7 @@
     <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю (хранятся последние 8).</string>
     <string name="auto_backup_pending">Первая копия скоро появится</string>
     <string name="auto_backup_last">Последняя: %1$s · раз в неделю</string>
-    <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
+    <string name="auto_backup_failed">Не удалось сохранить копию. Выберите папку ещё раз — возможно, доступ к ней пропал</string>
     <string name="auto_backup_off_title">Автокопия выключена</string>
     <string name="auto_backup_failed_title">Копия не сохранилась</string>
     <string name="auto_backup_folder_change">нажмите, чтобы сменить</string>
@@ -495,11 +495,11 @@
     <string name="family_msg_quota">Дневной лимит синхронизации исчерпан. Попробуйте завтра.</string>
     <string name="family_msg_server">Ошибка сервера (%1$s). Попробуйте через минуту.</string>
     <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
-    <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google с этим адресом.</string>
+    <string name="family_msg_invite_sent">Приглашение для %1$s готово. Теперь нужно установить приложение и войти через Google с этим адресом.</string>
     <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>
     <!-- Sync banner on «Обзор» (board 17А, feedback #102) -->
     <string name="sync_banner_offline_title">Нет интернета</string>
-    <string name="sync_banner_offline_text">Отправим и получим изменения сами, когда появится сеть.</string>
+    <string name="sync_banner_offline_text">Изменения сохранены на телефоне — отправим и получим их сами, когда появится сеть.</string>
     <string name="sync_banner_signed_out_title">Вход в Google истёк</string>
     <string name="sync_banner_signed_out_text">Войдите снова — ничего не потеряно.</string>
     <string name="sync_banner_no_access_title">Нет доступа к семье</string>
@@ -537,7 +537,7 @@
     <string name="wipe_confirm_word">СТЕРЕТЬ</string>
     <string name="wipe_word_label">Слово</string>
     <string name="wipe_button">Стереть у всей семьи</string>
-    <string name="wipe_backup_failed">Не удалось сохранить копию — ничего не стёрто. Проверьте место на телефоне.</string>
+    <string name="wipe_backup_failed">Не удалось сохранить копию, поэтому ничего не стёрто. Возможно, на телефоне мало места.</string>
     <string name="wipe_done_title">Данные стёрты</string>
     <string name="wipe_done_text">Копия: %1$s в «Загрузках». Другие телефоны очистятся при следующей синхронизации.</string>
     <string name="wipe_done_import">Импорт из Wallet</string>
@@ -576,7 +576,7 @@
     <string name="template_remembers">Счёт %1$s, категория «%2$s», заметка — запомнятся. Дата — всегда сегодня.</string>
     <string name="template_remembers_no_category">Счёт %1$s и заметка запомнятся. Дата — всегда сегодня.</string>
     <string name="template_remembers_transfer">Перевод %1$s → %2$s и заметка запомнятся. Дата — всегда сегодня.</string>
-    <string name="template_save_failed">Счёт или категория этой операции в архиве — шаблон не сохранить</string>
+    <string name="template_save_failed">Шаблон не сохранится: счёт или категория этой операции в архиве</string>
     <string name="template_account">Счёт</string>
     <string name="template_from_account">Со счёта</string>
     <string name="template_to_account">На счёт</string>

@@ -87,6 +87,25 @@ class ScreensScreenshotTest {
     @Test
     fun `home light`() = shot("home_light") { HomeScreen(homePreviewSample) }
 
+    /** Translations (#270): longer English and Spanish texts still fit. Sample data stays Russian. */
+    @Test @Config(qualifiers = "+en")
+    fun `home english`() = shot("home_en") { HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample) }
+
+    @Test @Config(qualifiers = "+es")
+    fun `home spanish`() = shot("home_es") { HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample) }
+
+    @Test @Config(qualifiers = "+en")
+    fun `budgets english`() = shot("budgets_en", dark = true) { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }
+
+    @Test @Config(qualifiers = "+es")
+    fun `budgets spanish`() = shot("budgets_es", dark = true) { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }
+
+    @Test @Config(qualifiers = "+en")
+    fun `more english`() = shot("more_en") { MoreScreen(MoreActions(), moreSample) }
+
+    @Test @Config(qualifiers = "+es")
+    fun `more spanish`() = shot("more_es") { MoreScreen(MoreActions(), moreSample) }
+
     @Test
     fun `home dark`() = shot("home_dark", dark = true) { HomeScreen(homePreviewSample) }
 

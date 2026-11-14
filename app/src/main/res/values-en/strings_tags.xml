@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tags_all">All %1$d</string>
+    <string name="tags_add">＋ Tag</string>
+    <string name="tags_sheet_title">Tags</string>
+    <string name="tags_sheet_done">Done</string>
+    <string name="tags_search">Find or create a tag</string>
+    <string name="tags_remove">Remove tag</string>
+    <string name="tags_new">New tag — name and color</string>
+    <string name="tags_new_named">New tag “%1$s”</string>
+    <string name="tags_recent">Recent</string>
+    <string name="tags_all_by_name">All · %1$d · A–Z</string>
+    <string name="tags_nothing">No such tag — create a new one</string>
+    <string name="tags_empty">No tags yet. A tag is a colored label on a transaction: “vacation”, “gifts”, “shared”.</string>
+    <string name="tags_new_title">New tag</string>
+    <string name="tags_name">Name</string>
+    <string name="tags_create">Create</string>
+</resources>

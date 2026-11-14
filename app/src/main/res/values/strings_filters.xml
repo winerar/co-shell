@@ -51,7 +51,7 @@
     <string name="filter_tags_search">Найти тег</string>
     <string name="filter_tags_all">Все · %1$d · по алфавиту</string>
     <string name="filter_tags_some">Выбрано %1$d из %2$d</string>
-    <string name="filter_tags_nothing">Нет такого тега</string>
+    <string name="filter_tags_nothing">Такого тега нет</string>
 
     <!-- Поиск по сумме: как приложение поняло запрос -->
     <string name="amount_hint_exact">Сумма ровно %1$s — в любой валюте</string>

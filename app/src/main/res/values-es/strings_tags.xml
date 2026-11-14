@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tags_all">Todas (%1$d)</string>
+    <string name="tags_add">＋ Etiqueta</string>
+    <string name="tags_sheet_title">Etiquetas</string>
+    <string name="tags_sheet_done">Listo</string>
+    <string name="tags_search">Buscar o crear etiqueta</string>
+    <string name="tags_remove">Quitar etiqueta</string>
+    <string name="tags_new">Etiqueta nueva — nombre y color</string>
+    <string name="tags_new_named">Etiqueta nueva «%1$s»</string>
+    <string name="tags_recent">Recientes</string>
+    <string name="tags_all_by_name">Todas · %1$d · A–Z</string>
+    <string name="tags_nothing">No existe esa etiqueta — crea una nueva</string>
+    <string name="tags_empty">Aún no hay etiquetas. Una etiqueta es una marca de color en el movimiento: «vacaciones», «regalos», «a medias».</string>
+    <string name="tags_new_title">Etiqueta nueva</string>
+    <string name="tags_name">Nombre</string>
+    <string name="tags_create">Crear</string>
+</resources>

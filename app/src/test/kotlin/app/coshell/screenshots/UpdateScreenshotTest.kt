@@ -27,7 +27,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** «Обновление приложения» (#268, boards Fb268A, Fb268B, Fb269A) and «Прошлые версии» (#284, Fb284A); the same setup as [ScreensScreenshotTest]. */
+/** «Обновление» (#268, boards Fb268A, Fb268B, Fb269A) and «Прошлые версии» (#284, Fb284A); the same setup as [ScreensScreenshotTest]. */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)

@@ -120,7 +120,7 @@ internal fun FilterBar(
     }
 }
 
-/** «Сумма от 3 000 до 5 000 — в любой валюте, по счёту и по чеку» (board `Fb141AAmount`). */
+/** «Сумма от 3 000 до 5 000 — в любой валюте» (account and receipt amounts both match) (board `Fb141AAmount`). */
 @Composable
 private fun AmountHint(query: AmountQuery) {
     val bounds = FilterLabels.amountBounds(query)

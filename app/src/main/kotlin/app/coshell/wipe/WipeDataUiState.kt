@@ -5,7 +5,7 @@ import app.coshell.core.domain.DataCounts
 /**
  * «Стереть все данные» (board 18, feedback #107).
  * @property counts what will be deleted; `null` while counting.
- * @property word what the user typed; the button unlocks on [CONFIRM_WORD].
+ * @property word what the user typed; the button unlocks on the localized confirm word (`R.string.wipe_confirm_word`).
  * @property backupName the copy saved before the wipe (shown on the «Данные стёрты» step).
  */
 data class WipeDataUiState(
@@ -17,9 +17,6 @@ data class WipeDataUiState(
 ) {
     enum class Step { CONFIRM, WIPING, DONE }
 
-    val canWipe: Boolean get() = step == Step.CONFIRM && word.trim().equals(CONFIRM_WORD, ignoreCase = true)
-
-    companion object {
-        const val CONFIRM_WORD = "СТЕРЕТЬ"
-    }
+    /** The button unlocks once [word] matches [confirmWord] (the localized word from resources), in any case. */
+    fun canWipe(confirmWord: String): Boolean = step == Step.CONFIRM && word.trim().equals(confirmWord, ignoreCase = true)
 }

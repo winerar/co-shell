@@ -30,8 +30,8 @@ class WipeDataViewModel @Inject constructor(
 
     fun onWordChange(word: String) = _state.update { it.copy(word = word, backupFailed = false) }
 
-    fun wipe() {
-        if (!_state.value.canWipe) return
+    fun wipe(confirmWord: String) {
+        if (!_state.value.canWipe(confirmWord)) return
         _state.update { it.copy(step = Step.WIPING, backupFailed = false) }
         viewModelScope.launch {
             var name: String? = null

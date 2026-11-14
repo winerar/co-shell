@@ -15,9 +15,9 @@
     <string name="import_step_preview">Проверка</string>
     <string name="import_step_done">Готово</string>
 
-    <string name="import_start_intro">В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь. Перед записью приложение само сделает резервную копию, а импорт можно отменить целиком.</string>
+    <string name="import_start_intro">В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь. Перед импортом сохранится резервная копия, а сам импорт можно отменить целиком.</string>
     <string name="import_pick_file">Выбрать файл CSV</string>
-    <string name="import_pick_file_hint">Повторный импорт того же или более нового файла добавит только новое</string>
+    <string name="import_pick_file_hint">Повторный импорт добавит только новое</string>
     <string name="import_batches_title">Прошлые импорты</string>
     <string name="import_batch_row">%1$s · операций: %2$d</string>
     <string name="import_batch_period">с %1$s по %2$s</string>

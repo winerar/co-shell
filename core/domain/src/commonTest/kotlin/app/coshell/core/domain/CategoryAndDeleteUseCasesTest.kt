@@ -31,6 +31,24 @@ class CategoryAndDeleteUseCasesTest {
     }
 
     @Test
+    fun `seeded names come from the localized provider, blank or unknown keep the built-in`() = runTest {
+        val categories = FakeCategoryRepository()
+        val names = CategoryNames { key ->
+            when (key) {
+                DefaultCategories.key(CategoryType.EXPENSE, "food") -> "Groceries"
+                DefaultCategories.key(CategoryType.INCOME, "salary") -> " "
+                else -> null
+            }
+        }
+        SeedDefaultCategoriesUseCase(categories, ids, names)()
+        val byName = categories.items.value.values.associateBy { it.name }
+
+        assertEquals("food", byName["Groceries"]?.icon)
+        assertEquals(CategoryType.INCOME, byName["Зарплата"]?.type)
+        assertEquals(DefaultCategories.keys.size, DefaultCategories.keys.toSet().size)
+    }
+
+    @Test
     fun `default categories have unique names within a type`() {
         DefaultCategories.create(ids).groupBy { it.type }.values.forEach { list ->
             assertEquals(list.size, list.map { it.name }.toSet().size)

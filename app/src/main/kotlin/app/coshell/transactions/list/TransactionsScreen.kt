@@ -34,12 +34,14 @@ import app.coshell.ui.top.SelectionTopBar
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import kotlinx.datetime.LocalDate
 
 /**
  * «Операции»: search and filter chips on top, days with their net on the right. Rows have no swipes — a
  * horizontal swipe flips tabs (issue #112); a long press chooses rows (mockup 19В): the header counts them,
  * the bottom bar turns into «Дублировать · Удалить · N», back or «✕» leaves the mode.
- * Older pages load while scrolling ([LoadMoreEffect]); day headers stick to the top.
+ * Older pages load while scrolling ([LoadMoreEffect]); day headers stick to the top. Holding an amount shows
+ * it in the report currencies at the operation's day ([peek], #318).
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -47,7 +49,9 @@ fun TransactionsScreen(
     state: TransactionsUiState,
     selection: Selection = Selection(),
     actions: TransactionsActions = TransactionsActions(),
+    peek: AmountPeek? = null,
 ) {
+    val noRate = stringResource(R.string.amount_peek_no_rate)
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
     LoadMoreEffect(listState, enabled = state.hasMore, onLoadMore = actions.onLoadMore)
@@ -90,6 +94,9 @@ fun TransactionsScreen(
                             onClick = if (selection.active) actions.onToggle else actions.onTransactionClick,
                             onLongClick = actions.onLongPress,
                             selected = row.id in selection,
+                            peek = peek?.takeIf { it.rowId == row.id },
+                            onPeek = if (selection.active) null else ({ actions.onPeek(row, day.date, noRate) }),
+                            onPeekEnd = actions.onPeekEnd,
                         )
                     }
                 }
@@ -108,6 +115,9 @@ data class TransactionsActions(
     val onClearSelection: () -> Unit = {},
     val onDuplicate: (String) -> Unit = {},
     val onDeleteSelected: () -> Unit = {},
+    /** Hold the amount of a row of a day (#318); the text is «нет курса». */
+    val onPeek: (TransactionsUiState.Row, LocalDate, String) -> Unit = { _, _, _ -> },
+    val onPeekEnd: () -> Unit = {},
 )
 
 @Composable

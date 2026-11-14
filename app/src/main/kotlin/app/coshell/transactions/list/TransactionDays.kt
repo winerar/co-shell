@@ -53,6 +53,7 @@ internal fun buildTransactionDays(
                     t.toRow(accountsById, categoriesById, moneyFormat)
                         .copy(author = t.authorMemberId?.let(authors::get))
                         .withTags(t, tagsById)
+                        .copy(money = t.amount)
                 },
             ).withTotal(items, moneyFormat)
         }

@@ -55,6 +55,8 @@
   на градиенте темы** (`CoShellCard(accent = true)`, владелец 2026-11-12, #277; на досках — `hero_card`); `tint` — для блоков-сообщений. `CoShellOutlinedButton(color = …)` — контур и текст цвета
   (фиолетовая «Синхронизировать сейчас» высотой `Sizes.wideButton`). **Пустой слот «добавить»** — `Modifier.dashedBorder(color, radius)`
   (пунктир: «+ Новый шаблон», «Пригласить», «+ Добавить курс»).
+- **Пузырь-подсказка у удержанного элемента** — `CoShellPeekBubble(lines, footnote)` (попап над элементом, справа, не берёт касаний;
+  `PeekCard` — то же без попапа для превью) + жест `Modifier.holdToPeek(enabled, onTap, onPeek, onRelease)` (#318: держишь — виден, отпустил — исчез).
 - **Снэкбар** — `CoShellSnackbarHost` (выезжает снизу, полоска оставшегося времени); **тема (палитра)** — `CoShellPaletteSwatch` (квадрат в фоне темы, по 4 в ряд, #271).
 - Тест `app/.../TactileRuleTest` запрещает в `app` импорт Material-кнопок, чипов, полей, диалогов,
   `ListItem`, `Card`, `ModalBottomSheet`, `NavigationBar` — только компоненты отсюда. Обёртки со строками приложения (`ui/form/ConfirmDialog`,

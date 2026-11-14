@@ -3,7 +3,10 @@ package app.coshell.transactions.list
 import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.domain.tags.TagUsage
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -183,5 +187,31 @@ class TransactionsViewModelTest {
         vm.onFilter { it.copy(tagIds = setOf("аня")) }
         assertEquals(listOf("t1"), vm.state.first { it.filter.tagIds.isNotEmpty() }.days.flatMap { d -> d.rows.map { it.id } })
         assertEquals(1, vm.state.value.total?.count)
+    }
+
+    @Test
+    fun `holding an amount shows it in the report currencies until released`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val usd = CurrencyCode("USD")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        transactions.saveTransaction(Transaction("t", TransactionType.EXPENSE, "card", Money.ofMajor(2_000, currency = ars), now))
+        val rates = FakeExchangeRateRepository().apply {
+            this.rates.value = listOf(ExchangeRate(LocalDate(2026, 1, 1), usd, ars, Rate.parse("1000"), RateOrigin.DOWNLOADED))
+        }
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), rates, FakeReportCurrencySettings(listOf(usd, ars)), tags,
+        )
+        vm.state.launchIn(backgroundScope)
+        val day = vm.state.first { !it.isLoading && it.days.isNotEmpty() }.days.single()
+
+        vm.onPeek(day.rows.single(), day.date, "нет курса")
+        assertEquals(listOf("2,00" to "USD"), vm.peek.value!!.lines.map { it.amount to it.currency })
+        assertEquals("t", vm.peek.value!!.rowId)
+
+        vm.onPeekEnd()
+        assertEquals(null, vm.peek.value)
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Radii
@@ -21,7 +22,10 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.rates.list.CurrentRateItem
 import app.coshell.rates.list.formatRateDate
 
-/** Currency chip, «1 USD = 1 049,69 ARS» and «на 9 ноября · вручную»; tap sets the rate by hand (board `Rates`). */
+/**
+ * Currency chip, «1 USD = 1 049,69 ARS» and «на 9 ноября · вручную», the converter's amount on the right (#319);
+ * tap sets the rate by hand (board `Rates`).
+ */
 @Composable
 internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> Unit) {
     val details = buildList {
@@ -38,13 +42,26 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
             }
         },
         supporting = {
-            if (item.rateText == null) {
+            if (item.isSource) {
+                Text(stringResource(R.string.rates_converter_source), color = accentInk())
+            } else if (item.rateText == null) {
                 Text(stringResource(R.string.rates_no_rate), color = LocalStatusPalette.current.warning)
             } else {
                 Text(details)
             }
         },
         leading = { CurrencyChip(item.currency) },
+        // The converter's amount in this currency (#319).
+        trailing = item.converted?.let { value ->
+            {
+                Text(
+                    value,
+                    style = RateTextStyle.copy(fontSize = ConvertedText, fontWeight = FontWeight.Bold),
+                    color = if (item.isSource) accentInk() else MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                )
+            }
+        },
         onClick = onClick,
     )
 }
@@ -67,3 +84,4 @@ private fun CurrencyChip(code: String) {
 }
 
 private val ChipText = 11.sp
+private val ConvertedText = 17.sp

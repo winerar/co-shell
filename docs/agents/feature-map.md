@@ -52,7 +52,7 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `ExchangeRateRepository` (`core:domain/rates/`), Room — `db/RateEntities.kt`, `db/RateDao.kt`,
 `repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`. Экран «Ещё → Курсы валют» — `rates/list/`
 (курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
-`components/ManualRateDialog.kt`).
+`components/ManualRateDialog.kt`; конвертер сверху #319 — `Converter.kt`, `components/ConverterCard.kt`, `ConverterKeypadSheet.kt`).
 Валюты отчётов (первая — основная): контракт и правила списка — `core:domain/settings/ReportCurrencies.kt`,
 хранение — общие настройки семьи `core:data/repository/RoomFamilySettings` (там же день начала месяца, `MonthStartSettings`;
 перенос старого списка с телефона — `app/.../currencies/data/LegacyReportCurrencies`), экран «Ещё → Валюты отчётов» — `currencies/list/`.

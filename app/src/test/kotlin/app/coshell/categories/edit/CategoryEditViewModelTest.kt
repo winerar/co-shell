@@ -54,7 +54,7 @@ class CategoryEditViewModelTest {
         val state = vm.state.value
         assertTrue(state.asFolder)
         // "car" already has a subcategory, so it cannot go into another folder.
-        assertEquals(listOf("taxi", "food"), state.candidates.map { it.id })
+        assertEquals(listOf("food", "taxi"), state.candidates.map { it.id })
 
         vm.onNameChange("Транспорт")
         vm.onToggleChild("taxi")
@@ -99,7 +99,7 @@ class CategoryEditViewModelTest {
         assertFalse(vm.state.value.asFolder)
         vm.onKindChange(folder = true)
         assertNull("a folder sits at the top level", vm.state.value.parentId)
-        assertEquals(listOf("taxi", "food"), vm.state.value.candidates.map { it.id })
+        assertEquals(listOf("food", "taxi"), vm.state.value.candidates.map { it.id })
         vm.onToggleChild("food")
         vm.onKindChange(folder = false)
         assertTrue("a category holds nothing", vm.state.value.childIds.isEmpty())

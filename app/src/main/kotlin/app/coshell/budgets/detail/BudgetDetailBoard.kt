@@ -7,6 +7,7 @@ import app.coshell.budgets.list.folderSizes
 import app.coshell.budgets.list.number
 import app.coshell.core.domain.budgets.BudgetLedger
 import app.coshell.core.domain.budgets.BudgetProgress
+import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
 import kotlinx.datetime.LocalDate
@@ -35,7 +36,7 @@ internal fun buildEnvelopeDetail(
     )
     val limits = progress.associateBy { it.budget.categoryId }
     val currency = item.budget.limit.currency
-    val inner = categories.filter { it.parentId == categoryId }.sortedBy { it.sortOrder }.mapNotNull { category ->
+    val inner = categories.filter { it.parentId == categoryId }.sortedWith(CATEGORY_ORDER).mapNotNull { category ->
         limits[category.id]?.let { return@mapNotNull Inner.Limited(buildEnvelope(it, category, null, format)) }
         val spent = ledger.spent(setOf(category.id), item.period, currency).sum
         if (category.archived && spent.isZero) return@mapNotNull null

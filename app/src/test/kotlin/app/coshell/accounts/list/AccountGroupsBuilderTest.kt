@@ -24,9 +24,9 @@ class AccountGroupsBuilderTest {
     }
 
     @Test
-    fun byCurrencyBiggestFirst() {
+    fun byCurrencyAlphabetically() {
         val groups = buildAccountGroups(rows, AccountGrouping.CURRENCY, emptySet()) { null }
-        assertEquals(listOf("ARS", "AMD", "USDT"), groups.map { it.titleText })
+        assertEquals(listOf("AMD", "ARS", "USDT"), groups.map { it.titleText })
     }
 
     @Test
@@ -34,6 +34,13 @@ class AccountGroupsBuilderTest {
         val groups = buildAccountGroups(rows, AccountGrouping.OWNER, emptySet()) { null }
         assertEquals(listOf(R.string.accounts_group_shared, R.string.accounts_group_mine, null), groups.map { it.titleRes })
         assertEquals("Аня", groups[2].titleText)
+    }
+
+    @Test
+    fun otherOwnersAlphabetically() {
+        val more = rows + row("tbank", AccountType.CARD, "RUB", personalOf = "борис") + row("mp", AccountType.CARD, "ARS", personalOf = "Ёся")
+        val groups = buildAccountGroups(more, AccountGrouping.OWNER, emptySet()) { null }
+        assertEquals(listOf("Аня", "борис", "Ёся"), groups.drop(2).map { it.titleText })
     }
 
     @Test

@@ -6,7 +6,7 @@ data class CategoryNode(val category: Category, val children: List<Category>) {
 }
 
 /**
- * Groups [categories] into one level of folders, ordered by `sortOrder`, then name.
+ * Groups [categories] into one level of folders, ordered by [CATEGORY_ORDER].
  * A subcategory whose folder is not in the list (archived or deleted, e.g. on another phone)
  * is shown at the top level so it never disappears.
  */
@@ -18,4 +18,6 @@ fun buildCategoryTree(categories: List<Category>): List<CategoryNode> {
         .map { CategoryNode(it, children[it.id].orEmpty().sortedWith(CATEGORY_ORDER)) }
 }
 
-val CATEGORY_ORDER: Comparator<Category> = compareBy<Category>({ it.sortOrder }, { it.name })
+/** Categories alphabetically ([nameOrder], #338); «Корректировка баланса» always last among its siblings. */
+val CATEGORY_ORDER: Comparator<Category> =
+    compareBy<Category> { SystemCategories.isAdjustment(it.id) }.then(nameOrder { it.name }).thenBy { it.id }

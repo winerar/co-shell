@@ -35,7 +35,7 @@ fun WipeDataScreen(
     state: WipeDataUiState,
     onBack: () -> Unit = {},
     onWordChange: (String) -> Unit = {},
-    onWipe: () -> Unit = {},
+    onWipe: (confirmWord: String) -> Unit = {},
     onImport: () -> Unit = {},
 ) {
     // No way out halfway through: the copy is written, the wipe is one transaction.

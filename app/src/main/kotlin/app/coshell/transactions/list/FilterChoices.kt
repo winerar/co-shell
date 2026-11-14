@@ -56,7 +56,6 @@ data class FilterChoices(
     /** How many of [folder]'s categories are in [chosen]. */
     fun chosenIn(folder: CategoryChoice, chosen: Set<String>): Int = folder.children.count { it.id in chosen }
 
-    val categoryCount: Int get() = (expenseCategories + incomeCategories).sumOf { 1 + it.children.size }
 
     /** Every category by id, folders and children alike — for the chip label. */
     val categoriesById: Map<String, CategoryChoice> by lazy {

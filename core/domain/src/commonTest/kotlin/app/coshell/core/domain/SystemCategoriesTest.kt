@@ -27,6 +27,15 @@ class SystemCategoriesTest {
     }
 
     @Test
+    fun `a new adjustment category takes the localized name`() = runTest {
+        val local = FakeCategoryRepository()
+        EnsureAdjustmentCategoriesUseCase(local) { key -> if (key == CategoryNames.ADJUSTMENT) "Balance adjustment" else null }()
+
+        assertEquals("Balance adjustment", local.getCategory(expenseId)?.name)
+        assertEquals("Balance adjustment", local.getCategory(incomeId)?.name)
+    }
+
+    @Test
     fun `restores an archived one and keeps the user's name`() = runTest {
         ensure()
         val renamed = categories.getCategory(expenseId)!!.copy(name = "Выравнивание", archived = true)

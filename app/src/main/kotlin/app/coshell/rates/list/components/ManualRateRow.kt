@@ -31,7 +31,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * A manual rate as a violet card with a bar (board `Rates`): «1 USD = 1 450 ARS»,
- * «вручную · с 5 ноября · важнее загруженного»; tap edits, the bin deletes.
+ * «вручную · с 5 ноября»; tap edits, the bin deletes.
  */
 @Composable
 internal fun ManualRateRow(item: ManualRateItem, onClick: () -> Unit, onDelete: () -> Unit) {

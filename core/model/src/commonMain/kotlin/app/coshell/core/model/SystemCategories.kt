@@ -11,6 +11,7 @@ package app.coshell.core.model
 object SystemCategories {
     const val ADJUSTMENT_EXPENSE_ID = "system-adjustment-expense"
     const val ADJUSTMENT_INCOME_ID = "system-adjustment-income"
+    /** Built-in (Russian) name; the app passes the localized one to [adjustment]. */
     const val ADJUSTMENT_NAME = "Корректировка баланса"
 
     fun adjustmentId(type: CategoryType): String = when (type) {
@@ -27,10 +28,10 @@ object SystemCategories {
 
     fun isAdjustment(categoryId: String?): Boolean = adjustmentType(categoryId) != null
 
-    /** A fresh adjustment category of [type]; sorted last among its siblings. */
-    fun adjustment(type: CategoryType): Category = Category(
+    /** A fresh adjustment category of [type] named [name] (localized by the caller); sorted last among its siblings. */
+    fun adjustment(type: CategoryType, name: String = ADJUSTMENT_NAME): Category = Category(
         id = adjustmentId(type),
-        name = ADJUSTMENT_NAME,
+        name = name,
         type = type,
         icon = "bank",
         color = 0xFF7A8494,

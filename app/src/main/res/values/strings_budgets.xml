@@ -10,7 +10,7 @@
     <string name="budgets_start_hint">Месяц считается с %1$d-го числа. Удобно начинать в день зарплаты; в коротком месяце — с последнего дня.</string>
     <string name="budgets_start_day">С %1$d-го числа</string>
     <string name="budgets_start_default">по умолчанию — календарный месяц</string>
-    <string name="budgets_period_days">%1$s — %2$s</string>
+    <string name="budgets_period_days" translatable="false">%1$s — %2$s</string>
     <string name="budgets_left">Осталось</string>
     <string name="budgets_over">Перерасход</string>
     <string name="budgets_spent_of">потрачено %1$s из %2$s</string>
@@ -50,11 +50,11 @@
     <string name="budgets_fold">Свернуть подкатегории</string>
     <string name="budgets_unfold">Развернуть подкатегории</string>
     <string name="budgets_empty_title">Лимитов на этот месяц нет</string>
-    <string name="budgets_empty_text">Задайте, сколько готовы тратить в месяц на категорию, — приложение само покажет, сколько осталось, и предупредит, если траты обгоняют темп.</string>
-    <string name="budgets_hint">Полоса — сколько потрачено, черта — где стоило бы быть сегодня. Лимит меняется с выбранного месяца, прошлые месяцы остаются как были.</string>
+    <string name="budgets_empty_text">Задайте месячный лимит на категорию — приложение покажет остаток и предупредит, если траты обгоняют темп.</string>
+    <string name="budgets_hint">Полоса — потрачено, черта — норма на сегодня. Изменения лимита действуют с выбранного месяца.</string>
 
     <!-- Экран конверта (#183) -->
-    <string name="budget_detail_title">%1$s · %2$s</string>
+    <string name="budget_detail_title" translatable="false">%1$s · %2$s</string>
     <string name="budget_detail_edit">Изменить лимит</string>
     <string name="budget_detail_left">осталось</string>
     <string name="budget_detail_over">перерасход</string>
@@ -72,7 +72,7 @@
     <string name="budget_detail_operations">Операции за %1$s</string>
     <string name="budget_detail_no_operations">Операций по этому лимиту в этом месяце нет.</string>
     <string name="budget_detail_no_limit_title">Лимита в этом месяце нет</string>
-    <string name="budget_detail_no_limit_text">Его убрали или он начинается с более позднего месяца. Задайте лимит — он будет действовать с этого месяца и дальше.</string>
+    <string name="budget_detail_no_limit_text">Его убрали или он начнётся позже. Новый лимит будет действовать с этого месяца.</string>
     <string name="budget_detail_set_limit">Задать лимит</string>
 
     <!-- Редактор лимита -->
@@ -82,7 +82,7 @@
     <string name="budget_what">На что</string>
     <string name="budget_choose_folder">Выберите категорию с подкатегориями</string>
     <string name="budget_choose_category">Выберите категорию</string>
-    <string name="budget_no_folders">Категорий расходов с подкатегориями пока нет — создайте в «Ещё → Категории» или задайте лимит на обычную категорию.</string>
+    <string name="budget_no_folders">Категорий с подкатегориями пока нет — создайте их в «Ещё → Категории» или выберите обычную категорию.</string>
     <string name="budget_category_error">Выберите, на что лимит</string>
     <string name="budget_amount">В месяц</string>
     <string name="budget_amount_error">Введите сумму больше нуля</string>

@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Co-Shell</string>
+    <string name="app_name" translatable="false">Co-Shell</string>
 
     <string name="action_save">Сохранить</string>
     <string name="action_cancel">Отмена</string>
@@ -17,10 +17,10 @@
     <string name="home_total_balance">Общий баланс</string>
     <string name="home_total_rate_date">По курсу на %1$s</string>
     <string name="home_total_missing">Без учёта: %1$s — нет курса</string>
-    <string name="home_total_show_breakdown">Показать по валютам счетов</string>
+    <string name="home_total_show_breakdown">Показать по валютам</string>
     <string name="home_total_hide_breakdown">Скрыть разбивку</string>
     <string name="home_spending_title">Траты за %1$s</string>
-    <string name="home_spending_rate_hint">Каждая трата — по курсу на её день</string>
+    <string name="home_spending_rate_hint">По курсу на день каждой траты</string>
     <string name="home_spending_tile">Траты</string>
     <string name="home_spending_without">без %1$s</string>
     <string name="home_uncategorized_title">Без категории</string>
@@ -42,10 +42,10 @@
     </plurals>
     <string name="home_recent">Последние операции</string>
     <string name="home_recent_all">Все</string>
-    <string name="home_recent_empty">Операций пока нет — нажмите «+» внизу.</string>
+    <string name="home_recent_empty">Операций пока нет. Нажмите «+», чтобы добавить первую.</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
 
-    <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
+    <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы добавить первую.</string>
     <string name="transactions_no_category">Без категории</string>
 
     <string name="accounts_title">Счета</string>
@@ -81,8 +81,8 @@
     <string name="accounts_grouping_currency">По валюте</string>
     <string name="accounts_grouping_owner">Чьи</string>
     <string name="accounts_total">Всего в общем балансе</string>
-    <string name="accounts_search">Поиск счёта</string>
-    <string name="transactions_search">Поиск: заметка, тег, сумма</string>
+    <string name="accounts_search">Найти счёт</string>
+    <string name="transactions_search">Найти: заметка, тег, сумма</string>
     <string name="filter_type">Тип</string>
     <string name="filter_all_types">Все типы</string>
     <string name="filter_expenses">Расходы</string>
@@ -112,30 +112,30 @@
     <string name="account_name_error">Введите название</string>
     <string name="account_currency">Валюта</string>
     <string name="account_currency_code">Код валюты</string>
-    <string name="account_currency_error">Код из 3–10 латинских букв или цифр, например ARS, USDT</string>
-    <string name="account_currency_locked">По счёту уже есть операции — валюту изменить нельзя</string>
+    <string name="account_currency_error">3–10 латинских букв или цифр, например USD</string>
+    <string name="account_currency_locked">Валюту не изменить: по счёту есть операции</string>
     <string name="account_type">Тип</string>
     <string name="account_initial_balance">Начальный баланс</string>
-    <string name="account_initial_balance_hint">Сколько было на счёте до первой записанной операции. Для долга — со знаком минус.</string>
+    <string name="account_initial_balance_hint">Сумма до первой операции. Долг — со знаком минус.</string>
     <string name="account_included_in_total">Учитывать в общем балансе</string>
-    <string name="account_included_in_total_hint">Выключите для долга или чужих денег — счёт не попадёт в общий баланс на «Обзоре»</string>
+    <string name="account_included_in_total_hint">Выключите для долгов и чужих денег — счёт не войдёт в общий баланс</string>
     <string name="account_excluded_from_total">Не в общем балансе</string>
     <string name="account_excluded_suffix">%1$s · не в общем балансе</string>
     <string name="account_section_money">Деньги</string>
     <string name="account_section_balance">Баланс</string>
-    <string name="account_initial_balance_short">Нач. баланс</string>
-    <string name="account_currency_locked_short">%1$s · заблок.</string>
+    <string name="account_initial_balance_short">Начальный баланс</string>
+    <string name="account_currency_locked_short">%1$s · не изменить</string>
     <string name="account_currency_none">Не выбрана</string>
     <string name="account_bank_like">Как у %1$s</string>
     <string name="account_banks">Банки и приложения</string>
-    <string name="account_included_in_total_short">Выключите для долга или чужих денег</string>
+    <string name="account_included_in_total_short">Выключите для долгов и чужих денег</string>
     <string name="account_shared_short">Выключите для личного счёта</string>
     <string name="account_initial_balance_error">Не похоже на сумму</string>
-    <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой для этой валюты</string>
+    <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой</string>
     <string name="account_delete_confirm_title">Удалить счёт?</string>
-    <string name="account_delete_confirm_text">Счёт без операций будет удалён безвозвратно.</string>
+    <string name="account_delete_confirm_text">Счёт удалится навсегда.</string>
     <string name="account_delete_blocked_title">Счёт нельзя удалить</string>
-    <string name="account_delete_blocked_text">По счёту есть операции. Отправьте его в архив: история и баланс сохранятся, а в списках выбора он больше не появится.</string>
+    <string name="account_delete_blocked_text">По счёту есть операции. Отправьте его в архив: история сохранится, а при выборе счёта его не будет.</string>
 
     <string name="categories_title">Категории</string>
     <string name="categories_add">Добавить</string>
@@ -169,7 +169,7 @@
     <string name="form_icons_count">Иконки · %1$d</string>
     <string name="form_colors_count">Цвета · %1$d</string>
     <string name="color_none">Без цвета</string>
-    <string name="category_type_locked">Категория уже используется или содержит подкатегории — тип изменить нельзя</string>
+    <string name="category_type_locked">Тип не изменить: категория уже в операциях или у неё есть подкатегории</string>
     <string name="category_section_what">Что это</string>
     <string name="category_folder_inside">Входит в</string>
     <string name="category_children_pick">Выбрать</string>
@@ -177,15 +177,15 @@
     <string name="category_folder">Родительская категория</string>
     <string name="category_folder_none">Нет — верхний уровень</string>
     <string name="category_children">Подкатегории</string>
-    <string name="category_children_hint">Отметьте категории, которые станут подкатегориями. Саму категорию тоже можно выбирать в операциях.</string>
+    <string name="category_children_hint">Отметьте категории, которые станут подкатегориями. Саму категорию тоже можно выбрать в операции.</string>
     <string name="category_error_parent_not_found">Родительская категория не найдена — выберите другую</string>
     <string name="category_error_parent_nested">У подкатегории не может быть своих подкатегорий</string>
-    <string name="category_error_parent_type">Подкатегория должна быть того же типа, что и родительская</string>
-    <string name="category_error_has_children">В этой категории есть подкатегории — её нельзя сделать подкатегорией</string>
+    <string name="category_error_parent_type">Тип должен совпадать с родительской категорией</string>
+    <string name="category_error_has_children">У этой категории есть подкатегории — её нельзя сделать подкатегорией</string>
     <string name="category_delete_confirm_title">Удалить категорию?</string>
-    <string name="category_delete_confirm_text">Категория без операций будет удалена. Если у неё есть подкатегории, они станут обычными категориями.</string>
+    <string name="category_delete_confirm_text">Категория удалится навсегда. Её подкатегории станут обычными категориями.</string>
     <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
-    <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе операций она больше не появится.</string>
+    <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе её не будет.</string>
     <string name="transaction_add">Добавить операцию</string>
     <string name="transaction_edit_title_new">Новая операция</string>
     <string name="transaction_edit_title">Операция</string>
@@ -195,15 +195,15 @@
     <string name="transaction_amount">Сумма</string>
     <string name="transaction_to_amount">Сумма зачисления</string>
     <string name="transaction_amount_debited">Списано со счёта</string>
-    <string name="transaction_amount_suggested">По курсу на %1$s — поправьте по выписке банка</string>
+    <string name="transaction_amount_suggested">По курсу на %1$s — сверьте с банком</string>
     <string name="transaction_receipt_currency">Валюта покупки</string>
-    <string name="transaction_receipt_explain">Баланс счёта меняется на списанную сумму, сумма покупки сохраняется для отчётов.</string>
-    <string name="transaction_receipt_currency_invalid">Код валюты: 3–10 латинских букв или цифр</string>
+    <string name="transaction_receipt_explain">Баланс меняется на списанную сумму, сумма покупки — для отчётов.</string>
+    <string name="transaction_receipt_currency_invalid">3–10 латинских букв или цифр, например USD</string>
     <string name="transaction_receipt_currency_same">Совпадает с валютой счёта — уберите сумму покупки</string>
-    <string name="transaction_to_amount_hint">Сколько пришло на счёт «%1$s». Курс обмена считается из двух сумм.</string>
+    <string name="transaction_to_amount_hint">Сколько пришло на «%1$s». Курс посчитается сам.</string>
     <string name="transaction_amount_required">Введите сумму</string>
     <string name="transaction_amount_invalid">Не похоже на сумму</string>
-    <string name="transaction_amount_fraction">Слишком много знаков после запятой для этой валюты</string>
+    <string name="transaction_amount_fraction">Слишком много знаков после запятой</string>
     <string name="transaction_amount_not_positive">Сумма должна быть больше нуля</string>
     <string name="transaction_account">Счёт</string>
     <string name="transaction_from_account">Со счёта</string>
@@ -212,38 +212,38 @@
     <string name="transaction_to_account_same">Счета должны быть разными</string>
     <string name="transaction_category">Категория</string>
     <string name="transaction_category_required">Выберите категорию</string>
-    <string name="transaction_no_categories">Категорий этого типа нет. Добавьте их в разделе «Ещё → Категории».</string>
+    <string name="transaction_no_categories">Категорий этого типа нет. Добавьте их в «Ещё → Категории».</string>
     <string name="transaction_date">Дата</string>
     <string name="transaction_date_today">Сегодня</string>
     <string name="transaction_date_yesterday">Вчера</string>
     <string name="transaction_date_other">Другая дата</string>
     <string name="transaction_note">Заметка</string>
     <string name="transaction_no_accounts">Чтобы записать операцию, сначала добавьте счёт.</string>
-    <string name="action_ok">OK</string>
+    <string name="action_ok" translatable="false">OK</string>
 
     <string name="backup_title">Резервная копия</string>
-    <string name="backup_intro">Копия — один файл со всеми счетами, категориями, операциями и ручными курсами. Пригодится при смене или сбросе телефона.</string>
+    <string name="backup_intro">Один файл со всеми данными. Пригодится при смене или сбросе телефона.</string>
     <string name="backup_export">Сохранить копию</string>
     <string name="backup_export_hint">в папку или на Диск</string>
     <string name="backup_import">Восстановить</string>
     <string name="backup_manual">Вручную</string>
     <string name="backup_import_hint">записи добавятся к текущим</string>
     <string name="backup_import_confirm_title">Восстановить из копии?</string>
-    <string name="backup_import_confirm_text">Записи из файла добавятся в приложение, а совпадающие с ними — заменятся версией из файла. Остальные данные останутся как есть.</string>
+    <string name="backup_import_confirm_text">Данные из файла добавятся к текущим, совпадающие записи заменятся версией из файла. Остальное не изменится.</string>
     <string name="backup_import_confirm">Восстановить</string>
     <string name="backup_result_exported">Копия сохранена.</string>
     <string name="backup_result_imported">Восстановлено: счетов — %1$d, категорий — %2$d, операций — %3$d.</string>
-    <string name="backup_error_not_backup">Это не файл резервной копии Co-Shell.</string>
-    <string name="backup_error_version">Копия сделана более новой версией приложения. Обновите приложение и попробуйте снова.</string>
+    <string name="backup_error_not_backup">Это не резервная копия Co-Shell.</string>
+    <string name="backup_error_version">Копия из более новой версии. Обновите приложение.</string>
     <string name="backup_error_corrupted">Файл копии повреждён — ничего не изменено.</string>
-    <string name="backup_error_write">Не удалось записать файл. Попробуйте другую папку.</string>
+    <string name="backup_error_write">Не удалось сохранить файл. Выберите другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
     <string name="categories_menu_hint">Подкатегории, иконки и цвета</string>
     <string name="backup_menu_hint">Сохранить или восстановить данные</string>
-    <string name="feedback_menu_hint">Сообщить об ошибке или предложить идею</string>
+    <string name="feedback_menu_hint">Ошибка или идея</string>
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
-    <string name="shake_to_add_hint">Встряхните телефон, пока открыто приложение</string>
+    <string name="shake_to_add_hint">Когда приложение открыто</string>
     <string name="transaction_deleted">Операция удалена</string>
     <string name="transactions_deleted_many">Удалено операций: %d</string>
     <string name="transactions_selected">Выбрано %d</string>
@@ -252,12 +252,12 @@
     <string name="transaction_copy_today">Копия · сегодня</string>
     <string name="action_undo">Отменить</string>
     <string name="appearance_title">Внешний вид</string>
-    <string name="appearance_menu_hint">%1$s · %2$s</string>
+    <string name="appearance_menu_hint" translatable="false">%1$s · %2$s</string>
     <string name="appearance_input_section">Ввод</string>
     <string name="more_section_money">Деньги</string>
     <string name="more_section_family_data">Семья и данные</string>
     <string name="more_section_app">Приложение</string>
-    <string name="more_version_title">Co-Shell</string>
+    <string name="more_version_title" translatable="false">Co-Shell</string>
     <string name="more_version_available">Вышла версия %1$s</string>
     <string name="theme_title">Тема</string>
     <string name="theme_system">Системная</string>
@@ -280,9 +280,9 @@
     <string name="palette_pear">Груша</string>
     <string name="palette_gooseberry">Крыжовник</string>
     <string name="feedback_intro">Опишите, что не работает или чего не хватает.</string>
-    <string name="feedback_attached">Приложим: версия %1$d · %2$s · Android %3$s · журнал обновления и тех. данные (без сумм)</string>
+    <string name="feedback_attached">Приложим: версия %1$d · %2$s · Android %3$s, технический журнал (без сумм)</string>
     <string name="feedback_text_label">Сообщение</string>
-    <string name="feedback_counter">%1$d / %2$d</string>
+    <string name="feedback_counter" translatable="false">%1$d / %2$d</string>
     <string name="feedback_kind_bug">Ошибка</string>
     <string name="feedback_kind_idea">Идея</string>
     <string name="feedback_kind_design">Дизайн</string>
@@ -290,9 +290,9 @@
     <string name="feedback_prompt_bug">Что случилось и где?</string>
     <string name="feedback_prompt_idea">Что добавить или упростить?</string>
     <string name="feedback_prompt_design">Что выглядит не так?</string>
-    <string name="feedback_prompt_other">Напишите как удобно</string>
+    <string name="feedback_prompt_other">О чём угодно</string>
     <string name="feedback_sent_title">Мои отзывы · %1$d</string>
-    <string name="feedback_sent_note">Статус — из задачи разработки, обновляется несколько раз в день. Тап — подробно, удержание — убрать из списка.</string>
+    <string name="feedback_sent_note">Статусы обновляются несколько раз в день. Нажмите — подробнее, удерживайте — убрать.</string>
     <string name="feedback_status_sent">Отправлен</string>
     <string name="feedback_status_received">Получен</string>
     <string name="feedback_status_in_progress">В работе</string>
@@ -303,10 +303,10 @@
     <string name="feedback_detail_title">Отзыв</string>
     <string name="feedback_detail_progress">Что происходит</string>
     <string name="feedback_detail_remove">Убрать из списка</string>
-    <string name="feedback_detail_no_status">Отзыв отправлен до появления статусов — что с ним, видно только в задачах разработки.</string>
+    <string name="feedback_detail_no_status">Отправлен до появления статусов — что с ним, не отслеживается.</string>
     <string name="feedback_step_sent">Отправлен</string>
-    <string name="feedback_step_task">Стал задачей разработки</string>
-    <string name="feedback_step_task_number">Стал задачей разработки №%1$d</string>
+    <string name="feedback_step_task">Стал задачей</string>
+    <string name="feedback_step_task_number">Стал задачей №%1$d</string>
     <string name="feedback_step_in_progress">В работе</string>
     <string name="feedback_step_done">Сделано</string>
     <string name="feedback_step_done_build">Сделано в сборке %1$d</string>
@@ -314,7 +314,7 @@
     <string name="feedback_step_done_next">выйдет в следующей сборке</string>
     <string name="feedback_step_later">Отложено — вернёмся позже</string>
     <string name="feedback_step_closed">Закрыт без изменений</string>
-    <string name="feedback_sent_explain">Сообщение станет задачей разработки в течение нескольких часов.</string>
+    <string name="feedback_sent_explain">Статус появится в списке отзывов в течение нескольких часов.</string>
     <string name="feedback_write_more">Написать ещё</string>
     <string name="update_downloaded_mb">%1$s из %2$s МБ</string>
     <string name="feedback_send">Отправить</string>
@@ -322,8 +322,8 @@
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>
     <string name="feedback_error_too_long">Слишком длинно: не больше %1$d символов.</string>
     <string name="feedback_error_not_configured">В этой сборке отправка не настроена.</string>
-    <string name="feedback_error_failed">Не удалось отправить. Проверьте интернет и попробуйте ещё раз — текст сохранён.</string>
-    <string name="update_title">Обновление приложения</string>
+    <string name="feedback_error_failed">Не отправилось. Проверьте интернет — текст сохранён.</string>
+    <string name="update_title">Обновление</string>
     <string name="version_label">Версия %1$s · сборка %2$d</string>
     <string name="update_checked_now">Проверили только что</string>
     <string name="update_version_now">Сейчас</string>
@@ -337,12 +337,12 @@
     <string name="transaction_refund_row">↩ возврат</string>
     <string name="update_this_version_title">Что в этой версии</string>
     <string name="update_past_title">Прошлые версии</string>
-    <string name="update_past_row">Прошлые версии и что в них было</string>
-    <string name="update_past_hint">Последние выпуски · тап раскрывает</string>
+    <string name="update_past_row">Прошлые версии</string>
+    <string name="update_past_hint">Нажмите, чтобы раскрыть</string>
     <string name="update_past_installed">у вас</string>
-    <string name="update_past_error">Не удалось загрузить список версий. Проверьте интернет.</string>
+    <string name="update_past_error">Не удалось загрузить версии. Проверьте интернет.</string>
     <string name="update_past_retry">Повторить</string>
-    <string name="update_past_empty">Список версий пока пуст: он появится со следующим обновлением.</string>
+    <string name="update_past_empty">Список появится со следующим обновлением.</string>
     <string name="update_install_manually_link">Не ставится? Установить вручную</string>
     <string name="update_hero_checking">Ищем обновления…</string>
     <string name="update_hero_up_to_date">У вас последняя версия</string>
@@ -353,24 +353,24 @@
     <string name="update_hero_installing">Устанавливаем</string>
     <string name="update_hero_failed">Не получилось</string>
     <string name="update_check_again">Проверить снова</string>
-    <string name="update_not_configured">В этой сборке обновления не настроены. Их получают сборки, выложенные из GitHub.</string>
+    <string name="update_not_configured">В этой сборке обновления не настроены.</string>
     <string name="update_installing">Подтвердите установку в окне Android. Данные сохранятся.</string>
-    <string name="update_permission_hint">Android спросит разрешение устанавливать приложения из Co-Shell. Включите его один раз и вернитесь сюда.</string>
+    <string name="update_permission_hint">Android попросит разрешить установку из Co-Shell. Включите и вернитесь сюда.</string>
     <string name="update_allow_install">Разрешить установку</string>
-    <string name="update_installing_manual">Окно Android не появилось или выдало ошибку? «Установить вручную» откроет установщик Android — как для файла из браузера.</string>
+    <string name="update_installing_manual">Окно установки не появилось или выдало ошибку? Попробуйте «Установить вручную».</string>
     <string name="update_install_manually">Установить вручную</string>
     <string name="update_retry">Повторить</string>
     <string name="update_error_check">Не удалось проверить обновления. Проверьте интернет.</string>
-    <string name="update_error_download">Не удалось скачать обновление. Проверьте интернет и повторите.</string>
-    <string name="update_error_checksum">Скачанный файл повреждён — устанавливать его нельзя. Повторите загрузку.</string>
-    <string name="update_error_install">Android не установил обновление. Попробуйте установщик Android — так ставится файл из браузера.</string>
+    <string name="update_error_download">Не удалось скачать. Проверьте интернет и повторите.</string>
+    <string name="update_error_checksum">Файл скачался с ошибкой. Повторите загрузку.</string>
+    <string name="update_error_install">Обновление не установилось. Попробуйте «Установить вручную».</string>
     <string name="update_open">Обновить</string>
     <string name="update_pill">Версия %1$s · сборка %2$d · Обновить</string>
     <string name="update_pill_dismiss">Скрыть до следующего запуска</string>
     <string name="crash_notice_title">Приложение закрылось с ошибкой</string>
-    <string name="crash_notice_text">Отправить отчёт разработчику? Уйдут только техническое описание ошибки и данные телефона — без сумм и названий.</string>
+    <string name="crash_notice_text">Отправить отчёт? Только технические данные — без сумм и названий.</string>
     <string name="crash_notice_send">Отправить</string>
-    <string name="crash_notice_skip">Не надо</string>
+    <string name="crash_notice_skip">Не отправлять</string>
     <string name="update_whats_new_title">Что нового в %1$s</string>
     <string name="update_whats_new_ok">Понятно</string>
     <!-- More → Rates -->
@@ -378,15 +378,15 @@
     <string name="rates_menu_hint">Обновляются сами раз в день</string>
 
     <string name="report_currencies_title">Валюты итогов</string>
-    <string name="report_currencies_hint">Общий баланс на «Обзоре» показывается в каждой из этих валют. Тап — сделать основной.</string>
+    <string name="report_currencies_hint">Общий баланс показывается в каждой из этих валют. Нажмите, чтобы сделать основной.</string>
     <string name="report_currencies_preview">Общий баланс · так будет на «Обзоре»</string>
     <string name="report_currencies_main">Основная</string>
     <string name="report_currencies_add">Добавить валюту</string>
     <string name="report_currencies_menu_hint">Основная: %1$s</string>
     <string name="rates_current">Курсы на сегодня</string>
-    <string name="rates_current_hint">тап — задать вручную</string>
+    <string name="rates_current_hint">нажмите, чтобы изменить</string>
     <string name="rates_accounts">Валюты ваших счетов</string>
-    <string name="rates_line">1 %1$s = %2$s %3$s</string>
+    <string name="rates_line" translatable="false">1 %1$s = %2$s %3$s</string>
     <string name="rates_no_rate">Курса пока нет</string>
     <string name="rates_no_currencies">Здесь появятся курсы валют ваших счетов и операций</string>
     <string name="rates_from_date">на %1$s</string>
@@ -398,27 +398,27 @@
     <string name="rates_refresh_running">Загружаем курсы…</string>
     <string name="rates_refresh_updated">Курсы обновлены</string>
     <string name="rates_refresh_fresh">Курсы на сегодня уже загружены</string>
-    <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет и попробуйте ещё раз</string>
+    <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет</string>
     <string name="rates_manual">Ручные курсы</string>
-    <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного курса этой пары</string>
-    <string name="rates_manual_since">вручную · с %1$s · важнее загруженного</string>
+    <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного</string>
+    <string name="rates_manual_since">вручную · с %1$s</string>
     <string name="rates_manual_add">Добавить курс</string>
     <string name="rates_manual_title">Курс вручную</string>
     <string name="rates_manual_from">Валюта</string>
     <string name="rates_manual_to">Сколько стоит в</string>
     <string name="rates_manual_rate">Курс</string>
     <string name="rates_manual_date">Действует с</string>
-    <string name="rates_manual_currency_error">Код валюты: 3–10 латинских букв или цифр, например USD</string>
+    <string name="rates_manual_currency_error">3–10 латинских букв или цифр, например USD</string>
     <string name="rates_manual_same_error">Нужны две разные валюты</string>
     <string name="rates_manual_rate_error">Введите число больше нуля</string>
     <string name="rates_manual_delete_title">Удалить ручной курс?</string>
     <string name="rates_manual_delete_text">Снова будет действовать загруженный курс (или предыдущий ручной).</string>
     <string name="rates_sources">Источники: fawazahmed0/currency-api и</string>
     <string name="rates_sources_daily">Курсы обновляются сами раз в день.</string>
-    <string name="rates_attribution">Rates By Exchange Rate API</string>
+    <string name="rates_attribution" translatable="false">Rates By Exchange Rate API</string>
 
     <string name="account_shared">Общий счёт</string>
-    <string name="account_shared_hint">Выключите для личного счёта — он останется виден всей семье, но с пометкой «личный»</string>
+    <string name="account_shared_hint">Выключите для личного счёта — его увидят все, но с пометкой «личный»</string>
     <string name="account_personal_mine">личный</string>
     <string name="account_personal_of">личный · %1$s</string>
 
@@ -426,13 +426,13 @@
     <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
-    <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю, хранятся последние 8.</string>
+    <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю (хранятся последние 8).</string>
     <string name="auto_backup_pending">Первая копия скоро появится</string>
     <string name="auto_backup_last">Последняя: %1$s · раз в неделю</string>
     <string name="auto_backup_failed">Не удалось сохранить копию — выберите папку заново</string>
     <string name="auto_backup_off_title">Автокопия выключена</string>
     <string name="auto_backup_failed_title">Копия не сохранилась</string>
-    <string name="auto_backup_folder_change">тап — выбрать другую</string>
+    <string name="auto_backup_folder_change">нажмите, чтобы сменить</string>
     <string name="auto_backup_folder_hint">на телефоне или Google Диске</string>
     <plurals name="auto_backup_days_left">
         <item quantity="one">день до копии</item>
@@ -443,13 +443,13 @@
 
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
     <string name="family_title">Семья</string>
-    <string name="family_menu_hint">Общий бюджет на двух телефонах</string>
+    <string name="family_menu_hint">Общий бюджет с близкими</string>
     <string name="family_not_configured">Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.</string>
-    <string name="family_intro">Войдите через Google, чтобы вести общий бюджет с семьёй. Данные хранятся на телефоне и в облаке Firebase, приложение работает и без интернета. Доступ — только по приглашению.</string>
+    <string name="family_intro">Войдите через Google, чтобы вести бюджет вместе с семьёй. Данные хранятся на телефоне и в облаке, приложение работает и без интернета. Вступить можно только по приглашению.</string>
     <string name="family_sign_in">Войти через Google</string>
     <string name="family_sign_in_hint">Выберите свой Google-аккаунт</string>
     <string name="family_checking">Вы вошли как %1$s. Проверяем доступ…</string>
-    <string name="family_no_access">Вы вошли как %1$s. Доступа к семье нет: попросите участника пригласить этот адрес в «Семья → Пригласить», затем нажмите «Проверить снова».</string>
+    <string name="family_no_access">Вы вошли как %1$s. Попросите участника семьи пригласить этот адрес, затем нажмите «Проверить снова».</string>
     <string name="family_check_again">Проверить снова</string>
     <string name="family_create">Создать семью</string>
     <string name="family_create_hint">Только для первого участника. Данные этого телефона станут общими.</string>
@@ -491,23 +491,23 @@
     <string name="family_msg_exists">Семья уже создана. Попросите её участника пригласить вас.</string>
     <string name="family_msg_network">Нет интернета. Проверьте связь и попробуйте ещё раз.</string>
     <string name="family_msg_signed_out">Вход в Google истёк. Войдите снова — ничего не потеряно.</string>
-    <string name="family_msg_no_access">Сервер не пускает в семью. Отправьте отзыв — в нём будет код ошибки %1$s.</string>
-    <string name="family_msg_quota">Бесплатный лимит Firebase на сегодня закончился. Попробуйте завтра.</string>
-    <string name="family_msg_server">Сервер ответил ошибкой (%1$s). Это не у вас — попробуйте через минуту.</string>
+    <string name="family_msg_no_access">Нет доступа к семье. Отправьте отзыв — код ошибки %1$s добавится сам.</string>
+    <string name="family_msg_quota">Дневной лимит синхронизации исчерпан. Попробуйте завтра.</string>
+    <string name="family_msg_server">Ошибка сервера (%1$s). Попробуйте через минуту.</string>
     <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
-    <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google этим адресом.</string>
+    <string name="family_msg_invite_sent">Приглашение для %1$s готово. Пусть установит приложение и войдёт через Google с этим адресом.</string>
     <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>
     <!-- Sync banner on «Обзор» (board 17А, feedback #102) -->
     <string name="sync_banner_offline_title">Нет интернета</string>
     <string name="sync_banner_offline_text">Отправим и получим изменения сами, когда появится сеть.</string>
     <string name="sync_banner_signed_out_title">Вход в Google истёк</string>
     <string name="sync_banner_signed_out_text">Войдите снова — ничего не потеряно.</string>
-    <string name="sync_banner_no_access_title">Сервер не пускает в семью</string>
-    <string name="sync_banner_no_access_text">Нет доступа к семье. Отправьте отзыв — в нём будет код ошибки %1$s.</string>
+    <string name="sync_banner_no_access_title">Нет доступа к семье</string>
+    <string name="sync_banner_no_access_text">Отправьте отзыв — код ошибки %1$s добавится сам.</string>
     <string name="sync_banner_server_title">Сервер не отвечает</string>
-    <string name="sync_banner_server_text">Это не у вас. Попробуем снова через минуту.</string>
+    <string name="sync_banner_server_text">Попробуем снова через минуту.</string>
     <string name="sync_banner_quota_title">Дневной лимит исчерпан</string>
-    <string name="sync_banner_quota_text">Бесплатный лимит Firebase на сегодня закончился. Синхронизация продолжится в %1$s.</string>
+    <string name="sync_banner_quota_text">Синхронизация продолжится в %1$s.</string>
     <plurals name="sync_banner_pending">
         <item quantity="one">%1$d изменение ждёт на телефоне.</item>
         <item quantity="few">%1$d изменения ждут на телефоне.</item>
@@ -522,22 +522,24 @@
     <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
     <!-- «Стереть все данные» (board 18, feedback #107) -->
     <string name="wipe_title">Стереть все данные</string>
-    <string name="wipe_menu_hint">Чтобы загрузить Wallet на чистую. Сначала — копия</string>
+    <string name="wipe_menu_hint">Начать с чистого листа. Сначала — копия</string>
     <string name="wipe_family_title">Удалится у всей семьи</string>
-    <string name="wipe_family_hint">На обоих телефонах, при следующей синхронизации</string>
+    <string name="wipe_family_hint">На всех телефонах — при следующей синхронизации</string>
     <string name="wipe_count_accounts">счетов</string>
     <string name="wipe_count_transactions">операций</string>
     <string name="wipe_count_categories">категорий</string>
     <string name="wipe_count_rates">ручных курсов</string>
-    <string name="wipe_kept">Останутся: семья и участники, настройки, тема. Категории по умолчанию появятся заново.</string>
+    <string name="wipe_kept">Останутся семья, настройки и тема. Стандартные категории появятся заново.</string>
     <string name="wipe_backup_title">Сначала сохраним копию</string>
     <string name="wipe_backup_hint">Файл co-shell-before-wipe-….json в «Загрузках». Вернуть — «Ещё → Резервная копия».</string>
     <string name="wipe_word_prompt">Чтобы подтвердить, введите %1$s</string>
+    <!-- The word the user types to confirm; the check ignores case. -->
+    <string name="wipe_confirm_word">СТЕРЕТЬ</string>
     <string name="wipe_word_label">Слово</string>
     <string name="wipe_button">Стереть у всей семьи</string>
     <string name="wipe_backup_failed">Не удалось сохранить копию — ничего не стёрто. Проверьте место на телефоне.</string>
     <string name="wipe_done_title">Данные стёрты</string>
-    <string name="wipe_done_text">Копия: %1$s в «Загрузках». Второй телефон очистится при следующей синхронизации.</string>
+    <string name="wipe_done_text">Копия: %1$s в «Загрузках». Другие телефоны очистятся при следующей синхронизации.</string>
     <string name="wipe_done_import">Импорт из Wallet</string>
     <string name="wipe_done_ok">Готово</string>
 
@@ -553,15 +555,15 @@
     <string name="templates_section_expense">Расходы · по категориям, А→Я</string>
     <string name="templates_section_income">Доходы · по категориям, А→Я</string>
     <string name="templates_section_transfer">Переводы</string>
-    <string name="templates_hint">Нажмите на шаблон — откроется новая операция с заполненными полями. Удерживайте — изменить или удалить шаблон.</string>
-    <string name="templates_empty">Шаблон — заготовка операции, которая повторяется: аренда, уроки, кофе. Запоминает тип, счёт, категорию, заметку и, если нужно, сумму. Дата — всегда сегодня.</string>
+    <string name="templates_hint">Нажмите — новая операция по шаблону. Удерживайте — изменить или удалить.</string>
+    <string name="templates_empty">Шаблон — заготовка для повторяющихся операций: аренда, уроки, кофе. Хранит счёт, категорию, заметку и, если нужно, сумму.</string>
     <string name="template_new">Новый шаблон</string>
     <string name="template_edit_title">Шаблон</string>
     <string name="template_amount_on_entry">сумма при вводе</string>
     <string name="template_amount_on_entry_short">при вводе</string>
-    <string name="template_row_subtitle">%1$s · %2$s</string>
-    <string name="template_row_transfer">%1$s → %2$s</string>
-    <string name="template_account_gone">счёт выбрать</string>
+    <string name="template_row_subtitle" translatable="false">%1$s · %2$s</string>
+    <string name="template_row_transfer" translatable="false">%1$s → %2$s</string>
+    <string name="template_account_gone">выберите счёт</string>
     <string name="template_clear">Убрать шаблон</string>
     <string name="template_hint_amount">Из шаблона · сумму можно поправить</string>
     <string name="template_hint_enter_amount">Из шаблона · введите сумму</string>
@@ -578,11 +580,11 @@
     <string name="template_account">Счёт</string>
     <string name="template_from_account">Со счёта</string>
     <string name="template_to_account">На счёт</string>
-    <string name="template_account_value">%1$s · %2$s</string>
+    <string name="template_account_value" translatable="false">%1$s · %2$s</string>
     <string name="template_choose_account">Выберите счёт</string>
     <string name="template_amount">Сумма</string>
     <string name="template_amount_hint">Пусто — спросим при вводе</string>
-    <string name="template_amount_error">Сумма должна быть числом больше нуля</string>
+    <string name="template_amount_error">Введите сумму больше нуля</string>
     <string name="template_category">Категория</string>
     <string name="template_category_none">Не выбрана — спросим при вводе</string>
     <string name="template_delete_confirm_title">Удалить шаблон?</string>

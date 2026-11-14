@@ -27,24 +27,24 @@ class WipeDataViewModelTest {
     private val categories = FakeCategoryRepository()
     private var backupName: String? = "co-shell-before-wipe-2026-11-10-0912.json"
     private val vm by lazy {
-        WipeDataViewModel(wipe, WipeAllDataUseCase(wipe, SeedDefaultCategoriesUseCase(categories) { "id" }), WipeBackup { backupName })
+        WipeDataViewModel(wipe, WipeAllDataUseCase(wipe, SeedDefaultCategoriesUseCase(categories, { "id" })), WipeBackup { backupName })
     }
 
     @Test
     fun `button unlocks only on the word, in any case`() {
         assertEquals(DataCounts(12, 3418, 46, 8), vm.state.value.counts)
         vm.onWordChange("стер")
-        assertFalse(vm.state.value.canWipe)
-        vm.wipe()
+        assertFalse(vm.state.value.canWipe(WORD))
+        vm.wipe(WORD)
         assertEquals(0, wipe.wiped)
         vm.onWordChange(" стереть ")
-        assertTrue(vm.state.value.canWipe)
+        assertTrue(vm.state.value.canWipe(WORD))
     }
 
     @Test
     fun `wipe saves the copy first and shows where it went`() {
         vm.onWordChange("СТЕРЕТЬ")
-        vm.wipe()
+        vm.wipe(WORD)
         assertEquals(1, wipe.wiped)
         assertEquals(Step.DONE, vm.state.value.step)
         assertEquals("co-shell-before-wipe-2026-11-10-0912.json", vm.state.value.backupName)
@@ -54,9 +54,13 @@ class WipeDataViewModelTest {
     fun `failed copy wipes nothing and says so`() {
         backupName = null
         vm.onWordChange("СТЕРЕТЬ")
-        vm.wipe()
+        vm.wipe(WORD)
         assertEquals(0, wipe.wiped)
         assertEquals(Step.CONFIRM, vm.state.value.step)
         assertTrue(vm.state.value.backupFailed)
+    }
+
+    private companion object {
+        const val WORD = "СТЕРЕТЬ"
     }
 }

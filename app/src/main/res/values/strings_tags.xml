@@ -11,7 +11,7 @@
     <string name="tags_new_named">Новый тег «%1$s»</string>
     <string name="tags_recent">Недавние</string>
     <string name="tags_all_by_name">Все · %1$d · по алфавиту</string>
-    <string name="tags_nothing">Нет такого тега — создайте новый</string>
+    <string name="tags_nothing">Такого тега нет — можно создать новый</string>
     <string name="tags_empty">Тегов пока нет. Тег — цветная метка операции: «отпуск», «Аня», «на двоих».</string>
     <string name="tags_new_title">Новый тег</string>
     <string name="tags_name">Название</string>

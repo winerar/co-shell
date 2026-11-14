@@ -38,12 +38,12 @@
     <string name="budgets_caption_left">осталось %1$s</string>
     <string name="budgets_caption_left_per_day">осталось %1$s · %2$s в день</string>
     <plurals name="budgets_caption_ahead">
-        <item quantity="one">обгоняете темп · осталось %2$s на %1$d день</item>
-        <item quantity="few">обгоняете темп · осталось %2$s на %1$d дня</item>
-        <item quantity="many">обгоняете темп · осталось %2$s на %1$d дней</item>
-        <item quantity="other">обгоняете темп · осталось %2$s на %1$d дня</item>
+        <item quantity="one">траты обгоняют темп · осталось %2$s на %1$d день</item>
+        <item quantity="few">траты обгоняют темп · осталось %2$s на %1$d дня</item>
+        <item quantity="many">траты обгоняют темп · осталось %2$s на %1$d дней</item>
+        <item quantity="other">траты обгоняют темп · осталось %2$s на %1$d дня</item>
     </plurals>
-    <string name="budgets_caption_ahead_last">обгоняете темп · осталось %1$s</string>
+    <string name="budgets_caption_ahead_last">траты обгоняют темп · осталось %1$s</string>
     <string name="budgets_caption_over">перерасход %1$s</string>
     <string name="budgets_caption_idle">не тратили</string>
     <string name="budgets_caption_paid">оплачено полностью</string>
@@ -83,7 +83,7 @@
     <string name="budget_choose_folder">Выберите категорию с подкатегориями</string>
     <string name="budget_choose_category">Выберите категорию</string>
     <string name="budget_no_folders">Категорий расходов с подкатегориями пока нет — создайте в «Ещё → Категории» или задайте лимит на обычную категорию.</string>
-    <string name="budget_category_error">Выберите, на что лимит</string>
+    <string name="budget_category_error">Выберите, на что будет лимит</string>
     <string name="budget_amount">В месяц</string>
     <string name="budget_amount_error">Введите сумму больше нуля</string>
     <string name="budget_average">В среднем за 3 месяца — %1$s</string>
@@ -99,7 +99,7 @@
     <string name="budget_remove">Убрать лимит</string>
     <string name="budget_remove_confirm_title">Убрать лимит?</string>
     <string name="budget_remove_confirm_text">Лимита не будет с %1$s и дальше. В прошлых месяцах он останется.</string>
-    <string name="budget_save_failed">Не получилось сохранить: категорию убрали в архив или удалили на другом телефоне.</string>
+    <string name="budget_save_failed">Не получилось сохранить: эту категорию убрали в архив или удалили на другом телефоне. Выберите другую.</string>
     <!-- «Обзор» (#184, доска BudHome): плитка бюджета и «Горит в бюджете». -->
     <string name="home_budget_title">Бюджет</string>
     <plurals name="home_budget_title_days">

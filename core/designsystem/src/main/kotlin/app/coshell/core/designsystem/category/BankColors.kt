@@ -10,11 +10,12 @@ object BankColors {
     /** One preset: [name] shown under the badge, [initials] on it, [aliases] — lowercase name parts to match. */
     data class Preset(val name: String, val initials: String, val color: Long, val aliases: List<String> = emptyList())
 
-    data class Group(val title: String, val presets: List<Preset>)
+    /** Presets of one region; [region] is a key for grouping, not shown (no translation needed). */
+    data class Group(val region: String, val presets: List<Preset>)
 
     val groups: List<Group> = listOf(
         Group(
-            "Аргентина",
+            "argentina",
             listOf(
                 Preset("Galicia", "GA", 0xFFF26E22),
                 Preset("Santander", "SA", 0xFFEC0000),
@@ -28,7 +29,7 @@ object BankColors {
             ),
         ),
         Group(
-            "Армения",
+            "armenia",
             listOf(
                 Preset("Ameria", "AM", 0xFF00A859, listOf("америа", "ameriabank")),
                 Preset("Inecobank", "IN", 0xFF0096D6, listOf("ineco", "инеко")),
@@ -39,7 +40,7 @@ object BankColors {
             ),
         ),
         Group(
-            "Россия",
+            "russia",
             listOf(
                 Preset("Сбер", "СБ", 0xFF21A038, listOf("сбербанк", "sber")),
                 Preset("Т-Банк", "Т", 0xFFFFDD2D, listOf("тинькофф", "тбанк", "tinkoff", "t-bank")),
@@ -50,7 +51,7 @@ object BankColors {
             ),
         ),
         Group(
-            "Крипто и кошельки",
+            "crypto",
             listOf(
                 Preset("Binance", "BN", 0xFFF0B90B),
                 Preset("Bybit", "BY", 0xFFF7A600),

@@ -2,7 +2,9 @@
 
 ## Kotlin
 - Официальный стиль Kotlin (`kotlin.code.style=official`), отступ 4 пробела, trailing commas.
-- Код, идентификаторы и комментарии — на английском. Строки UI — только в `strings*.xml`: `values` (русский) + `values-en`, `values-es` (#270, правила — `glossary.md`).
+- Код, идентификаторы и комментарии — на английском. Строки UI — только в `strings*.xml`, **сразу на всех языках**
+  (`values` — русский, `values-en`, `values-es`; правила — `glossary.md`). Литерал с текстом в `Text(…)`, `title =`, `contentDescription =`
+  и любой кириллический литерал в коде роняют `HardcodedTextTest` (исключения-данные — его `ALLOWED`, с причиной).
 - Неизменяемые данные: `val`, `data class`, `List` вместо `MutableList` в публичных API.
 - Ошибки ввода — через sealed `Result`, а не исключения. Исключения — для нарушенных инвариантов
   (`require`, переполнение).

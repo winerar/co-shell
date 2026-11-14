@@ -76,6 +76,16 @@ class TranslationsTest {
     }
 
     @Test
+    fun `strings folders, SUPPORTED and localeFilters list the same languages`() {
+        val folders = res.listFiles { f -> f.isDirectory && f.name.startsWith("values-") && File(f, "strings.xml").isFile }!!
+            .map { it.name.removePrefix("values-") }
+        assertEquals("values-xx folders", AppLanguage.SUPPORTED.drop(1).sorted(), folders.sorted())
+        val filters = Regex("""localeFilters \+= listOf\(([^)]*)\)""").find(File("build.gradle.kts").readText())!!
+            .groupValues[1].split(",").map { it.trim().trim('"') }
+        assertEquals("localeFilters in app/build.gradle.kts", AppLanguage.SUPPORTED.sorted(), filters.sorted())
+    }
+
+    @Test
     fun `the wipe word of every language unlocks the wipe`() {
         AppLanguage.SUPPORTED.forEach { lang ->
             val dir = if (lang == AppLanguage.SUPPORTED.first()) "values" else "values-$lang"

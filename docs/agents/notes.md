@@ -121,3 +121,4 @@
 - (11-13) `agent.sh poll` пишет в `/tmp/poll`, а Artifact берёт файлы только из рабочей папки/scratchpad — скопировать `cp -r /tmp/poll <scratch>/poll`.
 - Синхронизация и Firebase — `notes-sync.md`.
 - (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.
+- (11-14) Robolectric снимает `Popup` (второй корень `onAllNodes(isRoot())[1]`) **чёрным** — для эталона/сверки выносить содержимое попапа в отдельную функцию (так `PeekCard`). Долгое нажатие в UI-тесте: `performTouchInput { down(center) }` + `mainClock.advanceTimeBy(1000)` (`advanceEventTime` таймаут жеста не двигает).

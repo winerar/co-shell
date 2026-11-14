@@ -35,9 +35,11 @@ fun TransactionsRoute(
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val selection by viewModel.selection.collectAsStateWithLifecycle()
+    val peek by viewModel.peek.collectAsStateWithLifecycle()
     TransactionsScreen(
         state = state,
         selection = selection,
+        peek = peek,
         actions = TransactionsActions(
             onTransactionClick = onTransactionClick,
             onLoadMore = viewModel::loadMore,
@@ -50,6 +52,8 @@ fun TransactionsRoute(
                 onDuplicate(id)
             },
             onDeleteSelected = viewModel::deleteSelected,
+            onPeek = viewModel::onPeek,
+            onPeekEnd = viewModel::onPeekEnd,
         ),
     )
 }

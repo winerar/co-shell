@@ -30,20 +30,25 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellPeekBubble
 import app.coshell.core.designsystem.components.CoShellTagMore
 import app.coshell.core.designsystem.components.CoShellTagPill
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.motion.holdToPeek
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.transactions.list.AmountPeek
 import app.coshell.transactions.list.TransactionsUiState.Kind
+import app.coshell.ui.format.formatDayMonth
 import app.coshell.transactions.list.TransactionsUiState.Row as RowState
 import app.coshell.core.designsystem.R as DesignR
 
 /**
  * Badge, category (or "Перевод") and account on the left, coloured amount on the right. A long press starts
- * the selection mode (19В); a [selected] row is tinted and its badge turns into a check mark.
+ * the selection mode (19В); a [selected] row is tinted and its badge turns into a check mark. Holding the
+ * amount itself calls [onPeek] (null — off, e.g. while choosing) and shows [peek] over it until [onPeekEnd].
  */
 @Composable
 internal fun TransactionRow(
@@ -51,6 +56,9 @@ internal fun TransactionRow(
     onClick: (String) -> Unit,
     onLongClick: (String) -> Unit = {},
     selected: Boolean = false,
+    peek: AmountPeek? = null,
+    onPeek: (() -> Unit)? = null,
+    onPeekEnd: () -> Unit = {},
 ) {
     val colors = MaterialTheme.colorScheme
     val container by animateColorAsState(
@@ -88,7 +96,14 @@ internal fun TransactionRow(
             }
         },
         trailing = {
-            Column(horizontalAlignment = Alignment.End) {
+            // Holding the amount shows it in the report currencies (#318); a tap still opens the row.
+            Column(
+                Modifier.holdToPeek(enabled = onPeek != null, onTap = { onClick(row.id) }, onPeek = { onPeek?.invoke() }, onRelease = onPeekEnd),
+                horizontalAlignment = Alignment.End,
+            ) {
+                if (peek != null) {
+                    CoShellPeekBubble(peek.lines, stringResource(R.string.home_total_rate_date, formatDayMonth(peek.date)))
+                }
                 AmountText(row.amount, style = AmountTextStyle, color = row.amountColor())
                 row.secondaryAmount?.let {
                     AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)

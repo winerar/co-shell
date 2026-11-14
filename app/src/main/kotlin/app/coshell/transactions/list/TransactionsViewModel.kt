@@ -14,6 +14,7 @@ import app.coshell.core.domain.tags.TagRepository
 import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
+import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -141,12 +143,33 @@ class TransactionsViewModel @Inject constructor(
         )
     }
 
-    /** Rates and the main report currency, for the total (4А); the book is rebuilt only when rates change. */
+    /** Rates and the report currencies, for the total (4А) and the held amount (#318); the book is rebuilt only when rates change. */
     private val money = combine(rates.observeRates().map { RateBook.of(it) }, reportCurrencies.currencies) { book, currencies ->
-        book to currencies.firstOrNull()
+        book to currencies
     }
 
-    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money) { src, f, limit, (book, main) ->
+    /** The latest [money], for [onPeek]: the bubble is built on demand, not for every row. */
+    @Volatile private var lastMoney: Pair<RateBook, List<CurrencyCode>>? = null
+
+    private val _peek = MutableStateFlow<AmountPeek?>(null)
+
+    /** The bubble over a held amount (#318, `Fb318A`); null while no amount is held. */
+    val peek: StateFlow<AmountPeek?> = _peek.asStateFlow()
+
+    /** The finger holds the amount of [row] of the day [date]; [missing] — «нет курса». */
+    fun onPeek(row: TransactionsUiState.Row, date: LocalDate, missing: String) {
+        val money = row.money ?: return
+        val (book, currencies) = lastMoney ?: return
+        _peek.value = book.amountPeek(row.id, money, date, currencies, moneyFormat, missing)
+    }
+
+    fun onPeekEnd() {
+        _peek.value = null
+    }
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money) { src, f, limit, (book, currencies) ->
+        lastMoney = book to currencies
+        val main = currencies.firstOrNull()
         val matching = src.page.items.filter { f.matches(it, src.search) }
         val shown = if (f.needsAll) matching.take(limit) else matching
         _selection.update { it.keepOnly(shown.mapTo(HashSet()) { t -> t.id }) }

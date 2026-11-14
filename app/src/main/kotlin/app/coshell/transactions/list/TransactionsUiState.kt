@@ -1,5 +1,6 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.model.Money
 import kotlinx.datetime.LocalDate
 
 /** The Transactions tab: transactions grouped by local day, newest first. */
@@ -64,6 +65,8 @@ data class TransactionsUiState(
         /** Up to [MAX_ROW_TAGS] live tags under the account line (#129, board `Fb129AOps`); [moreTags] — how many others. */
         val tags: List<RowTag> = emptyList(),
         val moreTags: Int = 0,
+        /** The operation's own amount, for «hold the amount» (#318); null in previews. */
+        val money: Money? = null,
     )
 
     /** A tag pill: [color] — a stored palette value (chosen, or picked from the tag id). */

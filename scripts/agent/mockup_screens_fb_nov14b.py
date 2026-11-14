@@ -59,18 +59,6 @@ def rules_a():
                         + note('Правило появляется, когда вы выбрали категорию черновику. «*» — любое окончание (номер кассы, город).'))
 
 
-def card_b():
-    cats = ''.join(chip(n, n == 'Аптека', dot=c) for n, c in (('Аптека', '#FF5470'), ('Врачи', '#FF8FA3'), ('Продукты', LIME), ('Красота', '#FFB38A'))) + chip('Все 34', dashed=True)
-    big = card('<div style="font-size: 12px; color: %s;">Galicia · 13 нояб., 18:42</div><div style="%s font-size: 18px; margin-top: 8px;">FARMACITY 0231</div>'
-               '<div style="%s font-size: 36px; font-weight: 700; color: %s; margin: 6px 0 14px;">−12 900 <span style="font-size: 16px; color: %s;">ARS</span></div>'
-               '<div style="font-size: 13px; color: %s; margin-bottom: 8px;">Категория</div><div style="display: flex; gap: 6px; flex-wrap: wrap;">%s</div>'
-               '<div style="display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 13px;">%s<span>Запомнить для FARMACITY*</span></div>'
-               % (MUTED, MONO, MONO, INK, MUTED, MUTED, cats, switch(True)), pad='16px', radius=24)
-    prog = '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; color: %s;">3 из 8%s</div>' % (MUTED, progress(0.37, 0).replace('margin-top: 0px;', 'flex-grow: 1;'))
-    btns = '<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">%s%s</div>' % (button('Пропустить', 'outline', mt=0), button('Провести', 'primary', 'check', 0))
-    return inner_screen('Черновики', prog + big + '<div style="height: 12px;"></div>' + btns + note('Свайп влево — пропустить, вправо — провести.'))
-
-
 def share_done():
     rows = group([row('Проведены сами', 'знакомые получатели', svg('check', OK), '<b style="%s">12</b>' % MONO, min_h=52),
                   row('Черновики', 'нужно выбрать категорию', svg('note', WARN), '<b style="%s">8</b>' % MONO, min_h=52),
@@ -117,13 +105,6 @@ def settings_all():
                         + group([row(t, s, svg(i), chevron(), min_h=52) for i, t, s in screens]) + label('Приложение') + group([row(t, s, svg(i), chevron(), min_h=52) for i, t, s in others]))
 
 
-def settings_b():
-    return inner_screen('Операции · вид', label('Настройки → Экраны → Операции') + screen_opts()
-                        + note('Только в «Настройках»: на самих экранах значков нет — чище, но дальше идти (3 нажатия).'))
-
-
-# ---- #334 version gate ---------------------------------------------------------------------------------------------
-
 def home_body(extra):
     return extra + balance_hero() + tiles(tile('Траты за ноябрь', '2 140', 'USD'), tile('Бюджет · 17 дней', '860', 'осталось')) + recent_card(RECENT[:3])
 
@@ -141,13 +122,6 @@ def gate_a():
               % (WARNBG, WARNLINE, WARN, svg('download', WARN, 18), WARN))
     return tab_screen('Обзор', home_body(banner), 'home', bar=False) + nav_locked()
 
-
-def gate_b():
-    body = hero('download', 'Обновите приложение', 'Аня уже на версии 0.41 — данные изменились. Пока вы не обновитесь, приложение закрыто, чтобы ничего не испортить.', WARN, True, 120)
-    return '<div style="padding: 0 16px;">%s</div>' % body + footer(button('Обновить · 5,6 МБ', 'primary', 'download', 0), button('Что нового', 'text', mt=6))
-
-
-# ---- #335 «новое» --------------------------------------------------------------------------------------------------
 
 def new_pill():
     return '<span style="height: 20px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; margin-left: 6px; vertical-align: 2px;">новое</span>' % (LIME, ONLIME)
@@ -172,14 +146,6 @@ def new_a():
     return more_screen(new_pill())
 
 
-def new_b():
-    tip = ('<div style="position: absolute; left: 96px; top: 318px; padding: 8px 12px; border-radius: 12px; background: %s; border: 1px solid %s; font-size: 12px; max-width: 220px; '
-           'box-shadow: 0 10px 24px rgba(0,0,0,0.5);">Новое в 0.41: черновики из выписок</div>' % (CHIP, LINE2))
-    return more_screen(new_dot(), True) + tip
-
-
-# ---- #336 screenshots ----------------------------------------------------------------------------------------------
-
 def shot(h):
     return ('<span style="position: relative; height: 112px; border-radius: 12px; background: linear-gradient(180deg, %s, %s); border: 1px solid %s; overflow: hidden;">'
             '<span style="position: absolute; left: 8px; right: 8px; top: 10px; height: 8px; border-radius: 4px; background: %s;"></span>'
@@ -202,25 +168,14 @@ def shots_a():
     return fb_form(label('Скриншоты · 2 из 3') + grid_ + last)
 
 
-def shots_b():
-    att = ('<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">%s%s</div>'
-           % (chip('Screenshot_1114_1802.jpg · 180 КБ', icon='file'), chip('Приложить скриншот', icon='plus', dashed=True)))
-    return fb_form(att)
-
-
 BOARDS = [  # name, title, fn, issue number
     ('Fb331A', 'А: черновики списком — по дням, категория по правилу, дубль помечен', drafts_a, 331),
     ('Fb331ARules', 'А: «Получатели → категории» — 24 правила, правка', rules_a, 331),
-    ('Fb331B', 'Б: черновики по одному — карточка, свайп «провести/пропустить»', card_b, 331),
     ('Fb331Done', 'Общее: итог разбора после «Поделиться»', share_done, 331),
     ('Fb332', 'Общее (#332): не узнали документ — прислать обезличенный образец', unparsed, 331),
     ('Fb333A', 'А: ⚙ в заголовке экрана → шторка «Вид «Операций»»', settings_a, 333),
     ('Fb333All', 'Общее: «Настройки» — раздел «Экраны» + поиск', settings_all, 333),
-    ('Fb333B', 'Б: только в «Настройках → Экраны»', settings_b, 333),
     ('Fb334A', 'А: смотреть можно, ввод закрыт до обновления', gate_a, 334),
-    ('Fb334B', 'Б: приложение закрыто экраном «Обновите»', gate_b, 334),
     ('Fb335A', 'А: пилюля «новое» у пункта на 7 дней', new_a, 335),
-    ('Fb335B', 'Б: точка у пункта и на вкладке «Ещё» + подсказка', new_b, 335),
     ('Fb336A', 'А: до 3 скриншотов плитками + «последний скриншот»', shots_a, 336),
-    ('Fb336B', 'Б: вложение чипом с именем файла', shots_b, 336),
 ]

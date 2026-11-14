@@ -7,6 +7,7 @@ import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DeleteCategoryUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
+import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.IdGenerator
@@ -159,7 +160,7 @@ class CategoryEditViewModel @Inject constructor(
     private fun withOptions(state: CategoryEditUiState): CategoryEditUiState {
         val selfId = existing?.id
         val topLevel = all.filter { it.type == state.type && !it.archived && it.parentId == null && it.id != selfId }
-            .sortedWith(compareBy({ it.sortOrder }, { it.name }))
+            .sortedWith(CATEGORY_ORDER)
         val hasChildren = all.filter { it.parentId != null && it.parentId != selfId }.map { it.parentId }.toSet()
         val currentChildren = all.filter { it.parentId == selfId && selfId != null }
         val candidates = topLevel.filter { it.id !in hasChildren } + currentChildren.filter { !it.archived }

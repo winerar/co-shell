@@ -3,6 +3,7 @@ package app.coshell.accounts.list
 import app.coshell.R
 import app.coshell.accounts.AccountTypeGroupOrder
 import app.coshell.accounts.groupLabelRes
+import app.coshell.core.model.nameOrder
 
 /**
  * Splits [rows] into the groups of the accounts list for [grouping]; [collapsed] holds keys of folded groups,
@@ -29,9 +30,8 @@ internal fun buildAccountGroups(
             AccountTypeGroupOrder.mapNotNull { type -> byType[type]?.let { group(type.name, it, titleRes = type.groupLabelRes) } }
         }
         AccountGrouping.CURRENCY ->
-            // Currencies with more accounts first, then by code.
-            rows.groupBy { it.currency }.entries
-                .sortedWith(compareByDescending<Map.Entry<String, List<AccountsUiState.Row>>> { it.value.size }.thenBy { it.key })
+            // Alphabetically by code (#338).
+            rows.groupBy { it.currency }.entries.sortedBy { it.key }
                 .map { (code, items) -> group(code, items, titleText = code) }
         AccountGrouping.OWNER -> {
             val shared = rows.filter { it.personalOf == null }
@@ -40,7 +40,7 @@ internal fun buildAccountGroups(
             listOfNotNull(
                 shared.takeIf { it.isNotEmpty() }?.let { group("shared", it, titleRes = R.string.accounts_group_shared) },
                 mine.takeIf { it.isNotEmpty() }?.let { group("mine", it, titleRes = R.string.accounts_group_mine) },
-            ) + others.map { (name, items) -> group("of:$name", items, titleText = name) }
+            ) + others.entries.sortedWith(nameOrder { it.key }).map { (name, items) -> group("of:$name", items, titleText = name) }
         }
     }
 }

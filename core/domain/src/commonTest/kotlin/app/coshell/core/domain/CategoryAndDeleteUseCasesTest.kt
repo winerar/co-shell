@@ -31,10 +31,23 @@ class CategoryAndDeleteUseCasesTest {
     }
 
     @Test
-    fun `default categories have unique names within a type`() {
-        DefaultCategories.create(ids).groupBy { it.type }.values.forEach { list ->
-            assertEquals(list.size, list.map { it.name }.toSet().size)
+    fun `default categories have unique names within a type in every language`() {
+        listOf("ru", "en", "es").forEach { language ->
+            DefaultCategories.create(ids, language).groupBy { it.type }.values.forEach { list ->
+                assertEquals(list.size, list.map { it.name }.toSet().size)
+            }
         }
+    }
+
+    @Test
+    fun `default categories are named in the app language, Russian for an unknown one`() = runTest {
+        val categories = FakeCategoryRepository()
+        SeedDefaultCategoriesUseCase(categories, ids) { "es" }()
+        assertTrue(categories.items.value.values.any { it.name == "Supermercado" })
+        assertEquals("Groceries", DefaultCategories.create(ids, "en").first().name)
+        assertEquals("Продукты", DefaultCategories.create(ids, "fr").first().name)
+        val icons = listOf("ru", "en", "es").map { lang -> DefaultCategories.create(ids, lang).map { it.icon to it.type } }
+        assertEquals(1, icons.toSet().size)
     }
 
     @Test

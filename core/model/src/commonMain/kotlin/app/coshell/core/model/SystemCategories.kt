@@ -13,6 +13,13 @@ object SystemCategories {
     const val ADJUSTMENT_INCOME_ID = "system-adjustment-income"
     const val ADJUSTMENT_NAME = "Корректировка баланса"
 
+    /** [ADJUSTMENT_NAME] in the app's language at creation (`en`, `es`; anything else → Russian). */
+    fun adjustmentName(language: String): String = when (language) {
+        "en" -> "Balance adjustment"
+        "es" -> "Ajuste de saldo"
+        else -> ADJUSTMENT_NAME
+    }
+
     fun adjustmentId(type: CategoryType): String = when (type) {
         CategoryType.EXPENSE -> ADJUSTMENT_EXPENSE_ID
         CategoryType.INCOME -> ADJUSTMENT_INCOME_ID
@@ -27,10 +34,10 @@ object SystemCategories {
 
     fun isAdjustment(categoryId: String?): Boolean = adjustmentType(categoryId) != null
 
-    /** A fresh adjustment category of [type]; sorted last among its siblings. */
-    fun adjustment(type: CategoryType): Category = Category(
+    /** A fresh adjustment category of [type], named in [language]; sorted last among its siblings. */
+    fun adjustment(type: CategoryType, language: String = "ru"): Category = Category(
         id = adjustmentId(type),
-        name = ADJUSTMENT_NAME,
+        name = adjustmentName(language),
         type = type,
         icon = "bank",
         color = 0xFF7A8494,

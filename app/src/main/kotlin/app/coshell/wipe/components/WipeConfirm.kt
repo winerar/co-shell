@@ -50,7 +50,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
             }
         }
         Text(
-            stringResource(R.string.wipe_word_prompt, WipeDataUiState.CONFIRM_WORD),
+            stringResource(R.string.wipe_word_prompt, stringResource(R.string.wipe_confirm_word)),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = Spacing.s),
@@ -59,7 +59,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
             value = state.word,
             onValueChange = onWordChange,
             label = stringResource(R.string.wipe_word_label),
-            placeholder = WipeDataUiState.CONFIRM_WORD,
+            placeholder = stringResource(R.string.wipe_confirm_word),
             enabled = state.step == WipeDataUiState.Step.CONFIRM,
             modifier = Modifier.fillMaxWidth(),
         )

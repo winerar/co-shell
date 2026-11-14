@@ -12,11 +12,13 @@ class AppLanguageTest {
 
     @Test
     fun `a language the app has no strings for falls back to Russian`() {
-        assertEquals(Locale.forLanguageTag("ru"), AppLanguage.resolve("en"))
+        assertEquals(Locale.forLanguageTag("ru"), AppLanguage.resolve("fr"))
     }
 
     @Test
     fun `a supported language is used as is`() {
         assertEquals(Locale.forLanguageTag("ru"), AppLanguage.resolve("ru"))
+        assertEquals(Locale.forLanguageTag("en"), AppLanguage.resolve("en"))
+        assertEquals(Locale.forLanguageTag("es"), AppLanguage.resolve("es"))
     }
 }

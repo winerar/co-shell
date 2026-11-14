@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_title">Import from Wallet</string>
+    <string name="import_menu_hint">Bring in transactions from a CSV export</string>
+    <string name="import_next">Next</string>
+    <string name="import_do">Import</string>
+    <string name="import_step_of">Step %1$d of %2$d</string>
+
+    <string name="import_step_start">File</string>
+    <string name="import_step_summary">What\'s in the file</string>
+    <string name="import_step_accounts">Accounts</string>
+    <string name="import_step_categories">Categories</string>
+    <string name="import_step_transfers">Unpaired transfers</string>
+    <string name="import_step_preview">Review</string>
+    <string name="import_step_done">Done</string>
+
+    <string name="import_start_intro">In Wallet: Settings → Export → CSV. Save the file to your phone and choose it here. The app makes a backup before writing anything, and the whole import can be undone.</string>
+    <string name="import_pick_file">Choose CSV file</string>
+    <string name="import_pick_file_hint">Importing the same or a newer file again adds only what\'s new</string>
+    <string name="import_batches_title">Past imports</string>
+    <string name="import_batch_row">%1$s · transactions: %2$d</string>
+    <string name="import_batch_period">%1$s to %2$s</string>
+    <string name="import_undo">Undo import</string>
+    <string name="import_undo_confirm_title">Undo import?</string>
+    <string name="import_undo_confirm_text">All transactions from this import will be deleted (on the second phone too). Accounts and categories stay.</string>
+    <string name="import_undone">Import undone: transactions deleted — %1$d.</string>
+
+    <string name="import_summary_records">Records: %1$d</string>
+    <string name="import_summary_period">%1$s to %2$s</string>
+    <string name="import_summary_accounts">Accounts: %1$d</string>
+    <string name="import_summary_currencies">Currencies: %1$s</string>
+    <string name="import_summary_categories">Categories: %1$d</string>
+    <string name="import_summary_transfers">Transfers: %1$d, unpaired: %2$d</string>
+    <string name="import_summary_labels">Labels: %1$s</string>
+    <string name="import_parse_errors_title">Lines not read: %1$d — they won\'t be imported</string>
+    <string name="import_parse_error_line">Line %1$d: %2$s</string>
+
+    <string name="import_accounts_hint">Each Wallet account can become a new account or be merged into an existing one in the same currency.</string>
+    <string name="import_account_records">Records: %1$d · %2$s</string>
+    <string name="import_account_new">New account</string>
+    <string name="import_wallet_balance">Current balance in Wallet</string>
+    <string name="import_wallet_balance_hint">Optional: the difference goes into the starting balance</string>
+    <string name="import_wallet_balance_toggle_sign">Switch sign: minus — credit card debt</string>
+    <string name="import_wallet_balance_error">Check the amount: digits and a decimal point only</string>
+
+    <string name="import_categories_hint">Tap a category to pick an existing one instead of a new one.</string>
+    <string name="import_category_records">%1$s · records: %2$d</string>
+    <string name="import_category_new">New: %1$s</string>
+    <string name="import_category_pick_title">Category for “%1$s”</string>
+    <string name="import_expense">Expense</string>
+    <string name="import_income">Income</string>
+
+    <string name="import_transfers_hint">These transfers have no other half in the file. Usually these are balance adjustments in Wallet.</string>
+    <string name="import_unpaired_adjustment">Adjustment</string>
+    <string name="import_unpaired_skip">Skip</string>
+    <string name="import_unpaired_transfer">Transfer: %1$s</string>
+    <string name="import_unpaired_pick_title">Other account of the transfer</string>
+    <string name="import_unpaired_transfer_choose">Transfer to account…</string>
+
+    <string name="import_preview_new">Transactions to add: %1$d</string>
+    <string name="import_preview_known">Already imported before: %1$d — skipped</string>
+    <string name="import_preview_skipped">Skipped by your choice: %1$d</string>
+    <string name="import_preview_issues">Need a decision: %1$d — won\'t be imported</string>
+    <string name="import_preview_new_accounts">New accounts: %1$d, new categories: %2$d</string>
+    <string name="import_preview_balances">Balances after import</string>
+    <string name="import_preview_nothing">No new transactions — everything in this file is already imported.</string>
+    <string name="import_issue_unmapped">no account or category chosen</string>
+    <string name="import_issue_needs_rate">currency differs from the account, no rate</string>
+    <string name="import_issue_zero">zero amount</string>
+    <string name="import_issue_line">Line %1$d: %2$s</string>
+
+    <string name="import_done_title">Import complete</string>
+    <string name="import_done_text">Transactions added: %1$d. A backup was made beforehand.</string>
+    <string name="import_done_close">Done</string>
+
+    <string name="import_error_read">Couldn\'t open the file. Try choosing it again.</string>
+    <string name="import_error_not_wallet">This doesn\'t look like a Wallet export: the file is missing the needed columns. Make sure it\'s the CSV from Wallet.</string>
+    <string name="import_error_backup">Couldn\'t make a backup — the import hasn\'t started.</string>
+    <string name="import_error_save">Couldn\'t save, nothing was written. Please try again.</string>
+
+    <string name="import_problem_empty_file">the file is empty</string>
+    <string name="import_problem_quote">unclosed quote</string>
+    <string name="import_problem_column">no %1$s column</string>
+    <string name="import_problem_value">unclear value “%1$s” in column %2$s</string>
+</resources>

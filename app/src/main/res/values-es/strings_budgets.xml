@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="budgets_title">Presupuestos</string>
+    <string name="budgets_menu_hint">Límites mensuales, plan y real</string>
+    <string name="budgets_new">Nuevo límite</string>
+    <string name="budgets_previous_month">Mes anterior</string>
+    <string name="budgets_next_month">Mes siguiente</string>
+    <string name="budgets_settings">Ajustes del presupuesto</string>
+    <string name="budgets_start_hint">El mes empieza el día %1$d. Va bien empezar el día de cobro; en un mes corto, el último día.</string>
+    <string name="budgets_start_day">Desde el día %1$d</string>
+    <string name="budgets_start_default">por defecto — mes natural</string>
+    <string name="budgets_period_days">%1$s — %2$s</string>
+    <string name="budgets_left">Queda</string>
+    <string name="budgets_over">Exceso</string>
+    <string name="budgets_spent_of">gastado %1$s de %2$s</string>
+    <plurals name="budgets_days_left">
+        <item quantity="one">queda %d día</item>
+        <item quantity="many">quedan %d días</item>
+        <item quantity="other">quedan %d días</item>
+    </plurals>
+    <string name="budgets_forecast_over">A este ritmo, a fin de mes ≈ %1$s — %2$s más de lo previsto</string>
+    <string name="budgets_forecast_ok">A este ritmo, a fin de mes ≈ %1$s — dentro de lo previsto</string>
+    <string name="budgets_missing">Sin contar: %1$s — no hay tipo de cambio</string>
+    <string name="budgets_envelopes">Límites · %1$d</string>
+    <string name="budgets_filter_all">Todos · %1$d</string>
+    <string name="budgets_filter_hot">Al límite · %1$d</string>
+    <string name="budgets_filter_in_plan">En plan · %1$d</string>
+    <string name="budgets_filter_idle">Sin gastos · %1$d</string>
+    <plurals name="budgets_folder">
+        <item quantity="one">%d subcategoría</item>
+        <item quantity="many">%d subcategorías</item>
+        <item quantity="other">%d subcategorías</item>
+    </plurals>
+    <string name="budgets_carried">arrastre %1$s</string>
+    <string name="budgets_caption_left">quedan %1$s</string>
+    <string name="budgets_caption_left_per_day">quedan %1$s · %2$s al día</string>
+    <plurals name="budgets_caption_ahead">
+        <item quantity="one">el gasto va por delante del ritmo · quedan %2$s para %1$d día</item>
+        <item quantity="many">el gasto va por delante del ritmo · quedan %2$s para %1$d días</item>
+        <item quantity="other">el gasto va por delante del ritmo · quedan %2$s para %1$d días</item>
+    </plurals>
+    <string name="budgets_caption_ahead_last">el gasto va por delante del ritmo · quedan %1$s</string>
+    <string name="budgets_caption_over">exceso de %1$s</string>
+    <string name="budgets_caption_idle">sin gastos</string>
+    <string name="budgets_caption_paid">pagado del todo</string>
+    <string name="budgets_fold">Plegar subcategorías</string>
+    <string name="budgets_unfold">Desplegar subcategorías</string>
+    <string name="budgets_empty_title">No hay límites para este mes</string>
+    <string name="budgets_empty_text">Indica cuánto quieres gastar al mes en una categoría — la app te mostrará cuánto queda y te avisará si el gasto va por delante del ritmo.</string>
+    <string name="budgets_hint">La barra es lo gastado; la marca, dónde convendría estar hoy. El límite cambia desde el mes elegido; los meses anteriores se quedan como estaban.</string>
+
+    <string name="budget_detail_title">%1$s · %2$s</string>
+    <string name="budget_detail_edit">Cambiar el límite</string>
+    <string name="budget_detail_left">queda</string>
+    <string name="budget_detail_over">exceso</string>
+    <plurals name="budget_detail_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="many">%1$d días</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <string name="budget_detail_spent_of">Gastado %1$s de %2$s</string>
+    <string name="budget_detail_pace">hasta hoy debería ser ≈ %1$s</string>
+    <string name="budget_detail_note">Nota</string>
+    <string name="budget_detail_categories">Categorías</string>
+    <string name="budget_detail_spent">gastado %1$s</string>
+    <string name="budget_detail_operations">Movimientos de %1$s</string>
+    <string name="budget_detail_no_operations">Este mes no hay movimientos para este límite.</string>
+    <string name="budget_detail_no_limit_title">Este mes no hay límite</string>
+    <string name="budget_detail_no_limit_text">Se quitó o empieza en un mes posterior. Fija un límite — regirá desde este mes en adelante.</string>
+    <string name="budget_detail_set_limit">Fijar límite</string>
+
+    <string name="budget_edit_title">Límite</string>
+    <string name="budget_kind_folder">Con subcategorías</string>
+    <string name="budget_kind_category">Categoría</string>
+    <string name="budget_what">Para qué</string>
+    <string name="budget_choose_folder">Elige una categoría con subcategorías</string>
+    <string name="budget_choose_category">Elige una categoría</string>
+    <string name="budget_no_folders">Aún no hay categorías de gastos con subcategorías — créalas en «Más → Categorías» o fija un límite para una categoría normal.</string>
+    <string name="budget_category_error">Elige para qué será el límite</string>
+    <string name="budget_amount">Al mes</string>
+    <string name="budget_amount_error">Escribe un importe mayor que cero</string>
+    <string name="budget_average">Media de 3 meses — %1$s</string>
+    <string name="budget_currency">Moneda del límite</string>
+    <string name="budget_inside">Subcategorías · opcional</string>
+    <string name="budget_inside_limit">límite %1$s</string>
+    <string name="budget_inside_none">sin límite propio</string>
+    <string name="budget_inside_add">＋ límite</string>
+    <string name="budget_rollover">Arrastrar el sobrante</string>
+    <string name="budget_rollover_hint">lo no gastado o el exceso — al mes siguiente</string>
+    <string name="budget_note">Nota para ti</string>
+    <string name="budget_from_month">Rige desde %1$s en adelante; los meses anteriores no cambian.</string>
+    <string name="budget_remove">Quitar límite</string>
+    <string name="budget_remove_confirm_title">¿Quitar el límite?</string>
+    <string name="budget_remove_confirm_text">No habrá límite desde %1$s en adelante. En los meses anteriores se conserva.</string>
+    <string name="budget_save_failed">No se pudo guardar: esta categoría se archivó o se eliminó en el otro teléfono. Elige otra.</string>
+    <string name="home_budget_title">Presupuesto</string>
+    <plurals name="home_budget_title_days">
+        <item quantity="one">Presupuesto · %d día</item>
+        <item quantity="many">Presupuesto · %d días</item>
+        <item quantity="other">Presupuesto · %d días</item>
+    </plurals>
+    <string name="home_budget_over">exceso</string>
+    <string name="home_budget_hot">Al límite en el presupuesto</string>
+</resources>

@@ -32,3 +32,25 @@
 - Не винить человека: «траты обгоняют темп», а не «обгоняете темп»; сбой сервера — «С вашей стороны всё в порядке».
 - При сбое — успокоить, если это правда: «данные не тронуты», «данные в сохранности», «ничего не потеряно».
 - Без жаргона и сокращений: «нажмите, чтобы…», а не «тап —»; «не меняется», а не «заблок.».
+
+## English and Spanish (#270)
+`values-en`, `values-es` — те же ключи, что в `values` (русский); сверяет `TranslationsTest` (ключи, `%1$s`, формы
+множественного числа: en — one/other, es — one/many/other). Новая строка → сразу во все три языка.
+Испанский — нейтральный castellano на «tú» (без voseo и региональных слов: «teléfono», не móvil/celular).
+В английском — кавычки “ ”, апостроф экранировать `\'`; в испанском — «».
+
+| Русский | English | Español |
+|---|---|---|
+| Операция | Transaction | Movimiento |
+| Счёт | Account | Cuenta |
+| Категория / Подкатегория | Category / Subcategory | Categoría / Subcategoría |
+| Сумма / Сумма покупки | Amount / Purchase amount | Importe / Importe de la compra |
+| Возврат | Refund | Devolución |
+| Шаблон | Template | Plantilla |
+| Бюджеты / Лимит | Budgets / Limit | Presupuestos / Límite |
+| Валюты итогов | Totals currencies | Monedas de los totales |
+| Курс (ручной) | Rate (manual) | Tipo de cambio, cambio (manual) |
+| Теги | Tags | Etiquetas |
+| Семья | Family | Familia |
+| Резервная копия | Backup | Copia de seguridad |
+| Обзор / Ещё | Overview / More | Resumen / Más |

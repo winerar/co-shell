@@ -38,6 +38,7 @@ import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
+import app.coshell.language.AppLanguage
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.WipeAllDataUseCase
 import app.coshell.core.domain.importer.ImportRepository
@@ -147,7 +148,7 @@ object DataModule {
         ids: IdGenerator,
         ensureLabelTags: EnsureLabelTagsUseCase,
     ): WalletImportUseCase =
-        WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors, ensureLabelTags)
+        WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories, AppLanguage::current), ids, ImportAccountColors, ensureLabelTags)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =
@@ -181,7 +182,7 @@ object DataModule {
 
     @Provides
     fun provideSeedDefaultCategories(categories: CategoryRepository, ids: IdGenerator) =
-        SeedDefaultCategoriesUseCase(categories, ids)
+        SeedDefaultCategoriesUseCase(categories, ids, AppLanguage::current)
 
     @Provides
     fun provideDataWipeRepository(db: CoShellDatabase, stamper: WriteStamper): DataWipeRepository =

@@ -51,6 +51,14 @@ class SystemCategoriesTest {
     }
 
     @Test
+    fun `a new adjustment category is named in the app language`() = runTest {
+        val spanish = FakeCategoryRepository()
+        EnsureAdjustmentCategoriesUseCase(spanish) { "es" }()
+        assertEquals("Ajuste de saldo", spanish.getCategory(expenseId)!!.name)
+        assertEquals("Корректировка баланса", SystemCategories.adjustmentName("fr"))
+    }
+
+    @Test
     fun `type of a system category cannot change`() = runTest {
         ensure()
         val save = SaveCategoryUseCase(categories, FakeTransactionRepository())

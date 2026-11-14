@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="filter_category">Category</string>
+    <string name="filter_me">Me</string>
+    <string name="filter_sheet_reset">Reset</string>
+    <plurals name="filter_show_count">
+        <item quantity="one">Show %1$d transaction</item>
+        <item quantity="other">Show %1$d transactions</item>
+    </plurals>
+    <string name="filter_show">Done</string>
+    <plurals name="filter_total_count">
+        <item quantity="one">%1$d transaction</item>
+        <item quantity="other">%1$d transactions</item>
+    </plurals>
+    <string name="filter_total_no_rate">no rate: %1$s</string>
+
+    <string name="filter_categories_title">Categories</string>
+    <string name="filter_categories_search">Search %1$d categories</string>
+    <string name="filter_categories_expenses">Expenses</string>
+    <string name="filter_categories_incomes">Income</string>
+    <string name="filter_categories_some">%1$d of %2$d</string>
+
+    <string name="filter_period_title">Period</string>
+    <string name="filter_period_three_months">3 months</string>
+    <string name="filter_period_this_year">This year</string>
+    <string name="filter_period_last_year">Last year</string>
+    <string name="filter_period_earlier">Earlier</string>
+    <string name="filter_period_later">Later</string>
+    <string name="filter_period_own">Custom period</string>
+    <string name="filter_period_from">From</string>
+    <string name="filter_period_to">To</string>
+    <string name="filter_period_note">The arrows move the chosen span: a month, three months, a year.</string>
+
+    <string name="filter_accounts_title">Account and who added</string>
+    <string name="filter_accounts_title_alone">Accounts</string>
+    <string name="filter_who">Who added</string>
+    <string name="filter_who_all">Everyone</string>
+    <string name="filter_accounts_some">Accounts · %1$d of %2$d</string>
+
+    <string name="filter_tag"># Tag</string>
+    <string name="filter_tags_title">Tags</string>
+    <string name="filter_tags_search">Find a tag</string>
+    <string name="filter_tags_all">All · %1$d · A–Z</string>
+    <string name="filter_tags_some">%1$d of %2$d selected</string>
+    <string name="filter_tags_nothing">No such tag</string>
+
+    <string name="amount_hint_exact">Amount exactly %1$s — in any currency, by account and purchase amount</string>
+    <string name="amount_hint_range">Amount from %1$s to %2$s — in any currency, by account and purchase amount</string>
+    <string name="amount_hint_more">Amount over %1$s — in any currency, by account and purchase amount</string>
+    <string name="amount_hint_at_least">Amount from %1$s — in any currency, by account and purchase amount</string>
+    <string name="amount_hint_less">Amount under %1$s — in any currency, by account and purchase amount</string>
+    <string name="amount_hint_at_most">Amount up to %1$s — in any currency, by account and purchase amount</string>
+</resources>

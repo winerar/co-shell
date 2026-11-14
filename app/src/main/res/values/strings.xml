@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Co-Shell</string>
+    <string name="app_name" translatable="false">Co-Shell</string>
 
     <string name="action_save">Сохранить</string>
     <string name="action_cancel">Отмена</string>
@@ -534,6 +534,8 @@
     <string name="wipe_backup_hint">Файл co-shell-before-wipe-….json в «Загрузках». Вернуть — «Ещё → Резервная копия».</string>
     <string name="wipe_word_prompt">Чтобы подтвердить, введите %1$s</string>
     <string name="wipe_word_label">Слово</string>
+    <!-- Must be one of WipeDataUiState.CONFIRM_WORDS. -->
+    <string name="wipe_confirm_word">СТЕРЕТЬ</string>
     <string name="wipe_button">Стереть у всей семьи</string>
     <string name="wipe_backup_failed">Не удалось сохранить копию, поэтому ничего не стёрто. Возможно, на телефоне мало места.</string>
     <string name="wipe_done_title">Данные стёрты</string>

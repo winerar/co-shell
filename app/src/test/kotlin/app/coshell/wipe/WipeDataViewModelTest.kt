@@ -27,7 +27,7 @@ class WipeDataViewModelTest {
     private val categories = FakeCategoryRepository()
     private var backupName: String? = "co-shell-before-wipe-2026-11-10-0912.json"
     private val vm by lazy {
-        WipeDataViewModel(wipe, WipeAllDataUseCase(wipe, SeedDefaultCategoriesUseCase(categories) { "id" }), WipeBackup { backupName })
+        WipeDataViewModel(wipe, WipeAllDataUseCase(wipe, SeedDefaultCategoriesUseCase(categories, { "id" })), WipeBackup { backupName })
     }
 
     @Test
@@ -39,6 +39,14 @@ class WipeDataViewModelTest {
         assertEquals(0, wipe.wiped)
         vm.onWordChange(" стереть ")
         assertTrue(vm.state.value.canWipe)
+    }
+
+    @Test
+    fun `the word of every app language unlocks the button`() {
+        listOf("DELETE", "borrar").forEach {
+            vm.onWordChange(it)
+            assertTrue(vm.state.value.canWipe)
+        }
     }
 
     @Test

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="filter_category">Categoría</string>
+    <string name="filter_me">Yo</string>
+    <string name="filter_sheet_reset">Restablecer</string>
+    <plurals name="filter_show_count">
+        <item quantity="one">Ver %1$d movimiento</item>
+        <item quantity="many">Ver %1$d movimientos</item>
+        <item quantity="other">Ver %1$d movimientos</item>
+    </plurals>
+    <string name="filter_show">Listo</string>
+    <plurals name="filter_total_count">
+        <item quantity="one">%1$d movimiento</item>
+        <item quantity="many">%1$d movimientos</item>
+        <item quantity="other">%1$d movimientos</item>
+    </plurals>
+    <string name="filter_total_no_rate">sin tipo de cambio: %1$s</string>
+
+    <string name="filter_categories_title">Categorías</string>
+    <string name="filter_categories_search">Buscar entre %1$d categorías</string>
+    <string name="filter_categories_expenses">Gastos</string>
+    <string name="filter_categories_incomes">Ingresos</string>
+    <string name="filter_categories_some">%1$d de %2$d</string>
+
+    <string name="filter_period_title">Periodo</string>
+    <string name="filter_period_three_months">3 meses</string>
+    <string name="filter_period_this_year">Este año</string>
+    <string name="filter_period_last_year">Año pasado</string>
+    <string name="filter_period_earlier">Antes</string>
+    <string name="filter_period_later">Después</string>
+    <string name="filter_period_own">Periodo propio</string>
+    <string name="filter_period_from">Desde</string>
+    <string name="filter_period_to">Hasta</string>
+    <string name="filter_period_note">Las flechas mueven el tramo elegido: un mes, tres meses, un año.</string>
+
+    <string name="filter_accounts_title">Cuenta y quién lo anotó</string>
+    <string name="filter_accounts_title_alone">Cuentas</string>
+    <string name="filter_who">Quién lo anotó</string>
+    <string name="filter_who_all">Todos</string>
+    <string name="filter_accounts_some">Cuentas · %1$d de %2$d</string>
+
+    <string name="filter_tag"># Etiqueta</string>
+    <string name="filter_tags_title">Etiquetas</string>
+    <string name="filter_tags_search">Buscar etiqueta</string>
+    <string name="filter_tags_all">Todas · %1$d · A–Z</string>
+    <string name="filter_tags_some">%1$d de %2$d seleccionadas</string>
+    <string name="filter_tags_nothing">No existe esa etiqueta</string>
+
+    <string name="amount_hint_exact">Importe exacto de %1$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+    <string name="amount_hint_range">Importe de %1$s a %2$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+    <string name="amount_hint_more">Importe mayor que %1$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+    <string name="amount_hint_at_least">Importe desde %1$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+    <string name="amount_hint_less">Importe menor que %1$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+    <string name="amount_hint_at_most">Importe hasta %1$s — en cualquier moneda, por cuenta y por importe de la compra</string>
+</resources>

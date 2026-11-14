@@ -14,6 +14,7 @@ import mockup_screens_fb_290 as fb_290
 import mockup_screens_fb_quick as fb_quick
 import mockup_screens_fb_nov14 as fb_nov14
 import mockup_screens_fb_nov14b as fb_nov14b
+import mockup_screens_fb_modals as fb_modals
 
 FEEDBACK = [
     (154, 'Отзывы #154 + #155 · что где лежит: вкладки, плитки, «Ещё», настройки',
@@ -139,5 +140,5 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),
     ('Fb157A', 'А · Мои отзывы со статусом (выбрано)', feedback_status_list, 157),
     ('Fb157A2', 'А · Отзыв подробно: путь до версии', feedback_detail, 157),
-] + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS + fb_290.BOARDS + fb_quick.BOARDS + fb_nov14.BOARDS + fb_nov14b.BOARDS
-FEEDBACK = fb_nov14.FEEDBACK + fb_nov14b.FEEDBACK + fb_quick.FEEDBACK + fb_290.FEEDBACK + fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK
+] + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS + fb_290.BOARDS + fb_quick.BOARDS + fb_nov14.BOARDS + fb_nov14b.BOARDS + fb_modals.BOARDS
+FEEDBACK = fb_modals.FEEDBACK + fb_nov14.FEEDBACK + fb_nov14b.FEEDBACK + fb_quick.FEEDBACK + fb_290.FEEDBACK + fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK

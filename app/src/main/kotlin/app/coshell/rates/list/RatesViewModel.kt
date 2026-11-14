@@ -119,7 +119,10 @@ class RatesViewModel @Inject constructor(
 
     private fun openEditor(from: String, to: String, rate: String, date: LocalDate? = null, original: ExchangeRate? = null) {
         val today = today()
-        local.update { it.copy(editor = ManualRateForm(from, to, rate, date ?: today, today, original)) }
+        val state = state.value
+        val choices = (listOf(state.base) + state.current.map { it.currency } + state.manual.flatMap { listOf(it.rate.from.value, it.rate.to.value) })
+            .filter { it.isNotEmpty() }.distinct()
+        local.update { it.copy(editor = ManualRateForm(from, to, rate, date ?: today, today, original, choices = choices)) }
     }
 
     fun onFromChange(value: String) = updateEditor { it.copy(from = value.uppercase(), fromError = null, toError = null) }

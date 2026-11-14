@@ -7,9 +7,10 @@
     <string name="budgets_previous_month">Прошлый месяц</string>
     <string name="budgets_next_month">Следующий месяц</string>
     <string name="budgets_settings">Настройки бюджета</string>
-    <string name="budgets_start_hint">Месяц считается с %1$d-го числа. Удобно начинать в день зарплаты; в коротком месяце — с последнего дня.</string>
-    <string name="budgets_start_day">С %1$d-го числа</string>
-    <string name="budgets_start_default">по умолчанию — календарный месяц</string>
+    <string name="budgets_start_title">Начало месяца</string>
+    <string name="budgets_start_subtitle">С какого числа считать бюджет — удобно в день зарплаты</string>
+    <string name="budgets_start_period">%1$s: %2$s — %3$s</string>
+    <string name="budgets_start_rule">Точка — по умолчанию, календарный месяц. В коротком месяце — с последнего дня.</string>
     <string name="budgets_period_days">%1$s — %2$s</string>
     <string name="budgets_left">Осталось</string>
     <string name="budgets_over">Перерасход</string>

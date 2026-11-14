@@ -53,6 +53,12 @@ class RatesViewModelTest {
     }
 
     @Test
+    fun `currency pickers offer the main and the family's currencies`() {
+        vm.addManual()
+        assertEquals(listOf("USD", "AMD", "ARS"), vm.state.value.editor!!.choices)
+    }
+
+    @Test
     fun `current rates follow the main currency`() {
         settings.currencies.value = listOf(ars, usd)
 

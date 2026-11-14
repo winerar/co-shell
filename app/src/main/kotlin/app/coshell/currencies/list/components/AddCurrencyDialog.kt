@@ -9,23 +9,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import app.coshell.R
 import app.coshell.core.designsystem.components.CodeKeyboard
-import app.coshell.core.designsystem.components.CoShellDialog
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.currencies.list.AddCurrencyForm
 import app.coshell.currencies.list.ReportCurrenciesActions
+import app.coshell.ui.sheet.ModalSheet
 
 /** "Add a currency": chips of the family's currencies not in the list yet, plus a code field. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AddCurrencyDialog(form: AddCurrencyForm, actions: ReportCurrenciesActions) {
-    CoShellDialog(
+    ModalSheet(
         title = stringResource(R.string.report_currencies_add),
-        confirmLabel = stringResource(R.string.action_add),
-        onConfirm = actions.onConfirmAdd,
-        onDismiss = actions.onDismissAdd,
-        dismissLabel = stringResource(R.string.action_cancel),
+        actionLabel = stringResource(R.string.action_add),
+        onAction = { actions.onConfirmAdd() },
+        onClosed = actions.onDismissAdd,
     ) {
         if (form.suggestions.isNotEmpty()) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {

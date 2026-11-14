@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.ui.form.ChoiceDialog
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ChoiceOption
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -55,7 +55,7 @@ fun CategoryPickDialog(
             val name = c.parentId?.let(byId::get)?.let { "${it.name} / ${c.name}" } ?: c.name
             ChoiceOption<CategoryChoice>(CategoryChoice.UseExisting(c.id), name)
         }.sortedBy { it.label.lowercase() }
-    ChoiceDialog(stringResource(R.string.import_category_pick_title, key.name), options, selected, onPick, onDismiss)
+    ChoiceSheet(stringResource(R.string.import_category_pick_title, key.name), options, selected, onPick, onDismiss)
 }
 
 @Composable

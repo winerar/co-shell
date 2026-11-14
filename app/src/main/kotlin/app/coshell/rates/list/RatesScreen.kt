@@ -14,7 +14,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.rates.list.components.AddRateButton
 import app.coshell.rates.list.components.CurrentRateRow
-import app.coshell.rates.list.components.ManualRateDialog
+import app.coshell.rates.list.components.ManualRateSheet
 import app.coshell.rates.list.components.ManualRateRow
 import app.coshell.rates.list.components.RatesSectionHeader
 import app.coshell.rates.list.components.RatesSources
@@ -67,7 +67,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         }
     }
 
-    state.editor?.let { ManualRateDialog(it, editorActions) }
+    state.editor?.let { ManualRateSheet(it, editorActions) }
     if (state.pendingDelete != null) {
         ConfirmDialog(
             title = R.string.rates_manual_delete_title,

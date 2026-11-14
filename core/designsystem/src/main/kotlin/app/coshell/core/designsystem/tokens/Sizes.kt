@@ -77,4 +77,7 @@ object Sizes {
     val bullet = 8.dp
     val bulletLarge = 10.dp
     val bulletSmall = 5.dp
+
+    /** Height of the date range picker in its sheet (#345): about three months on screen. */
+    val rangePicker = 440.dp
 }

@@ -6,7 +6,7 @@ import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import kotlinx.datetime.LocalDate
 
-/** Fields of the "manual rate" dialog: `1 from = rate to` from [date]. */
+/** Fields of the «Курс вручную» sheet: `1 from = rate to` from [date]. */
 data class ManualRateForm(
     val from: String,
     val to: String,
@@ -18,8 +18,15 @@ data class ManualRateForm(
     val fromError: CurrencyError? = null,
     val toError: CurrencyError? = null,
     val rateError: Boolean = false,
+    /** Currencies offered by the pickers: the main one, the family's and those of manual rates. */
+    val choices: List<String> = emptyList(),
 ) {
     enum class CurrencyError { INVALID, SAME }
+
+    companion object {
+        /** Digits after the comma the keypad takes for a rate (0,000675 USD per ARS needs six). */
+        const val RATE_FRACTION_DIGITS = 10
+    }
 }
 
 /** Checks the form; returns it with errors set, and the rate to save when everything is valid. */

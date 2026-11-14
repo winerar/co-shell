@@ -33,7 +33,7 @@ import app.coshell.core.designsystem.tokens.Spacing
  * Own amount keypad of the entry sheet (owner 2026-11-09: «удобно одним пальцем»): digits, `000`, decimal,
  * `+` for adding up a receipt, backspace and a tall «Готово» under the thumb (bottom right). Fixed height —
  * the sheet does not jump as with the system keyboard. Every key sinks and springs back (tactile system)
- * with a keyboard tick.
+ * with a keyboard tick. [showPlus] = false — a single number (a rate), no adding up.
  */
 @Composable
 fun CoShellKeypad(
@@ -43,6 +43,7 @@ fun CoShellKeypad(
     modifier: Modifier = Modifier,
     doneEnabled: Boolean = true,
     showDecimal: Boolean = true,
+    showPlus: Boolean = true,
 ) {
     val haptics = LocalHapticFeedback.current
     val press = { key: KeypadKey ->
@@ -67,8 +68,12 @@ fun CoShellKeypad(
             Key(onClick = { press(KeypadKey.Backspace) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
                 Icon(painterResource(R.drawable.ic_backspace), contentDescription = backspaceLabel)
             }
-            Key(onClick = { press(KeypadKey.Plus) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
-                Text("+", style = AmountTitleStyle)
+            if (showPlus) {
+                Key(onClick = { press(KeypadKey.Plus) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
+                    Text("+", style = AmountTitleStyle)
+                }
+            } else {
+                Spacer()
             }
             Key(
                 onClick = { if (doneEnabled) press(KeypadKey.Done) },

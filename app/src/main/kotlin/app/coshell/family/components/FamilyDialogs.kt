@@ -1,7 +1,6 @@
 package app.coshell.family.components
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,22 +10,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellAlertDialog
-import app.coshell.core.designsystem.components.CoShellDialog
 import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.ui.sheet.ModalSheet
 
 /** Asks for the Google email of the person to invite. */
 @Composable
 internal fun InviteDialog(onInvite: (String) -> Unit, onDismiss: () -> Unit) {
     var email by rememberSaveable { mutableStateOf("") }
-    CoShellDialog(
+    ModalSheet(
         title = stringResource(R.string.family_invite),
-        confirmLabel = stringResource(R.string.family_invite_send),
-        onConfirm = { onInvite(email) },
-        onDismiss = onDismiss,
-        dismissLabel = stringResource(R.string.action_cancel),
-        confirmEnabled = email.isNotBlank(),
+        subtitle = stringResource(R.string.family_invite_dialog_text),
+        actionLabel = stringResource(R.string.family_invite_send),
+        onAction = { onInvite(email) },
+        onClosed = onDismiss,
+        actionEnabled = email.isNotBlank(),
     ) {
-        Text(stringResource(R.string.family_invite_dialog_text))
         CoShellTextField(
             value = email,
             onValueChange = { email = it },

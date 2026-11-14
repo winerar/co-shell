@@ -5,7 +5,7 @@ Usage: poll-page.py <spec.json> <out-dir>
 spec.json: {"title": "...", "h1": "...", "intro": "...", "questions": [
   {"id": "i129", "num": "#129", "title": "...", "lead": "...",
    "opts": [{"v": "A", "t": "А: ...", "rec": true, "d": "...", "img": ["Fb129A"]}, ...],
-   "common": ["Fb129All"]}]}
+   "common": ["Fb129All"], "link": {"href": "https://…", "text": "живая страница"}}]}  # link — optional
 Writes <out-dir>/index.html and <out-dir>/img/<Board>.png (dark «Вольт», via render-mockups.js).
 Publish: Artifact publish file_path=<out>/index.html, files {"img/X.png": "<out>/img/X.png"}, capabilities {"db": {}}.
 Read answers: ArtifactData list, collection "answers" (doc id = question id: {choice, note?, at}).

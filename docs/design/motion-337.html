@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Движение co-shell</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root {
+  --bg: #F4F7EF; --card: #FFFFFF; --chip: #E7ECE1; --line: #D5DCCD; --ink: #10160D; --muted: #5E6A58;
+  --lime: #5A8F00; --onlime: #FFFFFF; --pink: #D6264D; --hero: linear-gradient(135deg, #DDF3B8, #CFEFEA, #E6DAF5);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #050805; --card: #10160D; --chip: #1B2317; --line: #2E382A; --ink: #EEF5E6; --muted: #9AA594;
+    --lime: #B8FF2E; --onlime: #0E1F00; --pink: #FF5C7F; --hero: linear-gradient(135deg, #314617, #0E2523, #271E36);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #050805; --card: #10160D; --chip: #1B2317; --line: #2E382A; --ink: #EEF5E6; --muted: #9AA594;
+  --lime: #B8FF2E; --onlime: #0E1F00; --pink: #FF5C7F; --hero: linear-gradient(135deg, #314617, #0E2523, #271E36);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: Onest, system-ui, sans-serif; }
+main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { margin: 0 0 6px; font-size: 26px; }
+.intro { margin: 0 0 16px; color: var(--muted); max-width: 75ch; line-height: 1.45; }
+.bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.btn { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+.col { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+.col h2 { margin: 0; font-size: 18px; }
+.col p.d { margin: 4px 0 14px; color: var(--muted); font-size: 13px; line-height: 1.4; min-height: 54px; }
+.tag { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--lime); color: var(--onlime); font-size: 11px; vertical-align: 3px; }
+.demo { border-top: 1px solid var(--line); padding: 12px 0; }
+.demo > span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+/* --- components, timing comes from per-variant vars --- */
+.press { height: 48px; width: 100%; border-radius: 999px; border: none; background: var(--lime); color: var(--onlime); font: inherit; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform var(--t-fast) var(--e-press), border-radius var(--t) var(--e), width var(--t) var(--e); }
+.press:active { transform: scale(var(--press)); }
+.press.done { border-radius: 999px; }
+.press .ck { display: inline-block; transform: scale(0) rotate(-45deg); transition: transform var(--t) var(--e-pop); width: 0; overflow: visible; }
+.press.done .ck { transform: scale(1) rotate(0); width: 20px; }
+.sw { width: 56px; height: 32px; border-radius: 999px; background: var(--chip); border: 1px solid var(--line); position: relative; cursor: pointer; transition: background var(--t) var(--e); }
+.sw i { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 999px; background: var(--muted); transition: left var(--t) var(--e), width var(--t-fast) var(--e), background var(--t) var(--e); }
+.sw:active i { width: var(--squish); }
+.sw.on { background: var(--lime); }
+.sw.on i { left: calc(100% - 3px - 24px); background: var(--onlime); }
+.sw.on:active i { left: calc(100% - 3px - var(--squish)); }
+.seg { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); height: 40px; border-radius: 999px; background: var(--chip); padding: 3px; }
+.seg b { position: absolute; top: 3px; bottom: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: var(--lime); transition: transform var(--t) var(--e); }
+.seg button { position: relative; border: none; background: none; font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; transition: color var(--t) var(--e); }
+.seg button.on { color: var(--onlime); font-weight: 600; }
+.list { display: flex; flex-direction: column; gap: 6px; }
+.item { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px; border-radius: 12px; background: var(--chip); font-size: 14px; overflow: hidden;
+  transition: transform var(--t) var(--e), opacity var(--t-fast) linear, height var(--t) var(--e), filter var(--t) var(--e); }
+.item.enter { opacity: 0; transform: var(--enter); height: 0; filter: blur(var(--blur)); }
+.item .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--lime); flex: none; }
+.item .a { margin-left: auto; font-family: 'JetBrains Mono', monospace; color: var(--pink); }
+.cardx { border-radius: 16px; background: var(--hero); padding: 12px 14px; cursor: pointer; overflow: hidden; transition: transform var(--t-fast) var(--e-press); }
+.cardx:active { transform: scale(var(--press-card)); }
+.cardx .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t) var(--e), opacity var(--t) var(--e); opacity: 0; }
+.cardx.open .more { grid-template-rows: 1fr; opacity: 1; }
+.cardx .more > div { overflow: hidden; font-size: 13px; color: var(--muted); }
+.num { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; display: flex; height: 40px; overflow: hidden; }
+.num span { display: inline-block; white-space: pre; transition: transform var(--t) var(--e); }
+.stage { position: relative; height: 150px; border-radius: 16px; background: var(--chip); overflow: hidden; cursor: pointer; }
+.stage .sh { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; border-radius: 20px 20px 0 0; background: var(--card); transform: translateY(100%);
+  transition: transform var(--t-slow) var(--e); padding: 12px; font-size: 13px; color: var(--muted); }
+.stage.open .sh { transform: translateY(0); }
+.stage .hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; }
+.burst { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); pointer-events: none; transition: transform 700ms cubic-bezier(.2,.8,.2,1), opacity 700ms ease-out; }
+/* variants: spring curves drawn with linear() */
+.A { --t-fast: 180ms; --t: 420ms; --t-slow: 520ms; --press: .94; --press-card: .97; --squish: 32px; --enter: translateY(10px) scale(.96); --blur: 0px;
+  --e: linear(0, .25 8%, .64 18%, .92 30%, 1.04 42%, 1.05 50%, 1.01 65%, 1);
+  --e-press: linear(0, .5 20%, .9 45%, 1.02 65%, 1); --e-pop: linear(0, .6 20%, 1.12 45%, .98 70%, 1); }
+.B { --t-fast: 160ms; --t: 360ms; --t-slow: 460ms; --press: .97; --press-card: .99; --squish: 24px; --enter: translateY(6px); --blur: 6px;
+  --e: cubic-bezier(.22, 1, .36, 1); --e-press: cubic-bezier(.22, 1, .36, 1); --e-pop: cubic-bezier(.22, 1, .36, 1); }
+.C { --t-fast: 220ms; --t: 620ms; --t-slow: 720ms; --press: .88; --press-card: .93; --squish: 38px; --enter: translateX(-40px) rotate(-4deg) scale(.9); --blur: 0px;
+  --e: linear(0, .32 8%, .82 18%, 1.15 30%, 1.2 36%, 1.08 48%, .96 60%, 1.01 75%, 1);
+  --e-press: linear(0, .6 18%, 1.15 40%, .95 62%, 1.02 80%, 1); --e-pop: linear(0, .7 18%, 1.3 40%, .9 62%, 1.04 80%, 1); }
+@media (prefers-reduced-motion: reduce) { .col * { transition-duration: 1ms !important; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Движение: три характера</h1>
+  <p class="intro">Отзыв #337. Одни и те же кирпичи в трёх характерах — нажимайте. Все три — на пружинах из нашей системы движения, разница в упругости, длине и «изюминках». Поменять можно всё приложение разом: компоненты двигаются сами.</p>
+  <div class="bar"><button class="btn" id="replay">Проиграть все</button><button class="btn" id="theme">Тема: авто</button></div>
+  <div class="cols" id="cols"></div>
+</main>
+<template id="tpl">
+  <div class="col">
+    <h2></h2><p class="d"></p>
+    <div class="demo"><span>«Сохранить» → галочка</span><button class="press" data-k="save"><span class="ck">✓</span><span class="lbl">Сохранить</span></button></div>
+    <div class="demo"><span>Переключатель (удерживайте — бегунок сплющится)</span><div class="sw" data-k="sw"><i></i></div></div>
+    <div class="demo"><span>Сегменты</span><div class="seg" data-k="seg"><b></b><button class="on">День</button><button>Месяц</button><button>Год</button></div></div>
+    <div class="demo"><span>Новая операция в списке</span><div class="list" data-k="list"><div class="item"><i class="dot"></i>Продукты<span class="a">−32 000</span></div></div></div>
+    <div class="demo"><span>Карточка раскрывается</span><div class="cardx" data-k="card"><b>Бюджет «Еда»</b> · 62 %<div class="more"><div><br>Осталось 41 000 ARS на 17 дней. В среднем 2 400 в день.</div></div></div></div>
+    <div class="demo"><span>Сумма меняется</span><div class="num" data-k="num"></div></div>
+    <div class="demo"><span>Шторка</span><div class="stage" data-k="stage"><div class="hint">нажмите</div><div class="sh">Шторка ввода: въезжает снизу.</div></div></div>
+  </div>
+</template>
+<script>
+const V = [
+  ['A', 'А · Пружина+', 'Наша система, доведённая: мягкий перелёт, галочка «выпрыгивает», бегунок сплющивается, строки въезжают снизу. Быстро и живо, без лишнего.', true],
+  ['B', 'Б · Шёлк', 'Без перелёта: плавное торможение, проявление с размытием. Спокойно и дорого, но меньше «объёма».', false],
+  ['C', 'В · Игривый', 'Сильная упругость, строки влетают сбоку с поворотом, на «Сохранить» — искры. Ярко, но дольше и может надоесть.', false],
+];
+const cols = document.getElementById('cols');
+const tpl = document.getElementById('tpl');
+const NUMS = ['30 500', '31 820', '29 140'];
+V.forEach(([cls, title, d, rec]) => {
+  const n = tpl.content.firstElementChild.cloneNode(true);
+  n.classList.add(cls);
+  n.querySelector('h2').innerHTML = title + (rec ? '<span class="tag">рекомендую</span>' : '');
+  n.querySelector('.d').textContent = d;
+  const q = k => n.querySelector('[data-k="' + k + '"]');
+  const save = q('save');
+  save.onclick = () => {
+    save.classList.toggle('done');
+    save.querySelector('.lbl').textContent = save.classList.contains('done') ? 'Сохранено' : 'Сохранить';
+    if (cls === 'C' && save.classList.contains('done')) burst(save);
+  };
+  const sw = q('sw'); sw.onclick = () => sw.classList.toggle('on');
+  const seg = q('seg'), pill = seg.querySelector('b');
+  seg.querySelectorAll('button').forEach((b, i) => b.onclick = () => {
+    seg.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+    pill.style.transform = 'translateX(' + (i * 100) + '%)';
+  });
+  const list = q('list'); let c = 0;
+  list.parentElement.onclick = () => {
+    const it = document.createElement('div');
+    it.className = 'item enter';
+    it.innerHTML = '<i class="dot"></i>' + ['Кафе', 'Такси', 'Аптека', 'Дом'][c++ % 4] + '<span class="a">−' + (1000 + c * 450).toLocaleString('ru-RU') + '</span>';
+    list.prepend(it);
+    requestAnimationFrame(() => requestAnimationFrame(() => it.classList.remove('enter')));
+    if (list.children.length > 3) list.lastElementChild.remove();
+  };
+  const card = q('card'); card.onclick = () => card.classList.toggle('open');
+  const num = q('num'); let ni = 0;
+  const setNum = s => {
+    if (!num.children.length) num.innerHTML = [...s].map(ch => '<span>' + ch + '</span>').join('');
+    [...s].forEach((ch, i) => {
+      const sp = num.children[i]; if (!sp || sp.textContent === ch) return;
+      sp.style.transform = 'translateY(-100%)';
+      setTimeout(() => { sp.style.transition = 'none'; sp.textContent = ch; sp.style.transform = 'translateY(100%)';
+        requestAnimationFrame(() => requestAnimationFrame(() => { sp.style.transition = ''; sp.style.transform = 'translateY(0)'; })); }, 120);
+    });
+  };
+  setNum(NUMS[0]); num.parentElement.onclick = () => setNum(NUMS[++ni % 3]);
+  const stage = q('stage'); stage.onclick = () => stage.classList.toggle('open');
+  cols.append(n);
+});
+function burst(el) {
+  const r = el.getBoundingClientRect(), host = el.closest('.demo'); host.style.position = 'relative';
+  const hr = host.getBoundingClientRect();
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('i'); p.className = 'burst';
+    p.style.left = (r.left - hr.left + r.width / 2) + 'px'; p.style.top = (r.top - hr.top + r.height / 2) + 'px';
+    host.append(p);
+    const a = i / 14 * Math.PI * 2, d = 40 + Math.random() * 30;
+    requestAnimationFrame(() => { p.style.transform = 'translate(' + Math.cos(a) * d + 'px,' + Math.sin(a) * d + 'px) scale(.4)'; p.style.opacity = '0'; });
+    setTimeout(() => p.remove(), 800);
+  }
+}
+document.getElementById('replay').onclick = () => {
+  document.querySelectorAll('.col').forEach((col, k) => setTimeout(() => {
+    col.querySelector('.press').click(); col.querySelector('.sw').click();
+    col.querySelectorAll('.seg button')[1 + (Math.random() > .5 ? 1 : 0)].click();
+    col.querySelector('.list').parentElement.click(); col.querySelector('.cardx').click();
+    col.querySelector('.num').parentElement.click(); col.querySelector('.stage').click();
+  }, k * 80));
+};
+const modes = ['auto', 'dark', 'light'], names = { auto: 'авто', dark: 'тёмная', light: 'светлая' };
+let mode = 'auto';
+try { mode = localStorage.getItem('motion-theme') || 'auto'; } catch (e) {}
+const applyTheme = () => { if (mode === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = mode;
+  document.getElementById('theme').textContent = 'Тема: ' + names[mode]; };
+applyTheme();
+document.getElementById('theme').onclick = () => { mode = modes[(modes.indexOf(mode) + 1) % 3]; try { localStorage.setItem('motion-theme', mode); } catch (e) {} applyTheme(); };
+</script>
+</body>
+</html>

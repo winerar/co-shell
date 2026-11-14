@@ -140,24 +140,24 @@
     <string name="categories_title">Категории</string>
     <string name="categories_add">Добавить</string>
     <string name="category_kind_category">Категория</string>
-    <string name="category_kind_folder">Папка</string>
-    <string name="categories_add_to_folder">Добавить в папку</string>
+    <string name="category_kind_folder">С подкатегориями</string>
+    <string name="categories_add_to_folder">Добавить подкатегорию</string>
     <string name="categories_expand">Развернуть</string>
     <string name="categories_collapse">Свернуть</string>
     <string name="categories_show_archived">Показать архивные (%1$d)</string>
     <string name="categories_hide_archived">Скрыть архивные (%1$d)</string>
     <plurals name="categories_in_folder">
-        <item quantity="one">%1$d категория</item>
-        <item quantity="few">%1$d категории</item>
-        <item quantity="many">%1$d категорий</item>
-        <item quantity="other">%1$d категории</item>
+        <item quantity="one">%1$d подкатегория</item>
+        <item quantity="few">%1$d подкатегории</item>
+        <item quantity="many">%1$d подкатегорий</item>
+        <item quantity="other">%1$d подкатегории</item>
     </plurals>
 
     <string name="category_type_expense">Расходы</string>
     <string name="category_type_income">Доходы</string>
 
     <string name="category_edit_title_new">Новая категория</string>
-    <string name="category_edit_title_new_folder">Новая папка</string>
+    <string name="category_edit_title_new_folder">Новая категория с подкатегориями</string>
     <string name="category_edit_title">Категория</string>
     <string name="category_name">Название</string>
     <string name="category_name_error">Введите название</string>
@@ -169,21 +169,21 @@
     <string name="form_icons_count">Иконки · %1$d</string>
     <string name="form_colors_count">Цвета · %1$d</string>
     <string name="color_none">Без цвета</string>
-    <string name="category_type_locked">Тип не изменить: категория уже в операциях или в ней есть вложенные</string>
+    <string name="category_type_locked">Тип не изменить: категория уже в операциях или у неё есть подкатегории</string>
     <string name="category_section_what">Что это</string>
-    <string name="category_folder_inside">Внутри папки</string>
+    <string name="category_folder_inside">Входит в</string>
     <string name="category_children_pick">Выбрать</string>
     <string name="category_children_none">Пока пусто — отметьте категории</string>
-    <string name="category_folder">Папка</string>
-    <string name="category_folder_none">Без папки</string>
-    <string name="category_children">Категории в папке</string>
-    <string name="category_children_hint">Отметьте категории для этой папки. Саму папку тоже можно выбрать в операции.</string>
-    <string name="category_error_parent_not_found">Папка не найдена — выберите другую</string>
-    <string name="category_error_parent_nested">Папки не вкладываются друг в друга</string>
-    <string name="category_error_parent_type">Папка должна быть того же типа</string>
-    <string name="category_error_has_children">Категорию с вложенными нельзя положить в папку</string>
+    <string name="category_folder">Родительская категория</string>
+    <string name="category_folder_none">Нет — верхний уровень</string>
+    <string name="category_children">Подкатегории</string>
+    <string name="category_children_hint">Отметьте категории, которые станут подкатегориями. Саму категорию тоже можно выбрать в операции.</string>
+    <string name="category_error_parent_not_found">Родительская категория не найдена — выберите другую</string>
+    <string name="category_error_parent_nested">У подкатегории не может быть своих подкатегорий</string>
+    <string name="category_error_parent_type">Тип должен совпадать с родительской категорией</string>
+    <string name="category_error_has_children">У этой категории есть подкатегории — её нельзя сделать подкатегорией</string>
     <string name="category_delete_confirm_title">Удалить категорию?</string>
-    <string name="category_delete_confirm_text">Категория удалится навсегда. Если это папка, её категории останутся без папки.</string>
+    <string name="category_delete_confirm_text">Категория удалится навсегда. Её подкатегории станут обычными категориями.</string>
     <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
     <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе её не будет.</string>
     <string name="transaction_add">Добавить операцию</string>
@@ -196,10 +196,10 @@
     <string name="transaction_to_amount">Сумма зачисления</string>
     <string name="transaction_amount_debited">Списано со счёта</string>
     <string name="transaction_amount_suggested">По курсу на %1$s — сверьте с банком</string>
-    <string name="transaction_receipt_currency">Валюта чека</string>
-    <string name="transaction_receipt_explain">Баланс меняется на списанную сумму, сумма чека — для отчётов.</string>
+    <string name="transaction_receipt_currency">Валюта покупки</string>
+    <string name="transaction_receipt_explain">Баланс меняется на списанную сумму, сумма покупки — для отчётов.</string>
     <string name="transaction_receipt_currency_invalid">3–10 латинских букв или цифр, например USD</string>
-    <string name="transaction_receipt_currency_same">Совпадает с валютой счёта — чек не нужен</string>
+    <string name="transaction_receipt_currency_same">Совпадает с валютой счёта — уберите сумму покупки</string>
     <string name="transaction_to_amount_hint">Сколько пришло на «%1$s». Курс посчитается сам.</string>
     <string name="transaction_amount_required">Введите сумму</string>
     <string name="transaction_amount_invalid">Не похоже на сумму</string>
@@ -239,7 +239,7 @@
     <string name="backup_error_write">Не удалось сохранить файл. Выберите другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
-    <string name="categories_menu_hint">Папки, иконки и цвета</string>
+    <string name="categories_menu_hint">Подкатегории, иконки и цвета</string>
     <string name="backup_menu_hint">Сохранить или восстановить данные</string>
     <string name="feedback_menu_hint">Ошибка или идея</string>
     <string name="shake_to_add_title">Встряхнуть — новая операция</string>
@@ -377,7 +377,7 @@
     <string name="rates_title">Курсы валют</string>
     <string name="rates_menu_hint">Обновляются сами раз в день</string>
 
-    <string name="report_currencies_title">Валюты отчётов</string>
+    <string name="report_currencies_title">Валюты итогов</string>
     <string name="report_currencies_hint">Общий баланс показывается в каждой из этих валют. Нажмите, чтобы сделать основной.</string>
     <string name="report_currencies_preview">Общий баланс · так будет на «Обзоре»</string>
     <string name="report_currencies_main">Основная</string>
@@ -595,9 +595,9 @@
     <string name="entry_section_category">Категория</string>
     <string name="entry_section_category_frequent">Категория · частые</string>
     <string name="entry_section_details">Детали</string>
-    <string name="entry_receipt_add">+ Чек</string>
-    <string name="entry_receipt">Чек</string>
-    <string name="entry_receipt_remove">Убрать чек</string>
+    <string name="entry_receipt_add">+ Сумма покупки</string>
+    <string name="entry_receipt">Сумма покупки</string>
+    <string name="entry_receipt_remove">Убрать сумму покупки</string>
     <string name="entry_note_empty">Без заметки</string>
     <string name="entry_tags">Теги</string>
     <string name="entry_tags_count">Теги · %1$d</string>
@@ -610,5 +610,5 @@
     <string name="transaction_categories_all_title">Все категории · %1$d</string>
     <string name="transaction_categories_search">Найти категорию</string>
     <string name="transaction_categories_nothing">Ничего не нашлось</string>
-    <string name="transaction_categories_no_folder">Без папки</string>
+    <string name="transaction_categories_no_folder">Остальные</string>
 </resources>

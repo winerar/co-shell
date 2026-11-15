@@ -18,6 +18,7 @@ import app.coshell.core.designsystem.motion.ThemeRevealHost
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.family.sync.ForegroundSync
 import app.coshell.language.AppLanguage
+import app.coshell.language.LanguagePromptHost
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.rememberRevealedSystemDark
@@ -69,6 +70,8 @@ class MainActivity : ComponentActivity() {
                 }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {
                     CoShellNavHost()
+                    // The one-time language question over «Обзор» (#352).
+                    LanguagePromptHost()
                 }
             }
         }

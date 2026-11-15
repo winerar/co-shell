@@ -32,7 +32,7 @@ import app.coshell.core.designsystem.R as DesignR
 /**
  * Top of «Ещё» (board 154А, #155): the installed version, always in sight. A newer build tints the card with the
  * palette's accent and puts «Обновить» on it (starts the download right away, like the pill); a tap elsewhere
- * opens «Обновление приложения» (what's new, manual install, the log).
+ * opens «Обновление» (what's new, manual install, the log).
  */
 @Composable
 internal fun VersionCard(

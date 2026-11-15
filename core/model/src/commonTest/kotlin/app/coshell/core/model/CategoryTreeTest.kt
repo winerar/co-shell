@@ -25,4 +25,13 @@ class CategoryTreeTest {
         val tree = buildCategoryTree(listOf(cat("cafe", parent = "gone")))
         assertEquals(listOf("cafe"), tree.map { it.category.id })
     }
+
+    @Test
+    fun ordersAlphabeticallyIgnoringSortOrderAndKeepsAdjustmentLast() {
+        val adjustment = SystemCategories.adjustment(CategoryType.EXPENSE)
+        val tree = buildCategoryTree(
+            listOf(adjustment, cat("t", name = "Такси", order = 0), cat("a", name = "аптека", order = 5), cat("e", name = "Ёлка", order = 1)),
+        )
+        assertEquals(listOf("a", "e", "t", adjustment.id), tree.map { it.category.id })
+    }
 }

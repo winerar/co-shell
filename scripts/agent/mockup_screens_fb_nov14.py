@@ -59,31 +59,6 @@ def tree_a_edit():
     return page('Категория', body)
 
 
-def rename_b():
-    out = ''
-    for i, (name, icon, col, cats) in enumerate(FOLDERS[:4]):
-        inner = row('<b>%s</b>' % name, 'группа · %d категорий' % len(cats), square(icon, col, len(cats)), svg('down' if i == 0 else 'chev', MUTED, 18), min_h=60)
-        if i == 0:
-            inner += '<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 12px 66px;">%s</div>' % ''.join(
-                '<span style="display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px 0 4px; border-radius: 999px; background: %s; font-size: 13px;">%s%s</span>'
-                % (CHIP, circle(icon, col, 24), c) for c in cats)
-        out += card(inner, extra='margin-bottom: 8px;')
-    out += label('Без группы · 6') + group([row(n, '', circle(ic, c), chevron(), min_h=52) for n, ic, c in LOOSE[:3]])
-    return cats_screen(out + note('Только слово: «Папка» → «Группа». Квадрат с числом (#181 В) остаётся.'))
-
-
-def deep_c():
-    crumbs = ('<div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: %s; margin: 2px 4px 10px;">Все %s Дети %s <b style="color: %s;">Школа</b></div>'
-              % (MUTED, svg('chev', MUTED, 14), svg('chev', MUTED, 14), INK))
-    sub = [('Учебники', 3), ('Форма', 2), ('Поездки', 4), ('Обеды', 0), ('Взносы', 0), ('Канцелярия', 0)]
-    rows = [row(n, '%d подкатегорий' % k if k else 'без подкатегорий', circle('school', '157,123,255', 36), chevron() if k else '', min_h=52) for n, k in sub]
-    return cats_screen(crumbs + hero_card('<div style="font-size: 12px; color: %s;">Школа · 3-й уровень</div><div style="%s font-size: 24px; font-weight: 700; color: %s; margin-top: 4px;">−184 500 ARS</div>'
-                                          '<div style="font-size: 12px; color: %s;">за ноябрь вместе с подкатегориями</div>' % (HERO_HINT, MONO, LIME, HERO_HINT), pad='12px 14px')
-                       + label('Внутри · 6') + group(rows) + note('Любая глубина: Дети › Школа › Учебники › … Сложнее искать и выбирать в шторке.'))
-
-
-# ---- #328 tips category ---------------------------------------------------------------------------------------------
-
 def tips_sheet(cat_block):
     pct = '<div style="display: flex; gap: 8px;">%s</div>' % (chip('10 %', True) + chip('15 %') + chip('Своя сумма'))
     accs = '<div style="display: flex; gap: 8px; flex-wrap: wrap;">%s</div>' % (chip('Наличные ARS', True, dot='#C9D3C2') + chip('Mercado Pago', dot='#00B1EA') + chip('Galicia', dot='#F26E22'))
@@ -92,13 +67,6 @@ def tips_sheet(cat_block):
              '<div style="%s font-size: 32px; font-weight: 700; color: %s; text-align: center; margin: 2px 0 8px;">1 330 <span style="font-size: 16px; color: %s;">ARS</span></div>'
              '%s%s%s%s</div>' % (LIME, MONO, PINK, MUTED, pct, label('С какого счёта', top=12), accs, cat_block))
     return entry_from(tip_amount(False), cat='Кафе') + scrim() + sheet(inner, 300)
-
-
-def tips_a():
-    cats = [('Чаевые', 'gift', '#FF8A5C'), ('Кафе', 'cafe', WARN), ('Рестораны', 'cafe', '#FFC46B'), ('Доставка', 'taxi', YELLOW)]
-    cells = ''.join(chip(n, n == 'Чаевые', dot=c) for n, _, c in cats) + chip('Все 34', dashed=True)
-    return tips_sheet(label('Категория чаевых · первый раз — выберите', top=12) + '<div style="display: flex; gap: 8px; flex-wrap: wrap;">%s</div>' % cells
-                      + note('Две операции с одним временем: «Кафе» 13 300 ARS и «Чаевые» 1 330 ARS. В следующий раз категория подставится сама.', mt=10))
 
 
 def tips_b():
@@ -150,17 +118,6 @@ def reorder_a_cats():
     return top + '<div style="padding: 0 16px;">%s%s</div>' % (out, note('«Частые» — по операциям за 30 дней сверху, и в шторке ввода тоже. Тронули ⠿ — станет «Вручную».'))
 
 
-def sort_b():
-    under = tab_screen('Счета', group([row(a[0], a[4], badge(a[1], a[2], a[3], 36), money(a[5], a[6]), min_h=54) for a in ACCOUNTS[:9]]), 'acc', icon_button(SORT_ICON, 'Сортировка'))
-    radio = lambda on: ('<span style="width: 20px; height: 20px; border-radius: 50%%; border: %s; box-sizing: border-box;"></span>' % ('6px solid %s' % LIME if on else '2px solid %s' % LINE2))
-    opts = ''.join(row(t, s, '', radio(t == 'По балансу'), min_h=52) for t, s in (('По балансу', 'большие сверху, в основной валюте'), ('По имени', 'А → Я'),
-                                                                                ('Часто используемые', 'по операциям за 30 дней'), ('По дате создания', 'новые снизу')))
-    inner = '<div style="padding: 8px 16px;"><b style="display: block; font-size: 20px; height: 44px; line-height: 44px;">Сортировка счетов</b>%s%s</div>' % (opts, note('Без ручного порядка: только готовые правила.'))
-    return under + scrim() + sheet(inner, 470)
-
-
-# ---- #291 minus key -------------------------------------------------------------------------------------------------
-
 def key(t, bg=KEY, col=INK, sz=22, extra=''):
     return ('<span style="border-radius: 16px; background: %s; color: %s; font-size: %dpx; %s display: flex; align-items: center; justify-content: center; %s">%s</span>'
             % (bg, col, sz, MONO, extra, t))
@@ -181,15 +138,6 @@ def keypad_a():
     return '<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 54px; gap: 6px;">%s</div>' % keys
 
 
-def keypad_b():
-    ops = ('<div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 6px; margin-bottom: 6px;">%s%s%s</div>'
-           % (key('+', KEY2, LIME, 24, 'height: 40px;'), key('−', KEY2, LIME, 24, 'height: 40px;'), key('= 30 500', BAR, INK2, 15, 'height: 40px;')))
-    k = (key('7') + key('8') + key('9') + key('⌫', KEY2, INK, 20) + key('4') + key('5') + key('6')
-         + '<span style="grid-row: span 3; border-radius: 18px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">%sГотово</span>' % (LIME, ONLIME, svg('check', ONLIME, 26, 2.2))
-         + key('1') + key('2') + key('3') + key(',') + key('0') + key('000', KEY, INK, 18))
-    return ops + '<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 50px; gap: 6px;">%s</div>' % k
-
-
 def entry_keys(pad, neg=False):
     cats = block('Категория', '<div style="display: flex; gap: 6px;">%s</div>' % (chip('Продукты', True, dot=LIME) + chip('Кафе', dot=WARN) + chip('Все 34', dashed=True)))
     warn = message('Сумма меньше нуля — сохранить нельзя. Это доход? Смените тип вверху.', 'error') if neg else ''
@@ -199,14 +147,9 @@ def entry_keys(pad, neg=False):
 BOARDS = [  # name, title, fn, issue number
     ('Fb330A', 'А: категории деревом — у любой категории подкатегории, слова «папка» нет', tree_a, 330),
     ('Fb330AEdit', 'А: редактор — «Входит в: Еда» вместо «Категория | Папка»', tree_a_edit, 330),
-    ('Fb330B', 'Б: только новое слово — «Группа», вид #181 В остаётся', rename_b, 330),
-    ('Fb330C', 'В: дерево любой глубины с «хлебными крошками»', deep_c, 330),
-    ('Fb328A', 'А: категория чаевых — строкой в шторке, запоминается', tips_a, 328),
     ('Fb328B', 'Б: первый раз — окно «Куда записывать чаевые?»', tips_b, 328),
     ('Fb338A', 'А: режим «Порядок» — перетаскивание счетов и групп + быстрые сортировки', reorder_a, 338),
     ('Fb338ACats', 'А: порядок категорий — родители и подкатегории', reorder_a_cats, 338),
-    ('Fb338B', 'Б: только готовые сортировки в шторке', sort_b, 338),
     ('Fb291A', 'А: «−» под «+», «Готово» — одна клавиша', lambda: entry_keys(keypad_a()), 291),
-    ('Fb291B', 'Б: строка действий над цифрами: + − и итог', lambda: entry_keys(keypad_b()), 291),
     ('Fb291Neg', 'Общее: итог меньше нуля — красным, сохранить нельзя', lambda: entry_keys(keypad_a(), True), 291),
 ]

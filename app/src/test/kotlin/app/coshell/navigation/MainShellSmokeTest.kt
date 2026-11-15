@@ -65,7 +65,7 @@ import org.robolectric.annotation.Config
  */
 @RunWith(RobolectricTestRunner::class)
 // A plain Application: CoShellApp would open Room (native SQLite) and schedule work at start.
-@Config(sdk = [36], qualifiers = "w411dp-h891dp", application = Application::class)
+@Config(sdk = [36], qualifiers = "ru-w411dp-h891dp", application = Application::class)
 class MainShellSmokeTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 

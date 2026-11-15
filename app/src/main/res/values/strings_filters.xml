@@ -21,7 +21,7 @@
 
     <!-- «Категории» -->
     <string name="filter_categories_title">Категории</string>
-    <string name="filter_categories_search">Поиск среди %1$d категорий</string>
+    <string name="filter_categories_search">Найти категорию</string>
     <string name="filter_categories_expenses">Расходы</string>
     <string name="filter_categories_incomes">Доходы</string>
     <string name="filter_categories_some">%1$d из %2$d</string>
@@ -51,13 +51,13 @@
     <string name="filter_tags_search">Найти тег</string>
     <string name="filter_tags_all">Все · %1$d · по алфавиту</string>
     <string name="filter_tags_some">Выбрано %1$d из %2$d</string>
-    <string name="filter_tags_nothing">Нет такого тега</string>
+    <string name="filter_tags_nothing">Такого тега нет</string>
 
     <!-- Поиск по сумме: как приложение поняло запрос -->
-    <string name="amount_hint_exact">Сумма ровно %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_range">Сумма от %1$s до %2$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_more">Сумма больше %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_at_least">Сумма от %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_less">Сумма меньше %1$s — в любой валюте, по счёту и по чеку</string>
-    <string name="amount_hint_at_most">Сумма до %1$s — в любой валюте, по счёту и по чеку</string>
+    <string name="amount_hint_exact">Сумма ровно %1$s — в любой валюте</string>
+    <string name="amount_hint_range">Сумма от %1$s до %2$s — в любой валюте</string>
+    <string name="amount_hint_more">Сумма больше %1$s — в любой валюте</string>
+    <string name="amount_hint_at_least">Сумма от %1$s — в любой валюте</string>
+    <string name="amount_hint_less">Сумма меньше %1$s — в любой валюте</string>
+    <string name="amount_hint_at_most">Сумма до %1$s — в любой валюте</string>
 </resources>

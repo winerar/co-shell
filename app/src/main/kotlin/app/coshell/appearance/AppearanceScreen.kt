@@ -6,6 +6,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import app.coshell.language.components.endonymRes
+import app.coshell.language.LanguageSettingsSheet
+import app.coshell.language.AppLanguage
+import app.coshell.core.designsystem.components.CoShellMenuRow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +43,8 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Ещё → Внешний вид» (board Fb154Look, #155; the former «Настройки» without the items that moved to «Ещё»):
- * theme, the fruit palettes (juicy and soft rows, #271), and the shake gesture — the preferences of this phone, not of the family.
+ * language (#352), theme, the fruit palettes (juicy and soft rows, #271), and the shake gesture — the preferences of this
+ * phone, not of the family.
  */
 @Composable
 fun AppearanceRoute(
@@ -47,25 +57,35 @@ fun AppearanceRoute(
     val palette by themeSettings.palette.collectAsStateWithLifecycle()
     // Theme and palette open as a circle from the tapped control (design-refactor Step 4).
     val reveal = LocalThemeReveal.current
+    val context = LocalContext.current
+    var languageOpen by rememberSaveable { mutableStateOf(false) }
+    val language = remember(languageOpen) { LanguageRow(AppLanguage.chosen(context), AppLanguage.current()) }
     AppearanceScreen(
-        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeEnabled),
+        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeEnabled, language),
         actions = AppearanceActions(
             onBack = onBack,
+            onLanguageClick = { languageOpen = true },
             onThemeModeChange = { mode -> if (mode != themeMode) reveal.change { themeSettings.setMode(mode) } },
             onPaletteChange = { p -> if (p != palette) reveal.change { themeSettings.setPalette(p) } },
             onShakeEnabledChange = shakeSettings::setEnabled,
         ),
     )
+    if (languageOpen) LanguageSettingsSheet(onClosed = { languageOpen = false })
 }
+
+/** «Язык» row: [chosen] `null` = follows the phone; [inEffect] — the language the app speaks now. */
+data class LanguageRow(val chosen: String? = null, val inEffect: String = "ru")
 
 data class AppearanceState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val palette: ThemePalette = ThemePalette.LIME,
     val shakeEnabled: Boolean = true,
+    val language: LanguageRow = LanguageRow(),
 )
 
 data class AppearanceActions(
     val onBack: () -> Unit = {},
+    val onLanguageClick: () -> Unit = {},
     val onThemeModeChange: (ThemeMode) -> Unit = {},
     val onPaletteChange: (ThemePalette) -> Unit = {},
     val onShakeEnabledChange: (Boolean) -> Unit = {},
@@ -77,6 +97,8 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
         topBar = { ScreenTopBar(stringResource(R.string.appearance_title), onBack = actions.onBack) },
     ) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+            item { SectionTitle(stringResource(R.string.language_title)) }
+            item { LanguageRowGroup(state.language, actions.onLanguageClick) }
             item { SectionTitle(stringResource(R.string.theme_title)) }
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
             PaletteGroup.entries.forEach { group ->
@@ -100,6 +122,25 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
         }
     }
 }
+
+@Composable
+private fun LanguageRowGroup(language: LanguageRow, onClick: () -> Unit) {
+    val name = stringResource(endonymRes(language.inEffect))
+    CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+        row {
+            CoShellMenuRow(
+                icon = DesignR.drawable.ic_language,
+                color = categoryColor(CategoryPalette.colors[LANGUAGE_COLOR]),
+                title = stringResource(R.string.language_title),
+                subtitle = if (language.chosen == null) stringResource(R.string.language_row_phone, name) else name,
+                onClick = onClick,
+            )
+        }
+    }
+}
+
+/** Blue of the palette. */
+private const val LANGUAGE_COLOR = 5
 
 /** Lime-green of the palette, as the «+» it opens. */
 private const val SHAKE_COLOR = 9

@@ -55,7 +55,6 @@ class FilterChoicesTest {
         assertEquals(listOf("shop"), plain.expenseCategories.single().children.map { it.id })
         assertEquals(listOf("salary"), plain.incomeCategories.map { it.id })
         assertEquals(listOf("Аня"), plain.members.map { it.name })
-        assertEquals(3, plain.categoryCount)
 
         val chosen = buildFilterChoices(accounts, categories, emptyMap(), ListFilter(accountIds = setOf("old"), categoryIds = setOf("gone")))
         assertEquals(listOf("a", "old"), chosen.accounts.map { it.id })

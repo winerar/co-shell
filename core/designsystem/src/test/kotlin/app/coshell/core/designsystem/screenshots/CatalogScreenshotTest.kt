@@ -133,7 +133,7 @@ private fun RowGroupSample() {
     Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         CoShellSectionLabel("Общее")
         CoShellRowGroup {
-            row { CoShellListRow(title = "Валюты отчётов", subtitle = "Основная: USD", onClick = {}) }
+            row { CoShellListRow(title = "Валюты итогов", subtitle = "Основная: USD", onClick = {}) }
             row { CoShellSwitchRow(title = "Встряхнуть — новая операция", subtitle = "Пока открыто приложение", checked = true, onCheckedChange = {}) }
             row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
         }

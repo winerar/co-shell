@@ -1,6 +1,7 @@
 package app.coshell.di
 
 import android.content.Context
+import app.coshell.categories.ResourceCategoryNames
 import app.coshell.core.data.auth.AuthManager
 import app.coshell.core.data.backup.JsonBackupRepository
 import app.coshell.core.data.db.CoShellDatabase
@@ -33,7 +34,9 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DataWipeRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
+import app.coshell.core.domain.CategoryNames
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
+import app.coshell.core.domain.RenameStarterCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -146,8 +149,9 @@ object DataModule {
         categories: CategoryRepository,
         ids: IdGenerator,
         ensureLabelTags: EnsureLabelTagsUseCase,
+        names: CategoryNames,
     ): WalletImportUseCase =
-        WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories), ids, ImportAccountColors, ensureLabelTags)
+        WalletImportUseCase(accounts, imports, EnsureAdjustmentCategoriesUseCase(categories, names), ids, ImportAccountColors, ensureLabelTags)
 
     @Provides @Singleton
     fun provideBackupRepository(db: CoShellDatabase, stamper: WriteStamper): BackupRepository =
@@ -180,8 +184,14 @@ object DataModule {
         DeleteCategoryUseCase(categories, transactions)
 
     @Provides
-    fun provideSeedDefaultCategories(categories: CategoryRepository, ids: IdGenerator) =
-        SeedDefaultCategoriesUseCase(categories, ids)
+    fun provideSeedDefaultCategories(categories: CategoryRepository, ids: IdGenerator, names: CategoryNames) =
+        SeedDefaultCategoriesUseCase(categories, ids, names)
+
+    @Provides
+    fun provideRenameStarterCategories(categories: CategoryRepository) = RenameStarterCategoriesUseCase(categories)
+
+    @Provides
+    fun provideCategoryNames(@ApplicationContext context: Context): CategoryNames = ResourceCategoryNames(context)
 
     @Provides
     fun provideDataWipeRepository(db: CoShellDatabase, stamper: WriteStamper): DataWipeRepository =

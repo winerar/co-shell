@@ -10,9 +10,11 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.AuthorFilter
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.model.ACCOUNT_ORDER
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Budget
+import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Money
@@ -39,7 +41,7 @@ class RoomAccountRepository(
 ) : AccountRepository {
 
     override fun observeAccounts(includeArchived: Boolean): Flow<List<Account>> =
-        accounts.observe(includeArchived).map { list -> list.map { it.toModel() } }
+        accounts.observe(includeArchived).map { list -> list.map { it.toModel() }.sortedWith(ACCOUNT_ORDER) }
 
     override fun observeAccountsWithBalance(includeArchived: Boolean): Flow<List<AccountWithBalance>> =
         combine(observeAccounts(includeArchived), transactions.observeBalanceDeltas()) { list, deltas ->
@@ -72,7 +74,9 @@ class RoomCategoryRepository(
 ) : CategoryRepository {
 
     override fun observeCategories(type: CategoryType?, includeArchived: Boolean): Flow<List<Category>> =
-        categories.observe(type?.name, includeArchived).map { list -> list.map { it.toModel() } }
+        categories.observe(type?.name, includeArchived).map { list ->
+            list.map { it.toModel() }.sortedWith(compareBy<Category> { it.type }.then(CATEGORY_ORDER))
+        }
 
     override suspend fun getCategory(id: String): Category? = categories.get(id)?.toModel()
 

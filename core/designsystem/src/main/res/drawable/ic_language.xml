@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Globe for «Язык» (#352, board Fb352A): outline drawn with strokes, like the mockup's icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,21a9,9 0,1 0,0 -18a9,9 0,0 0,0 18zM3,12h18M12,3c2.5,2.7 3.8,5.7 3.8,9s-1.3,6.3 -3.8,9c-2.5,-2.7 -3.8,-5.7 -3.8,-9S9.5,5.7 12,3z" />
+</vector>

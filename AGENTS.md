@@ -9,10 +9,10 @@
 4. Любое изменение поведения — с unit-тестами. Коммит: `scripts/agent/agent.sh ship -m …` (check → коммит → push).
 5. Документация — часть изменения: поменял решение/структуру → обнови соответствующий файл ниже.
 6. Маленькие файлы по одной теме (~200 строк), экран — пакет из блоков: `project-structure.md`.
-7. **Начало сессии:** `scripts/agent/agent.sh start`, затем `owner.md` и `notes.md`. **Конец:**
-   чек-лист `workflow.md` + `agent.sh finish` (STATUS → check, если менялся код → push → `end`). Узнал новое — в `notes.md`; рутина
-   повторилась — команда в `scripts/agent/agent.sh`; ввёл практику — правило (`workflow.md` §«Самоулучшение»).
+7. **Начало:** `agent.sh start`, затем `owner.md` и `notes.md`. **Конец:** чек-лист `workflow.md` + `agent.sh finish`.
+   Новое — в `notes.md`; рутина — команда в `agent.sh`; практика — правило (`workflow.md` §«Самоулучшение»).
 8. **Визуальное — сначала примеры:** любое видимое изменение сначала макетом владельцу, код — после «ок» (`workflow.md`).
+9. **Никакого текста в коде:** любой текст для людей — ресурс сразу на всех языках `AppLanguage.SUPPORTED` (`glossary.md`).
 
 ## Карта документации
 | Файл | О чём |
@@ -20,14 +20,14 @@
 | [docs/STATUS.md](docs/STATUS.md) | **текущее состояние** (передача между сессиями) |
 | [docs/agents/tasks.md](docs/agents/tasks.md) | **задачи — GitHub Issues + доска**: метки статусов, как брать и закрывать |
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
-| [docs/agents/notes.md](docs/agents/notes.md) (+ [notes-sync.md](docs/agents/notes-sync.md)), [scripts.md](docs/agents/scripts.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры; **команды и флоу `agent.sh`**; облачное окружение |
+| [docs/agents/notes.md](docs/agents/notes.md) (+ [notes-sync.md](docs/agents/notes-sync.md), [notes-screenshots.md](docs/agents/notes-screenshots.md)), [scripts.md](docs/agents/scripts.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры; **команды и флоу `agent.sh`**; облачное окружение |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md), [feature-map.md](docs/agents/feature-map.md) | модули, куда класть новое; где лежит каждая фича |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется |
-| [docs/agents/code-style.md](docs/agents/code-style.md) | стиль Kotlin/Compose, слои, UDF |
+| [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
-| [docs/agents/motion.md](docs/agents/motion.md) | движение: тактильная система, анимации, вибрация |
+| [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |
 | [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, документация, визуальные изменения, отзывы |

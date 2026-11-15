@@ -36,3 +36,11 @@ fun upcomingPayments(templates: List<TransactionTemplate>, today: LocalDate, day
 
 /** «Скоро · 7 дней». */
 const val SOON_DAYS = 7
+
+/**
+ * Templates with a payment today that still waits for «Провести» — the 9:00 reminder (#143, board
+ * `Rec143Notify`). Call after [PostAutoPaymentsUseCase]: a «само» payment that posted is handled and
+ * drops out, one that could not post (account archived) stays and is reminded like any other.
+ */
+fun paymentsToRemind(templates: List<TransactionTemplate>, today: LocalDate): List<TransactionTemplate> =
+    templates.filter { it.schedule?.due(today)?.lastOrNull() == today }.sortedBy { it.name.lowercase() }

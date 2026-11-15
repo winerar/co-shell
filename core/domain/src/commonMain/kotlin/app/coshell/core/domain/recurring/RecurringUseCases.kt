@@ -7,6 +7,7 @@ import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.domain.templates.draftFrom
 import app.coshell.core.model.PostMode
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.TransactionTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -29,6 +30,9 @@ class MarkPaymentsHandledUseCase(private val templates: TemplateRepository) {
     }
 }
 
+/** A payment [PostAutoPaymentsUseCase] posted: [template] gives the name for «Проведено: Netflix · …». */
+data class PostedPayment(val template: TransactionTemplate, val transaction: Transaction)
+
 /**
  * Posts due payments of «Проводить само» templates (#143) and returns them — for the «Проведено: …»
  * notification. A payment the template can no longer fill (account archived, category gone) is left
@@ -44,10 +48,10 @@ class PostAutoPaymentsUseCase(
     private val save: SaveTransactionUseCase,
     private val clock: Clock = Clock.System,
 ) {
-    suspend operator fun invoke(timeZone: TimeZone, authorMemberId: String? = null): List<Transaction> {
+    suspend operator fun invoke(timeZone: TimeZone, authorMemberId: String? = null): List<PostedPayment> {
         val now = clock.now()
         val today = now.toLocalDateTime(timeZone).date
-        val posted = mutableListOf<Transaction>()
+        val posted = mutableListOf<PostedPayment>()
         for (template in templates.allTemplates()) {
             val schedule = template.schedule?.takeIf { it.mode == PostMode.AUTO } ?: continue
             var handled: LocalDate? = null
@@ -71,7 +75,7 @@ class PostAutoPaymentsUseCase(
                     authorMemberId = authorMemberId,
                 )
                 if (save(tx) != SaveTransactionUseCase.Result.Saved) break
-                posted += tx
+                posted += PostedPayment(template, tx)
                 handled = day
             }
             handled?.let { templates.saveTemplate(template.copy(schedule = schedule.handledUpTo(it))) }

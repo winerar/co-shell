@@ -55,9 +55,10 @@ class RecurringUseCasesTest {
     fun `auto posts every due payment once, dated its day, and marks it handled`() = runTest {
         templates.saveTemplate(netflix())
         val posted = post(TimeZone.UTC, authorMemberId = "me")
-        assertEquals(listOf("rec-netflix-2026-10-18"), posted.map { it.id })
-        assertEquals(Instant.parse("2026-10-18T12:00:00Z"), posted.single().date)
-        assertEquals("me", posted.single().authorMemberId)
+        assertEquals(listOf("rec-netflix-2026-10-18"), posted.map { it.transaction.id })
+        assertEquals(Instant.parse("2026-10-18T12:00:00Z"), posted.single().transaction.date)
+        assertEquals("me", posted.single().transaction.authorMemberId)
+        assertEquals("Netflix", posted.single().template.name)
         assertEquals(d("2026-10-18"), templates.getTemplate("netflix")?.schedule?.handledThrough)
         assertEquals(emptyList(), post(TimeZone.UTC))
         assertEquals(1, transactions.items.value.size)

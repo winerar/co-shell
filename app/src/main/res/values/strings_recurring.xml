@@ -31,4 +31,18 @@
     <string name="recurring_state_missed_many">пропущено %1$d</string>
     <string name="recurring_auto_short">само</string>
     <string name="recurring_post_a11y">Провести «%1$s»</string>
+    <!-- Уведомления (#143, доска Rec143Notify). -->
+    <string name="recurring_channel">Регулярные платежи</string>
+    <string name="recurring_channel_hint">Напоминание в день платежа и «Проведено» для тех, что проводятся сами</string>
+    <string name="recurring_notify_today">Сегодня платёж: %1$s</string>
+    <string name="recurring_notify_today_amount">Сегодня платёж: %1$s · %2$s</string>
+    <plurals name="recurring_notify_today_many">
+        <item quantity="one">%1$d платёж сегодня</item>
+        <item quantity="few">%1$d платежа сегодня</item>
+        <item quantity="many">%1$d платежей сегодня</item>
+        <item quantity="other">%1$d платежа сегодня</item>
+    </plurals>
+    <string name="recurring_notify_posted">Проведено: %1$s · %2$s</string>
+    <string name="recurring_notify_amount_later">сумма при вводе</string>
+    <string name="recurring_open">Открыть</string>
 </resources>

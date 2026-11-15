@@ -32,6 +32,8 @@ import mockup_screens_ops as ops_screens  # noqa: E402
 import mockup_screens_forms as form_screens  # noqa: E402
 import mockup_screens_settings as set_screens  # noqa: E402
 import mockup_catalog as catalog  # noqa: E402
+import mockup_comp_v2 as comp_v2  # noqa: E402
+import mockup_comp_v2_contrast as comp_v2_contrast  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
@@ -96,6 +98,10 @@ def main():
     for name, title, fn, _ in idea_screens.BOARDS + fb_screens.BOARDS + plan_boards:
         write(name, board(title, fn()))
         gen[name] = (title, False)
+    comp_v2_boards = comp_v2.BOARDS + comp_v2_contrast.BOARDS  # #367 proposal, under «Компоненты»; not read by ApprovedComponentsTest
+    for name, fn in comp_v2_boards:
+        write(name, fn())
+        gen[name] = ('Компоненты v2 (#367, на утверждении): ' + name[6:], False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
                             ('ThemeSwitchComponents', special.theme_switch, 'Тема макетов'), ('Settings', special.settings, 'Настройки: тема и палитра перекрашивают холст'),
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
@@ -142,6 +148,14 @@ def main():
     add('Flows', 0, 0, 1840, flows_h, 'flows')
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
     add('Components', 0, 0, catalog.W, catalog.H, 'components')
+    y = catalog.H + 400
+    notes['v2'] = {'kind': 'title1', 'page': 'components', 'text': 'Компоненты v2 — на утверждении (#367)', 'x': 0, 'y': y - 250, 'maxW': 2600, 'w': 240}
+    for i, (name, _) in enumerate(comp_v2_boards):
+        h = int(open(os.path.join(OUT, name + '.dc.html'), encoding='utf-8').read().split('"height":', 1)[1].split('}', 1)[0])
+        add(name, (i % 2) * (comp_v2.W + 160), y, comp_v2.W, h, 'components')
+        if i % 2:
+            y += max(h, prev_h) + 300
+        prev_h = h
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
     for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # picked feedback variants
         y = 1900 + r * PITCH_Y

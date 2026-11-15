@@ -88,6 +88,4 @@ internal fun ReportLedger.hasOperations(period: BudgetPeriod): Boolean {
     return spent.byCategory.isNotEmpty() || earned.byCategory.isNotEmpty() || spent.missing.isNotEmpty() || earned.missing.isNotEmpty()
 }
 
-private fun Money.atLeastZero(): Money = if (isNegative) Money.zero(currency) else this
-
 private val Money.isZero: Boolean get() = amountMinor == 0L

@@ -74,10 +74,26 @@ class Component extends DCLogic {
 ''' % (title, BG, INK, body, script)).replace('height: 844px', 'height: %dpx' % height).replace('"height":844', '"height":%d' % height)
 
 
-def tab_screen(title, body, active, actions='', bar=True):
-    top = ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
-           '<h1 style="margin: 0; font-size: 28px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
-    return top + '<div style="padding: 0 16px;">%s</div>' % body + (nav(active) if bar else '')
+def tab_head(title, actions='', sub=None):
+    """TabTopBar «Живая строка» (header poll А, 2026-11-15). At rest: 28 px title on the screen colour. Scrolled ([sub] given,
+    may be ''): solid screen colour — no glass (owner) — a hairline below, the title ×0.74 (≈21 px) and «where am I» under it."""
+    if sub is None:
+        return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
+                '<h1 style="margin: 0; font-size: 28px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
+    line2 = '<span style="font-size: 12px; color: %s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>' % (MUTED, sub) if sub else ''
+    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px; background: %s; border-bottom: 1px solid %s; box-sizing: border-box;">'
+            '<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 21px; font-weight: 700;">%s</h1>%s</div>%s</div>'
+            % (BG, LINE, title, line2, actions))
+
+
+def select_head(count):
+    """SelectionTopBar: raised solid fill, «✕ Выбрано N»; slides down over the tab header, the number rolls (header poll А)."""
+    return ('<div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px; background: %s;">%s'
+            '<span style="font-size: 22px; font-weight: 700;">Выбрано %s</span></div>' % (CHIP, icon_button('close', 'Отменить выбор'), count))
+
+
+def tab_screen(title, body, active, actions='', bar=True, sub=None):
+    return tab_head(title, actions, sub) + '<div style="padding: 0 16px;">%s</div>' % body + (nav(active) if bar else '')
 
 
 def inner_screen(title, body, actions=''):

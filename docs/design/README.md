@@ -19,7 +19,7 @@
 | Ряд | Доски (`mockups/`) | Код |
 |---|---|---|
 | Обзор | `Home`, `HomeEmpty` (первый запуск), `HomeAttention` (нет курса), `HomeSync` (ошибка синка, 17А), `UpdateWhatsNew` | `home/`, `home/sync/`, `update/notice/` |
-| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
+| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsScrolled` (шапка «Живая строка» прокручена: линия, «где я»), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
 | Шторка ввода | `Main` (шаги 1–2), `EntryTransfer`, `EntryReceipt`, `EntryEdit` (правка, дубль, удалить), `EntryError`, `EntryNoAccounts` | `transactions/edit/`, `components/keypad/` |
 | Счета и «Ещё» | `Accounts`, `AccountsSearch`, `AccountsEmpty`, `More`, `UpdatePill`, `Update` | `accounts/list/`, `more/`, `update/` |
 | Счёт и категории | `AccountEdit`, `AccountEditExisting` (блок валюты, ошибки), `AccountDelete`, `AccountBlocked`, `Colors`, `Categories`, `CategoryEdit`, `CategoryBlocked` | `accounts/edit/`, `categories/`, `category/BankColors` |
@@ -54,7 +54,8 @@
 
 ## Живые страницы выбора
 - Шапки экранов (2026-11-15, **выбрано А «Живая строка» без прозрачности**): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия
-  `topbar-headers.html`; код — `ui/top/` (`TabTopBar`, `TabOrSelectionTopBar`), эталон `transactions_scrolled_dark`. Пока не сделано:
+  `topbar-headers.html`; код — `ui/top/` (`TabTopBar`, `TabOrSelectionTopBar`), эталон `transactions_scrolled_dark`, доски `OpsScrolled`, `OpsSelect`, «Компоненты → Шапки»
+  (кирпичи `tab_head`, `select_head`). Пока не сделано:
   поиск из лупы в шапке (в «Операциях» остаётся строка поиска #141), линия при прокрутке у внутренних экранов (`ScreenTopBar`).
 
 ## Ранние страницы (до холста)

@@ -31,8 +31,7 @@ def ops_panel():
     days = ('<sc-for list="{{days}}" as="d" hint-placeholder-count="2">%s<sc-for list="{{d.rows}}" as="r" hint-placeholder-count="3">%s</sc-for></sc-for>'
             % (m.day('{{d.title}}', '{{d.total}}', '{{d.cur}}', '{{d.color}}'), row_))
     head = when('notSelecting', '<div style="display: flex; align-items: center; height: 64px; padding: 0 16px;"><h1 style="margin: 0; font-size: 28px; font-weight: 700;">Операции</h1></div>')
-    sel = when('selecting', tap('<div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px;">%s<span style="font-size: 22px; font-weight: 700;">Выбрано {{selCount}}</span></div>'
-                                % icon_button('close', 'Отменить выбор'), 'clearSel'))
+    sel = when('selecting', tap(select_head('{{selCount}}'), 'clearSel'))
     return head + sel + '<div style="padding: 0 16px;">%s<div style="margin: 14px -16px 0;">%s</div></div>' % (m.ops_head([chip('Расходы ✕', True), chip('Счёт ▾'), chip('Ноябрь ▾')]), days)
 
 

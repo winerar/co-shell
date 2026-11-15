@@ -98,8 +98,17 @@
       "is_interactive": true,
       "radius": 28
     },
-    "OpsSelect.dc.html": {
+    "OpsScrolled.dc.html": {
       "x": 470,
+      "y": 1240,
+      "w": 390,
+      "h": 844,
+      "title": "Операции: прокручено, шапка «где я»",
+      "page": "screens",
+      "radius": 28
+    },
+    "OpsSelect.dc.html": {
+      "x": 940,
       "y": 1240,
       "w": 390,
       "h": 844,
@@ -108,7 +117,7 @@
       "radius": 28
     },
     "OpsUndo.dc.html": {
-      "x": 940,
+      "x": 1410,
       "y": 1240,
       "w": 390,
       "h": 844,
@@ -117,7 +126,7 @@
       "radius": 28
     },
     "OpsEmpty.dc.html": {
-      "x": 1410,
+      "x": 1880,
       "y": 1240,
       "w": 390,
       "h": 844,
@@ -126,7 +135,7 @@
       "radius": 28
     },
     "OpsNothing.dc.html": {
-      "x": 1880,
+      "x": 2350,
       "y": 1240,
       "w": 390,
       "h": 844,
@@ -1788,6 +1797,7 @@
     "HomeSync.dc.html",
     "UpdateWhatsNew.dc.html",
     "Operations.dc.html",
+    "OpsScrolled.dc.html",
     "OpsSelect.dc.html",
     "OpsUndo.dc.html",
     "OpsEmpty.dc.html",
@@ -2014,13 +2024,13 @@
       "text": "Операции",
       "x": 0,
       "y": 990,
-      "maxW": 2270,
+      "maxW": 2740,
       "w": 240
     },
     "s1": {
       "page": "screens",
       "text": "Выбран 19В (2026-11-10): строки без свайпов; удержание — выбор нескольких, панель «Дублировать · Удалить · N». Тяните экран влево/вправо — соседняя вкладка. Тап по строке — шторка операции.",
-      "x": 2350,
+      "x": 2820,
       "y": 1240,
       "w": 390
     },

@@ -25,12 +25,14 @@ import app.coshell.home.budget.HomeBudget
 import app.coshell.home.budget.HomeBudgetViewModel
 import app.coshell.home.components.HomeTiles
 import app.coshell.home.components.HotBudgets
+import app.coshell.home.components.MonthReviewCard
 import app.coshell.home.components.RecentCard
 import app.coshell.home.components.SyncBanner
 import app.coshell.home.components.SyncBannerActions
 import app.coshell.home.components.TotalCard
 import app.coshell.home.sync.SyncBannerState
 import app.coshell.home.sync.SyncBannerViewModel
+import app.coshell.reports.review.MonthReviewUiState
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
@@ -52,6 +54,8 @@ data class HomeActions(
     /** The budget tile → «Бюджеты»; an envelope of «Горит в бюджете» → its screen in the current budget month. */
     val onBudgets: () -> Unit = {},
     val onBudget: (categoryId: String, month: YearMonth) -> Unit = { _, _ -> },
+    /** «Итог октября» → its screen (#236). */
+    val onReview: (month: YearMonth) -> Unit = {},
 )
 
 @Composable
@@ -71,11 +75,20 @@ fun HomeRoute(
         onDismiss = syncViewModel::dismiss,
     )
     // Both counts in before the blocks show: the budget tile takes the place of «Без категории».
-    HomeScreen(if (budget == null) HomeUiState(isLoading = true) else state, actions, sync, syncActions, budget?.budget)
+    HomeScreen(
+        if (budget == null) HomeUiState(isLoading = true) else state,
+        actions,
+        sync,
+        syncActions,
+        budget?.budget,
+        review = budget?.review,
+        onHideReview = budgetViewModel::hideReview,
+    )
 }
 
 /**
- * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`): hero card with the total, two tiles, «Горит в бюджете»
+ * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`, `Mon236A`): hero card with the total, «Итог месяца» in the
+ * first days of a month, two tiles, «Горит в бюджете»
  * when some limit needs a look, the latest operations. Blocks come in as a short cascade the first time the tab shows (Step 4).
  */
 @Composable
@@ -85,6 +98,8 @@ fun HomeScreen(
     sync: SyncBannerState? = null,
     syncActions: SyncBannerActions = SyncBannerActions(),
     budget: HomeBudget? = null,
+    review: MonthReviewUiState? = null,
+    onHideReview: (YearMonth) -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -110,6 +125,11 @@ fun HomeScreen(
                 return@LazyColumn
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
+            review?.month?.let { month ->
+                item(key = "review") {
+                    MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, Modifier.staggeredEntrance(1))
+                }
+            }
             item {
                 HomeTiles(
                     state,

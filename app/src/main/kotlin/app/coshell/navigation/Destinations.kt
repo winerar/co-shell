@@ -38,6 +38,14 @@ data class ReportCategoryDestination(
     val compare: Boolean,
 )
 
+/** «Итог месяца» (#236) of [year]-[month] (the family's month). */
+@Serializable
+data class MonthReviewDestination(val year: Int, val month: Int)
+
+/** «Лимиты октября» of the review under it (shares its ViewModel). */
+@Serializable
+data object MonthReviewLimitsDestination
+
 /** Account editor; `accountId == null` creates a new account. */
 @Serializable
 data class AccountEditDestination(val accountId: String? = null) {

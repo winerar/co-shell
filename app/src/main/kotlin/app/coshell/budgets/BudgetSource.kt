@@ -80,7 +80,7 @@ class BudgetSource @Inject constructor(
     class Snapshot(
         val budgets: List<Budget>,
         val categories: List<Category>,
-        private val days: List<ReportDay>,
+        val days: List<ReportDay>,
         private val rates: List<ExchangeRate>,
         val mainCurrency: CurrencyCode,
         val startDay: Int,

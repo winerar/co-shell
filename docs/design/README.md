@@ -29,7 +29,7 @@
 | Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports,review}.py` |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | `budgets/` (#167, #103); `BudHome` — `home/budget/`, `home/components/{BudgetTile,HotBudgets}` (#184) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | `reports/`, `reports/all/` (#140), `reports/category/` (`RepDrill`, #188) |
-| Картина целиком (#189, опрос) | `Rp189IeA/B/C` (доходы и расходы), `Rp189NwA/B` (капитал), `Rp189WhoA/B` (участники), `Rp189NwDrill` (24 счёта), `Rp189Edge` | — (после выбора) |
+| Картина целиком (#189, выбрано А · Б · А) | `Rp189IeA`, `Rp189NwB`, `Rp189WhoA`, `Rp189NwDrill` (24 счёта), `Rp189Edge` | `reports/components/IncomeCard`, `CapitalCard`, `MembersCard`; `NwDrill` — `reports/capital/CapitalMonthScreen` (#373) |
 | Тренд категории | `Tr238DrillA`, `Tr238MarkA` (выбраны в опросе #238, А + А), `Tr238All`, `Tr238Edge` | расчёт — `core:domain/reports/CategoryTrend`, `UsualMark` (#237); экран — `reports/category/TrendCard`, `components/UsualMarks` |
 | Итог месяца | `Mon236A` (выбран А: карточка на «Обзоре» 1–7 числа), `Mon236Screen`, `Mon236Limits`, `Mon236Edge` | `home/components/MonthReviewCard`, `reports/review/` (#236; расчёт `core:domain/reports/MonthReview`, #235); строки лимитов — `EnvelopeRow` «Бюджетов», выше, чем на доске |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |

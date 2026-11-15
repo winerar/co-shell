@@ -2,8 +2,10 @@ package app.coshell.reports
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.reports.ReportLedger
@@ -40,7 +42,9 @@ import kotlinx.datetime.todayIn
 class ReportsViewModel @Inject constructor(
     private val reports: ReportRepository,
     categories: CategoryRepository,
+    accounts: AccountRepository,
     rates: ExchangeRateRepository,
+    otherMembers: OtherMembers,
     reportCurrencies: ReportCurrencySettings,
     monthStart: MonthStartSettings,
     moneyFormat: MoneyFormat,
@@ -63,12 +67,22 @@ class ReportsViewModel @Inject constructor(
         Settings(period, startDay, currency, currencies, chosen.compare)
     }.distinctUntilChanged()
 
+    /** Accounts and their balance changes by day — «Капитал» (#189); the same for every period. */
+    private val balances = combine(accounts.observeAccounts(includeArchived = true), reports.observeBalanceDays(), ::Pair)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
         val (from, to) = s.period.loadRange(s.startDay)
-        combine(reports.observeDays(from, to), categories.observeCategories(includeArchived = true), rates.observeRates()) { days, categoryList, rateList ->
+        combine(
+            reports.observeDays(from, to),
+            categories.observeCategories(includeArchived = true),
+            rates.observeRates(),
+            otherMembers.names(),
+            balances,
+        ) { days, categoryList, rateList, others, (accountList, balanceDays) ->
+            val book = RateBook.of(rateList)
             val input = ReportInput(
-                ledger = ReportLedger(days, categoryList, RateBook.of(rateList), s.currency),
+                ledger = ReportLedger(days, categoryList, book, s.currency),
                 categories = categoryList,
                 period = s.period,
                 startDay = s.startDay,
@@ -84,6 +98,9 @@ class ReportsViewModel @Inject constructor(
                 compare = s.compare,
                 spending = buildSpending(input, format),
                 months = buildMonths(input, format),
+                income = buildIncome(input, format),
+                members = buildMembers(input, others, format),
+                capital = buildCapital(input, accountList, balanceDays, book, format),
             )
         }
     }

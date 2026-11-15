@@ -103,4 +103,38 @@
     <string name="review_card_limits">Limits: kept %1$d of %2$d</string>
     <string name="review_card_more">Details ›</string>
     <string name="review_card_hide">Hide until next month</string>
+    <!-- Income and spending (#189, board Rp189IeA) -->
+    <string name="reports_income_title">Income and spending</string>
+    <string name="reports_income_caption">tap a month</string>
+    <string name="reports_income_in">came in</string>
+    <string name="reports_income_out">went out</string>
+    <string name="reports_income_left">left</string>
+    <string name="reports_income_month_in">%1$s · came in</string>
+    <string name="reports_income_so_far">so far</string>
+    <string name="reports_income_rate">Saved %1$d%% of income</string>
+    <string name="reports_income_average">%1$d-month average — %2$d%%</string>
+    <string name="reports_income_description">%1$s: came in %2$s, went out %3$s</string>
+    <!-- Who spent how much (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Who spent how much</string>
+    <string name="reports_members_caption">by who added it</string>
+    <string name="reports_members_me">Me</string>
+    <string name="reports_members_note">Spending is shared — split by who recorded the operation.</string>
+    <!-- Net worth (#189, board Rp189NwB) -->
+    <string name="reports_capital_title">Net worth</string>
+    <string name="reports_capital_caption">all accounts</string>
+    <string name="reports_capital_year">%1$s this year</string>
+    <string name="reports_capital_months">%1$s in %2$d mo.</string>
+    <string name="reports_capital_why">Why it changed</string>
+    <string name="reports_capital_saved">saved</string>
+    <string name="reports_capital_rates">rates</string>
+    <string name="reports_capital_total">total</string>
+    <string name="reports_capital_rates_note">Rates — everything that is neither income nor spending: exchange rates, exchanges, balance adjustments.</string>
+    <string name="reports_capital_description">Net worth by month: %1$s</string>
+    <!-- «Капитал · октябрь» (#373) -->
+    <string name="capital_month_title">Net worth · %1$s</string>
+    <string name="capital_month_on">Net worth on %1$s</string>
+    <string name="capital_month_tap">tap for another month</string>
+    <string name="capital_month_change">%1$s this month</string>
+    <string name="capital_month_search">Find an account · %1$d</string>
+    <string name="capital_month_order_change">By change</string>
 </resources>

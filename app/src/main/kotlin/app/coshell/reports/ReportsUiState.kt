@@ -22,6 +22,12 @@ data class ReportsUiState(
     val compare: Boolean = true,
     val spending: Spending? = null,
     val months: Months? = null,
+    /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
+    val income: Income? = null,
+    /** «Кто сколько потратил» (#189); empty — one-person family or nothing spent. */
+    val members: List<MemberRow> = emptyList(),
+    /** «Капитал» (#189); `null` — no account counted into the total. */
+    val capital: Capital? = null,
 ) {
     /** Nothing was spent in the period (the cards say so instead of empty charts). */
     val isEmpty: Boolean get() = !isLoading && spending == null
@@ -98,4 +104,78 @@ data class ReportsUiState(
     data class Months(val columns: List<MonthColumn>, val selected: Int)
 
     data class MonthColumn(val month: YearMonth, val value: String, val fraction: Float)
+
+    /**
+     * «Доходы и расходы» (board `Rp189IeA`): income and spending of each month of «По месяцам» on one scale; under the
+     * chart — the [selected] month: what came in, went out and was left ([saved] signed: «+270», «-110»).
+     */
+    data class Income(
+        val columns: List<IncomeColumn>,
+        val selected: Int,
+        val earned: String,
+        val spent: String,
+        val saved: String,
+        val overspent: Boolean,
+        /** The selected month's savings rate, `null` — nothing came in. */
+        val rate: Int?,
+        /** The selected month is still running: its numbers are «пока». */
+        val running: Boolean,
+        /** The average rate of the finished months and how many there were; `null` — none. */
+        val averageRate: Int?,
+        val averageMonths: Int,
+    )
+
+    data class IncomeColumn(
+        val month: YearMonth,
+        val earned: String,
+        val spent: String,
+        val earnedFraction: Float,
+        val spentFraction: Float,
+    )
+
+    /**
+     * A row of «Кто сколько потратил» (board `Rp189WhoA`): [name] `null` — «Я» (everything the others did not add);
+     * [top] — the folders this member spent most on («Дом 262»).
+     */
+    data class MemberRow(
+        val memberId: String?,
+        val name: String?,
+        val value: String,
+        val percent: Int,
+        val fraction: Float,
+        val top: List<TopFolder>,
+    )
+
+    /** [name] `null` — a category deleted on another phone. */
+    data class TopFolder(val name: String?, val value: String)
+
+    /**
+     * «Капитал» (board `Rp189NwB`): the money on all accounts now ([value]), its change over the chart ([change] signed,
+     * [percent] of the first point), a point per month end and «Почему изменился» for the last months, newest first.
+     */
+    data class Capital(
+        val value: String,
+        val change: String,
+        val falling: Boolean,
+        val percent: Int?,
+        /** How many months the change is over: 12 — «за год». */
+        val months: Int,
+        val points: List<CapitalPoint>,
+        val why: List<WhyRow>,
+        /** Currencies left out for lack of a rate: «без учёта: AMD». */
+        val missing: List<String> = emptyList(),
+    )
+
+    data class CapitalPoint(val month: YearMonth, val value: String, val minor: Long)
+
+    /** One month of «Почему изменился»: [saved] — income minus spending, [rates] — the rest; all signed. */
+    data class WhyRow(
+        val month: YearMonth,
+        val running: Boolean,
+        val saved: String,
+        val savedNegative: Boolean,
+        val rates: String,
+        val total: String,
+        val totalNegative: Boolean,
+    )
 }

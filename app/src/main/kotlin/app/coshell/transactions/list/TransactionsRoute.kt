@@ -15,7 +15,7 @@ const val PRESET_UNCATEGORIZED = "presetUncategorized"
 
 /**
  * Connects [TransactionsScreen] to its ViewModel. [preset] is the tab's SavedStateHandle: another screen
- * may ask there for a ready filter ([PRESET_UNCATEGORIZED]); it is applied once.
+ * may ask there for a ready filter ([PRESET_UNCATEGORIZED], [PRESET_MEMBER]); it is applied once.
  */
 @Composable
 fun TransactionsRoute(
@@ -31,6 +31,12 @@ fun TransactionsRoute(
             if (!uncategorized) return@LaunchedEffect
             viewModel.showUncategorizedThisMonth()
             preset[PRESET_UNCATEGORIZED] = false
+        }
+        val member by preset.getStateFlow<String?>(PRESET_MEMBER, null).collectAsStateWithLifecycle()
+        LaunchedEffect(member) {
+            val asked = MemberPreset.decode(member) ?: return@LaunchedEffect
+            viewModel.show(asked.toFilter())
+            preset[PRESET_MEMBER] = null
         }
     }
     val state by viewModel.state.collectAsStateWithLifecycle()

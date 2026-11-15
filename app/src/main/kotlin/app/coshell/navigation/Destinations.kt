@@ -38,6 +38,20 @@ data class ReportCategoryDestination(
     val compare: Boolean,
 )
 
+/**
+ * «Капитал · октябрь» (#373, board `Rp189NwDrill`): the accounts at the end of [year]-[month] (a family month from
+ * [startDay]) in the report [currency]; the line shows the year up to [lastYear]-[lastMonth], as on «Отчёты».
+ */
+@Serializable
+data class CapitalMonthDestination(
+    val year: Int,
+    val month: Int,
+    val lastYear: Int,
+    val lastMonth: Int,
+    val startDay: Int,
+    val currency: String,
+)
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)

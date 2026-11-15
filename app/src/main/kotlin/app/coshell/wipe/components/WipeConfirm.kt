@@ -29,7 +29,8 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** Step 1 of board 18: what goes (for the whole family), the copy first, the word, the red button. */
 @Composable
-internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit, onWipe: () -> Unit, modifier: Modifier = Modifier) {
+internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit, onWipe: (confirmWord: String) -> Unit, modifier: Modifier = Modifier) {
+    val confirmWord = stringResource(R.string.wipe_confirm_word)
     val danger = MaterialTheme.colorScheme.error
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellCard(tint = danger) {
@@ -50,7 +51,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
             }
         }
         Text(
-            stringResource(R.string.wipe_word_prompt, WipeDataUiState.CONFIRM_WORD),
+            stringResource(R.string.wipe_word_prompt, confirmWord),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = Spacing.s),
@@ -59,15 +60,15 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
             value = state.word,
             onValueChange = onWordChange,
             label = stringResource(R.string.wipe_word_label),
-            placeholder = WipeDataUiState.CONFIRM_WORD,
+            placeholder = confirmWord,
             enabled = state.step == WipeDataUiState.Step.CONFIRM,
             modifier = Modifier.fillMaxWidth(),
         )
         if (state.backupFailed) CoShellMessage(stringResource(R.string.wipe_backup_failed), isError = true)
         if (state.step == WipeDataUiState.Step.WIPING) CoShellLinearProgress(Modifier.fillMaxWidth())
         CoShellButton(
-            onClick = onWipe,
-            enabled = state.canWipe,
+            onClick = { onWipe(confirmWord) },
+            enabled = state.canWipe(confirmWord),
             colors = ButtonDefaults.buttonColors(containerColor = danger, contentColor = MaterialTheme.colorScheme.onError),
             modifier = Modifier.fillMaxWidth(),
         ) {

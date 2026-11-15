@@ -11,11 +11,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellDialog
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.Tag
 import app.coshell.ui.form.ColorSection
+import app.coshell.ui.sheet.ModalSheet
 
 /**
  * «Новый тег — название и цвет» (#293): the name (from the search text) and a palette colour. No colour chosen —
@@ -25,13 +25,12 @@ import app.coshell.ui.form.ColorSection
 internal fun NewTagDialog(initialName: String, onCreate: (name: String, color: Long?) -> Unit, onDismiss: () -> Unit) {
     var name by rememberSaveable { mutableStateOf(initialName.take(Tag.MAX_NAME)) }
     var color by rememberSaveable { mutableStateOf<Long?>(null) }
-    CoShellDialog(
+    ModalSheet(
         title = stringResource(R.string.tags_new_title),
-        confirmLabel = stringResource(R.string.tags_create),
-        onConfirm = { onCreate(name, color) },
-        onDismiss = onDismiss,
-        dismissLabel = stringResource(R.string.action_cancel),
-        confirmEnabled = name.isNotBlank(),
+        actionLabel = stringResource(R.string.tags_create),
+        onAction = { onCreate(name, color) },
+        onClosed = onDismiss,
+        actionEnabled = name.isNotBlank(),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             CoShellTextField(

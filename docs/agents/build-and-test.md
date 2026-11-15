@@ -57,6 +57,8 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 - **Скриншоты экранов** (#226) — `app/.../screenshots/ScreensScreenshotTest.kt`: Обзор, Операции, Счета, Бюджеты на
   образцах из `*Previews.kt` (`internal val …PreviewSample`), обе темы; эталоны — `app/src/test/screenshots/`.
   Часы Compose стоят и проматываются на 3 с (каскад появления блоков доходит до конца). `agent.sh shots` пишет оба модуля.
+- **Локализация** — `TranslationsTest` и `HardcodedTextTest` (`app/.../language/`): падают на непереведённую строку и текст в коде
+  (`glossary.md` §«Языки»). Robolectric-тесту с русским текстом — `ru` в `qualifiers`.
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.
 
 ## Версии

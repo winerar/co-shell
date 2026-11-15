@@ -68,7 +68,7 @@ gradle/libs.versions.toml  все версии зависимостей и пл�
 (закреплённая «Сохранить»), заголовок вкладки — `ui/top/TabTopBar`, внутреннего экрана — `ui/top/ScreenTopBar`, «Отменить» — `undo/UndoCenter`.
 Базовые блоки — в `core:designsystem` `components/` (поля, строки, диалоги, разделы форм, сообщения —
 `design-system.md` §«Компоненты»). Обёртки со строками приложения — `ui/form/`: `EditFooter` (Архив/Удалить),
-`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `ChoiceDialog` (выбор из списка); строка меню — `ui/list/ActionRow`.
+`DeleteButton`, `DateChips`, `ConfirmDialog` (+ `ConfirmDeleteDialog`, `DeleteBlockedDialog`), `ChoiceSheet` (выбор из списка); `ui/sheet/ModalSheet` — любая форма поверх экрана; строка меню — `ui/list/ActionRow`.
 Значок категории — `core:designsystem` `category/`: `CategoryBadge` (иконка в круге цвета категории),
 `IconBadge` (то же для любой иконки), набор `CategoryIcons` (ключ → иконка) и `CategoryPalette`.
 Сначала проверь там, потом пиши новое.

@@ -24,7 +24,7 @@ import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * «Деньги» (#290, board `Fb290FAAcc`): «Валюта» and «Нач. баланс» as two tiles, each opening its own small sheet.
+ * «Деньги» (#290, board `Fb290FAAcc`): «Валюта» and «Начальный баланс» as two tiles, each opening its own small sheet.
  * A locked currency says so on the tile; an error is said under the tiles, so a bad value is seen without opening.
  */
 @Composable

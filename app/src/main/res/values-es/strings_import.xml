@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_title">Importar desde Wallet</string>
+    <string name="import_menu_hint">Traer movimientos de una exportación CSV</string>
+    <string name="import_next">Siguiente</string>
+    <string name="import_do">Importar</string>
+    <string name="import_step_of">Paso %1$d de %2$d</string>
+
+    <string name="import_step_start">Archivo</string>
+    <string name="import_step_summary">Qué hay en el archivo</string>
+    <string name="import_step_accounts">Cuentas</string>
+    <string name="import_step_categories">Categorías</string>
+    <string name="import_step_transfers">Transferencias sin pareja</string>
+    <string name="import_step_preview">Revisión</string>
+    <string name="import_step_done">Listo</string>
+
+    <string name="import_start_intro">En Wallet: Ajustes → Exportar → CSV. Guarda el archivo en el teléfono y elígelo aquí. Antes de importar se guarda una copia, y la importación se puede deshacer entera.</string>
+    <string name="import_pick_file">Elegir archivo CSV</string>
+    <string name="import_pick_file_hint">Volver a importar solo añade lo nuevo</string>
+    <string name="import_batches_title">Importaciones anteriores</string>
+    <string name="import_batch_row">%1$s · movimientos: %2$d</string>
+    <string name="import_batch_period">del %1$s al %2$s</string>
+    <string name="import_undo">Deshacer importación</string>
+    <string name="import_undo_confirm_title">¿Deshacer la importación?</string>
+    <string name="import_undo_confirm_text">Se eliminarán todos los movimientos de esta importación (también en el otro teléfono). Las cuentas y categorías se quedan.</string>
+    <string name="import_undone">Importación deshecha: movimientos eliminados — %1$d.</string>
+
+    <string name="import_summary_records">Registros: %1$d</string>
+    <string name="import_summary_period">del %1$s al %2$s</string>
+    <string name="import_summary_accounts">Cuentas: %1$d</string>
+    <string name="import_summary_currencies">Monedas: %1$s</string>
+    <string name="import_summary_categories">Categorías: %1$d</string>
+    <string name="import_summary_transfers">Transferencias: %1$d, sin pareja: %2$d</string>
+    <string name="import_summary_labels">Etiquetas: %1$s</string>
+    <string name="import_parse_errors_title">Líneas sin leer: %1$d — no se importarán</string>
+    <string name="import_parse_error_line">Línea %1$d: %2$s</string>
+
+    <string name="import_accounts_hint">Cada cuenta de Wallet puede pasar a una cuenta nueva o unirse a una existente de la misma moneda.</string>
+    <string name="import_account_records">Registros: %1$d · %2$s</string>
+    <string name="import_account_new">Cuenta nueva</string>
+    <string name="import_wallet_balance">Saldo actual en Wallet</string>
+    <string name="import_wallet_balance_hint">Opcional: la diferencia irá al saldo inicial</string>
+    <string name="import_wallet_balance_toggle_sign">Cambiar signo: menos — deuda de la tarjeta de crédito</string>
+    <string name="import_wallet_balance_error">Revisa el importe: solo cifras y una coma</string>
+
+    <string name="import_categories_hint">Pulsa una categoría para elegir una existente en lugar de crear una nueva.</string>
+    <string name="import_category_records">%1$s · registros: %2$d</string>
+    <string name="import_category_new">Nueva: %1$s</string>
+    <string name="import_category_pick_title">Categoría para «%1$s»</string>
+    <string name="import_expense">Gasto</string>
+    <string name="import_income">Ingreso</string>
+
+    <string name="import_transfers_hint">Estas transferencias no tienen la otra mitad en el archivo. Suelen ser ajustes de saldo de Wallet.</string>
+    <string name="import_unpaired_adjustment">Ajuste</string>
+    <string name="import_unpaired_skip">Omitir</string>
+    <string name="import_unpaired_transfer">Transferencia: %1$s</string>
+    <string name="import_unpaired_pick_title">Otra cuenta de la transferencia</string>
+    <string name="import_unpaired_transfer_choose">Transferencia a la cuenta…</string>
+
+    <string name="import_preview_new">Movimientos que se añadirán: %1$d</string>
+    <string name="import_preview_known">Ya importados antes: %1$d — se omiten</string>
+    <string name="import_preview_skipped">Omitidos por tu elección: %1$d</string>
+    <string name="import_preview_issues">Pendientes de decidir: %1$d — no se importarán</string>
+    <string name="import_preview_new_accounts">Cuentas nuevas: %1$d, categorías nuevas: %2$d</string>
+    <string name="import_preview_balances">Saldos tras la importación</string>
+    <string name="import_preview_nothing">No hay movimientos nuevos — todo lo de este archivo ya está importado.</string>
+    <string name="import_issue_unmapped">falta elegir cuenta o categoría</string>
+    <string name="import_issue_needs_rate">la moneda no coincide con la cuenta y no hay tipo de cambio</string>
+    <string name="import_issue_zero">importe cero</string>
+    <string name="import_issue_line">Línea %1$d: %2$s</string>
+
+    <string name="import_done_title">Importación terminada</string>
+    <string name="import_done_text">Movimientos añadidos: %1$d. Antes se hizo una copia de seguridad.</string>
+    <string name="import_done_close">Listo</string>
+
+    <string name="import_error_read">No se pudo abrir el archivo. Prueba a elegirlo otra vez.</string>
+    <string name="import_error_not_wallet">No parece una exportación de Wallet: al archivo le faltan columnas. Comprueba que es el CSV de Wallet.</string>
+    <string name="import_error_backup">No se pudo hacer la copia de seguridad — la importación no ha empezado.</string>
+    <string name="import_error_save">No se pudo guardar, no se ha escrito nada. Vuelve a intentarlo.</string>
+
+    <string name="import_problem_empty_file">el archivo está vacío</string>
+    <string name="import_problem_quote">comillas sin cerrar</string>
+    <string name="import_problem_column">falta la columna %1$s</string>
+    <string name="import_problem_value">valor poco claro «%1$s» en la columna %2$s</string>
+</resources>

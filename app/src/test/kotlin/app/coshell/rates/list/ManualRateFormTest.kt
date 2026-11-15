@@ -4,6 +4,8 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.designsystem.components.keypad.KeypadKey
 import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -15,6 +17,14 @@ class ManualRateFormTest {
     private val nov9 = LocalDate(2026, 11, 9)
     private fun form(from: String = "usd", to: String = "ARS", rate: String = "1 450,5") =
         ManualRateForm(from, to, rate, nov9, nov9)
+
+    @Test
+    fun `a small rate typed on the keypad keeps its fraction`() {
+        val keys = listOf(KeypadKey.Digit('0'), KeypadKey.Decimal) + "000675".map { KeypadKey.Digit(it) }
+        val text = keys.fold("") { t, k -> AmountKeys.apply(t, k, ManualRateForm.RATE_FRACTION_DIGITS) }
+        assertEquals("0,000675", text)
+        assertEquals(Rate.parse("0.000675"), form(rate = text).validate().second!!.rate)
+    }
 
     @Test
     fun `valid form gives a manual rate with spaces and comma accepted`() {

@@ -20,7 +20,7 @@ import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.form.ChoiceDialog
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ChoiceOption
 import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
@@ -41,7 +41,7 @@ internal fun FolderSection(folders: List<Option>, parentId: String?, onSelect: (
         )
     }
     if (open) {
-        ChoiceDialog(
+        ChoiceSheet(
             title = stringResource(R.string.category_folder),
             options = listOf(ChoiceOption<String?>(null, none)) + folders.map { ChoiceOption<String?>(it.id, it.name) },
             selected = parentId,

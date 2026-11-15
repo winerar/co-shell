@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
@@ -30,10 +29,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.R
+import app.coshell.ui.sheet.ModalSheet
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.search.PeriodRange
@@ -166,18 +165,16 @@ private fun RangePickerDialog(initial: PeriodRange?, onDismiss: () -> Unit, onPi
         initialSelectedStartDateMillis = initial?.start?.millis(),
         initialSelectedEndDateMillis = initial?.lastDay?.millis(),
     )
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            CoShellTextButton(
-                onClick = {
-                    val start = state.selectedStartDateMillis
-                    if (start == null) onDismiss() else onPicked(start.date(), (state.selectedEndDateMillis ?: start).date())
-                },
-            ) { Text(stringResource(R.string.action_ok)) }
+    ModalSheet(
+        title = stringResource(R.string.date_range_pick_title),
+        actionLabel = stringResource(R.string.keypad_done),
+        onAction = { close ->
+            val start = state.selectedStartDateMillis
+            if (start == null) close() else onPicked(start.date(), (state.selectedEndDateMillis ?: start).date())
         },
-        dismissButton = { CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+        onClosed = onDismiss,
     ) {
-        DateRangePicker(state = state, modifier = Modifier.weight(1f))
+        // A lazy month list: it needs a bounded height inside the sheet's scrolling column.
+        DateRangePicker(state = state, title = null, showModeToggle = false, modifier = Modifier.height(Sizes.rangePicker))
     }
 }

@@ -1,0 +1,73 @@
+package app.coshell.core.designsystem.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
+
+/**
+ * Days 1..[days] seven to a row (#345, «Начало месяца»): round cells, [selected] filled with the accent,
+ * [markedDay] (the default) carries a small dot under the number.
+ */
+@Composable
+fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, days: Int = 31, markedDay: Int? = null) {
+    val colors = MaterialTheme.colorScheme
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+        (1..days).chunked(DAYS_IN_ROW).forEach { week ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                week.forEach { day ->
+                    val on = day == selected
+                    Box(Modifier.weight(1f).height(Sizes.pillHeight), contentAlignment = Alignment.Center) {
+                        Box(
+                            Modifier
+                                .size(Sizes.pillHeight)
+                                .background(if (on) colors.primaryContainer else Color.Transparent, CircleShape)
+                                .semantics { this.selected = on }
+                                .tactileClickable(Tactile.Control, CircleShape, role = Role.RadioButton) { onSelect(day) },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                day.toString(),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = if (on) FontWeight.Bold else FontWeight.Normal,
+                                color = if (on) colors.onPrimaryContainer else colors.onSurface,
+                            )
+                            if (day == markedDay && !on) {
+                                Box(
+                                    Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .padding(bottom = Spacing.xs)
+                                        .size(Sizes.bulletSmall)
+                                        .background(colors.tertiary, CircleShape),
+                                )
+                            }
+                        }
+                    }
+                }
+                repeat(DAYS_IN_ROW - week.size) { Box(Modifier.weight(1f)) }
+            }
+        }
+    }
+}
+
+private const val DAYS_IN_ROW = 7

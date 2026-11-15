@@ -13,6 +13,7 @@ import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ChartsCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
+import app.coshell.core.designsystem.catalog.ModalsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
 import app.coshell.core.designsystem.components.CoShellBottomBar
@@ -88,6 +89,13 @@ class CatalogScreenshotTest {
     @Test
     fun `row group light`() = shot("row_group_light") { RowGroupSample() }
 
+    /** #345: the question card and the sheet with the day grid. */
+    @Test
+    fun `modals dark`() = shot("modals_dark", dark = true) { ModalsCatalog() }
+
+    @Test
+    fun `modals light`() = shot("modals_light") { ModalsCatalog() }
+
     @Test
     fun `check marks dark`() = shot("check_marks_dark", dark = true) { CheckMarkSample() }
 
@@ -125,7 +133,7 @@ private fun RowGroupSample() {
     Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         CoShellSectionLabel("Общее")
         CoShellRowGroup {
-            row { CoShellListRow(title = "Валюты отчётов", subtitle = "Основная: USD", onClick = {}) }
+            row { CoShellListRow(title = "Валюты итогов", subtitle = "Основная: USD", onClick = {}) }
             row { CoShellSwitchRow(title = "Встряхнуть — новая операция", subtitle = "Пока открыто приложение", checked = true, onCheckedChange = {}) }
             row { CoShellListRow(title = "Обновление приложения", subtitle = "Версия 1.43 · последняя", onClick = {}) }
         }

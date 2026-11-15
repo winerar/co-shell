@@ -16,6 +16,7 @@
   `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
+- **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp, выбранное — неон с точкой; один из списка (язык).
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
   `surfaceContainer`, сегменты 40 dp, одна пилюля скользит к выбранному на `Motion.spatial()` (рисуется в `drawBehind` —
   смена выбора только перерисовка). `SegmentTone.Choice` — неон `primary` (тип операции, «Категория | Папка», тема,
@@ -36,8 +37,12 @@
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.
   `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, color, title, onClick, subtitle)`
   (#155): иконка в квадрате 32 dp с заливкой цвета (`MenuIcon`; квадрат — раздел, круг — категория), шеврон; группы «Ещё».
-- **Диалоги** — `CoShellAlertDialog` (вопрос: текст и 1–2 кнопки, `destructive` — красная «Удалить»),
-  `CoShellDialog` (маленькая форма, содержимое прокручивается). Редакторы — не диалоги, а шторки.
+- **Модальные окна (#345, вариант В)** — вопрос: `CoShellAlertDialog` — карточка по центру (иконка в квадрате, вопрос,
+  последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`).
+  Форма или выбор — только шторка `CoShellModalSheet` (в app — `ui/sheet/ModalSheet`): заголовок + подзаголовок + ×,
+  кнопка внизу во всю ширину; числа — своей клавиатурой (`CoShellKeypad`, `showPlus = false` для курса). Выбор одного —
+  `ui/form/ChoiceSheet` (строки с ✓, поиск от 9 вариантов, `extra` — свой код валюты); числа 1–31 — `CoShellDayGrid`.
+  Material-диалоги в app запрещены (`TactileRuleTest`).
 - **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`
   (итог действия: блок на ступень светлее фона или контейнер ошибки).
 - **Шторка и панель** — `CoShellSheet` + `CoShellSheetLayout` (действие закреплено внизу, `titleAction` — текст-кнопка
@@ -55,6 +60,8 @@
   на градиенте темы** (`CoShellCard(accent = true)`, владелец 2026-11-12, #277; на досках — `hero_card`); `tint` — для блоков-сообщений. `CoShellOutlinedButton(color = …)` — контур и текст цвета
   (фиолетовая «Синхронизировать сейчас» высотой `Sizes.wideButton`). **Пустой слот «добавить»** — `Modifier.dashedBorder(color, radius)`
   (пунктир: «+ Новый шаблон», «Пригласить», «+ Добавить курс»).
+- **Пузырь-подсказка у удержанного элемента** — `CoShellPeekBubble(lines, footnote)` (попап над элементом, справа, не берёт касаний;
+  `PeekCard` — то же без попапа для превью) + жест `Modifier.holdToPeek(enabled, onTap, onPeek, onRelease)` (#318: держишь — виден, отпустил — исчез).
 - **Снэкбар** — `CoShellSnackbarHost` (выезжает снизу, полоска оставшегося времени); **тема (палитра)** — `CoShellPaletteSwatch` (квадрат в фоне темы, по 4 в ряд, #271).
 - Тест `app/.../TactileRuleTest` запрещает в `app` импорт Material-кнопок, чипов, полей, диалогов,
   `ListItem`, `Card`, `ModalBottomSheet`, `NavigationBar` — только компоненты отсюда. Обёртки со строками приложения (`ui/form/ConfirmDialog`,

@@ -14,6 +14,8 @@ import kotlinx.serialization.json.Json
  * Room entity ⇄ [SyncRecord]. The payload is the entity's JSON: adding a column with a default
  * value is compatible both ways (unknown keys are ignored, missing keys take the default).
  * Renaming or removing a field is not — treat entity property names as a wire format.
+ * Every payload is stamped with the sync schema ([SyncPayload.SCHEMA]); fields of a newer version
+ * that the entity lacks are kept by [SyncEngine] in `sync_extras` (#340).
  */
 object SyncCodec {
     private val json = Json {
@@ -22,21 +24,21 @@ object SyncCodec {
     }
 
     fun encode(e: AccountEntity) =
-        SyncRecord(SyncKind.ACCOUNT, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.ACCOUNT, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: CategoryEntity) =
-        SyncRecord(SyncKind.CATEGORY, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.CATEGORY, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: TransactionEntity) =
-        SyncRecord(SyncKind.TRANSACTION, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.TRANSACTION, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: BudgetEntity) =
-        SyncRecord(SyncKind.BUDGET, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.BUDGET, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: ManualRateEntity) =
-        SyncRecord(SyncKind.MANUAL_RATE, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.MANUAL_RATE, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: TemplateEntity) =
-        SyncRecord(SyncKind.TEMPLATE, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.TEMPLATE, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: SettingEntity) =
-        SyncRecord(SyncKind.SETTING, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.SETTING, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
     fun encode(e: TagEntity) =
-        SyncRecord(SyncKind.TAG, e.id, e.updatedAt, e.updatedBy, e.deleted, json.encodeToString(e))
+        SyncRecord(SyncKind.TAG, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
 
     // Decoded rows come from the server, so they are not pending.
     fun account(r: SyncRecord) = json.decodeFromString<AccountEntity>(r.json).copy(pendingSync = false)

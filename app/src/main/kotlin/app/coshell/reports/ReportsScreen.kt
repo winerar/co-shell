@@ -21,6 +21,7 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.reports.components.IncomeCard
 import app.coshell.reports.components.MonthsCard
 import app.coshell.reports.components.PeriodSwitch
 import app.coshell.reports.components.ReportChoice
@@ -32,8 +33,8 @@ import app.coshell.ui.top.tabScroll
 import kotlinx.datetime.YearMonth
 
 /**
- * «Отчёты» (#140, boards `RepA`, `RepPeriod`): a feed of cards for one period and one currency — «На что ушли деньги»
- * and «По месяцам». The arrows step through periods; the title or «USD ▾» opens «Период и валюта»; a month column
+ * «Отчёты» (#140, boards `RepA`, `RepPeriod`): a feed of cards for one period and one currency — «На что ушли деньги»,
+ * «По месяцам» and «Доходы и расходы» (#189). The arrows step through periods; the title or «USD ▾» opens «Период и валюта»; a month column
  * opens that month.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +87,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
                 }
             }
             state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
+            state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
             item(key = "note") {
                 val missing = spending?.missing.orEmpty()
                 CoShellHint(

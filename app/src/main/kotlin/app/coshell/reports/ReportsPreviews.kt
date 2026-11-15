@@ -9,6 +9,8 @@ import app.coshell.reports.ReportsUiState.Bar
 import app.coshell.reports.ReportsUiState.CategoryRow
 import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
+import app.coshell.reports.ReportsUiState.Income
+import app.coshell.reports.ReportsUiState.IncomeColumn
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
 import app.coshell.reports.ReportsUiState.Other
@@ -60,6 +62,22 @@ object ReportsSamples {
         selected = 5,
     )
 
+    /** Board `Rp189IeA`: income next to spending, June … November (November so far). */
+    val income = Income(
+        columns = listOf(1_650 to 1_180, 1_600 to 1_320, 1_700 to 1_090, 1_300 to 1_410, 1_620 to 1_350, 1_580 to 760).mapIndexed { i, (e, s) ->
+            IncomeColumn(YearMonth(2026, 6 + i), "%,d".format(e).replace(',', ' '), "%,d".format(s).replace(',', ' '), e / 1_700f, s / 1_700f)
+        },
+        selected = 5,
+        earned = "1 580",
+        spent = "760",
+        saved = "+820",
+        overspent = false,
+        rate = 51,
+        running = true,
+        averageRate = 19,
+        averageMonths = 5,
+    )
+
     val state = ReportsUiState(
         period = ReportPeriod.month(YearMonth(2026, 11)),
         today = LocalDate(2026, 11, 11),
@@ -67,6 +85,7 @@ object ReportsSamples {
         currencies = listOf("USD", "ARS", "AMD", "RUB"),
         spending = spending,
         months = months,
+        income = income,
     )
 
     val empty = state.copy(spending = null)

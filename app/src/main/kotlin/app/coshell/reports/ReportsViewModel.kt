@@ -84,6 +84,7 @@ class ReportsViewModel @Inject constructor(
                 compare = s.compare,
                 spending = buildSpending(input, format),
                 months = buildMonths(input, format),
+                income = buildIncome(input, format),
             )
         }
     }

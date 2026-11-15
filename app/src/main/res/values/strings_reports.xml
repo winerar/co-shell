@@ -116,4 +116,15 @@
     <string name="review_card_limits">Лимиты: уложились %1$d из %2$d</string>
     <string name="review_card_more">Подробнее ›</string>
     <string name="review_card_hide">Скрыть до следующего месяца</string>
+    <!-- «Доходы и расходы» (#189, board Rp189IeA) -->
+    <string name="reports_income_title">Доходы и расходы</string>
+    <string name="reports_income_caption">тап — месяц</string>
+    <string name="reports_income_in">пришло</string>
+    <string name="reports_income_out">ушло</string>
+    <string name="reports_income_left">остаток</string>
+    <string name="reports_income_month_in">%1$s · пришло</string>
+    <string name="reports_income_so_far">пока</string>
+    <string name="reports_income_rate">Отложили %1$d%% дохода</string>
+    <string name="reports_income_average">в среднем за %1$d мес. — %2$d%%</string>
+    <string name="reports_income_description">%1$s: пришло %2$s, ушло %3$s</string>
 </resources>

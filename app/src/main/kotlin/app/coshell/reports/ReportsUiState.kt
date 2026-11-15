@@ -22,6 +22,8 @@ data class ReportsUiState(
     val compare: Boolean = true,
     val spending: Spending? = null,
     val months: Months? = null,
+    /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
+    val income: Income? = null,
 ) {
     /** Nothing was spent in the period (the cards say so instead of empty charts). */
     val isEmpty: Boolean get() = !isLoading && spending == null
@@ -98,4 +100,32 @@ data class ReportsUiState(
     data class Months(val columns: List<MonthColumn>, val selected: Int)
 
     data class MonthColumn(val month: YearMonth, val value: String, val fraction: Float)
+
+    /**
+     * «Доходы и расходы» (board `Rp189IeA`): income and spending of each month of «По месяцам» on one scale; under the
+     * chart — the [selected] month: what came in, went out and was left ([saved] signed: «+270», «-110»).
+     */
+    data class Income(
+        val columns: List<IncomeColumn>,
+        val selected: Int,
+        val earned: String,
+        val spent: String,
+        val saved: String,
+        val overspent: Boolean,
+        /** The selected month's savings rate, `null` — nothing came in. */
+        val rate: Int?,
+        /** The selected month is still running: its numbers are «пока». */
+        val running: Boolean,
+        /** The average rate of the finished months and how many there were; `null` — none. */
+        val averageRate: Int?,
+        val averageMonths: Int,
+    )
+
+    data class IncomeColumn(
+        val month: YearMonth,
+        val earned: String,
+        val spent: String,
+        val earnedFraction: Float,
+        val spentFraction: Float,
+    )
 }

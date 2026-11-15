@@ -1,7 +1,6 @@
 package app.coshell.transactions.list
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,10 +30,10 @@ import app.coshell.transactions.list.components.DayHeader
 import app.coshell.transactions.list.components.FilterBar
 import app.coshell.transactions.list.components.SelectionActions
 import app.coshell.transactions.list.components.TransactionRow
+import app.coshell.transactions.list.components.dayLabel
 import app.coshell.ui.bar.ReplaceBottomBar
 import app.coshell.ui.list.LoadMoreEffect
-import app.coshell.ui.top.SelectionTopBar
-import app.coshell.ui.top.TabTopBar
+import app.coshell.ui.top.TabOrSelectionTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import kotlinx.datetime.LocalDate
@@ -40,10 +42,10 @@ import kotlinx.datetime.LocalDate
  * «Операции»: search and filter chips on top, days with their net on the right. Rows have no swipes — a
  * horizontal swipe flips tabs (issue #112); a long press chooses rows (mockup 19В): the header counts them,
  * the bottom bar turns into «Дублировать · Удалить · N», back or «✕» leaves the mode.
- * Older pages load while scrolling ([LoadMoreEffect]); day headers stick to the top. Holding an amount shows
+ * Older pages load while scrolling ([LoadMoreEffect]); once scrolled, the header's second line names the day at
+ * the top with its net (header poll А, 2026-11-15) — so day titles no longer stick. Holding an amount shows
  * it in the report currencies at the operation's day ([peek], #318).
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsScreen(
     state: TransactionsUiState,
@@ -63,10 +65,19 @@ fun TransactionsScreen(
             onDelete = actions.onDeleteSelected,
         )
     }
+    val topDay by remember(state.days, state.filter.isActive) {
+        derivedStateOf { dayAt(state, listState.firstVisibleItemIndex) }
+    }
+    val subtitle = topDay?.let { day -> listOfNotNull(dayLabel(day), day.total).joinToString(SUBTITLE_SEPARATOR) }
     Scaffold(
         topBar = {
-            if (selection.active) SelectionTopBar(selection.count, actions.onClearSelection, scroll)
-            else TabTopBar(stringResource(R.string.nav_transactions), scroll)
+            TabOrSelectionTopBar(
+                title = stringResource(R.string.nav_transactions),
+                scroll = scroll,
+                selectedCount = selection.count,
+                onClearSelection = actions.onClearSelection,
+                subtitle = subtitle,
+            )
         },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
@@ -84,7 +95,7 @@ fun TransactionsScreen(
                 return@LazyColumn
             }
             state.days.forEach { day ->
-                stickyHeader(key = day.date.toString()) { DayHeader(day) }
+                item(key = day.date.toString()) { DayHeader(day) }
                 items(day.rows, key = { it.id }) { row ->
                     // Rows slide in, out and into place (design-questions §6).
                     Box(listItemMotion()) {
@@ -104,6 +115,23 @@ fun TransactionsScreen(
         }
     }
 }
+
+/**
+ * The day whose title or rows are at the top of the list at item [index]: the list is the filter bar (when
+ * shown), then each day's title and its rows — the same order as the LazyColumn above.
+ */
+internal fun dayAt(state: TransactionsUiState, index: Int): TransactionsUiState.Day? {
+    var at = if (state.days.isNotEmpty() || state.filter.isActive) 1 else 0
+    var found: TransactionsUiState.Day? = null
+    for (day in state.days) {
+        if (at > index) break
+        found = day
+        at += 1 + day.rows.size
+    }
+    return found
+}
+
+private const val SUBTITLE_SEPARATOR = " · "
 
 /** Everything the list can ask for; defaults make previews short. */
 data class TransactionsActions(

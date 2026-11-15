@@ -53,7 +53,9 @@
 «вошёл · N операций» у участника и изменение курса за день. Стрелка «назад» в коде — Material, на досках — шеврон (на всех экранах).
 
 ## Живые страницы выбора
-- Шапки экранов (2026-11-15, ждут выбора): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия `topbar-headers.html`; после выбора — доски на холст и `ui/top/`.
+- Шапки экранов (2026-11-15, **выбрано А «Живая строка» без прозрачности**): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия
+  `topbar-headers.html`; код — `ui/top/` (`TabTopBar`, `TabOrSelectionTopBar`), эталон `transactions_scrolled_dark`. Пока не сделано:
+  поиск из лупы в шапке (в «Операциях» остаётся строка поиска #141), линия при прокрутке у внутренних экранов (`ScreenTopBar`).
 
 ## Ранние страницы (до холста)
 - Новый облик (пружины, палитры, вёрстка): https://claude.ai/artifact/WqocoPvC6g6mLRt31WvcCW

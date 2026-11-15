@@ -49,7 +49,7 @@ def bar():
     def tab(key, icon, lbl):
         return tap('<span aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 64px;">%s</span>'
                    % (lbl, svg(icon, '{{tabs.%s.ink}}' % key, 24, 1.7)), 'tabs.%s.go' % key)
-    plus = ('<span style="display: flex; justify-content: center;"><span style="width: 52px; height: 52px; border-radius: 50%%; background: %s; display: flex; '
+    plus = ('<span style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; '
             'align-items: center; justify-content: center;">%s</span></span>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: %s; '
             'display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'

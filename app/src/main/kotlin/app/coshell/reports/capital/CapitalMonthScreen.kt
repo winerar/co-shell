@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,19 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.accounts.list.components.AccountRow
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSearchField
+import app.coshell.core.designsystem.theme.AmountHeadlineStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.format.formatMonth
@@ -89,7 +88,7 @@ fun CapitalMonthScreen(state: CapitalMonthUiState, actions: CapitalMonthActions)
                 else -> item(key = "rows") {
                     CoShellCard(Modifier.fillMaxWidth()) {
                         state.rows.forEachIndexed { i, row ->
-                            if (i > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                            if (i > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
                             AccountRow(row, actions.onAccount)
                         }
                     }
@@ -118,7 +117,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
             Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
                 Text(
                     state.value,
-                    style = RateTextStyle.copy(fontSize = MaterialTheme.typography.headlineSmall.fontSize, fontWeight = FontWeight.Bold),
+                    style = AmountHeadlineStyle,
                     maxLines = 1,
                 )
                 Text(

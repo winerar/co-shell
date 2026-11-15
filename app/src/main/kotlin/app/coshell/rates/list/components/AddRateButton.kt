@@ -32,9 +32,9 @@ internal fun AddRateButton(onClick: () -> Unit) {
         Modifier
             .fillMaxWidth()
             .padding(horizontal = Spacing.l, vertical = Spacing.s)
-            .height(Sizes.wideButton)
+            .height(Sizes.button)
             .tactileClickable(Tactile.Control, PillShape, onClick = onClick)
-            .dashedBorder(MaterialTheme.colorScheme.outline, Sizes.wideButton),
+            .dashedBorder(MaterialTheme.colorScheme.outline, Sizes.button),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s, Alignment.CenterHorizontally),
     ) {

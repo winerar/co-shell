@@ -2,6 +2,7 @@ package app.coshell.core.data.sync
 
 import app.coshell.core.data.db.PulledRows
 import app.coshell.core.data.db.SyncDao
+import app.coshell.core.data.db.SyncExtraEntity
 import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.data.integrity.IntegrityCheck
 import app.coshell.core.data.remote.ApiException
@@ -21,6 +22,7 @@ data class SyncResult(val pulled: Int, val applied: Int, val pushed: Int, val pu
  * 1. **Pull** records the server stored since the last cursor and merge them: a row is replaced
  *    only if the incoming version is newer ([remoteWins]); a newer local edit stays pending.
  * 2. **Push** every pending row; the flag is cleared only if the row was not edited meanwhile.
+ *    Fields of a newer app version, saved on pull, go back with the row ([SyncPayload], #340).
  *
  * Pull goes first so that a stale offline edit cannot silently overwrite a newer one on the
  * server. Runs are serialized; a failed run leaves rows pending and the cursor where it was,
@@ -95,7 +97,7 @@ class SyncEngine(
         val tags = pending.tags.map(SyncCodec::encode)
         (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK)).forEach { chunk ->
             try {
-                remote.push(chunk)
+                remote.push(chunk.withExtras())
             } catch (e: ApiException) {
                 if (e.isQuotaExceeded) pausePush()
                 throw e
@@ -105,18 +107,34 @@ class SyncEngine(
         return records.size + settings.size + tags.size
     }
 
+    /** Puts back the fields of a newer version this phone saved on pull (#340); own fields win. */
+    private suspend fun List<SyncRecord>.withExtras(): List<SyncRecord> {
+        val extras = dao.extrasFor(this)
+        if (extras.isEmpty()) return this
+        return map { r -> extras[r.key]?.let { r.copy(json = SyncPayload.withExtras(r.json, it)) } ?: r }
+    }
+
     private fun List<RemoteRecord>.toRows(): PulledRows {
         val byKind = map { it.record }.groupBy { it.kind }
-        fun <T> of(kind: SyncKind, decode: (SyncRecord) -> T) = byKind[kind].orEmpty().map(decode)
+        // Keys this version writes, per kind: the re-encoded payload of a decoded record has all of them.
+        val known = mutableMapOf<SyncKind, Set<String>>()
+        val extras = mutableListOf<SyncExtraEntity>()
+        fun <T> of(kind: SyncKind, decode: (SyncRecord) -> T, encode: (T) -> SyncRecord) = byKind[kind].orEmpty().map { r ->
+            decode(r).also { row ->
+                val keys = known.getOrPut(kind) { SyncPayload.keys(encode(row).json) }
+                SyncPayload.unknownKeys(r.json, keys)?.let { extras += SyncExtraEntity(kind.wire, r.id, it) }
+            }
+        }
         return PulledRows(
-            accounts = of(SyncKind.ACCOUNT, SyncCodec::account),
-            categories = of(SyncKind.CATEGORY, SyncCodec::category),
-            transactions = of(SyncKind.TRANSACTION, SyncCodec::transaction),
-            budgets = of(SyncKind.BUDGET, SyncCodec::budget),
-            manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate),
-            templates = of(SyncKind.TEMPLATE, SyncCodec::template),
-            settings = of(SyncKind.SETTING, SyncCodec::setting),
-            tags = of(SyncKind.TAG, SyncCodec::tag),
+            accounts = of(SyncKind.ACCOUNT, SyncCodec::account, SyncCodec::encode),
+            categories = of(SyncKind.CATEGORY, SyncCodec::category, SyncCodec::encode),
+            transactions = of(SyncKind.TRANSACTION, SyncCodec::transaction, SyncCodec::encode),
+            budgets = of(SyncKind.BUDGET, SyncCodec::budget, SyncCodec::encode),
+            manualRates = of(SyncKind.MANUAL_RATE, SyncCodec::manualRate, SyncCodec::encode),
+            templates = of(SyncKind.TEMPLATE, SyncCodec::template, SyncCodec::encode),
+            settings = of(SyncKind.SETTING, SyncCodec::setting, SyncCodec::encode),
+            tags = of(SyncKind.TAG, SyncCodec::tag, SyncCodec::encode),
+            extras = extras,
         )
     }
 

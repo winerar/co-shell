@@ -20,6 +20,8 @@ data class PulledRows(
     val templates: List<TemplateEntity> = emptyList(),
     val settings: List<SettingEntity> = emptyList(),
     val tags: List<TagEntity> = emptyList(),
+    /** Unknown fields of the pulled records that have any (#340); kept only for rows that win. */
+    val extras: List<SyncExtraEntity> = emptyList(),
 )
 
 /** Rows waiting to be sent to the server. */
@@ -121,6 +123,19 @@ abstract class SyncDao {
 
     @Query("SELECT COUNT(*) FROM transactions WHERE deleted = 0") abstract suspend fun liveTransactionCount(): Int
 
+    // --- fields of a newer app version (#340) ---
+    @Query("SELECT * FROM sync_extras WHERE kind = :kind AND id IN (:ids)")
+    abstract suspend fun extras(kind: String, ids: List<String>): List<SyncExtraEntity>
+    @Query("DELETE FROM sync_extras WHERE kind = :kind AND id IN (:ids)") abstract suspend fun deleteExtras(kind: String, ids: List<String>)
+    @Upsert abstract suspend fun upsertExtras(rows: List<SyncExtraEntity>)
+    @Query("DELETE FROM sync_extras") abstract suspend fun deleteAllExtras()
+
+    /** Saved unknown fields of [records] by [SyncRecord.key]. */
+    @Transaction
+    open suspend fun extrasFor(records: List<SyncRecord>): Map<String, String> =
+        records.groupBy { it.kind }.flatMap { (kind, rows) -> extras(kind.wire, rows.map { it.id }) }
+            .associate { "${it.kind}_${it.id}" to it.json }
+
     // --- state ---
     @Query("SELECT value FROM sync_state WHERE `key` = :key") abstract suspend fun state(key: String): String?
     @Query("SELECT value FROM sync_state WHERE `key` = :key") abstract fun observeState(key: String): Flow<String?>
@@ -129,25 +144,29 @@ abstract class SyncDao {
     /**
      * Applies downloaded rows that win over local ones ([remoteWins]) and moves the cursor, in one
      * transaction: a local edit saved during the merge is either seen here or made after it.
+     * A winning row also replaces its saved unknown fields ([PulledRows.extras], #340).
      * Returns how many rows changed.
      */
     @Transaction
     open suspend fun merge(rows: PulledRows, cursorKey: String, cursor: String?): Int {
-        var changed = 0
-        fun <T> winners(remote: List<T>, local: List<T>, id: (T) -> String, v: (T) -> Version): List<T> {
+        val won = mutableMapOf<SyncKind, List<String>>()
+        fun <T> winners(kind: SyncKind, remote: List<T>, local: List<T>, id: (T) -> String, v: (T) -> Version): List<T> {
             val byId = local.associateBy(id)
-            return remote.filter { remoteWins(byId[id(it)]?.let(v), v(it)) }.also { changed += it.size }
+            return remote.filter { remoteWins(byId[id(it)]?.let(v), v(it)) }.also { w -> won[kind] = w.map(id) }
         }
-        upsertAccounts(winners(rows.accounts, accounts(rows.accounts.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertCategories(winners(rows.categories, categories(rows.categories.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertTransactions(winners(rows.transactions, transactions(rows.transactions.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertBudgets(winners(rows.budgets, budgets(rows.budgets.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertManualRates(winners(rows.manualRates, manualRates(rows.manualRates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertTemplates(winners(rows.templates, templates(rows.templates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertSettings(winners(rows.settings, settings(rows.settings.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertTags(winners(rows.tags, tags(rows.tags.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertAccounts(winners(SyncKind.ACCOUNT, rows.accounts, accounts(rows.accounts.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertCategories(winners(SyncKind.CATEGORY, rows.categories, categories(rows.categories.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertTransactions(winners(SyncKind.TRANSACTION, rows.transactions, transactions(rows.transactions.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertBudgets(winners(SyncKind.BUDGET, rows.budgets, budgets(rows.budgets.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertManualRates(winners(SyncKind.MANUAL_RATE, rows.manualRates, manualRates(rows.manualRates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertTemplates(winners(SyncKind.TEMPLATE, rows.templates, templates(rows.templates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertSettings(winners(SyncKind.SETTING, rows.settings, settings(rows.settings.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertTags(winners(SyncKind.TAG, rows.tags, tags(rows.tags.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        won.forEach { (kind, ids) -> if (ids.isNotEmpty()) deleteExtras(kind.wire, ids) }
+        val wonKeys = won.flatMap { (kind, ids) -> ids.map { "${kind.wire}_$it" } }.toSet()
+        upsertExtras(rows.extras.filter { "${it.kind}_${it.id}" in wonKeys })
         if (cursor != null) setState(SyncStateEntity(cursorKey, cursor))
-        return changed
+        return won.values.sumOf { it.size }
     }
 
     // --- replace local data with the family's (joining a family) ---
@@ -164,7 +183,7 @@ abstract class SyncDao {
     @Transaction
     open suspend fun wipeSyncedData() {
         deleteAccounts(); deleteCategories(); deleteTransactions(); deleteBudgets(); deleteManualRates(); deleteTemplates()
-        deleteSettings(); deleteTags(); deleteState()
+        deleteSettings(); deleteTags(); deleteState(); deleteAllExtras()
     }
 
     /** Marks every row as not yet sent — used when this phone's data must go to a (new) family. */

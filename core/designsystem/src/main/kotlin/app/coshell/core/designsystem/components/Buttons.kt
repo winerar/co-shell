@@ -3,6 +3,9 @@ package app.coshell.core.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -28,8 +31,9 @@ import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.tokens.Sizes
 
-// Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple.
+// Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple, all [Sizes.button] high.
 // Screens use these, never the Material ones (design-system.md §«Движение»).
 
 /**
@@ -49,7 +53,7 @@ fun CoShellButton(
     NoRipple {
         Button(
             onClick = onClick,
-            modifier = modifier.tactile(source, tactile, PillShape, enabled).smoothResize(),
+            modifier = modifier.heightIn(min = Sizes.button).tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
@@ -78,7 +82,7 @@ fun CoShellOutlinedButton(
     NoRipple {
         OutlinedButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
+            modifier = modifier.heightIn(min = Sizes.button).tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = color?.let { ButtonDefaults.outlinedButtonColors(contentColor = it) } ?: ButtonDefaults.outlinedButtonColors(),
             border = color?.let { BorderStroke(1.dp, it.copy(alpha = if (enabled) OUTLINE_TINT_ALPHA else DISABLED_ALPHA)) }
@@ -105,7 +109,7 @@ fun CoShellTextButton(
     NoRipple {
         TextButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
+            modifier = modifier.heightIn(min = Sizes.button).tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = ButtonDefaults.textButtonColors(contentColor = contentColor),
             interactionSource = source,
@@ -114,20 +118,23 @@ fun CoShellTextButton(
     }
 }
 
-/** Round icon button. */
+/**
+ * Icon button: a 48 dp circle on the filled track, like every button 48 high (board Style6, owner 2026-11-15).
+ * Over a coloured surface pass [coShellIconButtonColors] with that surface's own container.
+ */
 @Composable
 fun CoShellIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
+    colors: IconButtonColors = coShellIconButtonColors(),
     content: @Composable () -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
     NoRipple {
         IconButton(
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
+            modifier = modifier.size(Sizes.button).tactile(source, Tactile.Control, PillShape, enabled),
             enabled = enabled,
             colors = colors,
             interactionSource = source,
@@ -135,6 +142,11 @@ fun CoShellIconButton(
         )
     }
 }
+
+/** Colours of [CoShellIconButton]: the track of choice controls under the icon in ink. */
+@Composable
+fun coShellIconButtonColors(container: Color = MaterialTheme.colorScheme.surfaceContainerHigh): IconButtonColors =
+    IconButtonDefaults.iconButtonColors(containerColor = container, contentColor = MaterialTheme.colorScheme.onSurface)
 
 /** Floating action button; the bottom bar's "+" uses `Tactile.Primary`. */
 @Composable
@@ -180,7 +192,7 @@ fun CoShellExtendedFab(
             text = text,
             icon = icon,
             onClick = onClick,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, originColor = containerColor),
+            modifier = modifier.height(Sizes.button).tactile(source, Tactile.Control, PillShape, originColor = containerColor),
             shape = PillShape,
             containerColor = containerColor,
             contentColor = contentColor,

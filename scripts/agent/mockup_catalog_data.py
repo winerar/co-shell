@@ -1,5 +1,5 @@
 """«Компоненты v3» — existing amounts, charts and tags (#367, part 3 of 3), each as a function of v."""
-from mockup_comp_v3_kit import *  # noqa: F401,F403
+from mockup_catalog_kit import *  # noqa: F401,F403
 
 
 def amt(v, text, cur, size=28, color=INK):
@@ -148,6 +148,16 @@ def tag_pills(v):
                cap('в строке операции: ' + ('пилюля с тоном' if v == 'A' else 'полоска + подпись, без фона')))
 
 
+def paired(v):
+    import mockup_screens_picture as pic  # approved on the screen board Rp189IeA (#189, poll А)
+    return col(pic.pairs() + pic.legend((CYAN, 'пришло'), (PINK, 'ушло')), cap('пара на месяц: доход и расход от нуля; выбранная — ярко на плашке, остальные бледно; тап — месяц'))
+
+
+def lines(v):
+    import mockup_screens_picture as pic  # approved on the screen board Rp189NwB (#189, poll Б)
+    return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -158,4 +168,6 @@ DATA = [
     ('Кольцо', donuts, 'CoShellDonut(slices, description, content)'),
     ('Теги — выбор', tag_chips, 'CoShellTagChip(name, color, selected, removeLabel) · CoShellTagMoreChip'),
     ('Теги — в строке', tag_pills, 'CoShellTagPill(name, color) · CoShellTagMore · CoShellTagDot'),
+    ('Доходы и расходы', paired, 'CoShellPairedColumns(pairs, selected, onSelect) — доска Rp189IeA'),
+    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
 ]

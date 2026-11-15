@@ -2,8 +2,8 @@ package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -30,6 +30,7 @@ import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileToggleable
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -156,28 +157,35 @@ fun CoShellSwitchLine(title: String, subtitle: String, checked: Boolean, onCheck
 
 /**
  * A small choice pill for a few options in a form card (#290, «Тип» of an account): five fit on one line where
- * filter chips need two. The chosen one is filled, the rest are outlined.
+ * filter chips need two. A [Sizes.chipHeight] chip like every choice (board Style1): neon + frame + bold / the track.
  */
 @Composable
 fun CoShellChoicePill(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val shape = CircleShape
+    val shape = PillShape
     val colors = MaterialTheme.colorScheme
-    Text(
-        text,
-        style = MaterialTheme.typography.labelMedium,
-        color = if (selected) colors.onSecondaryContainer else colors.onSurfaceVariant,
-        maxLines = 1,
-        modifier = modifier
+    Box(
+        modifier
+            .heightIn(min = Sizes.chipHeight)
             .tactileClickable(Tactile.Control, shape, role = Role.RadioButton, onClick = onClick)
             .selectionPop(selected)
-            .then(if (selected) Modifier.background(colors.secondaryContainer, shape) else Modifier.border(Sizes.hairline, colors.outlineVariant, shape))
-            .padding(horizontal = Spacing.s, vertical = Spacing.s - Spacing.xxs),
-    )
+            .background(if (selected) colors.primaryContainer else colors.surfaceContainerHigh, shape)
+            .then(if (selected) Modifier.border(Sizes.selectionRing, colors.onSurface, shape) else Modifier)
+            .padding(horizontal = Spacing.s),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            color = if (selected) colors.onPrimaryContainer else colors.onSurfaceVariant,
+            maxLines = 1,
+        )
+    }
 }
 
 @Composable
 private fun TileRow(onClick: () -> Unit, modifier: Modifier, role: Role, content: @Composable () -> Unit) {
-    val shape = MaterialTheme.shapes.medium
+    val shape = PillShape
     Row(
         modifier
             .heightIn(min = TILE_HEIGHT)

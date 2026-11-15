@@ -26,17 +26,19 @@ import mockup_screens_reports as rep_screens  # noqa: E402
 import mockup_screens_review as mon_screens  # noqa: E402
 import mockup_screens_trend as trend_screens  # noqa: E402
 import mockup_screens_picture as picture_screens  # noqa: E402
+import mockup_screens_recurring as rec_screens  # noqa: E402
 import mockup_special as special  # noqa: E402
 import mockup_screens_tabs as tab_screens  # noqa: E402
 import mockup_screens_ops as ops_screens  # noqa: E402
 import mockup_screens_forms as form_screens  # noqa: E402
 import mockup_screens_settings as set_screens  # noqa: E402
 import mockup_catalog as catalog  # noqa: E402
-import mockup_comp_v3 as comp_v3  # noqa: E402
+import mockup_catalog_set as comp_set  # noqa: E402
+import mockup_catalog_style as comp_style  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
-PLAN = (tpl_screens, bud_screens, rep_screens, mon_screens, trend_screens, picture_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
+PLAN = (tpl_screens, rec_screens, bud_screens, rep_screens, mon_screens, trend_screens, picture_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
@@ -97,10 +99,13 @@ def main():
     for name, title, fn, _ in idea_screens.BOARDS + fb_screens.BOARDS + plan_boards:
         write(name, board(title, fn()))
         gen[name] = (title, False)
-    comp_boards = comp_v3.BOARDS  # #367 proposal (А | Б per component), under «Компоненты»; not read by ApprovedComponentsTest
+    comp_boards = comp_set.BOARDS  # #367 approved set (А «Капсула»), under «Компоненты»; read by ApprovedComponentsTest
     for name, fn in comp_boards:
         write(name, fn())
-        gen[name] = ('Компоненты v3 (#367, на утверждении): ' + name[6:], False)
+        gen[name] = (dict((n, t) for n, t, _, _ in comp_set.GROUPS)[name], False)
+    for name, fn in comp_style.BOARDS:  # «Единый стиль» (poll 2026-11-15, approved), under the approved set
+        write(name, fn())
+        gen[name] = (dict((n, t) for n, t, _ in comp_style.FAMILIES)[name], False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
                             ('ThemeSwitchComponents', special.theme_switch, 'Тема макетов'), ('Settings', special.settings, 'Настройки: тема и палитра перекрашивают холст'),
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
@@ -148,10 +153,18 @@ def main():
     add('ThemeSwitchComponents', -520, 0, W, 560, 'components', 28)
     add('Components', 0, 0, catalog.W, catalog.H, 'components')
     y = catalog.H + 400
-    notes['v3'] = {'kind': 'title1', 'page': 'components', 'text': 'Компоненты v3 — на утверждении (#367): А | Б', 'x': 0, 'y': y - 250, 'maxW': 2600, 'w': 240}
+    notes['v3'] = {'kind': 'title1', 'page': 'components', 'text': 'Утверждённый набор (#367, А «Капсула»)', 'x': 0, 'y': y - 250, 'maxW': 2600, 'w': 240}
     for i, (name, _) in enumerate(comp_boards):
         h = int(open(os.path.join(OUT, name + '.dc.html'), encoding='utf-8').read().split('"height":', 1)[1].split('}', 1)[0])
-        add(name, (i % 2) * (comp_v3.W + 160), y, comp_v3.W, h, 'components')
+        add(name, (i % 2) * (comp_set.W + 160), y, comp_set.W, h, 'components')
+        if i % 2:
+            y += max(h, prev_h) + 300
+        prev_h = h
+    y += prev_h + 400 if len(comp_boards) % 2 else 100
+    notes['unify'] = {'kind': 'title1', 'page': 'components', 'text': 'Единый стиль (утверждён): одно правило на семью', 'x': 0, 'y': y - 250, 'maxW': 2400, 'w': 240}
+    for i, (name, _) in enumerate(comp_style.BOARDS):
+        h = comp_style.HEIGHTS[name]
+        add(name, (i % 2) * (comp_style.W + 160), y, comp_style.W, h, 'components')
         if i % 2:
             y += max(h, prev_h) + 300
         prev_h = h

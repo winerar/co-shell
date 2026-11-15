@@ -158,7 +158,7 @@ def wizard(step, body, primary='Далее', back=True):
     foot = ''
     if primary:
         foot = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 24px; display: flex; gap: 8px;">%s<span style="flex: 1;">%s</span></div>'
-                % ('<span style="width: 54px; height: 54px; border-radius: 50%%; border: 1px solid %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LINE2, svg('back', INK)) if back else '',
+                % ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (CHIP, svg('back', INK)) if back else '',
                    button(primary, mt=0)))
     return inner_screen('Импорт из Wallet', head + body) + foot
 

@@ -2,16 +2,15 @@ package app.coshell.core.designsystem.catalog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellCheckMark
-import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.amount.AmountText
@@ -20,25 +19,29 @@ import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
+import app.coshell.core.designsystem.components.CoShellAvatar
 import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellCheckMark
+import app.coshell.core.designsystem.components.CoShellDivider
+import app.coshell.core.designsystem.components.CoShellDot
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellPaletteSwatch
+import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.components.CoShellSection
+import app.coshell.core.designsystem.components.CoShellSectionLabel
+import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
-import app.coshell.core.designsystem.components.CoShellSegmented
-import app.coshell.core.designsystem.components.SegmentTone
-import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellTab
-import app.coshell.core.designsystem.components.CoShellSearchField
-import app.coshell.core.designsystem.components.CoShellSectionLabel
-import app.coshell.core.designsystem.components.SectionTone
 import app.coshell.core.designsystem.components.CoShellTextField
+import app.coshell.core.designsystem.components.SectionTone
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -62,6 +65,7 @@ fun ComponentsCatalog() {
             CoShellMessage("Нет сети", isError = true)
             CoShellButton(onClick = {}) { Text("Сохранить") }
             SegmentedSample()
+            MembersSample()
         }
         CoShellCard(Modifier.padding(horizontal = Spacing.l)) {
             CoShellListRow(
@@ -108,7 +112,23 @@ fun CheckMarkSample() {
 fun SegmentedSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellSegmented(listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {})
-        CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {}, tone = SegmentTone.View)
+        CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {})
+    }
+}
+
+/** #367 А: member avatars, colour dots of a legend and the divider under them. */
+@Composable
+fun MembersSample() {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+            CoShellAvatar("Аня", categoryColor(CategoryPalette.colors[3]))
+            CoShellAvatar("Миша", categoryColor(CategoryPalette.colors[6]))
+            CoShellDot(LocalAmountPalette.current.income)
+            Text("пришло", style = MaterialTheme.typography.labelSmall)
+            CoShellDot(LocalAmountPalette.current.expense)
+            Text("ушло", style = MaterialTheme.typography.labelSmall)
+        }
+        CoShellDivider()
     }
 }
 

@@ -2,7 +2,9 @@
 
 Everything is drawn in the «Вольт · тёмная» colours below; scripts/agent/mockup_theme.py then turns each colour
 into a theme token, so the boards follow the canvas theme switch. Sizes follow core/designsystem tokens:
-tab title 28, inner title 22, rows 56–64, cards radius 16–20, pill buttons 52–56, bottom bar 64.
+tab title 28, inner title 22, bottom bar 64. «Единый стиль» (owner's poll 2026-11-15, boards Style1…8): rows 56/52,
+radii 28 sheet · 24 card · 16 field · capsule, every button 48 (icon button — a 48 circle on the track), chosen =
+neon + 2 px ink frame + bold, icon holders — a circle tinted 18 %, bars 8.
 """
 BG, CARD, FIELD, BAR, CHIP, LINE, DIV, LINE2 = '#050805', '#10160D', '#121810', '#161D12', '#1B2317', '#222B1E', '#1B2317', '#2E382A'
 SHEET, KEY, KEY2 = '#11170E', '#1F271B', '#2A3326'
@@ -12,6 +14,8 @@ CYAN, VIOLET, VIOLETPILL, VIOLETINK, PINK, PINKBG, YELLOW = '#00F0FF', '#B266FF'
 WARN, WARNBG, WARNLINE, OK = '#FFB547', '#2A1E08', '#5A3F10', '#5CFFB0'
 MONO = "font-family: 'JetBrains Mono', monospace;"
 # Hero card (#249, `CoShellCard(accent)`): palette gradient, no border; mockup_theme.py repaints the stops per palette/theme.
+OUTLINE = MUTED2  # colorScheme.outline — frames that must read ≥ 3:1 (#385)
+SEL = 'background: %s; color: %s; font-weight: 700; box-shadow: inset 0 0 0 2px %s;' % (LIME, ONLIME, INK)  # chosen (Style1)
 HERO_BG, HERO_HINT = 'linear-gradient(135deg, #314617, #0E2523, #271E36)', '#AFB0AE'
 
 ICON = {
@@ -116,10 +120,15 @@ def inner_screen(title, body, actions=''):
     return inner_head(title, actions) + '<div style="padding: 0 16px;">%s</div>' % body
 
 
+def mix(color, pct):
+    """Colour at pct% over whatever is under it (Compose `copy(alpha)`); the hex stays visible to mockup_theme."""
+    return 'color-mix(in srgb, %s %d%%, transparent)' % (color, pct)
+
+
 def icon_button(icon, label, color=INK, border=False):
-    b = '1px solid %s' % LINE2 if border else 'none'
-    return ('<button type="button" aria-label="%s" style="width: 48px; height: 48px; flex: none; border-radius: 50%%; border: %s; '
-            'background: transparent; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, b, svg(icon, color)))
+    """CoShellIconButton: a 48 circle on the filled track (Style6); `border` is kept for old callers and ignored."""
+    return ('<button type="button" aria-label="%s" style="width: 48px; height: 48px; flex: none; border-radius: 50%%; border: none; '
+            'background: %s; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, CHIP, svg(icon, color)))
 
 
 def nav(active, dot_more=False):
@@ -132,7 +141,7 @@ def nav(active, dot_more=False):
                if key == 'more' and dot_more else '')
         return ('<a href="#" aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 64px;">%s%s</a>'
                 % (label, inner, dot))
-    plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 52px; height: 52px; '
+    plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; '
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
@@ -146,12 +155,12 @@ def label(text, accent=False, top=18):
     return '<div style="margin: %dpx 4px 8px; font-size: 13px; font-weight: 600; color: %s;">%s</div>' % (top, MUTED, text)
 
 
-def card(inner, pad='0', radius=16, extra=''):
+def card(inner, pad='0', radius=24, extra=''):
     return ('<div style="border-radius: %dpx; background: %s; border: 1px solid %s; overflow: hidden; padding: %s; %s">%s</div>'
             % (radius, CARD, LINE, pad, extra, inner))
 
 
-def hero_card(inner, pad='16px', radius=16, extra=''):
+def hero_card(inner, pad='16px', radius=24, extra=''):
     """The one main block of a screen: gradient of the palette; inside — INK text, HERO_HINT greys, LIME amount."""
     return ('<div style="border-radius: %dpx; background: %s; overflow: hidden; padding: %s; %s">%s</div>'
             % (radius, HERO_BG, pad, extra, inner))
@@ -164,9 +173,9 @@ def group(rows):
     return card(''.join(out))
 
 
-def row(title, sub='', lead='', trail='', title_color=INK, min_h=60):
+def row(title, sub='', lead='', trail='', title_color=INK, min_h=56):
     sub_html = '<span style="font-size: 12px; color: %s;">%s</span>' % (MUTED, sub) if sub else ''
-    return ('<div style="display: flex; align-items: center; gap: 12px; min-height: %dpx; padding: 8px 14px; box-sizing: border-box; {{div}}">%s'
+    return ('<div style="display: flex; align-items: center; gap: 12px; min-height: %dpx; padding: 8px 16px; box-sizing: border-box; {{div}}">%s'
             '<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 15px; color: %s;">%s</span>%s</span>%s</div>'
             % (min_h, lead, title_color, title, sub_html, trail))
 
@@ -188,13 +197,14 @@ def badge(ini, color, ink='#0B0F0A', size=36, radius=11):
 
 
 def dot_icon(icon, color, size=40):
+    """CategoryBadge: a circle tinted 18 % with the colour, the icon in the colour (Style3)."""
     return ('<span style="width: %dpx; height: %dpx; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
-            % (size, size, color, svg(icon, ONLIME, size // 2, 1.8)))
+            % (size, size, mix(color, 18), svg(icon, color, round(size * 0.55), 1.8)))
 
 
-def tile_icon(icon, color=LIME, bg=CHIP):
-    return ('<span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
-            % (bg, svg(icon, color, 22, 1.7)))
+def tile_icon(icon, color=LIME, bg=None):
+    """IconBadge / MenuIcon: the same tinted circle as a category (Style3); `bg` is kept for old callers and ignored."""
+    return dot_icon(icon, color, 40)
 
 
 def amount(text, cur='', color=INK, size=15):
@@ -219,19 +229,19 @@ def day(title, total, cur, color=PINK):
 def button(text, kind='primary', icon=None, mt=12, disabled=False):
     styles = {
         'primary': 'border: none; background: %s; color: %s; font-weight: 600;' % (LIME, ONLIME),
-        'outline': 'border: 1px solid %s; background: transparent; color: %s;' % (LINE2, INK),
+        'outline': 'border: 1px solid %s; background: transparent; color: %s;' % (OUTLINE, INK),
         'danger': 'border: none; background: %s; color: %s; font-weight: 600;' % (PINKBG, PINK),
-        'violet': 'border: 1px solid #3A2257; background: transparent; color: #D9C2FF; font-weight: 600;',
+        'violet': 'border: none; background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK),
         'text': 'border: none; background: transparent; color: %s; font-weight: 600;' % LIME,
     }
     st = styles[kind] + (' opacity: 0.4;' if disabled else '')
     ic = svg(icon, ONLIME if kind == 'primary' else (PINK if kind == 'danger' else INK), 20) if icon else ''
-    return ('<button type="button" style="margin-top: %dpx; width: 100%%; height: 54px; border-radius: 999px; font-size: 16px; %s display: flex; '
+    return ('<button type="button" style="margin-top: %dpx; width: 100%%; height: 48px; border-radius: 999px; font-size: 15px; %s display: flex; '
             'align-items: center; justify-content: center; gap: 8px;">%s%s</button>' % (mt, st, ic, text))
 
 
 def field(lbl, value, hint='', error='', mono=False, placeholder=False, trail=''):
-    border = PINK if error else LINE2
+    border = PINK if error else OUTLINE
     vcol = MUTED2 if placeholder else INK
     under = ''
     if error:
@@ -239,7 +249,7 @@ def field(lbl, value, hint='', error='', mono=False, placeholder=False, trail=''
     elif hint:
         under = '<div style="margin: 6px 4px 0; font-size: 12px; line-height: 1.35; color: %s;">%s</div>' % (MUTED, hint)
     return ('<div style="margin-top: 12px;"><label style="display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 6px 14px; box-sizing: border-box; '
-            'border-radius: 12px; background: %s; border: 1px solid %s;"><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">'
+            'border-radius: 16px; background: %s; border: 1px solid %s;"><span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">'
             '<span style="font-size: 12px; color: %s;">%s</span><span style="font-size: 16px; color: %s; %s">%s</span></span>%s</label>%s</div>'
             % (FIELD, border, PINK if error else MUTED, lbl, vcol, MONO if mono else '', value, trail, under))
 
@@ -248,26 +258,32 @@ def search(placeholder, value=''):
     v = ('<span style="flex-grow: 1; color: %s; font-size: 15px;">%s</span>' % (INK, value) if value
          else '<span style="flex-grow: 1; color: %s; font-size: 15px;">%s</span>' % (MUTED2, placeholder))
     x = svg('close', MUTED, 18) if value else ''
-    return ('<label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: %s;">%s%s%s</label>'
-            % (FIELD, svg('search', MUTED, 20), v, x))
+    return ('<label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; box-sizing: border-box; border-radius: 999px; background: %s; border: 1px solid %s;">%s%s%s</label>'
+            % (FIELD, OUTLINE, svg('search', MUTED, 20), v, x))
 
 
 def segmented(options, selected, tone='violet', taps=None):
-    """taps: action holes per option (mockup_logic) — the cells become tap targets."""
-    on_bg, on_ink = (LIME, ONLIME) if tone == 'lime' else (VIOLETPILL, VIOLETINK)
+    """CoShellSegmented (Style1): 36 cells on a 44 track, the chosen one — neon + ink frame + bold, for every `tone`
+    (the violet «how to show» was dropped by the poll). taps: action holes per option (mockup_logic)."""
     cells = []
     for i, o in enumerate(options):
-        st = 'background: %s; color: %s; font-weight: 600;' % (on_bg, on_ink) if o == selected else 'color: %s;' % INK2
+        st = SEL if o == selected else 'color: %s;' % INK2
         ev = ' onClick="{{%s}}"' % taps[i] if taps else ''
-        cells.append('<span%s style="height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
+        cells.append('<span%s style="height: 36px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
                      % (ev, st, o))
     return ('<div style="display: grid; grid-template-columns: repeat(%d, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: %s;">%s</div>'
             % (len(options), CHIP, ''.join(cells)))
 
 
 def chip(text, on=False, icon=None, dot=None, dashed=False):
-    st = ('border: none; background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK) if on
-          else 'border: 1px %s %s; background: transparent; color: %s;' % ('dashed' if dashed else 'solid', LINE2, INK))
+    """CoShellFilterChip (Style1): 36 capsule; chosen — neon + ink frame + bold, not chosen — the filled track;
+    `dashed` — the outline «more» chip («＋ В папку», «Все 34»)."""
+    if on:
+        st = 'border: none; ' + SEL
+    elif dashed:
+        st = 'border: 1px solid %s; background: transparent; color: %s;' % (OUTLINE, INK)
+    else:
+        st = 'border: none; background: %s; color: %s;' % (CHIP, INK2)
     lead = svg(icon, MUTED, 16) if icon else ''
     if dot:
         lead = '<span style="width: 18px; height: 18px; border-radius: 50%%; background: %s;"></span>' % dot
@@ -279,7 +295,7 @@ def message(text, kind='ok', title=''):
     col, bg, line, icon = {'ok': (OK, '#0B1A10', '#1F3A28', 'check'), 'error': (PINK, PINKBG, '#5C1C26', 'alert'),
                            'warn': (WARN, WARNBG, WARNLINE, 'alert'), 'info': (CYAN, '#062224', '#0E4448', 'info')}[kind]
     t = '<span style="font-size: 14px; font-weight: 600; color: %s;">%s</span>' % (col, title) if title else ''
-    return ('<div style="margin-top: 12px; display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s;">%s'
+    return ('<div style="margin-top: 12px; display: flex; gap: 10px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">%s'
             '<span style="display: flex; flex-direction: column; gap: 3px;">%s<span style="font-size: 13px; line-height: 1.4;">%s</span></span></div>'
             % (bg, line, svg(icon, col, 20, 1.9), t, text))
 
@@ -310,7 +326,7 @@ def dialog(title, text, actions, body=''):
     for lbl, kind in actions:
         st = {'text': 'background: transparent; color: %s;' % LIME, 'primary': 'background: %s; color: %s;' % (LIME, ONLIME),
               'danger': 'background: %s; color: %s;' % (PINKBG, PINK)}[kind]
-        btns += ('<span style="height: 44px; padding: 0 16px; border-radius: 999px; %s font-size: 15px; font-weight: 600; display: inline-flex; align-items: center;">%s</span>'
+        btns += ('<span style="height: 48px; padding: 0 18px; border-radius: 999px; %s font-size: 15px; font-weight: 600; display: inline-flex; align-items: center;">%s</span>'
                  % (st, lbl))
     t = '<p style="margin: 12px 0 0; font-size: 14px; line-height: 1.45; color: %s;">%s</p>' % (INK2, text) if text else ''
     return ('<div role="dialog" aria-label="%s" style="position: absolute; left: 24px; right: 24px; top: 50%%; transform: translateY(-50%%); padding: 24px; '
@@ -325,15 +341,15 @@ def sheet(inner, top=56):
 
 
 def snackbar(text, action='Отменить', bottom=96):
-    return ('<div style="position: absolute; left: 16px; right: 16px; bottom: %dpx; border-radius: 12px; background: %s; overflow: hidden;">'
+    return ('<div style="position: absolute; left: 16px; right: 16px; bottom: %dpx; border-radius: 24px; background: %s; overflow: hidden;">'
             '<div style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px 0 16px;"><span style="flex-grow: 1; font-size: 14px;">%s</span>'
             '<span style="padding: 0 12px; color: %s; font-size: 14px; font-weight: 600;">%s</span></div><div style="height: 3px; width: 62%%; background: %s;"></div></div>'
             % (bottom, CHIP, text, LIME, action, LIME))
 
 
 def progress(frac, mt=12):
-    return ('<div style="margin-top: %dpx; height: 6px; border-radius: 3px; background: %s; overflow: hidden;"><div style="width: %d%%; height: 100%%; background: %s;"></div></div>'
-            % (mt, LINE2, round(frac * 100), LIME))
+    return ('<div style="margin-top: %dpx; height: 8px; border-radius: 999px; background: %s; overflow: hidden;"><div style="width: %d%%; height: 100%%; border-radius: 999px; background: %s;"></div></div>'
+            % (mt, KEY2, round(frac * 100), LIME))
 
 
 def note(text, mt=12):

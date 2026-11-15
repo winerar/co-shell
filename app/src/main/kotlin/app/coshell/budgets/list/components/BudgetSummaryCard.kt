@@ -20,7 +20,6 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -62,7 +61,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    CoShellBullet(summary.fraction, summary.tone, Modifier.padding(top = Spacing.s), mark = summary.pace, height = Sizes.bulletLarge)
+    CoShellBullet(summary.fraction, summary.tone, Modifier.padding(top = Spacing.s), mark = summary.pace)
     summary.forecast?.let { forecast ->
         val over = forecast.overBy != null
         Text(

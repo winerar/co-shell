@@ -94,11 +94,13 @@ fun TabTopBar(
                 }
             },
             actions = {
-                if (search != null) {
-                    if (searching) SearchCloseButton(search, onClose = { searching = false })
-                    else SearchOpenButton(search, onOpen = { searching = true })
+                TopBarActions {
+                    if (search != null) {
+                        if (searching) SearchCloseButton(search, onClose = { searching = false })
+                        else SearchOpenButton(search, onOpen = { searching = true })
+                    }
+                    actions()
                 }
-                actions()
             },
             scrollBehavior = scroll.behavior,
             colors = TopAppBarDefaults.topAppBarColors(containerColor = surface, scrolledContainerColor = surface),

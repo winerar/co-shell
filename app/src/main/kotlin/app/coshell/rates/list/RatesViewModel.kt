@@ -2,6 +2,8 @@ package app.coshell.rates.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
@@ -9,6 +11,7 @@ import app.coshell.core.domain.rates.currentRates
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
+import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.RateOrigin
 import app.coshell.rates.RatesRefresher
 import app.coshell.rates.RefreshStatus
@@ -34,7 +37,8 @@ import kotlinx.datetime.todayIn
 /**
  * "More → Rates": rates in force today for every currency the family uses against the main
  * currency (`1 USD = X`),
- * manual rates with add / edit / delete, and "Update now" (a one-off run of the daily worker).
+ * manual rates with add / edit / delete, "Update now" (a one-off run of the daily worker) and the converter on top
+ * (#319: an amount typed on the own keypad, shown in every currency of the list).
  */
 @HiltViewModel
 class RatesViewModel @Inject constructor(
@@ -43,6 +47,7 @@ class RatesViewModel @Inject constructor(
     reportCurrencies: ReportCurrencySettings,
     private val clock: Clock,
     private val timeZone: TimeZone,
+    private val moneyFormat: MoneyFormat,
 ) : ViewModel() {
 
     /** Screen-only state: dialogs and whether "Update now" was pressed on this screen. */
@@ -50,6 +55,7 @@ class RatesViewModel @Inject constructor(
         val editor: ManualRateForm? = null,
         val pendingDelete: ManualRateItem? = null,
         val refreshRequested: Boolean = false,
+        val converter: ConverterInput = ConverterInput(),
     )
 
     private val local = MutableStateFlow(Local())
@@ -79,8 +85,17 @@ class RatesViewModel @Inject constructor(
     ): RatesUiState {
         val manual = all.filter { it.origin == RateOrigin.MANUAL }.sortedByDescending { it.date }
         val currencies = used + manual.flatMap { listOf(it.from, it.to) }
-        val current = RateBook.of(all).currentRates(currencies, base, today()).map { row ->
+        val book = RateBook.of(all)
+        val today = today()
+        val rows = book.currentRates(currencies, base, today)
+        // The converter (#319): the typed amount in every currency of the list, at today's rate.
+        val options = listOf(base) + rows.map { it.currency }
+        val from = local.converter.from?.takeIf { it in options } ?: base
+        val values = book.converted(keypadMoney(local.converter.text, from), options, today, moneyFormat)
+        val current = rows.map { row ->
             CurrentRateItem(
+                converted = values[row.currency],
+                isSource = row.currency == from,
                 currency = row.currency.value,
                 rateText = row.found?.let { formatRate(it.rate) },
                 date = row.found?.date,
@@ -98,8 +113,21 @@ class RatesViewModel @Inject constructor(
             refresh = if (local.refreshRequested || refresh == RefreshStatus.Running) refresh else RefreshStatus.Idle,
             editor = local.editor,
             pendingDelete = local.pendingDelete,
+            converter = ConverterUi(
+                amountText = AmountKeys.display(local.converter.text),
+                from = from.value,
+                options = options.map { it.value },
+                inMain = values[base]?.takeIf { from != base }?.let { "≈ $it ${base.value}" },
+            ),
         )
     }
+
+    /** A key of the converter's keypad; fraction digits follow the chosen currency. */
+    fun onConverterKey(key: KeypadKey) =
+        local.update { it.copy(converter = it.converter.type(key, CurrencyCode(state.value.converter.from))) }
+
+    /** The converter counts from [code] now. */
+    fun onConverterFrom(code: String) = local.update { it.copy(converter = it.converter.from(CurrencyCode(code))) }
 
     fun refreshNow() {
         local.update { it.copy(refreshRequested = true) }

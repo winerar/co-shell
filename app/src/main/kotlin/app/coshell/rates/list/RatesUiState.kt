@@ -18,6 +18,7 @@ data class RatesUiState(
     val editor: ManualRateForm? = null,
     /** Manual rate waiting for delete confirmation. */
     val pendingDelete: ManualRateItem? = null,
+    val converter: ConverterUi = ConverterUi(),
 )
 
 /** One line of "Current rates": `1 base = rateText currency`, or no rate known yet. */
@@ -29,6 +30,10 @@ data class CurrentRateItem(
     val isManual: Boolean,
     /** Computed through USD (cross rate). */
     val viaPivot: Boolean,
+    /** The converter's amount in this currency («101 500»); null without a rate. */
+    val converted: String? = null,
+    /** The converter counts from this currency. */
+    val isSource: Boolean = false,
 )
 
 /** A rate typed by a family member, e.g. "1 USD = 1 450 ARS" from 5 Nov. */

@@ -15,6 +15,7 @@
 
     <string name="home_total_balance">Saldo total</string>
     <string name="home_total_rate_date">Al cambio del %1$s</string>
+    <string name="amount_peek_no_rate">sin tipo de cambio</string>
     <string name="home_total_missing">Sin contar: %1$s — no hay tipo de cambio</string>
     <string name="home_total_show_breakdown">Ver por moneda</string>
     <string name="home_total_hide_breakdown">Ocultar desglose</string>
@@ -372,6 +373,10 @@
     <string name="report_currencies_main">Principal</string>
     <string name="report_currencies_add">Añadir moneda</string>
     <string name="report_currencies_menu_hint">Principal: %1$s</string>
+    <string name="rates_converter_title">¿Cuánto es?</string>
+    <string name="rates_converter_today">tipo de hoy</string>
+    <string name="rates_converter_pick">Convertir desde</string>
+    <string name="rates_converter_source">origen</string>
     <string name="rates_current">Cambios de hoy</string>
     <string name="rates_current_hint">pulsa para cambiar</string>
     <string name="rates_accounts">Monedas de tus cuentas</string>

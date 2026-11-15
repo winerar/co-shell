@@ -3,12 +3,8 @@ package app.coshell.core.domain.recurring
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
-import app.coshell.core.domain.rates.ExchangeRateRepository
-import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.domain.templates.draftFrom
-import app.coshell.core.model.Money
-import app.coshell.core.model.PostMode
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import kotlinx.coroutines.flow.first
@@ -44,24 +40,25 @@ data class PostedPayment(val template: TransactionTemplate, val transaction: Tra
  *
  * The operation id is derived from the template and the day ([autoPaymentId]): when both phones post
  * the same payment before they sync, the second write lands on the same record instead of a duplicate.
- * A payment in another currency (#415) without any known rate is left due too: the reminder opens the sheet.
+ * A payment in another currency (#415) never posts by itself ([TransactionTemplate.postsByItself]): the bank's rate
+ * differs from the official one, so the reminder opens the sheet and the user enters what was debited (owner, poll 3 «Д»).
  */
 class PostAutoPaymentsUseCase(
     accounts: AccountRepository,
     categories: CategoryRepository,
     private val templates: TemplateRepository,
     save: SaveTransactionUseCase,
-    rates: ExchangeRateRepository,
     private val clock: Clock = Clock.System,
 ) {
-    private val poster = PaymentPoster(accounts, categories, save, rates)
+    private val poster = PaymentPoster(accounts, categories, save)
 
     suspend operator fun invoke(timeZone: TimeZone, authorMemberId: String? = null): List<PostedPayment> {
         val now = clock.now()
         val today = now.toLocalDateTime(timeZone).date
         val posted = mutableListOf<PostedPayment>()
         for (template in templates.allTemplates()) {
-            val schedule = template.schedule?.takeIf { it.mode == PostMode.AUTO } ?: continue
+            if (!template.postsByItself) continue
+            val schedule = template.schedule ?: continue
             var handled: LocalDate? = null
             for (day in schedule.due(today)) {
                 val tx = poster.post(template, day, now, timeZone, authorMemberId) ?: break
@@ -77,18 +74,17 @@ class PostAutoPaymentsUseCase(
 /**
  * «Провести 650 USD» on the reminder (#405): posts the payment of [day] by the template's amount without opening
  * the app, and marks it handled. `null` — nothing posted: the template is gone, has no «Повтор» or amount, or can
- * no longer be filled (account archived, no rate for a payment in another currency) — the reminder stays,
- * «Изменить сумму» opens the sheet.
+ * no longer be filled (account archived), or the amount is in another currency (#415: what was debited is entered
+ * in the sheet) — the reminder stays, «Ввести сумму» opens the sheet.
  */
 class PostPaymentUseCase(
     accounts: AccountRepository,
     categories: CategoryRepository,
     private val templates: TemplateRepository,
     save: SaveTransactionUseCase,
-    rates: ExchangeRateRepository,
     private val clock: Clock = Clock.System,
 ) {
-    private val poster = PaymentPoster(accounts, categories, save, rates)
+    private val poster = PaymentPoster(accounts, categories, save)
 
     suspend operator fun invoke(templateId: String, day: LocalDate, timeZone: TimeZone, authorMemberId: String? = null): PostedPayment? {
         val template = templates.getTemplate(templateId) ?: return null
@@ -101,15 +97,14 @@ class PostPaymentUseCase(
 }
 
 /**
- * One payment of a template as an operation dated its day (today — now, earlier — noon); `null` — cannot be filled.
- * A payment in another currency (#415) is debited by the rate of its day ([RateBook] rules) and keeps the template's
- * amount as the receipt (`originalAmount`), as «чек в другой валюте» in the sheet; no rate at all — not posted.
+ * One payment of a template as an operation dated its day (today — now, earlier — noon); `null` — cannot be filled
+ * without the user: a gap (account archived, category gone) or a payment in another currency (#415), whose debited
+ * amount only the user knows.
  */
 private class PaymentPoster(
     private val accounts: AccountRepository,
     private val categories: CategoryRepository,
     private val save: SaveTransactionUseCase,
-    private val rates: ExchangeRateRepository,
 ) {
     suspend fun post(template: TransactionTemplate, day: LocalDate, now: Instant, timeZone: TimeZone, authorMemberId: String?): Transaction? {
         val draft = draftFrom(
@@ -118,25 +113,19 @@ private class PaymentPoster(
             target = null,
             category = template.categoryId?.let { categories.getCategory(it) },
         )
-        if (draft.gaps.isNotEmpty() || draft.accountId == null) return null
-        val amount = draft.amount ?: draft.receipt?.let { debited(it, template, day) } ?: return null
+        if (template.isForeign || draft.gaps.isNotEmpty() || draft.accountId == null) return null
+        val amount = draft.amount ?: return null
         val tx = Transaction(
             id = autoPaymentId(template.id, day),
             type = template.type,
             accountId = draft.accountId,
             amount = amount,
-            originalAmount = draft.receipt,
             date = if (day == now.toLocalDateTime(timeZone).date) now else day.atTime(NOON).toInstant(timeZone),
             categoryId = draft.categoryId,
             note = template.note,
             authorMemberId = authorMemberId,
         )
         return tx.takeIf { save(it) == SaveTransactionUseCase.Result.Saved }
-    }
-
-    private suspend fun debited(receipt: Money, template: TransactionTemplate, day: LocalDate): Money? {
-        val found = RateBook.of(rates.observeRates().first()).find(receipt.currency, template.currency, day) ?: return null
-        return found.rate.convert(receipt, template.currency).takeIf { it.isPositive }
     }
 
     private companion object {

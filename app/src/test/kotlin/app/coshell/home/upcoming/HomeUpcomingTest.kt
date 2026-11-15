@@ -105,6 +105,16 @@ class HomeUpcomingTest {
     }
 
     @Test
+    fun `a payment in another currency is never «само» nor posted all at once`() {
+        val usd = Money(650_00, CurrencyCode("USD"))
+        val auto = template("rent", Recurrence.Monthly(18), amount = 1, mode = PostMode.AUTO).copy(amount = usd)
+        assertFalse(rows(auto).single().auto)
+
+        val weekly = template("tutor", Recurrence.Weekly(DayOfWeek.FRIDAY), amount = 1).copy(amount = usd)
+        assertFalse(rows(weekly).single().bulk)
+    }
+
+    @Test
     fun `a payment whose account is archived is paused and not listed`() {
         val archived = accounts + ("cash" to Account("cash", "Наличные", ars, archived = true))
         val rent = template("rent", Recurrence.Monthly(15)).copy(accountId = "cash")

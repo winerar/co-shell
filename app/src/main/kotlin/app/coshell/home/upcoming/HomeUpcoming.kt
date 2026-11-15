@@ -6,7 +6,6 @@ import app.coshell.core.domain.recurring.upcomingPayments
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
-import app.coshell.core.model.PostMode
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.templates.TemplateItem
 import app.coshell.templates.toItem
@@ -46,7 +45,8 @@ fun buildUpcomingRows(
         state = payment.state,
         missed = payment.missed.size,
         // A missed «само» payment could not post itself (account archived, category gone): by hand then.
-        auto = template.schedule?.mode == PostMode.AUTO && payment.state != PaymentState.MISSED,
-        bulk = payment.missed.size > 1 && template.amount != null,
+        auto = template.postsByItself && payment.state != PaymentState.MISSED,
+        // A payment in another currency is entered one by one (#415): what was debited differs each time.
+        bulk = payment.missed.size > 1 && template.amount != null && !template.isForeign,
     )
 }

@@ -2,7 +2,6 @@ package app.coshell.core.domain.recurring
 
 import app.coshell.core.domain.FakeAccountRepository
 import app.coshell.core.domain.FakeCategoryRepository
-import app.coshell.core.domain.FakeExchangeRateRepository
 import app.coshell.core.domain.FakeTemplateRepository
 import app.coshell.core.domain.FakeTransactionRepository
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -40,7 +39,7 @@ class EdgeCasesTest {
     private val templates = FakeTemplateRepository()
     private val transactions = FakeTransactionRepository()
     private val save = SaveTransactionUseCase(accounts, categories, transactions)
-    private val missed = MissedPaymentsUseCase(templates, PostPaymentUseCase(accounts, categories, templates, save, FakeExchangeRateRepository(), clock))
+    private val missed = MissedPaymentsUseCase(templates, PostPaymentUseCase(accounts, categories, templates, save, clock))
 
     private val cash = Account("cash", "Наличные", ars)
     private val card = Account("card", "Galicia", ars)

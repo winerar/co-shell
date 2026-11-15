@@ -4,7 +4,7 @@
 Labels are the source of truth the agent reads and writes; the board is the owner's view.
 - every open issue is on the board; its Status column follows its `status:*` label;
 - a closed issue goes to «Готово» (closed = merged into dev: `Fixes #N`, dev is the default branch);
-- the owner moved a card (the item changed after the issue's last label change) → the label
+- the owner moved a card (its Status value changed after the issue's last label change) → the label
   follows the board; «Готово» on an open issue closes it;
 - field «Тип» (story / feature / bug / question / owner check) follows the type label, one way:
   the owner can group or filter the board by it.
@@ -22,8 +22,8 @@ API = "https://api.github.com"
 FIELD = "Status"
 DONE = "Готово"
 TRIAGE = "status:triage"
-# GitHub bumps a card's updatedAt a few seconds after its issue's labels change, so «card newer than labels»
-# alone reverted the agent's own label changes (2026-11-15). A real drag by the owner is later than this.
+# «Moved by the owner» = the card's Status value changed after the last label change. Not the card's own
+# updatedAt: GitHub bumps it on any change of the issue, which reverted the agent's label changes (2026-11-15).
 OWNER_MOVE_GRACE = timedelta(minutes=2)
 # label → column, in board order; «Готово» is the last column
 COLUMNS = [
@@ -129,7 +129,7 @@ PROJECT_Q = """query($owner:String!,$number:Int!,$after:String){user(login:$owne
  id field(name:"Status"){... on ProjectV2SingleSelectField{id options{id name}}}
  kind:field(name:"Тип"){... on ProjectV2SingleSelectField{id options{id name}}}
  items(first:100,after:$after){pageInfo{hasNextPage endCursor} nodes{id updatedAt
-  fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name}}
+  fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name updatedAt}}
   kind:fieldValueByName(name:"Тип"){... on ProjectV2ItemFieldSingleSelectValue{name}}
   content{... on Issue{number repository{nameWithOwner}}}}}}}}"""
 
@@ -204,7 +204,8 @@ def main():
         for n in page["items"]["nodes"]:
             c = n["content"] or {}
             if c.get("repository", {}).get("nameWithOwner") == repo:
-                items[c["number"]] = {"id": n["id"], "updated_at": n["updatedAt"],
+                value = n["fieldValueByName"] or {}
+                items[c["number"]] = {"id": n["id"], "updated_at": value.get("updatedAt") or n["updatedAt"],
                                       "status": None if reset else (n["fieldValueByName"] or {}).get("name"),
                                       "kind": None if kind_reset else (n["kind"] or {}).get("name")}
     issues = {}
@@ -232,6 +233,7 @@ def main():
                 graphql(ptoken, CLEAR_M, project=project, item=item["id"], field=kind["id"])
             print(f"#{number}: {TYPE_FIELD} → {want or '—'}")
         if label:
+            print(f"#{number}: card «{item['status']}» set {item['updated_at']}, labels changed {issue['labels_at']}")
             drop_status(rtoken, repo, number, issue["labels"])
             rest(rtoken, "POST", f"/repos/{repo}/issues/{number}/labels", {"labels": [label]})
             print(f"#{number}: board → {label}")

@@ -41,6 +41,12 @@ data class MonthAheadUi(
     val missing: List<String> = emptyList(),
 )
 
+/**
+ * «Счёт «Наличные» в архиве — платёж «Аренда» на паузе» (#406, board `Rec143Edge`); a tap opens the template to choose
+ * another account. [accountName] `null` — the account was deleted.
+ */
+data class PausedUi(val templateId: String, val name: String, val accountName: String?)
+
 data class RecurringListUiState(
     val isLoading: Boolean = false,
     val query: String = "",
@@ -51,6 +57,8 @@ data class RecurringListUiState(
     val counts: Map<PaymentFilter, Int> = emptyMap(),
     val ahead: MonthAheadUi? = null,
     val months: List<RecurringMonth> = emptyList(),
+    /** Payments on pause (account archived), above the hero. */
+    val paused: List<PausedUi> = emptyList(),
 ) {
     val isEmpty: Boolean get() = !isLoading && total == 0
     val nothingFound: Boolean get() = !isLoading && total > 0 && months.isEmpty()
@@ -69,6 +77,7 @@ internal fun recurringList(
     ahead: MonthAheadUi?,
     query: String,
     filter: PaymentFilter,
+    paused: List<PausedUi> = emptyList(),
 ): RecurringListUiState {
     val rows = payments.mapNotNull { payment -> items[payment.template.id]?.let { payment.toRow(it) } }
     val counts = PaymentFilter.entries.associateWith { chip -> rows.count { it.matches(chip) } }.filter { (chip, n) -> chip == PaymentFilter.ALL || n > 0 }
@@ -83,6 +92,7 @@ internal fun recurringList(
         counts = counts,
         ahead = ahead,
         months = shown.groupBy { YearMonth(it.date.year, it.date.month) }.map { (month, list) -> RecurringMonth(month, list) },
+        paused = paused,
     )
 }
 

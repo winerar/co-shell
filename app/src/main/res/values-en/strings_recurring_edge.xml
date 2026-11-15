@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Recurring payments — special cases (#406, board Rec143Edge). -->
+<resources>
+    <string name="recurring_post_both">Record both</string>
+    <string name="recurring_post_all">Record all %1$d</string>
+    <string name="recurring_skip_missed">Skip</string>
+    <string name="recurring_paused">Account “%1$s” is archived — “%2$s” is paused. Choose another account.</string>
+    <string name="recurring_paused_gone">The account of “%1$s” no longer exists — the payment is paused. Choose another account.</string>
+</resources>

@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.recurring.PostAutoPaymentsUseCase
+import app.coshell.core.domain.recurring.activePayments
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
@@ -36,6 +38,7 @@ class RecurringPaymentsWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val post: PostAutoPaymentsUseCase,
     private val templates: TemplateRepository,
+    private val accounts: AccountRepository,
     private val notices: PaymentNotices,
     private val log: ReminderLog,
     private val reminders: ReminderSettings,
@@ -55,9 +58,11 @@ class RecurringPaymentsWorker @AssistedInject constructor(
         if (inputData.getBoolean(KEY_REMIND, false) && reminders.enabled.first()) {
             val today = clock.now().toLocalDateTime(zone).date
             if (!log.remindedOn(today)) {
-                val due = paymentsToRemind(templates.observeTemplates().first(), today, log.snoozedFor(today))
+                // A paused payment (account archived, #406) is not reminded: «Регулярные платежи» says why.
+                val active = activePayments(templates.observeTemplates().first(), accounts.observeAccounts(includeArchived = true).first().associateBy { it.id })
+                val due = paymentsToRemind(active, today, log.snoozedFor(today))
                 notices.remind(due, today, total(due, today))
-                log.markReminded(today)
+                log.markReminded(today, due.map { it.id })
             }
         }
         return Result.success()

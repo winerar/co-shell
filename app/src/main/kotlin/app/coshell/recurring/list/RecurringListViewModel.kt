@@ -6,6 +6,8 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.recurring.ScheduledPayment
+import app.coshell.core.domain.recurring.activePayments
+import app.coshell.core.domain.recurring.pausedPayments
 import app.coshell.core.domain.recurring.scheduledPayments
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.templates.TemplateRepository
@@ -26,8 +28,8 @@ import kotlinx.datetime.todayIn
 
 /**
  * «Регулярные платежи» (#143, board `Rec143List`): every template with «Повтор» by its next payment, the hero
- * «До конца ноября» in the main report currency at today's rates, search and chips. The day is fixed when the
- * screen opens, like «Обзор».
+ * «До конца ноября» in the main report currency at today's rates, search and chips. Paused payments (account
+ * archived, #406) get a message and stay out of the hero. The day is fixed when the screen opens, like «Обзор».
  */
 @HiltViewModel
 class RecurringListViewModel @Inject constructor(
@@ -57,12 +59,13 @@ class RecurringListViewModel @Inject constructor(
         val withRule = list.filter { it.schedule != null }
         Content(
             payments = scheduledPayments(withRule, today),
+            paused = pausedPayments(withRule, accountsById).map { PausedUi(it.template.id, it.template.name, it.accountName) },
             items = withRule.associate { it.id to it.toItem(accountsById, categoriesById, moneyFormat) },
-            ahead = monthAheadUi(withRule, rateList, currencies.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first(), today, moneyFormat),
+            ahead = monthAheadUi(activePayments(withRule, accountsById), rateList, currencies.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first(), today, moneyFormat),
         )
     }
 
-    val state: StateFlow<RecurringListUiState> = combine(content, query, filter) { c, q, f -> recurringList(c.payments, c.items, c.ahead, q, f) }
+    val state: StateFlow<RecurringListUiState> = combine(content, query, filter) { c, q, f -> recurringList(c.payments, c.items, c.ahead, q, f, c.paused) }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), RecurringListUiState(isLoading = true))
 
@@ -74,6 +77,7 @@ class RecurringListViewModel @Inject constructor(
         val payments: List<ScheduledPayment>,
         val items: Map<String, TemplateItem>,
         val ahead: MonthAheadUi,
+        val paused: List<PausedUi>,
     )
 
     private companion object {

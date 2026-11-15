@@ -12,6 +12,7 @@ import app.coshell.core.domain.recurring.PaymentState
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.TransactionType
 import app.coshell.recurring.list.MonthAheadUi
+import app.coshell.recurring.list.PausedUi
 import app.coshell.recurring.list.PaymentFilter
 import app.coshell.recurring.list.RecurringListActions
 import app.coshell.recurring.list.RecurringListScreen
@@ -43,6 +44,12 @@ class RecurringListScreenshotTest {
 
     @Test
     fun `list light`() = shot("recurring_list_light") { RecurringListScreen(STATE, RecurringListActions()) }
+
+    @Test
+    fun `paused dark`() = shot("recurring_list_paused_dark", dark = true) { RecurringListScreen(PAUSED, RecurringListActions()) }
+
+    @Test
+    fun `paused light`() = shot("recurring_list_paused_light") { RecurringListScreen(PAUSED, RecurringListActions()) }
 
     @Test
     fun `empty dark`() = shot("recurring_list_empty_dark", dark = true) {
@@ -103,5 +110,7 @@ class RecurringListScreenshotTest {
                 )),
             ),
         )
+        /** Board `Rec143Edge` (#406): an archived account pauses «Аренда». */
+        val PAUSED = STATE.copy(paused = listOf(PausedUi("rent", "Аренда", "Наличные")))
     }
 }

@@ -13,6 +13,39 @@ data object TransactionsDestination
 @Serializable
 data object AccountsDestination
 
+/** «Отчёты» tab (#140). */
+@Serializable
+data object ReportsDestination
+
+/** «Все категории» of the report open in the tab under it (shares its ViewModel). */
+@Serializable
+data object ReportCategoriesDestination
+
+/**
+ * «Из чего сложилось» (#188): one category of a report — the period ([kind], ISO days [start] ..< [end], [firstYear]-[firstMonth],
+ * the family's month [startDay]), the report [currency] and whether it is compared with the period before.
+ */
+@Serializable
+data class ReportCategoryDestination(
+    val categoryId: String,
+    val kind: String,
+    val start: String,
+    val end: String,
+    val firstYear: Int,
+    val firstMonth: Int,
+    val startDay: Int,
+    val currency: String,
+    val compare: Boolean,
+)
+
+/** «Итог месяца» (#236) of [year]-[month] (the family's month). */
+@Serializable
+data class MonthReviewDestination(val year: Int, val month: Int)
+
+/** «Лимиты октября» of the review under it (shares its ViewModel). */
+@Serializable
+data object MonthReviewLimitsDestination
+
 /** Account editor; `accountId == null` creates a new account. */
 @Serializable
 data class AccountEditDestination(val accountId: String? = null) {

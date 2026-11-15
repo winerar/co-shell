@@ -51,6 +51,8 @@
     <string name="transactions_no_category">Без категории</string>
 
     <string name="accounts_title">Счета</string>
+    <string name="accounts_menu_hint">Карты, наличные, вклады</string>
+    <string name="home_all_accounts">Все счета ›</string>
     <string name="accounts_add">Добавить счёт</string>
     <string name="accounts_empty">Счетов пока нет. Нажмите «+», чтобы добавить первый.</string>
     <string name="accounts_archive">Архив</string>

@@ -28,19 +28,14 @@ internal enum class TopLevel(
         R.string.nav_transactions,
         DesignR.drawable.ic_receipt_long,
     ),
-    ACCOUNTS(
-        AccountsDestination,
-        AccountsDestination::class,
-        R.string.nav_accounts,
-        DesignR.drawable.ic_account_balance_wallet,
-    ),
+    REPORTS(ReportsDestination, ReportsDestination::class, R.string.nav_reports, DesignR.drawable.ic_bar_chart),
     MORE(MoreDestination, MoreDestination::class, R.string.nav_more, DesignR.drawable.ic_more_horiz),
 }
 
 internal fun NavDestination?.isOn(tab: TopLevel): Boolean =
     this?.hierarchy?.any { it.hasRoute(tab.routeClass) } == true
 
-/** Bottom bar of the app: Обзор · Операции · [+] · Счета · Ещё; the "+" opens a new transaction. Hidden off the tabs. */
+/** Bottom bar of the app: Обзор · Операции · [+] · Отчёты · Ещё (#140, «Счета» moved to «Ещё»); the "+" opens a new transaction. Hidden off the tabs. */
 @Composable
 internal fun MainBottomBar(
     current: NavDestination?,

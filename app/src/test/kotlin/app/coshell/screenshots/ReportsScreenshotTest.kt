@@ -1,0 +1,111 @@
+package app.coshell.screenshots
+
+import app.coshell.home.HomeScreen
+import app.coshell.home.homeBudgetPreviewSample
+import app.coshell.home.homePreviewSample
+import app.coshell.reports.review.MonthLimitsScreen
+import app.coshell.reports.review.MonthReviewSamples
+import app.coshell.reports.review.MonthReviewScreen
+
+import android.app.Application
+import androidx.activity.ComponentActivity
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onRoot
+import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.reports.ReportsActions
+import app.coshell.reports.ReportsSamples
+import app.coshell.reports.ReportsScreen
+import app.coshell.reports.all.ReportCategoriesScreen
+import app.coshell.reports.category.ReportCategorySamples
+import app.coshell.reports.category.ReportCategoryScreen
+import com.github.takahirom.roborazzi.captureRoboImage
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+
+/**
+ * «Отчёты» (#140) on [ReportsSamples] — the numbers of board `RepA`: the tab, empty period, «Все категории» (`RepAll`),
+ * «Из чего сложилось» (`RepDrill`, #188); «Итог месяца» (#236, `Mon236*`) and its card on «Обзор».
+ */
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
+class ReportsScreenshotTest {
+    @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    @Test
+    fun `reports dark`() = shot("reports_dark", dark = true) { ReportsScreen(ReportsSamples.state, ReportsActions()) }
+
+    @Test
+    fun `reports light`() = shot("reports_light") { ReportsScreen(ReportsSamples.state, ReportsActions()) }
+
+    @Test @Config(qualifiers = "+en")
+    fun `reports english`() = shot("reports_en", dark = true) { ReportsScreen(ReportsSamples.state, ReportsActions()) }
+
+    @Test @Config(qualifiers = "+es")
+    fun `reports spanish`() = shot("reports_es", dark = true) { ReportsScreen(ReportsSamples.state, ReportsActions()) }
+
+    @Test
+    fun `reports empty period`() = shot("reports_empty", dark = true) { ReportsScreen(ReportsSamples.empty, ReportsActions()) }
+
+    @Test
+    fun `all categories`() = shot("report_categories_dark", dark = true) { ReportCategoriesScreen(ReportsSamples.state, onBack = {}) }
+
+    @Test
+    fun `category drill dark`() = shot("report_category_dark", dark = true) { drill() }
+
+    @Test
+    fun `category drill light`() = shot("report_category_light") { drill() }
+
+    @Test
+    fun `month review dark`() = shot("month_review_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `month review light`() = shot("month_review_light") { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `month review edge cases`() = shot("month_review_edge_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.edge) }
+
+    @Test
+    fun `month review limits`() = shot("month_review_limits_dark", dark = true) {
+        MonthLimitsScreen(MonthReviewSamples.manyLimits, onBack = {}, onLimit = {})
+    }
+
+    @Test @Config(qualifiers = "+en")
+    fun `month review english`() = shot("month_review_en", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `home with the month review`() = shot("home_review_dark", dark = true) {
+        HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample, review = MonthReviewSamples.state)
+    }
+
+    /** Board `Tr238DrillA`: «↑ 45% больше обычного · к 11-му обычно 61» and the card «По месяцам». */
+    @Test
+    fun `category drill trend`() = shot("report_category_trend_dark", dark = true) {
+        ReportCategoryScreen(ReportCategorySamples.trend, onBack = {}, onTransactionClick = {})
+    }
+
+    @Test
+    fun `category drill trend light`() = shot("report_category_trend_light") {
+        ReportCategoryScreen(ReportCategorySamples.trend, onBack = {}, onTransactionClick = {})
+    }
+
+    @Composable
+    private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})
+
+    private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
+        compose.mainClock.autoAdvance = false
+        compose.setContent { CoShellTheme(darkTheme = dark) { Surface { content() } } }
+        compose.mainClock.advanceTimeBy(SETTLE_MS)
+        compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
+    }
+
+    private companion object {
+        const val SETTLE_MS = 3_000L
+    }
+}

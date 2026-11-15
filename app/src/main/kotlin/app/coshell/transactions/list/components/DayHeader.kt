@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -26,9 +27,12 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.datetime.toJavaLocalDate
 
-/** Sticky day title in accent capitals: "СЕГОДНЯ", "ВЧЕРА" or a short date, with the day's net on the right. */
+/**
+ * Sticky day title in accent capitals: "СЕГОДНЯ", "ВЧЕРА" or a short date, with the day's net on the right.
+ * [background] — the list's surface; inside a card that draws its own fill — transparent.
+ */
 @Composable
-internal fun DayHeader(day: Day) {
+internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.surface) {
     val text = when (day.relative) {
         RelativeDay.TODAY -> stringResource(R.string.transaction_date_today)
         RelativeDay.YESTERDAY -> stringResource(R.string.transaction_date_yesterday)
@@ -37,7 +41,7 @@ internal fun DayHeader(day: Day) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(background)
             .padding(horizontal = Spacing.l, vertical = Spacing.s),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.m),

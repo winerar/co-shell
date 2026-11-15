@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,10 +60,12 @@ internal fun TransactionRow(
     peek: AmountPeek? = null,
     onPeek: (() -> Unit)? = null,
     onPeekEnd: () -> Unit = {},
+    /** What the row is drawn on: the list's surface, or transparent inside a card that draws its own fill. */
+    background: Color = MaterialTheme.colorScheme.surface,
 ) {
     val colors = MaterialTheme.colorScheme
     val container by animateColorAsState(
-        if (selected) colors.primary.copy(alpha = SelectedTint).compositeOver(colors.surface) else colors.surface,
+        if (selected) colors.primary.copy(alpha = SelectedTint).compositeOver(colors.surface) else background,
         Motion.effects(),
         label = "rowSelected",
     )

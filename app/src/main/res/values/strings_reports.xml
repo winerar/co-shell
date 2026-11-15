@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Отчёты (#140): вкладка «Отчёты» (reports/), шторка «Период и валюта», «Все категории». -->
+<resources>
+    <string name="nav_reports">Отчёты</string>
+    <string name="reports_title">Отчёты</string>
+    <string name="reports_previous">Раньше</string>
+    <string name="reports_next">Позже</string>
+    <string name="reports_quarter_title">%1$d-й квартал %2$d</string>
+    <string name="reports_spending_title">На что ушли деньги</string>
+    <string name="reports_ghost_month">черта — %1$s</string>
+    <string name="reports_ghost_other">черта — прошлый период</string>
+    <plurals name="reports_days">
+        <item quantity="one">за %d день</item>
+        <item quantity="few">за %d дня</item>
+        <item quantity="many">за %d дней</item>
+        <item quantity="other">за %d дня</item>
+    </plurals>
+    <string name="reports_so_far_month">в прошлом месяце к %1$d-му было %2$s</string>
+    <string name="reports_so_far_quarter">в прошлом квартале за те же дни — %1$s</string>
+    <string name="reports_so_far_year">в прошлом году за те же дни — %1$s</string>
+    <string name="reports_so_far_custom">в прошлом периоде за те же дни — %1$s</string>
+    <string name="reports_whole_month">в прошлом месяце — %1$s</string>
+    <string name="reports_whole_quarter">в прошлом квартале — %1$s</string>
+    <string name="reports_whole_year">в прошлом году — %1$s</string>
+    <string name="reports_whole_custom">в прошлом периоде — %1$s</string>
+    <string name="reports_ghost_value">в прошлом периоде %1$s</string>
+    <string name="reports_other">Другое · %1$s</string>
+    <string name="reports_other_more">Другое · %1$s и ещё %2$d</string>
+    <string name="reports_all">Все категории · %1$d</string>
+    <string name="reports_deleted_category">Удалённая категория</string>
+    <string name="reports_rate_note">В %1$s по курсу на день операции</string>
+    <string name="reports_missing">Без учёта: %1$s — нет курса</string>
+    <string name="reports_empty">В этом периоде трат нет. Выберите другой период стрелками или в «%1$s».</string>
+    <string name="reports_months_title">По месяцам</string>
+    <string name="reports_months_caption">расходы</string>
+    <string name="reports_months_description" translatable="false">%1$s: %2$s</string>
+    <string name="reports_range" translatable="false">%1$s – %2$s</string>
+    <!-- Шторка «Период и валюта» (доска RepPeriod) -->
+    <string name="reports_period_title">Период и валюта</string>
+    <string name="reports_kind_month">Месяц</string>
+    <string name="reports_kind_quarter">Квартал</string>
+    <string name="reports_kind_year">Год</string>
+    <string name="reports_kind_custom">Свой</string>
+    <string name="reports_pick_days">Выбрать дни</string>
+    <string name="reports_currency_label">Валюта отчёта</string>
+    <string name="reports_compare">Сравнивать с прошлым периодом</string>
+    <string name="reports_compare_hint">Серая черта у полос</string>
+    <string name="reports_show">Показать</string>
+    <!-- «Все категории» (доска RepAll) -->
+    <string name="reports_all_title">Все категории</string>
+    <string name="reports_all_search">Найти категорию · %1$d</string>
+    <string name="reports_order_amount">По сумме</string>
+    <string name="reports_order_growth">По росту</string>
+    <string name="reports_order_groups">Группами</string>
+    <string name="reports_all_nothing">Ничего не нашлось</string>
+    <!-- «Выше / ниже обычного» и тренд категории (#238, boards Tr238DrillA, Tr238MarkA, Tr238All) -->
+    <string name="report_mark_up">↑ %1$d%%</string>
+    <string name="report_mark_down">↓ %1$d%%</string>
+    <string name="report_mark_new">новое</string>
+    <plurals name="report_mark_above_description">
+        <item quantity="one">на %d процент больше обычного</item>
+        <item quantity="few">на %d процента больше обычного</item>
+        <item quantity="many">на %d процентов больше обычного</item>
+        <item quantity="other">на %d процента больше обычного</item>
+    </plurals>
+    <plurals name="report_mark_below_description">
+        <item quantity="one">на %d процент меньше обычного</item>
+        <item quantity="few">на %d процента меньше обычного</item>
+        <item quantity="many">на %d процентов меньше обычного</item>
+        <item quantity="other">на %d процента меньше обычного</item>
+    </plurals>
+    <string name="report_mark_new_description">новое: раньше трат не было</string>
+    <string name="report_mark_above">больше обычного</string>
+    <string name="report_mark_below">меньше обычного</string>
+    <string name="report_mark_new_line">раньше трат не было</string>
+    <string name="report_mark_usual_by">к %1$d-му обычно %2$s</string>
+    <string name="report_mark_usual">обычно %1$s</string>
+    <string name="reports_filter_unusual">Необычные · %1$d</string>
+    <string name="report_trend_title">По месяцам</string>
+    <string name="report_trend_caption">черта — среднее</string>
+    <string name="report_trend_months">За %1$d мес.: %2$s</string>
+    <string name="report_trend_year">За год: %1$s</string>
+    <!-- «Из чего сложилось» (#188, board RepDrill) -->
+    <string name="report_drill_head">%1$s за %2$s</string>
+    <string name="report_drill_head_year">%1$s за %2$d год</string>
+    <string name="report_drill_head_range">%1$s · %2$s</string>
+    <string name="report_drill_share">%1$s %2$s · %3$d%% трат</string>
+    <plurals name="report_drill_operations">
+        <item quantity="one">Из чего сложилось · %d операция</item>
+        <item quantity="few">Из чего сложилось · %d операции</item>
+        <item quantity="many">Из чего сложилось · %d операций</item>
+        <item quantity="other">Из чего сложилось · %d операции</item>
+    </plurals>
+    <string name="report_drill_no_operations">В этом периоде операций нет.</string>
+    <string name="report_drill_refunds">Возвраты в этом периоде больше трат.</string>
+    <!-- «Итог месяца» (#236, boards Mon236A, Mon236Screen, Mon236Limits, Mon236Edge) -->
+    <string name="review_title">Итог %1$s</string>
+    <string name="review_left">Остаток за %1$s</string>
+    <string name="review_rate">отложили %1$d%% дохода</string>
+    <string name="review_over_income">траты больше дохода</string>
+    <string name="review_no_income" formatted="false">дохода нет — без %</string>
+    <string name="review_spent">Потрачено</string>
+    <string name="review_earned">Пришло</string>
+    <string name="review_changes">Главное к среднему за %1$d мес.</string>
+    <string name="review_change_usual">%1$s · обычно %2$s</string>
+    <string name="review_no_history">Сравнивать пока не с чем: главные изменения появятся, когда будет хотя бы месяц истории.</string>
+    <string name="review_no_changes">Траты как обычно — заметных изменений нет.</string>
+    <string name="review_limits">Лимиты</string>
+    <string name="review_limits_kept">Уложились %1$d из %2$d</string>
+    <string name="review_limits_over">перерасход · %1$d</string>
+    <string name="review_all_limits">Все лимиты %1$s</string>
+    <string name="review_limits_title">Лимиты %1$s</string>
+    <string name="review_filter_over">Перерасход · %1$d</string>
+    <string name="review_filter_within">В лимите · %1$d</string>
+    <string name="review_card_rate">остаток · %1$d%% дохода</string>
+    <string name="review_card_limits">Лимиты: уложились %1$d из %2$d</string>
+    <string name="review_card_more">Подробнее ›</string>
+    <string name="review_card_hide">Скрыть до следующего месяца</string>
+</resources>

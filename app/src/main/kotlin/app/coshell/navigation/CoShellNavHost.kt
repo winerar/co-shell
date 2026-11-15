@@ -22,6 +22,11 @@ import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
+import app.coshell.reports.ReportsRoute
+import app.coshell.reports.all.ReportCategoriesRoute
+import app.coshell.reports.category.ReportCategoryRoute
+import app.coshell.reports.review.MonthLimitsRoute
+import app.coshell.reports.review.MonthReviewRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.core.designsystem.components.CoShellSheet
@@ -107,12 +112,14 @@ fun CoShellNavHost(
                     },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    onAccounts = { navController.navigate(AccountsDestination) { launchSingleTop = true } },
                     onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
                     onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
                     onBudgets = { navController.navigate(BudgetsDestination) { launchSingleTop = true } },
                     onBudget = { id, month ->
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
+                    onReview = { month -> navController.navigate(MonthReviewDestination(month.year, month.month.number)) { launchSingleTop = true } },
                 ),
             )
         }
@@ -180,8 +187,49 @@ fun CoShellNavHost(
         }
         composable<AccountsDestination> {
             AccountsRoute(
+                onBack = { navController.popBackStack() },
                 onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                 onAddAccount = { navController.navigate(AccountEditDestination()) },
+            )
+        }
+        composable<ReportsDestination> {
+            ReportsRoute(
+                onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
+                onCategory = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        composable<ReportCategoriesDestination> { entry ->
+            // The tab's entry sits under this one: «Все категории» shows its period, currency and data.
+            val tab = remember(entry) { navController.getBackStackEntry<ReportsDestination>() }
+            ReportCategoriesRoute(
+                viewModel = hiltViewModel(tab),
+                onBack = { navController.popBackStack() },
+                onCategory = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        composable<MonthReviewDestination> { entry ->
+            val route = entry.toRoute<MonthReviewDestination>()
+            MonthReviewRoute(
+                onBack = { navController.popBackStack() },
+                onCategory = { navController.navigate(it) { launchSingleTop = true } },
+                onLimit = { id -> navController.navigate(BudgetDetailDestination(id, route.year, route.month)) { launchSingleTop = true } },
+                onAllLimits = { navController.navigate(MonthReviewLimitsDestination) { launchSingleTop = true } },
+            )
+        }
+        composable<MonthReviewLimitsDestination> { entry ->
+            // The review's entry sits under this one: the limits are of its month, from its data.
+            val review = remember(entry) { navController.getBackStackEntry<MonthReviewDestination>() }
+            val route = review.toRoute<MonthReviewDestination>()
+            MonthLimitsRoute(
+                viewModel = hiltViewModel(review),
+                onBack = { navController.popBackStack() },
+                onLimit = { id -> navController.navigate(BudgetDetailDestination(id, route.year, route.month)) { launchSingleTop = true } },
+            )
+        }
+        composable<ReportCategoryDestination> {
+            ReportCategoryRoute(
+                onBack = { navController.popBackStack() },
+                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
             )
         }
         dialog<AccountEditDestination>(dialogProperties = CoShellSheetDialogProperties) {

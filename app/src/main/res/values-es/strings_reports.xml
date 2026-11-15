@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_reports">Informes</string>
+    <string name="reports_title">Informes</string>
+    <string name="reports_previous">Antes</string>
+    <string name="reports_next">Después</string>
+    <string name="reports_quarter_title">%1$d.º trimestre %2$d</string>
+    <string name="reports_spending_title">En qué se fue el dinero</string>
+    <string name="reports_ghost_month">línea — %1$s</string>
+    <string name="reports_ghost_other">línea — período anterior</string>
+    <plurals name="reports_days">
+        <item quantity="one">en %d día</item>
+        <item quantity="many">en %d días</item>
+        <item quantity="other">en %d días</item>
+    </plurals>
+    <string name="reports_so_far_month">el mes pasado al día %1$d eran %2$s</string>
+    <string name="reports_so_far_quarter">el trimestre pasado, mismos días — %1$s</string>
+    <string name="reports_so_far_year">el año pasado, mismos días — %1$s</string>
+    <string name="reports_so_far_custom">período anterior, mismos días — %1$s</string>
+    <string name="reports_whole_month">el mes pasado — %1$s</string>
+    <string name="reports_whole_quarter">el trimestre pasado — %1$s</string>
+    <string name="reports_whole_year">el año pasado — %1$s</string>
+    <string name="reports_whole_custom">período anterior — %1$s</string>
+    <string name="reports_ghost_value">período anterior %1$s</string>
+    <string name="reports_other">Otros · %1$s</string>
+    <string name="reports_other_more">Otros · %1$s y %2$d más</string>
+    <string name="reports_all">Todas las categorías · %1$d</string>
+    <string name="reports_deleted_category">Categoría eliminada</string>
+    <string name="reports_rate_note">En %1$s al tipo de cambio del día de cada operación</string>
+    <string name="reports_missing">Sin contar: %1$s — sin tipo de cambio</string>
+    <string name="reports_empty">No hay gastos en este período. Elija otro con las flechas o en «%1$s».</string>
+    <string name="reports_months_title">Por meses</string>
+    <string name="reports_months_caption">gastos</string>
+    <string name="reports_period_title">Período y moneda</string>
+    <string name="reports_kind_month">Mes</string>
+    <string name="reports_kind_quarter">Trimestre</string>
+    <string name="reports_kind_year">Año</string>
+    <string name="reports_kind_custom">Otro</string>
+    <string name="reports_pick_days">Elegir días</string>
+    <string name="reports_currency_label">Moneda del informe</string>
+    <string name="reports_compare">Comparar con el período anterior</string>
+    <string name="reports_compare_hint">Línea gris en las barras</string>
+    <string name="reports_show">Mostrar</string>
+    <string name="reports_all_title">Todas las categorías</string>
+    <string name="reports_all_search">Buscar categoría · %1$d</string>
+    <string name="reports_order_amount">Por importe</string>
+    <string name="reports_order_growth">Por aumento</string>
+    <string name="reports_order_groups">Agrupadas</string>
+    <string name="reports_all_nothing">No se encontró nada</string>
+    <!-- «Más / menos de lo habitual» y la tendencia de la categoría (#238) -->
+    <string name="report_mark_up">↑ %1$d%%</string>
+    <string name="report_mark_down">↓ %1$d%%</string>
+    <string name="report_mark_new">nuevo</string>
+    <plurals name="report_mark_above_description">
+        <item quantity="one">%d por ciento más de lo habitual</item>
+        <item quantity="many">%d por ciento más de lo habitual</item>
+        <item quantity="other">%d por ciento más de lo habitual</item>
+    </plurals>
+    <plurals name="report_mark_below_description">
+        <item quantity="one">%d por ciento menos de lo habitual</item>
+        <item quantity="many">%d por ciento menos de lo habitual</item>
+        <item quantity="other">%d por ciento menos de lo habitual</item>
+    </plurals>
+    <string name="report_mark_new_description">nuevo: antes no había gastos</string>
+    <string name="report_mark_above">más de lo habitual</string>
+    <string name="report_mark_below">menos de lo habitual</string>
+    <string name="report_mark_new_line">antes no había gastos</string>
+    <string name="report_mark_usual_by">lo habitual al día %1$d: %2$s</string>
+    <string name="report_mark_usual">lo habitual: %1$s</string>
+    <string name="reports_filter_unusual">Inusuales · %1$d</string>
+    <string name="report_trend_title">Por meses</string>
+    <string name="report_trend_caption">línea — promedio</string>
+    <string name="report_trend_months">%1$d meses: %2$s</string>
+    <string name="report_trend_year">Año: %1$s</string>
+    <!-- «Из чего сложилось» (#188, board RepDrill) -->
+    <string name="report_drill_head">%1$s en %2$s</string>
+    <string name="report_drill_head_year">%1$s en %2$d</string>
+    <string name="report_drill_head_range">%1$s · %2$s</string>
+    <string name="report_drill_share">%1$s %2$s · %3$d%% del gasto</string>
+    <plurals name="report_drill_operations">
+        <item quantity="one">De qué se compone · %d movimiento</item>
+        <item quantity="many">De qué se compone · %d movimientos</item>
+        <item quantity="other">De qué se compone · %d movimientos</item>
+    </plurals>
+    <string name="report_drill_no_operations">No hay movimientos en este período.</string>
+    <string name="report_drill_refunds">En este período los reembolsos superan a los gastos.</string>
+    <!-- Resumen del mes (#236, boards Mon236A, Mon236Screen, Mon236Limits, Mon236Edge) -->
+    <string name="review_title">Resumen de %1$s</string>
+    <string name="review_left">Saldo de %1$s</string>
+    <string name="review_rate">ahorraron el %1$d%% de los ingresos</string>
+    <string name="review_over_income">gastaron más de lo que entró</string>
+    <string name="review_no_income" formatted="false">sin ingresos — sin %</string>
+    <string name="review_spent">Gastado</string>
+    <string name="review_earned">Entró</string>
+    <string name="review_changes">Lo principal frente a la media de %1$d meses</string>
+    <string name="review_change_usual">%1$s · normalmente %2$s</string>
+    <string name="review_no_history">Aún no hay con qué comparar: los cambios principales aparecerán cuando haya al menos un mes de historial.</string>
+    <string name="review_no_changes">Gastos como siempre — sin cambios notables.</string>
+    <string name="review_limits">Límites</string>
+    <string name="review_limits_kept">Cumplidos %1$d de %2$d</string>
+    <string name="review_limits_over">excedidos · %1$d</string>
+    <string name="review_all_limits">Todos los límites de %1$s</string>
+    <string name="review_limits_title">Límites de %1$s</string>
+    <string name="review_filter_over">Excedidos · %1$d</string>
+    <string name="review_filter_within">Dentro · %1$d</string>
+    <string name="review_card_rate">saldo · %1$d%% de los ingresos</string>
+    <string name="review_card_limits">Límites: cumplidos %1$d de %2$d</string>
+    <string name="review_card_more">Detalles ›</string>
+    <string name="review_card_hide">Ocultar hasta el próximo mes</string>
+</resources>

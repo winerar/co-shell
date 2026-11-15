@@ -29,11 +29,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.coshell.R
-import app.coshell.accounts.list.AccountsActions
-import app.coshell.accounts.list.AccountsScreen
-import app.coshell.accounts.list.AccountsUiState
+import app.coshell.reports.ReportsActions
+import app.coshell.reports.ReportsSamples
+import app.coshell.reports.ReportsScreen
 import app.coshell.core.designsystem.theme.CoShellTheme
-import app.coshell.core.model.AccountType
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.more.MoreActions
@@ -99,7 +98,7 @@ class MainShellSmokeTest {
                             ),
                         )
                     }
-                    composable<AccountsDestination> { AccountsScreen(ACCOUNTS, AccountsActions()) }
+                    composable<ReportsDestination> { ReportsScreen(ReportsSamples.state, ReportsActions()) }
                     composable<MoreDestination> {
                         MoreScreen(MoreActions(onAppearance = { nav.navigate(AppearanceDestination) }))
                     }
@@ -123,8 +122,8 @@ class MainShellSmokeTest {
     fun `every tab opens its screen`() {
         tab(R.string.nav_transactions)
         compose.onNodeWithText(TRANSACTION_CATEGORY).assertIsDisplayed()
-        tab(R.string.nav_accounts)
-        compose.onNodeWithText(ACCOUNT).assertIsDisplayed()
+        tab(R.string.nav_reports)
+        compose.onNodeWithText(string(R.string.reports_spending_title)).assertIsDisplayed()
         tab(R.string.nav_more)
         compose.onNodeWithText(string(R.string.categories_title)).assertIsDisplayed()
         tab(R.string.nav_home)
@@ -214,7 +213,6 @@ class MainShellSmokeTest {
         /** Title of the second tile on «Обзор» (no rate issues in [HOME]). */
         const val HOME_TILE = "Без категории"
         const val TRANSACTION_CATEGORY = "Кафе"
-        const val ACCOUNT = "Наличные"
         const val INNER = "Внутренний экран"
 
         val HOME = HomeUiState(
@@ -230,11 +228,6 @@ class MainShellSmokeTest {
                     listOf(Row("1", Kind.EXPENSE, TRANSACTION_CATEGORY, "Карта", "кофе", "-4 500,00 $")),
                 ),
             ),
-        )
-        private val ACCOUNT_ROW = AccountsUiState.Row("1", ACCOUNT, AccountType.CASH, "85 000,00 $", isNegative = false)
-        val ACCOUNTS = AccountsUiState(
-            active = listOf(ACCOUNT_ROW),
-            groups = listOf(AccountsUiState.Group("TYPE:CASH", titleText = "Cash", rows = listOf(ACCOUNT_ROW), total = null, expanded = true)),
         )
     }
 }

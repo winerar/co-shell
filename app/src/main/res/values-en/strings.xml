@@ -45,6 +45,8 @@
     <string name="transactions_no_category">No category</string>
 
     <string name="accounts_title">Accounts</string>
+    <string name="accounts_menu_hint">Cards, cash, savings</string>
+    <string name="home_all_accounts">All accounts ›</string>
     <string name="accounts_add">Add account</string>
     <string name="accounts_empty">No accounts yet. Tap “+” to add your first one.</string>
     <string name="accounts_archive">Archive</string>

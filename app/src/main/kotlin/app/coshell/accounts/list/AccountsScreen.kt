@@ -32,13 +32,13 @@ import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.top.TabTopBar
-import app.coshell.ui.top.rememberTabScrollBehavior
-import app.coshell.ui.top.tabScroll
+import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
 /** What the accounts tab can ask for; defaults make previews short. */
 data class AccountsActions(
+    /** «Счета» opens from «Ещё» and «Обзор» (#140); `null` — no back arrow. */
+    val onBack: (() -> Unit)? = null,
     val onAccountClick: (String) -> Unit = {},
     val onAddAccount: () -> Unit = {},
     val onToggleArchived: () -> Unit = {},
@@ -55,7 +55,6 @@ data class AccountsActions(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
-    val scroll = rememberTabScrollBehavior()
     val groupings = groupingOptions(state)
     val swipe = rememberSegmentSwipe()
     val grouping = Grouping(
@@ -67,7 +66,7 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
     )
     Scaffold(
         topBar = {
-            TabTopBar(stringResource(R.string.accounts_title), scroll) {
+            ScreenTopBar(stringResource(R.string.accounts_title), onBack = actions.onBack) {
                 CoShellIconButton(onClick = actions.onToggleSearch) {
                     Icon(painterResource(DesignR.drawable.ic_search), stringResource(R.string.accounts_search))
                 }
@@ -76,7 +75,6 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
                 }
             }
         },
-        modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
             // The groupings swipe like tabs (#173); from the first or last one the swipe goes to the next tab.

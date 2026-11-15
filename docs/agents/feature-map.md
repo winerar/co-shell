@@ -31,7 +31,8 @@
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
 Отчёты: расчёт (#187) — `core:domain/reports/`: `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
-`categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
+`categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; «Итог месяца» (#235, экран — #236) — `monthReview`
+(остаток, норма сбережений, `reviewStart`), `usualChanges` (3 главных изменения к среднему за 3 мес., порог 5 % обычных трат), `limitsTally`; Room — `ReportDao`, `RoomReportRepository`.
 Вкладка (#140, доски `RepA`/`RepAll`/`RepPeriod`) — `reports/`: `ReportsViewModel` (дни за `loadRange`), `ReportsBoard` (чистая сборка),
 `components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки;
 `category/` — «Из чего сложилось» (#188, `RepDrill`): тап по полосе/строке → `ReportCategoryDestination` (период, валюта, сравнение в маршруте),

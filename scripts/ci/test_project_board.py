@@ -32,6 +32,10 @@ class DecideTest(unittest.TestCase):
         moved = item("Ждёт владельца", at="2026-11-10T11:00:00Z")
         self.assertEqual(decide(issue("status:next"), moved), (None, "status:needs-owner", False))
 
+    def test_card_bumped_right_after_label_change_keeps_label(self):
+        bumped = item("Разобрать", at="2026-11-10T10:00:03Z")
+        self.assertEqual(decide(issue("status:backlog"), bumped), ("Бэклог", None, False))
+
     def test_card_moved_to_done_closes_issue(self):
         self.assertEqual(decide(issue("status:next"), item(DONE, at="2026-11-10T11:00:00Z")), (None, None, True))
 

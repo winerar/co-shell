@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pagos recurrentes — casos especiales (#406, tablero Rec143Edge). -->
+<resources>
+    <string name="recurring_post_both">Registrar ambos</string>
+    <string name="recurring_post_all">Registrar los %1$d</string>
+    <string name="recurring_skip_missed">Omitir</string>
+    <string name="recurring_paused">La cuenta «%1$s» está archivada: «%2$s» está en pausa. Elige otra cuenta.</string>
+    <string name="recurring_paused_gone">La cuenta de «%1$s» ya no existe: el pago está en pausa. Elige otra cuenta.</string>
+</resources>

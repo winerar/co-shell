@@ -36,7 +36,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** Regular payments (#143, boards `Rec143HomeA`, `Rec143EditA`, `Rec143RepeatA`): «Скоро» on «Обзоре», «Повтор» in the template, on the owner's phone (393×873 dp). */
+/** Regular payments (#143, boards `Rec143HomeA`, `Rec143EditA`, `Rec143RepeatA`, `Rec143Edge`): «Скоро» on «Обзоре», «Повтор» in the template, on the owner's phone (393×873 dp). */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w393dp-h873dp-xhdpi", application = Application::class)
@@ -60,6 +60,12 @@ class RecurringScreenshotTest {
 
     @Test
     fun `home soon light`() = shot("recurring_home_light") { HomeScreen(homePreviewSample, upcoming = SOON, upcomingTotal = 24) }
+
+    @Test
+    fun `home missed twice dark`() = shot("recurring_home_missed_dark", dark = true) { HomeScreen(homePreviewSample, upcoming = MISSED, upcomingTotal = 24) }
+
+    @Test
+    fun `home missed twice light`() = shot("recurring_home_missed_light") { HomeScreen(homePreviewSample, upcoming = MISSED, upcomingTotal = 24) }
 
     @Composable
     private fun template() = TemplateEditScreen(STATE, TemplateEditActions())
@@ -95,6 +101,11 @@ class RecurringScreenshotTest {
             row("Свет", "Коммуналка", "utilities", 4, "", TODAY, PaymentState.TODAY),
             row("Испанский", "Образование", "education", 6, "40 000 ARS", LocalDate(2026, 11, 17), PaymentState.SOON),
             row("Netflix", "Подписки", "subscriptions", 8, "7 990 ARS", LocalDate(2026, 11, 18), PaymentState.SOON, auto = true),
+        )
+        /** Board `Rec143Edge` (#406): «Уборка — пропущено 2» with «Провести оба» / «Пропустить», then today's «Свет». */
+        val MISSED = listOf(
+            row("Уборка", "Дом", "cleaning", 2, "30 000 ARS", LocalDate(2026, 11, 6), PaymentState.MISSED).copy(missed = 2, bulk = true),
+            SOON[1],
         )
         val STATE = TemplateEditUiState(
             isNew = false,

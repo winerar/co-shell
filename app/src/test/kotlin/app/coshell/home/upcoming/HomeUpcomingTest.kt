@@ -90,4 +90,26 @@ class HomeUpcomingTest {
         assertEquals(PaymentState.MISSED, missed.state)
         assertFalse(missed.auto)
     }
+
+    @Test
+    fun `two or more missed with an amount get post all and skip`() {
+        val list = rows(
+            template("cleaning", Recurrence.Weekly(DayOfWeek.FRIDAY), amount = 30_000_00),
+            template("lessons", Recurrence.Weekly(DayOfWeek.FRIDAY)),
+            template("gas", Recurrence.Monthly(10), amount = 9_000_00),
+        ).associateBy { it.item.id }
+
+        assertTrue(list.getValue("cleaning").bulk)
+        assertFalse(list.getValue("lessons").bulk) // no amount: «Провести» opens the sheet
+        assertFalse(list.getValue("gas").bulk) // one missed: plain «Провести»
+    }
+
+    @Test
+    fun `a payment whose account is archived is paused and not listed`() {
+        val archived = accounts + ("cash" to Account("cash", "Наличные", ars, archived = true))
+        val rent = template("rent", Recurrence.Monthly(15)).copy(accountId = "cash")
+        val list = buildUpcomingRows(listOf(rent, template("light", Recurrence.Monthly(15))), archived, categories, MoneyFormat.RU, today)
+
+        assertEquals(listOf("light"), list.map { it.item.id })
+    }
 }

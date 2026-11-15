@@ -29,6 +29,7 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.recurring.list.components.MonthAheadCard
+import app.coshell.recurring.list.components.PausedMessage
 import app.coshell.recurring.list.components.RecurringPaymentRow
 import app.coshell.ui.format.formatMonth
 import app.coshell.ui.format.formatMonthYear
@@ -38,7 +39,8 @@ import kotlinx.datetime.YearMonth
 
 /**
  * «Регулярные платежи» (#143, board `Rec143List`): search (from [SEARCH_FROM] rules), the hero «До конца ноября»,
- * chips «Все · Расходы · Доходы · Само», then rules by the month of their next payment. A tap opens the template,
+ * chips «Все · Расходы · Доходы · Само», then rules by the month of their next payment; a payment on pause (account
+ * archived, #406) — a message above the hero. A tap opens the template,
  * «+» creates one (the «Повтор» is set in it).
  */
 @Composable
@@ -71,6 +73,11 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
                         clearLabel = stringResource(R.string.search_clear),
                         modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
                     )
+                }
+            }
+            state.paused.forEach { paused ->
+                item(key = "paused-${paused.templateId}") {
+                    PausedMessage(paused, { actions.onEdit(paused.templateId) }, Modifier.padding(horizontal = Spacing.l))
                 }
             }
             state.ahead?.let { ahead -> item(key = "ahead") { MonthAheadCard(ahead, Modifier.padding(horizontal = Spacing.l)) } }

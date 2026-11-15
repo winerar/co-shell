@@ -16,7 +16,15 @@ class ReminderLog @Inject constructor(@ApplicationContext context: Context) {
 
     fun remindedOn(day: LocalDate): Boolean = prefs.getString(LAST, null) == day.toString()
 
-    fun markReminded(day: LocalDate) = prefs.edit().putString(LAST, day.toString()).apply()
+    /** The reminder of [day] went out about [templateIds] — [ReminderWatch] takes it back once they are handled. */
+    fun markReminded(day: LocalDate, templateIds: Collection<String> = emptyList()) =
+        prefs.edit().putString(LAST, day.toString()).putStringSet(REMINDED_IDS, templateIds.toSet()).apply()
+
+    /** Templates the reminder on screen is about, if it went out on [day]; empty — none or an older one. */
+    fun remindedFor(day: LocalDate): Set<String> = if (remindedOn(day)) prefs.getStringSet(REMINDED_IDS, null).orEmpty() else emptySet()
+
+    /** What the reminder on screen is about now: fewer templates, or none once it is taken back. */
+    fun updateReminded(templateIds: Collection<String>) = prefs.edit().putStringSet(REMINDED_IDS, templateIds.toSet()).apply()
 
     /** «Завтра» on the reminder: [templateIds] are asked again on [day]. */
     fun snooze(templateIds: Collection<String>, day: LocalDate) =
@@ -28,6 +36,7 @@ class ReminderLog @Inject constructor(@ApplicationContext context: Context) {
 
     private companion object {
         const val LAST = "last_reminded"
+        const val REMINDED_IDS = "reminded_ids"
         const val SNOOZED_IDS = "snoozed_ids"
         const val SNOOZED_DAY = "snoozed_day"
     }

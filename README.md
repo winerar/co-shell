@@ -18,3 +18,8 @@ Android-приложение для совместного учёта семей
 ./gradlew check assembleDebug
 ```
 Нужны JDK 21 и Android SDK (подробности — [docs/agents/build-and-test.md](docs/agents/build-and-test.md)).
+
+## Лицензия
+[PolyForm Strict 1.0.0](LICENSE.md) ([перевод на русский](LICENSE.ru.md)): код можно
+смотреть и использовать некоммерчески, но нельзя распространять, изменять и
+использовать в коммерческих целях без письменного разрешения автора.

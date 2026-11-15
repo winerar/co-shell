@@ -1,16 +1,16 @@
 """Generated boards: «Итог месяца» (#236, calculation #235, research reports-set.md П1) — variants for the owner's poll.
-Where it shows up: А — card on «Обзор» the first 7 days of the month (recommended), Б — first card of the «Отчёты» feed,
-В — the screen opens by itself once a month. Common: the review screen, the long limits list, edge cases.
+Where it shows up: card on «Обзор» the first 7 days of the month (owner picked А, 2026-11-15; Б «Отчёты» feed and
+В «opens by itself» dropped). Also: the review screen, the long limits list, edge cases.
 Data — October 2026 (shown on 2 November): spent 1 350, came 2 100 USD, usual = average of 3 months before.
 
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
 from mockup_screens_main import balance_hero, recent_card, tile, tiles, RECENT
-from mockup_screens_reports import REP_TABS, STRUCT, chart_card, hbar, total_line
+from mockup_screens_reports import REP_TABS
 
 ROW = ('mon', 'Итог месяца',
-       'Макет #236 — ждёт выбора владельца. Итог прошлого месяца: потрачено / пришло / остаток и норма сбережений, '
+       'Макет #236 — выбран вариант А (владелец 2026-11-15): карточка на «Обзоре» 1–7 числа, ✕ — до следующего месяца. Итог прошлого месяца: потрачено / пришло / остаток и норма сбережений, '
        '3 главных изменения к среднему за 3 месяца (без мелочи: меньше 5% обычных трат не показываем), лимиты: уложились / перерасход. '
        'Тап по изменению — «Из чего сложилось» (#188). Суммы — по курсу на день операции.')
 
@@ -96,19 +96,6 @@ def var_a_home():
     return tab_page('Обзор', body, 'home', REP_TABS, icon_button('search', 'Поиск'))
 
 
-def var_b_feed():
-    struct = chart_card('На что ушли деньги', 'черта — октябрь', total_line('64', 'за 2 дня') + ''.join(hbar(*s) for s in STRUCT[:2]))
-    return tab_page('Отчёты', month_switch('Ноябрь 2026', 'USD') + mini_card(False) + struct, 'rep', REP_TABS)
-
-
-def var_c_auto():
-    top = ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;"><h1 style="margin: 0; font-size: 22px; '
-           'font-weight: 700; flex-grow: 1;">Итог октября</h1>%s</div>' % icon_button('close', 'Закрыть', INK))
-    body = (review_hero() + changes_block() + limits_block(rows=OVER[:1]) + button('Понятно', mt=14)
-            + note('Откроется сам 1-го числа, один раз. Потом — в «Отчётах» у прошлого месяца.', 8))
-    return top + '<div style="padding: 0 16px;">%s</div>' % body
-
-
 LIMITS18 = [('Кафе', '95 000', '80 000', 'ARS', 'over'), ('Подарки', '120', '50', 'USD', 'over'), ('Подписки', '27 000', '25 000', 'ARS', 'over'),
             ('Дом', '372 000', '400 000', 'ARS', 'ok'), ('Продукты', '338 000', '350 000', 'ARS', 'ok'), ('Образование', '160', '160', 'USD', 'ok'),
             ('Транспорт', '52 000', '60 000', 'ARS', 'ok'), ('Спорт', '45 000', '45 000', 'ARS', 'ok'), ('Аптека', '31 000', '40 000', 'ARS', 'ok'),
@@ -147,9 +134,7 @@ def edge_cases():
 
 
 BOARDS = [  # name, title, fn, row key
-    ('Mon236A', 'А (рекомендую): «Обзор» 1–7 числа — карточка «Итог октября»', var_a_home, 'mon'),
-    ('Mon236B', 'Б: первая карточка ленты «Отчётов»', var_b_feed, 'mon'),
-    ('Mon236C', 'В: экран открывается сам 1-го числа, один раз', var_c_auto, 'mon'),
+    ('Mon236A', 'Выбрано (А): «Обзор» 1–7 числа — карточка «Итог октября»', var_a_home, 'mon'),
     ('Mon236Screen', 'Общее: экран «Итог октября» (тап по карточке)', review_screen, 'mon'),
     ('Mon236Limits', 'Общее: «Все лимиты октября» — 18 лимитов', limits_long, 'mon'),
     ('Mon236Edge', 'Общее: нет дохода, мало истории, без лимитов, нет курса', edge_cases, 'mon'),

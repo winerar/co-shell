@@ -7,7 +7,10 @@ import app.coshell.budgets.list.buildEnvelopes
 import app.coshell.budgets.list.buildSummary
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.reports.monthReviewDue
 import app.coshell.core.model.MoneyFormat
+import app.coshell.reports.review.MonthReviewUiState
+import app.coshell.reports.review.buildMonthReview
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 
@@ -54,3 +57,12 @@ internal fun hotEnvelopes(envelopes: List<BudgetsUiState.Envelope>, count: Int =
         .filter { it.matches(BudgetFilter.HOT) }
         .sortedBy { if (it.tone == BulletTone.DANGER) 0 else 1 }
         .take(count)
+
+/**
+ * Pure: «Итог месяца» on «Обзор» (#236) — the review of the month before in the first days of a month
+ * (`monthReviewDue`), unless hidden; `null` otherwise or when the month had nothing in it. Counted only when due.
+ */
+internal fun buildHomeReview(snapshot: BudgetSource.Snapshot, dismissed: YearMonth?, today: LocalDate, format: MoneyFormat): MonthReviewUiState? {
+    val month = monthReviewDue(today, snapshot.startDay, dismissed) ?: return null
+    return buildMonthReview(snapshot, month, today, format).takeUnless { it.isEmpty }
+}

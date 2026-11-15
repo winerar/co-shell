@@ -66,4 +66,27 @@
     </plurals>
     <string name="report_drill_no_operations">В этом периоде операций нет.</string>
     <string name="report_drill_refunds">Возвраты в этом периоде больше трат.</string>
+    <!-- «Итог месяца» (#236, boards Mon236A, Mon236Screen, Mon236Limits, Mon236Edge) -->
+    <string name="review_title">Итог %1$s</string>
+    <string name="review_left">Остаток за %1$s</string>
+    <string name="review_rate">отложили %1$d%% дохода</string>
+    <string name="review_over_income">траты больше дохода</string>
+    <string name="review_no_income" formatted="false">дохода нет — без %</string>
+    <string name="review_spent">Потрачено</string>
+    <string name="review_earned">Пришло</string>
+    <string name="review_changes">Главное к среднему за %1$d мес.</string>
+    <string name="review_change_usual">%1$s · обычно %2$s</string>
+    <string name="review_no_history">Сравнивать пока не с чем: главные изменения появятся, когда будет хотя бы месяц истории.</string>
+    <string name="review_no_changes">Траты как обычно — заметных изменений нет.</string>
+    <string name="review_limits">Лимиты</string>
+    <string name="review_limits_kept">Уложились %1$d из %2$d</string>
+    <string name="review_limits_over">перерасход · %1$d</string>
+    <string name="review_all_limits">Все лимиты %1$s</string>
+    <string name="review_limits_title">Лимиты %1$s</string>
+    <string name="review_filter_over">Перерасход · %1$d</string>
+    <string name="review_filter_within">В лимите · %1$d</string>
+    <string name="review_card_rate">остаток · %1$d%% дохода</string>
+    <string name="review_card_limits">Лимиты: уложились %1$d из %2$d</string>
+    <string name="review_card_more">Подробнее ›</string>
+    <string name="review_card_hide">Скрыть до следующего месяца</string>
 </resources>

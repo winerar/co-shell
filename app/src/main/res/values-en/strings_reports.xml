@@ -57,4 +57,27 @@
     </plurals>
     <string name="report_drill_no_operations">No transactions in this period.</string>
     <string name="report_drill_refunds">Refunds in this period are bigger than spending.</string>
+    <!-- Month review (#236, boards Mon236A, Mon236Screen, Mon236Limits, Mon236Edge) -->
+    <string name="review_title">%1$s review</string>
+    <string name="review_left">Left in %1$s</string>
+    <string name="review_rate">saved %1$d%% of income</string>
+    <string name="review_over_income">spent more than came in</string>
+    <string name="review_no_income" formatted="false">no income — no %</string>
+    <string name="review_spent">Spent</string>
+    <string name="review_earned">Came in</string>
+    <string name="review_changes">Main changes vs the %1$d-month average</string>
+    <string name="review_change_usual">%1$s · usually %2$s</string>
+    <string name="review_no_history">Nothing to compare with yet: the main changes appear once there is at least a month of history.</string>
+    <string name="review_no_changes">Spending as usual — no notable changes.</string>
+    <string name="review_limits">Limits</string>
+    <string name="review_limits_kept">Kept %1$d of %2$d</string>
+    <string name="review_limits_over">over · %1$d</string>
+    <string name="review_all_limits">All %1$s limits</string>
+    <string name="review_limits_title">%1$s limits</string>
+    <string name="review_filter_over">Over · %1$d</string>
+    <string name="review_filter_within">Within · %1$d</string>
+    <string name="review_card_rate">left · %1$d%% of income</string>
+    <string name="review_card_limits">Limits: kept %1$d of %2$d</string>
+    <string name="review_card_more">Details ›</string>
+    <string name="review_card_hide">Hide until next month</string>
 </resources>

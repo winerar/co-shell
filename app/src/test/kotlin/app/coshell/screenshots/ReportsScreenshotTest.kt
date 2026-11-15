@@ -1,5 +1,12 @@
 package app.coshell.screenshots
 
+import app.coshell.home.HomeScreen
+import app.coshell.home.homeBudgetPreviewSample
+import app.coshell.home.homePreviewSample
+import app.coshell.reports.review.MonthLimitsScreen
+import app.coshell.reports.review.MonthReviewSamples
+import app.coshell.reports.review.MonthReviewScreen
+
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
@@ -21,7 +28,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** «Отчёты» (#140) on [ReportsSamples] — the numbers of board `RepA`: the tab, empty period, «Все категории» (`RepAll`), «Из чего сложилось» (`RepDrill`, #188). */
+/**
+ * «Отчёты» (#140) on [ReportsSamples] — the numbers of board `RepA`: the tab, empty period, «Все категории» (`RepAll`),
+ * «Из чего сложилось» (`RepDrill`, #188); «Итог месяца» (#236, `Mon236*`) and its card on «Обзор».
+ */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
@@ -51,6 +61,28 @@ class ReportsScreenshotTest {
 
     @Test
     fun `category drill light`() = shot("report_category_light") { drill() }
+
+    @Test
+    fun `month review dark`() = shot("month_review_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `month review light`() = shot("month_review_light") { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `month review edge cases`() = shot("month_review_edge_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.edge) }
+
+    @Test
+    fun `month review limits`() = shot("month_review_limits_dark", dark = true) {
+        MonthLimitsScreen(MonthReviewSamples.manyLimits, onBack = {}, onLimit = {})
+    }
+
+    @Test @Config(qualifiers = "+en")
+    fun `month review english`() = shot("month_review_en", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }
+
+    @Test
+    fun `home with the month review`() = shot("home_review_dark", dark = true) {
+        HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample, review = MonthReviewSamples.state)
+    }
 
     @Composable
     private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})

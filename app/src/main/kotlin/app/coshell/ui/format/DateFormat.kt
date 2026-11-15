@@ -39,3 +39,6 @@ fun formatClock(time: LocalDateTime): String = "%d:%02d".format(time.hour, time.
 /** "июн" — three letters of the stand-alone month name in the phone's locale: columns of «По месяцам», month cells. */
 fun formatMonthShort(month: YearMonth): String =
     month.firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("LLLL")).take(3)
+
+/** "октября" (genitive in Russian, "October" in English) in the phone's locale: «Итог октября», «Все лимиты октября». */
+fun formatMonthOf(month: YearMonth): String = month.firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("MMMM"))

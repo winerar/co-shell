@@ -59,4 +59,27 @@
     </plurals>
     <string name="report_drill_no_operations">No hay movimientos en este período.</string>
     <string name="report_drill_refunds">En este período los reembolsos superan a los gastos.</string>
+    <!-- Resumen del mes (#236, boards Mon236A, Mon236Screen, Mon236Limits, Mon236Edge) -->
+    <string name="review_title">Resumen de %1$s</string>
+    <string name="review_left">Saldo de %1$s</string>
+    <string name="review_rate">ahorraron el %1$d%% de los ingresos</string>
+    <string name="review_over_income">gastaron más de lo que entró</string>
+    <string name="review_no_income" formatted="false">sin ingresos — sin %</string>
+    <string name="review_spent">Gastado</string>
+    <string name="review_earned">Entró</string>
+    <string name="review_changes">Lo principal frente a la media de %1$d meses</string>
+    <string name="review_change_usual">%1$s · normalmente %2$s</string>
+    <string name="review_no_history">Aún no hay con qué comparar: los cambios principales aparecerán cuando haya al menos un mes de historial.</string>
+    <string name="review_no_changes">Gastos como siempre — sin cambios notables.</string>
+    <string name="review_limits">Límites</string>
+    <string name="review_limits_kept">Cumplidos %1$d de %2$d</string>
+    <string name="review_limits_over">excedidos · %1$d</string>
+    <string name="review_all_limits">Todos los límites de %1$s</string>
+    <string name="review_limits_title">Límites de %1$s</string>
+    <string name="review_filter_over">Excedidos · %1$d</string>
+    <string name="review_filter_within">Dentro · %1$d</string>
+    <string name="review_card_rate">saldo · %1$d%% de los ingresos</string>
+    <string name="review_card_limits">Límites: cumplidos %1$d de %2$d</string>
+    <string name="review_card_more">Detalles ›</string>
+    <string name="review_card_hide">Ocultar hasta el próximo mes</string>
 </resources>

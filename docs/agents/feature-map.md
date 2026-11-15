@@ -61,7 +61,8 @@
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
 Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`; повтор (#143) — `core:model/RecurringSchedule.kt`,
-`core:domain/recurring/` (даты, «Скоро», автопроведение), `core:data/repository/ScheduleCodec.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
+`core:domain/recurring/` (даты, «Скоро», автопроведение, `edited` — правка правила), `core:data/repository/ScheduleCodec.kt`;
+в редакторе — `templates/edit/components/RepeatBlock.kt` (плитки «Детали»), `RepeatSheet.kt` + `RepeatDraft.kt` (шторка), текст правила — `app/.../recurring/RecurrenceText.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
 `components/` (чип, полоса), `strip/` (полоса в шторке «+»), `list/` («Все шаблоны»), `edit/` (редактор), `data/PrefsTemplateUsage`;
 в шторке операции — `transactions/edit/EntryTemplates.kt` и `components/TemplateBits.kt` (пилюля, «Сохранить как шаблон»).
 Теги операций (#129): модель и ссылки — `core:model/Tag.kt` (`Tag`, `TagIds`, `Transaction.tagIds`), логика — `core:domain/tags/`

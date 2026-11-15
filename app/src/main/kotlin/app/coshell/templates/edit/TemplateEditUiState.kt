@@ -1,7 +1,13 @@
 package app.coshell.templates.edit
 
+import app.coshell.core.domain.recurring.edited
+import app.coshell.core.domain.recurring.nextUnhandled
 import app.coshell.core.model.CategoryType
+import app.coshell.core.model.PostMode
+import app.coshell.core.model.Recurrence
+import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.TransactionType
+import kotlinx.datetime.LocalDate
 
 data class TemplateEditUiState(
     val isLoading: Boolean = false,
@@ -24,6 +30,11 @@ data class TemplateEditUiState(
     /** Optional: without it the entry sheet asks for the category. Never set for a transfer. */
     val categoryId: String? = null,
     val note: String = "",
+    /** «Повтор» (#143) as it will be saved; `null` — an ordinary template. Built by [withRepeat]. */
+    val schedule: RecurringSchedule? = null,
+    /** The rule the template had when opened: a changed day counts from its last handled payment. */
+    val savedSchedule: RecurringSchedule? = null,
+    val today: LocalDate? = null,
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
 ) {
@@ -36,6 +47,20 @@ data class TemplateEditUiState(
     val account: AccountChoice? get() = accounts.firstOrNull { it.id == accountId }
     val toAccount: AccountChoice? get() = accounts.firstOrNull { it.id == toAccountId }
     val category: CategoryChoice? get() = categories.firstOrNull { it.id == categoryId }
+
+    /** «Проводить само» needs an amount and is not for a transfer (the arriving amount is typed then). */
+    val canPostAuto: Boolean get() = !isTransfer && amount.isNotBlank()
+
+    /** What the template will do on the payment day: «Проводить само» falls back to «Напомнить» once it cannot. */
+    val postMode: PostMode get() = schedule?.mode?.takeIf { it == PostMode.REMIND || canPostAuto } ?: PostMode.REMIND
+
+    val nextPayment: LocalDate? get() = schedule?.nextUnhandled()
+
+    /** «Готово» in the «Повтор» sheet; the same as [preview] of that choice. */
+    fun withRepeat(recurrence: Recurrence?, mode: PostMode): TemplateEditUiState = copy(schedule = preview(recurrence, mode))
+
+    fun preview(recurrence: Recurrence?, mode: PostMode): RecurringSchedule? =
+        today?.let { savedSchedule.edited(recurrence, if (recurrence == null) PostMode.REMIND else mode, it) }
 
     val categoryChoices: List<CategoryChoice>
         get() = when (type) {

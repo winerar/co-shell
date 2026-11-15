@@ -18,6 +18,7 @@ internal sealed interface TemplateFormResult {
 /**
  * Checks the typed form and builds the template. Pure: no repositories. A blank amount is fine («спросим
  * при вводе»); a transfer needs a second, different account and never keeps a category.
+ * «Повтор» is kept; «Проводить само» becomes «Напомнить» once the amount is cleared or the type became a transfer.
  */
 internal fun buildTemplate(
     form: TemplateEditUiState,
@@ -51,6 +52,7 @@ internal fun buildTemplate(
             toAccountId = toAccount?.id,
             note = form.note.trim(),
             sortOrder = sortOrder,
+            schedule = form.schedule?.copy(mode = form.postMode),
         ),
     )
 }

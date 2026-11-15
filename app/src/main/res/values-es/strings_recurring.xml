@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Regular payments (#143). -->
+<resources>
+    <string name="recurring_repeat">Repetición</string>
+    <string name="recurring_how">Cómo registrar</string>
+    <string name="recurring_next">Próximo</string>
+    <string name="recurring_off">No</string>
+    <string name="recurring_month">Mes</string>
+    <string name="recurring_week">Semana</string>
+    <string name="recurring_year">Año</string>
+    <string name="recurring_day_of_month">Día del mes</string>
+    <string name="recurring_weekday">Día de la semana</string>
+    <string name="recurring_month_of_year">Mes y día</string>
+    <string name="recurring_monthly_value">Cada mes, día %1$d</string>
+    <string name="recurring_weekly_value">Cada semana, %1$s</string>
+    <string name="recurring_yearly_value">Cada año, %1$s</string>
+    <string name="recurring_remind">Recordar</string>
+    <string name="recurring_remind_hint">el día del pago: «Registrar», el importe se puede cambiar</string>
+    <string name="recurring_auto">Registrar solo</string>
+    <string name="recurring_auto_hint">solo con importe fijo · te avisaremos con «Deshacer»</string>
+    <string name="recurring_auto_needs_amount">primero indica el importe en la plantilla</string>
+    <string name="recurring_auto_no_transfer">una transferencia se registra a mano</string>
+    <string name="recurring_short_month">En un mes corto, su último día.</string>
+    <string name="recurring_next_payment">Próximo pago: %1$s.</string>
+    <string name="recurring_off_hint">Sin repetición, la plantilla funciona como siempre.</string>
+    <string name="recurring_missed_value">%1$s · pendiente</string>
+</resources>

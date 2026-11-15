@@ -5,6 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.core.model.PostMode
+import app.coshell.core.model.Recurrence
 import app.coshell.core.model.TransactionType
 
 /** Connects [TemplateEditScreen] to [TemplateEditViewModel]; closes when the template is saved or deleted. */
@@ -23,6 +25,7 @@ fun TemplateEditRoute(onDone: () -> Unit, viewModel: TemplateEditViewModel = hil
             onAmountChange = viewModel::onAmountChange,
             onCategorySelect = viewModel::onCategorySelect,
             onNoteChange = viewModel::onNoteChange,
+            onRepeatChange = viewModel::onRepeatChange,
             onSave = viewModel::save,
             onDelete = viewModel::delete,
         ),
@@ -39,6 +42,7 @@ data class TemplateEditActions(
     val onAmountChange: (String) -> Unit = {},
     val onCategorySelect: (String?) -> Unit = {},
     val onNoteChange: (String) -> Unit = {},
+    val onRepeatChange: (Recurrence?, PostMode) -> Unit = { _, _ -> },
     val onSave: () -> Unit = {},
     val onDelete: () -> Unit = {},
 )

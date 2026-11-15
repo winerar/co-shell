@@ -33,7 +33,7 @@
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
 `categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; «Итог месяца» (#235) — `monthReview`
 (остаток, норма сбережений, `reviewStart`), `usualChanges` (3 главных изменения к среднему за 3 мес., порог 5 % обычных трат), `limitsTally`;
-тренд (#237) — `categoryTrend` (12 мес. + средние за 3/12, `trendCategoryIds`), «выше/ниже обычного» — `UsualMark.kt` (`usualMarks` по папкам, темп по дням, ≥ 20 % и ≥ 5 % обычных трат, не раньше 7-го дня);
+тренд (#237) — `categoryTrend` (12 мес. + средние за 3/12, `trendCategoryIds`), «выше/ниже обычного» — `UsualMark.kt` (`usualMarks` по папкам, к тому же числу прошлых месяцев, ≥ 20 % и ≥ 5 % обычных трат, не раньше 7-го дня);
 когда показывать карточку — `monthReviewDue` (1–7 день месяца, ✕ — `settings/MonthReviewSettings`, на телефоне: `reports/review/data/PrefsMonthReviewSettings`).
 Экран (#236, `Mon236*`) — `app/.../reports/review/`: `MonthReviewBoard` (сборка из `BudgetSource.Snapshot`), `MonthReviewScreen`
 (герой, изменения → «Из чего сложилось», лимиты), `MonthLimitsScreen` («Лимиты октября», та же ViewModel); карточка на «Обзоре» —

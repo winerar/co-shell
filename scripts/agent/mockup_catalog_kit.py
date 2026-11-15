@@ -62,7 +62,7 @@ def btn(v, text, kind='primary', icon=None, w='auto', disabled=False):
     }[kind]
     ic = svg(icon, ONLIME if kind == 'primary' else (PINK if kind == 'danger' else INK), 18, 2) if icon else ''
     return ('<span style="height: %dpx; padding: 0 18px; width: %s; box-sizing: border-box; border-radius: %s; font-size: 15px; display: inline-flex; align-items: center; '
-            'justify-content: center; gap: 8px; white-space: nowrap; %s%s">%s%s</span>' % (52 if v == 'A' else 48, w, r(v, 'ctl') if v == 'A' else '14px', st,
+            'justify-content: center; gap: 8px; white-space: nowrap; %s%s">%s%s</span>' % (48, w, r(v, 'ctl') if v == 'A' else '14px', st,
                                                                     ' opacity: 0.4;' if disabled else '', ic, text))
 
 

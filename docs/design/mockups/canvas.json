@@ -953,68 +953,68 @@
       "title": "Компоненты · данные и теги (11)",
       "page": "components"
     },
-    "Uni1.dc.html": {
+    "Style1.dc.html": {
       "x": 0,
       "y": 6420,
-      "w": 1040,
-      "h": 764,
-      "title": "Единый стиль · выбор (на утверждении)",
+      "w": 640,
+      "h": 744,
+      "title": "Единый стиль · выбор",
       "page": "components"
     },
-    "Uni2.dc.html": {
-      "x": 1200,
+    "Style2.dc.html": {
+      "x": 800,
       "y": 6420,
-      "w": 1040,
-      "h": 512,
-      "title": "Единый стиль · метки (на утверждении)",
+      "w": 640,
+      "h": 504,
+      "title": "Единый стиль · метки",
       "page": "components"
     },
-    "Uni3.dc.html": {
+    "Style3.dc.html": {
       "x": 0,
-      "y": 7484,
-      "w": 1040,
-      "h": 670,
-      "title": "Единый стиль · иконки (на утверждении)",
+      "y": 7464,
+      "w": 640,
+      "h": 490,
+      "title": "Единый стиль · иконки",
       "page": "components"
     },
-    "Uni4.dc.html": {
-      "x": 1200,
-      "y": 7484,
-      "w": 1040,
-      "h": 634,
-      "title": "Единый стиль · поверхности (на утверждении)",
+    "Style4.dc.html": {
+      "x": 800,
+      "y": 7464,
+      "w": 640,
+      "h": 646,
+      "title": "Единый стиль · поверхности",
       "page": "components"
     },
-    "Uni5.dc.html": {
+    "Style5.dc.html": {
       "x": 0,
-      "y": 8454,
-      "w": 1040,
-      "h": 640,
-      "title": "Единый стиль · строки (на утверждении)",
+      "y": 8410,
+      "w": 640,
+      "h": 648,
+      "title": "Единый стиль · строки",
       "page": "components"
     },
-    "Uni6.dc.html": {
-      "x": 1200,
-      "y": 8454,
-      "w": 1040,
-      "h": 534,
-      "title": "Единый стиль · кнопки (на утверждении)",
+    "Style6.dc.html": {
+      "x": 800,
+      "y": 8410,
+      "w": 640,
+      "h": 490,
+      "title": "Единый стиль · кнопки",
       "page": "components"
     },
-    "Uni7.dc.html": {
+    "Style7.dc.html": {
       "x": 0,
-      "y": 9394,
-      "w": 1040,
-      "h": 416,
-      "title": "Единый стиль · полосы (на утверждении)",
+      "y": 9358,
+      "w": 640,
+      "h": 384,
+      "title": "Единый стиль · полосы",
       "page": "components"
     },
-    "Uni8.dc.html": {
-      "x": 1200,
-      "y": 9394,
-      "w": 1040,
+    "Style8.dc.html": {
+      "x": 800,
+      "y": 9358,
+      "w": 640,
       "h": 540,
-      "title": "Единый стиль · поля и отметки (на утверждении)",
+      "title": "Единый стиль · поля и отметки",
       "page": "components"
     },
     "Ideas.dc.html": {
@@ -1946,14 +1946,14 @@
     "CompChoice.dc.html",
     "CompRows.dc.html",
     "CompData.dc.html",
-    "Uni1.dc.html",
-    "Uni2.dc.html",
-    "Uni3.dc.html",
-    "Uni4.dc.html",
-    "Uni5.dc.html",
-    "Uni6.dc.html",
-    "Uni7.dc.html",
-    "Uni8.dc.html",
+    "Style1.dc.html",
+    "Style2.dc.html",
+    "Style3.dc.html",
+    "Style4.dc.html",
+    "Style5.dc.html",
+    "Style6.dc.html",
+    "Style7.dc.html",
+    "Style8.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2288,7 +2288,7 @@
     "unify": {
       "kind": "title1",
       "page": "components",
-      "text": "Единый стиль — на утверждении: сейчас → единое",
+      "text": "Единый стиль (утверждён): одно правило на семью",
       "x": 0,
       "y": 6170,
       "maxW": 2400,

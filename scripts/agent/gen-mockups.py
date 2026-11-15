@@ -33,7 +33,7 @@ import mockup_screens_forms as form_screens  # noqa: E402
 import mockup_screens_settings as set_screens  # noqa: E402
 import mockup_catalog as catalog  # noqa: E402
 import mockup_catalog_set as comp_set  # noqa: E402
-import mockup_comp_unify as comp_unify  # noqa: E402
+import mockup_catalog_style as comp_style  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
@@ -102,9 +102,9 @@ def main():
     for name, fn in comp_boards:
         write(name, fn())
         gen[name] = (dict((n, t) for n, t, _, _ in comp_set.GROUPS)[name], False)
-    for name, fn in comp_unify.BOARDS:  # proposal «Единый стиль» (owner 2026-11-15), under the approved set
+    for name, fn in comp_style.BOARDS:  # «Единый стиль» (poll 2026-11-15, approved), under the approved set
         write(name, fn())
-        gen[name] = (dict((n, t) for n, t, _ in comp_unify.FAMILIES)[name] + ' (на утверждении)', False)
+        gen[name] = (dict((n, t) for n, t, _ in comp_style.FAMILIES)[name], False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
                             ('ThemeSwitchComponents', special.theme_switch, 'Тема макетов'), ('Settings', special.settings, 'Настройки: тема и палитра перекрашивают холст'),
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
@@ -160,10 +160,10 @@ def main():
             y += max(h, prev_h) + 300
         prev_h = h
     y += prev_h + 400 if len(comp_boards) % 2 else 100
-    notes['unify'] = {'kind': 'title1', 'page': 'components', 'text': 'Единый стиль — на утверждении: сейчас → единое', 'x': 0, 'y': y - 250, 'maxW': 2400, 'w': 240}
-    for i, (name, _) in enumerate(comp_unify.BOARDS):
-        h = comp_unify.HEIGHTS[name]
-        add(name, (i % 2) * (comp_unify.W + 160), y, comp_unify.W, h, 'components')
+    notes['unify'] = {'kind': 'title1', 'page': 'components', 'text': 'Единый стиль (утверждён): одно правило на семью', 'x': 0, 'y': y - 250, 'maxW': 2400, 'w': 240}
+    for i, (name, _) in enumerate(comp_style.BOARDS):
+        h = comp_style.HEIGHTS[name]
+        add(name, (i % 2) * (comp_style.W + 160), y, comp_style.W, h, 'components')
         if i % 2:
             y += max(h, prev_h) + 300
         prev_h = h

@@ -41,6 +41,7 @@ data class MoreState(
 
 data class MoreActions(
     val onCategories: () -> Unit = {},
+    val onAccounts: () -> Unit = {},
     val onBudgets: () -> Unit = {},
     val onRates: () -> Unit = {},
     val onReportCurrencies: () -> Unit = {},

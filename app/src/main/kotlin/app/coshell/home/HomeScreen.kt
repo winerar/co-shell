@@ -44,6 +44,8 @@ data class HomeActions(
     val onUncategorized: () -> Unit = {},
     val onTransactionClick: (String) -> Unit = {},
     val onAddAccount: () -> Unit = {},
+    /** «Все счета ›» on the balance card → «Счета». */
+    val onAccounts: () -> Unit = {},
     /** Sync banner: «Войти» → «Семья», «Отзыв» → feedback with the error code typed in. */
     val onFamily: () -> Unit = {},
     val onFeedback: (prefill: String) -> Unit = {},
@@ -107,7 +109,7 @@ fun HomeScreen(
                 item { CoShellButton(onClick = actions.onAddAccount) { Text(stringResource(R.string.accounts_add)) } }
                 return@LazyColumn
             }
-            item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state) } }
+            item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
             item {
                 HomeTiles(
                     state,

@@ -29,8 +29,11 @@
 валюта — `ReceiptCurrencySheet`), `CategoryBlock` (частые — `frequentCategories` в `CategoryOptions.kt`, «Все» — `AllCategoriesSheet`
 по полкам `categoryShelves`), `DetailsBlock` (плитки 2×2; шторки даты и заметки — `DetailSheets.kt`); образец — `EntrySheetSamples.kt`.
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
-Отчёты (#187, без экранов): `core:domain/reports/` — `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
-`spendingBreakdown` (папки, доли, «Другое»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
+Отчёты: расчёт (#187) — `core:domain/reports/`: `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
+`ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
+`categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
+Вкладка (#140, доски `RepA`/`RepAll`/`RepPeriod`) — `reports/`: `ReportsViewModel` (дни за `loadRange`), `ReportsBoard` (чистая сборка),
+`components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки.
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),

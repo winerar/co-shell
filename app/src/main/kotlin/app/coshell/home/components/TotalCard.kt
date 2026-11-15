@@ -21,6 +21,9 @@ import app.coshell.core.designsystem.amount.RollingAmountText
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.motion.CoShellExpandable
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.tactileClickable
+import androidx.compose.ui.semantics.Role
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -31,10 +34,10 @@ import app.coshell.ui.format.formatDayMonth
 
 /**
  * "Overview" header: total of all accounts in the main currency (large) and the other report
- * currencies, the rate date and currencies left out. Tap shows sums per account currency.
+ * currencies, the rate date and currencies left out. Tap shows sums per account currency; «Все счета ›» opens «Счета».
  */
 @Composable
-internal fun TotalCard(state: HomeUiState) {
+internal fun TotalCard(state: HomeUiState, onAccounts: () -> Unit) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val canExpand = state.byCurrency.isNotEmpty()
     CoShellCard(
@@ -63,6 +66,13 @@ internal fun TotalCard(state: HomeUiState) {
             CoShellExpandable(expanded) {
                 state.byCurrency.forEach { AmountLine(it, AmountTextStyle, LocalHeroPalette.current.content) }
             }
+            // «Счета» left the bottom bar for «Отчёты» (#140): the balance card leads to them.
+            Text(
+                stringResource(R.string.home_all_accounts),
+                style = MaterialTheme.typography.labelLarge,
+                color = LocalHeroPalette.current.content,
+                modifier = Modifier.padding(top = Spacing.s).tactileClickable(Tactile.Control, role = Role.Button, onClick = onAccounts).padding(vertical = Spacing.xs),
+            )
         }
     }
 }

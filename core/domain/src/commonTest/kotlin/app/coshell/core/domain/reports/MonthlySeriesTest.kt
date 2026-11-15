@@ -65,4 +65,26 @@ class MonthlySeriesTest {
         assertEquals(LocalDate(2026, 2, 28), comparison.sameDay)
         assertEquals(ars(10), comparison.previousSameDays)
     }
+
+    @Test
+    fun `a finished period is compared whole with the whole period before`() {
+        val ledger = ledger(day(9, 30, "cafe", ars(10)), day(10, 31, "cafe", ars(20)))
+
+        val comparison = periodComparison(ledger, ReportPeriod.month(YearMonth(2026, 9)), ReportPeriod.month(YearMonth(2026, 8)), LocalDate(2026, 12, 1))
+
+        assertEquals(true, comparison.isComplete)
+        assertEquals(30, comparison.daysPassed)
+    }
+
+    @Test
+    fun `a quarter is compared with the quarter before`() {
+        val ledger = ledger(day(7, 15, "cafe", ars(100)), day(10, 2, "cafe", ars(50)), day(11, 1, "cafe", ars(70)))
+        val quarter = ReportPeriod.quarter(YearMonth(2026, 11))
+
+        val comparison = periodComparison(ledger, quarter, quarter.previous(), today)
+
+        assertEquals(ars(120), comparison.spent)
+        assertEquals(ars(100), comparison.previousSameDays)
+        assertEquals(ars(100), comparison.previousTotal)
+    }
 }

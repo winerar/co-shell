@@ -58,12 +58,26 @@ class CategoryTrendTest {
     }
 
     @Test
-    fun `a running month is compared at its pace`() {
-        val mark = trend("cafe", eleventh, day(11, 3, "cafe", ars(300))).mark
+    fun `a running month is compared with the same days of the months before`() {
+        val mark = trend("cafe", eleventh, day(11, 3, "cafe", ars(600))).mark
 
-        // By the 11th of 30 days the usual 300 is 110.
-        assertEquals(UsualMark(UsualDirection.ABOVE, ars(300), ars(110), 173), mark)
-        assertEquals(ars(190), mark?.difference)
+        assertEquals(UsualMark(UsualDirection.ABOVE, ars(600), ars(300), 100), mark)
+        assertEquals(ars(300), mark?.difference)
+    }
+
+    @Test
+    fun `rent paid early in the month is usual, not above`() {
+        assertNull(trend("home", eleventh, day(11, 2, "rent", ars(1_000))).mark)
+    }
+
+    @Test
+    fun `spending earlier than usual is not above`() {
+        val lateCafe = (8..10).flatMap { m -> listOf(day(m, 2, "rent", ars(1_000)), day(m, 20, "cafe", ars(300))) }
+        val trend = categoryTrend(
+            ledger(*(lateCafe + day(11, 3, "cafe", ars(300))).toTypedArray()), setOf("cafe"), month, 1, eleventh,
+        )
+
+        assertNull(trend.mark)
     }
 
     @Test
@@ -73,10 +87,10 @@ class CategoryTrendTest {
 
     @Test
     fun `small differences are not marked, by amount or by percent`() {
-        // Cafe: 120 against 110 — below 5 % of the usual total at this pace (≈ 24,75).
-        assertNull(trend("cafe", eleventh, day(11, 3, "cafe", ars(120))).mark)
-        // Home: 420 against ≈ 366,67 — enough by amount, but only +15 %.
-        assertNull(trend("home", eleventh, day(11, 2, "rent", ars(420))).mark)
+        // Cafe: 330 against 300 — below 5 % of the usual total by the 11th (67,50).
+        assertNull(trend("cafe", eleventh, day(11, 3, "cafe", ars(330))).mark)
+        // Home: 1 150 against 1 000 — enough by amount, but only +15 %.
+        assertNull(trend("home", eleventh, day(11, 2, "rent", ars(1_150))).mark)
     }
 
     @Test

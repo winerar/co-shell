@@ -12,7 +12,8 @@ data class TrendMonth(val period: BudgetPeriod, val amount: Money?)
 /**
  * A category or folder over a year (#237, for #188 and «Итог месяца»): [months] — the [TREND_MONTHS] months ending
  * with the chosen one (oldest first; the last one so far), the average spending of the [USUAL_MONTHS] and of the
- * [LONG_USUAL_MONTHS] full months before it (`null` without history), and the [mark] «выше / ниже обычного».
+ * [LONG_USUAL_MONTHS] full months before it (`null` without history), and the [mark] «выше / ниже обычного» — against
+ * the same days of the [USUAL_MONTHS] before (see [UsualMark]).
  * [missing] — currencies left out for lack of a rate.
  */
 data class CategoryTrend(
@@ -47,30 +48,30 @@ fun categoryTrend(
 ): CategoryTrend {
     val currency = ledger.currency
     val missing = linkedSetOf<CurrencyCode>()
-    fun spentIn(period: BudgetPeriod): Money {
-        val sums = ledger.spent(period)
+    fun amountOf(sums: CategorySums): Money {
         missing += sums.missing
         return sums.byCategory.filterKeys { it in categoryIds }.values
             .fold(Money.zero(currency)) { acc, it -> acc + it }.atLeastZero()
     }
 
     val before = usualHistory(ledger, monthsBefore(month, startDay, LONG_USUAL_MONTHS))
-    val amounts = (before + month).associateWith { spentIn(it) }
+    val amounts = (before + month).associateWith { amountOf(ledger.spent(it)) }
     val chart = reportMonths(month.month, TREND_MONTHS, startDay).map { TrendMonth(it, amounts[it]) }
 
     val recent = before.takeLast(USUAL_MONTHS)
-    val recentAmounts = recent.map { amounts.getValue(it) }
+    val passed = month.daysPassed(today)
+    val complete = passed == month.days
+    val usual = recent.map { UsualSpending(amountOf(ledger.spentByDay(it, passed, complete)), amounts.getValue(it)) }
     val mark = if (recent.isEmpty()) null
-    else usualMark(amounts.getValue(month), recentAmounts, usualTotal(ledger, recent), month, today)
+    else usualMark(amounts.getValue(month), usual, usualTotal(ledger, recent, passed, complete), month, today)
 
     return CategoryTrend(
         months = chart,
-        average3 = recentAmounts.averageOrNull(currency),
+        average3 = recent.map { amounts.getValue(it) }.averageOrNull(currency),
         average12 = before.map { amounts.getValue(it) }.averageOrNull(currency),
         mark = mark,
         missing = missing,
     )
 }
 
-private fun List<Money>.averageOrNull(currency: CurrencyCode): Money? =
-    if (isEmpty()) null else fold(Money.zero(currency)) { acc, it -> acc + it }.scale(1, size.toLong())
+private fun List<Money>.averageOrNull(currency: CurrencyCode): Money? = if (isEmpty()) null else average(currency)

@@ -25,6 +25,7 @@ import mockup_screens_budgets as bud_screens  # noqa: E402
 import mockup_screens_reports as rep_screens  # noqa: E402
 import mockup_screens_review as mon_screens  # noqa: E402
 import mockup_screens_trend as trend_screens  # noqa: E402
+import mockup_screens_picture as picture_screens  # noqa: E402
 import mockup_special as special  # noqa: E402
 import mockup_screens_tabs as tab_screens  # noqa: E402
 import mockup_screens_ops as ops_screens  # noqa: E402
@@ -34,7 +35,7 @@ import mockup_catalog as catalog  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
-PLAN = (tpl_screens, bud_screens, rep_screens, mon_screens, trend_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
+PLAN = (tpl_screens, bud_screens, rep_screens, mon_screens, trend_screens, picture_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 

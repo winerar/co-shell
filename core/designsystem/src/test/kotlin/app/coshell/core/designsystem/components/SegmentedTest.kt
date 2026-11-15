@@ -33,7 +33,7 @@ class SegmentedTest {
         compose.setContent {
             CoShellTheme {
                 var selected by remember { mutableIntStateOf(0) }
-                CoShellSegmented(LABELS, selected, { selected = it; picked += it }, tone = SegmentTone.View)
+                CoShellSegmented(LABELS, selected, { selected = it; picked += it })
             }
         }
     }

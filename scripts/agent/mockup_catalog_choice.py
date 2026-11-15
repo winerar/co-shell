@@ -1,11 +1,11 @@
 """«Компоненты v3» — existing choice components (#367, part 1 of 3), each as a function of the rule set v."""
-from mockup_comp_v3_kit import *  # noqa: F401,F403
+from mockup_catalog_kit import *  # noqa: F401,F403
 
 
-def seg(v, labels, chosen, view=False, disabled=False):
-    """CoShellSegmented. View tone: А — violet wash instead of neon; Б — same tint, the frame tells it."""
-    on = sel(v) if not view or v == 'B' else 'background: %s; color: %s; font-weight: 700; box-shadow: inset 0 0 0 2px %s;' % (VIOLETPILL, VIOLETINK, INK)
-    cells = ''.join('<span style="height: 38px; border-radius: %s; display: flex; align-items: center; justify-content: center; font-size: 14px; min-width: 0; %s">'
+def seg(v, labels, chosen, disabled=False):
+    """CoShellSegmented: 36 cells on a 44 track; chosen like everything — also «how a list is shown» («Единый стиль», Style1)."""
+    on = sel(v)
+    cells = ''.join('<span style="height: 36px; border-radius: %s; display: flex; align-items: center; justify-content: center; font-size: 14px; min-width: 0; %s">'
                     '<span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 4px;">%s</span></span>'
                     % ('999px' if v == 'A' else '9px', on if i == chosen else 'color: %s;' % INK2, l) for i, l in enumerate(labels))
     return ('<div style="width: 100%%; box-sizing: border-box; display: grid; grid-template-columns: repeat(%d, minmax(0, 1fr)); gap: 2px; border-radius: %s; %s %s">%s</div>'
@@ -13,7 +13,7 @@ def seg(v, labels, chosen, view=False, disabled=False):
 
 
 def segments(v):
-    return col(labeled(seg(v, ['Расход', 'Доход', 'Перевод'], 0), 'Choice — вид операции'), labeled(seg(v, ['По типу', 'По валюте', 'Чьи'], 1, True), 'View — как показать'),
+    return col(labeled(seg(v, ['Расход', 'Доход', 'Перевод'], 0), 'что выбрать — вид операции'), labeled(seg(v, ['По типу', 'По валюте', 'Чьи'], 1), 'как показать — тоже неон'),
                labeled(seg(v, ['Категория', 'Папка'], 0, disabled=True), 'заблокировано — 50 %'), labeled(seg(v, ['Ежедневно', 'Еженедельно', 'Ежемесячно', 'Никогда'], 2), 'длинные — «…»'))
 
 
@@ -110,18 +110,18 @@ def labels(v):
 
 def fab_bar(v):
     if v == 'A':
-        f = flexrow(fab_round().replace('border-radius: 18px', 'border-radius: 50%'), fab_round('check').replace('border-radius: 18px', 'border-radius: 50%'), cap('круг 56, без текста'))
+        f = flexrow(fab_round().replace('border-radius: 18px', 'border-radius: 50%'), fab_round('check').replace('border-radius: 18px', 'border-radius: 50%'), cap('круг 48, без текста'))
         bar = action_bar([('copy', 'Дублировать'), ('trash', 'Удалить'), ('close', '3')])
     else:
         f = flexrow(btn(v, 'Операция', icon='plus').replace('height: 48px', 'height: 56px').replace('border-radius: 14px', 'border-radius: 16px'), cap('плитка 56 с подписью'))
         cells = ''.join('<span style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: %s;">%s%s</span>'
                         % (PINK if ic == 'trash' else INK, svg(ic, PINK if ic == 'trash' else INK, 22), t) for ic, t in [('copy', 'Дублировать'), ('trash', 'Удалить'), ('close', 'Снять')])
-        bar = '<div style="display: flex; padding: 12px 8px; border-radius: 16px 16px 0 0; background: %s; border-top: 1px solid %s;">%s</div>' % (KEY, OUTLINE, cells)
+        bar = '<div style="display: flex; padding: 12px 8px; border-radius: 28px 28px 0 0; background: %s; border-top: 1px solid %s;">%s</div>' % (KEY, OUTLINE, cells)
     return col(f, bar, cap('панель выбора — ' + ('плавающая капсула' if v == 'A' else 'прижата к низу, иконка над подписью')))
 
 
 CHOICE = [
-    ('Сегменты', segments, 'CoShellSegmented(labels, selected, tone = Choice | View, enabled)'),
+    ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled)'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),
     ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty)'),

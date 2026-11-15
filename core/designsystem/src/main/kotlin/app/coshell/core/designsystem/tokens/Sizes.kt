@@ -50,8 +50,8 @@ object Sizes {
     val bottomBarHeight = 64.dp
     /** Active tab's pill inside the bar. */
     val bottomBarPill = 44.dp
-    /** The «+» circle in the middle of the bar. */
-    val bottomBarAdd = 52.dp
+    /** The «+» circle in the middle of the bar — a button, so [button] high like all of them. */
+    val bottomBarAdd = 48.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */
     val actionBarButton = 48.dp
     /** A currency code tile in a rates row («USD» on «Курсах валют»). */
@@ -59,24 +59,31 @@ object Sizes {
     val currencyChipHeight = 36.dp
     /** The card-coloured ring that separates overlapping avatars (members on «Семье»). */
     val avatarRing = 3.dp
-    /** A full-width pill under a hero card («Синхронизировать сейчас»). */
-    val wideButton = 54.dp
+    /**
+     * Every button — filled, outlined, text, the icon button (a circle) and the bar's «+» (owner's poll «Единый стиль»
+     * 2026-11-15: «все кнопки одной высоты, стандартный размер 48, в том числе круги»).
+     */
+    val button = 48.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
     val tabSwipe = 80.dp
-    /** Segment of CoShellSegmented (К3): 40 dp, like the boards. */
-    val segmentHeight = 40.dp
+    /** Segment of CoShellSegmented: 36 dp, with the track's [segmentInset] the control is a 44 dp cell (board Style1). */
+    val segmentHeight = 36.dp
     /** Gap between the segments' track and the sliding pill. */
     val segmentInset = 4.dp
-    /** Small status pill in a list row («В работе», «Сделано · 248»; #157). */
-    val statusChipHeight = 24.dp
+    /** Label — a capsule that is not pressed: tag, change, status, «новое» (board Style2). */
+    val labelHeight = 22.dp
+    /** Chip in a row of choices (ChoicePill, FilterChip, TagChip; board Style1). */
+    val chipHeight = 36.dp
+    /** Cell of a choice grid, a day of the month (LabelGrid, DayGrid; board Style1). */
+    val cellHeight = 44.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
     val timelineDot = 12.dp
-    /** Bullet bar of a budget envelope (CoShellBullet, #103); [bulletLarge] — the month total, [bulletSmall] — a limit inside a folder. */
+    /** Every bar — budget bullet, bar row, progress (board Style7: one bar 8 dp with a mark). */
     val bullet = 8.dp
-    val bulletLarge = 10.dp
-    val bulletSmall = 5.dp
+    /** The dot under a marked day of [cellHeight]. */
+    val dayMark = 5.dp
 
     /** Height of the date range picker in its sheet (#345): about three months on screen. */
     val rangePicker = 440.dp

@@ -2,10 +2,9 @@ package app.coshell.reports.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,15 +14,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
+import app.coshell.core.designsystem.theme.AmountCellStrongStyle
+import app.coshell.core.designsystem.theme.AmountCellStyle
+import app.coshell.core.designsystem.theme.AmountHeadlineStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.Capital
 import app.coshell.reports.ReportsUiState.WhyRow
@@ -70,7 +71,7 @@ private fun Head(capital: Capital, currency: String) {
     Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
         Text(
             capital.value,
-            style = RateTextStyle.copy(fontSize = MaterialTheme.typography.headlineSmall.fontSize, fontWeight = FontWeight.Bold),
+            style = AmountHeadlineStyle,
             maxLines = 1,
         )
         Text(
@@ -92,7 +93,7 @@ private fun Head(capital: Capital, currency: String) {
 @Composable
 private fun Why(rows: List<WhyRow>) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
-    HorizontalDivider(Modifier.padding(top = Spacing.m), color = MaterialTheme.colorScheme.outlineVariant)
+    CoShellDivider(Modifier.padding(top = Spacing.m))
     Row(Modifier.padding(top = Spacing.s), verticalAlignment = Alignment.CenterVertically) {
         Text(stringResource(R.string.reports_capital_why), style = MaterialTheme.typography.labelSmall, color = muted, modifier = Modifier.weight(MONTH_WEIGHT))
         Cell(stringResource(R.string.reports_capital_saved), muted, label = true)
@@ -100,7 +101,7 @@ private fun Why(rows: List<WhyRow>) {
         Cell(stringResource(R.string.reports_capital_total), muted, label = true)
     }
     rows.forEachIndexed { i, row ->
-        if (i > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+        if (i > 0) CoShellDivider(faint = true)
         Row(Modifier.padding(vertical = Spacing.s).semantics(mergeDescendants = true) {}, verticalAlignment = Alignment.CenterVertically) {
             val month = formatMonth(row.month.firstDay).replaceFirstChar { it.uppercase() } +
                 if (row.running) " · " + stringResource(R.string.reports_income_so_far) else ""
@@ -123,7 +124,7 @@ private fun RowScope.Cell(text: String, color: Color, label: Boolean = false, bo
     Text(
         text,
         style = if (label) MaterialTheme.typography.labelSmall
-        else RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize, fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal),
+        else if (bold) AmountCellStrongStyle else AmountCellStyle,
         color = color,
         textAlign = TextAlign.End,
         maxLines = 1,

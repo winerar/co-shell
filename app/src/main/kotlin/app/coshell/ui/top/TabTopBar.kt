@@ -40,7 +40,7 @@ fun Modifier.tabScroll(scroll: TabScroll): Modifier = nestedScroll(scroll.behavi
 fun TabTopBar(title: String, scroll: TabScroll, actions: @Composable RowScope.() -> Unit = {}) {
     TopAppBar(
         title = { Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold) },
-        actions = actions,
+        actions = { TopBarActions(actions) },
         scrollBehavior = scroll.behavior,
     )
 }

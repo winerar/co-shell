@@ -23,7 +23,6 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.SegmentSwipe
-import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.components.rememberSegmentSwipe
 import app.coshell.core.designsystem.components.segmentSwipe
 import app.coshell.core.designsystem.components.CoShellSearchField
@@ -137,7 +136,6 @@ private fun Header(state: AccountsUiState, actions: AccountsActions, grouping: G
                 labels = grouping.options.map { stringResource(it.second) },
                 selected = grouping.selected,
                 onSelect = grouping.onSelect,
-                tone = SegmentTone.View,
                 swipe = grouping.swipe,
             )
         }

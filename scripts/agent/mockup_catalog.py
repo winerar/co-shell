@@ -38,7 +38,7 @@ def token_key(hexv):
 
 
 def tokens():
-    cells = ''.join('<div style="display: flex; flex-direction: column; gap: 4px;"><span style="height: 44px; border-radius: 12px; background: %s; border: 1px solid %s;"></span>'
+    cells = ''.join('<div style="display: flex; flex-direction: column; gap: 4px;"><span style="height: 44px; border-radius: 999px; background: %s; border: 1px solid %s;"></span>'
                     '<span style="font-size: 12px;">%s</span><span style="%s font-size: 10px; color: %s;">{{tok%d}}</span></div>' % (c, LINE, n, MONO, MUTED, i)
                     for i, (n, c) in enumerate(TOKENS))
     radii = line(*['<span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: %s;"><span style="width: %dpx; height: 44px; '

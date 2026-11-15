@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
- * Days 1..[days] seven to a row (#345, «Начало месяца»): round cells, [selected] filled with the accent,
+ * Days 1..[days] seven to a row (#345, «Начало месяца»): 44 dp circles, [selected] — neon + 2 dp frame in ink + bold (board Style1),
  * [markedDay] (the default) carries a small dot under the number.
  */
 @Composable
@@ -37,11 +38,12 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                 week.forEach { day ->
                     val on = day == selected
-                    Box(Modifier.weight(1f).height(Sizes.pillHeight), contentAlignment = Alignment.Center) {
+                    Box(Modifier.weight(1f).height(Sizes.cellHeight), contentAlignment = Alignment.Center) {
                         Box(
                             Modifier
-                                .size(Sizes.pillHeight)
+                                .size(Sizes.cellHeight)
                                 .background(if (on) colors.primaryContainer else Color.Transparent, CircleShape)
+                                .then(if (on) Modifier.border(Sizes.selectionRing, colors.onSurface, CircleShape) else Modifier)
                                 .semantics { this.selected = on }
                                 .tactileClickable(Tactile.Control, CircleShape, role = Role.RadioButton) { onSelect(day) },
                             contentAlignment = Alignment.Center,
@@ -57,7 +59,7 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
                                     Modifier
                                         .align(Alignment.BottomCenter)
                                         .padding(bottom = Spacing.xs)
-                                        .size(Sizes.bulletSmall)
+                                        .size(Sizes.dayMark)
                                         .background(colors.tertiary, CircleShape),
                                 )
                             }

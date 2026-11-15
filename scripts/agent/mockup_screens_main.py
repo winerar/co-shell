@@ -156,7 +156,7 @@ def entry_transfer():
     a, b = ACC[2], ACC[0]
     two = ('<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">'
            '<div style="padding: 10px 12px; border-radius: 16px; background: %s; border: 2px solid %s;"><div style="font-size: 12px; color: %s;">Списано</div>%s</div>'
-           '<div style="padding: 10px 12px; border-radius: 16px; background: %s; border: 1px solid %s;"><div style="font-size: 12px; color: %s;">Зачислено</div>%s</div></div>'
+           '<div style="padding: 10px 12px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="font-size: 12px; color: %s;">Зачислено</div>%s</div></div>'
            % (BAR, LIME, MUTED, amount('500', 'USD', INK, 22), BAR, LINE2, MUTED, amount('512 000', 'ARS', INK, 22)))
     hint = '<div style="font-size: 12px; color: %s; padding: 0 4px;">Курс обмена: 1 USD = 1 024 ARS — считается из двух сумм</div>' % MUTED
     head = ('<div style="display: flex; align-items: center; gap: 6px; padding: 0 4px;">%s<span style="color: %s;">→</span>%s</div>'
@@ -165,7 +165,7 @@ def entry_transfer():
 
 
 def entry_receipt():
-    rc = ('<div style="padding: 10px 14px; border-radius: 16px; background: %s; border: 1px solid %s;"><div style="display: flex; justify-content: space-between; font-size: 12px; color: %s;">'
+    rc = ('<div style="padding: 10px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="display: flex; justify-content: space-between; font-size: 12px; color: %s;">'
           '<span>Чек в другой валюте</span><span>✕</span></div><div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px;">%s'
           '<span style="font-size: 12px; color: %s;">Курс покупки: 1 USDT = 1 015 ARS</span></div></div>' % (BAR, LINE2, MUTED, amount('13 300', 'ARS', INK, 20), MUTED))
     head = '<div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">%s<span style="flex-grow: 1;"></span><span style="font-size: 13px; font-weight: 600; color: %s;">Расход</span></div>' % (acc_chip(ACC[3]), PINK)

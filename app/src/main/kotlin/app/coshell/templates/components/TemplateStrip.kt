@@ -82,8 +82,8 @@ private fun NewTemplateTile(withLabel: Boolean, onClick: () -> Unit) {
     val label = stringResource(R.string.template_new)
     Row(
         modifier = Modifier
-            .heightIn(min = Sizes.bottomBarAdd)
-            .widthIn(min = Sizes.bottomBarAdd)
+            .heightIn(min = Sizes.button)
+            .widthIn(min = Sizes.button)
             .tactileClickable(Tactile.Control, MaterialTheme.shapes.large, onClick = onClick)
             .dashedBorder(line, Radii.large)
             .padding(horizontal = Spacing.m),

@@ -19,7 +19,6 @@ import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
 import app.coshell.core.designsystem.components.CoShellExtendedFab
 import app.coshell.core.designsystem.components.CoShellSegmented
-import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.components.rememberSegmentSwipe
 import app.coshell.core.designsystem.components.segmentSwipe
 import app.coshell.core.designsystem.tokens.Sizes
@@ -57,7 +56,6 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
                 selected = selected,
                 onSelect = onSelect,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s),
-                tone = SegmentTone.View,
                 swipe = swipe,
             )
             if (state.isLoading) return@Column

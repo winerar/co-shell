@@ -23,7 +23,7 @@ def rates():
     lbl = ('<div style="display: flex; margin: 18px 4px 8px; font-size: 13px;"><span style="flex-grow: 1; font-weight: 600; color: %s;">Валюты ваших счетов</span>'
            '<span style="color: %s;">тап — задать вручную</span></div>' % (MUTED, MUTED))
     rows = group([row('<span style="%s">%s</span>' % (MONO, r), s, code_badge(c), amount(d, '', OK if d.startswith('+') else PINK, 12) if d else '') for c, r, s, d in RATES])
-    manual = ('<div style="display: flex; gap: 12px; padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s;"><span style="width: 4px; border-radius: 2px; background: %s;"></span>'
+    manual = ('<div style="display: flex; gap: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><span style="width: 4px; border-radius: 2px; background: %s;"></span>'
               '<span><div style="%s font-size: 15px;">1 USD = 1 185,00 ARS</div><div style="font-size: 12px; color: %s;">вручную · с 1 ноября · важнее загруженного</div></span></div>'
               % (VIOLETBG, '#3A2257', VIOLET, MONO, VIOLETINK))
     foot = '<div style="position: absolute; left: 20px; right: 20px; bottom: 20px;">%s</div>' % note('Источники: fawazahmed0/currency-api и ExchangeRate-API. Курсы обновляются сами раз в день.', 0)

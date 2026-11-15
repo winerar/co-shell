@@ -1,22 +1,17 @@
 package app.coshell.core.designsystem.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.theme.CoShellTheme
-import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Sizes
 
 /**
@@ -46,18 +41,11 @@ fun CoShellMenuRow(
     )
 }
 
-/** The section's icon in a [Sizes.badgeSmall] rounded square washed with its colour. */
+/** The section's icon in a [Sizes.badgeSmall] circle tinted with its colour — the same holder as [IconBadge] (board Style3). */
 @Composable
 fun MenuIcon(@DrawableRes icon: Int, color: Color, modifier: Modifier = Modifier) {
-    Box(
-        modifier.size(Sizes.badgeSmall).background(color.copy(alpha = ICON_WASH), RoundedCornerShape(Radii.small)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(painterResource(icon), contentDescription = null, tint = color, modifier = Modifier.size(Sizes.tileIcon))
-    }
+    IconBadge(icon, color, modifier, Sizes.badgeSmall)
 }
-
-private const val ICON_WASH = 0.16f
 
 @Preview(showBackground = true)
 @Composable

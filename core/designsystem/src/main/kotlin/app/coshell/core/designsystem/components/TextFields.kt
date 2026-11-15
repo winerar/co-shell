@@ -36,7 +36,7 @@ import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 
 // Text inputs of the app (design-system.md §«Компоненты», К6 = 8А, issue #200): filled `surfaceContainer`,
-// 1 dp border, 12 dp corners (shapes.extraSmall), the label inside the field; full width of their slot.
+// 1 dp outline border, 16 dp corners (shapes.extraSmall, board Style4), the label inside the field; full width of their slot.
 // Texts come as parameters — no app strings here.
 
 /**
@@ -180,7 +180,8 @@ private fun fieldBorderColor(focused: Boolean, isError: Boolean, enabled: Boolea
     !enabled -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = DISABLED_ALPHA)
     isError -> MaterialTheme.colorScheme.error
     focused -> accentInk()
-    else -> MaterialTheme.colorScheme.outlineVariant
+    // An empty frame must stay visible: outline (≥ 3:1, #385, board Style8), not the faint outlineVariant.
+    else -> MaterialTheme.colorScheme.outline
 }
 
 private const val DISABLED_ALPHA = 0.38f

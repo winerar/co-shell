@@ -17,7 +17,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.theme.LocalDarkTheme
 
 /**
- * A category's icon in a softly tinted circle of its colour (shade for the current theme). Used everywhere a category is
+ * A category's icon in a circle tinted 18 % with its colour (board Style3; shade for the current theme). Used everywhere a category is
  * shown: category list, transaction list, pickers. Missing colour → neutral grey.
  */
 @Composable
@@ -36,7 +36,7 @@ fun IconBadge(@DrawableRes iconRes: Int, color: Color?, modifier: Modifier = Mod
     Box(
         modifier = modifier
             .size(size)
-            .background(tint.copy(alpha = 0.16f), CircleShape),
+            .background(tint.copy(alpha = ICON_TINT), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
@@ -47,3 +47,6 @@ fun IconBadge(@DrawableRes iconRes: Int, color: Color?, modifier: Modifier = Mod
         )
     }
 }
+
+/** Every icon holder is a circle of its colour at 18 % (board Style3); only an account and a member are filled. */
+internal const val ICON_TINT = 0.18f

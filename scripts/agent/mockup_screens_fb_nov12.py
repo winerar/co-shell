@@ -107,7 +107,7 @@ def swatch(p, selected=False, light=False):
     name, prim, bgd, bgl = p[:4]
     ring_ = 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (BG, LIME) if selected else ''
     return ('<span style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: %s;">'
-            '<span style="width: 56px; height: 56px; border-radius: 16px; background: %s; border: 1px solid %s; position: relative; %s">'
+            '<span style="width: 56px; height: 56px; border-radius: 24px; background: %s; border: 1px solid %s; position: relative; %s">'
             '<span style="position: absolute; left: 10px; top: 10px; width: 24px; height: 24px; border-radius: 50%%; background: %s;"></span>'
             '<span style="position: absolute; right: 9px; bottom: 9px; width: 12px; height: 12px; border-radius: 50%%; background: %s;"></span></span>%s</span>'
             % (INK if selected else MUTED, rgbh(bgl if light else bgd), LINE2, ring_, rgbh(prim), rgbh(p[4 if not light else 5]), name))
@@ -130,7 +130,7 @@ def mini(p, light):
     name, prim, bgd, bgl, incd, incl, expd, expl = p
     bg, inc, exp_ = (bgl, incl, expl) if light else (bgd, incd, expd)
     ink = '#0B0F0A' if light else INK
-    return ('<span style="flex: 1; min-width: 0; height: 40px; border-radius: 12px; background: %s; border: 1px solid %s; display: flex; align-items: center; '
+    return ('<span style="flex: 1; min-width: 0; height: 40px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; align-items: center; '
             'gap: 6px; padding: 0 8px; box-sizing: border-box; color: %s;"><span style="height: 22px; padding: 0 8px; border-radius: 999px; background: %s; '
             'color: rgb(14,20,10); font-size: 11px; font-weight: 600; display: flex; align-items: center;">Ок</span>'
             '<span style="%s font-size: 11px; color: %s;">+1 200</span><span style="%s font-size: 11px; color: %s;">−450</span></span>'

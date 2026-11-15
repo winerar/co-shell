@@ -28,6 +28,7 @@ import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase
 import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.domain.recurring.PostAutoPaymentsUseCase
+import app.coshell.core.domain.recurring.PostPaymentUseCase
 import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
 import app.coshell.core.domain.tags.SaveTagUseCase
 import app.coshell.core.domain.tags.TagRepository
@@ -173,6 +174,15 @@ object DataModule {
         save: SaveTransactionUseCase,
         clock: Clock,
     ) = PostAutoPaymentsUseCase(accounts, categories, templates, save, clock)
+
+    @Provides
+    fun providePostPayment(
+        accounts: AccountRepository,
+        categories: CategoryRepository,
+        templates: TemplateRepository,
+        save: SaveTransactionUseCase,
+        clock: Clock,
+    ) = PostPaymentUseCase(accounts, categories, templates, save, clock)
 
     @Provides
     fun provideSaveAccount(accounts: AccountRepository, transactions: TransactionRepository) =

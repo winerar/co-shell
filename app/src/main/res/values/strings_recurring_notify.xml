@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reminder actions and the switch (#405, board Rec143Notify). -->
+<resources>
+    <string name="recurring_notify_total">%1$s · ≈ %2$s</string>
+    <string name="recurring_action_post_amount">Провести %1$s</string>
+    <string name="recurring_action_change_amount">Изменить сумму</string>
+    <string name="recurring_action_tomorrow">Завтра</string>
+    <string name="appearance_notifications_section">Уведомления</string>
+    <string name="reminders_title">Напоминания о платежах</string>
+    <string name="reminders_hint">В 9:00 в день платежа</string>
+</resources>

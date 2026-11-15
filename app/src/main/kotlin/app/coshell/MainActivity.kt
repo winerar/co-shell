@@ -2,6 +2,7 @@ package app.coshell
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +25,8 @@ import app.coshell.language.AppLanguage
 import app.coshell.language.LanguagePromptHost
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.recurring.notify.NotificationPermissionAsk
+import app.coshell.recurring.notify.PaymentLinks
+import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.rememberRevealedSystemDark
 import app.coshell.theme.toDesign
@@ -41,6 +44,8 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var installEvents: InstallEvents
     @Inject lateinit var updateJournal: UpdateJournal
     @Inject lateinit var notificationAsk: NotificationPermissionAsk
+    @Inject lateinit var paymentLinks: PaymentLinks
+    @Inject lateinit var paymentNotices: PaymentNotices
 
     private val askNotifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
@@ -62,6 +67,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             if (notificationAsk.awaitDue()) withStarted { askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS) }
         }
+        openPayment(intent)
         setContent {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
             // already matches the phone's mode), so a chosen theme never flashes the other one.
@@ -80,11 +86,22 @@ class MainActivity : ComponentActivity() {
                     onDispose {}
                 }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {
-                    CoShellNavHost()
+                    CoShellNavHost(paymentLinks = paymentLinks)
                     // The one-time language question over «Обзор» (#352).
                     LanguagePromptHost()
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        openPayment(intent)
+    }
+
+    /** «Изменить сумму» / «Провести» on the reminder (#405): the sheet opens, the reminder is answered. */
+    private fun openPayment(intent: Intent?) {
+        if (paymentLinks.offer(intent)) paymentNotices.cancelReminder()
     }
 }

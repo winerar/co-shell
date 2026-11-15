@@ -1,5 +1,8 @@
 package app.coshell.core.domain.recurring
 
+import app.coshell.core.domain.rates.CurrencyConverter
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Money
 import app.coshell.core.model.TransactionTemplate
 import kotlinx.datetime.LocalDate
 
@@ -40,7 +43,27 @@ const val SOON_DAYS = 7
 /**
  * Templates with a payment today that still waits for «Провести» — the 9:00 reminder (#143, board
  * `Rec143Notify`). Call after [PostAutoPaymentsUseCase]: a «само» payment that posted is handled and
- * drops out, one that could not post (account archived) stays and is reminded like any other.
+ * drops out, one that could not post (account archived) stays and is reminded like any other. [snoozed] —
+ * templates whose reminder was put off till today with «Завтра».
  */
-fun paymentsToRemind(templates: List<TransactionTemplate>, today: LocalDate): List<TransactionTemplate> =
-    templates.filter { it.schedule?.due(today)?.lastOrNull() == today }.sortedBy { it.name.lowercase() }
+fun paymentsToRemind(
+    templates: List<TransactionTemplate>,
+    today: LocalDate,
+    snoozed: Set<String> = emptySet(),
+): List<TransactionTemplate> = templates.filter { template ->
+    val due = template.schedule?.due(today).orEmpty()
+    // «Завтра» on yesterday's reminder (#405): asked again today while the payment still waits.
+    due.lastOrNull() == today || (template.id in snoozed && due.isNotEmpty())
+}.sortedBy { it.name.lowercase() }
+
+/**
+ * «3 платежа сегодня · ≈ 96 USD» (#405): what the reminded payments come to in [main] at today's rates; template
+ * amounts are sizes, so an income and an expense on one day add up (both are money to handle). Payments with «сумма при вводе»
+ * and currencies without a rate are left out — hence «≈»; `null` — nothing to count.
+ */
+fun remindTotal(templates: List<TransactionTemplate>, converter: CurrencyConverter, main: CurrencyCode, today: LocalDate): Money? {
+    val amounts = templates.mapNotNull { it.amount }
+    if (amounts.isEmpty()) return null
+    val total = converter.total(amounts.map { it to today }, main)
+    return total.sum.takeIf { amounts.any { it.currency !in total.missing } }
+}

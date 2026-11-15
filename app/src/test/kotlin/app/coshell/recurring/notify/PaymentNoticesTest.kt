@@ -19,6 +19,7 @@ import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -34,6 +35,7 @@ import org.robolectric.annotation.Config
 class PaymentNoticesTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val ars = CurrencyCode("ARS")
+    private val day = LocalDate(2026, 11, 15)
     private val accounts = FakeAccountRepository()
     private val categories = FakeCategoryRepository()
     private val notices = PaymentNotices(context, accounts, categories, MoneyFormat.RU)
@@ -56,30 +58,40 @@ class PaymentNoticesTest {
 
     @Test
     fun `one payment without an amount shows name, account, amount at entry`() = runTest {
-        notices.remind(listOf(template("Свет")))
+        notices.remind(listOf(template("Свет")), day)
         val n = shown().single()
         assertEquals("Сегодня платёж: Свет", n.title())
         assertEquals("Galicia · сумма при вводе", n.text())
         assertEquals(PaymentNotices.CHANNEL, n.channelId)
+        assertEquals(listOf("Провести", "Завтра"), n.actions.map { it.title.toString() })
     }
 
     @Test
     fun `one payment with an amount shows it in the title`() = runTest {
-        notices.remind(listOf(template("Аренда", 650_000_00)))
-        assertEquals("Сегодня платёж: Аренда · 650\u202F000,00\u00A0ARS", shown().single().title())
+        notices.remind(listOf(template("Аренда", 650_000_00)), day)
+        val n = shown().single()
+        assertEquals("Сегодня платёж: Аренда · 650\u202F000,00\u00A0ARS", n.title())
+        assertEquals(listOf("Провести 650\u202F000,00\u00A0ARS", "Изменить сумму"), n.actions.map { it.title.toString() })
+    }
+
+    @Test
+    fun `several payments show their total in the main currency`() = runTest {
+        notices.remind(listOf(template("Интернет"), template("Expensas")), day, total = Money(96_00, CurrencyCode("USD")))
+        assertEquals("2 платежа сегодня · ≈ 96,00\u00A0USD", shown().single().title())
     }
 
     @Test
     fun `several payments on one day are one notification`() = runTest {
-        notices.remind(listOf(template("Интернет"), template("Expensas"), template("Мобильная связь")))
+        notices.remind(listOf(template("Интернет"), template("Expensas"), template("Мобильная связь")), day)
         val n = shown().single()
         assertEquals("3 платежа сегодня", n.title())
         assertEquals("Интернет, Expensas, Мобильная связь", n.text())
+        assertEquals(listOf("Открыть"), n.actions.map { it.title.toString() })
     }
 
     @Test
     fun `nothing today means no notification`() = runTest {
-        notices.remind(emptyList())
+        notices.remind(emptyList(), day)
         assertTrue(shown().isEmpty())
     }
 
@@ -99,7 +111,7 @@ class PaymentNoticesTest {
     @Test
     fun `no permission means silent`() = runTest {
         shadowOf(context as Application).denyPermissions(android.Manifest.permission.POST_NOTIFICATIONS)
-        notices.remind(listOf(template("Свет")))
+        notices.remind(listOf(template("Свет")), day)
         assertTrue(shown().isEmpty())
     }
 }

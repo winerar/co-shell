@@ -15,8 +15,11 @@ import androidx.compose.ui.unit.sp
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 
-/** Meaning of a [CoShellStatusChip]: new or «сегодня», in work or «пропущен», done, closed. */
-enum class StatusTone { New, Work, Done, No }
+/**
+ * Meaning of a [CoShellStatusChip]: new or «сегодня», in work or «пропущен», done, closed; [Fresh] — the «новое» mark on
+ * a place with something new in this version (board Style2 «Метки», #335), the palette's neon in the dot.
+ */
+enum class StatusTone { New, Work, Done, No, Fresh }
 
 /**
  * A status label (board `CompNew` «Точка и статус», #367 А; shape — board Style2): a 22 dp capsule tinted 18 % with
@@ -50,4 +53,5 @@ private fun statusToneColor(tone: StatusTone): Color = when (tone) {
     StatusTone.Work -> LocalStatusPalette.current.warning
     StatusTone.Done -> LocalStatusPalette.current.success
     StatusTone.No -> MaterialTheme.colorScheme.onSurfaceVariant
+    StatusTone.Fresh -> MaterialTheme.colorScheme.primary
 }

@@ -1,6 +1,7 @@
 package app.coshell.core.data.repository
 
 import app.coshell.core.data.db.ReportDao
+import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportRepository
 import app.coshell.core.model.CurrencyCode
@@ -31,6 +32,11 @@ class RoomReportRepository(
     }
 
     override fun observeAllDays(): Flow<List<ReportDay>> = days(Long.MIN_VALUE, Long.MAX_VALUE, offsetMs(clock.now()))
+
+    override fun observeBalanceDays(): Flow<List<BalanceDay>> =
+        reports.observeBalanceDays(offsetMs(clock.now())).map { rows ->
+            rows.map { BalanceDay(LocalDate.fromEpochDays(it.epochDay), it.accountId, it.deltaMinor) }
+        }
 
     private fun offsetMs(at: Instant): Long = timeZone.offsetAt(at).totalSeconds * 1000L
 

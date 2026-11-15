@@ -119,4 +119,15 @@
     <string name="reports_members_caption">by who added it</string>
     <string name="reports_members_me">Me</string>
     <string name="reports_members_note">Spending is shared — split by who recorded the operation.</string>
+    <!-- Net worth (#189, board Rp189NwB) -->
+    <string name="reports_capital_title">Net worth</string>
+    <string name="reports_capital_caption">all accounts</string>
+    <string name="reports_capital_year">%1$s this year</string>
+    <string name="reports_capital_months">%1$s in %2$d mo.</string>
+    <string name="reports_capital_why">Why it changed</string>
+    <string name="reports_capital_saved">saved</string>
+    <string name="reports_capital_rates">rates</string>
+    <string name="reports_capital_total">total</string>
+    <string name="reports_capital_rates_note">Rates — everything that is neither income nor spending: exchange rates, exchanges, balance adjustments.</string>
+    <string name="reports_capital_description">Net worth by month: %1$s</string>
 </resources>

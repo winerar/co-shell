@@ -18,13 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.charts.CoShellBarRow
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.MemberRow
 
@@ -73,11 +73,10 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
 
 @Composable
 private fun Initial(name: String, color: Color) {
-    Box(Modifier.size(AVATAR).background(color, CircleShape), contentAlignment = Alignment.Center) {
+    Box(Modifier.size(Sizes.badgeSmall).background(color, CircleShape), contentAlignment = Alignment.Center) {
         Text(name.take(1).uppercase(), color = inkOn(color), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
     }
 }
 
-private val AVATAR = 32.dp
 /** The colour key of «Я»: the others are keyed by their id. */
 private const val ME_KEY = "me"

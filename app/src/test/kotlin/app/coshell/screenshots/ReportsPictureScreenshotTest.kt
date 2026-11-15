@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onRoot
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsSamples
+import app.coshell.reports.components.CapitalCard
 import app.coshell.reports.components.IncomeCard
 import app.coshell.reports.components.MembersCard
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -26,7 +27,7 @@ import org.robolectric.annotation.GraphicsMode
 /** «Картина целиком» (#189): the new cards of «Отчёты» on [ReportsSamples] — the numbers of boards `Rp189*`. */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
+@Config(sdk = [36], qualifiers = "ru-w411dp-h1500dp-xhdpi", application = Application::class)
 class ReportsPictureScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
@@ -42,6 +43,7 @@ class ReportsPictureScreenshotTest {
     @Composable
     private fun cards() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         IncomeCard(ReportsSamples.income, onMonth = {})
+        CapitalCard(ReportsSamples.capital, "USD")
         MembersCard(ReportsSamples.members)
     }
 

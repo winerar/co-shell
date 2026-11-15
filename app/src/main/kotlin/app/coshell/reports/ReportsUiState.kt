@@ -26,6 +26,8 @@ data class ReportsUiState(
     val income: Income? = null,
     /** «Кто сколько потратил» (#189); empty — one-person family or nothing spent. */
     val members: List<MemberRow> = emptyList(),
+    /** «Капитал» (#189); `null` — no account counted into the total. */
+    val capital: Capital? = null,
 ) {
     /** Nothing was spent in the period (the cards say so instead of empty charts). */
     val isEmpty: Boolean get() = !isLoading && spending == null
@@ -146,4 +148,34 @@ data class ReportsUiState(
 
     /** [name] `null` — a category deleted on another phone. */
     data class TopFolder(val name: String?, val value: String)
+
+    /**
+     * «Капитал» (board `Rp189NwB`): the money on all accounts now ([value]), its change over the chart ([change] signed,
+     * [percent] of the first point), a point per month end and «Почему изменился» for the last months, newest first.
+     */
+    data class Capital(
+        val value: String,
+        val change: String,
+        val falling: Boolean,
+        val percent: Int?,
+        /** How many months the change is over: 12 — «за год». */
+        val months: Int,
+        val points: List<CapitalPoint>,
+        val why: List<WhyRow>,
+        /** Currencies left out for lack of a rate: «без учёта: AMD». */
+        val missing: List<String> = emptyList(),
+    )
+
+    data class CapitalPoint(val month: YearMonth, val value: String, val minor: Long)
+
+    /** One month of «Почему изменился»: [saved] — income minus spending, [rates] — the rest; all signed. */
+    data class WhyRow(
+        val month: YearMonth,
+        val running: Boolean,
+        val saved: String,
+        val savedNegative: Boolean,
+        val rates: String,
+        val total: String,
+        val totalNegative: Boolean,
+    )
 }

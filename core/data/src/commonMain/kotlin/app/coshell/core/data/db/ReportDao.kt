@@ -17,6 +17,13 @@ data class ReportDayRow(
     @ColumnInfo(name = "author_member_id") val authorId: String? = null,
 )
 
+/** How one account's balance moved in one day — a row of [ReportDao.observeBalanceDays]; a day may repeat. */
+data class BalanceDayRow(
+    @ColumnInfo(name = "epoch_day") val epochDay: Long,
+    @ColumnInfo(name = "account_id") val accountId: String,
+    @ColumnInfo(name = "delta_minor") val deltaMinor: Long,
+)
+
 /** Reports (#187): SQLite adds the operations up by day, so a year of reports reads day sums, not operations. */
 @Dao
 interface ReportDao {
@@ -33,4 +40,18 @@ interface ReportDao {
            GROUP BY epoch_day, category_id, type, currency, author_member_id""",
     )
     fun observeDays(fromMs: Long, toMs: Long, offsetMs: Long): Flow<List<ReportDayRow>>
+
+    /**
+     * «Капитал» (#189): the balance change of each account by day over the whole history — expenses and outgoing
+     * transfers subtract `amount`, incomes add it, incoming transfers add `to_amount` (as `observeBalanceDeltas`).
+     */
+    @Query(
+        """SELECT (date + :offsetMs) / 86400000 AS epoch_day, account_id,
+                  SUM(CASE type WHEN 'INCOME' THEN amount_minor ELSE -amount_minor END) AS delta_minor
+           FROM transactions WHERE deleted = 0 GROUP BY epoch_day, account_id
+           UNION ALL
+           SELECT (date + :offsetMs) / 86400000 AS epoch_day, to_account_id AS account_id, SUM(to_amount_minor) AS delta_minor
+           FROM transactions WHERE deleted = 0 AND type = 'TRANSFER' GROUP BY epoch_day, to_account_id""",
+    )
+    fun observeBalanceDays(offsetMs: Long): Flow<List<BalanceDayRow>>
 }

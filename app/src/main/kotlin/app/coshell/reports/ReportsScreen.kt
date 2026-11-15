@@ -21,6 +21,7 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.reports.components.CapitalCard
 import app.coshell.reports.components.IncomeCard
 import app.coshell.reports.components.MembersCard
 import app.coshell.reports.components.MonthsCard
@@ -35,7 +36,7 @@ import kotlinx.datetime.YearMonth
 
 /**
  * «Отчёты» (#140, boards `RepA`, `RepPeriod`): a feed of cards for one period and one currency — «На что ушли деньги»,
- * «По месяцам», «Доходы и расходы» and «Кто сколько потратил» (#189). The arrows step through periods; the title or «USD ▾» opens «Период и валюта»; a month column
+ * «По месяцам», «Доходы и расходы», «Капитал» and «Кто сколько потратил» (#189). The arrows step through periods; the title or «USD ▾» opens «Период и валюта»; a month column
  * opens that month.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,9 +90,10 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
             }
             state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
             state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
+            state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency) } }
             if (state.members.isNotEmpty()) item(key = "members") { MembersCard(state.members) }
             item(key = "note") {
-                val missing = spending?.missing.orEmpty()
+                val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()
                 CoShellHint(
                     if (missing.isEmpty()) stringResource(R.string.reports_rate_note, state.currency)
                     else stringResource(R.string.reports_rate_note, state.currency) + ". " + stringResource(R.string.reports_missing, missing.joinToString()),

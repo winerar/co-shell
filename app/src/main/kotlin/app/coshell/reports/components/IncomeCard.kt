@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.charts.ChartPair
 import app.coshell.core.designsystem.charts.CoShellPairedColumns
@@ -118,9 +117,8 @@ private fun RateLine(income: Income) {
 @Composable
 private fun Legend(color: Color, label: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        Box(Modifier.size(LEGEND_DOT).background(color, RoundedCornerShape(3.dp)))
+        Box(Modifier.size(Spacing.s).background(color, RoundedCornerShape(Spacing.xxs)))
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
-private val LEGEND_DOT = 9.dp

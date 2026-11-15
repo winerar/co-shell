@@ -45,6 +45,9 @@
 Тренд на экранах (#238, `Tr238DrillA`/`Tr238MarkA`): пилюля «↑ 45%» — `CoShellChangePill` (ds `charts/`, слот `badge` у `CoShellBarRow`),
 `reports/components/UsualMarks.kt` (текст, цвет, TalkBack); `Mark` в `ReportsUiState` (только для месяца); «Все категории» — чип «Необычные · N»;
 «Из чего сложилось» — строка пометки и `category/TrendCard` (столбцы истории, черта среднего за год, тап — тот месяц: `onMonth` во ViewModel).
+Картина целиком (#189, `Rp189*`): «Доходы и расходы» — `incomeExpenses` (domain) → `IncomeBoard` → `components/IncomeCard` (ds `CoShellPairedColumns`);
+«Капитал» — `netWorth` (начальный остаток + `BalanceDay` из `ReportDao.observeBalanceDays`, курс на конец месяца, «отложили / курсы») → `CapitalBoard` →
+`CapitalCard` (ds `CoShellLine`); «Кто сколько потратил» — `ReportDay.authorId` → `spendingByMember` → `MembersBoard` → `MembersCard` («Я» — всё, что не внесли другие).
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),

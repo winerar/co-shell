@@ -9,9 +9,12 @@ import app.coshell.reports.ReportsUiState.Bar
 import app.coshell.reports.ReportsUiState.CategoryRow
 import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
+import app.coshell.reports.ReportsUiState.Capital
+import app.coshell.reports.ReportsUiState.CapitalPoint
 import app.coshell.reports.ReportsUiState.Income
 import app.coshell.reports.ReportsUiState.MemberRow
 import app.coshell.reports.ReportsUiState.TopFolder
+import app.coshell.reports.ReportsUiState.WhyRow
 import app.coshell.reports.ReportsUiState.IncomeColumn
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
@@ -86,6 +89,24 @@ object ReportsSamples {
         MemberRow(null, null, "330", 43, 330 / 430f, listOf(TopFolder("Образование", "120"), TopFolder("Аптека", "70"), TopFolder("Продукты", "51"))),
     )
 
+    /** Board `Rp189NwB`: a year of month ends (USD), why the last three months changed. */
+    val capital = Capital(
+        value = "8 503",
+        change = "+2 403",
+        falling = false,
+        percent = 39,
+        months = 12,
+        points = listOf(6_100, 6_150, 6_230, 6_090, 6_200, 6_280, 6_750, 6_990, 7_580, 7_440, 7_700, 8_503).mapIndexed { i, v ->
+            val month = YearMonth(2025, 12).let { if (i == 0) it else YearMonth(2026, i) }
+            CapitalPoint(month, "%,d".format(v).replace(',', ' '), v * 100L)
+        },
+        why = listOf(
+            WhyRow(YearMonth(2026, 11), running = true, saved = "+820", savedNegative = false, rates = "-17", total = "+803", totalNegative = false),
+            WhyRow(YearMonth(2026, 10), running = false, saved = "+270", savedNegative = false, rates = "-10", total = "+260", totalNegative = false),
+            WhyRow(YearMonth(2026, 9), running = false, saved = "-110", savedNegative = true, rates = "-30", total = "-140", totalNegative = true),
+        ),
+    )
+
     val state = ReportsUiState(
         period = ReportPeriod.month(YearMonth(2026, 11)),
         today = LocalDate(2026, 11, 11),
@@ -95,6 +116,7 @@ object ReportsSamples {
         months = months,
         income = income,
         members = members,
+        capital = capital,
     )
 
     val empty = state.copy(spending = null)

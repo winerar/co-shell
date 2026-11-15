@@ -4,7 +4,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -23,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.material3.FilterChipDefaults
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.search.AmountQuery
 import app.coshell.transactions.list.FilterLabels
@@ -36,8 +34,8 @@ import app.coshell.core.designsystem.R as DesignR
 private enum class OpenSheet { CATEGORIES, TAGS, PERIOD, ACCOUNTS }
 
 /**
- * Top of «Операции» (#141, variant А): the search field (with a line on how an amount query was understood),
- * the filter chips — type, category, tag (#294), period, account, who — each with its own sheet, and the total of what
+ * Top of «Операции» (#141, variant А): a line on how an amount query was understood (the query itself is typed in
+ * the header's search, #394 Б), the filter chips — type, category, tag (#294), period, account, who — each with its own sheet, and the total of what
  * was found (4А) while any filter is set.
  */
 @Composable
@@ -51,13 +49,6 @@ internal fun FilterBar(
     var open by rememberSaveable { mutableStateOf<OpenSheet?>(null) }
     val locale = LocalConfiguration.current.locales[0]
     Column(modifier.padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
-        CoShellSearchField(
-            value = filter.query,
-            onValueChange = { q -> onFilter { it.copy(query = q) } },
-            placeholder = stringResource(R.string.transactions_search),
-            clearLabel = stringResource(R.string.search_clear),
-            modifier = Modifier.fillMaxWidth(),
-        )
         filter.amount?.let { AmountHint(it) }
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             val kinds = listOf(

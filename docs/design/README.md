@@ -19,7 +19,7 @@
 | Ряд | Доски (`mockups/`) | Код |
 |---|---|---|
 | Обзор | `Home`, `HomeEmpty` (первый запуск), `HomeAttention` (нет курса), `HomeSync` (ошибка синка, 17А), `UpdateWhatsNew` | `home/`, `home/sync/`, `update/notice/` |
-| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
+| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsScrolled` (шапка «Живая строка» прокручена: линия, «где я»), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
 | Шторка ввода | `Main` (шаги 1–2), `EntryTransfer`, `EntryReceipt`, `EntryEdit` (правка, дубль, удалить), `EntryError`, `EntryNoAccounts` | `transactions/edit/`, `components/keypad/` |
 | Счета и «Ещё» | `Accounts`, `AccountsSearch`, `AccountsEmpty`, `More`, `UpdatePill`, `Update` | `accounts/list/`, `more/`, `update/` |
 | Счёт и категории | `AccountEdit`, `AccountEditExisting` (блок валюты, ошибки), `AccountDelete`, `AccountBlocked`, `Colors`, `Categories`, `CategoryEdit`, `CategoryBlocked` | `accounts/edit/`, `categories/`, `category/BankColors` |
@@ -52,6 +52,13 @@
 на «Счетах» в коде есть сворачиваемая группа «Архив · N», на доске (v37) архива нет.
 Сверка #203 (2026-11-12): «Семья» и «Курсы» приведены к доскам (эталоны `family_*`, `rates_*`); без данных пока —
 «вошёл · N операций» у участника и изменение курса за день. Стрелка «назад» в коде — Material, на досках — шеврон (на всех экранах).
+
+## Живые страницы выбора
+- Шапки экранов (2026-11-15, **выбрано А «Живая строка» без прозрачности**): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия
+  `topbar-headers.html`; код — `ui/top/` (`TabTopBar`, `TabOrSelectionTopBar`), эталон `transactions_scrolled_dark`, доски `OpsScrolled`, `OpsSelect`, «Компоненты → Шапки»
+  (кирпичи `tab_head`, `select_head`). #394 (опрос
+  https://claude.ai/artifact/8mf6ECQP7sb8128EkeKRur) — **выбрано Б и Б**: поиск лупой в шапке (`OpsNothing` — раскрытый), линия у внутренних
+  экранов при прокрутке; доски `Hdr394*` (`mockup_screens_fb_headers.py`), кирпичи `search_head`, `inner_head`.
 
 ## Ранние страницы (до холста)
 - Новый облик (пружины, палитры, вёрстка): https://claude.ai/artifact/WqocoPvC6g6mLRt31WvcCW

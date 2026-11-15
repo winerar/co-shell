@@ -60,18 +60,37 @@ def home_attention():
 
 
 def ops_head(chips=None):
+    """Filter chips under the «Операции» header; the search itself is a loupe in the header (#394 Б)."""
     chips = chips or [chip('Тип ▾'), chip('Счёт ▾'), chip('Ноябрь ▾')]
-    return search('Поиск: заметка, сумма, категория') + '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % ''.join(chips)
+    return '<div style="display: flex; gap: 8px; margin-top: 4px;">%s</div>' % ''.join(chips)
+
+
+def loupe():
+    return icon_button('search', 'Найти операцию')
 
 
 def ops_empty():
-    return tab_screen('Операции', ops_head() + empty('list', 'Операций пока нет. Нажмите «+», чтобы записать первую.'), 'ops')
+    return tab_screen('Операции', ops_head() + empty('list', 'Операций пока нет. Нажмите «+», чтобы записать первую.'), 'ops', loupe())
 
 
 def ops_nothing():
-    body = (search('', 'кофе 500') + '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % (chip('Расходы ✕', True) + chip('Galicia ✕', True) + chip('Октябрь ▾'))
+    body = ('<div style="display: flex; gap: 8px; margin-top: 4px;">%s</div>' % (chip('Расходы ✕', True) + chip('Galicia ✕', True) + chip('Октябрь ▾'))
             + empty('search', 'Ничего не нашлось') + '<div style="text-align: center; margin-top: 4px;"><span style="color: %s; font-size: 15px; font-weight: 600;">Сбросить фильтры</span></div>' % LIME)
-    return tab_screen('Операции', body, 'ops')
+    return search_head('кофе 500') + '<div style="padding: 0 16px;">%s</div>' % body + nav('ops')
+
+
+def ops_scrolled():
+    """Header poll А: scrolled «Операции» — solid header + hairline, the day at the top and its net under the title;
+    day titles scroll away with the list (they no longer stick). A long list: 8 days, 4 rows each."""
+    names = [('Продукты', 'Galicia · Coto', 'cart', LIME), ('Кафе', 'USDT-карта', 'cafe', WARN), ('Такси', 'Наличные', 'taxi', YELLOW), ('Аптека', 'Galicia', 'pill', PINK)]
+    days = ['10 НОЯБРЯ, ВТ', '9 НОЯБРЯ, ПН', '8 НОЯБРЯ, ВС', '7 НОЯБРЯ, СБ']
+    rows = []
+    for d, title in enumerate(days):
+        if d:
+            rows.append(day(title, '−%d 000' % (24 + d * 4), 'ARS'))
+        for r, (t, sub, ic, col) in enumerate(names[(1 if d == 0 else 0):]):
+            rows.append(tx(t, sub, '−%d 250' % (20 + d * 4 + r), 'ARS', 'e', ic, col, ''))
+    return tab_screen('Операции', '<div style="margin: 0 -16px;">%s</div>' % ''.join(rows), 'ops', loupe(), sub='10 ноября, вт · −24 000,00 ARS')
 
 
 def ops_list(selected=(), snack=False):
@@ -86,15 +105,14 @@ def ops_list(selected=(), snack=False):
             rows.append(day('ВЧЕРА', '−6 500', 'ARS'))
     lst = '<div style="margin: 14px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), ''.join(rows))
     if selected:
-        top = ('<div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px;">%s<span style="font-size: 22px; font-weight: 700;">Выбрано %d</span></div>'
-               % (icon_button('close', 'Отменить выбор'), len(selected)))
+        top = select_head(len(selected))
         bar = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
                '<span style="flex: 1; height: 48px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px; color: %s; font-size: 15px;">%sДублировать</span>'
                '<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · %d</span></div>'
                % (BAR, '#5C6757', svg('copy', '#5C6757', 20), PINKBG, PINK, svg('trash', PINK, 20), len(selected)))
         return top + '<div style="padding: 0 16px;">%s%s</div>' % (ops_head(), lst) + bar
     body = ops_head([chip('Расходы ✕', True), chip('Счёт ▾'), chip('Ноябрь ▾')]) + lst
-    return tab_screen('Операции', body, 'ops') + (snackbar('Удалено операций: 3') if snack else '')
+    return tab_screen('Операции', body, 'ops', loupe()) + (snackbar('Удалено операций: 3') if snack else '')
 
 
 def accounts_empty():
@@ -229,6 +247,7 @@ BOARDS = [
     # name, title, html-function
     ('Home', '1 · Обзор', home), ('HomeEmpty', '1 · Обзор: первый запуск', home_empty), ('HomeAttention', '1 · Обзор: нет курса', home_attention),
     ('OpsEmpty', '2 · Операции: пусто', ops_empty), ('OpsNothing', '2 · Операции: ничего не нашлось', ops_nothing),
+    ('OpsScrolled', '2 · Операции: прокручено, шапка «где я»', ops_scrolled),
     ('OpsSelect', '2 · Операции: выбор нескольких', lambda: ops_list((0, 1, 3))), ('OpsUndo', '2 · Операции: удалено, «Отменить»', lambda: ops_list(snack=True)),
     ('AccountsEmpty', '3 · Счета: пусто', accounts_empty), ('AccountsSearch', '3 · Счета: поиск', accounts_search),
     ('EntryTransfer', '5 · Шторка: перевод между валютами', entry_transfer), ('EntryReceipt', '5 · Шторка: чек в другой валюте', entry_receipt),

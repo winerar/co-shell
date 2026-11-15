@@ -21,8 +21,11 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.hasScrollToIndexAction
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditScreen
 import app.coshell.accounts.edit.accountEditPreviewSample
@@ -47,6 +50,7 @@ import app.coshell.family.FamilyScreen
 import app.coshell.family.FamilyUiState
 import app.coshell.rates.list.RatesActions
 import app.coshell.rates.list.RatesScreen
+import app.coshell.rates.list.ratesLongSample
 import app.coshell.rates.list.ratesPreviewSample
 import app.coshell.currencies.list.ReportCurrenciesActions
 import app.coshell.currencies.list.ReportCurrenciesScreen
@@ -62,9 +66,11 @@ import app.coshell.transactions.list.components.PeriodChoices
 import app.coshell.transactions.list.components.TagsChoices
 import app.coshell.transactions.list.transactionsFilterChoices
 import app.coshell.transactions.list.transactionsFilteredSample
+import app.coshell.transactions.list.transactionsLongSample
 import app.coshell.transactions.list.TransactionsScreen
 import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.transactionsPreviewSample
+import app.coshell.ui.top.ScreenScrollHost
 import com.github.takahirom.roborazzi.captureRoboImage
 import kotlinx.datetime.LocalDate
 import org.junit.Rule
@@ -132,6 +138,12 @@ class ScreensScreenshotTest {
 
     @Test
     fun `transactions dark`() = shot("transactions_dark", dark = true) { TransactionsScreen(transactionsPreviewSample) }
+
+    /** Header poll А (2026-11-15): scrolled — solid header with a hairline, smaller title, the top day below it. */
+    @Test
+    fun `transactions scrolled dark`() = shot("transactions_scrolled_dark", dark = true, before = {
+        compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
+    }) { TransactionsScreen(transactionsLongSample) }
 
     /** Board `Fb141A` (#141): set filters are lit chips with ✕, the total (4А) under them. */
     @Test
@@ -251,6 +263,12 @@ class ScreensScreenshotTest {
     @Test
     fun `rates dark`() = shot("rates_dark", dark = true) { RatesScreen(ratesPreviewSample, RatesActions()) }
 
+    /** #394 Б: an inner screen scrolled — solid header with a hairline (the destination's ScreenScrollHost). */
+    @Test
+    fun `rates scrolled dark`() = shot("rates_scrolled_dark", dark = true, before = {
+        compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
+    }) { ScreenScrollHost { RatesScreen(ratesLongSample, RatesActions()) } }
+
     /** Board `ReportCurrencies`: the balance preview hero over the list, main currency outlined. */
     @Test
     fun `report currencies light`() = shot("report_currencies_light") { ReportCurrenciesScreen(reportCurrenciesPreviewSample, ReportCurrenciesActions()) }
@@ -261,10 +279,18 @@ class ScreensScreenshotTest {
     }
 
     /** The clock is wound past every entrance animation (blocks cascade in), so each shot is the settled screen. */
-    private fun shot(name: String, dark: Boolean = false, palette: CoShellPalette = CoShellPalette.Lime, content: @Composable () -> Unit) {
+    private fun shot(
+        name: String,
+        dark: Boolean = false,
+        palette: CoShellPalette = CoShellPalette.Lime,
+        before: () -> Unit = {},
+        content: @Composable () -> Unit,
+    ) {
         compose.mainClock.autoAdvance = false
         // Surface: editors have no Scaffold, in the app the window gives them the background.
         compose.setContent { CoShellTheme(darkTheme = dark, palette = palette) { Surface { content() } } }
+        compose.mainClock.advanceTimeBy(SETTLE_MS)
+        before()
         compose.mainClock.advanceTimeBy(SETTLE_MS)
         compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
     }

@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
@@ -102,7 +101,7 @@ fun CoShellNavHost(
             )
         },
     ) {
-        composable<HomeDestination> {
+        screen<HomeDestination> {
             HomeRoute(
                 HomeActions(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
@@ -125,7 +124,7 @@ fun CoShellNavHost(
                 ),
             )
         }
-        composable<TransactionsDestination> { entry ->
+        screen<TransactionsDestination> { entry ->
             TransactionsRoute(
                 preset = entry.savedStateHandle,
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
@@ -149,7 +148,7 @@ fun CoShellNavHost(
                 )
             }
         }
-        composable<TemplatesDestination> {
+        screen<TemplatesDestination> {
             TemplatesRoute(
                 onBack = { navController.popBackStack() },
                 onUse = { navController.navigate(TransactionEditDestination(templateId = it)) { launchSingleTop = true } },
@@ -157,10 +156,10 @@ fun CoShellNavHost(
                 onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
             )
         }
-        composable<TemplateEditDestination> {
+        screen<TemplateEditDestination> {
             TemplateEditRoute(onDone = { navController.popBackStack() })
         }
-        composable<BudgetsDestination> {
+        screen<BudgetsDestination> {
             BudgetsRoute(
                 onBack = { navController.popBackStack() },
                 onEdit = { id, month ->
@@ -171,7 +170,7 @@ fun CoShellNavHost(
                 },
             )
         }
-        composable<BudgetDetailDestination> {
+        screen<BudgetDetailDestination> {
             BudgetDetailRoute(
                 onBack = { navController.popBackStack() },
                 onEditLimit = { id, month -> navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) },
@@ -180,21 +179,21 @@ fun CoShellNavHost(
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
             )
         }
-        composable<BudgetEditDestination> {
+        screen<BudgetEditDestination> {
             BudgetEditRoute(
                 onDone = { navController.popBackStack() },
                 // A limit inside the folder: its own editor on top; back returns to the folder.
                 onOpenCategory = { id, month -> navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) },
             )
         }
-        composable<AccountsDestination> {
+        screen<AccountsDestination> {
             AccountsRoute(
                 onBack = { navController.popBackStack() },
                 onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                 onAddAccount = { navController.navigate(AccountEditDestination()) },
             )
         }
-        composable<ReportsDestination> {
+        screen<ReportsDestination> {
             ReportsRoute(
                 onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
                 onCategory = { navController.navigate(it) { launchSingleTop = true } },
@@ -206,13 +205,13 @@ fun CoShellNavHost(
                 onCapital = { navController.navigate(it) { launchSingleTop = true } },
             )
         }
-        composable<CapitalMonthDestination> {
+        screen<CapitalMonthDestination> {
             CapitalMonthRoute(
                 onBack = { navController.popBackStack() },
                 onAccount = { navController.navigate(AccountEditDestination(it)) },
             )
         }
-        composable<ReportCategoriesDestination> { entry ->
+        screen<ReportCategoriesDestination> { entry ->
             // The tab's entry sits under this one: «Все категории» shows its period, currency and data.
             val tab = remember(entry) { navController.getBackStackEntry<ReportsDestination>() }
             ReportCategoriesRoute(
@@ -221,7 +220,7 @@ fun CoShellNavHost(
                 onCategory = { navController.navigate(it) { launchSingleTop = true } },
             )
         }
-        composable<MonthReviewDestination> { entry ->
+        screen<MonthReviewDestination> { entry ->
             val route = entry.toRoute<MonthReviewDestination>()
             MonthReviewRoute(
                 onBack = { navController.popBackStack() },
@@ -230,7 +229,7 @@ fun CoShellNavHost(
                 onAllLimits = { navController.navigate(MonthReviewLimitsDestination) { launchSingleTop = true } },
             )
         }
-        composable<MonthReviewLimitsDestination> { entry ->
+        screen<MonthReviewLimitsDestination> { entry ->
             // The review's entry sits under this one: the limits are of its month, from its data.
             val review = remember(entry) { navController.getBackStackEntry<MonthReviewDestination>() }
             val route = review.toRoute<MonthReviewDestination>()
@@ -240,7 +239,7 @@ fun CoShellNavHost(
                 onLimit = { id -> navController.navigate(BudgetDetailDestination(id, route.year, route.month)) { launchSingleTop = true } },
             )
         }
-        composable<ReportCategoryDestination> {
+        screen<ReportCategoryDestination> {
             ReportCategoryRoute(
                 onBack = { navController.popBackStack() },
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
@@ -249,7 +248,7 @@ fun CoShellNavHost(
         dialog<AccountEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }
         }
-        composable<MoreDestination> {
+        screen<MoreDestination> {
             MoreRoute(
                 navController = navController,
                 availableVersion = updateAvailable?.versionName,
@@ -259,10 +258,10 @@ fun CoShellNavHost(
                 },
             )
         }
-        composable<AppearanceDestination> {
+        screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
         }
-        composable<WipeDataDestination> {
+        screen<WipeDataDestination> {
             WipeDataRoute(
                 onBack = { navController.popBackStack() },
                 onImport = {
@@ -270,44 +269,44 @@ fun CoShellNavHost(
                 },
             )
         }
-        composable<UpdateDestination> {
+        screen<UpdateDestination> {
             UpdateRoute(
                 onBack = { navController.popBackStack() },
                 onPastReleases = { navController.navigate(PastReleasesDestination) { launchSingleTop = true } },
             )
         }
-        composable<PastReleasesDestination> {
+        screen<PastReleasesDestination> {
             PastReleasesRoute(onBack = { navController.popBackStack() })
         }
-        composable<FeedbackDestination> { entry ->
+        screen<FeedbackDestination> { entry ->
             FeedbackRoute(
                 onBack = { navController.popBackStack() },
                 onOpen = { navController.navigate(FeedbackDetailDestination(it)) { launchSingleTop = true } },
                 prefill = entry.toRoute<FeedbackDestination>().prefill,
             )
         }
-        composable<FeedbackDetailDestination> { entry ->
+        screen<FeedbackDetailDestination> { entry ->
             FeedbackDetailRoute(entry.toRoute<FeedbackDetailDestination>().sentAtMillis, onBack = { navController.popBackStack() })
         }
-        composable<RatesDestination> {
+        screen<RatesDestination> {
             RatesRoute(onBack = { navController.popBackStack() })
         }
-        composable<ReportCurrenciesDestination> {
+        screen<ReportCurrenciesDestination> {
             ReportCurrenciesRoute(onBack = { navController.popBackStack() })
         }
-        composable<FamilyDestination> {
+        screen<FamilyDestination> {
             FamilyRoute(onBack = { navController.popBackStack() })
         }
-        composable<BackupDestination> {
+        screen<BackupDestination> {
             BackupRoute(
                 onBack = { navController.popBackStack() },
                 onWipeData = { navController.navigate(WipeDataDestination) },
             )
         }
-        composable<WalletImportDestination> {
+        screen<WalletImportDestination> {
             WalletImportRoute(onBack = { navController.popBackStack() })
         }
-        composable<CategoriesDestination> {
+        screen<CategoriesDestination> {
             CategoriesRoute(
                 onBack = { navController.popBackStack() },
                 onOpen = { navController.navigate(it) },

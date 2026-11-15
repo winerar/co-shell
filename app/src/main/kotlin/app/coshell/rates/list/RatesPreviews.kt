@@ -32,6 +32,13 @@ internal val ratesPreviewSample = RatesUiState(
     converter = ConverterUi(amountText = "100", from = "USD", options = listOf("USD", "AMD", "ARS", "RUB")),
 )
 
+/** 16 currencies — enough to scroll the screen under its header (#394 Б: the hairline). */
+internal val ratesLongSample = ratesPreviewSample.copy(
+    current = listOf("AMD", "ARS", "RUB", "USDT", "EUR", "GEL", "TRY", "BRL", "CLP", "UYU", "KZT", "GBP", "CNY", "AED", "ILS", "PLN").mapIndexed { i, code ->
+        CurrentRateItem(code, "${100 + i * 37},5", nov9, isManual = false, viaPivot = false, converted = "${(100 + i * 37) * 100}")
+    },
+)
+
 @Preview(showBackground = true, heightDp = 900)
 @Composable
 private fun RatesPreview() {

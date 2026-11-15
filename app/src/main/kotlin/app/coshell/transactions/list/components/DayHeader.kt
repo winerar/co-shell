@@ -28,16 +28,12 @@ import java.util.Locale
 import kotlinx.datetime.toJavaLocalDate
 
 /**
- * Sticky day title in accent capitals: "СЕГОДНЯ", "ВЧЕРА" or a short date, with the day's net on the right.
+ * Day title in accent capitals: "СЕГОДНЯ", "ВЧЕРА" or a short date, with the day's net on the right.
  * [background] — the list's surface; inside a card that draws its own fill — transparent.
  */
 @Composable
 internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.surface) {
-    val text = when (day.relative) {
-        RelativeDay.TODAY -> stringResource(R.string.transaction_date_today)
-        RelativeDay.YESTERDAY -> stringResource(R.string.transaction_date_yesterday)
-        RelativeDay.OTHER -> dayTitle(day.date.toJavaLocalDate(), LocalDate.now().year, LocalConfiguration.current.locales[0])
-    }
+    val text = dayLabel(day)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,6 +56,14 @@ internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.s
             )
         }
     }
+}
+
+/** «Сегодня», «Вчера» or «10 ноября, пн» — the day's name in [DayHeader] and in the tab header's second line. */
+@Composable
+internal fun dayLabel(day: Day): String = when (day.relative) {
+    RelativeDay.TODAY -> stringResource(R.string.transaction_date_today)
+    RelativeDay.YESTERDAY -> stringResource(R.string.transaction_date_yesterday)
+    RelativeDay.OTHER -> dayTitle(day.date.toJavaLocalDate(), LocalDate.now().year, LocalConfiguration.current.locales[0])
 }
 
 /** "10 ноября, пн"; the year is added only when it is not [currentYear]. */

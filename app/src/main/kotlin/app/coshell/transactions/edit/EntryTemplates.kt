@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.domain.recurring.MarkPaymentsHandledUseCase
 import app.coshell.core.domain.templates.SaveAsTemplateUseCase
 import app.coshell.core.domain.templates.SaveTemplateUseCase
 import app.coshell.core.domain.templates.TemplateGap
@@ -15,6 +16,7 @@ import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import javax.inject.Inject
 import kotlin.time.Instant
+import kotlinx.datetime.LocalDate
 
 /**
  * Templates for the entry sheet (#104): a template → draft against the accounts and categories the
@@ -25,6 +27,8 @@ class EntryTemplates @Inject constructor(
     private val usage: TemplateUsage,
     private val saveAs: SaveAsTemplateUseCase,
 ) {
+    private val markHandled = MarkPaymentsHandledUseCase(templates)
+
     /** The draft and the template's name; `null` — the template is gone (deleted on the other phone). */
     suspend fun draft(
         templateId: String,
@@ -45,6 +49,11 @@ class EntryTemplates @Inject constructor(
 
     /** An operation was saved from the template: it moves up in «Часто». */
     suspend fun used(templateId: String) = usage.record(templateId)
+
+    /** «Провести» saved the payment of [day] (#143): it and every older one leave «Скоро». */
+    suspend fun paid(templateId: String, day: LocalDate) {
+        markHandled(templateId, day)
+    }
 
     /** `true` — saved; `false` — the operation's account or category can no longer be used. */
     suspend fun saveAs(transaction: Transaction, name: String, rememberAmount: Boolean): Boolean =

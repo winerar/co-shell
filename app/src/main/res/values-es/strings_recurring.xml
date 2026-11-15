@@ -24,4 +24,11 @@
     <string name="recurring_next_payment">Próximo pago: %1$s.</string>
     <string name="recurring_off_hint">Sin repetición, la plantilla funciona como siempre.</string>
     <string name="recurring_missed_value">%1$s · pendiente</string>
+    <string name="recurring_soon_title">Próximos · %1$d días</string>
+    <string name="recurring_post">Registrar</string>
+    <string name="recurring_state_today">hoy</string>
+    <string name="recurring_state_missed">vencido</string>
+    <string name="recurring_state_missed_many">vencidos %1$d</string>
+    <string name="recurring_auto_short">auto</string>
+    <string name="recurring_post_a11y">Registrar «%1$s»</string>
 </resources>

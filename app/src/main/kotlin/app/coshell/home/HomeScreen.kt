@@ -36,6 +36,10 @@ import app.coshell.reports.review.MonthReviewUiState
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import app.coshell.home.upcoming.UpcomingCard
+import app.coshell.home.upcoming.UpcomingRow
+import app.coshell.home.upcoming.UpcomingViewModel
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 
 /** Everything «Обзор» can open: «Операции», the rates screen, an operation, a new account. */
@@ -56,6 +60,8 @@ data class HomeActions(
     val onBudget: (categoryId: String, month: YearMonth) -> Unit = { _, _ -> },
     /** «Итог октября» → its screen (#236). */
     val onReview: (month: YearMonth) -> Unit = {},
+    /** «Провести» in «Скоро» → the entry sheet filled from the template on the payment's day (#143). */
+    val onPostPayment: (templateId: String, date: LocalDate) -> Unit = { _, _ -> },
 )
 
 @Composable
@@ -64,10 +70,12 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     syncViewModel: SyncBannerViewModel = hiltViewModel(),
     budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
+    upcomingViewModel: UpcomingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
+    val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
         onSignIn = actions.onFamily,
@@ -83,12 +91,13 @@ fun HomeRoute(
         budget?.budget,
         review = budget?.review,
         onHideReview = budgetViewModel::hideReview,
+        upcoming = upcoming,
     )
 }
 
 /**
- * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`, `Mon236A`): hero card with the total, «Итог месяца» in the
- * first days of a month, two tiles, «Горит в бюджете»
+ * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`, `Mon236A`, `Rec143HomeA`): hero card with the total, «Итог месяца» in the
+ * first days of a month, «Скоро · 7 дней» (regular payments, #143), two tiles, «Горит в бюджете»
  * when some limit needs a look, the latest operations. Blocks come in as a short cascade the first time the tab shows (Step 4).
  */
 @Composable
@@ -100,6 +109,7 @@ fun HomeScreen(
     budget: HomeBudget? = null,
     review: MonthReviewUiState? = null,
     onHideReview: (YearMonth) -> Unit = {},
+    upcoming: List<UpcomingRow> = emptyList(),
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -129,6 +139,9 @@ fun HomeScreen(
                 item(key = "review") {
                     MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, Modifier.staggeredEntrance(1))
                 }
+            }
+            if (upcoming.isNotEmpty()) {
+                item(key = "upcoming") { UpcomingCard(upcoming, actions.onPostPayment, Modifier.staggeredEntrance(1)) }
             }
             item {
                 HomeTiles(

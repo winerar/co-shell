@@ -24,4 +24,11 @@
     <string name="recurring_next_payment">Next payment: %1$s.</string>
     <string name="recurring_off_hint">Without a repeat, the template works as usual.</string>
     <string name="recurring_missed_value">%1$s · missed</string>
+    <string name="recurring_soon_title">Coming up · %1$d days</string>
+    <string name="recurring_post">Record</string>
+    <string name="recurring_state_today">today</string>
+    <string name="recurring_state_missed">missed</string>
+    <string name="recurring_state_missed_many">missed %1$d</string>
+    <string name="recurring_auto_short">auto</string>
+    <string name="recurring_post_a11y">Record “%1$s”</string>
 </resources>

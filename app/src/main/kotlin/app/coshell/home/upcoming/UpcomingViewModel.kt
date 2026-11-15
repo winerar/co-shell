@@ -1,0 +1,49 @@
+package app.coshell.home.upcoming
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.coshell.core.domain.AccountRepository
+import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.templates.TemplateRepository
+import app.coshell.core.model.MoneyFormat
+import app.coshell.ui.offMain
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.time.Clock
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
+
+/**
+ * «Скоро · 7 дней» on «Обзоре» (#143). Apart from `HomeViewModel`: a family without regular payments
+ * only reads its templates. The day is fixed when the screen subscribes, like the rest of «Обзор».
+ */
+@HiltViewModel
+class UpcomingViewModel @Inject constructor(
+    templates: TemplateRepository,
+    accounts: AccountRepository,
+    categories: CategoryRepository,
+    moneyFormat: MoneyFormat,
+    clock: Clock,
+    timeZone: TimeZone,
+) : ViewModel() {
+
+    private val today = clock.todayIn(timeZone)
+
+    val rows: StateFlow<List<UpcomingRow>> = combine(
+        templates.observeTemplates(),
+        accounts.observeAccounts(includeArchived = true),
+        categories.observeCategories(includeArchived = true),
+    ) { list, accountList, categoryList ->
+        buildUpcomingRows(list, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, moneyFormat, today)
+    }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    private companion object {
+        const val STOP_TIMEOUT_MS = 5_000L
+    }
+}

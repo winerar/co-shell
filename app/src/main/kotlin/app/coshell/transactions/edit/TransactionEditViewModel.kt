@@ -78,6 +78,9 @@ class TransactionEditViewModel @Inject constructor(
     private var pendingTemplateId: String? = savedStateHandle[TransactionEditDestination.ARG_TEMPLATE_ID]
     /** The template the form was filled from; its usage is counted when the operation is saved. */
     private var templateId: String? = null
+    /** «Провести» from «Скоро» (#143): the payment's day; applied with the route's template, cleared with it. */
+    private var paymentDate: LocalDate? = savedStateHandle.get<String>(TransactionEditDestination.ARG_PAYMENT_DATE)
+        ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
 
     private var existing: Transaction? = null
     /** Labels of the edited or copied operation: references the form does not change keep their form. */
@@ -198,13 +201,20 @@ class TransactionEditViewModel @Inject constructor(
     /** «✕» on the template pill: back to an empty new operation. */
     fun onTemplateClear() {
         templateId = null
+        paymentDate = null
         viewModelScope.launch { load() }
     }
 
     private suspend fun applyTemplate(id: String) {
         val (draft, name) = entryTemplates.draft(id, clock.now(), accountsById, allCategories) ?: return
+        // Another template picked in the strip is an ordinary operation, not the payment.
+        if (id != templateId && templateId != null) paymentDate = null
         templateId = id
-        _state.update { it.filledFrom(draft, name, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds) }
+        val day = paymentDate
+        _state.update { form ->
+            form.filledFrom(draft, name, moneyFormat).let { if (day != null) it.copy(date = day) else it }
+                .withCategoryOptions(allCategories, recentCategoryIds)
+        }
     }
 
     /** «Сохранить как шаблон» for the saved operation (not for unsaved edits in the form). */
@@ -338,7 +348,10 @@ class TransactionEditViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
                 SaveTransactionUseCase.Result.Saved -> {
-                    templateId?.let { entryTemplates.used(it) }
+                    templateId?.let { id ->
+                        entryTemplates.used(id)
+                        paymentDate?.let { entryTemplates.paid(id, it) }
+                    }
                     _state.update { it.copy(isDone = true) }
                 }
                 is SaveTransactionUseCase.Result.Invalid -> _state.update { it.withError(result.reason) }

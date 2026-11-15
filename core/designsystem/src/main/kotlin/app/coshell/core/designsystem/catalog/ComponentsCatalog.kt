@@ -26,6 +26,9 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellCheckMark
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellDot
+import app.coshell.core.designsystem.components.CoShellStatusChip
+import app.coshell.core.designsystem.components.StatusTone
+import app.coshell.core.designsystem.components.ButtonTone
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -63,7 +66,10 @@ fun ComponentsCatalog() {
             CoShellSection("Тип", error = null) { CoShellHint("Тип подкатегорий — как у родительской") }
             CoShellMessage("Копия сохранена", isError = false)
             CoShellMessage("Нет сети", isError = true)
-            CoShellButton(onClick = {}) { Text("Сохранить") }
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                CoShellButton(onClick = {}) { Text("Сохранить") }
+                CoShellButton(onClick = {}, tone = ButtonTone.Tonal) { Text("Провести") }
+            }
             SegmentedSample()
             MembersSample()
         }
@@ -116,7 +122,7 @@ fun SegmentedSample() {
     }
 }
 
-/** #367 А: member avatars, colour dots of a legend and the divider under them. */
+/** #367 А: member avatars, colour dots of a legend, status labels and the divider. */
 @Composable
 fun MembersSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
@@ -127,6 +133,12 @@ fun MembersSample() {
             Text("пришло", style = MaterialTheme.typography.labelSmall)
             CoShellDot(LocalAmountPalette.current.expense)
             Text("ушло", style = MaterialTheme.typography.labelSmall)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+            CoShellStatusChip("сегодня", StatusTone.New)
+            CoShellStatusChip("пропущен", StatusTone.Work)
+            CoShellStatusChip("Готово", StatusTone.Done)
+            CoShellStatusChip("Отклонено", StatusTone.No)
         }
         CoShellDivider()
     }

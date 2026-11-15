@@ -24,4 +24,11 @@
     <string name="recurring_next_payment">Следующий платёж — %1$s.</string>
     <string name="recurring_off_hint">Без повтора шаблон работает как обычно.</string>
     <string name="recurring_missed_value">%1$s · пропущен</string>
+    <string name="recurring_soon_title">Скоро · %1$d дней</string>
+    <string name="recurring_post">Провести</string>
+    <string name="recurring_state_today">сегодня</string>
+    <string name="recurring_state_missed">пропущен</string>
+    <string name="recurring_state_missed_many">пропущено %1$d</string>
+    <string name="recurring_auto_short">само</string>
+    <string name="recurring_post_a11y">Провести «%1$s»</string>
 </resources>

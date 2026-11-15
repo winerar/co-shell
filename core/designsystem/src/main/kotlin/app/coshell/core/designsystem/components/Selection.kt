@@ -1,15 +1,20 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.motion.Tactile
@@ -24,10 +30,14 @@ import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.tokens.Sizes
 
 // Choice controls with the [Tactile] press and the selection "pop".
 
-/** Chip (pill) for choosing an account, category, date… Pops when it becomes selected. */
+/**
+ * Chip (pill) for choosing an account, category, date… [Sizes.chipHeight] high. Chosen — neon + 2 dp frame in ink + bold,
+ * not chosen — the filled track without a frame (board Style1, «Единый стиль»). Pops when it becomes selected.
+ */
 @Composable
 fun CoShellFilterChip(
     selected: Boolean,
@@ -39,15 +49,27 @@ fun CoShellFilterChip(
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
     val source = remember { MutableInteractionSource() }
+    val colors = MaterialTheme.colorScheme
     NoRipple {
         FilterChip(
             selected = selected,
             onClick = onClick,
-            label = label,
-            modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).selectionPop(selected).smoothResize(),
+            label = { ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)) { label() } },
+            modifier = modifier.height(Sizes.chipHeight).tactile(source, Tactile.Control, PillShape, enabled).selectionPop(selected).smoothResize(),
             enabled = enabled,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
+            shape = PillShape,
+            colors = FilterChipDefaults.filterChipColors(
+                containerColor = colors.surfaceContainerHigh,
+                labelColor = colors.onSurfaceVariant,
+                iconColor = colors.onSurfaceVariant,
+                selectedContainerColor = colors.primaryContainer,
+                selectedLabelColor = colors.onPrimaryContainer,
+                selectedLeadingIconColor = colors.onPrimaryContainer,
+                selectedTrailingIconColor = colors.onPrimaryContainer,
+            ),
+            border = if (selected) BorderStroke(Sizes.selectionRing, colors.onSurface) else null,
             interactionSource = source,
         )
     }
@@ -74,8 +96,8 @@ fun CoShellSwitch(
 }
 
 /**
- * Check box of a multi-choice sheet row (#141, board `Fb141ACats`): 22 dp rounded square — empty frame when off,
- * neon with a check when on, neon with a dash when only some of a folder are chosen. Only shows: the row toggles.
+ * Check box of a multi-choice sheet row (#141): 22 dp rounded square — outline frame when off; on — like everything
+ * chosen (board Style8): neon + 2 dp frame in ink with a check, or a dash when only some of a folder are chosen.
  */
 @Composable
 fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
@@ -86,26 +108,28 @@ fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
         Box(box.border(2.dp, colors.outline, shape))
         return
     }
-    Box(box.background(colors.primary, shape), contentAlignment = Alignment.Center) {
+    Box(box.background(colors.primaryContainer, shape).border(Sizes.selectionRing, colors.onSurface, shape), contentAlignment = Alignment.Center) {
         if (state == ToggleableState.On) {
-            Icon(painterResource(R.drawable.ic_check), contentDescription = null, tint = colors.onPrimary, modifier = Modifier.size(16.dp))
+            Icon(painterResource(R.drawable.ic_check), contentDescription = null, tint = colors.onPrimaryContainer, modifier = Modifier.size(14.dp))
         } else {
-            Box(Modifier.size(width = 10.dp, height = 2.dp).background(colors.onPrimary))
+            Box(Modifier.size(width = 10.dp, height = 2.dp).background(colors.onPrimaryContainer))
         }
     }
 }
 
 /**
- * Round mark of a single-choice row (#352, board `Fb352A`): 22 dp ring, neon ring with a dot when chosen.
+ * Round mark of a single-choice row (#352): 22 dp outline ring; chosen — neon + 2 dp ring in ink with a dot (board Style8).
  * Only shows: the row picks. Pair with [CoShellCheckMark] for many-of-a-list choices.
  */
 @Composable
 fun CoShellRadioMark(selected: Boolean, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     Box(
-        modifier.size(22.dp).selectionPop(selected).border(2.dp, if (selected) colors.primary else colors.outline, CircleShape),
+        modifier.size(22.dp).selectionPop(selected)
+            .then(if (selected) Modifier.background(colors.primaryContainer, CircleShape) else Modifier)
+            .border(Sizes.selectionRing, if (selected) colors.onSurface else colors.outline, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        if (selected) Box(Modifier.size(10.dp).background(colors.primary, CircleShape))
+        if (selected) Box(Modifier.size(8.dp).background(colors.onPrimaryContainer, CircleShape))
     }
 }

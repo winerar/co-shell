@@ -19,8 +19,8 @@
   (`fontSize`, `fontWeight`, `TextStyle`). Старый код — `app/src/test/resources/component-rule-baseline.txt`: новых нарушений
   нельзя, исправленное — убрать из файла (тест напечатает новый). Не ослаблять правило и не дописывать базу — это обход.
 
-- **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outlineVariant` → ink в фокусе,
-  радиус 12, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
+- **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outline` (≥ 3:1, Style8) → ink в фокусе,
+  радиус 16, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
   после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
@@ -31,13 +31,12 @@
   `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
   В app (`ui/form`, `ui/sheet`): `IconStrip`/`ColorStrip` (одна строка + «Все 52»/«+29»), `IconColorSheet` (все иконки и цвета,
   `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
-- **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
+- **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка outline / неон + рамка цветом текста с галкой или чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
-- **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp, выбранное — неон с точкой; один из списка (язык).
-- **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
-  `surfaceContainer`, сегменты 40 dp, одна пилюля скользит к выбранному на `Motion.spatial()` (рисуется в `drawBehind` —
-  смена выбора только перерисовка). `SegmentTone.Choice` — неон `primary` (тип операции, «Категория | Папка», тема,
-  тип категории); `View` — фиолетовая `secondaryContainer` (группировка счетов, «Расходы | Доходы» в «Категориях»).
+- **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp outline, выбранное — неон + рамка цветом текста с точкой; один из списка (язык).
+- **Сегменты** — `CoShellSegmented(labels, selected, onSelect, enabled)` (К3, #202; Style1): залитая дорожка-пилюля, сегменты 36
+  (ячейка 44), одна пилюля скользит к выбранному на `Motion.spatial()` (`drawBehind` — только перерисовка); пилюля — неон + рамка 2 dp + жирный
+  везде, и для «как показать» (фиолетовый `SegmentTone.View` убран опросом «Единый стиль»).
   Material `SegmentedButton` не используем. Дорожку можно тянуть пальцем (вправо — следующий, края не отдаёт).
 - **Свайп сегментов** (#173, схема А): `val swipe = rememberSegmentSwipe()` → содержимому `Modifier.segmentSwipe(swipe,
   selected, count, onSelect)`, сегментам `swipe = swipe` — пилюля едет за пальцем, содержимое наклоняется (как 19В).
@@ -76,7 +75,7 @@
   (категории и папки — одной, вид выбирается в редакторе).
   Карточка состояния служебного экрана (курсы, автокопия) — `app/.../ui/hero/StatusCard`. **Все карточки-герои —
   на градиенте темы** (`CoShellCard(accent = true)`, владелец 2026-11-12, #277; на досках — `hero_card`); `tint` — для блоков-сообщений. `CoShellOutlinedButton(color = …)` — контур и текст цвета
-  (фиолетовая «Синхронизировать сейчас» высотой `Sizes.wideButton`). **Пустой слот «добавить»** — `Modifier.dashedBorder(color, radius)`
+  (фиолетовая «Синхронизировать сейчас» высотой `Sizes.button`). **Пустой слот «добавить»** — `Modifier.dashedBorder(color, radius)`
   (пунктир: «+ Новый шаблон», «Пригласить», «+ Добавить курс»).
 - **Пузырь-подсказка у удержанного элемента** — `CoShellPeekBubble(lines, footnote)` (попап над элементом, справа, не берёт касаний;
   `PeekCard` — то же без попапа для превью) + жест `Modifier.holdToPeek(enabled, onTap, onPeek, onRelease)` (#318: держишь — виден, отпустил — исчез).

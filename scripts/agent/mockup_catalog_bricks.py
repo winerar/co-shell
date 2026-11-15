@@ -5,7 +5,6 @@ Names after «→» on the boards are the Compose names (ApprovedComponentsTest 
 """
 from mockup_parts import *  # noqa: F401,F403
 
-OUTLINE = MUTED2  # colorScheme.outline — frames that must read ≥ 3:1 (#385)
 
 
 def flexrow(*items, gap=8, wrap=True, align='center'):
@@ -51,7 +50,7 @@ def menu_v2(items):
         trail = svg('check', LIME, 18, 2.2) if st == 'on' else ''
         out.append('<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 14px;%s">%s<span style="flex-grow: 1; font-size: 15px; color: %s;">%s</span>%s</div>'
                    % (op, svg(icon, PINK if st == 'danger' else MUTED, 20), color, text, trail))
-    return ('<div style="width: 232px; padding: 6px 0; border-radius: 16px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">%s</div>'
+    return ('<div style="width: 232px; padding: 6px 0; border-radius: 24px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">%s</div>'
             % (KEY, LINE2, ''.join(out)))
 
 
@@ -89,14 +88,15 @@ def dot(color=LIME, size=8):
 
 
 def status_chip(text, kind):
-    col, bg = {'new': (CYAN, '#062224'), 'work': (WARN, WARNBG), 'done': (OK, '#0B1A10'), 'no': (MUTED, CHIP)}[kind]
-    return ('<span style="height: 24px; padding: 0 10px 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 12px; font-weight: 600; '
-            'display: inline-flex; align-items: center; gap: 6px;">%s%s</span>' % (bg, col, dot(col, 6), text))
+    """A status label (Style2): 22 capsule tinted 18 %, the colour only in the dot, the words in ink."""
+    col = {'new': CYAN, 'work': WARN, 'done': OK, 'no': MUTED}[kind]
+    return ('<span style="height: 22px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; '
+            'display: inline-flex; align-items: center; gap: 5px;">%s%s</span>' % (mix(col, 18), INK, dot(col, 6), text))
 
 
 # ---- Полоски выбора иконки и цвета, превью карточки счёта ----
 def icon_strip(icons, sel):
-    return flexrow(*['<span style="width: 40px; height: 40px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+    return flexrow(*['<span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; display: flex; align-items: center; justify-content: center; %s">%s</span>'
                      % ('background: %s; box-shadow: inset 0 0 0 2px %s;' % (LIMEBG, LIME) if i == sel else 'background: %s;' % CHIP, svg(i, LIME if i == sel else INK2, 20))
                      for i in icons], gap=6, wrap=False)
 

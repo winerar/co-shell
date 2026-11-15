@@ -27,7 +27,7 @@ def nav_tabs(active, tabs=(('home', 'home', 'Обзор'), ('ops', 'list', 'Оп
             inner = ('<span style="width: 64px; height: 44px; border-radius: 999px; background: %s; display: flex; align-items: center; '
                      'justify-content: center;">%s</span>' % (LIME, inner))
         return '<a href="#" aria-label="%s" style="display: flex; justify-content: center; align-items: center; height: 64px;">%s</a>' % (lbl, inner)
-    plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 52px; height: 52px; '
+    plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; '
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     cells = [tab(*t) for t in tabs]
     return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; '

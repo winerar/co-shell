@@ -140,7 +140,7 @@ def acc_card(v, name, ini, color, ink, kind, bal, cur):
                 '<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 600;"><span style="min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">%s</span>'
                 '<span>%s</span></div><div style="margin-top: auto; font-size: 12px; opacity: 0.8;">%s</div><div style="%s font-size: %dpx; font-weight: 700; white-space: nowrap;">%s '
                 '<span style="font-size: 12px;">%s</span></div></div>' % (color, ink, name, ini, kind, MONO, big, bal, cur))
-    return ('<div style="width: 100%%; height: 120px; box-sizing: border-box; padding: 14px; border-radius: 16px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; '
+    return ('<div style="width: 100%%; height: 120px; box-sizing: border-box; padding: 14px; border-radius: 24px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; '
             'border-left: 6px solid %s;"><div style="display: flex; align-items: center; gap: 10px;">%s<span style="min-width: 0; display: flex; flex-direction: column;">'
             '<span style="font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span><span style="font-size: 12px; color: %s;">%s</span></span></div>'
             '<div style="margin-top: auto; %s font-size: %dpx; font-weight: 700; white-space: nowrap;">%s <span style="font-size: 12px; color: %s;">%s</span></div></div>'

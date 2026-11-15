@@ -104,7 +104,7 @@ def sync_banner(i):
     btn = ('<span style="height: 36px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; %s">%s</span>')
     acts = ('<div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">%s%s</div>'
             % (go('r', nxt, btn % ('border: 1px solid %s; color: %s;' % (WARNLINE, INK), 'Другая причина →')), go('r', 'ok', btn % ('background: %s; color: %s;' % (WARN, '#2A1E08'), action))))
-    return ('<div style="padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s;"><div style="display: flex; align-items: center; gap: 8px; '
+    return ('<div style="padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="display: flex; align-items: center; gap: 8px; '
             'font-size: 14px; font-weight: 600; color: %s;">%s%s</div><div style="margin-top: 4px; font-size: 13px; line-height: 1.4;">%s</div>'
             '<div style="margin-top: 4px; font-size: 12px; color: %s;">Последняя синхронизация: сегодня 09:12</div>%s</div>'
             % (WARNBG, WARNLINE, WARN, svg('cloud', WARN, 18), title, text, MUTED, acts))

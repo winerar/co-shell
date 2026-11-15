@@ -10,7 +10,7 @@ Only «Вольт · тёмная» constants (mockup_theme repaints them).
 from mockup_catalog_parts import *  # noqa: F401,F403
 
 RULES = {
-    'A': dict(name='Капсула', ctl=999, card=24, tile=20, icon='50%', small=999, h=44),
+    'A': dict(name='Капсула', ctl=999, card=24, tile=24, icon='50%', small=999, h=44),
     'B': dict(name='Плитка', ctl=12, card=16, tile=12, icon='10px', small=8, h=44),
 }
 
@@ -43,7 +43,7 @@ def ink_on_sel(v):
 
 def holder(v, icon, color, size=36, tint=True):
     """Icon holder: circle (А) or rounded square (Б); tinted with the colour or filled by it."""
-    bg = mix(color, 20) if tint else color
+    bg = mix(color, 18) if tint else color
     return ('<span style="width: %dpx; height: %dpx; flex: none; border-radius: %s; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
             % (size, size, r(v, 'icon'), bg, svg(icon, color if tint else ONLIME, size // 2 + 1, 1.9)))
 

@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
- * Search pill of every list (К2, review 2026-11-10): 48 dp capsule on `surfaceContainer`, a magnifier on the
+ * Search pill of every list (К2; board Style8): 48 dp capsule on `surfaceContainer` with the fields' 1 dp outline frame, a magnifier on the
  * left, [placeholder] inside (no label on the outline), «✕» on the right once something is typed — it clears
  * the query ([clearLabel] — its spoken description). «Search» on the keyboard just hides it: the list
  * filters as you type. Texts come as parameters — no app strings here.
@@ -66,6 +67,7 @@ fun CoShellSearchField(
                     Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surfaceContainer, CircleShape)
+                        .border(Sizes.hairline, MaterialTheme.colorScheme.outline, CircleShape)
                         .padding(start = Spacing.l, end = if (value.isEmpty()) Spacing.l else Spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Spacing.m),

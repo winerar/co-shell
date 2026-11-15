@@ -13,11 +13,11 @@ from mockup_catalog import section
 from mockup_bricks import board
 
 W = 1280
-HEIGHTS = {'CompNew': 1820, 'CompChoice': 1330, 'CompRows': 1540, 'CompData': 1480}  # content height + ~20, measured in Chromium
+HEIGHTS = {'CompNew': 1812, 'CompChoice': 1300, 'CompRows': 1530, 'CompData': 1480}  # content height + ~20, measured in Chromium
 
 LEGEND = ('<div style="margin-bottom: 20px; padding: 14px 16px; border-radius: 20px; background: %s; border: 1px solid %s; font-size: 13px; line-height: 1.55;">'
           '<b>Капсула</b> — пилюли и круги; выбранное — неон + рамка цветом текста + жирный; невыбранное — на залитой дорожке; '
-          'пустые рамки и поля — outline; подписи тегов — цветом текста; строки — одной карточкой; радиус карточки 24, плитки 20.</div>' % (CARD, LINE))
+          'пустые рамки и поля — outline; подписи тегов — цветом текста; строки — одной карточкой; радиусы 28 · 24 · 16 · капсула; все кнопки 48; правила семей — доски «Единый стиль».</div>' % (CARD, LINE))
 
 
 def wide(title, intro, items):

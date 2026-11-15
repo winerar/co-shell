@@ -52,7 +52,7 @@ def confirm(v, title, text, ok, cancel, danger=False):
                 '<span style="font-size: 18px; font-weight: 700;">%s</span><span style="font-size: 13px; line-height: 1.4; color: %s;">%s</span>%s</div>' % (KEY, ic, title, INK2, text, btns))
     head = flexrow(holder(v, 'trash' if danger else 'info', icon_c, 32), '<span style="font-size: 18px; font-weight: 700;">%s</span>' % title, gap=10, wrap=False)
     btns = '<div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;">%s%s</div>' % (btn(v, cancel, 'outline'), btn(v, ok, 'danger' if danger else 'primary'))
-    return ('<div style="padding: 18px; border-radius: 16px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; gap: 10px;">%s'
+    return ('<div style="padding: 18px; border-radius: 24px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; gap: 10px;">%s'
             '<span style="font-size: 13px; line-height: 1.4; color: %s;">%s</span>%s</div>' % (KEY, OUTLINE, head, INK2, text, btns))
 
 
@@ -72,7 +72,7 @@ def sheet(v, title, body, action=None, action_on=True):
     top = ('<div style="display: flex; align-items: center; gap: 8px; padding: 12px 12px 12px 16px; border-bottom: 1px solid %s;"><span style="flex-grow: 1; font-size: 18px; '
            'font-weight: 700;">%s</span><span style="width: 32px; height: 32px; border-radius: 8px; box-shadow: inset 0 0 0 1px %s; display: flex; align-items: center; '
            'justify-content: center;">%s</span></div>' % (LINE2, title, OUTLINE, svg('close', INK2, 18)))
-    return '<div style="border-radius: 16px 16px 0 0; background: %s; overflow: hidden; border: 1px solid %s; border-bottom: none;">%s<div style="padding: 12px 16px 0;">%s</div>%s</div>' % (
+    return '<div style="border-radius: 28px 28px 0 0; background: %s; overflow: hidden; border: 1px solid %s; border-bottom: none;">%s<div style="padding: 12px 16px 0;">%s</div>%s</div>' % (
         SHEET, LINE, top, body, act)
 
 

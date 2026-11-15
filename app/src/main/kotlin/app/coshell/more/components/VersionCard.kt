@@ -1,13 +1,10 @@
 package app.coshell.more.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,8 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.tokens.Radii
-import androidx.compose.foundation.shape.RoundedCornerShape
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.MenuIcon
@@ -52,17 +47,7 @@ internal fun VersionCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (available) {
-                Box(
-                    Modifier.size(Sizes.badge).background(accent, RoundedCornerShape(Radii.medium)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        painterResource(DesignR.drawable.ic_download),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(Sizes.buttonIcon),
-                    )
-                }
+                MenuIcon(DesignR.drawable.ic_download, accent)
             } else {
                 MenuIcon(DesignR.drawable.ic_deployed_code_update, categoryColor(CategoryPalette.colors[VERSION_COLOR]))
             }

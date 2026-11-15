@@ -28,17 +28,12 @@ app/coshell/home/components/HotBudgets.kt	material3 HorizontalDivider	1
 app/coshell/home/components/MonthReviewCard.kt	type fontSize	1
 app/coshell/home/components/SyncBanner.kt	material3 ButtonDefaults	1
 app/coshell/home/components/SyncBanner.kt	type fontWeight	1
-app/coshell/more/components/MoreTile.kt	draw background	1
-app/coshell/more/components/VersionCard.kt	draw RoundedCornerShape	1
-app/coshell/more/components/VersionCard.kt	draw background	1
 app/coshell/rates/list/components/CurrentRateRow.kt	draw RoundedCornerShape	1
 app/coshell/rates/list/components/CurrentRateRow.kt	draw background	1
 app/coshell/rates/list/components/CurrentRateRow.kt	type fontSize	2
 app/coshell/rates/list/components/CurrentRateRow.kt	type fontWeight	2
 app/coshell/rates/list/components/ManualRateRow.kt	draw RoundedCornerShape	1
 app/coshell/rates/list/components/ManualRateRow.kt	draw background	1
-app/coshell/rates/list/components/RefreshBlock.kt	draw CircleShape	1
-app/coshell/rates/list/components/RefreshBlock.kt	draw border	1
 app/coshell/reports/category/ReportCategoryScreen.kt	material3 HorizontalDivider	1
 app/coshell/reports/components/ReportPeriodSheet.kt	material3 FilterChipDefaults	1
 app/coshell/reports/review/MonthLimitsScreen.kt	material3 HorizontalDivider	1

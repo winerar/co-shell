@@ -42,7 +42,6 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.SectionTone
-import app.coshell.core.designsystem.components.SegmentTone
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -113,7 +112,7 @@ fun CheckMarkSample() {
 fun SegmentedSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellSegmented(listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {})
-        CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {}, tone = SegmentTone.View)
+        CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {})
     }
 }
 

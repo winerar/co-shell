@@ -71,7 +71,7 @@ def amount_block(compact=False):
 
 def detail(icon, lbl, value, on=True):
     vcol = INK if on else MUTED2
-    return ('<span style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 12px; background: %s; min-width: 0;">%s'
+    return ('<span style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 999px; background: %s; min-width: 0;">%s'
             '<span style="display: flex; flex-direction: column; min-width: 0;"><span style="font-size: 10px; color: %s;">%s</span>'
             '<span style="font-size: 13px; color: %s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span></span></span>'
             % (BAR, svg(icon, MUTED, 16), MUTED, lbl, vcol, value))
@@ -82,7 +82,7 @@ def refund_check(on=False):
     box = (('<span style="width: 20px; height: 20px; border-radius: 6px; background: %s; display: flex; align-items: center; justify-content: center; flex: none;">%s</span>'
             % (LIME, svg('check', ONLIME, 14, 2.6))) if on else
            '<span style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid %s; box-sizing: border-box; flex: none;"></span>' % LINE2)
-    return ('<span style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 12px; background: %s;">%s'
+    return ('<span style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 999px; background: %s;">%s'
             '<span style="display: flex; flex-direction: column;"><span style="font-size: 13px;">Это возврат</span>'
             '<span style="font-size: 10px; color: %s;">вернули на счёт</span></span></span>' % (BAR, box, MUTED))
 
@@ -179,7 +179,7 @@ def acc_form_a():
 
 
 def icons_sheet():
-    cells = ''.join('<span style="height: 44px; border-radius: 12px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
+    cells = ''.join('<span style="height: 44px; border-radius: 999px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
                     % (WARN if i == 'school' else BAR, svg(i, '#0B0F0A' if i == 'school' else INK2, 22)) for i in ICONS48)
     dots = ''.join('<span style="width: 30px; height: 30px; border-radius: 50%%; background: %s; justify-self: center; %s"></span>'
                    % (c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (SHEET, INK) if c == '#E07A4F' else '') for c in COLORS20)

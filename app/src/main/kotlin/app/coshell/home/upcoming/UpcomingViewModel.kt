@@ -13,6 +13,7 @@ import kotlin.time.Clock
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -42,6 +43,12 @@ class UpcomingViewModel @Inject constructor(
     }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Templates with «Повтор» in all — «Все 24 ›» to «Регулярные платежи» (#403). */
+    val total: StateFlow<Int> = templates.observeTemplates()
+        .map { list -> list.count { it.schedule != null } }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), 0)
 
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Регулярные платежи» (#143, board Rec143List). -->
+<resources>
+    <string name="recurring_list_title">Регулярные платежи</string>
+    <string name="recurring_list_search">Найти платёж · %1$d</string>
+    <string name="recurring_list_new">Новый платёж</string>
+    <string name="recurring_filter_auto">Само · %1$d</string>
+    <plurals name="recurring_ahead_title">
+        <item quantity="one">До конца %1$s · %2$d платёж</item>
+        <item quantity="few">До конца %1$s · %2$d платежа</item>
+        <item quantity="many">До конца %1$s · %2$d платежей</item>
+        <item quantity="other">До конца %1$s · %2$d платежа</item>
+    </plurals>
+    <string name="recurring_ahead_none">До конца %1$s платежей больше нет</string>
+    <string name="recurring_ahead_without">ещё %1$d — сумма при вводе</string>
+    <string name="recurring_ahead_missing">Без учёта: %1$s — нет курса</string>
+    <string name="recurring_list_empty">Регулярных платежей пока нет. Отметьте «Повтор» в любом шаблоне — аренда, подписки, зарплата.</string>
+</resources>

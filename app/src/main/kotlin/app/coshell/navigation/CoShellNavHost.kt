@@ -44,6 +44,7 @@ import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.rates.list.RatesRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
+import app.coshell.recurring.list.RecurringListRoute
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -124,6 +125,7 @@ fun CoShellNavHost(
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
+                    onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                 ),
             )
         }
@@ -155,6 +157,13 @@ fun CoShellNavHost(
             TemplatesRoute(
                 onBack = { navController.popBackStack() },
                 onUse = { navController.navigate(TransactionEditDestination(templateId = it)) { launchSingleTop = true } },
+                onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
+                onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+            )
+        }
+        screen<RecurringListDestination> {
+            RecurringListRoute(
+                onBack = { navController.popBackStack() },
                 onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
                 onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
             )

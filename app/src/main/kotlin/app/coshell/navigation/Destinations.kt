@@ -159,6 +159,10 @@ data class TransactionEditDestination(
     }
 }
 
+/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment. */
+@Serializable
+data object RecurringListDestination
+
 /** «Все шаблоны»: search, «Часто», groups by type and category (#104). */
 @Serializable
 data object TemplatesDestination

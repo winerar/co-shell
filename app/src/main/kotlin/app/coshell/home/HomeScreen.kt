@@ -62,6 +62,8 @@ data class HomeActions(
     val onReview: (month: YearMonth) -> Unit = {},
     /** «Провести» in «Скоро» → the entry sheet filled from the template on the payment's day (#143). */
     val onPostPayment: (templateId: String, date: LocalDate) -> Unit = { _, _ -> },
+    /** «Все N ›» in «Скоро» → «Регулярные платежи» (#403). */
+    val onRecurring: () -> Unit = {},
 )
 
 @Composable
@@ -76,6 +78,7 @@ fun HomeRoute(
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
     val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
+    val upcomingTotal by upcomingViewModel.total.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
         onSignIn = actions.onFamily,
@@ -92,6 +95,7 @@ fun HomeRoute(
         review = budget?.review,
         onHideReview = budgetViewModel::hideReview,
         upcoming = upcoming,
+        upcomingTotal = upcomingTotal,
     )
 }
 
@@ -110,6 +114,7 @@ fun HomeScreen(
     review: MonthReviewUiState? = null,
     onHideReview: (YearMonth) -> Unit = {},
     upcoming: List<UpcomingRow> = emptyList(),
+    upcomingTotal: Int = upcoming.size,
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -141,7 +146,7 @@ fun HomeScreen(
                 }
             }
             if (upcoming.isNotEmpty()) {
-                item(key = "upcoming") { UpcomingCard(upcoming, actions.onPostPayment, Modifier.staggeredEntrance(1)) }
+                item(key = "upcoming") { UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, Modifier.staggeredEntrance(1)) }
             }
             item {
                 HomeTiles(

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recurring_list_title">Regular payments</string>
+    <string name="recurring_list_search">Find a payment · %1$d</string>
+    <string name="recurring_list_new">New payment</string>
+    <string name="recurring_filter_auto">Auto · %1$d</string>
+    <plurals name="recurring_ahead_title">
+        <item quantity="one">Until the end of %1$s · %2$d payment</item>
+        <item quantity="other">Until the end of %1$s · %2$d payments</item>
+    </plurals>
+    <string name="recurring_ahead_none">No more payments in %1$s</string>
+    <string name="recurring_ahead_without">%1$d more — amount on entry</string>
+    <string name="recurring_ahead_missing">Not counted: %1$s — no rate</string>
+    <string name="recurring_list_empty">No regular payments yet. Turn on «Repeat» in any template — rent, subscriptions, salary.</string>
+</resources>

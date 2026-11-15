@@ -56,10 +56,10 @@ class RecurringScreenshotTest {
     fun `repeat sheet light`() = shot("recurring_sheet_light") { sheet() }
 
     @Test
-    fun `home soon dark`() = shot("recurring_home_dark", dark = true) { HomeScreen(homePreviewSample, upcoming = SOON) }
+    fun `home soon dark`() = shot("recurring_home_dark", dark = true) { HomeScreen(homePreviewSample, upcoming = SOON, upcomingTotal = 24) }
 
     @Test
-    fun `home soon light`() = shot("recurring_home_light") { HomeScreen(homePreviewSample, upcoming = SOON) }
+    fun `home soon light`() = shot("recurring_home_light") { HomeScreen(homePreviewSample, upcoming = SOON, upcomingTotal = 24) }
 
     @Composable
     private fun template() = TemplateEditScreen(STATE, TemplateEditActions())

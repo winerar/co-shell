@@ -2,6 +2,17 @@
 
 Что есть и как пользоваться. Общие правила дизайн-системы — `design-system.md`, движение — `motion.md`.
 
+## Утверждённый набор (владелец 2026-11-15, #367)
+- Экраны собираются **только** из компонентов доски «Компоненты» (`scripts/agent/mockup_catalog.py` → холст `docs/design/`).
+- Нет нужного компонента или состояния (даже точки, разделителя, аватарки) → макет всех состояний в обеих темах → «ок»
+  владельца (опрос) → кирпич на доску «Компоненты» → компонент в `core:designsystem` + в `catalog/` → экран.
+- `ApprovedComponentsTest` (`core:designsystem`): каждый публичный `@Composable` — на доске; `pending` — старые, ещё
+  не утверждённые (только сокращается: утвердил и внёс на доску — убери из списка).
+- `ComponentRuleTest` (`app`): в экранах нельзя Material-виджеты (кроме `Text`, `Icon`, `MaterialTheme`, `Scaffold`, состояния
+  снекбара), рисование (`background`, `border`, `clip`, формы, `Canvas`, `Brush`, `Color(0x…)`) и свои стили текста
+  (`fontSize`, `fontWeight`, `TextStyle`). Старый код — `app/src/test/resources/component-rule-baseline.txt`: новых нарушений
+  нельзя, исправленное — убрать из файла (тест напечатает новый). Не ослаблять правило и не дописывать базу — это обход.
+
 - **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outlineVariant` → ink в фокусе,
   радиус 12, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты

@@ -71,6 +71,8 @@
         <item quantity="other">%1$d счёта</item>
     </plurals>
     <string name="search_clear">Очистить поиск</string>
+    <string name="transactions_search_open">Найти операцию</string>
+    <string name="search_close">Закрыть поиск</string>
     <string name="choice_search">Найти</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>

@@ -34,12 +34,13 @@ import app.coshell.transactions.list.components.dayLabel
 import app.coshell.ui.bar.ReplaceBottomBar
 import app.coshell.ui.list.LoadMoreEffect
 import app.coshell.ui.top.TabOrSelectionTopBar
+import app.coshell.ui.top.TabSearch
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import kotlinx.datetime.LocalDate
 
 /**
- * «Операции»: search and filter chips on top, days with their net on the right. Rows have no swipes — a
+ * «Операции»: a loupe in the header (#394 Б) and filter chips on top, days with their net on the right. Rows have no swipes — a
  * horizontal swipe flips tabs (issue #112); a long press chooses rows (mockup 19В): the header counts them,
  * the bottom bar turns into «Дублировать · Удалить · N», back or «✕» leaves the mode.
  * Older pages load while scrolling ([LoadMoreEffect]); once scrolled, the header's second line names the day at
@@ -77,6 +78,14 @@ fun TransactionsScreen(
                 selectedCount = selection.count,
                 onClearSelection = actions.onClearSelection,
                 subtitle = subtitle,
+                search = TabSearch(
+                    query = state.filter.query,
+                    onQueryChange = { q -> actions.onFilter { it.copy(query = q) } },
+                    placeholder = stringResource(R.string.transactions_search),
+                    openLabel = stringResource(R.string.transactions_search_open),
+                    clearLabel = stringResource(R.string.search_clear),
+                    closeLabel = stringResource(R.string.search_close),
+                ),
             )
         },
         modifier = Modifier.tabScroll(scroll),

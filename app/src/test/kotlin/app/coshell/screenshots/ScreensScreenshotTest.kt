@@ -50,6 +50,7 @@ import app.coshell.family.FamilyScreen
 import app.coshell.family.FamilyUiState
 import app.coshell.rates.list.RatesActions
 import app.coshell.rates.list.RatesScreen
+import app.coshell.rates.list.ratesLongSample
 import app.coshell.rates.list.ratesPreviewSample
 import app.coshell.currencies.list.ReportCurrenciesActions
 import app.coshell.currencies.list.ReportCurrenciesScreen
@@ -69,6 +70,7 @@ import app.coshell.transactions.list.transactionsLongSample
 import app.coshell.transactions.list.TransactionsScreen
 import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.transactionsPreviewSample
+import app.coshell.ui.top.ScreenScrollHost
 import com.github.takahirom.roborazzi.captureRoboImage
 import kotlinx.datetime.LocalDate
 import org.junit.Rule
@@ -260,6 +262,12 @@ class ScreensScreenshotTest {
 
     @Test
     fun `rates dark`() = shot("rates_dark", dark = true) { RatesScreen(ratesPreviewSample, RatesActions()) }
+
+    /** #394 Б: an inner screen scrolled — solid header with a hairline (the destination's ScreenScrollHost). */
+    @Test
+    fun `rates scrolled dark`() = shot("rates_scrolled_dark", dark = true, before = {
+        compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
+    }) { ScreenScrollHost { RatesScreen(ratesLongSample, RatesActions()) } }
 
     /** Board `ReportCurrencies`: the balance preview hero over the list, main currency outlined. */
     @Test

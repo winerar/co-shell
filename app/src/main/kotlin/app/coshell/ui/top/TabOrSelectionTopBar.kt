@@ -24,6 +24,7 @@ fun TabOrSelectionTopBar(
     selectedCount: Int,
     onClearSelection: () -> Unit,
     subtitle: String? = null,
+    search: TabSearch? = null,
 ) {
     // The leaving selection header keeps its last count instead of showing «Выбрано 0».
     var lastCount by remember { mutableIntStateOf(1) }
@@ -42,6 +43,6 @@ fun TabOrSelectionTopBar(
         label = "selectionHeader",
     ) { selecting ->
         if (selecting) SelectionTopBar(lastCount, onClearSelection, scroll)
-        else TabTopBar(title, scroll, subtitle)
+        else TabTopBar(title, scroll, subtitle, search)
     }
 }

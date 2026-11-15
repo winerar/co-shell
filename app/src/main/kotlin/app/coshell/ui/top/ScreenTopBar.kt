@@ -7,7 +7,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +21,9 @@ import app.coshell.core.designsystem.R as DesignR
 /**
  * Header of an inner screen (Курсы, Настройки, Семья…): «Назад» and a 22 sp bold title, as on the mockup
  * boards (review 2026-11-10, К1). Tabs use [TabTopBar].
+ *
+ * Solid like the tab headers; once the screen's content moves under it, a hairline fades in (#394 Б) — the scroll
+ * comes from [LocalScreenScroll], set for every destination by the navigation host.
  *
  * [onBack] null hides «Назад» (a finished wipe has nowhere to go back to); [backEnabled] false greys it out
  * while work must not be interrupted. [subtitle] — a second muted line (the import wizard's step).
@@ -32,7 +37,10 @@ fun ScreenTopBar(
     subtitle: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
+    val surface = MaterialTheme.colorScheme.surface
     TopAppBar(
+        modifier = Modifier.scrollHairline(LocalScreenScroll.current?.scrolled == true),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = surface, scrolledContainerColor = surface),
         title = {
             Column {
                 Text(

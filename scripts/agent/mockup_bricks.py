@@ -86,6 +86,22 @@ def tab_head(title, actions='', sub=None):
             % (BG, LINE, title, line2, actions))
 
 
+def search_head(value, placeholder='Найти: заметка, тег, сумма'):
+    """Tab header with its search open (#394 Б): the field takes the title's place, «✕» clears and closes it."""
+    text = ('<span style="font-size: 15px;">%s</span><span style="width: 2px; height: 20px; background: %s;"></span>' % (value, LIME)) if value \
+        else '<span style="font-size: 15px; color: %s;">%s</span>' % (MUTED2, placeholder)
+    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
+            '<label style="flex-grow: 1; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: %s;">%s%s</label>%s</div>'
+            % (FIELD, svg('search', MUTED, 20), text, icon_button('close', 'Закрыть поиск')))
+
+
+def inner_head(title, actions='', scrolled=False):
+    """ScreenTopBar: «Назад» + 22 px title; once the content moves under it — a hairline (#394 Б)."""
+    line = ' background: %s; border-bottom: 1px solid %s; box-sizing: border-box; position: relative; z-index: 2;' % (BG, LINE) if scrolled else ''
+    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;%s">' % line
+            + icon_button('back', 'Назад', INK) + '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
+
+
 def select_head(count):
     """SelectionTopBar: raised solid fill, «✕ Выбрано N»; slides down over the tab header, the number rolls (header poll А)."""
     return ('<div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px; background: %s;">%s'
@@ -97,10 +113,7 @@ def tab_screen(title, body, active, actions='', bar=True, sub=None):
 
 
 def inner_screen(title, body, actions=''):
-    top = ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;">'
-           + icon_button('back', 'Назад', INK) +
-           '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
-    return top + '<div style="padding: 0 16px;">%s</div>' % body
+    return inner_head(title, actions) + '<div style="padding: 0 16px;">%s</div>' % body
 
 
 def icon_button(icon, label, color=INK, border=False):

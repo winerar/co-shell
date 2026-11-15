@@ -22,6 +22,8 @@ import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
+import app.coshell.reports.ReportsRoute
+import app.coshell.reports.all.ReportCategoriesRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.core.designsystem.components.CoShellSheet
@@ -107,6 +109,7 @@ fun CoShellNavHost(
                     },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
+                    onAccounts = { navController.navigate(AccountsDestination) { launchSingleTop = true } },
                     onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
                     onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
                     onBudgets = { navController.navigate(BudgetsDestination) { launchSingleTop = true } },
@@ -180,9 +183,18 @@ fun CoShellNavHost(
         }
         composable<AccountsDestination> {
             AccountsRoute(
+                onBack = { navController.popBackStack() },
                 onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                 onAddAccount = { navController.navigate(AccountEditDestination()) },
             )
+        }
+        composable<ReportsDestination> {
+            ReportsRoute(onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } })
+        }
+        composable<ReportCategoriesDestination> { entry ->
+            // The tab's entry sits under this one: «Все категории» shows its period, currency and data.
+            val tab = remember(entry) { navController.getBackStackEntry<ReportsDestination>() }
+            ReportCategoriesRoute(viewModel = hiltViewModel(tab), onBack = { navController.popBackStack() })
         }
         dialog<AccountEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }

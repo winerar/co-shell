@@ -29,6 +29,7 @@ internal fun MoreRoute(
     val palette by themeSettings.palette.collectAsStateWithLifecycle()
     MoreScreen(
         actions = MoreActions(
+            onAccounts = { navController.navigate(AccountsDestination) },
             onCategories = { navController.navigate(CategoriesDestination) },
             onBudgets = { navController.navigate(BudgetsDestination) },
             onRates = { navController.navigate(RatesDestination) },

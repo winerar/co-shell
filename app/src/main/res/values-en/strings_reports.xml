@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_reports">Reports</string>
+    <string name="reports_title">Reports</string>
+    <string name="reports_previous">Earlier</string>
+    <string name="reports_next">Later</string>
+    <string name="reports_quarter_title">Q%1$d %2$d</string>
+    <string name="reports_spending_title">Where the money went</string>
+    <string name="reports_ghost_month">line — %1$s</string>
+    <string name="reports_ghost_other">line — previous period</string>
+    <plurals name="reports_days">
+        <item quantity="one">in %d day</item>
+        <item quantity="other">in %d days</item>
+    </plurals>
+    <string name="reports_so_far_month">last month by day %1$d it was %2$s</string>
+    <string name="reports_so_far_quarter">last quarter, same days — %1$s</string>
+    <string name="reports_so_far_year">last year, same days — %1$s</string>
+    <string name="reports_so_far_custom">previous period, same days — %1$s</string>
+    <string name="reports_whole_month">last month — %1$s</string>
+    <string name="reports_whole_quarter">last quarter — %1$s</string>
+    <string name="reports_whole_year">last year — %1$s</string>
+    <string name="reports_whole_custom">previous period — %1$s</string>
+    <string name="reports_ghost_value">previous period %1$s</string>
+    <string name="reports_other">Other · %1$s</string>
+    <string name="reports_other_more">Other · %1$s and %2$d more</string>
+    <string name="reports_all">All categories · %1$d</string>
+    <string name="reports_deleted_category">Deleted category</string>
+    <string name="reports_rate_note">In %1$s at the rate of each operation\'s day</string>
+    <string name="reports_missing">Not counted: %1$s — no rate</string>
+    <string name="reports_empty">No spending in this period. Pick another one with the arrows or in “%1$s”.</string>
+    <string name="reports_months_title">By month</string>
+    <string name="reports_months_caption">spending</string>
+    <string name="reports_period_title">Period and currency</string>
+    <string name="reports_kind_month">Month</string>
+    <string name="reports_kind_quarter">Quarter</string>
+    <string name="reports_kind_year">Year</string>
+    <string name="reports_kind_custom">Custom</string>
+    <string name="reports_pick_days">Pick days</string>
+    <string name="reports_currency_label">Report currency</string>
+    <string name="reports_compare">Compare with previous period</string>
+    <string name="reports_compare_hint">Grey line on the bars</string>
+    <string name="reports_show">Show</string>
+    <string name="reports_all_title">All categories</string>
+    <string name="reports_all_search">Find a category · %1$d</string>
+    <string name="reports_order_amount">By amount</string>
+    <string name="reports_order_growth">By growth</string>
+    <string name="reports_order_groups">Grouped</string>
+    <string name="reports_all_nothing">Nothing found</string>
+</resources>

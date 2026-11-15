@@ -63,6 +63,20 @@ fun spendingBreakdown(sums: CategorySums, categories: List<Category>, currency: 
     return SpendingBreakdown(sums.total(currency), shown, other, sums.missing)
 }
 
+/**
+ * [sums] added up by folder — the same grouping as [spendingBreakdown]: a subcategory counts in its folder. The ghost
+ * marks of «На что ушли деньги» are the previous period's folders.
+ */
+fun spendingByFolder(sums: CategorySums, categories: List<Category>, currency: CurrencyCode): Map<String, Money> {
+    val byId = categories.associateBy { it.id }
+    val totals = linkedMapOf<String, Money>()
+    for ((id, money) in sums.byCategory) {
+        val folder = byId[id]?.parentId?.takeIf { it in byId } ?: id
+        totals[folder] = (totals[folder] ?: Money.zero(currency)) + money
+    }
+    return totals
+}
+
 /** Positive amounts as slices, largest first (ties — by id, so the order is stable), with percents of their sum. */
 private fun slices(amounts: List<Pair<String, Money>>): List<SpendingSlice> {
     val positive = amounts.filter { it.second.isPositive }.sortedWith(compareByDescending<Pair<String, Money>> { it.second.amountMinor }.thenBy { it.first })

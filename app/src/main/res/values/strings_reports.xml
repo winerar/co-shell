@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Отчёты (#140): вкладка «Отчёты» (reports/), шторка «Период и валюта», «Все категории». -->
+<resources>
+    <string name="nav_reports">Отчёты</string>
+    <string name="reports_title">Отчёты</string>
+    <string name="reports_previous">Раньше</string>
+    <string name="reports_next">Позже</string>
+    <string name="reports_quarter_title">%1$d-й квартал %2$d</string>
+    <string name="reports_spending_title">На что ушли деньги</string>
+    <string name="reports_ghost_month">черта — %1$s</string>
+    <string name="reports_ghost_other">черта — прошлый период</string>
+    <plurals name="reports_days">
+        <item quantity="one">за %d день</item>
+        <item quantity="few">за %d дня</item>
+        <item quantity="many">за %d дней</item>
+        <item quantity="other">за %d дня</item>
+    </plurals>
+    <string name="reports_so_far_month">в прошлом месяце к %1$d-му было %2$s</string>
+    <string name="reports_so_far_quarter">в прошлом квартале за те же дни — %1$s</string>
+    <string name="reports_so_far_year">в прошлом году за те же дни — %1$s</string>
+    <string name="reports_so_far_custom">в прошлом периоде за те же дни — %1$s</string>
+    <string name="reports_whole_month">в прошлом месяце — %1$s</string>
+    <string name="reports_whole_quarter">в прошлом квартале — %1$s</string>
+    <string name="reports_whole_year">в прошлом году — %1$s</string>
+    <string name="reports_whole_custom">в прошлом периоде — %1$s</string>
+    <string name="reports_ghost_value">в прошлом периоде %1$s</string>
+    <string name="reports_other">Другое · %1$s</string>
+    <string name="reports_other_more">Другое · %1$s и ещё %2$d</string>
+    <string name="reports_all">Все категории · %1$d</string>
+    <string name="reports_deleted_category">Удалённая категория</string>
+    <string name="reports_rate_note">В %1$s по курсу на день операции</string>
+    <string name="reports_missing">Без учёта: %1$s — нет курса</string>
+    <string name="reports_empty">В этом периоде трат нет. Выберите другой период стрелками или в «%1$s».</string>
+    <string name="reports_months_title">По месяцам</string>
+    <string name="reports_months_caption">расходы</string>
+    <string name="reports_months_description" translatable="false">%1$s: %2$s</string>
+    <string name="reports_range" translatable="false">%1$s – %2$s</string>
+    <!-- Шторка «Период и валюта» (доска RepPeriod) -->
+    <string name="reports_period_title">Период и валюта</string>
+    <string name="reports_kind_month">Месяц</string>
+    <string name="reports_kind_quarter">Квартал</string>
+    <string name="reports_kind_year">Год</string>
+    <string name="reports_kind_custom">Свой</string>
+    <string name="reports_pick_days">Выбрать дни</string>
+    <string name="reports_currency_label">Валюта отчёта</string>
+    <string name="reports_compare">Сравнивать с прошлым периодом</string>
+    <string name="reports_compare_hint">Серая черта у полос</string>
+    <string name="reports_show">Показать</string>
+    <!-- «Все категории» (доска RepAll) -->
+    <string name="reports_all_title">Все категории</string>
+    <string name="reports_all_search">Найти категорию · %1$d</string>
+    <string name="reports_order_amount">По сумме</string>
+    <string name="reports_order_growth">По росту</string>
+    <string name="reports_order_groups">Группами</string>
+    <string name="reports_all_nothing">Ничего не нашлось</string>
+</resources>

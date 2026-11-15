@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.R
-import app.coshell.ui.sheet.ModalSheet
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellIconButton
@@ -39,11 +35,8 @@ import app.coshell.core.domain.search.PeriodRange
 import app.coshell.core.domain.search.PeriodRange.Preset
 import app.coshell.transactions.list.FilterLabels
 import app.coshell.transactions.list.ListFilter
+import app.coshell.ui.form.DateRangeSheet
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Instant
 import app.coshell.core.designsystem.R as DesignR
 
 /**
@@ -116,8 +109,9 @@ internal fun ColumnScope.PeriodChoices(filter: ListFilter, today: LocalDate, onF
     )
     CoShellHint(stringResource(R.string.filter_period_note))
     if (pickerOpen) {
-        RangePickerDialog(
-            initial = period,
+        DateRangeSheet(
+            first = period?.start,
+            last = period?.lastDay,
             onDismiss = { pickerOpen = false },
             onPicked = { first, last ->
                 pickerOpen = false
@@ -152,29 +146,5 @@ private fun Stepper(label: String, onEarlier: () -> Unit, onLater: () -> Unit) {
         CoShellIconButton(onClick = onLater) {
             Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.filter_period_later))
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RangePickerDialog(initial: PeriodRange?, onDismiss: () -> Unit, onPicked: (LocalDate, LocalDate) -> Unit) {
-    // The picker counts days in UTC milliseconds.
-    fun LocalDate.millis() = atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
-    fun Long.date() = Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.UTC).date
-    val state = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = initial?.start?.millis(),
-        initialSelectedEndDateMillis = initial?.lastDay?.millis(),
-    )
-    ModalSheet(
-        title = stringResource(R.string.date_range_pick_title),
-        actionLabel = stringResource(R.string.keypad_done),
-        onAction = { close ->
-            val start = state.selectedStartDateMillis
-            if (start == null) close() else onPicked(start.date(), (state.selectedEndDateMillis ?: start).date())
-        },
-        onClosed = onDismiss,
-    ) {
-        // A lazy month list: it needs a bounded height inside the sheet's scrolling column.
-        DateRangePicker(state = state, title = null, showModeToggle = false, modifier = Modifier.height(Sizes.rangePicker))
     }
 }

@@ -13,6 +13,14 @@ data object TransactionsDestination
 @Serializable
 data object AccountsDestination
 
+/** «Отчёты» tab (#140). */
+@Serializable
+data object ReportsDestination
+
+/** «Все категории» of the report open in the tab under it (shares its ViewModel). */
+@Serializable
+data object ReportCategoriesDestination
+
 /** Account editor; `accountId == null` creates a new account. */
 @Serializable
 data class AccountEditDestination(val accountId: String? = null) {

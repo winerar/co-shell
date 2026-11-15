@@ -47,6 +47,8 @@
     <string name="transactions_no_category">Sin categoría</string>
 
     <string name="accounts_title">Cuentas</string>
+    <string name="accounts_menu_hint">Tarjetas, efectivo, ahorros</string>
+    <string name="home_all_accounts">Todas las cuentas ›</string>
     <string name="accounts_add">Añadir cuenta</string>
     <string name="accounts_empty">Aún no hay cuentas. Pulsa «+» para añadir la primera.</string>
     <string name="accounts_archive">Archivo</string>

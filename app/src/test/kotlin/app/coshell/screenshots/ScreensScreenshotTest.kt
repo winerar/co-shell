@@ -173,10 +173,10 @@ class ScreensScreenshotTest {
     }
 
     @Test
-    fun `accounts light`() = shot("accounts_light") { AccountsScreen(accountsPreviewSample, AccountsActions()) }
+    fun `accounts light`() = shot("accounts_light") { AccountsScreen(accountsPreviewSample, AccountsActions(onBack = {})) }
 
     @Test
-    fun `accounts dark`() = shot("accounts_dark", dark = true) { AccountsScreen(accountsPreviewSample, AccountsActions()) }
+    fun `accounts dark`() = shot("accounts_dark", dark = true) { AccountsScreen(accountsPreviewSample, AccountsActions(onBack = {})) }
 
     @Test
     fun `budgets light`() = shot("budgets_light") { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }

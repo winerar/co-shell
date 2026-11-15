@@ -116,4 +116,38 @@
     <string name="review_card_limits">Лимиты: уложились %1$d из %2$d</string>
     <string name="review_card_more">Подробнее ›</string>
     <string name="review_card_hide">Скрыть до следующего месяца</string>
+    <!-- «Доходы и расходы» (#189, board Rp189IeA) -->
+    <string name="reports_income_title">Доходы и расходы</string>
+    <string name="reports_income_caption">тап — месяц</string>
+    <string name="reports_income_in">пришло</string>
+    <string name="reports_income_out">ушло</string>
+    <string name="reports_income_left">остаток</string>
+    <string name="reports_income_month_in">%1$s · пришло</string>
+    <string name="reports_income_so_far">пока</string>
+    <string name="reports_income_rate">Отложили %1$d%% дохода</string>
+    <string name="reports_income_average">в среднем за %1$d мес. — %2$d%%</string>
+    <string name="reports_income_description">%1$s: пришло %2$s, ушло %3$s</string>
+    <!-- «Кто сколько потратил» (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Кто сколько потратил</string>
+    <string name="reports_members_caption">по тому, кто внёс</string>
+    <string name="reports_members_me">Я</string>
+    <string name="reports_members_note">Траты общие — делим по тому, кто записал операцию.</string>
+    <!-- «Капитал» (#189, board Rp189NwB) -->
+    <string name="reports_capital_title">Капитал</string>
+    <string name="reports_capital_caption">все счета</string>
+    <string name="reports_capital_year">%1$s за год</string>
+    <string name="reports_capital_months">%1$s за %2$d мес.</string>
+    <string name="reports_capital_why">Почему изменился</string>
+    <string name="reports_capital_saved">отложили</string>
+    <string name="reports_capital_rates">курсы</string>
+    <string name="reports_capital_total">итого</string>
+    <string name="reports_capital_rates_note">Курсы — всё, что не доход и не трата: курсы валют, обмен, корректировки баланса.</string>
+    <string name="reports_capital_description">Капитал по месяцам: %1$s</string>
+    <!-- «Капитал · октябрь» (#373) -->
+    <string name="capital_month_title">Капитал · %1$s</string>
+    <string name="capital_month_on">Капитал на %1$s</string>
+    <string name="capital_month_tap">тап — другой месяц</string>
+    <string name="capital_month_change">%1$s за месяц</string>
+    <string name="capital_month_search">Найти счёт · %1$d</string>
+    <string name="capital_month_order_change">По изменению</string>
 </resources>

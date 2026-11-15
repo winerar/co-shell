@@ -23,6 +23,7 @@ import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
 import app.coshell.reports.ReportsRoute
+import app.coshell.reports.capital.CapitalMonthRoute
 import app.coshell.reports.all.ReportCategoriesRoute
 import app.coshell.reports.category.ReportCategoryRoute
 import app.coshell.reports.review.MonthLimitsRoute
@@ -47,6 +48,7 @@ import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
 import app.coshell.transactions.edit.TransactionEditRoute
+import app.coshell.transactions.list.PRESET_MEMBER
 import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
@@ -196,6 +198,18 @@ fun CoShellNavHost(
             ReportsRoute(
                 onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
                 onCategory = { navController.navigate(it) { launchSingleTop = true } },
+                onMember = { preset ->
+                    navController.navigateToTab(TopLevel.TRANSACTIONS)
+                    navController.getBackStackEntry<TransactionsDestination>()
+                        .savedStateHandle[PRESET_MEMBER] = preset.encode()
+                },
+                onCapital = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        composable<CapitalMonthDestination> {
+            CapitalMonthRoute(
+                onBack = { navController.popBackStack() },
+                onAccount = { navController.navigate(AccountEditDestination(it)) },
             )
         }
         composable<ReportCategoriesDestination> { entry ->

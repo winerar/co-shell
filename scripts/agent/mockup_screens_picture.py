@@ -1,4 +1,4 @@
-"""Generated boards: the whole picture in «Отчёты» (#189, research reports-set.md П2/П3) — poll variants.
+"""Generated boards: the whole picture in «Отчёты» (#189, research reports-set.md П2/П3) — chosen А · Б · А (poll 2026-11-15).
 Three new cards in the feed after «По месяцам»: income vs expenses with the leftover (savings rate), net worth over
 time (a line), spending by family member. Poll: one question per card; common boards — the long list behind a
 net-worth point (24 accounts) and edge cases.
@@ -11,9 +11,8 @@ from mockup_parts import ACCOUNTS, GROUPS, acc_row, group_head
 from mockup_screens_reports import REP_TABS, chart_card
 
 ROW = ('picture', 'Картина целиком (#189)',
-       'Опрос: доходы и расходы с остатком (А — парные столбцы, Б — столбцы остатка от нуля, В — строки-месяцы), '
-       'капитал (А — линия, Б — линия + почему изменился: отложили / курсы), по участникам (А — кто внёс, Б — чьи счета). '
-       'Карточки — в ленте «Отчётов» после «По месяцам»; тап по любому числу — операции.')
+       'Выбрано (опрос 2026-11-15, А · Б · А): доходы и расходы — парные столбцы + остаток месяца; капитал — линия + '
+       '«отложили / курсы»; по участникам — кто внёс. Карточки — в ленте «Отчётов» после «По месяцам»; тап по любому числу — операции.')
 
 # USD, June … November (November so far, the 11th). September is a minus month.
 IE = [('июн', 1650, 1180), ('июл', 1600, 1320), ('авг', 1700, 1090), ('сен', 1300, 1410), ('окт', 1620, 1350), ('ноя', 1580, 760)]
@@ -69,48 +68,6 @@ def ie_a():
     return chart_card('Доходы и расходы', 'тап — месяц', inner)
 
 
-def leftover_cols(h=70):
-    top = max(abs(i - e) for _, i, e in IE)
-    cols = ''
-    for k, (m, inc, exp) in enumerate(IE):
-        v, part = inc - exp, k == len(IE) - 1
-        bar = round(abs(v) / top * h)
-        col = OK if v >= 0 else PINK
-        style = 'background: %s;' % col if not part else 'border: 1.5px dashed %s; box-sizing: border-box;' % col
-        up = ('<span style="%s font-size: 10px; color: %s;">%s</span><span style="width: 60%%; height: %dpx; border-radius: 5px 5px 1px 1px; %s"></span>'
-              % (MONO, INK, fmt(v, True), bar, style)) if v >= 0 else ''
-        down = ('<span style="width: 60%%; height: %dpx; border-radius: 1px 1px 5px 5px; %s"></span><span style="%s font-size: 10px; color: %s;">%s</span>'
-                % (bar, style, MONO, PINK, fmt(v, True))) if v < 0 else ''
-        cols += ('<div style="display: grid; grid-template-rows: %dpx 1px 34px 16px; justify-items: center;">'
-                 '<div style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 3px; width: 100%%;">%s</div>'
-                 '<span style="width: 100%%; background: %s;"></span>'
-                 '<div style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%%;">%s</div>'
-                 '<span style="font-size: 11px; color: %s;">%s</span></div>' % (h + 16, up, LINE2, down, MUTED, m))
-    return '<div style="margin-top: 12px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));">%s</div>' % cols
-
-
-def ie_b():
-    head = ('<div style="margin-top: 4px; display: flex; align-items: baseline; gap: 8px;"><span style="%s font-size: 24px; font-weight: 700; color: %s;">+2 340 '
-            '<span style="font-size: 14px; color: %s;">USD</span></span><span style="font-size: 12px; color: %s;">отложили за 6 мес. · 25%% дохода</span></div>' % (MONO, OK, MUTED, MUTED))
-    inner = head + leftover_cols() + legend((OK, 'отложили'), (PINK, 'потратили больше, чем пришло'))
-    return chart_card('Остаток по месяцам', 'пришло − ушло', inner)
-
-
-def ie_c():
-    top = max(max(i, e) for _, i, e in IE)
-    rows = ''
-    for k, (m, inc, exp) in enumerate(reversed(IE)):
-        v = inc - exp
-        bars = ('<div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1;">'
-                '<span style="height: 6px; width: %d%%; border-radius: 3px; background: %s;"></span>'
-                '<span style="height: 6px; width: %d%%; border-radius: 3px; background: %s;"></span></div>' % (round(inc / top * 100), CYAN, round(exp / top * 100), PINK))
-        rows += ('<div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; %s"><span style="width: 30px; font-size: 13px; color: %s;">%s</span>%s'
-                 '<span style="width: 70px; text-align: right; %s font-size: 14px; font-weight: 600; color: %s;">%s%s</span></div>'
-                 % ('border-top: 1px solid %s;' % DIV if k else '', INK2, m, bars, MONO, OK if v >= 0 else PINK, fmt(v, True),
-                    '<span style="display: block; font-size: 10px; font-weight: 400; color: %s;">пока</span>' % MUTED if k == 0 else ''))
-    return chart_card('Доходы и расходы', 'остаток справа', rows + legend((CYAN, 'пришло'), (PINK, 'ушло')))
-
-
 def feed(card_html, title='Отчёты'):
     from mockup_screens_reports import columns, MONTHS
     months = chart_card('По месяцам', 'расходы', columns(MONTHS, 50), 'margin-top: 4px;')
@@ -119,14 +76,6 @@ def feed(card_html, title='Отчёты'):
 
 def board_ie_a():
     return feed(ie_a())
-
-
-def board_ie_b():
-    return feed(ie_b())
-
-
-def board_ie_c():
-    return feed(ie_c())
 
 
 # ── Q2: net worth ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -153,11 +102,6 @@ def nw_head(value='8 503', sub='+2 403 за год · +39%'):
             '<span style="font-size: 14px; color: %s;">USD</span></span><span style="font-size: 12px; color: %s;">%s</span></div>' % (MONO, value, MUTED, OK, sub))
 
 
-def nw_a():
-    inner = nw_head() + line() + stat_row([('За месяц', '+803', OK), ('За 3 мес.', '+923', OK), ('Максимум', 'сейчас', INK)])
-    return chart_card('Капитал', 'все счета', inner)
-
-
 def why_rows():
     out = ''
     for k, (m, part, saved, rates) in enumerate(reversed(NW_WHY)):
@@ -174,10 +118,6 @@ def why_rows():
 
 def nw_b():
     return chart_card('Капитал', 'все счета', nw_head() + line(h=92) + why_rows())
-
-
-def board_nw_a():
-    return feed(nw_a())
 
 
 def board_nw_b():
@@ -200,20 +140,8 @@ def who_a():
                       + note('Траты общие — делим по тому, кто записал. Тап — его операции.', mt=6))
 
 
-def who_b():
-    data = [('Общие счета', 'О', LIME, 520, 68, 'Galicia, Наличные, Binance и ещё 4'), ('Личные Ани', 'А', '#C79BFF', 150, 20, 'Ameria · Inecobank'),
-            ('Личные Миши', 'М', CYAN, 90, 12, 'Т-Банк')]
-    rows = ''.join(who_bar(n, i, c, u, p, s, 520) for n, i, c, u, p, s in data)
-    return chart_card('Чьи деньги ушли', 'по владельцу счёта', '<div style="margin-top: 4px;">%s</div>' % rows
-                      + note('Владелец — в настройках счёта («общий» или чей-то личный).', mt=6))
-
-
 def board_who_a():
     return feed(who_a())
-
-
-def board_who_b():
-    return feed(who_b())
 
 
 # ── Common ───────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -258,13 +186,9 @@ def edge_cases():
 
 
 BOARDS = [  # name, title, fn, row key
-    ('Rp189IeA', 'Доходы и расходы — А: парные столбцы + остаток месяца (рекомендую)', board_ie_a, 'picture'),
-    ('Rp189IeB', 'Доходы и расходы — Б: столбцы остатка от нуля', board_ie_b, 'picture'),
-    ('Rp189IeC', 'Доходы и расходы — В: строки-месяцы', board_ie_c, 'picture'),
-    ('Rp189NwA', 'Капитал — А: линия за год', board_nw_a, 'picture'),
-    ('Rp189NwB', 'Капитал — Б: линия + «отложили / курсы» (рекомендую)', board_nw_b, 'picture'),
-    ('Rp189WhoA', 'По участникам — А: кто внёс (рекомендую)', board_who_a, 'picture'),
-    ('Rp189WhoB', 'По участникам — Б: чьи счета', board_who_b, 'picture'),
+    ('Rp189IeA', 'Выбрано (А): доходы и расходы — парные столбцы + остаток месяца', board_ie_a, 'picture'),
+    ('Rp189NwB', 'Выбрано (Б): капитал — линия + «отложили / курсы»', board_nw_b, 'picture'),
+    ('Rp189WhoA', 'Выбрано (А): по участникам — кто внёс', board_who_a, 'picture'),
     ('Rp189NwDrill', 'Общее: тап по точке капитала — 24 счёта на конец месяца', nw_drill, 'picture'),
     ('Rp189Edge', 'Общее: месяц не закончен, минус, без курса, Wallet, TalkBack', edge_cases, 'picture'),
 ]

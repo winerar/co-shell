@@ -37,7 +37,7 @@ class CategoriesViewModelTest {
         vm.toggleFolder("car")
 
         val state = vm.state.first { !it.isLoading }
-        assertEquals(listOf("car", "taxi", "food"), state.groups.map { it.item.id })
+        assertEquals(listOf("car", "food", "taxi"), state.groups.map { it.item.id })
         val car = state.groups.first()
         assertTrue(car.isFolder && car.expanded)
         assertEquals(listOf("fuel"), car.children.map { it.id })

@@ -16,6 +16,7 @@
   `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка / неон с галкой / неон с чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
+- **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp, выбранное — неон с точкой; один из списка (язык).
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, tone, enabled)` (К3, #202): дорожка-пилюля
   `surfaceContainer`, сегменты 40 dp, одна пилюля скользит к выбранному на `Motion.spatial()` (рисуется в `drawBehind` —
   смена выбора только перерисовка). `SegmentTone.Choice` — неон `primary` (тип операции, «Категория | Папка», тема,

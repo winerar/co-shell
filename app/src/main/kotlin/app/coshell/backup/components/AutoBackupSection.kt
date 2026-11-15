@@ -15,7 +15,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * Weekly automatic copy under the hero (board Backup): the folder («тап — выбрать другую») and a switch.
+ * Weekly automatic copy under the hero (board Backup): the folder («нажмите, чтобы сменить») and a switch.
  * Turning the switch on without a folder opens the folder picker; off — stops the copies.
  */
 @Composable

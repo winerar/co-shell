@@ -36,7 +36,7 @@ android {
     androidResources {
         // Only the app's languages (language/AppLanguage.SUPPORTED): libraries' other translations are
         // dropped — a smaller APK, and nothing can show up in a language the app doesn't speak.
-        localeFilters += listOf("ru")
+        localeFilters += listOf("ru", "en", "es")
     }
 
     signingConfigs {

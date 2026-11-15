@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 /**
- * «Обновление приложения»: shows [UpdateController]'s state. Checks on open unless a download is
+ * «Обновление»: shows [UpdateController]'s state. Checks on open unless a download is
  * already running (e.g. started from the update pill), so its progress shows right away.
  */
 @HiltViewModel

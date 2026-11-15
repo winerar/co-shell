@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Categories the app creates itself; see values/strings_defaults.xml. -->
+<resources>
+    <string name="default_category_expense_food">Supermercado</string>
+    <string name="default_category_expense_restaurant">Restaurantes y cafés</string>
+    <string name="default_category_expense_home">Hogar</string>
+    <string name="default_category_expense_utilities">Suministros</string>
+    <string name="default_category_expense_transport">Transporte</string>
+    <string name="default_category_expense_taxi">Taxi</string>
+    <string name="default_category_expense_health">Salud</string>
+    <string name="default_category_expense_kids">Niños</string>
+    <string name="default_category_expense_clothes">Ropa y calzado</string>
+    <string name="default_category_expense_fun">Ocio</string>
+    <string name="default_category_expense_education">Educación</string>
+    <string name="default_category_expense_subscriptions">Teléfono y suscripciones</string>
+    <string name="default_category_expense_gift">Regalos</string>
+    <string name="default_category_expense_documents">Trámites e impuestos</string>
+    <string name="default_category_expense_other">Otros</string>
+    <string name="default_category_income_salary">Salario</string>
+    <string name="default_category_income_interest">Intereses y dividendos</string>
+    <string name="default_category_income_gift">Regalos</string>
+    <string name="default_category_income_other">Otros</string>
+    <string name="default_category_adjustment">Ajuste de saldo</string>
+</resources>

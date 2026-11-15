@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.tokens.Spacing
 
-/** Section heading (К4) with an optional muted hint at its right end: «Валюты ваших счетов · тап — задать вручную». */
+/** Section heading (К4) with an optional muted hint at its right end: «Курсы на сегодня · нажмите, чтобы изменить». */
 @Composable
 internal fun RatesSectionHeader(title: String, hint: String? = null) {
     Row(

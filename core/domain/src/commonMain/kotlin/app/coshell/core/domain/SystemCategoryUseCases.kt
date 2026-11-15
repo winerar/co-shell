@@ -8,12 +8,15 @@ import app.coshell.core.model.SystemCategories
  * deleted) one, restores an archived one keeping the user's name and look. Returns their ids by
  * direction — ready for `WalletImportDecisions.adjustmentCategories`.
  */
-class EnsureAdjustmentCategoriesUseCase(private val categories: CategoryRepository) {
+class EnsureAdjustmentCategoriesUseCase(
+    private val categories: CategoryRepository,
+    private val names: CategoryNames = CategoryNames.BuiltIn,
+) {
     suspend operator fun invoke(): Map<CategoryType, String> {
         val toSave = CategoryType.entries.mapNotNull { type ->
             val existing = categories.getCategory(SystemCategories.adjustmentId(type))
             when {
-                existing == null -> SystemCategories.adjustment(type)
+                existing == null -> SystemCategories.adjustment(type, names.name(CategoryNames.ADJUSTMENT)?.takeIf { it.isNotBlank() } ?: SystemCategories.ADJUSTMENT_NAME)
                 existing.archived || existing.type != type -> existing.copy(archived = false, type = type)
                 else -> null
             }

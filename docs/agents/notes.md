@@ -2,7 +2,8 @@
 
 Факты, которые агент выяснил сам и которые экономят время следующей сессии: замеры, грабли,
 приёмы. Не правила (они — в тематических файлах) и не история решений (ARCHITECTURE).
-Пополнять в конце сессии; устаревшее — удалять. Файл ≤ ~120 строк: разросся — вынести тему.
+Пополнять в конце сессии; устаревшее — удалять. Файл ≤ ~120 строк: разросся — вынести тему
+(уже вынесены: `notes-sync.md`, `notes-screenshots.md`).
 Формат: `- (дата) факт — что из этого следует`.
 
 ## Служебные скрипты
@@ -54,26 +55,17 @@
   пересобирается синхронно; нужен обычный `runTest` + `runCurrent()` (так в `GrowingWindowTest`).
 - (11-09) M3 красит `primary` и как заливку, и как текст (`TextButton`, фокус поля, `Tab`, «сегодня» в `DatePicker`).
   При светлом неоновом `primary` текстовые места переопределять на `accentInk()`, иначе текст исчезает на белом.
+- (11-10) Скриншот экрана для сверки с доской без эмулятора: временный тест Robolectric с
+  `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, `qualifiers = "w390dp-h844dp-xxhdpi"`, `MainShell` + экран на данных
+  доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с). Месяцы по-русски — `@Config(qualifiers = "ru")`;
+  постоянные эталоны — Roborazzi (`build-and-test.md` §«Тесты»).
 - (11-10) Release падал «Top section of docs/whats-new.md is already released»: три PR (#90, #91, #94) влили
   заметные изменения без нового раздела. Теперь `session-end.sh` предупреждает, если верхний раздел совпадает
   с `main`, а ветка меняет `app/`/`core/`.
 - (11-10) `m2-mirror.sh` с `M2_REPO` раньше перезаписывал `m2-init.gradle` путём к `~/.m2` → Gradle снова шёл в
   Maven Central и ловил 429. Теперь с `M2_REPO` init-скрипт не пишется.
-- (11-10) Скриншот экрана для сверки с доской без эмулятора: временный тест Robolectric с
-  `@GraphicsMode(GraphicsMode.Mode.NATIVE)`, `qualifiers = "w390dp-h844dp-xxhdpi"`, `MainShell` + экран на данных
-  доски, `onRoot().captureToImage().asAndroidBitmap()` → PNG в scratchpad; тест не коммитить. Работает (~20 с). Месяцы по-русски — `@Config(qualifiers = "ru")`;
-  постоянные эталоны — Roborazzi (`build-and-test.md` §«Тесты»).
 - (11-10) `MainShellSmokeTest`: плашка обновления там не выровнена и лежит слева вверху поверх «✕»/«назад» шапки —
   клик по ним не доходит; выход из режима проверять `onBackPressedDispatcher.onBackPressed()`.
-- (11-11) PR, влитый автослиянием (GITHUB_TOKEN), не закрыл задачу по `Fixes #156`, а закрытие тем же токеном не
-  запускает `tasks.yml` — доска отстала. Теперь `automerge.sh` сам закрывает задачи из `Fixes`, снимает
-  `status:*` и запускает синк доски; `session-end.sh` перечисляет задачи `status:in-progress`.
-- (11-11) Релиз (run 9) упал на «CI on dev is not green», хотя CI зелёный: автослияние и релиз одновременно
-  запустили CI на dev, `concurrency` в `ci.yml` отменил первый запуск, а релиз ждал именно его (у обоих одно
-  время создания — `gh run list --limit 1` отдаёт любой). Теперь `release.yml` выбирает запуск по состоянию:
-  зелёный → идущий → упавший → отменённый.
-- (11-11) Доска (`project_board.py`) падала: `field(name:"Тип")` на отсутствующее поле — это GraphQL-ошибка
-  NOT_FOUND, а не `null`; скрипт выходил до создания поля. Теперь NOT_FOUND своих полей не фатален (`fatal_errors`).
 - (11-11) Переход из шторки (`dialog<>`-маршрут) на обычный экран сам закрывает шторку — так «Все шаблоны» и «Новый шаблон»
   открываются из шторки «+» без ручного `popBackStack`.
 - (11-11) GitHub MCP: `issue_write create` может вернуть 504, а задача всё равно создана (без родителя — проверить
@@ -85,15 +77,11 @@
   правило пока спит; владелец выбрал ввод возвратов в шторке дохода (#207 → А), работа — #208.
 - (11-12) CI: `BUILD_NUMBER` в PR выбивал кэш всего `:app` (versionCode в BuildConfig) — теперь только на `main` (`ci.md`).
   Замер `agent.sh profile` (4 ядра, без кэша): 4:24, lint 135 с CPU, тесты 61 с — тесты не узкое место, делить не нужно.
-- (11-12) Roborazzi `captureRoboImage(path) { … }` снимает раньше, чем доходит каскад `staggeredEntrance` (на «Обзоре» не было
-  «Последних операций») — экраны снимать через `createAndroidComposeRule` + `mainClock.autoAdvance = false` + `advanceTimeBy`.
 - (11-12) Фоновая команда Bash с `cat > файл` без ввода висит вечно (ждёт stdin) — так «застрял» `agent.sh test`; не склеивать.
 - (11-12) Коммит с трейлерами через `-m "...$T"`: `T=$'\n\nCo-Authored-By: …'` — с пустой строкой, иначе трейлеры уйдут в заголовок.
 - (11-12) Прогон, запущенный `GITHUB_TOKEN` (dispatch CI из `auto-pr.yml`), **не порождает `workflow_run`** — автомерж по
   завершении CI не срабатывал (#223, #229). Починено шагом в `ci.yml`; висящий PR будит переключение draft → ready (MCP).
 - (11-12) Ветка после автомержа удаляется; следующий push её пересоздаёт и `auto-pr.yml` открывает новый draft PR.
-- (11-12) Roborazzi-витрина `components_*` обрезается высотой экрана Robolectric: новое внизу `ComponentsCatalog` в эталон не
-  попадает — новому компоненту отдельный снимок (так `row_group_*` в `CatalogScreenshotTest`).
 - (11-12) Цвета палитр на досках писать `rgb(…)`: `mockup_theme.py` перекрашивает только `#hex` (так доски #105).
 - (11-12) `agent.sh test <модуль> Feedback` — «No tests found»: фильтр Gradle — шаблон, нужен `'*Feedback*'`. Число `Tests:` в выводе — по
   модулю целиком из старых XML, свой тест проверять по файлу `build/test-results/.../TEST-*<Класс>.xml`.
@@ -103,17 +91,13 @@
 - (11-12) `combine{}.stateIn(viewModelScope)` считает в главном потоке (как и `.map{}` у Room-потока) — нужен `.offMain()` (#258).
   Release APK: `assets/dexopt/baseline.prof` из одних библиотек; шаблон `HSPLapp/coshell/**;->**(**)**` разворачивает AGP
   (`build/intermediates/r8_art_profile/release/expandReleaseArtProfileWildcards/baseline-prof.txt`, ~17 тыс. строк приложения).
-- (11-12) Редакторы (счёт, категория) без `Scaffold` — в Roborazzi без `Surface` тёмная тема снимается на белом; `ScreensScreenshotTest.shot` оборачивает в `Surface`.
 - (11-12) `agent.sh test` берёт короткие имена модулей (`domain`, `data`, `app`), не `core:domain`; фильтр — шаблон Gradle (`'*BudgetLedger*'`).
 - (11-12) Имя теста в обратных кавычках с «ёлочками» не компилируется (`InvalidPathException` на `.class` лямбды в `runTest`) — в именах тестов только ASCII-знаки и кириллица без «».
-- (11-12) `CoShellSheet` вне навигации — в `Dialog(properties = CoShellSheetDialogProperties)` (так шторки фильтров #141); тело шторки — отдельная `ColumnScope`-функция, иначе Roborazzi его не снимет.
 - (11-12) Номер версии (#268): `version_name.py` считает merge-коммиты **первой линии** HEAD — на `main` это релизы (36 до #268), на агентской ветке от `dev` — ~100 (merge PR в dev); локальный вывод не показателен. Клон в облаке мелкий: `git fetch --unshallow`.
 - (11-12) `agent.sh test app "'*X*'"` (кавычки в кавычках) тихо гоняет не те тесты — XML своего класса нет; фильтр — просто `'*X*'`.
-- (11-12) Анимации появления на `Animatable` + `LaunchedEffect` (графики `charts/`, `CoShellMiniBars`) в Roborazzi `captureRoboImage` доходят до конца — эталон снят с полными столбцами.
 - (11-13) `agent.sh ship` в фоне (дольше 2 мин) проверяет **рабочую папку**: если параллельно писать код, check ловит полуготовые файлы и коммит не делается — либо ждать, либо коммитить вместе.
 - (11-13) Опрос владельца по макетам — `agent.sh poll` (PNG через `render-mockups.js`); БД опроса читается `ArtifactData list` без `user`-capability.
 - (11-13) `SearchIndex` («Операции») кэширует текст по `id` операции — в тесте две операции с одним id дают текст первой; разные id.
-- (11-13) `stamp-status.sh` менял любое «всего N » в STATUS (так «всего 3 места» стало «930») — теперь только в строке «- Тесты:».
 - (11-13) «Без прокрутки» (#290): над шторкой ≈102 dp (статус-бар ~30 + отступ `CoShellSheet` 24 + ручка 48), клавиатура 248 dp — телефону владельца
   (393×873 dp) на карточки остаётся ≈400 dp. Проверять эталоном с `padding(top = 102.dp)` (`EntrySheetScreenshotTest`); `CoShellTextButton`/`IconButton` в подписи раздувают строку до 48 dp — там `CoShellSectionLink`; `CoShellFilterChip`/`CoShellSwitchRow` в карточке формы — тоже 48+ dp: там `CoShellChoicePill`/`CoShellSwitchLine` (так «Счёт» влез).
 - (11-13) `agent.sh test domain '*A*' '*B*'` гоняет только первый фильтр (#317) — несколько классов: весь модуль (`agent.sh test domain`, ~2 мин) и XML по классам.
@@ -122,3 +106,8 @@
 - Синхронизация и Firebase — `notes-sync.md`.
 - (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.
 - (11-14) Robolectric снимает `Popup` (второй корень `onAllNodes(isRoot())[1]`) **чёрным** — для эталона/сверки выносить содержимое попапа в отдельную функцию (так `PeekCard`). Долгое нажатие в UI-тесте: `performTouchInput { down(center) }` + `mainClock.advanceTimeBy(1000)` (`advanceEventTime` таймаут жеста не двигает).
+- (11-14) Холст: публикация отказывает, пока не сделан `Artifact read` самого холста (чтения `path` мало). Холст отставал от репо (не было `Fb290*`, `Fb318*`) — перед публикацией сравнить имена досок в живом `project/canvas.json` и в `docs/design/mockups/canvas.json`, слать новые + индекс.
+- (11-14) Опрос: у вопроса необязательное `link` `{href, text}` — ссылка под вводным текстом (живая страница, например движение #337); варианты без `img` допустимы.
+- (11-14) Итог опроса: невыбранные доски — строка из `BOARDS` + её функция в `mockup_screens_*.py`, `git rm` их `.dc.html`, `agent.sh mockups`; на холст — индекс + `null` по удалённым.
+- (11-14) Новый параметр с дефолтом в конце конструктора ломает вызовы с завершающей лямбдой (`SeedDefaultCategoriesUseCase(categories) { "id" }` уходит в `names`, если он тоже `fun interface`) — передавать лямбду позиционно в скобках.
+- (11-14) Голый `./gradlew` может не скачать артефакты (403 зеркала Maven) — всегда `agent.sh gradle …`.

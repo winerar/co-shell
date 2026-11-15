@@ -84,6 +84,7 @@ function render() {
     const sec = el('section', { id: q.id });
     sec.append(el('div', { className: 'qhead' }, [el('span', { className: 'num', textContent: q.num }), el('h2', { textContent: q.title }), el('span', { className: 'saved', id: q.id + '-saved' })]));
     sec.append(el('p', { className: 'lead', textContent: q.lead }));
+    if (q.link) sec.append(el('p', { className: 'lead' }, [el('a', { href: q.link.href, target: '_blank', rel: 'noopener', textContent: q.link.text })]));
     const opts = el('div', { className: 'opts', role: 'radiogroup', ariaLabel: q.title });
     for (const o of q.opts) {
       const input = el('input', { type: 'radio', name: q.id, value: o.v, id: q.id + '-' + o.v });

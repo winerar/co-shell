@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -91,5 +92,20 @@ fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
         } else {
             Box(Modifier.size(width = 10.dp, height = 2.dp).background(colors.onPrimary))
         }
+    }
+}
+
+/**
+ * Round mark of a single-choice row (#352, board `Fb352A`): 22 dp ring, neon ring with a dot when chosen.
+ * Only shows: the row picks. Pair with [CoShellCheckMark] for many-of-a-list choices.
+ */
+@Composable
+fun CoShellRadioMark(selected: Boolean, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
+    Box(
+        modifier.size(22.dp).selectionPop(selected).border(2.dp, if (selected) colors.primary else colors.outline, CircleShape),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (selected) Box(Modifier.size(10.dp).background(colors.primary, CircleShape))
     }
 }

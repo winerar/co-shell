@@ -70,7 +70,7 @@ internal fun ColumnScope.CategoriesChoices(filter: ListFilter, choices: FilterCh
     CoShellSearchField(
         value = query,
         onValueChange = { query = it },
-        placeholder = stringResource(R.string.filter_categories_search, choices.categoryCount),
+        placeholder = stringResource(R.string.filter_categories_search),
         clearLabel = stringResource(R.string.search_clear),
         modifier = Modifier.fillMaxWidth(),
     )

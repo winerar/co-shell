@@ -16,11 +16,15 @@ import json
 import os
 import sys
 import urllib.request
+from datetime import datetime, timedelta
 
 API = "https://api.github.com"
 FIELD = "Status"
 DONE = "Готово"
 TRIAGE = "status:triage"
+# GitHub bumps a card's updatedAt a few seconds after its issue's labels change, so «card newer than labels»
+# alone reverted the agent's own label changes (2026-11-15). A real drag by the owner is later than this.
+OWNER_MOVE_GRACE = timedelta(minutes=2)
 # label → column, in board order; «Готово» is the last column
 COLUMNS = [
     ("status:triage", "Разобрать", "RED"),
@@ -57,12 +61,22 @@ def decide(issue, item):
     want = LABEL_TO_COLUMN.get(status_label(issue["labels"]), LABEL_TO_COLUMN[TRIAGE])
     if item is None or item["status"] == want:
         return (want if item is None else None), None, False
-    moved_by_owner = item["status"] and (item["updated_at"] or "") > (issue["labels_at"] or "")
+    moved_by_owner = item["status"] and moved_after(item["updated_at"], issue["labels_at"])
     if moved_by_owner and item["status"] == DONE:
         return None, None, True
     if moved_by_owner and item["status"] in COLUMN_TO_LABEL:
         return None, COLUMN_TO_LABEL[item["status"]], False
     return want, None, False
+
+
+def moved_after(card_at, labels_at):
+    """The card changed well after the last label change (ISO-8601 UTC strings; no label change yet → True)."""
+    if not labels_at:
+        return True
+    if not card_at:
+        return False
+    parse = lambda t: datetime.fromisoformat(t.replace("Z", "+00:00"))
+    return parse(card_at) > parse(labels_at) + OWNER_MOVE_GRACE
 
 
 def type_of(labels):

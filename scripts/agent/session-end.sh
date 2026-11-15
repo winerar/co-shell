@@ -30,7 +30,7 @@ git diff --quiet origin/dev -- docs/STATUS.md && bad "docs/STATUS.md not changed
 # STATUS is read at every session start: keep it short (workflow.md «Сессии ИИ-агента»).
 long=$(python3 -c 'import sys; print(*[i for i, l in enumerate(open(sys.argv[1], encoding="utf-8"), 1) if len(l) > 501], end=" ")' docs/STATUS.md)
 [ -n "${long// /}" ] && bad "docs/STATUS.md lines over 500 chars: $long— shorten (history goes to ARCHITECTURE/ROADMAP)"
-[ "$(wc -l <docs/STATUS.md)" -gt 150 ] && warn "docs/STATUS.md is $(wc -l <docs/STATUS.md) lines (aim ≤150) — drop finished items"
+[ "$(wc -l <docs/STATUS.md)" -gt 80 ] && bad "docs/STATUS.md is $(wc -l <docs/STATUS.md) lines (limit 80) — finished work goes to its issue, not STATUS"
 git diff --quiet origin/dev -- docs/agents/notes.md && warn "docs/agents/notes.md not changed — anything learned this session?"
 
 # whats-new: the Release button stops if dev has no new top section (workflow.md «Конец сессии» п.3).

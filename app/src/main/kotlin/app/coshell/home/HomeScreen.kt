@@ -96,6 +96,8 @@ fun HomeRoute(
         onHideReview = budgetViewModel::hideReview,
         upcoming = upcoming,
         upcomingTotal = upcomingTotal,
+        onPostAll = { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
+        onSkipAll = upcomingViewModel::skipAll,
     )
 }
 
@@ -115,6 +117,8 @@ fun HomeScreen(
     onHideReview: (YearMonth) -> Unit = {},
     upcoming: List<UpcomingRow> = emptyList(),
     upcomingTotal: Int = upcoming.size,
+    onPostAll: (UpcomingRow) -> Unit = {},
+    onSkipAll: (String) -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -146,7 +150,7 @@ fun HomeScreen(
                 }
             }
             if (upcoming.isNotEmpty()) {
-                item(key = "upcoming") { UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, Modifier.staggeredEntrance(1)) }
+                item(key = "upcoming") { UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, Modifier.staggeredEntrance(1), onPostAll, onSkipAll) }
             }
             item {
                 HomeTiles(

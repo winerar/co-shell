@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Регулярные платежи — особые случаи (#406, доска Rec143Edge). -->
+<resources>
+    <string name="recurring_post_both">Провести оба</string>
+    <string name="recurring_post_all">Провести все %1$d</string>
+    <string name="recurring_skip_missed">Пропустить</string>
+    <string name="recurring_paused">Счёт «%1$s» в архиве — платёж «%2$s» на паузе. Выберите другой счёт.</string>
+    <string name="recurring_paused_gone">Счёта платежа «%1$s» больше нет — платёж на паузе. Выберите другой счёт.</string>
+</resources>

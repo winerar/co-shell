@@ -135,4 +135,18 @@ class RecurringListTest {
         assertNull(ahead.total)
         assertEquals(listOf("RUB"), ahead.missing)
     }
+
+    @Test
+    fun `paused payments are shown above the list and survive search and chips`() {
+        val paused = listOf(PausedUi("Аренда", "Аренда", "Наличные"))
+        val state = recurringList(
+            payments = scheduledPayments(templates, today),
+            items = templates.associate { it.id to it.toItem(accounts, emptyMap(), MoneyFormat.RU) },
+            ahead = null,
+            query = "нет такого",
+            filter = PaymentFilter.INCOME,
+            paused = paused,
+        )
+        assertEquals(paused, state.paused)
+    }
 }

@@ -57,6 +57,14 @@ fun paymentsToRemind(
 }.sortedBy { it.name.lowercase() }
 
 /**
+ * Which of the [reminded] templates still wait on [today] (#406): a payment posted or skipped anywhere — in the app,
+ * from the reminder's buttons or on the other phone (its `handledThrough` arrives by sync) — drops out, and its
+ * reminder goes away. Empty — nothing left to remind of.
+ */
+fun stillToRemind(reminded: Set<String>, templates: List<TransactionTemplate>, today: LocalDate): List<TransactionTemplate> =
+    templates.filter { it.id in reminded && it.schedule?.due(today).orEmpty().isNotEmpty() }.sortedBy { it.name.lowercase() }
+
+/**
  * «3 платежа сегодня · ≈ 96 USD» (#405): what the reminded payments come to in [main] at today's rates; template
  * amounts are sizes, so an income and an expense on one day add up (both are money to handle). Payments with «сумма при вводе»
  * and currencies without a rate are left out — hence «≈»; `null` — nothing to count.

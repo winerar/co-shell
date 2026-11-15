@@ -64,8 +64,12 @@ class PaymentNotices @Inject constructor(
             builder(title, templates.joinToString(", ") { it.name })
                 .addAction(0, context.getString(R.string.recurring_open), openApp())
         }
-        show(REMINDER_ID, builder.build())
+        // Redrawn by ReminderWatch when some of the payments were handled elsewhere: no second sound.
+        show(REMINDER_ID, builder.setOnlyAlertOnce(true).build())
     }
+
+    /** The reminder is still on screen (not swiped away, not answered). */
+    fun reminderShown(): Boolean = manager.activeNotifications.any { it.id == REMINDER_ID }
 
     /** The reminder was answered from its buttons, or put off with «Завтра». */
     fun cancelReminder() = manager.cancel(REMINDER_ID)

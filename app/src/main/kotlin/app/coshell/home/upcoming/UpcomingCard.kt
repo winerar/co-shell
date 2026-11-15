@@ -24,6 +24,7 @@ import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellSectionLink
 import app.coshell.core.designsystem.tokens.Spacing
@@ -38,6 +39,7 @@ import kotlinx.datetime.LocalDate
  * «Скоро · 7 дней» on «Обзоре» (#143, board `Rec143HomeA`): missed and today's payments with a label, the next
  * ones with their day, the amount next to it (on the right it left no room for the name); «Провести» opens the
  * entry sheet on the payment's day, «само» — the phone posts it itself. «Все N ›» — «Регулярные платежи» (#403).
+ * Two or more missed with an amount — «Провести оба» / «Пропустить» under the row (#406, board `Rec143Edge`).
  * Not shown when nothing is due.
  */
 @Composable
@@ -47,6 +49,8 @@ internal fun UpcomingCard(
     onPost: (templateId: String, date: LocalDate) -> Unit,
     onAll: () -> Unit,
     modifier: Modifier = Modifier,
+    onPostAll: (UpcomingRow) -> Unit = {},
+    onSkipAll: (templateId: String) -> Unit = {},
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth().padding(start = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -58,6 +62,7 @@ internal fun UpcomingCard(
                 key(row.item.id) {
                     if (index > 0) CoShellDivider()
                     UpcomingRowItem(row, onPost)
+                    if (row.bulk) MissedActions(row, { onPostAll(row) }, { onSkipAll(row.item.id) })
                 }
             }
         }
@@ -83,6 +88,7 @@ private fun UpcomingRowItem(row: UpcomingRow, onPost: (String, LocalDate) -> Uni
         leading = { TemplateBadge(row.item) },
         trailing = {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                if (row.bulk) return@Row // «Провести оба» below
                 if (row.auto) {
                     Text(stringResource(R.string.recurring_auto_short), style = MaterialTheme.typography.bodySmall)
                 } else {
@@ -97,4 +103,19 @@ private fun UpcomingRowItem(row: UpcomingRow, onPost: (String, LocalDate) -> Uni
             }
         },
     )
+}
+
+/** «Провести оба» (all missed by the template's amount) and «Пропустить» (none of them posted). */
+@Composable
+private fun MissedActions(row: UpcomingRow, onPostAll: () -> Unit, onSkipAll: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().padding(start = Spacing.l, end = Spacing.l, bottom = Spacing.m),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+    ) {
+        val label = if (row.missed == 2) stringResource(R.string.recurring_post_both) else stringResource(R.string.recurring_post_all, row.missed)
+        CoShellButton(onClick = onPostAll, modifier = Modifier.weight(1f)) { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        CoShellOutlinedButton(onClick = onSkipAll, modifier = Modifier.weight(1f)) {
+            Text(stringResource(R.string.recurring_skip_missed), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
 }

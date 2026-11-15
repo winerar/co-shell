@@ -19,7 +19,7 @@
 | Ряд | Доски (`mockups/`) | Код |
 |---|---|---|
 | Обзор | `Home`, `HomeEmpty` (первый запуск), `HomeAttention` (нет курса), `HomeSync` (ошибка синка, 17А), `UpdateWhatsNew` | `home/`, `home/sync/`, `update/notice/` |
-| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
+| Операции | `Operations` (19В: удержание → выбор, свайп вкладок), `OpsScrolled` (шапка «Живая строка» прокручена: линия, «где я»), `OpsSelect`, `OpsUndo`, `OpsEmpty`, `OpsNothing` | `transactions/list/`, `navigation/TabSwipe` |
 | Шторка ввода | `Main` (шаги 1–2), `EntryTransfer`, `EntryReceipt`, `EntryEdit` (правка, дубль, удалить), `EntryError`, `EntryNoAccounts` | `transactions/edit/`, `components/keypad/` |
 | Счета и «Ещё» | `Accounts`, `AccountsSearch`, `AccountsEmpty`, `More`, `UpdatePill`, `Update` | `accounts/list/`, `more/`, `update/` |
 | Счёт и категории | `AccountEdit`, `AccountEditExisting` (блок валюты, ошибки), `AccountDelete`, `AccountBlocked`, `Colors`, `Categories`, `CategoryEdit`, `CategoryBlocked` | `accounts/edit/`, `categories/`, `category/BankColors` |
@@ -27,14 +27,15 @@
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
 | Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports,review}.py` |
+| Регулярные платежи (#143, выбрано А + А) | `Rec143HomeA` («Скоро» на «Обзоре»), `Rec143EditA` + `Rec143RepeatA` (повтор в шаблоне), `Rec143List` (24), `Rec143Post`, `Rec143Notify`, `Rec143Edge` | данные: `core:domain/recurring/`; экраны — следующим шагом |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | `budgets/` (#167, #103); `BudHome` — `home/budget/`, `home/components/{BudgetTile,HotBudgets}` (#184) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | `reports/`, `reports/all/` (#140), `reports/category/` (`RepDrill`, #188) |
-| Картина целиком (#189, опрос) | `Rp189IeA/B/C` (доходы и расходы), `Rp189NwA/B` (капитал), `Rp189WhoA/B` (участники), `Rp189NwDrill` (24 счёта), `Rp189Edge` | — (после выбора) |
+| Картина целиком (#189, выбрано А · Б · А) | `Rp189IeA`, `Rp189NwB`, `Rp189WhoA`, `Rp189NwDrill` (24 счёта), `Rp189Edge` | `reports/components/IncomeCard`, `CapitalCard`, `MembersCard`; `NwDrill` — `reports/capital/CapitalMonthScreen` (#373) |
 | Тренд категории | `Tr238DrillA`, `Tr238MarkA` (выбраны в опросе #238, А + А), `Tr238All`, `Tr238Edge` | расчёт — `core:domain/reports/CategoryTrend`, `UsualMark` (#237); экран — `reports/category/TrendCard`, `components/UsualMarks` |
 | Итог месяца | `Mon236A` (выбран А: карточка на «Обзоре» 1–7 числа), `Mon236Screen`, `Mon236Limits`, `Mon236Edge` | `home/components/MonthReviewCard`, `reports/review/` (#236; расчёт `core:domain/reports/MonthReview`, #235); строки лимитов — `EnvelopeRow` «Бюджетов», выше, чем на доске |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 19 главных действий по шагам (с шаблонами, бюджетами, отчётами); каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
-| Компоненты | `Components`: каталог кирпичей макетов (`mockup_catalog.py`) → имена в коде | `core/designsystem/` (`components.md`) |
+| Компоненты | `Components`: каталог кирпичей макетов (`mockup_catalog.py`) → имена в коде; ниже — **утверждённый набор (#367, опрос «Компоненты v3» 2026-11-15: везде А «Капсула»)**: `CompNew`, `CompChoice`, `CompRows`, `CompData` (`mockup_catalog_*.py`); ниже — **«Единый стиль» (утверждён 2026-11-15)**: `Style1…Style8` — одно правило на семью (`mockup_catalog_style.py`, опрос https://claude.ai/artifact/WACMzZCkWq5iXAEScbwPjp) | `core/designsystem/` (`components.md`) |
 | Предложения | Сверху — **макеты по отзывам**; выбрано 2026-11-14 (опрос https://claude.ai/artifact/LZwZnK7kHRYZmDFeAzvt3S): `Fb291A` + `Fb291Neg` (клавиша «−», А), `Fb328B` (категория чаевых — окно при первом разе, Б), `Fb330A`, `Fb330AEdit` (категории деревом, А; заменяет #181), `Fb331A`, `Fb331ARules`, `Fb331Done`, `Fb332` (выписки → черновики списком, А), `Fb333A` + `Fb333All` (⚙ на экране, А), `Fb334A` (несовместимая версия: смотреть можно, ввод закрыт), `Fb335A` (пилюля «новое»), `Fb336A` (скриншоты плитками), `Fb338A`, `Fb338ACats` (режим «Порядок»; по умолчанию — алфавит) — `mockup_screens_fb_nov14{,b}.py`; движение #337 — А «Пружина+» для всех элементов, живая страница https://claude.ai/artifact/CrZQeZeF3VQz3jyn6tV4iM (копия `docs/design/motion-337.html`); ждут опроса (#317): `Fb318A`…`Fb326B` (мелкие удобства, `mockup_screens_fb_quick.py`); выбрано 2026-11-13 (опрос): `Fb129A`, `Fb129AOps` + `Fb129Pick`, `Fb129All` (#129 теги: А строка недавних), `Fb180A` + `Fb180List` (#180 типы счетов: А сетка), `Fb208C` + `Fb208Show` (#208 возврат: В чип), `Fb284A` (#284 прошлые версии: А карточки) — генераторы `mockup_screens_fb_{tags,more}.py`; выбрано 2026-11-11: `Fb154*` (#154 + #155, вариант А: вкладки, плитки, «Ещё», настройки), `Fb157*` (#157, вариант А: отзывы со статусом); выбрано 2026-11-12: `Fb181V` (#181, В: папка — квадрат с числом), `Fb268A/B`, `Fb269A` (#268: версия 0.N + сборка, «что нового», ручная установка сразу), `Fb271A`, `Fb271Pal` (#271: 7 сочных + 7 нежных тем-фруктов, `mockup_screens_fb_nov12.py`); `Fb105B` (#105, Б: 24 различимых цвета, замер — `palette-distinct.py`, `Fb105Now`), `Fb173A` (#173, А: сначала сегменты, с края — вкладка), `Fb141A*` (#141, А: чипы, у каждого своя шторка, `mockup_screens_fb_search.py`) (генератор `mockup_screens_feedback.py`). Ниже — `Ideas`: 14 улучшений и **выбранные** варианты 3–12 (`Idea3B`, `Idea4A…Idea12A`; выбор #159 от 2026-11-11, генератор `mockup_screens_ideas.py`) | — |
 | История | `History`: ссылки на ранние страницы выбора | — |
 
@@ -51,6 +52,13 @@
 на «Счетах» в коде есть сворачиваемая группа «Архив · N», на доске (v37) архива нет.
 Сверка #203 (2026-11-12): «Семья» и «Курсы» приведены к доскам (эталоны `family_*`, `rates_*`); без данных пока —
 «вошёл · N операций» у участника и изменение курса за день. Стрелка «назад» в коде — Material, на досках — шеврон (на всех экранах).
+
+## Живые страницы выбора
+- Шапки экранов (2026-11-15, **выбрано А «Живая строка» без прозрачности**): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия
+  `topbar-headers.html`; код — `ui/top/` (`TabTopBar`, `TabOrSelectionTopBar`), эталон `transactions_scrolled_dark`, доски `OpsScrolled`, `OpsSelect`, «Компоненты → Шапки»
+  (кирпичи `tab_head`, `select_head`). #394 (опрос
+  https://claude.ai/artifact/8mf6ECQP7sb8128EkeKRur) — **выбрано Б и Б**: поиск лупой в шапке (`OpsNothing` — раскрытый), линия у внутренних
+  экранов при прокрутке; доски `Hdr394*` (`mockup_screens_fb_headers.py`), кирпичи `search_head`, `inner_head`.
 
 ## Ранние страницы (до холста)
 - Новый облик (пружины, палитры, вёрстка): https://claude.ai/artifact/WqocoPvC6g6mLRt31WvcCW

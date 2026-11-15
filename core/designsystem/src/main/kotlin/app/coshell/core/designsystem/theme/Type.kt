@@ -77,3 +77,15 @@ val RateTextStyle = TextStyle(
     lineHeight = 24.sp,
     fontWeight = FontWeight.Normal,
 )
+
+/** Hero number of a card («8 503», капитал): amount digits at headline size, bold. */
+val AmountHeadlineStyle = RateTextStyle.copy(fontSize = 24.sp, lineHeight = 32.sp, fontWeight = FontWeight.Bold)
+
+/** Figure in a stat row («1 620» under «пришло»): amount digits at title-small size. */
+val AmountStatStyle = RateTextStyle.copy(fontSize = 14.sp, lineHeight = 20.sp)
+
+/** Cells of a small table of amounts (the capital breakdown): amount digits at body-small size. */
+val AmountCellStyle = RateTextStyle.copy(fontSize = 12.sp, lineHeight = 16.sp)
+
+/** [AmountCellStyle] for the total row. */
+val AmountCellStrongStyle = AmountCellStyle.copy(fontWeight = FontWeight.SemiBold)

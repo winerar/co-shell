@@ -7,7 +7,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 
 /**
- * Local store of exchange rates (docs/agents/database.md §«Курсы»):
+ * Local store of exchange rates (docs/agents/database-tables.md §«Курсы»):
  * - **manual** rates are family data — synced (stage 4) and saved in backups; at most one per
  *   currency pair and date, in either direction (saving `ARS → USD` replaces `USD → ARS` of that day);
  * - **downloaded** rates are a cache of [RatesProvider] — local only, not in backups.

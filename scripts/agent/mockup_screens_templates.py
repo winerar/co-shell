@@ -17,7 +17,7 @@ TPL = [('Испанский', 'Образование', '40 000', 'ARS', 'Galici
 
 def tpl_chip(name, cat, amt, cur):
     a = '<span style="%s font-size: 12px; color: %s;">%s</span>' % (MONO, MUTED, (amt + ' ' + cur) if amt else 'сумма при вводе')
-    return ('<span style="flex: none; display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 14px 0 6px; border-radius: 16px; '
+    return ('<span style="flex: none; display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 14px 0 6px; border-radius: 24px; '
             'background: %s; border: 1px solid %s;">%s<span style="display: flex; flex-direction: column;"><span style="font-size: 14px; font-weight: 600;">%s</span>%s</span></span>'
             % (BAR, LINE2, cat_icon(cat, 38), name, a))
 

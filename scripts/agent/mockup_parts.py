@@ -59,7 +59,7 @@ def big_total(caption, total, cur, size=34):
 def acc_tile(a, on=False):
     """Account tile in the entry sheet (step 1): badge, name, balance; ring when chosen."""
     st = 'border: 2px solid %s; background: %s;' % (WARN, ORANGEBG) if on else 'border: 1px solid %s; background: %s;' % (LINE, CARD)
-    return ('<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 16px; min-width: 0; %s">%s'
+    return ('<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 24px; min-width: 0; %s">%s'
             '<span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>'
             '<span style="%s font-size: 11px; color: %s; white-space: nowrap;">%s %s</span></div>' % (st, badge(a[1], a[2], a[3], 26, 8), a[0], MONO, MUTED, a[5], a[6]))
 
@@ -77,7 +77,7 @@ def grid(cells, cols=3, gap=8):
 def nav_tile(icon, title, sub, color, bg):
     """Big tile on «Ещё»."""
     return ('<div style="display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 120px; padding: 14px; box-sizing: border-box; '
-            'border-radius: 16px; background: %s; border: 1px solid %s;">%s<span style="display: flex; flex-direction: column; gap: 2px;">'
+            'border-radius: 24px; background: %s; border: 1px solid %s;">%s<span style="display: flex; flex-direction: column; gap: 2px;">'
             '<span style="font-size: 16px; font-weight: 600;">%s</span><span style="font-size: 12px; color: %s;">%s</span></span></div>'
             % (CARD, LINE, tile_icon(icon, color, bg), title, MUTED, sub))
 
@@ -91,8 +91,9 @@ def swatch(color, on=False, size=34, new=False):
 
 
 def icon_cell(icon, on=False, color=None):
-    st = 'background: %s; border: 1px solid %s;' % (color or WARN, color or WARN) if on else 'background: %s; border: 1px solid %s;' % (CARD, LINE)
-    return ('<span style="height: 44px; border-radius: 12px; %s display: flex; align-items: center; justify-content: center;">%s</span>'
+    """A cell of an icon grid: a 44 capsule like every choice cell (Style1); chosen — neon + ink frame."""
+    st = SEL if on else 'background: %s;' % CHIP
+    return ('<span style="height: 44px; border-radius: 999px; %s display: flex; align-items: center; justify-content: center;">%s</span>'
             % (st, svg(icon, ONLIME if on else INK2, 20, 1.7)))
 
 
@@ -114,26 +115,28 @@ def top_bar(title, lead='back', actions=''):
 
 
 def dashed(text, mt=12):
-    return ('<div style="margin-top: %dpx; height: 52px; border-radius: 999px; border: 1px dashed %s; color: %s; font-size: 15px; font-weight: 600; '
+    return ('<div style="margin-top: %dpx; height: 48px; border-radius: 999px; border: 1px dashed %s; color: %s; font-size: 15px; font-weight: 600; '
             'display: flex; align-items: center; justify-content: center;">＋ %s</div>' % (mt, LINE2, LIME, text))
 
 
 def pill(text, kind='lime'):
-    st = {'lime': (LIME, ONLIME), 'violet': (VIOLETPILL, VIOLETINK), 'pink': (PINKBG, PINK), 'warn': (WARNBG, WARN), 'muted': (CHIP, INK2)}[kind]
-    return ('<span style="flex: none; height: 24px; padding: 0 10px; border-radius: 999px; background: %s; color: %s; font-size: 12px; font-weight: 600; '
-            'display: inline-flex; align-items: center; white-space: nowrap;">%s</span>' % (st[0], st[1], text))
+    """A label (Style2): 22 capsule tinted 18 % with the kind's colour, a dot of it, the text in ink."""
+    c = {'lime': LIME, 'violet': VIOLET, 'pink': PINK, 'warn': WARN, 'muted': MUTED}[kind]
+    return ('<span style="flex: none; height: 22px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; '
+            'display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;"><span style="width: 6px; height: 6px; border-radius: 50%%; background: %s;"></span>%s</span>'
+            % (mix(c, 18), INK, c, text))
 
 
 def fab(text, icon='plus'):
-    return ('<div style="position: absolute; right: 16px; bottom: 24px; height: 56px; padding: 0 22px; border-radius: 999px; background: %s; color: %s; '
+    return ('<div style="position: absolute; right: 16px; bottom: 24px; height: 48px; padding: 0 20px; border-radius: 999px; background: %s; color: %s; '
             'font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;">%s%s</div>' % (LIME, ONLIME, svg(icon, ONLIME, 22, 2.2), text))
 
 
 def textarea(placeholder, count, value=''):
     v = ('<span style="color: %s;">%s</span>' % (INK, value)) if value else '<span style="color: %s;">%s</span>' % (MUTED2, placeholder)
-    return ('<div style="margin-top: 12px; display: flex; flex-direction: column; min-height: 180px; padding: 12px 14px; border-radius: 12px; background: %s; '
+    return ('<div style="margin-top: 12px; display: flex; flex-direction: column; min-height: 180px; padding: 12px 14px; border-radius: 24px; background: %s; '
             'border: 1px solid %s; font-size: 15px; line-height: 1.45;">%s<span style="flex-grow: 1;"></span><span style="text-align: right; font-size: 12px; color: %s; %s">%s / 500</span></div>'
-            % (FIELD, LINE2, v, MUTED, MONO, count))
+            % (FIELD, OUTLINE, v, MUTED, MONO, count))
 
 
 def footer(*buttons):

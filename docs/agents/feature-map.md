@@ -45,6 +45,12 @@
 Тренд на экранах (#238, `Tr238DrillA`/`Tr238MarkA`): пилюля «↑ 45%» — `CoShellChangePill` (ds `charts/`, слот `badge` у `CoShellBarRow`),
 `reports/components/UsualMarks.kt` (текст, цвет, TalkBack); `Mark` в `ReportsUiState` (только для месяца); «Все категории» — чип «Необычные · N»;
 «Из чего сложилось» — строка пометки и `category/TrendCard` (столбцы истории, черта среднего за год, тап — тот месяц: `onMonth` во ViewModel).
+Картина целиком (#189, `Rp189*`): «Доходы и расходы» — `incomeExpenses` (domain) → `IncomeBoard` → `components/IncomeCard` (ds `CoShellPairedColumns`);
+«Капитал» — `netWorth` (начальный остаток + `BalanceDay` из `ReportDao.observeBalanceDays`, курс на конец месяца, «отложили / курсы») → `CapitalBoard` →
+`CapitalCard` (ds `CoShellLine`); «Кто сколько потратил» — `ReportDay.authorId` → `spendingByMember` → `MembersBoard` → `MembersCard` («Я» — всё, что не внесли другие).
+Хвост (#373, `Rp189NwDrill`): тап по линии (`CoShellLine.onSelect`) → `reports/capital/` — `accountsAt` (domain: счета на дату и изменение за месяц) →
+`CapitalMonthBoard` (группы — `buildAccountGroups`, строки — `AccountRow`/`AccountGroup` из «Счетов») → `CapitalMonthScreen`; тап по участнику →
+«Операции» через `PRESET_MEMBER` (`transactions/list/MemberPreset`, как `PRESET_UNCATEGORIZED` у «Внимания»).
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),
@@ -54,7 +60,9 @@
 С фильтром грузятся все подходящие строки (для итога), список показывается страницами в памяти.
 Шаблоны операций (#169, #104): модель `core:model/TransactionTemplate.kt`, логика — `core:domain/templates/`
 (`SaveTemplateUseCase`, `SaveAsTemplateUseCase`, `draftFrom` → `TransactionDraft` с `gaps`, `TemplateUsage` — счётчик «Часто»),
-Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
+Room — `db/TemplateDao.kt`, `repository/RoomTemplateRepository.kt`; повтор (#143) — `core:model/RecurringSchedule.kt`,
+`core:domain/recurring/` (даты, «Скоро», автопроведение, `edited` — правка правила), `core:data/repository/ScheduleCodec.kt`;
+в редакторе — `templates/edit/components/RepeatBlock.kt` (плитки «Детали»), `RepeatSheet.kt` + `RepeatDraft.kt` (шторка), текст правила — `app/.../recurring/RecurrenceText.kt`. Экраны — `app/.../templates/`: `TemplateCatalog` (общий источник),
 `components/` (чип, полоса), `strip/` (полоса в шторке «+»), `list/` («Все шаблоны»), `edit/` (редактор), `data/PrefsTemplateUsage`;
 в шторке операции — `transactions/edit/EntryTemplates.kt` и `components/TemplateBits.kt` (пилюля, «Сохранить как шаблон»).
 Теги операций (#129): модель и ссылки — `core:model/Tag.kt` (`Tag`, `TagIds`, `Transaction.tagIds`), логика — `core:domain/tags/`

@@ -61,6 +61,7 @@ private fun CoShellSnackbar(data: SnackbarData) {
     val timed = data.visuals.duration != SnackbarDuration.Indefinite
     Snackbar(
         modifier = Modifier.padding(Spacing.m),
+        shape = MaterialTheme.shapes.large,
         action = data.visuals.actionLabel?.let { label ->
             {
                 CoShellTextButton(onClick = data::performAction, contentColor = scheme.inversePrimary) { Text(label) }

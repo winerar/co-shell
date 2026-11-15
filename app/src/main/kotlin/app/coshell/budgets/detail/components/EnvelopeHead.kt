@@ -20,7 +20,6 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -47,7 +46,7 @@ internal fun EnvelopeHead(head: Head, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(start = Spacing.s),
                 )
             }
-            CoShellBullet(envelope.fraction, envelope.tone, Modifier.padding(top = Spacing.m), mark = envelope.pace, height = Sizes.bulletLarge)
+            CoShellBullet(envelope.fraction, envelope.tone, Modifier.padding(top = Spacing.m), mark = envelope.pace)
             Text(
                 spentLine(head),
                 style = MaterialTheme.typography.bodySmall,

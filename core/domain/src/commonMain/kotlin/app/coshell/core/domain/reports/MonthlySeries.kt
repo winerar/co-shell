@@ -18,6 +18,9 @@ data class MonthTotals(
 ) {
     /** What was left over: [earned] − [spent]; negative — spent more than came in. */
     val saved: Money get() = earned - spent
+
+    /** Savings rate: [saved] in whole percents of [earned], negative when spent more; `null` — nothing came in. */
+    val savingsRate: Int? get() = percentOf(saved, earned)
 }
 
 /** The [count] months ending with [last] (oldest first), in the family's months ([startDay]). */

@@ -40,4 +40,25 @@ class ChartMathTest {
         assertEquals(listOf(DonutArc(0f, 360f), DonutArc(0f, 0f)), donutArcs(listOf(5, 0)))
         assertEquals(emptyList<DonutArc>(), donutArcs(listOf(0, -3)))
     }
+
+    @Test
+    fun `a line is fitted to its values with a margin, a flat one sits in the middle`() {
+        val ys = lineFractions(listOf(6_100L, 8_500L, 7_000L))
+        assertEquals(0.15f / 1.25f, ys[0], 0.0001f)
+        assertEquals(1.15f / 1.25f, ys[1], 0.0001f)
+        assertTrue(ys[2] > ys[0] && ys[2] < ys[1])
+        assertEquals(listOf(0.5f, 0.5f), lineFractions(listOf(3L, 3L)))
+        assertEquals(emptyList<Float>(), lineFractions(emptyList()))
+    }
+
+    @Test
+    fun `a tap on a line picks the nearest point`() {
+        // 12 points over 110 px: one every 10 px.
+        assertEquals(0, nearestPoint(4f, 110f, 12))
+        assertEquals(1, nearestPoint(6f, 110f, 12))
+        assertEquals(10, nearestPoint(98f, 110f, 12))
+        assertEquals(11, nearestPoint(500f, 110f, 12))
+        assertEquals(0, nearestPoint(-20f, 110f, 12))
+        assertEquals(0, nearestPoint(50f, 110f, 1))
+    }
 }

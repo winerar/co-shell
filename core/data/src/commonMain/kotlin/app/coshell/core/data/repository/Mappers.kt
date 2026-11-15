@@ -159,6 +159,7 @@ internal fun TemplateEntity.toModel() = TransactionTemplate(
     toAccountId = toAccountId,
     note = note,
     sortOrder = sortOrder,
+    schedule = ScheduleCodec.decode(schedule),
 )
 
 internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
@@ -172,6 +173,7 @@ internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
     categoryId = categoryId,
     note = note,
     sortOrder = sortOrder,
+    schedule = schedule?.let(ScheduleCodec::encode),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

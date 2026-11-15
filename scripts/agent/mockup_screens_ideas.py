@@ -43,7 +43,7 @@ def cafe_chips():
 
 
 def idea4a():
-    total = ('<div style="margin-top: 12px; display: flex; align-items: baseline; justify-content: space-between; padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s;">'
+    total = ('<div style="margin-top: 12px; display: flex; align-items: baseline; justify-content: space-between; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">'
              '<span style="font-size: 13px; color: %s;">12 операций</span><span style="display: flex; flex-direction: column; align-items: flex-end;">%s'
              '<span style="%s font-size: 12px; color: %s;">≈ 82,10 USD</span></span></div>' % (CARD, LINE, MUTED, amount('−84 300', 'ARS', PINK, 18), MONO, MUTED))
     return tab_screen('Операции', cafe_chips() + total + cafe_list(), 'ops')

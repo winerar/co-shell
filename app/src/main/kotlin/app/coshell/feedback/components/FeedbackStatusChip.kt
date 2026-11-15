@@ -33,7 +33,7 @@ internal fun FeedbackStatusChip(status: FeedbackStatus, modifier: Modifier = Mod
         maxLines = 1,
         modifier = modifier
             .background(bg, PillShape)
-            .heightIn(min = Sizes.statusChipHeight)
+            .heightIn(min = Sizes.labelHeight)
             .wrapContentHeight()
             .padding(horizontal = Spacing.s, vertical = Spacing.xxs),
     )

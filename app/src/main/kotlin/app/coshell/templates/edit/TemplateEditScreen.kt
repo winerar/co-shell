@@ -23,6 +23,7 @@ import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.templates.edit.components.RepeatBlock
 import app.coshell.templates.edit.components.TemplatePickers
 import app.coshell.templates.edit.components.TemplatePicker
 import app.coshell.transactions.edit.components.TypeSelector
@@ -33,7 +34,7 @@ import app.coshell.ui.top.ScreenTopBar
 
 /**
  * Template editor (mockup `TplEdit`): type, name, account (for a transfer — both), amount that may stay
- * empty, category, note; «Сохранить» and, for an existing template, «Удалить».
+ * empty, category, note, «Детали» with «Повтор» (#143); «Сохранить» and, for an existing template, «Удалить».
  */
 @Composable
 fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions) {
@@ -96,6 +97,7 @@ fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions)
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             )
+            RepeatBlock(state, actions)
             CoShellButton(onClick = actions.onSave, modifier = Modifier.fillMaxWidth().padding(top = Spacing.s)) {
                 Text(stringResource(R.string.action_save))
             }

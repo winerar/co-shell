@@ -1,9 +1,12 @@
 package app.coshell.reports
 
+import app.coshell.core.domain.family.OtherMembers
+import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.core.domain.settings.MonthStartSettings
+import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
@@ -11,6 +14,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.TransactionType
 import app.coshell.reports.ReportsUiState.Comparison
+import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
@@ -72,10 +76,18 @@ class ReportsViewModelTest {
         ),
     )
 
+    private val others = MutableStateFlow(emptyMap<String, String>())
+
+    private val accounts = FakeAccountRepository().apply {
+        items.value = mapOf("cash" to Account("cash", "Доллары", usd, initialBalanceMinor = 1_000_00))
+    }
+
     private fun viewModel() = ReportsViewModel(
         reports,
         categories,
+        accounts,
         FakeExchangeRateRepository(),
+        OtherMembers { others },
         FakeReportCurrencySettings(listOf(usd, CurrencyCode("ARS"))),
         monthStart,
         MoneyFormat.RU,
@@ -156,5 +168,23 @@ class ReportsViewModelTest {
         vm.onMonth(YearMonth(2026, 6))
 
         assertEquals("10", vm.state.first { it.period?.firstMonth == YearMonth(2026, 6) }.spending!!.total)
+    }
+
+    @Test
+    fun `capital is a year of month ends with why the last months changed, members split the spending`() = runTest {
+        reports.balanceDays.value = listOf(BalanceDay(LocalDate(2026, 10, 5), "cash", -600_00), BalanceDay(LocalDate(2026, 11, 4), "cash", 1_600_00))
+        others.value = mapOf("anya" to "Аня")
+        val vm = viewModel()
+        vm.state.launchIn(backgroundScope)
+        val state = vm.state.first { it.capital != null }
+
+        val capital = state.capital!!
+        assertEquals(12, capital.points.size)
+        assertEquals(listOf("1\u202F000", "400", "2\u202F000"), capital.points.takeLast(3).map { it.value })
+        assertEquals("+1\u202F000", capital.change)
+        // November: saved 2 000 − 400 = 1 600, all of the change; October: −600 spent.
+        assertEquals(listOf("+1\u202F600", "-600"), capital.why.take(2).map { it.saved.replace('\u2212', '-') })
+        assertEquals("0", capital.why.first().rates)
+        assertEquals(listOf<String?>(null), state.members.map { it.name })
     }
 }

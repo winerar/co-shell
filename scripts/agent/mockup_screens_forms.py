@@ -74,7 +74,7 @@ def account_edit():
                 '<span style="flex-grow: 1;">Галисия · карта</span><span>Карта</span></div><div style="margin-top: 30px; %s font-size: 30px; font-weight: 700;">245 300,00 '
                 '<span style="font-size: 16px;">ARS</span></div></div>' % (col, ink, MONO))
     colors = ['cyan', 'orange'] + ['s%d' % i for i in range(8)]
-    hint = ('<div style="margin-top: 4px; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; background: %s; border: 1px solid %s;">'
+    hint = ('<div style="margin-top: 4px; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">'
             '<span style="width: 20px; height: 20px; border-radius: 50%%; background: #F26E22;"></span><span style="flex-grow: 1; font-size: 13px;">Похоже на Галисию — взять её цвет</span>%s</div>'
             % (CARD, LINE, go('c', 'orange', pill('Взять'))))
     sw = per('c', colors, lambda c: grid([go('c', 's%d' % i, swatch(SWATCHES[i], c == 's%d' % i, 30)) for i in range(8)], 8, 6))
@@ -122,7 +122,7 @@ def colors():
     preview = ('<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: {{cardBg}}; border: 1px solid {{cardLine}};">'
                '<div style="display: flex; align-items: center; gap: 12px;">%s<span><div style="font-size: 16px; font-weight: 600;">Galicia</div>'
                '<div style="font-size: 12px; color: %s;">{{name}}</div></span></div>%s</div>' % (badge('GA', '{{color}}', '{{colorInk}}', 44, 14), MUTED, amount('1 250 000', 'ARS', INK, 22)))
-    hint = ('<div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; background: %s; border: 1px solid %s;">'
+    hint = ('<div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">'
             '<span style="width: 20px; height: 20px; border-radius: 50%%; background: #F26E22;"></span><span style="flex-grow: 1; font-size: 13px;">Похоже на банк Galicia — взять его цвет</span>%s</div>'
             % (CARD, LINE, tap(pill('Взять'), 'suggest')))
     bank = tap('<span style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 2px; border-radius: 14px; min-width: 0; {{b.cell}}">%s'

@@ -69,7 +69,7 @@ def drill():
 
 
 def period_sheet():
-    months = ''.join('<span style="height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
+    months = ''.join('<span style="height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
                      % ('background: %s; color: %s; font-weight: 600;' % (LIME, ONLIME) if m == 'ноя' else 'background: %s; color: %s;' % (CHIP, INK2), m)
                      for m in ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'])
     grid = '<div style="margin-top: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">%s</div>' % months

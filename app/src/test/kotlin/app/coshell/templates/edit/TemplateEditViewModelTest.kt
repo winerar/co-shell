@@ -9,6 +9,9 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.PostMode
+import app.coshell.core.model.Recurrence
+import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TemplateEditDestination
@@ -17,6 +20,10 @@ import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTemplateRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -50,6 +57,10 @@ class TemplateEditViewModelTest {
         saveTemplate = SaveTemplateUseCase(accounts, categories, templates),
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
+        clock = object : Clock {
+            override fun now() = Instant.parse("2026-11-15T12:00:00Z")
+        },
+        timeZone = TimeZone.UTC,
     )
 
     @Test
@@ -164,5 +175,58 @@ class TemplateEditViewModelTest {
         vm.delete()
         assertTrue(templates.items.value.isEmpty())
         assertTrue(vm.state.value.isDone)
+    }
+
+    @Test
+    fun `a repeat set in the sheet is saved with the template`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onNameChange("Аренда")
+        vm.onAccountSelect("cash")
+        vm.onAmountChange("650")
+        vm.onRepeatChange(Recurrence.Monthly(5), PostMode.AUTO)
+        assertEquals(LocalDate(2026, 12, 5), vm.state.value.nextPayment)
+        vm.save()
+
+        val schedule = templates.getTemplate("new")!!.schedule!!
+        assertEquals(Recurrence.Monthly(5), schedule.recurrence)
+        assertEquals(PostMode.AUTO, schedule.mode)
+        assertEquals(LocalDate(2026, 11, 15), schedule.start)
+    }
+
+    @Test
+    fun `clearing the amount turns posting by itself into a reminder`() = runTest {
+        seed()
+        val vm = viewModel()
+        vm.onNameChange("Свет")
+        vm.onAmountChange("100")
+        vm.onRepeatChange(Recurrence.Monthly(10), PostMode.AUTO)
+        vm.onAmountChange("")
+        assertFalse(vm.state.value.canPostAuto)
+        assertEquals(PostMode.REMIND, vm.state.value.postMode)
+        vm.save()
+        assertEquals(PostMode.REMIND, templates.getTemplate("new")!!.schedule!!.mode)
+    }
+
+    @Test
+    fun `editing other fields keeps the repeat and what was already paid`() = runTest {
+        seed()
+        val rule = RecurringSchedule(Recurrence.Monthly(5), LocalDate(2026, 1, 1), handledThrough = LocalDate(2026, 11, 5))
+        templates.saveTemplate(TransactionTemplate("t", "Аренда", TransactionType.EXPENSE, "cash", usd, schedule = rule))
+        val vm = viewModel("t")
+        vm.onNameChange("Квартира")
+        vm.save()
+        assertEquals(rule, templates.getTemplate("t")!!.schedule)
+    }
+
+    @Test
+    fun `none in the sheet makes it an ordinary template`() = runTest {
+        seed()
+        val rule = RecurringSchedule(Recurrence.Monthly(5), LocalDate(2026, 1, 1))
+        templates.saveTemplate(TransactionTemplate("t", "Аренда", TransactionType.EXPENSE, "cash", usd, schedule = rule))
+        val vm = viewModel("t")
+        vm.onRepeatChange(null, PostMode.AUTO)
+        vm.save()
+        assertNull(templates.getTemplate("t")!!.schedule)
     }
 }

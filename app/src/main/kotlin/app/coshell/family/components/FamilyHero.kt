@@ -84,7 +84,7 @@ internal fun SyncNowButton(enabled: Boolean, onClick: () -> Unit) {
         onClick = onClick,
         enabled = enabled,
         color = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l).height(Sizes.wideButton),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l).height(Sizes.button),
     ) {
         Icon(painterResource(DesignR.drawable.ic_sync), contentDescription = null, modifier = Modifier.size(Sizes.buttonIcon))
         Text(

@@ -104,7 +104,7 @@ fun CoShellConfirmCard(
             }
             Row(Modifier.fillMaxWidth().padding(top = Spacing.l + Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s + Spacing.xxs)) {
                 dismissLabel?.let { label ->
-                    CoShellOutlinedButton(onClick = onDismissClick, modifier = Modifier.weight(1f).height(Sizes.wideButton)) { Text(label) }
+                    CoShellOutlinedButton(onClick = onDismissClick, modifier = Modifier.weight(1f).height(Sizes.button)) { Text(label) }
                 }
                 CoShellButton(
                     onClick = onConfirm,
@@ -114,7 +114,7 @@ fun CoShellConfirmCard(
                     } else {
                         coShellButtonColors()
                     },
-                    modifier = Modifier.weight(1f).height(Sizes.wideButton),
+                    modifier = Modifier.weight(1f).height(Sizes.button),
                 ) { Text(confirmLabel) }
             }
         }

@@ -13,6 +13,7 @@ import app.coshell.currencies.data.LegacyReportCurrencies
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
+import app.coshell.recurring.notify.RecurringPaymentsScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -54,6 +55,7 @@ class CoShellApp : Application(), Configuration.Provider {
             ensureLabelTags()
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
+            RecurringPaymentsScheduler.schedule(this@CoShellApp)
         }
     }
 }

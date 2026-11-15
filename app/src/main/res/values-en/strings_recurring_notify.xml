@@ -13,4 +13,10 @@
     <string name="recurring_notify_by_rate">≈ %1$s at the rate</string>
     <string name="recurring_notify_enter_debited">enter the amount charged</string>
     <string name="payment_hint_no_rate">No %1$s → %2$s rate — enter the amount charged</string>
+    <!-- Template editor: «Платёж в другой валюте» (#415, board Rec415B). -->
+    <string name="template_foreign_title">Payment in another currency</string>
+    <string name="template_foreign_subtitle">amount as on the receipt; we ask what was charged</string>
+    <string name="template_foreign_amount_hint">As on the receipt. We ask what was charged when recording and suggest it at the rate</string>
+    <string name="template_foreign_currency_error">Pick a currency other than the account’s: USD, EUR…</string>
+    <string name="recurring_auto_no_foreign">a payment in another currency is recorded by you: the charged amount varies</string>
 </resources>

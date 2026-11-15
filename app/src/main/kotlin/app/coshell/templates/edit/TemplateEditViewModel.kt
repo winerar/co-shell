@@ -65,6 +65,7 @@ class TemplateEditViewModel @Inject constructor(
             isNew = template == null,
             accounts = accountList.map { AccountChoice(it.id, it.name, it.currency.value) },
             categories = categoryList.toChoices(),
+            currencyChoices = (listOfNotNull(template?.amount?.currency?.value) + accountList.map { it.currency.value }).distinct(),
             today = clock.now().toLocalDateTime(timeZone).date,
             schedule = template?.schedule,
             savedSchedule = template?.schedule,
@@ -80,6 +81,7 @@ class TemplateEditViewModel @Inject constructor(
                 accountId = account?.id,
                 toAccountId = template.toAccountId?.takeIf { it in accountsById },
                 amount = template.amount?.takeIf { account != null }?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
+                foreign = template.isForeign,
                 amountCurrency = template.amount?.takeIf { template.isForeign }?.currency?.value,
                 categoryId = template.categoryId?.takeIf { id -> base.categories.any { it.id == id } },
                 note = template.note,
@@ -99,6 +101,15 @@ class TemplateEditViewModel @Inject constructor(
     fun onToAccountSelect(id: String) = _state.update { it.copy(toAccountId = id, toAccountError = false) }
 
     fun onAmountChange(value: String) = _state.update { it.copy(amount = value, amountError = false) }
+
+    /** «Платёж в другой валюте» (#415): ticked — the first chip is picked if nothing was. */
+    fun onForeignToggle(on: Boolean) = _state.update {
+        it.copy(foreign = on, amountCurrency = it.amountCurrency ?: it.foreignChoices.firstOrNull().takeIf { on }, amountCurrencyError = false)
+    }
+
+    fun onAmountCurrencyChange(code: String) = _state.update {
+        it.copy(amountCurrency = code.trim().uppercase().take(CODE_LENGTH), amountCurrencyError = false, amountError = false)
+    }
 
     /** `null` — «Не выбрана»: the entry sheet will ask. */
     fun onCategorySelect(id: String?) = _state.update { it.copy(categoryId = id) }
@@ -120,6 +131,7 @@ class TemplateEditViewModel @Inject constructor(
                         accountError = result.accountError,
                         toAccountError = result.toAccountError,
                         amountError = result.amountError,
+                        amountCurrencyError = result.amountCurrencyError,
                     )
                 }
                 is TemplateFormResult.Valid -> when (val saved = saveTemplate(result.template)) {
@@ -158,3 +170,6 @@ class TemplateEditViewModel @Inject constructor(
         }.sortedBy { it.label.lowercase() }
     }
 }
+
+/** ISO 4217: «USD». */
+private const val CODE_LENGTH = 3

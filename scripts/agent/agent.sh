@@ -37,6 +37,7 @@ usage() {
                           (модули: model, domain, data, ds — designsystem, app)
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
+    stability             отчёты компилятора Compose (app, ~1,5 мин) → нет нестабильных классов состояний (#383)
     shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem и экраны app) после
                           намеренной смены вида; PNG — */src/test/screenshots/ (показать владельцу)
 
@@ -91,6 +92,11 @@ case "$cmd" in
         [ $status -eq 0 ] && echo "OK: $task" || echo "FAILED (exit $status)"
         exit $status ;;
     gradle) exec "$here/gradle.sh" "$@" ;;
+    stability)
+        # --rerun: the build cache restores classes but not the reports (performance.md).
+        rm -rf app/build/compose_reports
+        "$here/gradle.sh" :app:compileDebugKotlin -PcomposeReports --rerun -q --console=plain || exit $?
+        exec python3 "$here/compose-stability.py" ;;
     profile) exec "$here/profile-build.sh" "$@" ;;
     shots)
         # The record task alone; verify from gradle.properties is switched off for this run.

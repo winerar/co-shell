@@ -2,7 +2,14 @@ package app.coshell.reports
 
 import app.coshell.budgets.list.number
 import app.coshell.core.designsystem.charts.ChartScale
+import app.coshell.core.domain.budgets.BudgetPeriod
+import app.coshell.core.domain.budgets.budgetPeriod
 import app.coshell.core.domain.reports.ReportLedger
+import app.coshell.core.domain.reports.ReportPeriodKind
+import app.coshell.core.domain.reports.UsualDirection
+import app.coshell.core.domain.reports.UsualMark
+import app.coshell.core.domain.reports.usualCategoryMarks
+import app.coshell.core.domain.reports.usualMarks
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.categorySpending
 import app.coshell.core.domain.reports.monthlySeries
@@ -14,6 +21,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.reports.ReportsUiState.Bar
 import app.coshell.reports.ReportsUiState.CategoryRow
+import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
@@ -30,6 +38,21 @@ internal class ReportInput(
     val today: LocalDate,
     val compare: Boolean,
 )
+
+/** The family month of a month report — marks «выше обычного» are counted only for one; `null` for other periods. */
+internal val ReportInput.month: BudgetPeriod?
+    get() = if (period.kind == ReportPeriodKind.MONTH) budgetPeriod(period.firstMonth, startDay) else null
+
+/** The mark for the screen; «к 11-му» while [month] runs. */
+internal fun UsualMark.toUi(month: BudgetPeriod, today: LocalDate, format: MoneyFormat): Mark = Mark(
+    up = direction == UsualDirection.ABOVE,
+    percent = percent?.let { kotlin.math.abs(it) },
+    expected = format.number(expected),
+    byDay = today.day.takeIf { month.daysPassed(today) < month.days },
+)
+
+private fun Map<String, UsualMark>.toUi(month: BudgetPeriod, today: LocalDate, format: MoneyFormat): Map<String, Mark> =
+    mapValues { it.value.toUi(month, today, format) }
 
 /** The days to load for [this] report: the period, the period before it and the months of «По месяцам». */
 internal fun ReportPeriod.loadRange(startDay: Int): Pair<LocalDate, LocalDate> {
@@ -53,6 +76,9 @@ internal fun buildSpending(input: ReportInput, format: MoneyFormat): Spending? {
     val previousSums = if (input.compare) ledger.spent(previous.start, previous.endExclusive) else null
     val previousFolders = previousSums?.let { spendingByFolder(it, input.categories, currency) }
     val byId = input.categories.associateBy { it.id }
+    val month = input.month
+    val folderMarks = month?.let { m -> usualMarks(ledger, input.categories, m, input.startDay, input.today).toUi(m, input.today, format) }.orEmpty()
+    val categoryMarks = month?.let { m -> usualCategoryMarks(ledger, m, input.startDay, input.today).toUi(m, input.today, format) }.orEmpty()
 
     fun ghostOf(id: String): Money? = previousFolders?.let { it[id] ?: Money.zero(currency) }
     val scale = ChartScale.of(breakdown.slices.flatMap { listOf(it.amount.amountMinor, ghostOf(it.categoryId)?.amountMinor) })
@@ -69,6 +95,7 @@ internal fun buildSpending(input: ReportInput, format: MoneyFormat): Spending? {
             fraction = scale.of(slice.amount.amountMinor),
             ghost = ghost?.let { scale.of(it.amountMinor) },
             ghostValue = ghost?.let { format.number(it) },
+            mark = folderMarks[slice.categoryId],
         )
     }
     val other = breakdown.other?.let { o ->
@@ -92,6 +119,7 @@ internal fun buildSpending(input: ReportInput, format: MoneyFormat): Spending? {
             growthMinor = row.growth.amountMinor,
             amountMinor = row.amount.amountMinor,
             parentId = category?.parentId?.takeIf { it in byId },
+            mark = categoryMarks[row.categoryId],
         )
     }
 

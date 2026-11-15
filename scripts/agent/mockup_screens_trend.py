@@ -1,7 +1,7 @@
 """Generated boards: category trend and «выше обычного» (#238, calculation #237, research reports-set.md П1) — poll variants.
-Q1 — where the year of one category lives in «Из чего сложилось» (#188): A — own card «По месяцам» with the average
-line; Б — a compact strip inside the header card. Q2 — the mark at a bar of «На что ушли деньги»: A — a pill next to
-the amount; Б — a caption under the bar. Common: the long list with marks, edge cases.
+Chosen by the owner (poll 2026-11-15, А + А): the year of one category — its own card «По месяцам» with the average
+line in «Из чего сложилось» (#188); the mark at a bar of «На что ушли деньги» — a pill next to the amount.
+Common: the long list with marks, edge cases.
 Data — November 2026 shown on the 11th: the mark compares with what the 3 months before spent by the 11th.
 
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
@@ -65,14 +65,6 @@ def drill_a():
     return inner_screen('Кафе', body)
 
 
-def drill_b():
-    strip = year_columns(h=40, avg_label='')
-    head = chart_card('Кафе за ноябрь', '89 USD · 12% трат', mark_line('Кафе') + strip
-                      + '<div style="font-size: 12px; color: %s;">Год: в среднем 65 в месяц · тап — по месяцам</div>' % MUTED, 'margin-top: 4px;')
-    body = head + label('Из чего сложилось · 3 операции') + cafe_ops() + note('Суммы в USD — по курсу на день операции.')
-    return inner_screen('Кафе', body)
-
-
 def bar_row(name, usd, pct, last, top=300, mode='pill'):
     w, g = round(usd / top * 100), round(last / top * 100)
     m = MARKS.get(name)
@@ -99,10 +91,6 @@ def reports(mode):
 
 def reports_a():
     return reports('pill')
-
-
-def reports_b():
-    return reports('caption')
 
 
 def all_marked():
@@ -136,10 +124,8 @@ def edge_cases():
 
 
 BOARDS = [  # name, title, fn, row key
-    ('Tr238DrillA', 'А (рекомендую): «Из чего сложилось» — карточка «По месяцам», черта среднего', drill_a, 'trend'),
-    ('Tr238DrillB', 'Б: год полоской в шапке, по тапу — по месяцам', drill_b, 'trend'),
-    ('Tr238MarkA', 'А (рекомендую): пометка — пилюля «↑ 45%» у суммы', reports_a, 'trend'),
-    ('Tr238MarkB', 'Б: пометка — подпись под полосой', reports_b, 'trend'),
+    ('Tr238DrillA', 'Выбрано (А): «Из чего сложилось» — карточка «По месяцам», черта среднего', drill_a, 'trend'),
+    ('Tr238MarkA', 'Выбрано (А): пометка — пилюля «↑ 45%» у суммы', reports_a, 'trend'),
     ('Tr238All', 'Общее: «Все категории» — пометки и фильтр «Необычные»', all_marked, 'trend'),
     ('Tr238Edge', 'Общее: начало месяца, аренда, «новое», TalkBack', edge_cases, 'trend'),
 ]

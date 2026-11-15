@@ -53,6 +53,33 @@
     <string name="reports_order_growth">По росту</string>
     <string name="reports_order_groups">Группами</string>
     <string name="reports_all_nothing">Ничего не нашлось</string>
+    <!-- «Выше / ниже обычного» и тренд категории (#238, boards Tr238DrillA, Tr238MarkA, Tr238All) -->
+    <string name="report_mark_up">↑ %1$d%%</string>
+    <string name="report_mark_down">↓ %1$d%%</string>
+    <string name="report_mark_new">новое</string>
+    <plurals name="report_mark_above_description">
+        <item quantity="one">на %d процент больше обычного</item>
+        <item quantity="few">на %d процента больше обычного</item>
+        <item quantity="many">на %d процентов больше обычного</item>
+        <item quantity="other">на %d процента больше обычного</item>
+    </plurals>
+    <plurals name="report_mark_below_description">
+        <item quantity="one">на %d процент меньше обычного</item>
+        <item quantity="few">на %d процента меньше обычного</item>
+        <item quantity="many">на %d процентов меньше обычного</item>
+        <item quantity="other">на %d процента меньше обычного</item>
+    </plurals>
+    <string name="report_mark_new_description">новое: раньше трат не было</string>
+    <string name="report_mark_above">больше обычного</string>
+    <string name="report_mark_below">меньше обычного</string>
+    <string name="report_mark_new_line">раньше трат не было</string>
+    <string name="report_mark_usual_by">к %1$d-му обычно %2$s</string>
+    <string name="report_mark_usual">обычно %1$s</string>
+    <string name="reports_filter_unusual">Необычные · %1$d</string>
+    <string name="report_trend_title">По месяцам</string>
+    <string name="report_trend_caption">черта — среднее</string>
+    <string name="report_trend_months">За %1$d мес.: %2$s</string>
+    <string name="report_trend_year">За год: %1$s</string>
     <!-- «Из чего сложилось» (#188, board RepDrill) -->
     <string name="report_drill_head">%1$s за %2$s</string>
     <string name="report_drill_head_year">%1$s за %2$d год</string>

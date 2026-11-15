@@ -14,6 +14,7 @@ data class TrendMonth(val period: BudgetPeriod, val amount: Money?)
  * with the chosen one (oldest first; the last one so far), the average spending of the [USUAL_MONTHS] and of the
  * [LONG_USUAL_MONTHS] full months before it (`null` without history), and the [mark] «выше / ниже обычного» — against
  * the same days of the [USUAL_MONTHS] before (see [UsualMark]).
+ * [recentMonths] and [longMonths] — how many months each average is over (fewer at the start of the history: «за 1 мес.»).
  * [missing] — currencies left out for lack of a rate.
  */
 data class CategoryTrend(
@@ -22,6 +23,8 @@ data class CategoryTrend(
     val average12: Money?,
     val mark: UsualMark?,
     val missing: Set<CurrencyCode>,
+    val recentMonths: Int = 0,
+    val longMonths: Int = 0,
 )
 
 /** Columns of the trend chart. */
@@ -71,6 +74,8 @@ fun categoryTrend(
         average12 = before.map { amounts.getValue(it) }.averageOrNull(currency),
         mark = mark,
         missing = missing,
+        recentMonths = recent.size,
+        longMonths = before.size,
     )
 }
 

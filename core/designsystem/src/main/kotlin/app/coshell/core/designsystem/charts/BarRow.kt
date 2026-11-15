@@ -3,6 +3,7 @@ package app.coshell.core.designsystem.charts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,8 +34,9 @@ import app.coshell.core.designsystem.tokens.Spacing
 /**
  * One bar of a horizontal-bars chart (board `RepA`, «На что ушли деньги»): [leading] (a category badge), the [label],
  * «290 · 38%» on the right, under them the bar of [fraction] (of the chart's [ChartScale]) in the category [color] and
- * the thin grey [ghost] — where the past period was. Bars grow from the left the first time they show and slide when
- * the numbers change. TalkBack reads the texts, then [ghostDescription] («в октябре 300»). A tap — [onClick].
+ * the thin grey [ghost] — where the past period was; [badge] — a pill before the value («↑ 45%», #238). Bars grow from
+ * the left the first time they show and slide when the numbers change. TalkBack reads the texts, then
+ * [badgeDescription] («на 45 процентов больше обычного») and [ghostDescription] («в октябре 300»). A tap — [onClick].
  */
 @Composable
 fun CoShellBarRow(
@@ -47,14 +49,17 @@ fun CoShellBarRow(
     ghost: Float? = null,
     ghostDescription: String? = null,
     leading: (@Composable () -> Unit)? = null,
+    badge: (@Composable () -> Unit)? = null,
+    badgeDescription: String? = null,
     onClick: (() -> Unit)? = null,
 ) {
+    val state = listOfNotNull(badgeDescription, ghostDescription).joinToString(", ").ifEmpty { null }
     val clickable = if (onClick != null) Modifier.tactileClickable(onClick = onClick) else Modifier
     Row(
         modifier
             .fillMaxWidth()
             .then(clickable)
-            .semantics(mergeDescendants = true) { ghostDescription?.let { stateDescription = it } }
+            .semantics(mergeDescendants = true) { state?.let { stateDescription = it } }
             .padding(vertical = Spacing.s),
         horizontalArrangement = Arrangement.spacedBy(Spacing.m),
         verticalAlignment = Alignment.CenterVertically,
@@ -69,6 +74,7 @@ fun CoShellBarRow(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
+                badge?.let { Box(Modifier.padding(start = Spacing.s)) { it() } }
                 ValueAndShare(value, share)
             }
             ChartBar(fraction, color, ghost, Modifier.padding(top = Spacing.xs))

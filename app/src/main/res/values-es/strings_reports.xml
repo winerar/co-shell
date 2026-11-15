@@ -47,6 +47,31 @@
     <string name="reports_order_growth">Por aumento</string>
     <string name="reports_order_groups">Agrupadas</string>
     <string name="reports_all_nothing">No se encontró nada</string>
+    <!-- «Más / menos de lo habitual» y la tendencia de la categoría (#238) -->
+    <string name="report_mark_up">↑ %1$d%%</string>
+    <string name="report_mark_down">↓ %1$d%%</string>
+    <string name="report_mark_new">nuevo</string>
+    <plurals name="report_mark_above_description">
+        <item quantity="one">%d por ciento más de lo habitual</item>
+        <item quantity="many">%d por ciento más de lo habitual</item>
+        <item quantity="other">%d por ciento más de lo habitual</item>
+    </plurals>
+    <plurals name="report_mark_below_description">
+        <item quantity="one">%d por ciento menos de lo habitual</item>
+        <item quantity="many">%d por ciento menos de lo habitual</item>
+        <item quantity="other">%d por ciento menos de lo habitual</item>
+    </plurals>
+    <string name="report_mark_new_description">nuevo: antes no había gastos</string>
+    <string name="report_mark_above">más de lo habitual</string>
+    <string name="report_mark_below">menos de lo habitual</string>
+    <string name="report_mark_new_line">antes no había gastos</string>
+    <string name="report_mark_usual_by">lo habitual al día %1$d: %2$s</string>
+    <string name="report_mark_usual">lo habitual: %1$s</string>
+    <string name="reports_filter_unusual">Inusuales · %1$d</string>
+    <string name="report_trend_title">Por meses</string>
+    <string name="report_trend_caption">línea — promedio</string>
+    <string name="report_trend_months">%1$d meses: %2$s</string>
+    <string name="report_trend_year">Año: %1$s</string>
     <!-- «Из чего сложилось» (#188, board RepDrill) -->
     <string name="report_drill_head">%1$s en %2$s</string>
     <string name="report_drill_head_year">%1$s en %2$d</string>

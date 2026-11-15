@@ -29,7 +29,7 @@
 | Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports,review}.py` |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | `budgets/` (#167, #103); `BudHome` — `home/budget/`, `home/components/{BudgetTile,HotBudgets}` (#184) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | `reports/`, `reports/all/` (#140), `reports/category/` (`RepDrill`, #188) |
-| Тренд категории | `Tr238DrillA`/`B`, `Tr238MarkA`/`B` (опрос #238), `Tr238All`, `Tr238Edge` | расчёт — `core:domain/reports/CategoryTrend`, `UsualMark` (#237); экран — после выбора |
+| Тренд категории | `Tr238DrillA`, `Tr238MarkA` (выбраны в опросе #238, А + А), `Tr238All`, `Tr238Edge` | расчёт — `core:domain/reports/CategoryTrend`, `UsualMark` (#237); экран — `reports/category/TrendCard`, `components/UsualMarks` |
 | Итог месяца | `Mon236A` (выбран А: карточка на «Обзоре» 1–7 числа), `Mon236Screen`, `Mon236Limits`, `Mon236Edge` | `home/components/MonthReviewCard`, `reports/review/` (#236; расчёт `core:domain/reports/MonthReview`, #235); строки лимитов — `EnvelopeRow` «Бюджетов», выше, чем на доске |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 19 главных действий по шагам (с шаблонами, бюджетами, отчётами); каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |

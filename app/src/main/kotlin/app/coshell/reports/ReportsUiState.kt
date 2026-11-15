@@ -62,7 +62,15 @@ data class ReportsUiState(
         val ghost: Float?,
         /** The previous period's amount for TalkBack. */
         val ghostValue: String?,
+        /** «↑ 45%» — spending noticeably more or less than usual (#238); `null` — as usual or not a month. */
+        val mark: Mark? = null,
     )
+
+    /**
+     * «Выше / ниже обычного» (#237, #238): [up] — more than usual; [percent] — by how much (no sign), `null` — nothing
+     * was usually spent («новое»); [expected] — the usual amount by now; [byDay] — «к 11-му», `null` — a whole month.
+     */
+    data class Mark(val up: Boolean, val percent: Int?, val expected: String, val byDay: Int?)
 
     /** «Другое · Транспорт и ещё 3 · 70 · 9%». */
     data class Other(val firstName: String?, val more: Int, val value: String, val percent: Int)
@@ -83,6 +91,7 @@ data class ReportsUiState(
         val amountMinor: Long,
         /** The parent category, `null` — top level («Подкатегориями» groups by it). */
         val parentId: String?,
+        val mark: Mark? = null,
     )
 
     /** «По месяцам»: spending of each month, the last month of the period highlighted. */

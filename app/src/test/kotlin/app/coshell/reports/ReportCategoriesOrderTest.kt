@@ -37,4 +37,14 @@ class ReportCategoriesOrderTest {
     fun `search matches any part of the name in any case`() {
         assertEquals(listOf("cafe" to false), ids(RowOrder.AMOUNT, "КАФ"))
     }
+
+    @Test
+    fun `unusual only keeps the marked rows, in the chosen order`() {
+        val mark = ReportsUiState.Mark(up = true, percent = 45, expected = "61", byDay = 11)
+        val marked = rows.map { if (it.categoryId in setOf("cafe", "power")) it.copy(mark = mark) else it }
+
+        val shown = orderRows(marked, "", RowOrder.AMOUNT, unusualOnly = true) { it.name!! }
+
+        assertEquals(listOf("cafe", "power"), shown.map { it.row.categoryId })
+    }
 }

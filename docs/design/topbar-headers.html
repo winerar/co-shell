@@ -1,0 +1,425 @@
+<title>Шапки co-shell</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: intro → three live phones side by side (stack on phones) → shared rules → vote. Palette = «Манго» from motion-337. */
+:root {
+  --bg: #F4F7EF; --card: #FFFFFF; --chip: #E7ECE1; --line: #D5DCCD; --ink: #10160D; --muted: #5E6A58;
+  --lime: #5A8F00; --onlime: #FFFFFF; --pink: #D6264D; --green: #2E7D32;
+  --hero: linear-gradient(135deg, #DDF3B8, #CFEFEA, #E6DAF5);
+  --glass: rgba(244, 247, 239, .78); --shadow: 0 6px 24px rgba(16, 22, 13, .12);
+  --f-ui: Onest, system-ui, sans-serif; --f-num: 'JetBrains Mono', ui-monospace, monospace;
+  --e: linear(0, .25 8%, .64 18%, .92 30%, 1.04 42%, 1.05 50%, 1.01 65%, 1);
+  --e-pop: linear(0, .6 20%, 1.12 45%, .98 70%, 1);
+  --t: 420ms; --t-fast: 200ms;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #050805; --card: #10160D; --chip: #1B2317; --line: #2E382A; --ink: #EEF5E6; --muted: #9AA594;
+    --lime: #B8FF2E; --onlime: #0E1F00; --pink: #FF5C7F; --green: #7EE07E;
+    --hero: linear-gradient(135deg, #314617, #0E2523, #271E36);
+    --glass: rgba(5, 8, 5, .74); --shadow: 0 6px 24px rgba(0, 0, 0, .5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #050805; --card: #10160D; --chip: #1B2317; --line: #2E382A; --ink: #EEF5E6; --muted: #9AA594;
+  --lime: #B8FF2E; --onlime: #0E1F00; --pink: #FF5C7F; --green: #7EE07E;
+  --hero: linear-gradient(135deg, #314617, #0E2523, #271E36);
+  --glass: rgba(5, 8, 5, .74); --shadow: 0 6px 24px rgba(0, 0, 0, .5); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-ui); }
+main { max-width: 1240px; margin: 0 auto; padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { margin: 0 0 6px; font-size: 28px; text-wrap: balance; }
+h2 { font-size: 19px; margin: 0; }
+.intro { margin: 0 0 14px; color: var(--muted); max-width: 72ch; line-height: 1.5; }
+.bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.btn { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+.btn:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1020px) { .cols { grid-template-columns: 1fr; justify-items: center; } }
+.col { display: flex; flex-direction: column; gap: 10px; align-items: center; min-width: 0; width: 100%; max-width: 380px; }
+.col .head { width: 100%; }
+.col .d { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; min-height: 78px; }
+.tag { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--lime); color: var(--onlime); font-size: 11px; font-weight: 700; vertical-align: 3px; }
+.tries { width: 100%; font-size: 12.5px; color: var(--muted); line-height: 1.45; margin: 0; padding-left: 18px; }
+
+/* ---------- phone ---------- */
+.phone { position: relative; width: 320px; max-width: 100%; height: 640px; border-radius: 36px; border: 1px solid var(--line); background: var(--bg); overflow: hidden; box-shadow: var(--shadow); isolation: isolate; }
+.layer { position: absolute; inset: 0; background: var(--bg); transition: transform var(--t) var(--e); }
+.layer.inner { transform: translateX(100%); z-index: 5; box-shadow: -8px 0 24px rgba(0,0,0,.12); }
+.phone.pushed .layer.inner { transform: none; }
+.phone.pushed .layer.root { transform: translateX(-24%); }
+.scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding: 64px 12px 96px; }
+.scroll::-webkit-scrollbar { display: none; }
+
+/* header base */
+.hdr { position: absolute; z-index: 3; left: 0; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 4px; padding: 0 8px 0 16px; }
+.hdr .ttl { position: relative; flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.hdr .tw { position: relative; height: 30px; }
+.hdr .t { position: absolute; left: 0; top: 0; white-space: nowrap; font-weight: 800; font-size: 26px; line-height: 30px; transform-origin: left center; transition: transform var(--t) var(--e), opacity var(--t-fast) linear, filter var(--t) var(--e); }
+.hdr .sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 0; opacity: 0; transform: translateY(6px); transition: max-height var(--t) var(--e), opacity var(--t-fast) linear, transform var(--t) var(--e); font-variant-numeric: tabular-nums; }
+.ic { width: 40px; height: 40px; flex: none; border: none; border-radius: 999px; background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: transform var(--t-fast) var(--e), background var(--t-fast) linear; }
+.ic:active { transform: scale(.88); background: var(--chip); }
+.ic svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back { margin-left: -8px; }
+.hdr.nob .back { display: none; }
+/* search pill */
+.srch { position: absolute; top: 8px; bottom: 8px; right: 8px; width: 40px; border-radius: 999px; background: var(--chip); display: flex; align-items: center; opacity: 0; pointer-events: none; transition: width var(--t) var(--e), opacity var(--t-fast) linear; overflow: hidden; }
+.srch input { flex: 1; min-width: 0; border: none; background: transparent; color: var(--ink); font: inherit; font-size: 15px; padding: 0 0 0 14px; outline: none; }
+.hdr.searching .srch { width: calc(100% - 16px); opacity: 1; pointer-events: auto; }
+.hdr.searching .ttl, .hdr.searching .acts { opacity: 0; transform: translateX(-12px); }
+.hdr .ttl, .hdr .acts { transition: opacity var(--t-fast) linear, transform var(--t) var(--e); }
+.acts { display: flex; }
+.hdr:not(.can-search) .js-search { display: none; }
+/* selection overlay — common for all variants */
+.sel { position: absolute; inset: 0; display: flex; align-items: center; gap: 6px; padding: 0 8px; background: var(--chip); transform: translateY(-105%); transition: transform var(--t) var(--e); font-weight: 700; font-size: 18px; }
+.hdr.selecting .sel { transform: none; }
+.sel .n { display: inline-flex; height: 24px; overflow: hidden; font-family: var(--f-num); }
+.sel .n span { display: block; transition: transform var(--t) var(--e-pop); }
+.sel .sp { flex: 1; }
+
+/* ---------- variant A · Живая строка ---------- */
+.vA .hdr { transition: background var(--t-fast) linear, box-shadow var(--t-fast) linear; }
+.vA .hdr.scrolled { background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); box-shadow: 0 1px 0 var(--line); }
+.vA .hdr.scrolled .t { transform: scale(.74) translateY(-5px); }
+.vA .hdr.scrolled.has-sub .sub { max-height: 16px; opacity: 1; transform: translateY(-6px); }
+.vA .hdr.inner-h .t { font-size: 21px; }
+.vA .hdr.inner-h.scrolled .t { transform: translateY(-5px); }
+.vA .hdr.inner-h .sub { max-height: 16px; opacity: 1; transform: translateY(-4px); }
+
+/* ---------- variant B · Капсула ---------- */
+.vB .hdr { left: 10px; right: 10px; top: 8px; height: 52px; border-radius: 26px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); padding-left: 18px; transition: transform var(--t) var(--e), opacity var(--t-fast) linear; }
+.vB .hdr .t { font-size: 20px; }
+.vB .hdr.hide { transform: translateY(calc(-100% - 14px)); }
+.vB .hdr.inner-h { padding-left: 10px; }
+.vB .hdr.has-sub .sub { max-height: 16px; opacity: 1; transform: translateY(-4px); }
+.vB .hdr .sel { border-radius: 26px; }
+.vB .scroll { padding-top: 70px; }
+
+/* ---------- variant C · Градиентная лента ---------- */
+.vC .hdr { --p: 0; background: var(--bg); height: calc(56px + 18px * (1 - var(--p))); align-items: flex-start; padding-top: 8px; }
+.vC .hdr::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--hero); opacity: calc(1 - var(--p) * .9); border-radius: 0 0 calc(24px * (1 - var(--p))) calc(24px * (1 - var(--p))); }
+.vC .hdr::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--hero); filter: saturate(2.2); opacity: var(--p); }
+.vC .hdr .ttl { height: 40px; overflow: visible; }
+.vC .hdr .t { transform: scale(calc(1 - .2 * var(--p))); }
+.vC .hdr .sub { max-height: 16px; opacity: calc(1 - var(--p)); transform: translateY(calc(4px - 8px * var(--p))); }
+.vC .hdr:not(.has-sub) .sub { opacity: 0; }
+.vC .hdr .sel { height: 56px; bottom: auto; }
+.vC .scroll { padding-top: 84px; }
+.vC .hdr.inner-h .t { font-size: 21px; }
+
+/* ---------- content ---------- */
+.day { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--muted); padding: 14px 6px 6px; font-variant-numeric: tabular-nums; }
+.row { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 10px; border-radius: 14px; cursor: pointer; transition: background var(--t-fast) linear, transform var(--t-fast) var(--e); user-select: none; }
+.row:active { transform: scale(.98); }
+.row.on { background: var(--chip); }
+.row .dot { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; font-weight: 700; font-size: 13px; color: #0E1F00; transition: transform var(--t) var(--e-pop); }
+.row.on .dot { transform: scale(.9); box-shadow: 0 0 0 2px var(--lime); }
+.row .tx { flex: 1; min-width: 0; }
+.row .tx b { display: block; font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .tx small { color: var(--muted); font-size: 12px; }
+.row .a { font-family: var(--f-num); font-weight: 500; font-size: 13.5px; white-space: nowrap; color: var(--pink); text-align: right; }
+.row .a.in { color: var(--green); }
+.row .a small { display: block; color: var(--muted); font-size: 11px; }
+.hero { border-radius: 22px; background: var(--hero); padding: 16px; margin: 4px 0 8px; }
+.hero small { color: var(--muted); font-size: 12px; }
+.hero .big { font-family: var(--f-num); font-weight: 700; font-size: 28px; margin-top: 2px; }
+.hero .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; font-size: 12px; }
+.hero .tiles div { background: color-mix(in srgb, var(--card) 55%, transparent); border-radius: 12px; padding: 8px 10px; }
+.hero .tiles b { display: block; font-family: var(--f-num); font-size: 14px; }
+.grp { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 16px 6px 6px; }
+.chev { color: var(--muted); }
+.empty { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 0; }
+/* bottom bar capsule (as in the app) */
+.bbar { position: absolute; z-index: 4; left: 14px; right: 14px; bottom: 14px; height: 64px; border-radius: 32px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-around; padding: 0 8px; }
+.bbar .pill { position: absolute; top: 10px; left: 0; width: 44px; height: 44px; border-radius: 22px; background: var(--chip); transition: transform var(--t) var(--e); }
+.bbar button { position: relative; width: 44px; height: 44px; border: none; background: none; color: var(--muted); border-radius: 22px; cursor: pointer; display: grid; place-items: center; transition: color var(--t-fast) linear; }
+.bbar button.on { color: var(--ink); }
+.bbar button svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bbar .plus { width: 52px; height: 52px; border-radius: 26px; background: var(--lime); color: var(--onlime); font-size: 28px; font-weight: 500; }
+
+/* ---------- shared + vote ---------- */
+.panel { margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
+.box { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-width: 0; }
+.box ul { margin: 10px 0 0; padding-left: 18px; line-height: 1.55; font-size: 14px; }
+.box li + li { margin-top: 4px; }
+.opts { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.opts label { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; font-weight: 600; }
+.opts label:has(input:checked) { border-color: var(--lime); background: var(--chip); }
+.opts input { accent-color: var(--lime); width: 18px; height: 18px; }
+textarea { width: 100%; min-height: 90px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; padding: 10px 12px; resize: vertical; }
+.status { font-size: 13px; color: var(--muted); margin-top: 8px; min-height: 18px; }
+@media (prefers-reduced-motion: reduce) { .phone *, .phone { transition-duration: 1ms !important; } }
+</style>
+
+<main>
+  <h1>Шапки экранов: три варианта</h1>
+  <p class="intro">Каждый телефон живой: листайте список, нажимайте вкладки внизу, лупу, строки операций (выбор) и «Курсы валют» на вкладке «Ещё» (внутренний экран). Все варианты остаются компактными, в одну строку, как вы просили 10 ноября, и двигаются на пружинах «Пружина+» (#337).</p>
+  <div class="bar"><button class="btn" id="demo">Показать всё по очереди</button><button class="btn" id="theme">Тема: авто</button></div>
+  <div class="cols" id="cols"></div>
+
+  <div class="panel">
+    <div class="box">
+      <h2>Общее для всех вариантов</h2>
+      <ul>
+        <li><b>Выбор операций:</b> шапка уезжает, сверху выезжает «✕ Выбрано N», число перекатывается цифрами.</li>
+        <li><b>Смена вкладки:</b> заголовок не мигает, а сменяется движением. Направление зависит от варианта.</li>
+        <li><b>Поиск</b> раскрывается из лупы прямо в шапке, без отдельного экрана; список фильтруется на ходу.</li>
+        <li><b>Назад</b> — шеврон, внутренний экран въезжает справа, предыдущий слегка уходит влево.</li>
+        <li>Вторая строка подсказывает, где вы: месяц и итог дня в «Операциях», время обновления в «Курсах».</li>
+        <li>Высота экрана под список не теряется: шапка 56 dp или меньше.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Ваш выбор</h2>
+      <div class="opts" id="opts"></div>
+      <label for="note" style="font-size:13px;color:var(--muted)">Правки и пожелания (можно смешать варианты, например «капсула, но с поиском из А»)</label>
+      <textarea id="note" placeholder="Например: вариант А, но без второй строки на «Обзоре»"></textarea>
+      <div class="status" id="status">Ответ сохранится на этой странице, агент прочитает его сам.</div>
+    </div>
+  </div>
+</main>
+
+<template id="tpl">
+  <div class="col">
+    <div class="head"><h2></h2><p class="d"></p></div>
+    <div class="phone">
+      <div class="layer root">
+        <div class="scroll"></div>
+        <header class="hdr nob can-search">
+          <button class="ic back" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="ttl"><div class="tw"><span class="t"></span></div><div class="sub"></div></div>
+          <div class="acts"><button class="ic js-search" aria-label="Поиск"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button><button class="ic" aria-label="Ещё действия"><svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r=".8"/><circle cx="12" cy="12" r=".8"/><circle cx="12" cy="18.5" r=".8"/></svg></button></div>
+          <div class="srch"><input type="search" placeholder="Поиск по операциям" aria-label="Поиск"><button class="ic js-close" aria-label="Закрыть поиск"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+          <div class="sel"><button class="ic js-unsel" aria-label="Снять выбор"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>Выбрано&nbsp;<span class="n"><span>1</span></span><span class="sp"></span><button class="ic" aria-label="Удалить"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div>
+        </header>
+        <nav class="bbar"><i class="pill"></i>
+          <button data-tab="0" aria-label="Обзор"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8H4z"/></svg></button>
+          <button data-tab="1" aria-label="Операции"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></button>
+          <button class="plus" aria-label="Новая операция">+</button>
+          <button data-tab="2" aria-label="Счета"><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="3"/><path d="M15 12h2"/></svg></button>
+          <button data-tab="3" aria-label="Ещё"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg></button>
+        </nav>
+      </div>
+      <div class="layer inner">
+        <div class="scroll"></div>
+        <header class="hdr inner-h has-sub">
+          <button class="ic back js-back" aria-label="Назад"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="ttl"><div class="tw"><span class="t">Курсы валют</span></div><div class="sub">Обновлено сегодня в 14:20 · 18 валют</div></div>
+          <div class="acts"><button class="ic" aria-label="Обновить"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2-4.9M19 4v4h-4"/></svg></button></div>
+        </header>
+      </div>
+    </div>
+    <ul class="tries"></ul>
+  </div>
+</template>
+
+<script>
+const V = [
+  { cls: 'vA', id: 'A', title: 'А · Живая строка', rec: true,
+    d: 'Шапка сливается с фоном. Стоит начать листать, она становится матовым стеклом, заголовок уменьшается, а под ним появляется строка «где я»: день и его итог. Вкладки сменяются прокруткой заголовка вверх.',
+    tries: ['Листайте «Операции»: вторая строка меняет день', 'Лупа раскрывается в поле поиска'] },
+  { cls: 'vB', id: 'B', title: 'Б · Капсула',
+    d: 'Шапка — плавающая капсула, пара к нижней панели. Листаете вниз, она прячется, и весь экран отдан списку. Чуть потянули вверх, капсула возвращается. Заголовок вкладки въезжает сбоку в сторону перехода.',
+    tries: ['Листайте вниз и немного вверх', 'Переходите между вкладками слева направо и обратно'] },
+  { cls: 'vC', id: 'C', title: 'В · Градиентная лента',
+    d: 'Наверху шапка на градиенте темы со второй строкой-итогом. При прокрутке градиент плавно сжимается в тонкую цветную линию под заголовком. Заголовок вкладки сменяется проявлением.',
+    tries: ['Листайте медленно: лента сжимается вслед за пальцем', 'Смените палитру — градиент из темы'] },
+];
+const TABS = ['Обзор', 'Операции', 'Счета', 'Ещё'];
+const nf = n => Math.abs(n).toLocaleString('ru-RU').replace(/ /g, ' ');
+const CATS = [['Продукты', '#B8FF2E', 'Карта Visa · ARS'], ['Кафе', '#FFC46B', 'USDT-карта'], ['Такси', '#7FD8FF', 'Карта Visa · ARS'], ['Аптека', '#FF9BB0', 'Наличные ARS'], ['Дом', '#C9A8FF', 'Карта Visa · ARS'], ['Связь', '#9BE7C4', 'USDT-карта'], ['Зарплата', '#B8FF2E', 'Ameria · AMD'], ['Подписки', '#FFD86B', 'USDT-карта']];
+const DAYS = ['Сегодня, 15 ноября', 'Вчера, 14 ноября', 'Пт, 13 ноября', 'Чт, 12 ноября', 'Ср, 11 ноября', 'Вт, 10 ноября', 'Пн, 9 ноября', 'Вс, 8 ноября'];
+const OPS = []; // [day, name, account, color, amountARS, extra]
+let s = 7;
+const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+DAYS.forEach((d, di) => { const k = 3 + Math.floor(rnd() * 3); for (let i = 0; i < k; i++) {
+  const c = CATS[Math.floor(rnd() * CATS.length)]; const inc = c[0] === 'Зарплата';
+  const amt = inc ? 1250000 : Math.round((800 + rnd() * 48000) / 10) * 10;
+  OPS.push([di, c[0], c[2], c[1], inc ? amt : -amt, c[2].startsWith('USDT') ? (amt / 1205).toFixed(2) + ' USDT' : (inc ? '1 250 000 AMD' : '')]); } });
+const ACCS = [['Карта Visa', 'ARS', 1284500], ['Наличные', 'ARS', 312000], ['USDT-карта', 'USDT', 2140.5], ['Ameria', 'AMD', 4870000], ['Тинькофф', 'RUB', 186400], ['Сбер', 'RUB', 42000], ['Mercado Pago', 'ARS', 98300], ['Brubank', 'ARS', 455000], ['Копилка', 'USD', 3200], ['Бинанс', 'USDT', 5120], ['Наличные', 'USD', 640], ['Наличные', 'AMD', 85000], ['Депозит', 'AMD', 2000000], ['Ozon-карта', 'RUB', 9800]];
+const RATES = ['USD', 'ARS', 'AMD', 'RUB', 'USDT', 'EUR', 'GEL', 'TRY', 'BRL', 'CLP', 'UYU', 'KZT', 'GBP', 'CNY', 'JPY', 'AED', 'ILS', 'PLN'];
+
+function opsHTML() {
+  let h = '', cur = -1;
+  OPS.forEach((o, i) => {
+    if (o[0] !== cur) { cur = o[0]; const sum = OPS.filter(x => x[0] === cur).reduce((a, x) => a + x[4], 0);
+      h += '<div class="day" data-day="' + cur + '"><span>' + DAYS[cur] + '</span><span>' + (sum < 0 ? '−' : '+') + nf(sum) + ' ARS</span></div>'; }
+    h += '<div class="row js-op" data-i="' + i + '"><i class="dot" style="background:' + o[3] + '">' + o[1][0] + '</i><div class="tx"><b>' + o[1] + '</b><small>' + o[2] + '</small></div><div class="a' + (o[4] > 0 ? ' in' : '') + '">' + (o[4] > 0 ? '+' : '−') + nf(o[4]) + ' ARS' + (o[5] ? '<small>' + o[5] + '</small>' : '') + '</div></div>';
+  });
+  return h;
+}
+const homeHTML = () => '<div class="hero"><small>Всего на счетах, в ARS</small><div class="big">14 862 300</div><div class="tiles"><div>Расходы ноября<b>−412 300</b></div><div>Доходы ноября<b>+1 553 000</b></div></div></div><div class="grp">Последние операции</div>' + opsHTML().split('<div class="day"').slice(0, 3).join('<div class="day"');
+const accsHTML = () => ['ARS', 'USDT', 'AMD', 'RUB', 'USD'].map(cur => '<div class="grp">' + cur + '</div>' + ACCS.filter(a => a[1] === cur).map(a => '<div class="row"><i class="dot" style="background:var(--chip);color:var(--ink)">' + a[0][0] + '</i><div class="tx"><b>' + a[0] + '</b><small>' + a[1] + '</small></div><div class="a in" style="color:var(--ink)">' + nf(a[2]) + ' ' + a[1] + '</div></div>').join('')).join('');
+const moreHTML = () => [['Деньги', ['Курсы валют', 'Категории', 'Шаблоны', 'Бюджеты', 'Валюты отчётов']], ['Семья и данные', ['Семья', 'Резервная копия', 'Импорт из Wallet']], ['Приложение', ['Внешний вид', 'Обратная связь', 'О приложении']]].map(([g, rs]) => '<div class="grp">' + g + '</div>' + rs.map(r => '<div class="row' + (r === 'Курсы валют' ? ' js-rates' : '') + '"><div class="tx"><b>' + r + '</b></div><span class="chev">›</span></div>').join('')).join('');
+const ratesHTML = () => RATES.map((c, i) => '<div class="row"><i class="dot" style="background:var(--chip);color:var(--ink);font-size:11px">' + c + '</i><div class="tx"><b>1 ' + c + '</b><small>к доллару</small></div><div class="a" style="color:var(--ink)">' + (i === 0 ? '1' : (Math.round(rnd() * 120000) / 100).toLocaleString('ru-RU')) + ' USD<small style="color:' + (i % 3 ? 'var(--green)' : 'var(--pink)') + '">' + (i % 3 ? '+' : '−') + (rnd() * 2).toFixed(1).replace('.', ',') + ' %</small></div></div>').join('');
+const SUB = ['', '', '14 счетов · 5 валют', ''];
+
+const cols = document.getElementById('cols');
+const tpl = document.getElementById('tpl');
+const phones = [];
+V.forEach(v => {
+  const n = tpl.content.firstElementChild.cloneNode(true);
+  n.querySelector('.phone').classList.add(v.cls);
+  n.querySelector('h2').innerHTML = v.title + (v.rec ? '<span class="tag">рекомендую</span>' : '');
+  n.querySelector('.d').textContent = v.d;
+  n.querySelector('.tries').innerHTML = v.tries.map(t => '<li>' + t + '</li>').join('');
+  cols.append(n);
+  phones.push(setup(n.querySelector('.phone'), v));
+});
+
+function setup(ph, v) {
+  const root = ph.querySelector('.layer.root'), inner = ph.querySelector('.layer.inner');
+  const sc = root.querySelector('.scroll'), hdr = root.querySelector('.hdr'), tw = hdr.querySelector('.tw'), sub = hdr.querySelector('.sub');
+  const isc = inner.querySelector('.scroll'), ihdr = inner.querySelector('.hdr');
+  const pill = root.querySelector('.pill'), tabsB = [...root.querySelectorAll('[data-tab]')];
+  const input = hdr.querySelector('input');
+  isc.innerHTML = ratesHTML();
+  let tab = -1, lastY = 0, selected = new Set();
+
+  function setTitle(text, dir) {
+    const old = tw.querySelector('.t'); const nt = document.createElement('span'); nt.className = 't'; nt.textContent = text;
+    if (!old || dir === 0) { if (old) old.remove(); tw.append(nt); return; }
+    const off = v.id === 'A' ? ['translateY(110%)', 'translateY(-110%)'] : v.id === 'B' ? ['translateX(' + 60 * dir + '%)', 'translateX(' + -60 * dir + '%)'] : ['scale(.92)', 'scale(1.06)'];
+    nt.style.transition = 'none'; nt.style.opacity = '0'; nt.style.transform = off[0]; if (v.id === 'C') nt.style.filter = 'blur(6px)';
+    tw.append(nt);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      nt.style.transition = ''; nt.style.opacity = ''; nt.style.transform = ''; nt.style.filter = '';
+      old.style.opacity = '0'; old.style.transform = off[1]; if (v.id === 'C') old.style.filter = 'blur(6px)';
+      setTimeout(() => old.remove(), 450);
+    }));
+  }
+  function go(t) {
+    if (t === tab) return;
+    const dir = tab < 0 ? 0 : (t > tab ? 1 : -1);
+    tab = t; clearSel(); closeSearch();
+    tabsB.forEach(b => b.classList.toggle('on', +b.dataset.tab === t));
+    const b = tabsB[t]; pill.style.transform = 'translateX(' + (b.offsetLeft) + 'px)';
+    setTitle(TABS[t], dir);
+    hdr.classList.toggle('can-search', t === 1 || t === 2);
+    input.placeholder = t === 2 ? 'Поиск по счетам' : 'Поиск по операциям';
+    sc.innerHTML = [homeHTML, opsHTML, accsHTML, moreHTML][t]();
+    sc.scrollTop = 0; hdr.classList.remove('hide'); onScroll();
+  }
+  function daySub() {
+    if (tab !== 1) return SUB[tab];
+    const top = sc.scrollTop + 70; let d = 0;
+    sc.querySelectorAll('.day').forEach(el => { if (el.offsetTop <= top) d = el; });
+    if (!d) return 'Ноябрь · −412 300 ARS';
+    return d.children[0].textContent + ' · ' + d.children[1].textContent;
+  }
+  function onScroll() {
+    const y = sc.scrollTop;
+    const txt = v.id === 'C' && tab === 1 ? 'Ноябрь · −412 300 ARS' : daySub();
+    if (sub.textContent !== txt) sub.textContent = txt;
+    hdr.classList.toggle('has-sub', !!txt);
+    if (v.id === 'A') hdr.classList.toggle('scrolled', y > 4);
+    if (v.id === 'B') { if (y > lastY + 6 && y > 60) hdr.classList.add('hide'); else if (y < lastY - 6 || y < 30) hdr.classList.remove('hide'); }
+    if (v.id === 'C') hdr.style.setProperty('--p', Math.min(1, y / 80).toFixed(3));
+    lastY = y;
+  }
+  sc.addEventListener('scroll', onScroll, { passive: true });
+  let ily = 0;
+  isc.addEventListener('scroll', () => { const y = isc.scrollTop;
+    if (v.id === 'A') ihdr.classList.toggle('scrolled', y > 4);
+    if (v.id === 'B') { if (y > ily + 6 && y > 60) ihdr.classList.add('hide'); else if (y < ily - 6 || y < 30) ihdr.classList.remove('hide'); }
+    if (v.id === 'C') ihdr.style.setProperty('--p', Math.min(1, y / 80).toFixed(3));
+    ily = y; }, { passive: true });
+
+  function setCount(nv) {
+    const box = hdr.querySelector('.n'), old = box.firstElementChild;
+    if (old.textContent === String(nv)) return;
+    const up = nv > +old.textContent;
+    const ne = document.createElement('span'); ne.textContent = nv; ne.style.transition = 'none'; ne.style.transform = up ? 'translateY(100%)' : 'translateY(-100%)';
+    box.style.flexDirection = 'column'; box.append(ne);
+    old.style.position = 'absolute'; old.style.transform = up ? 'translateY(-100%)' : 'translateY(100%)';
+    requestAnimationFrame(() => requestAnimationFrame(() => { ne.style.transition = ''; ne.style.transform = ''; }));
+    setTimeout(() => old.remove(), 450);
+  }
+  function clearSel() { selected.clear(); sc.querySelectorAll('.row.on').forEach(r => r.classList.remove('on')); hdr.classList.remove('selecting'); }
+  function closeSearch() { hdr.classList.remove('searching'); input.value = ''; filter(''); }
+  function filter(q) { q = q.trim().toLowerCase();
+    sc.querySelectorAll('.row').forEach(r => r.hidden = !!q && !r.textContent.toLowerCase().includes(q));
+    sc.querySelectorAll('.day, .grp').forEach(d => d.hidden = !!q); }
+
+  sc.addEventListener('click', e => {
+    const op = e.target.closest('.js-op');
+    if (op && tab === 1) { const i = op.dataset.i;
+      selected.has(i) ? selected.delete(i) : selected.add(i); op.classList.toggle('on', selected.has(i));
+      if (selected.size) { if (!hdr.classList.contains('selecting')) { hdr.querySelector('.n').innerHTML = '<span>' + selected.size + '</span>'; hdr.classList.add('selecting'); hdr.classList.remove('hide'); } else setCount(selected.size); }
+      else hdr.classList.remove('selecting');
+    }
+    if (e.target.closest('.js-rates')) { isc.scrollTop = 0; ihdr.classList.remove('scrolled', 'hide'); ihdr.style.setProperty('--p', 0); ph.classList.add('pushed'); }
+  });
+  hdr.querySelector('.js-unsel').onclick = clearSel;
+  hdr.querySelector('.js-search').onclick = () => { hdr.classList.add('searching'); hdr.classList.remove('hide'); setTimeout(() => input.focus({ preventScroll: true }), 120); };
+  hdr.querySelector('.js-close').onclick = closeSearch;
+  input.addEventListener('input', () => filter(input.value));
+  inner.querySelector('.js-back').onclick = () => ph.classList.remove('pushed');
+  tabsB.forEach(b => b.onclick = () => go(+b.dataset.tab));
+  requestAnimationFrame(() => go(1));
+  return { ph, go, sc, hdr, isc };
+}
+
+/* guided demo: same script for all three phones */
+const wait = ms => new Promise(r => setTimeout(r, ms));
+async function smooth(el, to, ms) { const from = el.scrollTop, t0 = performance.now();
+  return new Promise(res => { const f = t => { const k = Math.min(1, (t - t0) / ms); el.scrollTop = from + (to - from) * (1 - Math.pow(1 - k, 3)); k < 1 ? requestAnimationFrame(f) : res(); }; requestAnimationFrame(f); }); }
+let demoRunning = false;
+document.getElementById('demo').onclick = async () => {
+  if (demoRunning) return; demoRunning = true;
+  const all = f => Promise.all(phones.map(f));
+  await all(async p => { p.ph.classList.remove('pushed'); p.go(1); }); await wait(500);
+  await all(p => smooth(p.sc, 520, 1600)); await wait(500);
+  await all(p => smooth(p.sc, 440, 500)); await wait(700);
+  await all(p => smooth(p.sc, 0, 900)); await wait(400);
+  await all(async p => p.go(2)); await wait(900);
+  await all(async p => p.go(3)); await wait(900);
+  await all(async p => p.go(1)); await wait(700);
+  await all(async p => { const rows = p.sc.querySelectorAll('.js-op'); rows[0].click(); await wait(500); rows[2].click(); await wait(500); rows[3].click(); });
+  await wait(1200); await all(async p => p.hdr.querySelector('.js-unsel').click()); await wait(600);
+  await all(async p => p.hdr.querySelector('.js-search').click()); await wait(1300);
+  await all(async p => p.hdr.querySelector('.js-close').click()); await wait(500);
+  await all(async p => { p.go(3); }); await wait(700);
+  await all(async p => p.sc.querySelector('.js-rates').click()); await wait(800);
+  await all(p => smooth(p.isc, 300, 1000)); await wait(900);
+  await all(async p => p.ph.classList.remove('pushed'));
+  demoRunning = false;
+};
+
+/* theme toggle */
+const modes = ['auto', 'dark', 'light'], names = { auto: 'авто', dark: 'тёмная', light: 'светлая' };
+let mode = 'auto';
+try { mode = localStorage.getItem('coshell-mock-theme') || 'auto'; } catch (e) {}
+if (!modes.includes(mode)) mode = 'auto';
+const applyTheme = () => { if (mode === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = mode;
+  document.getElementById('theme').textContent = 'Тема: ' + names[mode]; };
+applyTheme();
+document.getElementById('theme').onclick = () => { mode = modes[(modes.indexOf(mode) + 1) % 3]; try { localStorage.setItem('coshell-mock-theme', mode); } catch (e) {} applyTheme(); };
+
+/* vote — same storage as poll pages: collection "answers", doc "headers" {choice, note, at} */
+const QID = 'headers';
+const opts = document.getElementById('opts'), note = document.getElementById('note'), st = document.getElementById('status');
+opts.innerHTML = V.map(v => '<label><input type="radio" name="hv" id="hv-' + v.id + '" value="' + v.id + '">' + v.title + (v.rec ? '<span class="tag">рекомендую</span>' : '') + '</label>').join('');
+let db = null, answer = {};
+async function save(patch) {
+  answer = Object.assign({}, answer, patch, { at: new Date().toISOString() });
+  if (!db) { st.textContent = 'Не удалось сохранить: страница открыта без входа в claude.ai. Напишите выбор агенту в чат.'; return; }
+  st.textContent = 'Сохраняю…';
+  try { await db.collection('answers').doc(QID).set(answer); st.textContent = 'Сохранено. Агент прочитает ответ с этой страницы.'; }
+  catch (e) { st.textContent = 'Не сохранилось. Попробуйте ещё раз или напишите выбор в чат.'; }
+}
+opts.addEventListener('change', e => save({ choice: e.target.value }));
+let nt; note.addEventListener('input', () => { clearTimeout(nt); nt = setTimeout(() => save({ note: note.value }), 700); });
+(async () => {
+  try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) return;
+  db.collection('answers').doc(QID).onSnapshot(d => {
+    const a = d && d.exists ? d.data() : null; if (!a) return; answer = a;
+    if (a.choice) { const r = document.getElementById('hv-' + a.choice); if (r) r.checked = true; }
+    if (typeof a.note === 'string' && document.activeElement !== note) note.value = a.note;
+  }, () => {});
+})();
+</script>

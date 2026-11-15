@@ -34,6 +34,22 @@ internal val transactionsPreviewSample =
         ),
     )
 
+/** A long list (8 days, 32 rows) for the scrolled header (header poll А): days with their nets. */
+internal val transactionsLongSample = TransactionsUiState(
+    days = (0 until 8).map { d ->
+        Day(
+            LocalDate(2026, 11, 15 - d),
+            when (d) { 0 -> RelativeDay.TODAY; 1 -> RelativeDay.YESTERDAY; else -> RelativeDay.OTHER },
+            (0 until 4).map { r ->
+                val n = d * 4 + r
+                Row("long$n", Kind.EXPENSE, listOf("Продукты", "Кафе", "Такси", "Аптека")[r], "Карта", "", "-${1 + n} 250,00 ARS")
+            },
+            total = "-${4 + d * 4} 000,00 ARS",
+            totalTone = Kind.EXPENSE,
+        )
+    },
+)
+
 /** Board `Fb141A`: food categories, October, Аня — and the total under the chips (4А). */
 internal val transactionsFilterChoices = FilterChoices(
     accounts = listOf(

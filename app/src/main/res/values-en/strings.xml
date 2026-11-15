@@ -63,6 +63,8 @@
         <item quantity="other">%1$d accounts</item>
     </plurals>
     <string name="search_clear">Clear search</string>
+    <string name="transactions_search_open">Search operations</string>
+    <string name="search_close">Close search</string>
     <string name="choice_search">Search</string>
     <string name="picker_nothing">Nothing found</string>
     <string name="picker_from_expense">Paid from?</string>

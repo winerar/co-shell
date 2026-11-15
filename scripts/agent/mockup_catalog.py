@@ -57,6 +57,11 @@ def components():
         section('Нижняя панель', grid([bars], 1).replace('repeat(1, minmax(0, 1fr))', 'repeat(2, minmax(0, 1fr))'),
                 'nav(active, dot_more) → CoShellBottomBar · CoShellTab — капсула 64 dp, пилюля 44 dp, «+» 52 dp (нажимайте вкладки) · '
                 'tab_screen(title, body, active) / inner_screen(title, body) / top_bar(title, lead) → TabTopBar · ScreenTopBar', 3),
+        section('Шапки', stack(frame(tab_head('Операции', icon_button('search', 'Поиск')), 64), frame(tab_head('Операции', icon_button('search', 'Поиск'), '10 ноября, вт · −24 000,00 ARS'), 64),
+                               frame(search_head('кафе'), 64), frame(select_head(3), 64), frame(inner_head('Курсы валют'), 64), frame(inner_head('Курсы валют', scrolled=True), 64)),
+                'tab_head(title, actions, sub) → TabTopBar: в покое 28 px; прокручено — сплошная, линия, 21 px и «где я» (опрос шапок А, без прозрачности) · '
+                'search_head(value) → TabTopBar(search): лупа раскрывает поле на месте заголовка (#394 Б) · select_head(n) → SelectionTopBar / TabOrSelectionTopBar '
+                '(выезжает сверху, число катится) · inner_head(title, scrolled) → ScreenTopBar: линия при прокрутке (#394 Б)'),
         section('Кнопки', stack(button('Сохранить', mt=0), button('Отмена', 'outline', None, 0), button('Удалить', 'danger', 'trash', 0), button('Синхронизировать', 'violet', 'refresh', 0),
                                 line(icon_button('search', 'Поиск', INK, True), icon_button('back', 'Назад'), button('Все →', 'text', None, 0).replace('width: 100%', 'width: auto; padding: 0 12px')),
                                 dashed('Добавить', 0), frame(fab('Добавить'), 90, 'background: transparent;')),

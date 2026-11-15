@@ -70,10 +70,11 @@ def decide(issue, item):
 
 
 def moved_after(card_at, labels_at):
-    """The card changed well after the last label change (ISO-8601 UTC strings; no label change yet → True)."""
-    if not labels_at:
-        return True
-    if not card_at:
+    """The card's Status changed well after the last status-label change (ISO-8601 UTC strings).
+
+    Unknown label time → the label wins: GraphQL timelineItems returned no label events at all (2026-11-15),
+    and «no events» read as «the owner moved it» reverted every label the agent set."""
+    if not labels_at or not card_at:
         return False
     parse = lambda t: datetime.fromisoformat(t.replace("Z", "+00:00"))
     return parse(card_at) > parse(labels_at) + OWNER_MOVE_GRACE
@@ -117,6 +118,23 @@ def rest(token, method, path, payload=None):
                                  method=method)
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read()
+
+
+def status_labels_at(events):
+    """Time of the last `status:*` labeled/unlabeled event in REST issue events (oldest first), or None."""
+    times = [e["created_at"] for e in events if e.get("event") in ("labeled", "unlabeled")
+             and (e.get("label") or {}).get("name", "").startswith("status:")]
+    return max(times) if times else None
+
+
+def issue_events(token, repo, number):
+    events, page = [], 1
+    while True:
+        batch = json.loads(rest(token, "GET", f"/repos/{repo}/issues/{number}/events?per_page=100&page={page}"))
+        events += batch
+        if len(batch) < 100:
+            return events
+        page += 1
 
 
 def drop_status(token, repo, number, labels):
@@ -220,6 +238,9 @@ def main():
     for number, issue in sorted(issues.items()):
         item = items.get(number)
         column, label, close = decide(issue, item)
+        if label or close:  # the board would override the label: check the label time over REST first
+            issue["labels_at"] = status_labels_at(issue_events(rtoken, repo, number))
+            column, label, close = decide(issue, item)
         if item is None and column:
             item = {"id": graphql(ptoken, ADD_M, project=project, content=issue["id"])["addProjectV2ItemById"]["item"]["id"]}
         if column:

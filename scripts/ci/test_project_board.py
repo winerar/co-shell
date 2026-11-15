@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
-from project_board import DONE, decide, decide_type, fatal_errors, type_of  # noqa: E402
+from project_board import DONE, decide, decide_type, fatal_errors, status_labels_at, type_of  # noqa: E402
 
 
 def issue(*labels, open=True, at="2026-11-10T10:00:00Z"):
@@ -49,8 +49,18 @@ class DecideTest(unittest.TestCase):
         self.assertEqual(decide(issue(open=False), item("В работе")), (DONE, None, False))
         self.assertEqual(decide(issue(open=False), item(DONE)), (None, None, False))
 
-    def test_issue_never_labelled_and_card_moved(self):
-        self.assertEqual(decide(issue(at=None), item("Бэклог")), (None, "status:backlog", False))
+    def test_unknown_label_time_keeps_label(self):
+        self.assertEqual(decide(issue("status:backlog", at=None), item("В работе")), ("Бэклог", None, False))
+
+    def test_status_labels_at_takes_last_status_event(self):
+        events = [
+            {"event": "labeled", "label": {"name": "status:next"}, "created_at": "2026-11-10T10:00:00Z"},
+            {"event": "unlabeled", "label": {"name": "status:next"}, "created_at": "2026-11-15T18:00:00Z"},
+            {"event": "labeled", "label": {"name": "design"}, "created_at": "2026-11-15T19:00:00Z"},
+            {"event": "renamed", "created_at": "2026-11-15T20:00:00Z"},
+        ]
+        self.assertEqual(status_labels_at(events), "2026-11-15T18:00:00Z")
+        self.assertIsNone(status_labels_at([]))
 
 
 class TypeTest(unittest.TestCase):

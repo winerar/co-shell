@@ -88,7 +88,7 @@
   (правила поиска — `money-and-currency.md`); загрузка — `RatesProvider` перебирает источники
   (`core:data/rates/`: currency-api через jsDelivr → то же через Cloudflare → open.er-api, только последний курс).
   Хранение — `ExchangeRateRepository` (`RoomExchangeRateRepository`): ручные курсы (синк, бэкап) и
-  загруженные (кэш), `usedCurrencies()` + `RatesSnapshot.keepOnly` (`database.md` §«Курсы»).
+  загруженные (кэш), `usedCurrencies()` + `RatesSnapshot.keepOnly` (`database-tables.md` §«Курсы»).
   Фоновая загрузка — `RefreshRatesUseCase` + `app/.../rates/work/RatesRefreshWorker` (раз в сутки при сети,
   планируется при запуске приложения; история — дни операций без курса, ≤ 30 за запуск; ARCHITECTURE §6).
   Живьём API не проверялись (песочница их блокирует) — формат ответов из документации; проверить на
@@ -179,7 +179,7 @@
   проседают, наклоняются к пальцу, ловят блик и пружинят; выбор — «щелчок на место». Правило — `TactileRuleTest`.
   **Не проверено на телефоне** — сила наклона/блика может потребовать подстройки (`motion/Tactile.kt`).
 - Название приложения для пользователя — **Co-Shell** (`app_name`; отзыв winerar/co-shell#32).
-- Тесты: всего 1196 (+ Python-скрипты) — всё зелёное; `check assembleDebug` проходит; release с R8 и подписью собирается локально.
+- Тесты: всего 1211 (+ Python-скрипты) — всё зелёное; `check assembleDebug` проходит; release с R8 и подписью собирается локально.
 - Структура кода: экраны — пакеты из маленьких файлов, общие блоки — компоненты `core:designsystem` (`project-structure.md`).
 - **Ветки:** работа → PR в `dev`; релиз (мерж `dev` → `main`) — **только по команде владельца**; рабочие ветки — **от `dev`**
   (сессии клонируют `main` — перейти на `dev`, `workflow.md` §«Git»).

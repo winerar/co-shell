@@ -25,7 +25,7 @@
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md), [release-checklist.md](docs/agents/release-checklist.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется; **чек-лист перед 1.0** |
 | [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
-| [docs/agents/database.md](docs/agents/database.md) | Room: схема, мягкое удаление, миграции, резервная копия |
+| [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
 | [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |

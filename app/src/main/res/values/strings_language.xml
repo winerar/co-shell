@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App language (#352): the sheet on first launch / after the update, the row in «Внешний вид». -->
+<resources>
+    <string name="language_title">Язык</string>
+    <string name="language_sheet_title">Язык приложения</string>
+    <string name="language_first_text">Выбрали язык телефона. Сменить можно в любой момент: «Ещё → Внешний вид».</string>
+    <string name="language_settings_text">Экран обновится сразу. Даты и названия месяцев — тоже на выбранном языке.</string>
+    <string name="language_update_title">Приложение говорит на трёх языках</string>
+    <string name="language_update_text">Русский, English и Español. Оставим русский или переключимся на язык телефона?</string>
+    <string name="language_follow_phone">Как в телефоне</string>
+    <string name="language_phone_now">сейчас — %1$s</string>
+    <string name="language_row_phone">Как в телефоне · %1$s</string>
+    <string name="language_keep_russian">Оставить русский</string>
+    <string name="language_keep_hint">как сейчас</string>
+    <string name="language_name_ru">русский</string>
+    <string name="language_name_en">английский</string>
+    <string name="language_name_es">испанский</string>
+    <!-- Each language by its own name: the same in every interface language. -->
+    <string name="language_endonym_ru" translatable="false">Русский</string>
+    <string name="language_endonym_en" translatable="false">English</string>
+    <string name="language_endonym_es" translatable="false">Español</string>
+</resources>

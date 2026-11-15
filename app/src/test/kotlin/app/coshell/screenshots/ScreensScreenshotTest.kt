@@ -6,6 +6,9 @@ import app.coshell.more.MoreState
 import app.coshell.appearance.AppearanceActions
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
+import app.coshell.language.LanguageChoice
+import app.coshell.language.LanguageChoices
+import app.coshell.language.components.LanguageList
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.domain.settings.ThemeMode
@@ -211,6 +214,18 @@ class ScreensScreenshotTest {
     @Test
     fun `appearance peach light`() = shot("appearance_peach_light", palette = CoShellPalette.Peach) {
         AppearanceScreen(AppearanceState(ThemeMode.LIGHT, ThemePalette.PEACH), AppearanceActions())
+    }
+
+    /** Board `Fb352A` / `Fb352Update`: the language list (body; in the app it sits in a `CoShellSheet`). */
+    @Test
+    fun `language first launch dark`() = shot("language_first_dark", dark = true) {
+        Column { LanguageList(LanguageChoices.all(), LanguageChoice(null), phoneLanguage = "es", uiLanguage = "ru") {} }
+    }
+
+    @Test
+    fun `language after update light`() = shot("language_update_light") {
+        val choices = LanguageChoices.afterUpdate()
+        Column { LanguageList(choices, choices.first(), phoneLanguage = "es", uiLanguage = "ru") {} }
     }
 
     @Test

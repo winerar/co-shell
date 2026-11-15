@@ -36,6 +36,7 @@ import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
 import app.coshell.core.domain.CategoryNames
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
+import app.coshell.core.domain.RenameStarterCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -185,6 +186,9 @@ object DataModule {
     @Provides
     fun provideSeedDefaultCategories(categories: CategoryRepository, ids: IdGenerator, names: CategoryNames) =
         SeedDefaultCategoriesUseCase(categories, ids, names)
+
+    @Provides
+    fun provideRenameStarterCategories(categories: CategoryRepository) = RenameStarterCategoriesUseCase(categories)
 
     @Provides
     fun provideCategoryNames(@ApplicationContext context: Context): CategoryNames = ResourceCategoryNames(context)

@@ -1,7 +1,6 @@
 package app.coshell.language
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Test
 
 class AppLanguageTest {
@@ -33,7 +32,18 @@ class AppLanguageTest {
     }
 
     @Test
-    fun `the app stays Russian until the language picker ships`() {
-        assertFalse(AppLanguage.FOLLOW_PHONE)
+    fun `a new install follows the phone and asks once`() {
+        assertEquals(null to LanguagePrompt.FIRST, AppLanguage.initial(updated = false, phone = listOf("es-AR")))
+    }
+
+    @Test
+    fun `after the update the app stays Russian until the person answers`() {
+        assertEquals("ru" to LanguagePrompt.UPDATE, AppLanguage.initial(updated = true, phone = listOf("es-AR")))
+        assertEquals("ru", AppLanguage.pick("ru", listOf("es-AR")))
+    }
+
+    @Test
+    fun `an update on a Russian phone has nothing to ask`() {
+        assertEquals(null to LanguagePrompt.NONE, AppLanguage.initial(updated = true, phone = listOf("ru-RU")))
     }
 }

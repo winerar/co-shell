@@ -3,13 +3,15 @@ package app.coshell.categories
 import android.content.Context
 import app.coshell.R
 import app.coshell.core.domain.CategoryNames
+import app.coshell.language.AppLanguage
 
 /**
  * Names of the categories the app creates itself, from `strings_defaults.xml` — so a new language gets
  * its own starter set. An explicit map, not `getIdentifier`: the resource shrinker keeps what is referenced.
+ * [language] — the tag to name in; by default the language in effect now (it can change while the app runs, #352).
  */
-class ResourceCategoryNames(private val context: Context) : CategoryNames {
-    override fun name(key: String): String? = IDS[key]?.let(context::getString)
+class ResourceCategoryNames(private val context: Context, private val language: () -> String = AppLanguage::current) : CategoryNames {
+    override fun name(key: String): String? = IDS[key]?.let { AppLanguage.localized(context, language()).getString(it) }
 
     companion object {
         val IDS: Map<String, Int> = mapOf(

@@ -31,6 +31,11 @@ object DefaultCategories {
     /** Key of a starter category in [CategoryNames]: `expense.food`, `income.other`… */
     fun key(type: CategoryType, icon: String): String = "${type.name.lowercase()}.$icon"
 
+    /** Name of the starter category of [type] with [icon] in [names]; `null` if the starter set has none. */
+    fun name(type: CategoryType, icon: String, names: CategoryNames): String? =
+        (if (type == CategoryType.EXPENSE) expenses else incomes).firstOrNull { it.icon == icon }
+            ?.let { seed -> names.name(key(type, icon))?.takeIf { it.isNotBlank() } ?: seed.name }
+
     /** Every key of the starter set, for checking that the app has a string for each. */
     val keys: List<String> get() =
         expenses.map { key(CategoryType.EXPENSE, it.icon) } + incomes.map { key(CategoryType.INCOME, it.icon) }

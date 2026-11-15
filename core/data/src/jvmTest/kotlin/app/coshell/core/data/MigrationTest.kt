@@ -225,6 +225,22 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `11 to 12 keeps tags and adds a place for fields of a newer version`() {
+        helper.createDatabase(11).use { v11 ->
+            v11.execSQL(
+                """INSERT INTO tags (id, name, color, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('аня', 'Аня', NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(12, emptyList()).use { v12 ->
+            assertEquals("Аня", v12.single("SELECT name FROM tags"))
+            v12.execSQL("INSERT INTO sync_extras (kind, id, json) VALUES ('tag', 'аня', '{\"pin\":true}')")
+            assertEquals("{\"pin\":true}", v12.single("SELECT json FROM sync_extras WHERE kind = 'tag'"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

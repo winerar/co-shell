@@ -8,4 +8,9 @@
     <string name="appearance_notifications_section">Notifications</string>
     <string name="reminders_title">Payment reminders</string>
     <string name="reminders_hint">At 9:00 on the payment day</string>
+    <!-- A payment in another currency (#415, poll 3 «Д»): the debited amount is always entered. -->
+    <string name="recurring_action_enter_amount">Enter amount</string>
+    <string name="recurring_notify_by_rate">≈ %1$s at the rate</string>
+    <string name="recurring_notify_enter_debited">enter the amount charged</string>
+    <string name="payment_hint_no_rate">No %1$s → %2$s rate — enter the amount charged</string>
 </resources>

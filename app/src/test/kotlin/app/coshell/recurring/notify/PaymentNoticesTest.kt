@@ -10,13 +10,17 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
+import app.coshell.testing.FakeExchangeRateRepository
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
@@ -38,7 +42,8 @@ class PaymentNoticesTest {
     private val day = LocalDate(2026, 11, 15)
     private val accounts = FakeAccountRepository()
     private val categories = FakeCategoryRepository()
-    private val notices = PaymentNotices(context, accounts, categories, MoneyFormat.RU)
+    private val rates = FakeExchangeRateRepository()
+    private val notices = PaymentNotices(context, accounts, categories, MoneyFormat.RU, rates)
     private val manager = context.getSystemService(NotificationManager::class.java)
 
     private fun template(name: String, amount: Long? = null) =
@@ -72,6 +77,21 @@ class PaymentNoticesTest {
         val n = shown().single()
         assertEquals("Сегодня платёж: Аренда · 650\u202F000,00\u00A0ARS", n.title())
         assertEquals(listOf("Провести 650\u202F000,00\u00A0ARS", "Изменить сумму"), n.actions.map { it.title.toString() })
+    }
+
+    @Test
+    fun `a payment in another currency asks for the amount, with the rate as a hint`() = runTest {
+        val usd = CurrencyCode("USD")
+        val rent = TransactionTemplate("rent", "Аренда", TransactionType.EXPENSE, "galicia", ars, Money(650_00, usd))
+        notices.remind(listOf(rent), day)
+        val bare = shown().single()
+        assertEquals("Сегодня платёж: Аренда · 650,00\u00A0USD", bare.title())
+        assertEquals("Galicia · введите, сколько списали", bare.text())
+        assertEquals(listOf("Ввести сумму", "Завтра"), bare.actions.map { it.title.toString() })
+
+        rates.rates.value = listOf(ExchangeRate(day, usd, ars, Rate.parse("1050"), RateOrigin.DOWNLOADED))
+        notices.remind(listOf(rent), day)
+        assertEquals("Galicia · ≈ 682\u202F500,00\u00A0ARS по курсу", shown().last().text())
     }
 
     @Test

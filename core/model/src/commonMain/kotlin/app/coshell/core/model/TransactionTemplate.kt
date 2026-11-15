@@ -19,9 +19,15 @@ data class TransactionTemplate(
     val toAccountId: String? = null,
     val note: String = "",
     val sortOrder: Int = 0,
+    /** «Повтор» — a regular payment (#143); `null` — an ordinary template. */
+    val schedule: RecurringSchedule? = null,
 ) {
     init {
         require(name.isNotBlank()) { "Template name must not be blank" }
+        if (schedule?.mode == PostMode.AUTO) {
+            require(amount != null) { "Only a template with an amount posts by itself" }
+            require(type != TransactionType.TRANSFER) { "A transfer is posted by hand: the arriving amount is entered then" }
+        }
         amount?.let {
             require(it.isPositive) { "Template amount must be positive, got $it" }
             require(it.currency == currency) { "Template amount must be in the account currency" }

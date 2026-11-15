@@ -3,10 +3,13 @@ package app.coshell.core.data.sync
 import app.coshell.core.data.db.SyncStateEntity
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
+import app.coshell.core.model.Recurrence
+import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +20,9 @@ class TemplateSyncTest {
     private val server = FakeRemoteStore()
     private val a = Phone("member-a", server, startMs = 1_000_000)
     private val b = Phone("member-b", server, startMs = 1_000_000)
-    private val coffee = TransactionTemplate("coffee", "Кофе", TransactionType.EXPENSE, "card", ars, categoryId = "cafe", sortOrder = 2)
+    private val coffee = TransactionTemplate("coffee", "Кофе", TransactionType.EXPENSE, "card", ars, categoryId = "cafe", sortOrder = 2,
+        schedule = RecurringSchedule(Recurrence.Monthly(31), LocalDate(2026, 11, 1)),
+    )
 
     @AfterTest
     fun tearDown() { a.close(); b.close() }

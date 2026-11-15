@@ -13,5 +13,5 @@ fun ReportCategoryRoute(
     viewModel: ReportCategoryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    ReportCategoryScreen(state, onBack = onBack, onTransactionClick = onTransactionClick)
+    ReportCategoryScreen(state, onBack = onBack, onTransactionClick = onTransactionClick, onMonth = viewModel::onMonth)
 }

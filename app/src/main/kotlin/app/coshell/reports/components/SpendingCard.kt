@@ -96,6 +96,8 @@ internal fun SpendingBar(bar: Bar, modifier: Modifier = Modifier, onClick: (() -
         ghost = bar.ghost,
         ghostDescription = bar.ghostValue?.let { stringResource(R.string.reports_ghost_value, it) },
         leading = { CategoryBadge(bar.icon, bar.color, size = Sizes.badgeSmall) },
+        badge = bar.mark?.let { mark -> { MarkPill(mark) } },
+        badgeDescription = bar.mark?.let { markDescription(it) },
         onClick = onClick,
         modifier = modifier,
     )

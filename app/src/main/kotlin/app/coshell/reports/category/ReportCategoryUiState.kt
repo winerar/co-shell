@@ -2,6 +2,8 @@ package app.coshell.reports.category
 
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.reports.ReportsUiState.Bar
+import app.coshell.reports.ReportsUiState.Mark
+import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.transactions.list.TransactionsUiState.Day
 
 /**
@@ -23,6 +25,25 @@ data class ReportCategoryUiState(
     val days: List<Day> = emptyList(),
     /** Currencies left out of the head for lack of a rate. */
     val missing: List<String> = emptyList(),
+    /** «↑ 45% · больше обычного · к 11-му обычно 61» (#238); only for a month. */
+    val mark: Mark? = null,
+    /** «По месяцам» of the category (board `Tr238DrillA`); only for a month. */
+    val trend: Trend? = null,
 ) {
     val operationCount: Int get() = days.sumOf { it.rows.size }
 }
+
+/**
+ * A year of one category: the months of its history up to the shown one ([selected], the last), [average] — the long
+ * average as a share of the scale (the dashed line), «За 3 мес.: 62 · За год: 65» — [recent] over [recentMonths] and
+ * [long] over [longMonths] (`null` — no months before to average).
+ */
+data class Trend(
+    val columns: List<MonthColumn>,
+    val selected: Int,
+    val average: Float?,
+    val recent: String?,
+    val recentMonths: Int,
+    val long: String?,
+    val longMonths: Int,
+)

@@ -22,9 +22,12 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Clock
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
@@ -59,14 +62,17 @@ class ReportCategoryViewModel @Inject constructor(
     /** Where the drill is counted; tests run it in place. Read once, on first [state]. */
     internal var work: CoroutineContext = Dispatchers.Default
 
-    private val data = run {
-        val period = route.period
-        val previous = period.previous(route.startDay)
+    /** The route's period at first; a tap on a column of «По месяцам» shows that month (#238). */
+    private val period = MutableStateFlow(route.period)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val data = period.flatMapLatest { period ->
+        val (from, to) = drillRange(period, route.startDay)
         val operations = transactions.observeTransactions(
             TransactionFilter(from = period.start.atStartOfDayIn(timeZone), to = period.endExclusive.atStartOfDayIn(timeZone)),
         )
         combine(
-            reports.observeDays(minOf(previous.start, period.start), period.endExclusive),
+            reports.observeDays(from, to),
             categories.observeCategories(includeArchived = true),
             rates.observeRates(),
             combine(operations, accounts.observeAccounts(includeArchived = true), otherMembers.names(), ::Triple),
@@ -97,6 +103,11 @@ class ReportCategoryViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
             ReportCategoryUiState(isLoading = true, period = route.period, currency = route.currency),
         )
+    }
+
+    /** A tap on a column of «По месяцам»: the same category in [month]. */
+    fun onMonth(month: YearMonth) {
+        period.value = ReportPeriod.month(month, route.startDay)
     }
 
     /** The route's arguments; keys are the property names of [ReportCategoryDestination]. */

@@ -35,14 +35,21 @@ import app.coshell.transactions.list.components.TransactionRow
 import app.coshell.ui.format.formatMonth
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.ScreenTopBar
+import kotlinx.datetime.YearMonth
 
 /**
  * «Дом» (board `RepDrill`, #188): «Дом за ноябрь · 290 USD · 38% трат» with the subcategories' bars, then «Из чего
- * сложилось» — the operations by day with the day's total. Each day is one lazy item drawing its piece of the card,
+ * сложилось» — the operations by day with the day's total. For a month: «↑ 45% больше обычного» under the head and
+ * «По месяцам» of the category (#238); a tap on a column shows that month. Each day is one lazy item drawing its piece of the card,
  * so a year of a large category scrolls lightly. A tap on an operation opens it for editing.
  */
 @Composable
-fun ReportCategoryScreen(state: ReportCategoryUiState, onBack: () -> Unit, onTransactionClick: (String) -> Unit) {
+fun ReportCategoryScreen(
+    state: ReportCategoryUiState,
+    onBack: () -> Unit,
+    onTransactionClick: (String) -> Unit,
+    onMonth: (YearMonth) -> Unit = {},
+) {
     Scaffold(
         topBar = { ScreenTopBar(if (state.isLoading) "" else categoryName(state.name), onBack = onBack) },
     ) { padding ->
@@ -50,6 +57,7 @@ fun ReportCategoryScreen(state: ReportCategoryUiState, onBack: () -> Unit, onTra
         val side = Modifier.padding(horizontal = Spacing.l)
         LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
             item(key = "head") { Head(state, side.padding(vertical = Spacing.s)) }
+            state.trend?.let { trend -> item(key = "trend") { TrendCard(trend, onMonth, side.padding(vertical = Spacing.s)) } }
             item(key = "operationsTitle") {
                 SectionTitle(pluralStringResource(R.plurals.report_drill_operations, state.operationCount, state.operationCount))
             }
@@ -90,6 +98,7 @@ private fun Head(state: ReportCategoryUiState, modifier: Modifier = Modifier) {
                 maxLines = 1,
             )
         }
+        state.mark?.let { MarkRow(it, Modifier.padding(start = Spacing.l, end = Spacing.l, bottom = Spacing.s)) }
         state.parts.forEach { bar -> SpendingBar(bar, Modifier.padding(horizontal = Spacing.l)) }
     }
 }

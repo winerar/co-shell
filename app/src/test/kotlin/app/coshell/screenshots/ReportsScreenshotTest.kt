@@ -84,6 +84,17 @@ class ReportsScreenshotTest {
         HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample, review = MonthReviewSamples.state)
     }
 
+    /** Board `Tr238DrillA`: «↑ 45% больше обычного · к 11-му обычно 61» and the card «По месяцам». */
+    @Test
+    fun `category drill trend`() = shot("report_category_trend_dark", dark = true) {
+        ReportCategoryScreen(ReportCategorySamples.trend, onBack = {}, onTransactionClick = {})
+    }
+
+    @Test
+    fun `category drill trend light`() = shot("report_category_trend_light") {
+        ReportCategoryScreen(ReportCategorySamples.trend, onBack = {}, onTransactionClick = {})
+    }
+
     @Composable
     private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})
 

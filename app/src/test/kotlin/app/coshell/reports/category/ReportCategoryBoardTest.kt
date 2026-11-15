@@ -12,6 +12,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.reports.ReportsUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -123,5 +124,39 @@ class ReportCategoryBoardTest {
         )
         assertNull(state.total)
         assertEquals(2, state.operationCount)
+    }
+
+    @Test
+    fun `a month gets the trend of its history and the mark against the same days`() {
+        // Cafe 300 by the 4th in August–October; November 600 by the 11th: twice the usual.
+        val history = (8..10).flatMap { listOf(day(it, 4, "cafe", 300), day(it, 5, "rent", 250)) }
+        val state = buildCategoryDrill(input(history + day(11, 4, "cafe", 600), emptyList(), categoryId = "cafe"), format, format)
+
+        assertEquals(ReportsUiState.Mark(up = true, percent = 100, expected = "300", byDay = 11), state.mark)
+        val trend = state.trend!!
+        assertEquals(listOf(8, 9, 10, 11), trend.columns.map { it.month.month.ordinal + 1 })
+        assertEquals(listOf("", "", "", "600"), trend.columns.map { it.value })
+        assertEquals(3, trend.selected)
+        assertEquals(0.5f, trend.average!!, 0.001f)
+        assertEquals("300", trend.recent)
+        assertEquals(3, trend.recentMonths)
+        // The year is not longer than the three months yet: one average is enough.
+        assertNull(trend.long)
+    }
+
+    @Test
+    fun `a quarter has neither trend nor mark`() {
+        val quarter = input(days, emptyList()).let {
+            DrillInput(it.categoryId, it.ledger, it.categories, ReportPeriod.quarter(YearMonth(2026, 11)), 1, true, it.operations, it.accounts, it.authors, tz, today)
+        }
+        val state = buildCategoryDrill(quarter, format, format)
+
+        assertNull(state.trend)
+        assertNull(state.mark)
+    }
+
+    @Test
+    fun `the drill reads a year before a month for the trend`() {
+        assertEquals(LocalDate(2025, 11, 1) to LocalDate(2026, 12, 1), drillRange(november, 1))
     }
 }

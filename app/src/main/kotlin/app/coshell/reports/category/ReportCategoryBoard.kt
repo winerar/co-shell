@@ -3,9 +3,16 @@ package app.coshell.reports.category
 import app.coshell.budgets.list.number
 import app.coshell.core.designsystem.charts.ChartScale
 import app.coshell.core.domain.budgets.budgetCategoryIds
+import app.coshell.core.domain.budgets.budgetPeriod
+import app.coshell.core.domain.reports.CategoryTrend
+import app.coshell.core.domain.reports.LONG_USUAL_MONTHS
 import app.coshell.core.domain.reports.ReportLedger
 import app.coshell.core.domain.reports.ReportPeriod
+import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.core.domain.reports.categoryDrill
+import app.coshell.core.domain.reports.categoryTrend
+import app.coshell.core.domain.reports.monthsBefore
+import app.coshell.core.domain.reports.trendCategoryIds
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.Money
@@ -14,11 +21,13 @@ import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.core.model.isBalanceAdjustment
 import app.coshell.reports.ReportsUiState.Bar
+import app.coshell.reports.ReportsUiState.MonthColumn
+import app.coshell.reports.toUi
 import app.coshell.transactions.list.buildTransactionDays
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 
-/** What the drill is counted from; [ledger] must hold the days of [period] and of the period before it. */
+/** What the drill is counted from; [ledger] must hold the days of [drillRange]. */
 internal class DrillInput(
     val categoryId: String,
     val ledger: ReportLedger,
@@ -33,6 +42,15 @@ internal class DrillInput(
     val timeZone: TimeZone,
     val today: LocalDate,
 )
+
+/** The days the drill reads: the period, the one before and, for a month, the [LONG_USUAL_MONTHS] before it (the trend). */
+internal fun drillRange(period: ReportPeriod, startDay: Int): Pair<LocalDate, LocalDate> {
+    val previous = period.previous(startDay)
+    val yearBefore = if (period.kind == ReportPeriodKind.MONTH) {
+        monthsBefore(budgetPeriod(period.firstMonth, startDay), startDay, LONG_USUAL_MONTHS).first().start
+    } else period.start
+    return minOf(previous.start, period.start, yearBefore) to period.endExclusive
+}
 
 /** The category and its subcategories: what the drill shows operations of. */
 internal fun drillCategoryIds(categoryId: String, categories: List<Category>): Set<String> = budgetCategoryIds(categoryId, categories)
@@ -80,6 +98,8 @@ internal fun buildCategoryDrill(input: DrillInput, format: MoneyFormat, moneyFor
         input.today,
         input.authors,
     )
+    val month = if (input.period.kind == ReportPeriodKind.MONTH) budgetPeriod(input.period.firstMonth, input.startDay) else null
+    val trend = month?.let { categoryTrend(input.ledger, trendCategoryIds(input.categoryId, input.categories), it, input.startDay, input.today) }
     return ReportCategoryUiState(
         name = byId[input.categoryId]?.name,
         period = input.period,
@@ -89,5 +109,25 @@ internal fun buildCategoryDrill(input: DrillInput, format: MoneyFormat, moneyFor
         parts = bars,
         days = days,
         missing = sums.missing.map { it.value }.sorted(),
+        mark = month?.let { m -> trend?.mark?.toUi(m, input.today, format) },
+        trend = trend?.let { trendOf(it, format) },
+    )
+}
+
+/** «По месяцам»: the months before the history are left out; only the shown month carries its value. */
+private fun trendOf(trend: CategoryTrend, format: MoneyFormat): Trend? {
+    val months = trend.months.mapNotNull { m -> m.amount?.let { m.period to it } }
+    if (months.isEmpty()) return null
+    val scale = ChartScale.of(months.map { it.second.amountMinor } + listOfNotNull(trend.average12?.amountMinor))
+    return Trend(
+        columns = months.mapIndexed { i, (period, amount) ->
+            MonthColumn(period.month, if (i == months.lastIndex) format.number(amount) else "", scale.of(amount.amountMinor))
+        },
+        selected = months.lastIndex,
+        average = trend.average12?.let { scale.of(it.amountMinor) },
+        recent = trend.average3?.let { format.number(it) },
+        recentMonths = trend.recentMonths,
+        long = trend.average12?.takeIf { trend.longMonths > trend.recentMonths }?.let { format.number(it) },
+        longMonths = trend.longMonths,
     )
 }

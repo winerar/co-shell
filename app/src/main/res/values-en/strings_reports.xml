@@ -46,6 +46,29 @@
     <string name="reports_order_growth">By growth</string>
     <string name="reports_order_groups">Grouped</string>
     <string name="reports_all_nothing">Nothing found</string>
+    <!-- «Above / below usual» and the category trend (#238) -->
+    <string name="report_mark_up">↑ %1$d%%</string>
+    <string name="report_mark_down">↓ %1$d%%</string>
+    <string name="report_mark_new">new</string>
+    <plurals name="report_mark_above_description">
+        <item quantity="one">%d percent above usual</item>
+        <item quantity="other">%d percent above usual</item>
+    </plurals>
+    <plurals name="report_mark_below_description">
+        <item quantity="one">%d percent below usual</item>
+        <item quantity="other">%d percent below usual</item>
+    </plurals>
+    <string name="report_mark_new_description">new: nothing spent before</string>
+    <string name="report_mark_above">above usual</string>
+    <string name="report_mark_below">below usual</string>
+    <string name="report_mark_new_line">nothing spent before</string>
+    <string name="report_mark_usual_by">usually %2$s by day %1$d</string>
+    <string name="report_mark_usual">usually %1$s</string>
+    <string name="reports_filter_unusual">Unusual · %1$d</string>
+    <string name="report_trend_title">By month</string>
+    <string name="report_trend_caption">line — average</string>
+    <string name="report_trend_months">%1$d mo.: %2$s</string>
+    <string name="report_trend_year">Year: %1$s</string>
     <!-- «Из чего сложилось» (#188, board RepDrill) -->
     <string name="report_drill_head">%1$s in %2$s</string>
     <string name="report_drill_head_year">%1$s in %2$d</string>

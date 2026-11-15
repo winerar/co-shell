@@ -7,6 +7,7 @@ import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.reports.ReportsUiState.Bar
 import app.coshell.reports.ReportsUiState.CategoryRow
+import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
@@ -31,13 +32,24 @@ object ReportsSamples {
     )
     private const val MAX = 300f
 
+    /** Board `Tr238MarkA` / `Tr238All`: noticeably more or less than by the 11th of the three months before. */
+    /** Bars are folders: only these of [marks] show on «На что ушли деньги». */
+    private val barMarks = setOf("cafe", "food")
+
+    private val marks = mapOf(
+        "cafe" to Mark(up = true, percent = 45, expected = "61", byDay = 11),
+        "food" to Mark(up = false, percent = 33, expected = "180", byDay = 11),
+        "subscriptions" to Mark(up = true, percent = 50, expected = "14", byDay = 11),
+        "taxi" to Mark(up = false, percent = 30, expected = "20", byDay = 11),
+    )
+
     val spending = Spending(
         total = "760",
         comparison = Comparison.SoFar(days = 11, kind = ReportPeriodKind.MONTH, previousDay = 11, previous = "820", faster = false),
-        bars = items.take(5).map { Bar(it.id, it.name, it.icon, it.color, it.amount.toString(), it.percent, it.amount / MAX, it.previous / MAX, it.previous.toString()) },
+        bars = items.take(5).map { Bar(it.id, it.name, it.icon, it.color, it.amount.toString(), it.percent, it.amount / MAX, it.previous / MAX, it.previous.toString(), marks[it.id].takeIf { m -> it.id in barMarks }) },
         other = Other("Транспорт", 3, "70", 9),
         categories = items.map {
-            CategoryRow(it.id, it.name, it.icon, it.color, it.amount.toString(), it.percent, it.amount / MAX, it.previous / MAX, it.previous.toString(), (it.amount - it.previous) * 100L, it.amount * 100L, null)
+            CategoryRow(it.id, it.name, it.icon, it.color, it.amount.toString(), it.percent, it.amount / MAX, it.previous / MAX, it.previous.toString(), (it.amount - it.previous) * 100L, it.amount * 100L, null, marks[it.id])
         },
     )
 

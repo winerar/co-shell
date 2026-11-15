@@ -33,7 +33,7 @@
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
 `categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; «Итог месяца» (#235) — `monthReview`
 (остаток, норма сбережений, `reviewStart`), `usualChanges` (3 главных изменения к среднему за 3 мес., порог 5 % обычных трат), `limitsTally`;
-тренд (#237) — `categoryTrend` (12 мес. + средние за 3/12, `trendCategoryIds`), «выше/ниже обычного» — `UsualMark.kt` (`usualMarks` по папкам, к тому же числу прошлых месяцев, ≥ 20 % и ≥ 5 % обычных трат, не раньше 7-го дня);
+тренд (#237) — `categoryTrend` (12 мес. + средние за 3/12, `trendCategoryIds`), «выше/ниже обычного» — `UsualMark.kt` (`usualMarks` по папкам, `usualCategoryMarks` по категориям, к тому же числу прошлых месяцев, ≥ 20 % и ≥ 5 % обычных трат, не раньше 7-го дня);
 когда показывать карточку — `monthReviewDue` (1–7 день месяца, ✕ — `settings/MonthReviewSettings`, на телефоне: `reports/review/data/PrefsMonthReviewSettings`).
 Экран (#236, `Mon236*`) — `app/.../reports/review/`: `MonthReviewBoard` (сборка из `BudgetSource.Snapshot`), `MonthReviewScreen`
 (герой, изменения → «Из чего сложилось», лимиты), `MonthLimitsScreen` («Лимиты октября», та же ViewModel); карточка на «Обзоре» —
@@ -42,6 +42,9 @@
 `components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки;
 `category/` — «Из чего сложилось» (#188, `RepDrill`): тап по полосе/строке → `ReportCategoryDestination` (период, валюта, сравнение в маршруте),
 своя ViewModel (дни + операции категории за период), доля и подкатегории — `core:domain/reports/categoryDrill`.
+Тренд на экранах (#238, `Tr238DrillA`/`Tr238MarkA`): пилюля «↑ 45%» — `CoShellChangePill` (ds `charts/`, слот `badge` у `CoShellBarRow`),
+`reports/components/UsualMarks.kt` (текст, цвет, TalkBack); `Mark` в `ReportsUiState` (только для месяца); «Все категории» — чип «Необычные · N»;
+«Из чего сложилось» — строка пометки и `category/TrendCard` (столбцы истории, черта среднего за год, тап — тот месяц: `onMonth` во ViewModel).
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),

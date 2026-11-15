@@ -70,6 +70,22 @@ fun usualMarks(
     month: BudgetPeriod,
     startDay: Int,
     today: LocalDate,
+): Map<String, UsualMark> = usualMarksBy(ledger, month, startDay, today) { spendingByFolder(it, categories, ledger.currency) }
+
+/**
+ * The same marks for each category on its own (#238, «Все категории» lists them flat): category id → mark.
+ * Refunds above a category's spending count as zero.
+ */
+fun usualCategoryMarks(ledger: ReportLedger, month: BudgetPeriod, startDay: Int, today: LocalDate): Map<String, UsualMark> =
+    usualMarksBy(ledger, month, startDay, today) { it.byCategory }
+
+/** Marks of the groups [group] makes of a month's sums (id → amount). */
+private fun usualMarksBy(
+    ledger: ReportLedger,
+    month: BudgetPeriod,
+    startDay: Int,
+    today: LocalDate,
+    group: (CategorySums) -> Map<String, Money>,
 ): Map<String, UsualMark> {
     val currency = ledger.currency
     val history = usualHistory(ledger, monthsBefore(month, startDay))
@@ -77,11 +93,11 @@ fun usualMarks(
     val passed = month.daysPassed(today)
     val complete = passed == month.days
 
-    fun byFolder(sums: CategorySums) = spendingByFolder(sums, categories, currency).mapValues { it.value.atLeastZero() }
+    fun grouped(sums: CategorySums) = group(sums).mapValues { it.value.atLeastZero() }
 
-    val current = byFolder(ledger.spent(month))
-    val sameDays = history.map { byFolder(ledger.spentByDay(it, passed, complete)) }
-    val whole = history.map { byFolder(ledger.spent(it)) }
+    val current = grouped(ledger.spent(month))
+    val sameDays = history.map { grouped(ledger.spentByDay(it, passed, complete)) }
+    val whole = history.map { grouped(ledger.spent(it)) }
     val usualTotal = usualTotal(ledger, history, passed, complete)
     val zero = Money.zero(currency)
     val ids = (current.keys + whole.flatMap { it.keys }).toSortedSet()

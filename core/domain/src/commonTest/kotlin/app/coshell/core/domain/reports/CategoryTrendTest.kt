@@ -142,4 +142,26 @@ class CategoryTrendTest {
     fun `no marks without history`() {
         assertEquals(emptyMap(), usualMarks(ledger(day(11, 3, "cafe", ars(300))), categories, month, 1, over))
     }
+
+    @Test
+    fun `marks of single categories - a folder's part on its own`() {
+        val marks = usualCategoryMarks(
+            ledger(*usual.toTypedArray(), day(11, 2, "rent", ars(1_000)), day(11, 5, "utilities", ars(300)), day(11, 3, "cafe", ars(300))),
+            month, startDay = 1, today = over,
+        )
+
+        // The folder «home» is +30 %, but rent is as usual: only the new utilities are marked.
+        assertEquals(mapOf("utilities" to UsualMark(UsualDirection.ABOVE, ars(300), ars(0), null)), marks)
+    }
+
+    @Test
+    fun `the averages say how many months they are over`() {
+        val trend = trend("cafe", eleventh, day(11, 3, "cafe", ars(300)))
+        assertEquals(3, trend.recentMonths)
+        assertEquals(3, trend.longMonths)
+
+        val short = categoryTrend(ledger(day(10, 3, "cafe", ars(300)), day(11, 3, "cafe", ars(300))), setOf("cafe"), month, 1, eleventh)
+        assertEquals(1, short.recentMonths)
+        assertEquals(1, short.longMonths)
+    }
 }

@@ -248,5 +248,6 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-15, `ccr-c602a681-7dz30j`: **#373** (хвост #189). Влита невлитая ветка #189 `ccr-68c7e24e-pacxbc` (PR #384 висел без CI,
-конфликт в ROADMAP) — PR #384 закрыт в пользу этой ветки. PR #386 (#376/#367, черновик) не трогал.
+2026-11-15, `ccr-eb73beb6-o77u7i`: **#377** (1.0-проверка, раздел 6). `ProjectRulesTest` (`app/.../rules/`): чистые `core:model`/`domain`,
+нет `Double`/`Float` в `core:*`, в UI — `Float` только геометрия и доли (исключения — `FLOAT_ALLOWED`); lint `HardcodedText`,
+`MissingTranslation`, `ExtraTranslation`, `MissingQuantity` — ошибки. Нарушений в коде не нашлось.

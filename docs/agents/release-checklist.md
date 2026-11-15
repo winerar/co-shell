@@ -50,9 +50,9 @@
 - [x] **[есть]** Только утверждённые компоненты: `ApprovedComponentsTest`, `ComponentRuleTest`; `pending` пуст (2026-11-15); к 1.0 — пуста база и код совпадает с досками (#367).
 
 ## 6. Правила проекта (золотые правила `AGENTS.md`)
-- [ ] **[добавить]** Проверка в `check`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
-- [ ] **[добавить]** Lint `HardcodedText`/`MissingTranslation` — ошибкой; поиск строковых литералов в `Text(…)`;
-  каждая строка есть во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`).
+- [x] **[есть, #377]** `ProjectRulesTest`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
+- [x] **[есть, #377]** Lint `HardcodedText`/`MissingTranslation`/`ExtraTranslation`/`MissingQuantity` — ошибкой; литералы в `Text(…)` —
+  `HardcodedTextTest`; каждая строка во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`) — `TranslationsTest`.
 - [ ] **[агент]** Тексты: словарь `glossary.md`, краткость и тон (`texts.md`), одно название сущности везде.
 - [ ] Размеры файлов и документация — `session-end.sh` зелёный; `STATUS`, `ROADMAP`, `feature-map.md` актуальны.
 

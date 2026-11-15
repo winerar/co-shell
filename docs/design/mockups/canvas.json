@@ -921,36 +921,100 @@
       "page": "components",
       "is_interactive": true
     },
-    "CompV3New.dc.html": {
+    "CompNew.dc.html": {
       "x": 0,
       "y": 2360,
       "w": 1280,
-      "h": 2440,
-      "title": "Компоненты v3 (#367, на утверждении): New",
+      "h": 1812,
+      "title": "Компоненты · новые (10)",
       "page": "components"
     },
-    "CompV3Choice.dc.html": {
+    "CompChoice.dc.html": {
       "x": 1440,
       "y": 2360,
       "w": 1280,
-      "h": 2000,
-      "title": "Компоненты v3 (#367, на утверждении): Choice",
+      "h": 1300,
+      "title": "Компоненты · выбор (9)",
       "page": "components"
     },
-    "CompV3Rows.dc.html": {
+    "CompRows.dc.html": {
       "x": 0,
-      "y": 5100,
+      "y": 4472,
       "w": 1280,
-      "h": 2280,
-      "title": "Компоненты v3 (#367, на утверждении): Rows",
+      "h": 1530,
+      "title": "Компоненты · строки и шторки (7)",
       "page": "components"
     },
-    "CompV3Data.dc.html": {
+    "CompData.dc.html": {
       "x": 1440,
-      "y": 5100,
+      "y": 4472,
       "w": 1280,
-      "h": 1756,
-      "title": "Компоненты v3 (#367, на утверждении): Data",
+      "h": 1480,
+      "title": "Компоненты · данные и теги (11)",
+      "page": "components"
+    },
+    "Style1.dc.html": {
+      "x": 0,
+      "y": 6402,
+      "w": 640,
+      "h": 744,
+      "title": "Единый стиль · выбор",
+      "page": "components"
+    },
+    "Style2.dc.html": {
+      "x": 800,
+      "y": 6402,
+      "w": 640,
+      "h": 504,
+      "title": "Единый стиль · метки",
+      "page": "components"
+    },
+    "Style3.dc.html": {
+      "x": 0,
+      "y": 7446,
+      "w": 640,
+      "h": 490,
+      "title": "Единый стиль · иконки",
+      "page": "components"
+    },
+    "Style4.dc.html": {
+      "x": 800,
+      "y": 7446,
+      "w": 640,
+      "h": 646,
+      "title": "Единый стиль · поверхности",
+      "page": "components"
+    },
+    "Style5.dc.html": {
+      "x": 0,
+      "y": 8392,
+      "w": 640,
+      "h": 648,
+      "title": "Единый стиль · строки",
+      "page": "components"
+    },
+    "Style6.dc.html": {
+      "x": 800,
+      "y": 8392,
+      "w": 640,
+      "h": 490,
+      "title": "Единый стиль · кнопки",
+      "page": "components"
+    },
+    "Style7.dc.html": {
+      "x": 0,
+      "y": 9340,
+      "w": 640,
+      "h": 384,
+      "title": "Единый стиль · полосы",
+      "page": "components"
+    },
+    "Style8.dc.html": {
+      "x": 800,
+      "y": 9340,
+      "w": 640,
+      "h": 540,
+      "title": "Единый стиль · поля и отметки",
       "page": "components"
     },
     "Ideas.dc.html": {
@@ -1878,10 +1942,18 @@
     "Flows.dc.html",
     "ThemeSwitchComponents.dc.html",
     "Components.dc.html",
-    "CompV3New.dc.html",
-    "CompV3Choice.dc.html",
-    "CompV3Rows.dc.html",
-    "CompV3Data.dc.html",
+    "CompNew.dc.html",
+    "CompChoice.dc.html",
+    "CompRows.dc.html",
+    "CompData.dc.html",
+    "Style1.dc.html",
+    "Style2.dc.html",
+    "Style3.dc.html",
+    "Style4.dc.html",
+    "Style5.dc.html",
+    "Style6.dc.html",
+    "Style7.dc.html",
+    "Style8.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2207,10 +2279,19 @@
     "v3": {
       "kind": "title1",
       "page": "components",
-      "text": "Компоненты v3 — на утверждении (#367): А | Б",
+      "text": "Утверждённый набор (#367, А «Капсула»)",
       "x": 0,
       "y": 2110,
       "maxW": 2600,
+      "w": 240
+    },
+    "unify": {
+      "kind": "title1",
+      "page": "components",
+      "text": "Единый стиль (утверждён): одно правило на семью",
+      "x": 0,
+      "y": 6152,
+      "maxW": 2400,
       "w": 240
     },
     "fb345": {
@@ -2932,6 +3013,7 @@
     "row14",
     "s14",
     "v3",
+    "unify",
     "fb345",
     "fbS345",
     "fb352",

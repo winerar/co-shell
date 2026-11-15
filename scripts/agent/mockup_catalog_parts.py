@@ -1,34 +1,13 @@
-"""Bricks of the 37 components that exist in code but not on the «Компоненты» board (#367, `ApprovedComponentsTest.pending`).
+"""Shared bricks of the approved set (#367, А «Капсула», owner 2026-11-15) — boards CompNew/CompChoice/CompRows/CompData.
 
 Drawn after core:designsystem (sizes, colour roles); «Вольт · тёмная» constants only (mockup_theme repaints them).
 """
-from mockup_comp_v2_bricks import *  # noqa: F401,F403
-
-def mix(color, pct):
-    """Colour at pct% over whatever is under it (Compose `copy(alpha)`); the hex stays visible to mockup_theme."""
-    return 'color-mix(in srgb, %s %d%%, transparent)' % (color, pct)
-
+from mockup_catalog_bricks import *  # noqa: F401,F403
 
 TAGS = [('Отпуск', '#4FC3F7'), ('Работа', '#FFB547'), ('Ремонт кухни и ванной комнаты', '#FF7AB8'), ('Дети', '#91E668'), ('Подарки', '#B266FF')]
 
 
 # ---- Выбор ----
-def seg_v2(labels, sel, tone='choice', disabled=False, mark=False):
-    """CoShellSegmented: Choice — neon pill, View — violet wash. mark — #385 Б: ink frame + bold on the chosen one."""
-    on_bg, on_ink = (LIME, ONLIME) if tone == 'choice' else (VIOLETPILL, VIOLETINK)
-    cells = ''.join('<span style="height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 14px; '
-                    'min-width: 0; %s"><span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">%s</span></span>'
-                    % ('background: %s; color: %s; font-weight: %d;%s' % (on_bg, on_ink, 700 if mark else 600, ' box-shadow: inset 0 0 0 2px %s;' % INK if mark else '')
-                       if i == sel else 'color: %s;' % MUTED, l) for i, l in enumerate(labels))
-    return ('<div style="width: 100%%; box-sizing: border-box; display: grid; grid-template-columns: repeat(%d, minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: %s; %s">%s</div>'
-            % (len(labels), CHIP, 'opacity: 0.5;' if disabled else '', cells))
-
-
-def choice_pill(text, on=False):
-    st = 'background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK) if on else 'box-shadow: inset 0 0 0 1px %s; color: %s;' % (LINE2, INK2)
-    return '<span style="height: 30px; padding: 0 12px; border-radius: 999px; font-size: 13px; display: inline-flex; align-items: center; %s">%s</span>' % (st, text)
-
-
 def check_mark(state, frame=LINE2):
     """CoShellCheckMark: 'off' — frame, 'on' — neon + check, 'some' — neon + dash."""
     if state == 'off':
@@ -43,7 +22,7 @@ def radio_mark(on, frame=LINE2):
 
 
 def tile(inner, w=None):
-    return ('<div style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 12px; background: %s; box-sizing: border-box; %s">%s</div>'
+    return ('<div style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 999px; background: %s; box-sizing: border-box; %s">%s</div>'
             % (KEY, 'width: %dpx;' % w if w else '', inner))
 
 
@@ -78,7 +57,7 @@ def day_grid(sel, marked=None, days=31):
 
 
 def label_grid(labels, sel, cols=4):
-    cells = ''.join('<span style="height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 13px; %s">%s</span>'
+    cells = ''.join('<span style="height: 36px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 13px; %s">%s</span>'
                     % ('background: %s; color: %s; font-weight: 700;' % (LIME, ONLIME) if i == sel else 'background: %s; color: %s;' % (CHIP, INK), l) for i, l in enumerate(labels))
     return '<div style="display: grid; grid-template-columns: repeat(%d, minmax(0, 1fr)); gap: 6px;">%s</div>' % (cols, cells)
 
@@ -114,7 +93,7 @@ def section_v2(title, inner, error=''):
 
 
 def confirm_card(title, text, ok, cancel=None, destructive=False):
-    icon = ('<span style="width: 44px; height: 44px; border-radius: 14px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
+    icon = ('<span style="width: 44px; height: 44px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
             % (PINKBG if destructive else LIMEPILL, svg('trash' if destructive else 'info', PINK if destructive else LIME, 22)))
     btns = (button(cancel, 'outline', None, 0).replace('width: 100%', 'flex: 1') if cancel else '') + button(ok, 'danger' if destructive else 'primary', None, 0).replace('width: 100%', 'flex: 1')
     return ('<div style="padding: 20px; border-radius: 28px; background: %s; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">%s'
@@ -135,7 +114,7 @@ def modal_sheet(title, body, sub='', action=None, action_on=True):
 def peek_card(lines, foot):
     rows = ''.join('<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 14px;"><span style="%s color: %s;">%s</span><span style="color: %s;">%s</span></div>'
                    % (MONO, INK if v else MUTED, v or 'нет курса', MUTED, c) for v, c in lines)
-    return ('<div style="width: 200px; padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.45); '
+    return ('<div style="width: 200px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.45); '
             'display: flex; flex-direction: column; gap: 6px;">%s<span style="font-size: 11px; color: %s;">%s</span></div>' % (KEY, LINE2, rows, MUTED, foot))
 
 
@@ -146,7 +125,7 @@ def action_bar(items):
 
 
 def fab_round(icon='plus'):
-    return ('<span style="width: 56px; height: 56px; border-radius: 18px; background: %s; display: flex; align-items: center; justify-content: center; '
+    return ('<span style="width: 48px; height: 48px; border-radius: 18px; background: %s; display: flex; align-items: center; justify-content: center; '
             'box-shadow: 0 6px 18px rgba(0,0,0,0.35);">%s</span>' % (LIME, svg(icon, ONLIME, 26, 2.2)))
 
 

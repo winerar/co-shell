@@ -1,4 +1,5 @@
-"""«Компоненты v3» (#367, owner 2026-11-15: «по два варианта каждого компонента, везде единый код»).
+"""Rule sets of the component set (#367). Owner 2026-11-15, poll «Компоненты v3»: А «Капсула» everywhere — boards draw v='A';
+Б stays only as history of the choice (do not use it for new bricks).
 
 Two rule sets; every component is drawn in both, so any pick reads as one language:
   А «Капсула» — pills and circles; chosen = neon fill + ink frame + bold; tracks are filled.
@@ -6,10 +7,10 @@ Two rule sets; every component is drawn in both, so any pick reads as one langua
 Both keep the #385 decisions: chosen — ink frame + bold, empty frames and fields — outline, tag labels — ink.
 Only «Вольт · тёмная» constants (mockup_theme repaints them).
 """
-from mockup_comp_v2_parts import *  # noqa: F401,F403
+from mockup_catalog_parts import *  # noqa: F401,F403
 
 RULES = {
-    'A': dict(name='Капсула', ctl=999, card=24, tile=20, icon='50%', small=999, h=44),
+    'A': dict(name='Капсула', ctl=999, card=24, tile=24, icon='50%', small=999, h=44),
     'B': dict(name='Плитка', ctl=12, card=16, tile=12, icon='10px', small=8, h=44),
 }
 
@@ -42,7 +43,7 @@ def ink_on_sel(v):
 
 def holder(v, icon, color, size=36, tint=True):
     """Icon holder: circle (А) or rounded square (Б); tinted with the colour or filled by it."""
-    bg = mix(color, 20) if tint else color
+    bg = mix(color, 18) if tint else color
     return ('<span style="width: %dpx; height: %dpx; flex: none; border-radius: %s; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
             % (size, size, r(v, 'icon'), bg, svg(icon, color if tint else ONLIME, size // 2 + 1, 1.9)))
 
@@ -61,7 +62,7 @@ def btn(v, text, kind='primary', icon=None, w='auto', disabled=False):
     }[kind]
     ic = svg(icon, ONLIME if kind == 'primary' else (PINK if kind == 'danger' else INK), 18, 2) if icon else ''
     return ('<span style="height: %dpx; padding: 0 18px; width: %s; box-sizing: border-box; border-radius: %s; font-size: 15px; display: inline-flex; align-items: center; '
-            'justify-content: center; gap: 8px; white-space: nowrap; %s%s">%s%s</span>' % (52 if v == 'A' else 48, w, r(v, 'ctl') if v == 'A' else '14px', st,
+            'justify-content: center; gap: 8px; white-space: nowrap; %s%s">%s%s</span>' % (48, w, r(v, 'ctl') if v == 'A' else '14px', st,
                                                                     ' opacity: 0.4;' if disabled else '', ic, text))
 
 

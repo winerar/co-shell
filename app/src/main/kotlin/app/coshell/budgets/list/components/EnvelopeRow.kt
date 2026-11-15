@@ -77,7 +77,6 @@ internal fun EnvelopeRow(
                 envelope.tone,
                 Modifier.padding(top = Spacing.xs),
                 mark = envelope.pace,
-                height = if (inner) Sizes.bulletSmall else Sizes.bullet,
             )
             if (!inner || envelope.tone == BulletTone.WARNING || envelope.tone == BulletTone.DANGER) {
                 Text(

@@ -13,7 +13,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
@@ -36,7 +35,6 @@ fun CoShellBullet(
     tone: BulletTone,
     modifier: Modifier = Modifier,
     mark: Float? = null,
-    height: Dp = Sizes.bullet,
 ) {
     // Neutral in both themes: the light theme's progress track is the neon accent, an empty envelope would look full.
     val track = MaterialTheme.colorScheme.surfaceContainerHighest
@@ -45,7 +43,7 @@ fun CoShellBullet(
     val markColor = MaterialTheme.colorScheme.onSurface
     val shown by animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "bullet")
     val overhang = MARK_OVERHANG
-    Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(height)) {
+    Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(Sizes.bullet)) {
         val radius = CornerRadius(size.height / 2)
         drawRoundRect(track, cornerRadius = radius)
         if (shown > 0f) {

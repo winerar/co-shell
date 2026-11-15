@@ -29,7 +29,7 @@ def chips(*c):
 
 
 def total(count, amt, cur, approx):
-    return ('<div style="margin-top: 12px; display: flex; align-items: baseline; justify-content: space-between; padding: 12px 14px; border-radius: 16px; '
+    return ('<div style="margin-top: 12px; display: flex; align-items: baseline; justify-content: space-between; padding: 12px 14px; border-radius: 24px; '
             'background: %s; border: 1px solid %s;"><span style="font-size: 13px; color: %s;">%s</span><span style="display: flex; flex-direction: column; '
             'align-items: flex-end;">%s<span style="%s font-size: 12px; color: %s;">%s</span></span></div>' % (CARD, LINE, MUTED, count, amount(amt, cur, PINK, 18), MONO, MUTED, approx))
 
@@ -94,7 +94,7 @@ def cats_sheet_a():
 def period_sheet_a():
     presets = ['Этот месяц', 'Прошлый месяц', '3 месяца', 'Этот год', 'Прошлый год', 'Всё время']
     grid = '<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">%s</div>' % ''.join(
-        '<span style="height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
+        '<span style="height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; %s">%s</span>'
         % ('background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK) if p == 'Прошлый месяц' else 'border: 1px solid %s;' % LINE2, p) for p in presets)
     step = ('<div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 6px; border-radius: 16px; '
             'background: %s;">%s<span style="font-size: 16px; font-weight: 600;">Октябрь 2026</span>%s</div>' % (CHIP, icon_button('back', 'Раньше'), icon_button('chev', 'Позже')))

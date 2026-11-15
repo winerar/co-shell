@@ -115,7 +115,7 @@ private fun ChartBar(fraction: Float, color: Color, ghost: Float?, modifier: Mod
     val entrance = rememberChartEntrance()
     val shown = animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "bar")
     val overhang = GHOST_OVERHANG
-    Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(Sizes.bulletLarge)) {
+    Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(Sizes.bullet)) {
         val radius = CornerRadius(size.height / 2)
         val length = size.width * shown.value * entrance.value
         if (length > 0f) {

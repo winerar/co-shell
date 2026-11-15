@@ -115,7 +115,7 @@ def nav_locked():
 
 
 def gate_a():
-    banner = ('<div style="padding: 12px 14px; border-radius: 16px; background: %s; border: 1px solid %s; margin-bottom: 12px;"><div style="display: flex; gap: 8px; align-items: center; '
+    banner = ('<div style="padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s; margin-bottom: 12px;"><div style="display: flex; gap: 8px; align-items: center; '
               'font-weight: 600; color: %s; font-size: 14px;">%sНужна версия 0.41</div><div style="font-size: 13px; line-height: 1.4; margin-top: 4px;">Аня обновилась, и её новые данные '
               'эта версия не понимает. Смотреть можно, вносить — после обновления: так ничего не испортится.</div><div style="display: flex; justify-content: flex-end; margin-top: 10px;">'
               '<span style="height: 36px; padding: 0 16px; border-radius: 999px; background: %s; color: #2A1E08; font-weight: 600; font-size: 13px; display: flex; align-items: center;">Обновить · 5,6 МБ</span></div></div>'

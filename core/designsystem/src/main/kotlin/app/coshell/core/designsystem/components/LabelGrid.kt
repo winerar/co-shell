@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,17 +20,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
- * Short labels [columns] to a row (board `RepPeriod`: months «янв … дек», quarters, years): rounded cells on the
- * container tone, the [selected] one filled with the accent. One of them is always the choice — like radio buttons.
+ * Short labels [columns] to a row (months «янв … дек», quarters, years): 44 dp capsules on the filled track, the
+ * [selected] one — neon + 2 dp frame in ink + bold (board Style1). One of them is always the choice — like radio buttons.
  */
 @Composable
 fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, columns: Int = 4) {
     val colors = MaterialTheme.colorScheme
-    val shape = MaterialTheme.shapes.medium
+    val shape = PillShape
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         labels.indices.chunked(columns).forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
@@ -38,8 +40,9 @@ fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Uni
                     Box(
                         Modifier
                             .weight(1f)
-                            .height(Sizes.pillHeight)
+                            .height(Sizes.cellHeight)
                             .background(if (on) colors.primaryContainer else colors.surfaceContainerHigh, shape)
+                            .then(if (on) Modifier.border(Sizes.selectionRing, colors.onSurface, shape) else Modifier)
                             .semantics { this.selected = on }
                             .tactileClickable(Tactile.Control, shape, role = Role.RadioButton) { onSelect(index) },
                         contentAlignment = Alignment.Center,
@@ -47,8 +50,8 @@ fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Uni
                         Text(
                             labels[index],
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal,
-                            color = if (on) colors.onPrimaryContainer else colors.onSurface,
+                            fontWeight = if (on) FontWeight.Bold else FontWeight.Normal,
+                            color = if (on) colors.onPrimaryContainer else colors.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )

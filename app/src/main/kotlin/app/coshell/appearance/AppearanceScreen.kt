@@ -32,6 +32,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.PaletteGroup
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
+import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.PaletteGrid
@@ -43,16 +44,18 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Ещё → Внешний вид» (board Fb154Look, #155; the former «Настройки» without the items that moved to «Ещё»):
- * language (#352), theme, the fruit palettes (juicy and soft rows, #271), and the shake gesture — the preferences of this
- * phone, not of the family.
+ * language (#352), theme, the fruit palettes (juicy and soft rows, #271), the shake gesture and payment reminders (#405) —
+ * the preferences of this phone, not of the family.
  */
 @Composable
 fun AppearanceRoute(
     onBack: () -> Unit,
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     themeSettings: ThemeSettingsViewModel = hiltViewModel(),
+    reminderSettings: ReminderSettingsViewModel = hiltViewModel(),
 ) {
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
+    val remindersEnabled by reminderSettings.enabled.collectAsStateWithLifecycle()
     val themeMode by themeSettings.mode.collectAsStateWithLifecycle()
     val palette by themeSettings.palette.collectAsStateWithLifecycle()
     // Theme and palette open as a circle from the tapped control (design-refactor Step 4).
@@ -61,13 +64,14 @@ fun AppearanceRoute(
     var languageOpen by rememberSaveable { mutableStateOf(false) }
     val language = remember(languageOpen) { LanguageRow(AppLanguage.chosen(context), AppLanguage.current()) }
     AppearanceScreen(
-        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeEnabled, language),
+        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeEnabled, language, remindersEnabled),
         actions = AppearanceActions(
             onBack = onBack,
             onLanguageClick = { languageOpen = true },
             onThemeModeChange = { mode -> if (mode != themeMode) reveal.change { themeSettings.setMode(mode) } },
             onPaletteChange = { p -> if (p != palette) reveal.change { themeSettings.setPalette(p) } },
             onShakeEnabledChange = shakeSettings::setEnabled,
+            onRemindersEnabledChange = reminderSettings::setEnabled,
         ),
     )
     if (languageOpen) LanguageSettingsSheet(onClosed = { languageOpen = false })
@@ -81,6 +85,8 @@ data class AppearanceState(
     val palette: ThemePalette = ThemePalette.LIME,
     val shakeEnabled: Boolean = true,
     val language: LanguageRow = LanguageRow(),
+    /** «Напоминания о платежах» (#405). */
+    val remindersEnabled: Boolean = true,
 )
 
 data class AppearanceActions(
@@ -89,6 +95,7 @@ data class AppearanceActions(
     val onThemeModeChange: (ThemeMode) -> Unit = {},
     val onPaletteChange: (ThemePalette) -> Unit = {},
     val onShakeEnabledChange: (Boolean) -> Unit = {},
+    val onRemindersEnabledChange: (Boolean) -> Unit = {},
 )
 
 @Composable
@@ -119,6 +126,20 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
                     }
                 }
             }
+            item { SectionTitle(stringResource(R.string.appearance_notifications_section)) }
+            item {
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                    row {
+                        CoShellSwitchRow(
+                            leading = { MenuIcon(DesignR.drawable.ic_refresh, categoryColor(CategoryPalette.colors[REMINDERS_COLOR])) },
+                            title = stringResource(R.string.reminders_title),
+                            subtitle = stringResource(R.string.reminders_hint),
+                            checked = state.remindersEnabled,
+                            onCheckedChange = actions.onRemindersEnabledChange,
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -144,6 +165,9 @@ private const val LANGUAGE_COLOR = 5
 
 /** Lime-green of the palette, as the «+» it opens. */
 private const val SHAKE_COLOR = 9
+
+/** The colour of «Регулярные платежи» in «Ещё». */
+private const val REMINDERS_COLOR = 5
 
 @Preview(showBackground = true)
 @Composable

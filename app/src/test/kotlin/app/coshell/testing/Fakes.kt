@@ -108,10 +108,12 @@ fun fakeEntryTemplates(
     categories: CategoryRepository,
     templates: TemplateRepository = FakeTemplateRepository(),
     usage: TemplateUsage = FakeTemplateUsage(),
+    transactions: TransactionRepository = FakeTransactionRepository(),
 ) = EntryTemplates(
     templates,
     usage,
     SaveAsTemplateUseCase(templates, SaveTemplateUseCase(accounts, categories, templates), IdGenerator { "tpl-new" }),
+    transactions,
 )
 
 fun fakeEntryTags(tags: TagRepository = FakeTagRepository()) = EntryTags(tags, SaveTagUseCase(tags, IdGenerator { "tag-new" }))

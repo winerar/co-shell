@@ -17,14 +17,16 @@ import app.coshell.R
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.recurring.PostedPayment
+import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.TransactionTemplate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.datetime.LocalDate
 
 /**
- * The payment notifications (#143, board `Rec143Notify`): «Сегодня платёж: Свет» at 9:00 — several on
- * one day go as one; «Проведено: Netflix · 7 990 ARS» with «Отменить» after a «само» payment. A tap
+ * The payment notifications (#143, board `Rec143Notify`): «Сегодня платёж: Свет» at 9:00 with its buttons (#405) —
+ * several on one day go as one; «Проведено: Netflix · 7 990 ARS» with «Отменить» after a «само» payment. A tap
  * opens the app («Скоро» on «Обзоре» has «Провести»). Silent without the notification permission.
  */
 class PaymentNotices @Inject constructor(
@@ -36,23 +38,37 @@ class PaymentNotices @Inject constructor(
 ) {
     private val manager = NotificationManagerCompat.from(context)
 
-    suspend fun remind(templates: List<TransactionTemplate>) {
+    /**
+     * «Сегодня платёж: …» for [templates] due on [day]. One with an amount: «Провести 650 USD» (posts here) and
+     * «Изменить сумму»; without: «Провести» (the sheet) and «Завтра»; several: «N платежей сегодня · ≈ [total]».
+     */
+    suspend fun remind(templates: List<TransactionTemplate>, day: LocalDate, total: Money? = null) {
         val first = templates.firstOrNull() ?: return
-        val (title, text) = if (templates.size == 1) {
+        val builder = if (templates.size == 1) {
             val account = accounts.getAccount(first.accountId)?.name.orEmpty()
             val amount = first.amount
+            val sheet = PaymentLinks.intent(context, PaymentLink(first.id, day))
             if (amount != null) {
-                context.getString(R.string.recurring_notify_today_amount, first.name, money.format(amount)) to account
+                builder(context.getString(R.string.recurring_notify_today_amount, first.name, money.format(amount)), account)
+                    .addAction(0, context.getString(R.string.recurring_action_post_amount, money.format(amount)), ReminderActionReceiver.post(context, first.id, day))
+                    .addAction(0, context.getString(R.string.recurring_action_change_amount), sheet)
             } else {
-                context.getString(R.string.recurring_notify_today, first.name) to
-                    listOf(account, context.getString(R.string.recurring_notify_amount_later)).filter { it.isNotEmpty() }.joinToString(SEP)
+                val text = listOf(account, context.getString(R.string.recurring_notify_amount_later)).filter { it.isNotEmpty() }.joinToString(SEP)
+                builder(context.getString(R.string.recurring_notify_today, first.name), text)
+                    .addAction(0, context.getString(R.string.recurring_post), sheet)
+                    .addAction(0, context.getString(R.string.recurring_action_tomorrow), ReminderActionReceiver.snooze(context, listOf(first.id), day))
             }
         } else {
-            context.resources.getQuantityString(R.plurals.recurring_notify_today_many, templates.size, templates.size) to
-                templates.joinToString(", ") { it.name }
+            val count = context.resources.getQuantityString(R.plurals.recurring_notify_today_many, templates.size, templates.size)
+            val title = total?.let { context.getString(R.string.recurring_notify_total, count, money.format(it)) } ?: count
+            builder(title, templates.joinToString(", ") { it.name })
+                .addAction(0, context.getString(R.string.recurring_open), openApp())
         }
-        show(REMINDER_ID, builder(title, text).addAction(0, context.getString(R.string.recurring_open), openApp()).build())
+        show(REMINDER_ID, builder.build())
     }
+
+    /** The reminder was answered from its buttons, or put off with «Завтра». */
+    fun cancelReminder() = manager.cancel(REMINDER_ID)
 
     suspend fun posted(payment: PostedPayment) {
         val tx = payment.transaction

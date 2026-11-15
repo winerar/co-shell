@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The «Провести» sheet of a payment (#404, board Rec143Post). -->
+<resources>
+    <string name="payment_pill">%1$s · %2$s</string>
+    <string name="payment_skip">Пропустить этот раз</string>
+    <string name="payment_hint_last">В прошлый раз %1$s</string>
+    <string name="payment_hint_last_average">В прошлый раз %1$s · в среднем %2$s</string>
+</resources>

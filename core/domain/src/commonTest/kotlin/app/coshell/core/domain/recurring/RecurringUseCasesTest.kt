@@ -22,6 +22,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -38,6 +39,7 @@ class RecurringUseCasesTest {
     private val transactions = FakeTransactionRepository()
     private val post = PostAutoPaymentsUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), clock)
     private val mark = MarkPaymentsHandledUseCase(templates)
+    private val postOne = PostPaymentUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), clock)
 
     private fun d(s: String) = LocalDate.parse(s)
     private fun netflix(mode: PostMode = PostMode.AUTO, handled: String? = "2026-09-18") = TransactionTemplate(
@@ -85,5 +87,27 @@ class RecurringUseCasesTest {
         assertTrue(mark("netflix", d("2026-10-18")))
         assertEquals(d("2026-11-18"), templates.getTemplate("netflix")?.schedule?.nextUnhandled())
         assertFalse(mark("nope", d("2026-10-18")))
+    }
+
+    @Test
+    fun `post from the reminder posts one payment by the template amount and marks it handled`() = runTest {
+        templates.saveTemplate(netflix(PostMode.REMIND, handled = "2026-10-18"))
+        val posted = postOne("netflix", d("2026-11-15"), TimeZone.UTC, authorMemberId = "me")!!
+        assertEquals("rec-netflix-2026-11-15", posted.transaction.id)
+        assertEquals(now, posted.transaction.date)
+        assertEquals(Money(7_990_00, ars), posted.transaction.amount)
+        assertEquals(d("2026-11-15"), templates.getTemplate("netflix")?.schedule?.handledThrough)
+    }
+
+    @Test
+    fun `post from the reminder refuses a template without amount or with an archived account`() = runTest {
+        templates.saveTemplate(netflix(PostMode.REMIND).copy(amount = null))
+        assertNull(postOne("netflix", d("2026-10-18"), TimeZone.UTC))
+        templates.saveTemplate(netflix(PostMode.REMIND))
+        accounts.saveAccount(Account("usdt", "USDT-карта", ars, archived = true))
+        assertNull(postOne("netflix", d("2026-10-18"), TimeZone.UTC))
+        assertNull(postOne("nope", d("2026-10-18"), TimeZone.UTC))
+        assertTrue(transactions.items.value.isEmpty())
+        assertEquals(d("2026-09-18"), templates.getTemplate("netflix")?.schedule?.handledThrough)
     }
 }

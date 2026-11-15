@@ -36,6 +36,7 @@ import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
+import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
@@ -63,7 +64,8 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
         }
         CoShellKeypad(
             onKey = actions.onKey,
-            doneLabel = stringResource(R.string.keypad_done),
+            // A payment from «Скоро» is posted, not just saved (board `Rec143Post`).
+            doneLabel = stringResource(if (state.payment != null) R.string.recurring_post else R.string.keypad_done),
             backspaceLabel = stringResource(R.string.keypad_backspace),
             showDecimal = fractionOf(state) > 0,
             modifier = Modifier.padding(horizontal = Spacing.m).padding(bottom = Spacing.m),
@@ -110,7 +112,12 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
             }
         }
         if (state.isCopy) CopyLabel()
-        state.templateName?.let { TemplatePill(it, onClear = actions.onTemplateClear) }
+        val payment = state.payment
+        if (payment != null) {
+            TemplatePill(stringResource(R.string.payment_pill, payment.name, formatDayMonthShort(payment.date)), onClear = null, icon = DesignR.drawable.ic_refresh)
+        } else {
+            state.templateName?.let { TemplatePill(it, onClear = actions.onTemplateClear) }
+        }
         state.savedTemplateName?.let { TemplatePill(it, onClear = null) }
     }
 }

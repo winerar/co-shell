@@ -3,6 +3,7 @@ package app.coshell.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
@@ -66,6 +68,7 @@ fun CoShellNavHost(
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
+    paymentLinks: PaymentLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -326,6 +329,18 @@ fun CoShellNavHost(
         }
         dialog<CategoryEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> CategoryEditRoute(onDone = close) }
+        }
+    }
+
+    // «Изменить сумму» / «Провести» on a payment reminder (#405): the «Провести» sheet on that payment.
+    if (paymentLinks != null) {
+        val link by paymentLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val payment = link ?: return@LaunchedEffect
+            navController.navigate(TransactionEditDestination(templateId = payment.templateId, paymentDate = payment.date.toString())) {
+                launchSingleTop = true
+            }
+            paymentLinks.consumed()
         }
     }
 }

@@ -34,6 +34,9 @@
         <receiver
             android:name=".recurring.notify.UndoPaymentReceiver"
             android:exported="false" />
+        <receiver
+            android:name=".recurring.notify.ReminderActionReceiver"
+            android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.updates"

@@ -70,6 +70,7 @@ fun TransactionEditRoute(
             onKeypadTarget = viewModel::onKeypadTarget,
             onTemplatePick = viewModel::onTemplatePick,
             onTemplateClear = viewModel::onTemplateClear,
+            onPaymentSkip = viewModel::onPaymentSkip,
             onAllTemplates = onAllTemplates,
             onNewTemplate = onNewTemplate,
             onSaveAsTemplate = viewModel::saveAsTemplate,
@@ -108,6 +109,8 @@ data class TransactionEditActions(
     val onKey: (KeypadKey) -> Unit = {},
     val onTemplatePick: (String) -> Unit = {},
     val onTemplateClear: () -> Unit = {},
+    /** «Пропустить этот раз» of a payment from «Скоро» (#404). */
+    val onPaymentSkip: () -> Unit = {},
     val onAllTemplates: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },

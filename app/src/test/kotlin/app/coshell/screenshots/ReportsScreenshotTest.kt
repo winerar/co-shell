@@ -11,6 +11,8 @@ import app.coshell.reports.ReportsActions
 import app.coshell.reports.ReportsSamples
 import app.coshell.reports.ReportsScreen
 import app.coshell.reports.all.ReportCategoriesScreen
+import app.coshell.reports.category.ReportCategorySamples
+import app.coshell.reports.category.ReportCategoryScreen
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -19,7 +21,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** «Отчёты» (#140) on [ReportsSamples] — the numbers of board `RepA`: the tab, empty period, «Все категории» (`RepAll`). */
+/** «Отчёты» (#140) on [ReportsSamples] — the numbers of board `RepA`: the tab, empty period, «Все категории» (`RepAll`), «Из чего сложилось» (`RepDrill`, #188). */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
@@ -43,6 +45,15 @@ class ReportsScreenshotTest {
 
     @Test
     fun `all categories`() = shot("report_categories_dark", dark = true) { ReportCategoriesScreen(ReportsSamples.state, onBack = {}) }
+
+    @Test
+    fun `category drill dark`() = shot("report_category_dark", dark = true) { drill() }
+
+    @Test
+    fun `category drill light`() = shot("report_category_light") { drill() }
+
+    @Composable
+    private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})
 
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false

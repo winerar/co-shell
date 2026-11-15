@@ -30,7 +30,8 @@ import app.coshell.reports.isMore
 
 /**
  * «На что ушли деньги» (board `RepA`): the total in the report currency, the line against the period before, the
- * largest top-level categories as bars with the previous period's grey mark, «Другое» and «Все категории».
+ * largest top-level categories as bars with the previous period's grey mark (a tap — «Из чего сложилось»), «Другое» and
+ * «Все категории».
  */
 @Composable
 internal fun SpendingCard(
@@ -38,6 +39,7 @@ internal fun SpendingCard(
     currency: String,
     ghostCaption: String?,
     onAll: () -> Unit,
+    onBar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CoShellCard(modifier.fillMaxWidth()) {
@@ -58,7 +60,7 @@ internal fun SpendingCard(
                 modifier = Modifier.padding(horizontal = Spacing.l),
             )
         }
-        spending.bars.forEach { bar -> SpendingBar(bar, Modifier.padding(horizontal = Spacing.l)) }
+        spending.bars.forEach { bar -> SpendingBar(bar, Modifier.padding(horizontal = Spacing.l), onClick = { onBar(bar.categoryId) }) }
         spending.other?.let { other ->
             val name = categoryName(other.firstName)
             val head = if (other.more > 0) stringResource(R.string.reports_other_more, name, other.more) else stringResource(R.string.reports_other, name)

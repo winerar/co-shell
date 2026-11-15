@@ -53,4 +53,17 @@
     <string name="reports_order_growth">По росту</string>
     <string name="reports_order_groups">Группами</string>
     <string name="reports_all_nothing">Ничего не нашлось</string>
+    <!-- «Из чего сложилось» (#188, board RepDrill) -->
+    <string name="report_drill_head">%1$s за %2$s</string>
+    <string name="report_drill_head_year">%1$s за %2$d год</string>
+    <string name="report_drill_head_range">%1$s · %2$s</string>
+    <string name="report_drill_share">%1$s %2$s · %3$d%% трат</string>
+    <plurals name="report_drill_operations">
+        <item quantity="one">Из чего сложилось · %d операция</item>
+        <item quantity="few">Из чего сложилось · %d операции</item>
+        <item quantity="many">Из чего сложилось · %d операций</item>
+        <item quantity="other">Из чего сложилось · %d операции</item>
+    </plurals>
+    <string name="report_drill_no_operations">В этом периоде операций нет.</string>
+    <string name="report_drill_refunds">Возвраты в этом периоде больше трат.</string>
 </resources>

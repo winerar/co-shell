@@ -24,6 +24,7 @@ import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
 import app.coshell.reports.ReportsRoute
 import app.coshell.reports.all.ReportCategoriesRoute
+import app.coshell.reports.category.ReportCategoryRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.core.designsystem.components.CoShellSheet
@@ -189,12 +190,25 @@ fun CoShellNavHost(
             )
         }
         composable<ReportsDestination> {
-            ReportsRoute(onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } })
+            ReportsRoute(
+                onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
+                onCategory = { navController.navigate(it) { launchSingleTop = true } },
+            )
         }
         composable<ReportCategoriesDestination> { entry ->
             // The tab's entry sits under this one: «Все категории» shows its period, currency and data.
             val tab = remember(entry) { navController.getBackStackEntry<ReportsDestination>() }
-            ReportCategoriesRoute(viewModel = hiltViewModel(tab), onBack = { navController.popBackStack() })
+            ReportCategoriesRoute(
+                viewModel = hiltViewModel(tab),
+                onBack = { navController.popBackStack() },
+                onCategory = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        composable<ReportCategoryDestination> {
+            ReportCategoryRoute(
+                onBack = { navController.popBackStack() },
+                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+            )
         }
         dialog<AccountEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }

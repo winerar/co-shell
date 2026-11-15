@@ -81,6 +81,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
                         state.currency,
                         ghostCaption = if (state.compare) ghostCaption(period, state.startDay) else null,
                         onAll = actions.onAllCategories,
+                        onBar = actions.onCategory,
                     )
                 }
             }
@@ -114,4 +115,6 @@ data class ReportsActions(
     val onApply: (ReportChoice) -> Unit = {},
     val onMonth: (YearMonth) -> Unit = {},
     val onAllCategories: () -> Unit = {},
+    /** A bar of «На что ушли деньги»: what its category is made of. */
+    val onCategory: (String) -> Unit = {},
 )

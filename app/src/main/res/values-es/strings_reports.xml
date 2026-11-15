@@ -47,4 +47,16 @@
     <string name="reports_order_growth">Por aumento</string>
     <string name="reports_order_groups">Agrupadas</string>
     <string name="reports_all_nothing">No se encontró nada</string>
+    <!-- «Из чего сложилось» (#188, board RepDrill) -->
+    <string name="report_drill_head">%1$s en %2$s</string>
+    <string name="report_drill_head_year">%1$s en %2$d</string>
+    <string name="report_drill_head_range">%1$s · %2$s</string>
+    <string name="report_drill_share">%1$s %2$s · %3$d%% del gasto</string>
+    <plurals name="report_drill_operations">
+        <item quantity="one">De qué se compone · %d movimiento</item>
+        <item quantity="many">De qué se compone · %d movimientos</item>
+        <item quantity="other">De qué se compone · %d movimientos</item>
+    </plurals>
+    <string name="report_drill_no_operations">No hay movimientos en este período.</string>
+    <string name="report_drill_refunds">En este período los reembolsos superan a los gastos.</string>
 </resources>

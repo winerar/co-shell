@@ -5,8 +5,8 @@ iOS-версии пока нет, но код пишем так, чтобы её
 ## Правила
 1. `core:model` и `core:domain` — модули `kotlin("multiplatform")`, код в `commonMain`.
    Сейчас таргет только `jvm()`; `iosArm64()` / `iosSimulatorArm64()` добавим, когда появится iPhone.
-2. В `commonMain` запрещены `android.*`, `java.*`, `javax.*`. Компилятор это проверит: в общем
-   коде этих API нет.
+2. В `commonMain` запрещены `android.*`, `java.*`, `javax.*`. Пока таргет один (`jvm`), компилятор их
+   пропустит — проверяет `ProjectRulesTest` (`app/.../rules/`, весь `src` обоих модулей, комментарии и строки не в счёт).
 3. Время и даты — `kotlinx-datetime`; сериализация — `kotlinx-serialization`; не `java.time`.
 4. Точная дробная арифметика (курсы) — KMP-библиотека (кандидат: `com.ionspin.kotlin:bignum`)
    или свой тип; **не** `java.math.BigDecimal`.

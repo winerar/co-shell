@@ -5,7 +5,9 @@
 - Число знаков после запятой — `Currencies.info(code).fractionDigits` (JPY 0, RUB 2, KWD 3, BTC 8).
   Неизвестный ISO-код → 2.
 - В Room: две колонки `amount_minor INTEGER` + `currency TEXT`. В Firestore — так же (`Long` + строка).
-- `Double`/`Float` для денег запрещены везде, включая промежуточные вычисления.
+- `Double`/`Float` для денег запрещены везде, включая промежуточные вычисления. `ProjectRulesTest` (`app/.../rules/`):
+  в `core:model`/`domain`/`data` — ни одного `Double`/`Float`; в `app` и `core:designsystem` `Float` — только геометрия
+  и доли (`spent / limit`), а `Double`, `roundToLong`, `toDoubleOrNull`, `"%.2f"` — запрещены. Исключения — `FLOAT_ALLOWED`, с причиной.
 
 ## Арифметика
 - `+`, `-`, сравнение — только в одной валюте, иначе `IllegalArgumentException`.

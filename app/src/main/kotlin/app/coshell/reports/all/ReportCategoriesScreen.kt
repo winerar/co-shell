@@ -36,7 +36,7 @@ import app.coshell.ui.top.ScreenTopBar
  * previous period's mark; search and «По сумме · По росту · Группами» for a long list (24 categories and more).
  */
 @Composable
-fun ReportCategoriesScreen(state: ReportsUiState, onBack: () -> Unit) {
+fun ReportCategoriesScreen(state: ReportsUiState, onBack: () -> Unit, onCategory: (String) -> Unit = {}) {
     var query by rememberSaveable { mutableStateOf("") }
     var order by rememberSaveable { mutableStateOf(RowOrder.AMOUNT) }
     val rows = state.spending?.categories.orEmpty()
@@ -70,7 +70,7 @@ fun ReportCategoriesScreen(state: ReportsUiState, onBack: () -> Unit) {
                             modifier = Modifier.padding(Spacing.l),
                         )
                     }
-                    shown.forEach { CategoryBar(it, Modifier.padding(start = if (it.inner) Spacing.xxl else Spacing.l, end = Spacing.l)) }
+                    shown.forEach { CategoryBar(it, onClick = { onCategory(it.row.categoryId) }, Modifier.padding(start = if (it.inner) Spacing.xxl else Spacing.l, end = Spacing.l)) }
                 }
             }
         }
@@ -92,7 +92,7 @@ private fun OrderChips(order: RowOrder, onOrder: (RowOrder) -> Unit) {
 }
 
 @Composable
-private fun CategoryBar(item: OrderedRow, modifier: Modifier = Modifier) {
+private fun CategoryBar(item: OrderedRow, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val row: ReportsUiState.CategoryRow = item.row
     CoShellBarRow(
         label = categoryName(row.name),
@@ -103,6 +103,7 @@ private fun CategoryBar(item: OrderedRow, modifier: Modifier = Modifier) {
         ghost = row.ghost,
         ghostDescription = row.ghostValue?.let { stringResource(R.string.reports_ghost_value, it) },
         leading = { CategoryBadge(row.icon, row.color, size = Sizes.badgeSmall) },
+        onClick = onClick,
         modifier = modifier,
     )
 }

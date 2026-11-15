@@ -33,7 +33,9 @@
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
 `categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; Room — `ReportDao`, `RoomReportRepository`.
 Вкладка (#140, доски `RepA`/`RepAll`/`RepPeriod`) — `reports/`: `ReportsViewModel` (дни за `loadRange`), `ReportsBoard` (чистая сборка),
-`components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки.
+`components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки;
+`category/` — «Из чего сложилось» (#188, `RepDrill`): тап по полосе/строке → `ReportCategoryDestination` (период, валюта, сравнение в маршруте),
+своя ViewModel (дни + операции категории за период), доля и подкатегории — `core:domain/reports/categoryDrill`.
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),

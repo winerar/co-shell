@@ -46,4 +46,15 @@
     <string name="reports_order_growth">By growth</string>
     <string name="reports_order_groups">Grouped</string>
     <string name="reports_all_nothing">Nothing found</string>
+    <!-- «Из чего сложилось» (#188, board RepDrill) -->
+    <string name="report_drill_head">%1$s in %2$s</string>
+    <string name="report_drill_head_year">%1$s in %2$d</string>
+    <string name="report_drill_head_range">%1$s · %2$s</string>
+    <string name="report_drill_share">%1$s %2$s · %3$d%% of spending</string>
+    <plurals name="report_drill_operations">
+        <item quantity="one">What it\'s made of · %d transaction</item>
+        <item quantity="other">What it\'s made of · %d transactions</item>
+    </plurals>
+    <string name="report_drill_no_operations">No transactions in this period.</string>
+    <string name="report_drill_refunds">Refunds in this period are bigger than spending.</string>
 </resources>

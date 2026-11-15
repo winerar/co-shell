@@ -11,6 +11,8 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.PostMode
+import app.coshell.core.model.Recurrence
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TemplateEditDestination
@@ -24,6 +26,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 
 /** New or existing template (mockup `TplEdit`). Validation — [buildTemplate]; this class loads, keeps the state, saves. */
 @HiltViewModel
@@ -35,6 +40,8 @@ class TemplateEditViewModel @Inject constructor(
     private val saveTemplate: SaveTemplateUseCase,
     private val ids: IdGenerator,
     private val moneyFormat: MoneyFormat,
+    private val clock: Clock,
+    private val timeZone: TimeZone,
 ) : ViewModel() {
 
     private val templateId: String? = savedStateHandle[TemplateEditDestination.ARG_TEMPLATE_ID]
@@ -58,6 +65,9 @@ class TemplateEditViewModel @Inject constructor(
             isNew = template == null,
             accounts = accountList.map { AccountChoice(it.id, it.name, it.currency.value) },
             categories = categoryList.toChoices(),
+            today = clock.now().toLocalDateTime(timeZone).date,
+            schedule = template?.schedule,
+            savedSchedule = template?.schedule,
         )
         _state.value = if (template == null) {
             base.copy(accountId = accountList.firstOrNull()?.id)
@@ -93,6 +103,9 @@ class TemplateEditViewModel @Inject constructor(
     fun onCategorySelect(id: String?) = _state.update { it.copy(categoryId = id) }
 
     fun onNoteChange(value: String) = _state.update { it.copy(note = value) }
+
+    /** «Готово» in the «Повтор» sheet; `null` [recurrence] — «Нет». */
+    fun onRepeatChange(recurrence: Recurrence?, mode: PostMode) = _state.update { it.withRepeat(recurrence, mode) }
 
     fun save() {
         val current = _state.value

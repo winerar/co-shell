@@ -42,3 +42,10 @@ fun formatMonthShort(month: YearMonth): String =
 
 /** "октября" (genitive in Russian, "October" in English) in the phone's locale: «Итог октября», «Все лимиты октября». */
 fun formatMonthOf(month: YearMonth): String = month.firstDay.toJavaLocalDate().format(DateTimeFormatter.ofPattern("MMMM"))
+
+/** "пт" — the short stand-alone weekday in the phone's locale: «Повтор» каждую неделю. */
+fun formatWeekdayShort(day: kotlinx.datetime.DayOfWeek): String =
+    java.time.DayOfWeek.of(day.ordinal + 1).getDisplayName(java.time.format.TextStyle.SHORT_STANDALONE, java.util.Locale.getDefault())
+
+/** "пт, 5 декабря" in the phone's locale: the next regular payment. */
+fun formatWeekdayDayMonth(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("EEE, d MMMM"))

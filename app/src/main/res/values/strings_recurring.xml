@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Регулярные платежи (#143): «Повтор» в шаблоне. -->
+<resources>
+    <string name="recurring_repeat">Повтор</string>
+    <string name="recurring_how">Как проводить</string>
+    <string name="recurring_next">Следующий</string>
+    <string name="recurring_off">Нет</string>
+    <string name="recurring_month">Месяц</string>
+    <string name="recurring_week">Неделя</string>
+    <string name="recurring_year">Год</string>
+    <string name="recurring_day_of_month">День месяца</string>
+    <string name="recurring_weekday">День недели</string>
+    <string name="recurring_month_of_year">Месяц и день</string>
+    <string name="recurring_monthly_value">Каждый месяц, %1$d-го</string>
+    <string name="recurring_weekly_value">Каждую неделю, %1$s</string>
+    <string name="recurring_yearly_value">Каждый год, %1$s</string>
+    <string name="recurring_remind">Напомнить</string>
+    <string name="recurring_remind_hint">в день платежа — «Провести», сумму можно поправить</string>
+    <string name="recurring_auto">Проводить само</string>
+    <string name="recurring_auto_hint">только если сумма задана · уведомим с «Отменить»</string>
+    <string name="recurring_auto_needs_amount">сначала задайте сумму в шаблоне</string>
+    <string name="recurring_auto_no_transfer">перевод проводится вручную</string>
+    <string name="recurring_short_month">В коротком месяце — последний день.</string>
+    <string name="recurring_next_payment">Следующий платёж — %1$s.</string>
+    <string name="recurring_off_hint">Без повтора шаблон работает как обычно.</string>
+    <string name="recurring_missed_value">%1$s · пропущен</string>
+</resources>

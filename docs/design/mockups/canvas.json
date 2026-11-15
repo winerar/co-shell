@@ -921,6 +921,46 @@
       "page": "components",
       "is_interactive": true
     },
+    "CompV2New.dc.html": {
+      "x": 0,
+      "y": 2360,
+      "w": 1280,
+      "h": 1880,
+      "title": "Компоненты v2 (#367, на утверждении): New",
+      "page": "components"
+    },
+    "CompV2Choice.dc.html": {
+      "x": 1440,
+      "y": 2360,
+      "w": 1280,
+      "h": 1280,
+      "title": "Компоненты v2 (#367, на утверждении): Choice",
+      "page": "components"
+    },
+    "CompV2Rows.dc.html": {
+      "x": 0,
+      "y": 4540,
+      "w": 1280,
+      "h": 1460,
+      "title": "Компоненты v2 (#367, на утверждении): Rows",
+      "page": "components"
+    },
+    "CompV2Data.dc.html": {
+      "x": 1440,
+      "y": 4540,
+      "w": 1280,
+      "h": 1160,
+      "title": "Компоненты v2 (#367, на утверждении): Data",
+      "page": "components"
+    },
+    "CompV2Contrast.dc.html": {
+      "x": 0,
+      "y": 6300,
+      "w": 1280,
+      "h": 1360,
+      "title": "Компоненты v2 (#367, на утверждении): Contrast",
+      "page": "components"
+    },
     "Ideas.dc.html": {
       "x": 0,
       "y": 0,
@@ -1846,6 +1886,11 @@
     "Flows.dc.html",
     "ThemeSwitchComponents.dc.html",
     "Components.dc.html",
+    "CompV2New.dc.html",
+    "CompV2Choice.dc.html",
+    "CompV2Rows.dc.html",
+    "CompV2Data.dc.html",
+    "CompV2Contrast.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2167,6 +2212,15 @@
       "x": 2350,
       "y": 17360,
       "w": 390
+    },
+    "v2": {
+      "kind": "title1",
+      "page": "components",
+      "text": "Компоненты v2 — на утверждении (#367)",
+      "x": 0,
+      "y": 2110,
+      "maxW": 2600,
+      "w": 240
     },
     "fb345": {
       "kind": "title1",
@@ -2886,6 +2940,7 @@
     "s13",
     "row14",
     "s14",
+    "v2",
     "fb345",
     "fbS345",
     "fb352",

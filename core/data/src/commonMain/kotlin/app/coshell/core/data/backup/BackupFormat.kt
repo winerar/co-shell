@@ -170,7 +170,10 @@ internal data class ManualRateDto(val date: String, val from: String, val to: St
 
 internal fun ExchangeRate.toManualDto() = ManualRateDto(date.toString(), from.value, to.value, rate.toPlainString())
 
-/** [amountMinor] is in [currency] (the account's); `null` — the amount is asked every time. */
+/**
+ * [amountMinor] is in [currency]; `null` — the amount is asked every time. [accountCurrency] — the account's
+ * currency when it differs (since v14, #415), as in `TemplateEntity`.
+ */
 @Serializable
 internal data class TemplateDto(
     val id: String,
@@ -185,17 +188,18 @@ internal data class TemplateDto(
     val sortOrder: Int = 0,
     /** Since schema v13: «Повтор» (#143) as `ScheduleCodec` text. */
     val schedule: String? = null,
+    val accountCurrency: String? = null,
 ) {
     fun toModel() = TransactionTemplate(
-        id, name, TransactionType.valueOf(type), accountId, CurrencyCode(currency),
+        id, name, TransactionType.valueOf(type), accountId, CurrencyCode(accountCurrency ?: currency),
         amountMinor?.let { Money(it, CurrencyCode(currency)) }, categoryId, toAccountId, note, sortOrder,
         ScheduleCodec.decode(schedule),
     )
 }
 
 internal fun TransactionTemplate.toDto() = TemplateDto(
-    id, name, type.name, accountId, currency.value, amount?.amountMinor, categoryId, toAccountId, note, sortOrder,
-    schedule?.let(ScheduleCodec::encode),
+    id, name, type.name, accountId, (amount?.currency ?: currency).value, amount?.amountMinor, categoryId, toAccountId,
+    note, sortOrder, schedule?.let(ScheduleCodec::encode), accountCurrency = currency.value.takeIf { isForeign },
 )
 
 /** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */

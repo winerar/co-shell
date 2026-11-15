@@ -227,6 +227,7 @@ class TransactionEditViewModel @Inject constructor(
         val payment = day?.let { paymentUi(name, it, entryTemplates.history(id, it, timeZone), moneyFormat) }
         _state.update { form ->
             form.filledFrom(draft, name, moneyFormat).let { if (day != null) it.copy(date = day, payment = payment) else it }
+                .withDebitSuggestion(converter, moneyFormat)
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
     }

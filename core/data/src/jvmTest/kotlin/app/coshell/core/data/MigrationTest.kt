@@ -241,6 +241,22 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `13 to 14 keeps templates in the account currency`() {
+        helper.createDatabase(13).use { v13 ->
+            v13.execSQL(
+                """INSERT INTO templates (id, name, type, account_id, currency, amount_minor, to_account_id, category_id,
+                   note, sort_order, schedule, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('rent', 'Аренда', 'EXPENSE', 'galicia', 'ARS', 65000000, NULL, NULL, '', 0, NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(14, emptyList()).use { v14 ->
+            assertEquals("65000000", v14.single("SELECT amount_minor FROM templates"))
+            assertEquals("1", v14.single("SELECT account_currency IS NULL FROM templates"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

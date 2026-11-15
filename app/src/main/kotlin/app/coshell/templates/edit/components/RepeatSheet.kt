@@ -134,7 +134,7 @@ private fun hintText(draft: RepeatDraft, state: TemplateEditUiState): String {
 private fun sheetSubtitle(state: TemplateEditUiState): String? {
     val name = state.name.trim().ifEmpty { return null }
     val amount = state.amount.trim().takeIf { it.isNotEmpty() } ?: return name
-    return stringResource(R.string.template_account_value, name, listOfNotNull(amount, state.account?.currency).joinToString(" "))
+    return stringResource(R.string.template_account_value, name, listOfNotNull(amount, state.amountCurrencyShown).joinToString(" "))
 }
 
 /** Every month has it: no «last day» note needed. */

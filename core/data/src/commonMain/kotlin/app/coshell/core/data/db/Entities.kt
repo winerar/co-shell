@@ -113,7 +113,12 @@ data class BudgetEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
-/** Operation template (schema v7; v13 — `schedule`). [amountMinor] `NULL` — the amount is asked every time. */
+/**
+ * Operation template (schema v7; v13 — `schedule`; v14 — `account_currency`). [amountMinor] `NULL` — the amount
+ * is asked every time. [currency] is the currency of the amount; [accountCurrency] is set only when the account's
+ * differs (#415, rent 650 USD from an ARS account). An older version then reads "650 USD on an account in another
+ * currency" — the account no longer fits, so it neither posts by itself nor counts 650 in ARS.
+ */
 @Serializable
 @Entity(tableName = "templates")
 data class TemplateEntity(
@@ -133,6 +138,8 @@ data class TemplateEntity(
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    /** Currency of the account when it differs from [currency] (v14, #415); `NULL` — the same. Default for older sync records. */
+    @ColumnInfo(name = "account_currency") val accountCurrency: String? = null,
 )
 
 /**

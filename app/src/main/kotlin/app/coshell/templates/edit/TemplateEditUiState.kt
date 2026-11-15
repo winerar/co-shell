@@ -25,6 +25,11 @@ data class TemplateEditUiState(
     /** As typed, in the currency of [accountId]; blank — the amount is asked every time. */
     val amount: String = "",
     val amountError: Boolean = false,
+    /**
+     * Currency of [amount] when it differs from the account's (#415, «Аренда · 650 USD» from an ARS account); `null` —
+     * the account's. Kept from the template so that editing does not turn 650 USD into 650 ARS.
+     */
+    val amountCurrency: String? = null,
     /** Every usable category; the screen offers [categoryChoices] — those of the current [type]. */
     val categories: List<CategoryChoice> = emptyList(),
     /** Optional: without it the entry sheet asks for the category. Never set for a transfer. */
@@ -45,6 +50,8 @@ data class TemplateEditUiState(
 
     val isTransfer: Boolean get() = type == TransactionType.TRANSFER
     val account: AccountChoice? get() = accounts.firstOrNull { it.id == accountId }
+    /** The currency [amount] is typed in: [amountCurrency] for an expense or income, else the account's. */
+    val amountCurrencyShown: String? get() = amountCurrency?.takeIf { !isTransfer && it != account?.currency } ?: account?.currency
     val toAccount: AccountChoice? get() = accounts.firstOrNull { it.id == toAccountId }
     val category: CategoryChoice? get() = categories.firstOrNull { it.id == categoryId }
 

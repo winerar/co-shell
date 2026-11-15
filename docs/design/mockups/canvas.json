@@ -921,44 +921,36 @@
       "page": "components",
       "is_interactive": true
     },
-    "CompV2New.dc.html": {
+    "CompV3New.dc.html": {
       "x": 0,
       "y": 2360,
       "w": 1280,
-      "h": 1880,
-      "title": "Компоненты v2 (#367, на утверждении): New",
+      "h": 2440,
+      "title": "Компоненты v3 (#367, на утверждении): New",
       "page": "components"
     },
-    "CompV2Choice.dc.html": {
+    "CompV3Choice.dc.html": {
       "x": 1440,
       "y": 2360,
       "w": 1280,
-      "h": 1280,
-      "title": "Компоненты v2 (#367, на утверждении): Choice",
+      "h": 2000,
+      "title": "Компоненты v3 (#367, на утверждении): Choice",
       "page": "components"
     },
-    "CompV2Rows.dc.html": {
+    "CompV3Rows.dc.html": {
       "x": 0,
-      "y": 4540,
+      "y": 5100,
       "w": 1280,
-      "h": 1460,
-      "title": "Компоненты v2 (#367, на утверждении): Rows",
+      "h": 2280,
+      "title": "Компоненты v3 (#367, на утверждении): Rows",
       "page": "components"
     },
-    "CompV2Data.dc.html": {
+    "CompV3Data.dc.html": {
       "x": 1440,
-      "y": 4540,
+      "y": 5100,
       "w": 1280,
-      "h": 1160,
-      "title": "Компоненты v2 (#367, на утверждении): Data",
-      "page": "components"
-    },
-    "CompV2Contrast.dc.html": {
-      "x": 0,
-      "y": 6300,
-      "w": 1280,
-      "h": 1360,
-      "title": "Компоненты v2 (#367, на утверждении): Contrast",
+      "h": 1756,
+      "title": "Компоненты v3 (#367, на утверждении): Data",
       "page": "components"
     },
     "Ideas.dc.html": {
@@ -1886,11 +1878,10 @@
     "Flows.dc.html",
     "ThemeSwitchComponents.dc.html",
     "Components.dc.html",
-    "CompV2New.dc.html",
-    "CompV2Choice.dc.html",
-    "CompV2Rows.dc.html",
-    "CompV2Data.dc.html",
-    "CompV2Contrast.dc.html",
+    "CompV3New.dc.html",
+    "CompV3Choice.dc.html",
+    "CompV3Rows.dc.html",
+    "CompV3Data.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2213,10 +2204,10 @@
       "y": 17360,
       "w": 390
     },
-    "v2": {
+    "v3": {
       "kind": "title1",
       "page": "components",
-      "text": "Компоненты v2 — на утверждении (#367)",
+      "text": "Компоненты v3 — на утверждении (#367): А | Б",
       "x": 0,
       "y": 2110,
       "maxW": 2600,
@@ -2940,7 +2931,7 @@
     "s13",
     "row14",
     "s14",
-    "v2",
+    "v3",
     "fb345",
     "fbS345",
     "fb352",

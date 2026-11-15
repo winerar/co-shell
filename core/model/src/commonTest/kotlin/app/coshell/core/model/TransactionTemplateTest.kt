@@ -2,6 +2,8 @@ package app.coshell.core.model
 
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.assertNull
 
 class TransactionTemplateTest {
@@ -26,9 +28,18 @@ class TransactionTemplateTest {
     }
 
     @Test
-    fun `amount must be positive and in the account currency`() {
+    fun `amount must be positive`() {
         assertFailsWith<IllegalArgumentException> { template(amount = Money(0, ars)) }
-        assertFailsWith<IllegalArgumentException> { template(amount = Money(10_00, usd)) }
+    }
+
+    @Test
+    fun `an expense may be in another currency, a transfer may not`() {
+        assertTrue(template(amount = Money(650_00, usd)).isForeign)
+        assertFalse(template().isForeign)
+        assertFalse(template(amount = null).isForeign)
+        assertFailsWith<IllegalArgumentException> {
+            template(type = TransactionType.TRANSFER, amount = Money(650_00, usd), toAccountId = "cash")
+        }
     }
 
     @Test

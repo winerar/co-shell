@@ -75,6 +75,18 @@ class TemplateDataTest {
     }
 
     @Test
+    fun `payment in another currency keeps both currencies in Room and in the backup`() = runTest {
+        val rent = TransactionTemplate("rent", "Аренда", TransactionType.EXPENSE, "galicia", ars, Money(650_00, CurrencyCode("USD")))
+        val source = Repos()
+        source.templates.saveTemplate(rent)
+        assertEquals(rent, source.templates.getTemplate("rent"))
+
+        val target = Repos()
+        target.backup.importJson(source.backup.exportJson())
+        assertEquals(rent, target.templates.getTemplate("rent"))
+    }
+
+    @Test
     fun `backup made before templates imports and keeps local templates`() = runTest {
         val r = Repos()
         r.templates.saveTemplate(coffee)

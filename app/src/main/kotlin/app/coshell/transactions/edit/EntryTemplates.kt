@@ -76,7 +76,8 @@ class EntryTemplates @Inject constructor(
 /**
  * The form filled from a template: a new operation dated today. What the template could not fill
  * ([TransactionDraft.gaps]) decides where the sheet opens — on the account, the target account, or
- * the amount with «выберите категорию».
+ * the amount with «выберите категорию». A payment in another currency (#415) opens with the receipt filled
+ * («Аренда · 650 USD»): «списано» follows by the rate ([withDebitSuggestion]) or waits to be typed.
  */
 internal fun TransactionEditUiState.filledFrom(
     draft: TransactionDraft,
@@ -95,8 +96,9 @@ internal fun TransactionEditUiState.filledFrom(
     categoryId = draft.categoryId,
     date = today,
     note = draft.note,
-    receiptEnabled = false,
-    receiptAmount = "",
+    receiptEnabled = draft.receipt != null,
+    receiptCurrency = draft.receipt?.currency?.value ?: receiptCurrency,
+    receiptAmount = draft.receipt?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
     amountError = null,
     toAmountError = null,
     accountError = false,

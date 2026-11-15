@@ -80,6 +80,7 @@ class TemplateEditViewModel @Inject constructor(
                 accountId = account?.id,
                 toAccountId = template.toAccountId?.takeIf { it in accountsById },
                 amount = template.amount?.takeIf { account != null }?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
+                amountCurrency = template.amount?.takeIf { template.isForeign }?.currency?.value,
                 categoryId = template.categoryId?.takeIf { id -> base.categories.any { it.id == id } },
                 note = template.note,
             )

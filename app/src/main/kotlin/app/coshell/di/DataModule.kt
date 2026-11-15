@@ -173,8 +173,9 @@ object DataModule {
         categories: CategoryRepository,
         templates: TemplateRepository,
         save: SaveTransactionUseCase,
+        rates: ExchangeRateRepository,
         clock: Clock,
-    ) = PostAutoPaymentsUseCase(accounts, categories, templates, save, clock)
+    ) = PostAutoPaymentsUseCase(accounts, categories, templates, save, rates, clock)
 
     @Provides
     fun providePostPayment(
@@ -182,8 +183,9 @@ object DataModule {
         categories: CategoryRepository,
         templates: TemplateRepository,
         save: SaveTransactionUseCase,
+        rates: ExchangeRateRepository,
         clock: Clock,
-    ) = PostPaymentUseCase(accounts, categories, templates, save, clock)
+    ) = PostPaymentUseCase(accounts, categories, templates, save, rates, clock)
 
     @Provides
     fun provideMissedPayments(templates: TemplateRepository, post: PostPaymentUseCase) = MissedPaymentsUseCase(templates, post)

@@ -168,6 +168,21 @@ class TemplateEditViewModelTest {
     }
 
     @Test
+    fun `editing a payment in another currency keeps its currency`() = runTest {
+        seed()
+        templates.saveTemplate(TransactionTemplate("rent", "Аренда", TransactionType.EXPENSE, "card", ars, Money(650_00, usd)))
+        val vm = viewModel("rent")
+        assertEquals("USD", vm.state.value.amountCurrencyShown)
+
+        vm.onNameChange("Аренда квартиры")
+        vm.save()
+
+        val saved = templates.getTemplate("rent")!!
+        assertEquals(Money(650_00, usd), saved.amount)
+        assertEquals(ars, saved.currency)
+    }
+
+    @Test
     fun `delete removes the template`() = runTest {
         seed()
         templates.saveTemplate(TransactionTemplate("t", "Аренда", TransactionType.EXPENSE, "cash", usd))

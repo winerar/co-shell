@@ -6,9 +6,12 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.Transaction
@@ -52,6 +55,7 @@ class TransactionEditPaymentTest {
     private val categories = FakeCategoryRepository()
     private val transactions = FakeTransactionRepository()
     private val templates = FakeTemplateRepository()
+    private val rates = FakeExchangeRateRepository()
 
     /** «Уборка» every Friday from 6 November, nothing handled: 6 and 13 November are missed. */
     private suspend fun seed() {
@@ -82,7 +86,7 @@ class TransactionEditPaymentTest {
         moneyFormat = MoneyFormat.RU,
         clock = object : Clock { override fun now(): Instant = now },
         timeZone = zone,
-        rates = FakeExchangeRateRepository(),
+        rates = rates,
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories, templates, transactions = transactions),
         entryTags = fakeEntryTags(),
@@ -102,6 +106,31 @@ class TransactionEditPaymentTest {
         assertEquals(LocalDate(2026, 11, 6), transactions.getTransaction("rec-cleaning-2026-11-06")!!.date.toLocalDateTime(zone).date)
         // Only the oldest one: 13 November still waits in «Скоро».
         assertEquals(LocalDate(2026, 11, 6), handledThrough())
+    }
+
+    @Test
+    fun `a payment in another currency opens with the receipt and debits by the rate`() = runTest {
+        seed()
+        val usd = CurrencyCode("USD")
+        rates.rates.value = listOf(ExchangeRate(LocalDate(2026, 11, 10), usd, ars, Rate.parse("1050"), RateOrigin.DOWNLOADED))
+        templates.saveTemplate(
+            TransactionTemplate(
+                "rent", "Аренда", TransactionType.EXPENSE, "cash", ars, Money(650_00, usd), "home",
+                schedule = RecurringSchedule(Recurrence.Monthly(10), start = LocalDate(2026, 11, 1)),
+            ),
+        )
+        val vm = viewModel("rent", "2026-11-10")
+        val state = vm.state.value
+        assertTrue(state.receiptEnabled)
+        assertEquals("USD", state.receiptCurrency)
+        assertEquals("650", state.receiptAmount)
+        assertEquals("682500", state.amount.filter { it.isDigit() })
+
+        vm.save()
+
+        val saved = transactions.getTransaction("rec-rent-2026-11-10")!!
+        assertEquals(Money(682_500_00, ars), saved.amount)
+        assertEquals(Money(650_00, usd), saved.originalAmount)
     }
 
     @Test

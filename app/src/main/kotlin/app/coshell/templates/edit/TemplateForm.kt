@@ -1,6 +1,7 @@
 package app.coshell.templates.edit
 
 import app.coshell.core.model.Account
+import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.transactions.edit.parsePositiveAmount
@@ -34,7 +35,8 @@ internal fun buildTemplate(
     var amount: Money? = null
     var amountError = false
     if (form.amount.isNotBlank() && account != null) {
-        amount = parsePositiveAmount(form.amount, account.currency).money
+        val currency = form.amountCurrencyShown?.let(CurrencyCode::parseOrNull) ?: account.currency
+        amount = parsePositiveAmount(form.amount, currency).money
         amountError = amount == null
     }
     if (name.isEmpty() || account == null || toAccountError || amountError) {

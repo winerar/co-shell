@@ -77,7 +77,7 @@ fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions)
                 value = state.amount,
                 onValueChange = actions.onAmountChange,
                 label = stringResource(R.string.template_amount),
-                currency = state.account?.currency,
+                currency = state.amountCurrencyShown,
                 error = stringResource(R.string.template_amount_error).takeIf { state.amountError },
                 hint = stringResource(R.string.template_amount_hint),
             )

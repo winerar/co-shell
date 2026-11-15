@@ -2,6 +2,7 @@ package app.coshell.core.domain.recurring
 
 import app.coshell.core.domain.FakeAccountRepository
 import app.coshell.core.domain.FakeCategoryRepository
+import app.coshell.core.domain.FakeExchangeRateRepository
 import app.coshell.core.domain.FakeTemplateRepository
 import app.coshell.core.domain.FakeTransactionRepository
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -37,9 +38,9 @@ class RecurringUseCasesTest {
     private val categories = FakeCategoryRepository()
     private val templates = FakeTemplateRepository()
     private val transactions = FakeTransactionRepository()
-    private val post = PostAutoPaymentsUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), clock)
+    private val post = PostAutoPaymentsUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), FakeExchangeRateRepository(), clock)
     private val mark = MarkPaymentsHandledUseCase(templates)
-    private val postOne = PostPaymentUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), clock)
+    private val postOne = PostPaymentUseCase(accounts, categories, templates, SaveTransactionUseCase(accounts, categories, transactions), FakeExchangeRateRepository(), clock)
 
     private fun d(s: String) = LocalDate.parse(s)
     private fun netflix(mode: PostMode = PostMode.AUTO, handled: String? = "2026-09-18") = TransactionTemplate(

@@ -26,9 +26,10 @@
 | Курсы и валюты | `Rates`, `RatesRefreshing`, `RatesFailed`, `RatesEmpty`, `RatesManual`, `ReportCurrencies`, `CurrencyAdd` | `rates/list/`, `currencies/` |
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
-| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports}.py` |
+| Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports,review}.py` |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | `budgets/` (#167, #103); `BudHome` — `home/budget/`, `home/components/{BudgetTile,HotBudgets}` (#184) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | `reports/`, `reports/all/` (#140), `reports/category/` (`RepDrill`, #188) |
+| Итог месяца | `Mon236A`, `Mon236B`, `Mon236C` — варианты места (опрос #236), общие `Mon236Screen`, `Mon236Limits`, `Mon236Edge` | — (после выбора; расчёт `core:domain/reports/MonthReview`, #235) |
 | Импорт из Wallet | `ImportStart`, `ImportError`, `ImportSummary`, `ImportAccounts`, `ImportCategories`, `ImportTransfers`, `ImportPreview`, `ImportDone` | `importer/wallet/` |
 | Воркфлоу | `Flows`: 19 главных действий по шагам (с шаблонами, бюджетами, отчётами); каждый шаг ведёт на доску | `navigation/`; генератор `scripts/agent/gen-flows-board.py` |
 | Компоненты | `Components`: каталог кирпичей макетов (`mockup_catalog.py`) → имена в коде | `core/designsystem/` (`components.md`) |

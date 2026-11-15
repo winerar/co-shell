@@ -5,6 +5,7 @@
     <string name="action_cancel">Отмена</string>
     <string name="action_add">Добавить</string>
     <string name="action_back">Назад</string>
+    <string name="action_close">Закрыть</string>
     <string name="action_archive">В архив</string>
     <string name="action_unarchive">Вернуть из архива</string>
     <string name="action_delete">Удалить</string>
@@ -68,6 +69,7 @@
         <item quantity="other">%1$d счёта</item>
     </plurals>
     <string name="search_clear">Очистить поиск</string>
+    <string name="choice_search">Найти</string>
     <string name="picker_nothing">Ничего не нашлось</string>
     <string name="picker_from_expense">Откуда списали?</string>
     <string name="picker_to_income">Куда пришло?</string>
@@ -218,6 +220,8 @@
     <string name="transaction_date_today">Сегодня</string>
     <string name="transaction_date_yesterday">Вчера</string>
     <string name="transaction_date_other">Другая дата</string>
+    <string name="date_pick_title">Дата</string>
+    <string name="date_range_pick_title">Свой период</string>
     <string name="transaction_note">Заметка</string>
     <string name="transaction_no_accounts">Чтобы записать операцию, сначала добавьте счёт.</string>
     <string name="action_ok" translatable="false">OK</string>

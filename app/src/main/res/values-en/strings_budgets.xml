@@ -6,9 +6,9 @@
     <string name="budgets_previous_month">Previous month</string>
     <string name="budgets_next_month">Next month</string>
     <string name="budgets_settings">Budget settings</string>
-    <string name="budgets_start_hint">The month starts on day %1$d. Handy to start on payday; in a short month — on its last day.</string>
-    <string name="budgets_start_day">From day %1$d</string>
-    <string name="budgets_start_default">default — calendar month</string>
+    <string name="budgets_start_title">Month start</string>
+    <string name="budgets_start_subtitle">Which day the budget starts — handy on payday</string>
+    <string name="budgets_start_rule">The dot is the default, a calendar month. In a short month — from its last day.</string>
     <string name="budgets_left">Left</string>
     <string name="budgets_over">Over budget</string>
     <string name="budgets_spent_of">spent %1$s of %2$s</string>

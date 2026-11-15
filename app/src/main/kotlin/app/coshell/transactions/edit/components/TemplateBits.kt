@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.components.CoShellDialog
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTextField
@@ -33,6 +32,7 @@ import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditUiState
+import app.coshell.ui.sheet.ModalSheet
 
 /**
  * «⚡ Испанский ✕» — the operation is being filled from a template (mockup `TplEntry`); the violet of
@@ -89,13 +89,12 @@ internal fun SaveAsTemplateDialog(
     var name by rememberSaveable { mutableStateOf(state.note.lineSequence().firstOrNull().orEmpty().ifBlank { categoryName.orEmpty() }) }
     var rememberAmount by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(state.savedTemplateName) { if (state.savedTemplateName != null) onDismiss() }
-    CoShellDialog(
+    ModalSheet(
         title = stringResource(R.string.template_save_as_title),
-        confirmLabel = stringResource(R.string.action_save),
-        onConfirm = { onSave(name, rememberAmount) },
-        onDismiss = onDismiss,
-        dismissLabel = stringResource(R.string.action_cancel),
-        confirmEnabled = name.isNotBlank(),
+        actionLabel = stringResource(R.string.action_save),
+        onAction = { onSave(name, rememberAmount) },
+        onClosed = onDismiss,
+        actionEnabled = name.isNotBlank(),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             Text(

@@ -20,7 +20,7 @@ import app.coshell.rates.list.components.AddRateButton
 import app.coshell.rates.list.components.ConverterCard
 import app.coshell.rates.list.components.ConverterKeypadSheet
 import app.coshell.rates.list.components.CurrentRateRow
-import app.coshell.rates.list.components.ManualRateDialog
+import app.coshell.rates.list.components.ManualRateSheet
 import app.coshell.rates.list.components.ManualRateRow
 import app.coshell.rates.list.components.RatesSectionHeader
 import app.coshell.rates.list.components.RatesSources
@@ -29,7 +29,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.itemsIndexed
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
-import app.coshell.ui.form.ChoiceDialog
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ChoiceOption
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.top.ScreenTopBar
@@ -85,7 +85,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
 
     if (keypadOpen) ConverterKeypadSheet(state.converter, actions.onConverterKey, onClosed = { keypadOpen = false })
     if (pickerOpen) {
-        ChoiceDialog(
+        ChoiceSheet(
             title = stringResource(R.string.rates_converter_pick),
             options = state.converter.options.map { ChoiceOption(it, it) },
             selected = state.converter.from,
@@ -96,7 +96,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             onDismiss = { pickerOpen = false },
         )
     }
-    state.editor?.let { ManualRateDialog(it, editorActions) }
+    state.editor?.let { ManualRateSheet(it, editorActions) }
     if (state.pendingDelete != null) {
         ConfirmDialog(
             title = R.string.rates_manual_delete_title,

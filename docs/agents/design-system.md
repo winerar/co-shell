@@ -11,11 +11,11 @@ core/designsystem/src/main/kotlin/app/coshell/core/designsystem/
   theme/    CoShellTheme, цвета (Color.kt), шрифты (Fonts.kt), стили текста, сумм и курсов (Type.kt)
   amount/   AmountText — сумма с серым кодом валюты; RollingAmountText — итог с перелистыванием цифр
   components/ CoShellCard, кнопки (Buttons.kt), выбор (Selection.kt), вкладка панели — все с тактильностью;
-              поля (TextFields.kt), строки (ListRow.kt), диалоги (Dialogs.kt), раздел/подсказка/сообщение (FormBlocks.kt),
+              поля (TextFields.kt), строки (ListRow.kt), вопрос-карточка (Dialogs.kt), шторка-форма (ModalSheet.kt), сетка дней (DayGrid.kt), раздел/подсказка/сообщение (FormBlocks.kt),
               ProgressHero — большое кольцо статуса в центре экрана (обновление; позже импорт/синк);
               CoShellTile — плитка «Обзора», `tint` — статусная (Tile.kt), CoShellMiniBars — мини-столбики (MiniBars.kt)
   motion/   Tactile (уровни), tactile/tactileClickable/tactileToggleable, selectionPop
-  catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов (@Preview светлая/тёмная)
+  catalog/  TokensCatalog — витрина токенов, ComponentsCatalog — витрина компонентов, ModalsCatalog — окна (@Preview светлая/тёмная)
   category/ CategoryBadge, палитра (18 неоновых + 6 тёплых + 12 пастель/кислота = 36, новые — только в конец:
             старые Material-цвета сопоставляются по индексу), иконки категорий (52, ключ — строка);
             AccountBadge (квадрат цвета счёта с буквами), BankColors (цвета банков и приложений)

@@ -24,7 +24,7 @@ import app.coshell.R
 import app.coshell.budgets.list.components.BudgetFilterChips
 import app.coshell.budgets.list.components.BudgetSummaryCard
 import app.coshell.budgets.list.components.EnvelopeRow
-import app.coshell.budgets.list.components.MonthStartDialog
+import app.coshell.budgets.list.components.MonthStartSheet
 import app.coshell.budgets.list.components.MonthSwitch
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellButton
@@ -44,7 +44,7 @@ import app.coshell.ui.top.ScreenTopBar
 fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     if (settingsOpen) {
-        MonthStartDialog(state.startDay, onPick = { actions.onStartDayChange(it); settingsOpen = false }, onDismiss = { settingsOpen = false })
+        MonthStartSheet(state.startDay, state.month, onPick = { actions.onStartDayChange(it); settingsOpen = false }, onDismiss = { settingsOpen = false })
     }
     Scaffold(
         topBar = {

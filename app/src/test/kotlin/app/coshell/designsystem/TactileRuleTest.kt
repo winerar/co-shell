@@ -15,9 +15,9 @@ class TactileRuleTest {
     private val forbidden = listOf(
         Regex("""^import androidx\.compose\.material3\.(Button|TextButton|OutlinedButton|FilledTonalButton|ElevatedButton|IconButton|FilledIconButton|FloatingActionButton|ExtendedFloatingActionButton|FilterChip|InputChip|AssistChip|SuggestionChip|SegmentedButton|Switch|Checkbox|RadioButton|NavigationBarItem)$""", RegexOption.MULTILINE),
         Regex("""^import androidx\.compose\.foundation\.(clickable|combinedClickable|selection\.toggleable|selection\.selectable)$""", RegexOption.MULTILINE),
-        // Base components: CoShellTextField/AmountField, CoShellDialog/AlertDialog, CoShellListRow/SwitchRow, CoShellCard/Message,
+        // Base components: CoShellTextField/AmountField, CoShellAlertDialog (questions) / ModalSheet (forms, choices, dates — #345), CoShellListRow/SwitchRow, CoShellCard/Message,
         // CoShellSheet/SheetLayout, CoShellBottomBar, CoShellLinearProgress.
-        Regex("""^import androidx\.compose\.material3\.(OutlinedTextField|TextField|AlertDialog|BasicAlertDialog|ListItem|Card|OutlinedCard|ElevatedCard|ModalBottomSheet|NavigationBar|LinearProgressIndicator)$""", RegexOption.MULTILINE),
+        Regex("""^import androidx\.compose\.material3\.(OutlinedTextField|TextField|AlertDialog|BasicAlertDialog|DatePickerDialog|ListItem|Card|OutlinedCard|ElevatedCard|ModalBottomSheet|NavigationBar|LinearProgressIndicator)$""", RegexOption.MULTILINE),
     )
 
     @Test

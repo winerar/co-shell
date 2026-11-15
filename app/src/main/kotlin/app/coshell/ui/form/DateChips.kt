@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -22,8 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
+import app.coshell.ui.sheet.ModalSheet
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.theme.accentInk
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -91,21 +90,19 @@ fun DateChips(
 @Composable
 private fun DatePickerSheet(initialMillisUtc: Long, onDismiss: () -> Unit, onConfirm: (Long) -> Unit) {
     val pickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillisUtc)
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            CoShellTextButton(onClick = { pickerState.selectedDateMillis?.let(onConfirm) ?: onDismiss() }) {
-                Text(stringResource(R.string.action_ok))
-            }
-        },
-        dismissButton = {
-            CoShellTextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
-        },
+    ModalSheet(
+        title = stringResource(R.string.date_pick_title),
+        actionLabel = stringResource(R.string.keypad_done),
+        onAction = { close -> pickerState.selectedDateMillis?.let(onConfirm) ?: close() },
+        onClosed = onDismiss,
     ) {
         // Today and the current year in the text accent; the selected day — Neon Mint fill with ink.
         val ink = accentInk()
         DatePicker(
             state = pickerState,
+            title = null,
+            headline = null,
+            showModeToggle = false,
             colors = DatePickerDefaults.colors(
                 todayContentColor = ink,
                 todayDateBorderColor = ink,

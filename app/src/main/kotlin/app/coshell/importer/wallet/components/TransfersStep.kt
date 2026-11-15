@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.ui.form.ChoiceDialog
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ChoiceOption
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
@@ -86,5 +86,5 @@ private fun UnpairedRow(
 @Composable
 fun UnpairedAccountDialog(selected: UnpairedChoice?, existing: List<Account>, onPick: (UnpairedChoice) -> Unit, onDismiss: () -> Unit) {
     val options = existing.map { ChoiceOption<UnpairedChoice>(UnpairedChoice.TransferWith(it.id), it.name, it.currency.value) }
-    ChoiceDialog(stringResource(R.string.import_unpaired_pick_title), options, selected, onPick, onDismiss)
+    ChoiceSheet(stringResource(R.string.import_unpaired_pick_title), options, selected, onPick, onDismiss)
 }

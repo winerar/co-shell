@@ -4,6 +4,7 @@
     <string name="action_cancel">Cancelar</string>
     <string name="action_add">Añadir</string>
     <string name="action_back">Atrás</string>
+    <string name="action_close">Cerrar</string>
     <string name="action_archive">Archivar</string>
     <string name="action_unarchive">Sacar del archivo</string>
     <string name="action_delete">Eliminar</string>
@@ -63,6 +64,7 @@
         <item quantity="other">%1$d cuentas</item>
     </plurals>
     <string name="search_clear">Borrar búsqueda</string>
+    <string name="choice_search">Buscar</string>
     <string name="picker_nothing">No se ha encontrado nada</string>
     <string name="picker_from_expense">¿De dónde salió?</string>
     <string name="picker_to_income">¿Adónde llegó?</string>
@@ -212,6 +214,8 @@
     <string name="transaction_date_today">Hoy</string>
     <string name="transaction_date_yesterday">Ayer</string>
     <string name="transaction_date_other">Otra fecha</string>
+    <string name="date_pick_title">Fecha</string>
+    <string name="date_range_pick_title">Periodo personalizado</string>
     <string name="transaction_note">Nota</string>
     <string name="transaction_no_accounts">Para anotar un movimiento, primero añade una cuenta.</string>
 

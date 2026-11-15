@@ -6,9 +6,9 @@
     <string name="budgets_previous_month">Mes anterior</string>
     <string name="budgets_next_month">Mes siguiente</string>
     <string name="budgets_settings">Ajustes del presupuesto</string>
-    <string name="budgets_start_hint">El mes empieza el día %1$d. Va bien empezar el día de cobro; en un mes corto, el último día.</string>
-    <string name="budgets_start_day">Desde el día %1$d</string>
-    <string name="budgets_start_default">por defecto — mes natural</string>
+    <string name="budgets_start_title">Inicio del mes</string>
+    <string name="budgets_start_subtitle">Desde qué día contar el presupuesto — cómodo el día de cobro</string>
+    <string name="budgets_start_rule">El punto es el valor por defecto, el mes natural. En un mes corto, desde su último día.</string>
     <string name="budgets_left">Queda</string>
     <string name="budgets_over">Exceso</string>
     <string name="budgets_spent_of">gastado %1$s de %2$s</string>

@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.templates.edit.TemplateEditActions
 import app.coshell.templates.edit.TemplateEditUiState
-import app.coshell.ui.form.ChoiceDialog
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ChoiceOption
 
 /** Which list the editor has open. */
@@ -17,21 +17,21 @@ enum class TemplatePicker { ACCOUNT, TO_ACCOUNT, CATEGORY }
 internal fun TemplatePickers(picker: TemplatePicker?, state: TemplateEditUiState, actions: TemplateEditActions, onClose: () -> Unit) {
     when (picker) {
         null -> Unit
-        TemplatePicker.ACCOUNT -> ChoiceDialog(
+        TemplatePicker.ACCOUNT -> ChoiceSheet(
             title = stringResource(R.string.template_account),
             options = state.accounts.map { ChoiceOption(it.id, it.name, it.currency) },
             selected = state.accountId,
             onPick = { actions.onAccountSelect(it); onClose() },
             onDismiss = onClose,
         )
-        TemplatePicker.TO_ACCOUNT -> ChoiceDialog(
+        TemplatePicker.TO_ACCOUNT -> ChoiceSheet(
             title = stringResource(R.string.template_to_account),
             options = state.accounts.filter { it.id != state.accountId }.map { ChoiceOption(it.id, it.name, it.currency) },
             selected = state.toAccountId,
             onPick = { actions.onToAccountSelect(it); onClose() },
             onDismiss = onClose,
         )
-        TemplatePicker.CATEGORY -> ChoiceDialog<String?>(
+        TemplatePicker.CATEGORY -> ChoiceSheet<String?>(
             title = stringResource(R.string.template_category),
             options = listOf(ChoiceOption<String?>(null, stringResource(R.string.template_category_none))) +
                 state.categoryChoices.map { ChoiceOption<String?>(it.id, it.label) },

@@ -776,6 +776,42 @@
       "page": "screens",
       "radius": 28
     },
+    "Rec415NoRate.dc.html": {
+      "x": 1410,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Нет курса: шторка спрашивает, сколько списали",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec415NoRateTyped.dc.html": {
+      "x": 1880,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Нет курса: сумма введена — курс из неё",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec415NoRateWhere.dc.html": {
+      "x": 2350,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Нет курса: уведомление, «Скоро», редактор",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec415OwnRate.dc.html": {
+      "x": 2820,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Г: свой курс в шаблоне",
+      "page": "screens",
+      "radius": 28
+    },
     "BudA.dc.html": {
       "x": 0,
       "y": 14880,
@@ -2052,6 +2088,10 @@
     "Rec415A.dc.html",
     "Rec415ADefault.dc.html",
     "Rec415B.dc.html",
+    "Rec415NoRate.dc.html",
+    "Rec415NoRateTyped.dc.html",
+    "Rec415NoRateWhere.dc.html",
+    "Rec415OwnRate.dc.html",
     "BudA.dc.html",
     "BudMany.dc.html",
     "BudDetail.dc.html",
@@ -2358,13 +2398,13 @@
       "text": "Регулярные платежи: валюта платежа (#415)",
       "x": 0,
       "y": 13390,
-      "maxW": 1330,
+      "maxW": 3210,
       "w": 240
     },
     "s11": {
       "page": "screens",
       "text": "Аренда 650 USD со счёта в ARS: шаблон хранит 650 USD, со счёта списывается по курсу дня платежа (как «чек в другой валюте» в шторке). Нет курса — само не проводим, напоминание откроет шторку с чеком. Вопрос — как выбрать валюту суммы в редакторе.",
-      "x": 1410,
+      "x": 3290,
       "y": 13640,
       "w": 390
     },

@@ -95,7 +95,7 @@ data class BudgetsUiState(
     sealed interface Caption {
         /** «осталось 220 000 ARS · 11 600 в день». */
         data class Left(val left: String, val perDay: String?) : Caption
-        /** «обгоняете темп · осталось 90 000 ARS на 19 дней». */
+        /** «траты обгоняют темп · осталось 90 000 ARS на 19 дней». */
         data class Ahead(val left: String, val days: Int) : Caption
         /** «перерасход 15 000 ARS». */
         data class Over(val over: String) : Caption

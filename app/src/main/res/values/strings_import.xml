@@ -42,7 +42,7 @@
     <string name="import_wallet_balance">Баланс в Wallet сейчас</string>
     <string name="import_wallet_balance_hint">Необязательно: разница уйдёт в начальный баланс</string>
     <string name="import_wallet_balance_toggle_sign">Сменить знак: минус — долг по кредитке</string>
-    <string name="import_wallet_balance_error">Не похоже на сумму</string>
+    <string name="import_wallet_balance_error">Проверьте сумму: только цифры и запятая</string>
 
     <string name="import_categories_hint">Нажмите на категорию, чтобы выбрать существующую вместо новой.</string>
     <string name="import_category_records">%1$s · записей: %2$d</string>
@@ -74,13 +74,13 @@
     <string name="import_done_text">Добавлено операций: %1$d. Перед этим сделана резервная копия.</string>
     <string name="import_done_close">Готово</string>
 
-    <string name="import_error_read">Не удалось открыть файл.</string>
-    <string name="import_error_not_wallet">Это не похоже на выгрузку Wallet: нет нужных колонок или строк.</string>
+    <string name="import_error_read">Не удалось открыть файл. Попробуйте выбрать его ещё раз.</string>
+    <string name="import_error_not_wallet">Не получилось узнать выгрузку Wallet: в файле нет нужных колонок. Проверьте, что выбран CSV из Wallet.</string>
     <string name="import_error_backup">Не удалось сделать резервную копию — импорт не начат.</string>
-    <string name="import_error_save">Не удалось сохранить — ничего не записано. Попробуйте ещё раз.</string>
+    <string name="import_error_save">Не удалось сохранить, ничего не записано. Попробуйте ещё раз.</string>
 
     <string name="import_problem_empty_file">файл пустой</string>
     <string name="import_problem_quote">незакрытая кавычка</string>
     <string name="import_problem_column">нет колонки %1$s</string>
-    <string name="import_problem_value">неверное значение «%1$s» в колонке %2$s</string>
+    <string name="import_problem_value">непонятное значение «%1$s» в колонке %2$s</string>
 </resources>

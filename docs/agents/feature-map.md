@@ -15,7 +15,7 @@
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
-`appearance/` — «Внешний вид» (тема, палитра, встряхивание; бывшие «Настройки», #155); `more/` — «Ещё»: карточка версии
+`appearance/` — «Внешний вид» (язык, тема, палитра, встряхивание; бывшие «Настройки», #155); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
 (`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Бюджеты (#167): модель `core:model/Budget.kt`, логика — `core:domain/budgets/` (`BudgetPlan` — лимит месяца,
 `SaveBudgetUseCase`, `RemoveBudgetUseCase`); Room — `BudgetDao`, `RoomBudgetRepository`. Расчёт (#182): `BudgetPeriod` (месяц по дню

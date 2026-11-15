@@ -143,4 +143,11 @@
     <string name="reports_capital_total">итого</string>
     <string name="reports_capital_rates_note">Курсы — всё, что не доход и не трата: курсы валют, обмен, корректировки баланса.</string>
     <string name="reports_capital_description">Капитал по месяцам: %1$s</string>
+    <!-- «Капитал · октябрь» (#373) -->
+    <string name="capital_month_title">Капитал · %1$s</string>
+    <string name="capital_month_on">Капитал на %1$s</string>
+    <string name="capital_month_tap">тап — другой месяц</string>
+    <string name="capital_month_change">%1$s за месяц</string>
+    <string name="capital_month_search">Найти счёт · %1$d</string>
+    <string name="capital_month_order_change">По изменению</string>
 </resources>

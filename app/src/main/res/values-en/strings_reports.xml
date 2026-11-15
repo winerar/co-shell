@@ -130,4 +130,11 @@
     <string name="reports_capital_total">total</string>
     <string name="reports_capital_rates_note">Rates — everything that is neither income nor spending: exchange rates, exchanges, balance adjustments.</string>
     <string name="reports_capital_description">Net worth by month: %1$s</string>
+    <!-- «Капитал · октябрь» (#373) -->
+    <string name="capital_month_title">Net worth · %1$s</string>
+    <string name="capital_month_on">Net worth on %1$s</string>
+    <string name="capital_month_tap">tap for another month</string>
+    <string name="capital_month_change">%1$s this month</string>
+    <string name="capital_month_search">Find an account · %1$d</string>
+    <string name="capital_month_order_change">By change</string>
 </resources>

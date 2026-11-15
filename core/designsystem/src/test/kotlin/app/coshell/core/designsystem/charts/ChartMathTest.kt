@@ -50,4 +50,15 @@ class ChartMathTest {
         assertEquals(listOf(0.5f, 0.5f), lineFractions(listOf(3L, 3L)))
         assertEquals(emptyList<Float>(), lineFractions(emptyList()))
     }
+
+    @Test
+    fun `a tap on a line picks the nearest point`() {
+        // 12 points over 110 px: one every 10 px.
+        assertEquals(0, nearestPoint(4f, 110f, 12))
+        assertEquals(1, nearestPoint(6f, 110f, 12))
+        assertEquals(10, nearestPoint(98f, 110f, 12))
+        assertEquals(11, nearestPoint(500f, 110f, 12))
+        assertEquals(0, nearestPoint(-20f, 110f, 12))
+        assertEquals(0, nearestPoint(50f, 110f, 1))
+    }
 }

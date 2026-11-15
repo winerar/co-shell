@@ -90,7 +90,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
             }
             state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
             state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
-            state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency) } }
+            state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
             if (state.members.isNotEmpty()) item(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
             item(key = "note") {
                 val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()
@@ -125,4 +125,6 @@ data class ReportsActions(
     val onCategory: (String) -> Unit = {},
     /** A row of «Кто сколько потратил»: the member's id, `null` — «Я». */
     val onMember: (String?) -> Unit = {},
+    /** A point of «Капитал»: the accounts at that month end. */
+    val onCapital: (YearMonth) -> Unit = {},
 )

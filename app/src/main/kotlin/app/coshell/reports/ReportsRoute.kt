@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.navigation.CapitalMonthDestination
 import app.coshell.navigation.ReportCategoryDestination
+import app.coshell.reports.capital.capitalMonthDestination
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.core.domain.search.PeriodRange
 import app.coshell.reports.category.reportCategoryDestination
@@ -18,6 +20,8 @@ fun ReportsRoute(
     onCategory: (ReportCategoryDestination) -> Unit,
     /** A row of «Кто сколько потратил» (#373): that member's operations in the shown period. */
     onMember: (MemberPreset) -> Unit = {},
+    /** A point of «Капитал» (#373): the accounts at that month end. */
+    onCapital: (CapitalMonthDestination) -> Unit = {},
     viewModel: ReportsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -30,6 +34,9 @@ fun ReportsRoute(
             onAllCategories = onAllCategories,
             onCategory = { id -> state.drillTo(id)?.let(onCategory) },
             onMember = { id -> state.membersOperations(id)?.let(onMember) },
+            onCapital = { month ->
+                state.period?.let { onCapital(capitalMonthDestination(month, it.lastMonth, state.startDay, state.currency)) }
+            },
         ),
     )
 }

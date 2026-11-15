@@ -134,4 +134,11 @@
     <string name="reports_capital_total">total</string>
     <string name="reports_capital_rates_note">Tipos: todo lo que no es ingreso ni gasto: tipos de cambio, cambios de moneda, ajustes de saldo.</string>
     <string name="reports_capital_description">Patrimonio por mes: %1$s</string>
+    <!-- «Капитал · октябрь» (#373) -->
+    <string name="capital_month_title">Patrimonio · %1$s</string>
+    <string name="capital_month_on">Patrimonio al %1$s</string>
+    <string name="capital_month_tap">toca para otro mes</string>
+    <string name="capital_month_change">%1$s en el mes</string>
+    <string name="capital_month_search">Buscar cuenta · %1$d</string>
+    <string name="capital_month_order_change">Por cambio</string>
 </resources>

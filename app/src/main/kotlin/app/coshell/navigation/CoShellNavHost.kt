@@ -23,6 +23,7 @@ import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
 import app.coshell.reports.ReportsRoute
+import app.coshell.reports.capital.CapitalMonthRoute
 import app.coshell.reports.all.ReportCategoriesRoute
 import app.coshell.reports.category.ReportCategoryRoute
 import app.coshell.reports.review.MonthLimitsRoute
@@ -202,6 +203,13 @@ fun CoShellNavHost(
                     navController.getBackStackEntry<TransactionsDestination>()
                         .savedStateHandle[PRESET_MEMBER] = preset.encode()
                 },
+                onCapital = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        composable<CapitalMonthDestination> {
+            CapitalMonthRoute(
+                onBack = { navController.popBackStack() },
+                onAccount = { navController.navigate(AccountEditDestination(it)) },
             )
         }
         composable<ReportCategoriesDestination> { entry ->

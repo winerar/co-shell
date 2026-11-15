@@ -58,15 +58,14 @@ fun netWorth(
     val counted = accounts.filter { !it.excludedFromTotal }
     val started = periods.filter { it.start <= today }
     if (counted.isEmpty() || started.isEmpty()) return null
-    val byAccount = days.groupBy { it.accountId }.mapValues { (_, list) -> list.sortedBy { it.day } }
+    val byAccount = days.groupBy { it.accountId }
     val missing = linkedSetOf<CurrencyCode>()
     val points = started.map { period ->
         val running = today < period.endExclusive
         val asOf = if (running) today else period.endExclusive.minus(1, DateTimeUnit.DAY)
         var total = Money.zero(currency)
         for (account in counted) {
-            val delta = byAccount[account.id].orEmpty().takeWhile { it.day <= asOf }.sumOf { it.deltaMinor }
-            val balance = Money(account.initialBalanceMinor + delta, account.currency)
+            val balance = balanceAt(account, byAccount[account.id].orEmpty(), asOf)
             if (balance.amountMinor == 0L) continue
             val rate = book.find(account.currency, currency, asOf)?.rate
             if (rate == null) { missing += account.currency; continue }

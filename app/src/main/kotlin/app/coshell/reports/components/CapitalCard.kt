@@ -30,13 +30,15 @@ import app.coshell.reports.ReportsUiState.WhyRow
 import app.coshell.ui.format.formatMonth
 import app.coshell.ui.format.formatMonthShort
 import app.coshell.ui.format.formatMonthYear
+import kotlinx.datetime.YearMonth
 
 /**
  * «Капитал» (#189, board `Rp189NwB`): the money on all accounts now and its change over the year, a line of month ends,
- * and «Почему изменился» — what was saved and what rates (and the rest) added in the last months.
+ * and «Почему изменился» — what was saved and what rates (and the rest) added in the last months. A tap on the line —
+ * the accounts at that month end ([onPoint], #373).
  */
 @Composable
-internal fun CapitalCard(capital: Capital, currency: String, modifier: Modifier = Modifier) {
+internal fun CapitalCard(capital: Capital, currency: String, modifier: Modifier = Modifier, onPoint: ((YearMonth) -> Unit)? = null) {
     CoShellCard(modifier.fillMaxWidth()) {
         Column(Modifier.padding(Spacing.l)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -53,6 +55,7 @@ internal fun CapitalCard(capital: Capital, currency: String, modifier: Modifier 
                 points = capital.points.map { LinePoint(formatMonthShort(it.month).take(1), it.minor) },
                 description = stringResource(R.string.reports_capital_description, description),
                 modifier = Modifier.padding(top = Spacing.m),
+                onSelect = onPoint?.let { open -> { i: Int -> capital.points.getOrNull(i)?.let { open(it.month) } } },
             )
             if (capital.why.isNotEmpty()) Why(capital.why)
         }

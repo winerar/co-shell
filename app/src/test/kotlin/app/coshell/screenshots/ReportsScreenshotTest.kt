@@ -16,6 +16,9 @@ import androidx.compose.ui.test.onRoot
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.reports.ReportsActions
 import app.coshell.reports.ReportsSamples
+import app.coshell.reports.capital.CapitalMonthActions
+import app.coshell.reports.capital.CapitalMonthSamples
+import app.coshell.reports.capital.CapitalMonthScreen
 import app.coshell.reports.ReportsScreen
 import app.coshell.reports.all.ReportCategoriesScreen
 import app.coshell.reports.category.ReportCategorySamples
@@ -94,6 +97,16 @@ class ReportsScreenshotTest {
     fun `category drill trend light`() = shot("report_category_trend_light") {
         ReportCategoryScreen(ReportCategorySamples.trend, onBack = {}, onTransactionClick = {})
     }
+
+    /** Board `Rp189NwDrill` (#373): October picked on the line, 24 accounts in groups. */
+    @Test
+    fun `capital month dark`() = shot("capital_month_dark", dark = true) { CapitalMonthScreen(CapitalMonthSamples.state, CapitalMonthActions()) }
+
+    @Test
+    fun `capital month light`() = shot("capital_month_light") { CapitalMonthScreen(CapitalMonthSamples.state, CapitalMonthActions()) }
+
+    @Test
+    fun `capital month by change`() = shot("capital_month_change_dark", dark = true) { CapitalMonthScreen(CapitalMonthSamples.byChange, CapitalMonthActions()) }
 
     @Composable
     private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})

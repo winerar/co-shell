@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.charts
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.theme.progressColors
 import app.coshell.core.designsystem.tokens.Spacing
+import kotlin.math.roundToInt
 
 /** One point of [CoShellLine]: the [label] under it («н»), its [value] (any unit, e.g. minor units of one currency). */
 @Immutable
@@ -34,6 +37,7 @@ data class LinePoint(val label: String, val value: Long)
  * A line over time (board `Rp189NwB`, «Капитал»): the points joined in the accent, a faint fill under them, two dotted
  * guides and a dot on the [selected] point. The scale is fitted to the values (not from zero: the change matters, not
  * the level); [description] — what TalkBack says for the whole chart. The line draws from the left the first time.
+ * [onSelect] — a tap picks the nearest point (#373, «тап — другой месяц»); `null` — the line is a picture.
  */
 @Composable
 fun CoShellLine(
@@ -42,6 +46,7 @@ fun CoShellLine(
     modifier: Modifier = Modifier,
     selected: Int = points.lastIndex,
     height: Dp = LINE_HEIGHT,
+    onSelect: ((Int) -> Unit)? = null,
 ) {
     val entrance = rememberChartEntrance()
     val accent = progressColors().indicator
@@ -49,7 +54,10 @@ fun CoShellLine(
     val marker = MaterialTheme.colorScheme.outline
     val ring = MaterialTheme.colorScheme.surfaceContainer
     Column(modifier.fillMaxWidth().semantics { contentDescription = description }) {
-        Canvas(Modifier.fillMaxWidth().height(height).padding(horizontal = DOT_RADIUS)) {
+        val tap = if (onSelect == null || points.isEmpty()) Modifier else Modifier.pointerInput(points.size, onSelect) {
+            detectTapGestures { offset -> onSelect(nearestPoint(offset.x - DOT_RADIUS.toPx(), size.width - 2 * DOT_RADIUS.toPx(), points.size)) }
+        }
+        Canvas(Modifier.fillMaxWidth().height(height).then(tap).padding(horizontal = DOT_RADIUS)) {
             if (points.isEmpty()) return@Canvas
             val ys = lineFractions(points.map { it.value })
             val step = if (points.size > 1) size.width / (points.size - 1) else 0f
@@ -88,6 +96,12 @@ fun CoShellLine(
             }
         }
     }
+}
+
+/** The point of [count] spread evenly over [width] nearest to [x] (both from the first point). */
+fun nearestPoint(x: Float, width: Float, count: Int): Int {
+    if (count <= 1 || width <= 0f) return 0
+    return (x / (width / (count - 1))).roundToInt().coerceIn(0, count - 1)
 }
 
 /**

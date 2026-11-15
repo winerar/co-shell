@@ -48,6 +48,9 @@
 Картина целиком (#189, `Rp189*`): «Доходы и расходы» — `incomeExpenses` (domain) → `IncomeBoard` → `components/IncomeCard` (ds `CoShellPairedColumns`);
 «Капитал» — `netWorth` (начальный остаток + `BalanceDay` из `ReportDao.observeBalanceDays`, курс на конец месяца, «отложили / курсы») → `CapitalBoard` →
 `CapitalCard` (ds `CoShellLine`); «Кто сколько потратил» — `ReportDay.authorId` → `spendingByMember` → `MembersBoard` → `MembersCard` («Я» — всё, что не внесли другие).
+Хвост (#373, `Rp189NwDrill`): тап по линии (`CoShellLine.onSelect`) → `reports/capital/` — `accountsAt` (domain: счета на дату и изменение за месяц) →
+`CapitalMonthBoard` (группы — `buildAccountGroups`, строки — `AccountRow`/`AccountGroup` из «Счетов») → `CapitalMonthScreen`; тап по участнику →
+«Операции» через `PRESET_MEMBER` (`transactions/list/MemberPreset`, как `PRESET_UNCATEGORIZED` у «Внимания»).
 Поиск и фильтры «Операций» (#141, вариант А): разбор суммы `=4500`/`>10000`/`3000-5000` — `core:domain/search/AmountQuery`,
 периоды со стрелками — `search/PeriodRange`, итог под фильтрами (4А) — `search/FilterTotal`; Room — `TransactionFilter`
 (`accountIds`, `categoryIds`, `author`) → `TransactionDao.observe`. Экран — `transactions/list/`: удержание суммы → пузырь в валютах отчётов (`AmountPeek.kt`, расчёт `core:domain/rates/AmountInCurrencies`, #318); `ListFilter` (что выбрано, что идёт в Room),

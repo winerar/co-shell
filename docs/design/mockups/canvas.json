@@ -749,44 +749,26 @@
       "page": "screens",
       "radius": 28
     },
-    "Rec415A.dc.html": {
+    "Rec415B.dc.html": {
       "x": 0,
       "y": 13640,
       "w": 390,
       "h": 844,
-      "title": "А (рекомендую): валюта у суммы",
-      "page": "screens",
-      "radius": 28
-    },
-    "Rec415ADefault.dc.html": {
-      "x": 470,
-      "y": 13640,
-      "w": 390,
-      "h": 844,
-      "title": "А: обычный шаблон — без чипов",
-      "page": "screens",
-      "radius": 28
-    },
-    "Rec415B.dc.html": {
-      "x": 940,
-      "y": 13640,
-      "w": 390,
-      "h": 844,
-      "title": "Б: галочка «Платёж в другой валюте»",
+      "title": "Выбрано (Б): галочка «Платёж в другой валюте»",
       "page": "screens",
       "radius": 28
     },
     "Rec415NoRate.dc.html": {
-      "x": 1410,
+      "x": 470,
       "y": 13640,
       "w": 390,
       "h": 844,
-      "title": "Нет курса: шторка спрашивает, сколько списали",
+      "title": "Выбрано (В) — нет курса: шторка спрашивает, сколько списали",
       "page": "screens",
       "radius": 28
     },
     "Rec415NoRateTyped.dc.html": {
-      "x": 1880,
+      "x": 940,
       "y": 13640,
       "w": 390,
       "h": 844,
@@ -795,7 +777,7 @@
       "radius": 28
     },
     "Rec415NoRateWhere.dc.html": {
-      "x": 2350,
+      "x": 1410,
       "y": 13640,
       "w": 390,
       "h": 844,
@@ -803,12 +785,30 @@
       "page": "screens",
       "radius": 28
     },
-    "Rec415OwnRate.dc.html": {
+    "Rec415AskSheet.dc.html": {
+      "x": 1880,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: сумма по курсу подставлена, её можно исправить",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec415AskAlways.dc.html": {
+      "x": 2350,
+      "y": 13640,
+      "w": 390,
+      "h": 844,
+      "title": "Д: платёж в другой валюте всегда спрашивает сумму",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec415AutoFix.dc.html": {
       "x": 2820,
       "y": 13640,
       "w": 390,
       "h": 844,
-      "title": "Г: свой курс в шаблоне",
+      "title": "Е: «само» по курсу + «Уточнить сумму»",
       "page": "screens",
       "radius": 28
     },
@@ -2085,13 +2085,13 @@
     "Rec143Post.dc.html",
     "Rec143Notify.dc.html",
     "Rec143Edge.dc.html",
-    "Rec415A.dc.html",
-    "Rec415ADefault.dc.html",
     "Rec415B.dc.html",
     "Rec415NoRate.dc.html",
     "Rec415NoRateTyped.dc.html",
     "Rec415NoRateWhere.dc.html",
-    "Rec415OwnRate.dc.html",
+    "Rec415AskSheet.dc.html",
+    "Rec415AskAlways.dc.html",
+    "Rec415AutoFix.dc.html",
     "BudA.dc.html",
     "BudMany.dc.html",
     "BudDetail.dc.html",

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.reports.ReportLedger
@@ -41,6 +42,7 @@ class ReportsViewModel @Inject constructor(
     private val reports: ReportRepository,
     categories: CategoryRepository,
     rates: ExchangeRateRepository,
+    otherMembers: OtherMembers,
     reportCurrencies: ReportCurrencySettings,
     monthStart: MonthStartSettings,
     moneyFormat: MoneyFormat,
@@ -66,7 +68,7 @@ class ReportsViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
         val (from, to) = s.period.loadRange(s.startDay)
-        combine(reports.observeDays(from, to), categories.observeCategories(includeArchived = true), rates.observeRates()) { days, categoryList, rateList ->
+        combine(reports.observeDays(from, to), categories.observeCategories(includeArchived = true), rates.observeRates(), otherMembers.names()) { days, categoryList, rateList, others ->
             val input = ReportInput(
                 ledger = ReportLedger(days, categoryList, RateBook.of(rateList), s.currency),
                 categories = categoryList,
@@ -85,6 +87,7 @@ class ReportsViewModel @Inject constructor(
                 spending = buildSpending(input, format),
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
+                members = buildMembers(input, others, format),
             )
         }
     }

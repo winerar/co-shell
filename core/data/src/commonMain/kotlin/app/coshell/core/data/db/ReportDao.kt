@@ -13,21 +13,24 @@ data class ReportDayRow(
     val type: String,
     val currency: String,
     @ColumnInfo(name = "amount_minor") val amountMinor: Long,
+    /** Who added the operations (#189 «Кто сколько потратил»); `null` — unknown (imported, older records). */
+    @ColumnInfo(name = "author_member_id") val authorId: String? = null,
 )
 
 /** Reports (#187): SQLite adds the operations up by day, so a year of reports reads day sums, not operations. */
 @Dao
 interface ReportDao {
     /**
-     * Expenses and incomes with a category in [fromMs] ..< [toMs], summed by day, category, type and currency.
+     * Expenses and incomes with a category in [fromMs] ..< [toMs], summed by day, category, type, currency and author.
      * A day is counted with one UTC offset ([offsetMs]) for the whole range — exact for zones without summer time.
      */
     @Query(
-        """SELECT (date + :offsetMs) / 86400000 AS epoch_day, category_id, type, currency, SUM(amount_minor) AS amount_minor
+        """SELECT (date + :offsetMs) / 86400000 AS epoch_day, category_id, type, currency, SUM(amount_minor) AS amount_minor,
+                  author_member_id
            FROM transactions
            WHERE deleted = 0 AND type IN ('EXPENSE', 'INCOME') AND category_id IS NOT NULL
              AND date >= :fromMs AND date < :toMs
-           GROUP BY epoch_day, category_id, type, currency""",
+           GROUP BY epoch_day, category_id, type, currency, author_member_id""",
     )
     fun observeDays(fromMs: Long, toMs: Long, offsetMs: Long): Flow<List<ReportDayRow>>
 }

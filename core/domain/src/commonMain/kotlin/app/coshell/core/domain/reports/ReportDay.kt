@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
 /**
- * The sum of one day's operations of one category, type and currency — what reports are counted from
+ * The sum of one day's operations of one category, type, currency and author — what reports are counted from
  * (#187). Room adds them up (`ReportDao`), so a year of reports never loads the operations themselves.
  * [type] is [TransactionType.EXPENSE] or [TransactionType.INCOME]: transfers are not in reports.
  */
@@ -15,6 +15,8 @@ data class ReportDay(
     val categoryId: String,
     val type: TransactionType,
     val amount: Money,
+    /** Who added them (`Transaction.authorMemberId`); `null` — unknown (imported, older records). */
+    val authorId: String? = null,
 )
 
 interface ReportRepository {

@@ -127,4 +127,9 @@
     <string name="reports_income_rate">Отложили %1$d%% дохода</string>
     <string name="reports_income_average">в среднем за %1$d мес. — %2$d%%</string>
     <string name="reports_income_description">%1$s: пришло %2$s, ушло %3$s</string>
+    <!-- «Кто сколько потратил» (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Кто сколько потратил</string>
+    <string name="reports_members_caption">по тому, кто внёс</string>
+    <string name="reports_members_me">Я</string>
+    <string name="reports_members_note">Траты общие — делим по тому, кто записал операцию.</string>
 </resources>

@@ -1,5 +1,6 @@
 package app.coshell.reports
 
+import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
@@ -72,10 +73,13 @@ class ReportsViewModelTest {
         ),
     )
 
+    private val others = MutableStateFlow(emptyMap<String, String>())
+
     private fun viewModel() = ReportsViewModel(
         reports,
         categories,
         FakeExchangeRateRepository(),
+        OtherMembers { others },
         FakeReportCurrencySettings(listOf(usd, CurrencyCode("ARS"))),
         monthStart,
         MoneyFormat.RU,

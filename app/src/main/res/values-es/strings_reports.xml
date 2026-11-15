@@ -118,4 +118,9 @@
     <string name="reports_income_rate">Ahorraron el %1$d%% de los ingresos</string>
     <string name="reports_income_average">media de %1$d meses — %2$d%%</string>
     <string name="reports_income_description">%1$s: entró %2$s, salió %3$s</string>
+    <!-- Quién gastó cuánto (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Quién gastó cuánto</string>
+    <string name="reports_members_caption">según quién lo anotó</string>
+    <string name="reports_members_me">Yo</string>
+    <string name="reports_members_note">Los gastos son comunes: se reparten según quién anotó la operación.</string>
 </resources>

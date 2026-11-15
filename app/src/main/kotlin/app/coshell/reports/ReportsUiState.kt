@@ -24,6 +24,8 @@ data class ReportsUiState(
     val months: Months? = null,
     /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
     val income: Income? = null,
+    /** «Кто сколько потратил» (#189); empty — one-person family or nothing spent. */
+    val members: List<MemberRow> = emptyList(),
 ) {
     /** Nothing was spent in the period (the cards say so instead of empty charts). */
     val isEmpty: Boolean get() = !isLoading && spending == null
@@ -128,4 +130,20 @@ data class ReportsUiState(
         val earnedFraction: Float,
         val spentFraction: Float,
     )
+
+    /**
+     * A row of «Кто сколько потратил» (board `Rp189WhoA`): [name] `null` — «Я» (everything the others did not add);
+     * [top] — the folders this member spent most on («Дом 262»).
+     */
+    data class MemberRow(
+        val memberId: String?,
+        val name: String?,
+        val value: String,
+        val percent: Int,
+        val fraction: Float,
+        val top: List<TopFolder>,
+    )
+
+    /** [name] `null` — a category deleted on another phone. */
+    data class TopFolder(val name: String?, val value: String)
 }

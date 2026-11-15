@@ -43,6 +43,7 @@ class RoomReportRepository(
                         categoryId = it.categoryId,
                         type = TransactionType.valueOf(it.type),
                         amount = Money(it.amountMinor, CurrencyCode(it.currency)),
+                        authorId = it.authorId,
                     )
                 }
             }

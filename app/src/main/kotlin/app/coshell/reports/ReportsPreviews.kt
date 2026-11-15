@@ -10,6 +10,8 @@ import app.coshell.reports.ReportsUiState.CategoryRow
 import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
 import app.coshell.reports.ReportsUiState.Income
+import app.coshell.reports.ReportsUiState.MemberRow
+import app.coshell.reports.ReportsUiState.TopFolder
 import app.coshell.reports.ReportsUiState.IncomeColumn
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
@@ -78,6 +80,12 @@ object ReportsSamples {
         averageMonths = 5,
     )
 
+    /** Board `Rp189WhoA`: spending by who added it. */
+    val members = listOf(
+        MemberRow("misha", "Миша", "430", 57, 1f, listOf(TopFolder("Дом", "262"), TopFolder("Продукты", "70"), TopFolder("Кафе", "38"))),
+        MemberRow(null, null, "330", 43, 330 / 430f, listOf(TopFolder("Образование", "120"), TopFolder("Аптека", "70"), TopFolder("Продукты", "51"))),
+    )
+
     val state = ReportsUiState(
         period = ReportPeriod.month(YearMonth(2026, 11)),
         today = LocalDate(2026, 11, 11),
@@ -86,6 +94,7 @@ object ReportsSamples {
         spending = spending,
         months = months,
         income = income,
+        members = members,
     )
 
     val empty = state.copy(spending = null)

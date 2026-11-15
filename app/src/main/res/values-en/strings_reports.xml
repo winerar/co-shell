@@ -114,4 +114,9 @@
     <string name="reports_income_rate">Saved %1$d%% of income</string>
     <string name="reports_income_average">%1$d-month average — %2$d%%</string>
     <string name="reports_income_description">%1$s: came in %2$s, went out %3$s</string>
+    <!-- Who spent how much (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Who spent how much</string>
+    <string name="reports_members_caption">by who added it</string>
+    <string name="reports_members_me">Me</string>
+    <string name="reports_members_note">Spending is shared — split by who recorded the operation.</string>
 </resources>

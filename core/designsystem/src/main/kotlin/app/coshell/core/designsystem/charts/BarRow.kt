@@ -36,7 +36,8 @@ import app.coshell.core.designsystem.tokens.Spacing
  * «290 · 38%» on the right, under them the bar of [fraction] (of the chart's [ChartScale]) in the category [color] and
  * the thin grey [ghost] — where the past period was; [badge] — a pill before the value («↑ 45%», #238). Bars grow from
  * the left the first time they show and slide when the numbers change. TalkBack reads the texts, then
- * [badgeDescription] («на 45 процентов больше обычного») and [ghostDescription] («в октябре 300»). A tap — [onClick].
+ * [badgeDescription] («на 45 процентов больше обычного») and [ghostDescription] («в октябре 300»); [caption] — a grey
+ * line under the bar («Дом 262 · Продукты 70», #189). A tap — [onClick].
  */
 @Composable
 fun CoShellBarRow(
@@ -51,6 +52,7 @@ fun CoShellBarRow(
     leading: (@Composable () -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
     badgeDescription: String? = null,
+    caption: String? = null,
     onClick: (() -> Unit)? = null,
 ) {
     val state = listOfNotNull(badgeDescription, ghostDescription).joinToString(", ").ifEmpty { null }
@@ -78,6 +80,15 @@ fun CoShellBarRow(
                 ValueAndShare(value, share)
             }
             ChartBar(fraction, color, ghost, Modifier.padding(top = Spacing.xs))
+            caption?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }

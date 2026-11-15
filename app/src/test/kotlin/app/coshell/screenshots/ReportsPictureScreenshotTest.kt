@@ -14,6 +14,7 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsSamples
 import app.coshell.reports.components.IncomeCard
+import app.coshell.reports.components.MembersCard
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -41,6 +42,7 @@ class ReportsPictureScreenshotTest {
     @Composable
     private fun cards() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         IncomeCard(ReportsSamples.income, onMonth = {})
+        MembersCard(ReportsSamples.members)
     }
 
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {

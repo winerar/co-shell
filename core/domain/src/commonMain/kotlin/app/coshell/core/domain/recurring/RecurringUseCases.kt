@@ -89,6 +89,9 @@ class PostAutoPaymentsUseCase(
 }
 
 /** Same template + same day → same operation id on every phone. */
-fun autoPaymentId(templateId: String, day: LocalDate): String = "rec-$templateId-$day"
+fun autoPaymentId(templateId: String, day: LocalDate): String = paymentIdPrefix(templateId) + day
+
+/** The start of every payment id of the template ([autoPaymentId]). */
+fun paymentIdPrefix(templateId: String): String = "rec-$templateId-"
 
 private suspend fun TemplateRepository.allTemplates() = observeTemplates().first()

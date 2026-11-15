@@ -15,8 +15,10 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditScreen
+import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.transactions.edit.components.AllCategoriesContent
 import app.coshell.transactions.edit.entrySheetSample
+import app.coshell.transactions.edit.paymentSheetSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +30,7 @@ import org.robolectric.annotation.GraphicsMode
 /**
  * The entry sheet without scrolling (#290, board `Fb290A`) on the owner's phone (393×873 dp), under the room the status
  * bar, the sheet's top margin and its handle take (≈102 dp) — «Детали» must end above the keypad; and «Все категории»
- * (board `Fb290ACats`).
+ * (board `Fb290ACats`); the «Провести» sheet of a payment (#404, board `Rec143Post`).
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -43,13 +45,20 @@ class EntrySheetScreenshotTest {
     fun `entry sheet light`() = shot("entry_sheet_light") { sheet() }
 
     @Test
+    fun `payment sheet dark`() = shot("recurring_post_dark", dark = true) { sheet(paymentSheetSample) }
+
+    @Test
+    fun `payment sheet light`() = shot("recurring_post_light") { sheet(paymentSheetSample) }
+
+    @Test
     fun `all categories dark`() = shot("entry_all_categories_dark", dark = true) { allCategories() }
 
     @Test
     fun `all categories light`() = shot("entry_all_categories_light") { allCategories() }
 
     @Composable
-    private fun sheet() = Column(Modifier.padding(top = SHEET_TOP)) { TransactionEditScreen(entrySheetSample, TransactionEditActions()) }
+    private fun sheet(state: TransactionEditUiState = entrySheetSample) =
+        Column(Modifier.padding(top = SHEET_TOP)) { TransactionEditScreen(state, TransactionEditActions()) }
 
     @Composable
     private fun allCategories() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {

@@ -11,6 +11,7 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.RecurringSchedule
+import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
@@ -30,10 +31,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -81,7 +84,7 @@ class TransactionEditPaymentTest {
         timeZone = zone,
         rates = FakeExchangeRateRepository(),
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
-        entryTemplates = fakeEntryTemplates(accounts, categories, templates),
+        entryTemplates = fakeEntryTemplates(accounts, categories, templates, transactions = transactions),
         entryTags = fakeEntryTags(),
     )
 
@@ -95,7 +98,8 @@ class TransactionEditPaymentTest {
 
         vm.save()
 
-        assertEquals(LocalDate(2026, 11, 6), transactions.getTransaction("new")!!.date.toLocalDateTime(zone).date)
+        // The id of the template and the day, like «Проводить само»: both phones write one record.
+        assertEquals(LocalDate(2026, 11, 6), transactions.getTransaction("rec-cleaning-2026-11-06")!!.date.toLocalDateTime(zone).date)
         // Only the oldest one: 13 November still waits in «Скоро».
         assertEquals(LocalDate(2026, 11, 6), handledThrough())
     }
@@ -135,4 +139,41 @@ class TransactionEditPaymentTest {
 
         assertNull(handledThrough())
     }
+
+    @Test
+    fun `the pill names the payment and the hint shows earlier payments`() = runTest {
+        seed()
+        transactions.saveTransaction(paidBefore("2026-10-30", 28_000_00))
+        transactions.saveTransaction(paidBefore("2026-10-23", 32_000_00))
+        val vm = viewModel("cleaning", "2026-11-06")
+
+        assertEquals(PaymentUi("Уборка", LocalDate(2026, 11, 6), last = n(28_000_00), average = n(30_000_00)), vm.state.value.payment)
+    }
+
+    @Test
+    fun `a template from the strip has no payment pill`() = runTest {
+        seed()
+        val vm = viewModel("coffee", null)
+        assertNull(vm.state.value.payment)
+        assertEquals("Кофе", vm.state.value.templateName)
+    }
+
+    @Test
+    fun `skip this time marks the payment handled without an operation`() = runTest {
+        seed()
+        val vm = viewModel("cleaning", "2026-11-06")
+
+        vm.onPaymentSkip()
+
+        assertEquals(LocalDate(2026, 11, 6), handledThrough())
+        assertTrue(vm.state.value.isDone)
+        assertTrue(transactions.items.value.isEmpty())
+    }
+
+    private fun n(minor: Long) = MoneyFormat.RU.formatNumber(minor, 2)
+
+    private fun paidBefore(day: String, amount: Long) = Transaction(
+        "rec-cleaning-$day", TransactionType.EXPENSE, "cash", Money(amount, ars),
+        LocalDate.parse(day).atStartOfDayIn(zone), categoryId = "home",
+    )
 }

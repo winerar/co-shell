@@ -106,6 +106,17 @@ android {
     }
 }
 
+// Compose stability (#383): classes from modules without the Compose compiler (core:model, collections)
+// are declared stable in compose-stability.conf. `agent.sh stability` writes the compiler reports
+// (-PcomposeReports) and fails on an unstable UiState.
+composeCompiler {
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose-stability.conf"))
+    // Off by default: the build cache does not restore reports, so `agent.sh stability` recompiles with --rerun.
+    if (providers.gradleProperty("composeReports").isPresent) {
+        reportsDestination = layout.buildDirectory.dir("compose_reports")
+    }
+}
+
 // Screenshot references of the key screens (#226), compared in every `check` like core:designsystem's.
 // Re-record after a deliberate visual change: `scripts/agent/agent.sh shots`.
 roborazzi {

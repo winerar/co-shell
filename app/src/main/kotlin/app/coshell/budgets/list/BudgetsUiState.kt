@@ -1,5 +1,6 @@
 package app.coshell.budgets.list
 
+import androidx.compose.runtime.Immutable
 import app.coshell.core.designsystem.charts.BulletTone
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
@@ -49,6 +50,8 @@ data class BudgetsUiState(
     /** «К концу месяца при таком темпе ≈ [amount]»; [overBy] — how much above the plan, `null` — within it. */
     data class Forecast(val amount: String, val overBy: String?)
 
+    /** Recursive (`children`), so the Compose compiler cannot infer it: immutable by construction (#383). */
+    @Immutable
     data class Envelope(
         /** The category or folder the limit is on. */
         val categoryId: String,

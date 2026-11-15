@@ -22,6 +22,8 @@
    (переименование, перенос данных).
 4. Тест миграции на JVM — `jvmTest/.../MigrationTest.kt` (`MigrationTestHelper` из `room-testing` +
    `BundledSQLiteDriver`): создать старую версию, вставить данные SQL-ом, мигрировать, проверить.
+   `MigrationToLatestTest` сам проверяет каждую версию → текущую одним прыжком (строка в каждой таблице
+   строится по JSON схемы), что схемы идут без пропусков до `version` и что нет `fallbackToDestructiveMigration`.
 5. `fallbackToDestructiveMigration` **запрещён**: до этапа 4 данные живут только на телефоне.
 
 ## Таблицы по схемам
@@ -69,3 +71,5 @@
   бюджеты и подкатегории переходят к категории из копии. Разбор и сборка JSON — на `Dispatchers.Default`.
 - UI: `app/.../backup/` — файл выбирает системный диалог (Storage Access Framework), чтение/запись —
   `DocumentStorage` (интерфейс; на Android — `ContentResolverDocumentStorage`). Перед импортом — подтверждение.
+- Круг «копия → «Стереть всё» → восстановить» в той же базе даёт ту же копию байт в байт и ставит строки
+  в синк — `BackupWipeRestoreTest` (#383). Новая сущность в копии — заполнить её и там.

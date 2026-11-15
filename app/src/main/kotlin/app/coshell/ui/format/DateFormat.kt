@@ -47,5 +47,8 @@ fun formatMonthOf(month: YearMonth): String = month.firstDay.toJavaLocalDate().f
 fun formatWeekdayShort(day: kotlinx.datetime.DayOfWeek): String =
     java.time.DayOfWeek.of(day.ordinal + 1).getDisplayName(java.time.format.TextStyle.SHORT_STANDALONE, java.util.Locale.getDefault())
 
+/** «вт, 17 нояб.» — a day in a tight row («Скоро» on «Обзоре»). */
+fun formatWeekdayDayMonthShort(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("EEE, d MMM"))
+
 /** "пт, 5 декабря" in the phone's locale: the next regular payment. */
 fun formatWeekdayDayMonth(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("EEE, d MMMM"))

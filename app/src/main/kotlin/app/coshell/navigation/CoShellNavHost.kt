@@ -121,6 +121,9 @@ fun CoShellNavHost(
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
                     onReview = { month -> navController.navigate(MonthReviewDestination(month.year, month.month.number)) { launchSingleTop = true } },
+                    onPostPayment = { templateId, date ->
+                        navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
+                    },
                 ),
             )
         }

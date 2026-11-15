@@ -12,7 +12,13 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.components.CoShellModalSheetLayout
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.domain.recurring.PaymentState
 import app.coshell.core.model.PostMode
+import app.coshell.home.HomeScreen
+import app.coshell.home.homePreviewSample
+import app.coshell.home.upcoming.UpcomingRow
+import app.coshell.templates.TemplateItem
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.TransactionType
@@ -30,7 +36,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** «Повтор» in the template (#143, boards `Rec143EditA`, `Rec143RepeatA`) on the owner's phone (393×873 dp). */
+/** Regular payments (#143, boards `Rec143HomeA`, `Rec143EditA`, `Rec143RepeatA`): «Скоро» on «Обзоре», «Повтор» in the template, on the owner's phone (393×873 dp). */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w393dp-h873dp-xhdpi", application = Application::class)
@@ -48,6 +54,12 @@ class RecurringScreenshotTest {
 
     @Test
     fun `repeat sheet light`() = shot("recurring_sheet_light") { sheet() }
+
+    @Test
+    fun `home soon dark`() = shot("recurring_home_dark", dark = true) { HomeScreen(homePreviewSample, upcoming = SOON) }
+
+    @Test
+    fun `home soon light`() = shot("recurring_home_light") { HomeScreen(homePreviewSample, upcoming = SOON) }
 
     @Composable
     private fun template() = TemplateEditScreen(STATE, TemplateEditActions())
@@ -69,6 +81,21 @@ class RecurringScreenshotTest {
 
     private companion object {
         val TODAY = LocalDate(2026, 11, 15)
+
+        private fun row(name: String, cat: String, icon: String, color: Int, amount: String, date: LocalDate, state: PaymentState, auto: Boolean = false) =
+            UpcomingRow(
+                TemplateItem(name, name, TransactionType.EXPENSE, "Galicia", categoryName = cat, categoryIcon = icon,
+                    categoryColor = CategoryPalette.colors[color], amount = amount, currency = "ARS"),
+                date, state, missed = if (state == PaymentState.MISSED) 1 else 0, auto = auto,
+            )
+
+        /** Board `Rec143HomeA`: missed, today without an amount, next Tuesday, «само». */
+        val SOON = listOf(
+            row("Уборка", "Дом", "cleaning", 2, "30 000 ARS", LocalDate(2026, 11, 13), PaymentState.MISSED),
+            row("Свет", "Коммуналка", "utilities", 4, "", TODAY, PaymentState.TODAY),
+            row("Испанский", "Образование", "education", 6, "40 000 ARS", LocalDate(2026, 11, 17), PaymentState.SOON),
+            row("Netflix", "Подписки", "subscriptions", 8, "7 990 ARS", LocalDate(2026, 11, 18), PaymentState.SOON, auto = true),
+        )
         val STATE = TemplateEditUiState(
             isNew = false,
             type = TransactionType.EXPENSE,

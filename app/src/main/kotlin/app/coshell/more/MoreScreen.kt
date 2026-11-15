@@ -43,6 +43,8 @@ data class MoreActions(
     val onCategories: () -> Unit = {},
     val onAccounts: () -> Unit = {},
     val onBudgets: () -> Unit = {},
+    /** «Регулярные платежи»: always reachable here, also when «Скоро» on «Обзор» is hidden (#403). */
+    val onRecurring: () -> Unit = {},
     val onRates: () -> Unit = {},
     val onReportCurrencies: () -> Unit = {},
     val onFamily: () -> Unit = {},

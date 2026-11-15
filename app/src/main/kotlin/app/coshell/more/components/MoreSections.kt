@@ -37,6 +37,7 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
                 MoreItem(DesignR.drawable.ic_account_balance_wallet, R.string.accounts_title, c[0], stringResource(R.string.accounts_menu_hint), actions.onAccounts),
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[9], stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[1], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
+                MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[5], stringResource(R.string.recurring_menu_hint), actions.onRecurring),
                 MoreItem(DesignR.drawable.ic_currency_exchange, R.string.rates_title, c[6], stringResource(R.string.rates_menu_hint), actions.onRates),
                 MoreItem(
                     DesignR.drawable.ic_payments,

@@ -1,8 +1,8 @@
-Required Notice: Copyright (c) 2026 winerar (https://github.com/winerar)
+Required Notice: Copyright (c) 2026 Aleksandr Karachevtsev (winerar, https://github.com/winerar)
 
 Any use not permitted below — including commercial use, distribution, and
 changes or new works based on the software — requires the licensor's prior
-written permission. Ask via https://github.com/winerar.
+written permission. Contact: https://github.com/winerar.
 
 A Russian translation is in [LICENSE.ru.md](LICENSE.ru.md). It is provided for
 convenience only; if the texts differ, this English text prevails.

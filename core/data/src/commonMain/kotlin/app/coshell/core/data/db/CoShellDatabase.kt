@@ -20,7 +20,7 @@ import kotlinx.coroutines.IO
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class,
     ],
-    version = 12,
+    version = 13,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -34,6 +34,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 9, to = 10), // v10: index on transactions.pending_sync (#259)
         AutoMigration(from = 10, to = 11), // v11: tags (#129)
         AutoMigration(from = 11, to = 12), // v12: sync_extras — fields of a newer version (#340)
+        AutoMigration(from = 12, to = 13), // v13: templates.schedule — regular payments (#143)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)

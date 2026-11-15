@@ -11,10 +11,15 @@ import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
+import app.coshell.core.model.PostMode
+import app.coshell.core.model.Recurrence
+import app.coshell.core.model.RecurringSchedule
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -36,6 +41,7 @@ class TemplateDataTest {
     private val spanish = TransactionTemplate(
         "spanish", "Испанский", TransactionType.EXPENSE, "galicia", ars, Money(40_000_00, ars),
         categoryId = "edu", note = "Марта", sortOrder = 1,
+        schedule = RecurringSchedule(Recurrence.Weekly(DayOfWeek.TUESDAY), LocalDate(2026, 11, 1), PostMode.AUTO, LocalDate(2026, 11, 10)),
     )
     private val coffee = TransactionTemplate("coffee", "Кофе", TransactionType.EXPENSE, "galicia", ars, sortOrder = 0)
     private val move = TransactionTemplate("move", "В наличные", TransactionType.TRANSFER, "galicia", ars, toAccountId = "cash", sortOrder = 2)

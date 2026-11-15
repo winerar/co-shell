@@ -1,5 +1,6 @@
 package app.coshell.core.data.backup
 
+import app.coshell.core.data.repository.ScheduleCodec
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
@@ -182,15 +183,19 @@ internal data class TemplateDto(
     val toAccountId: String? = null,
     val note: String = "",
     val sortOrder: Int = 0,
+    /** Since schema v13: «Повтор» (#143) as `ScheduleCodec` text. */
+    val schedule: String? = null,
 ) {
     fun toModel() = TransactionTemplate(
         id, name, TransactionType.valueOf(type), accountId, CurrencyCode(currency),
         amountMinor?.let { Money(it, CurrencyCode(currency)) }, categoryId, toAccountId, note, sortOrder,
+        ScheduleCodec.decode(schedule),
     )
 }
 
 internal fun TransactionTemplate.toDto() = TemplateDto(
     id, name, type.name, accountId, currency.value, amount?.amountMinor, categoryId, toAccountId, note, sortOrder,
+    schedule?.let(ScheduleCodec::encode),
 )
 
 /** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */

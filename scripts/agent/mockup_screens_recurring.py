@@ -4,7 +4,7 @@ Rule on top of a template (#104): every month on day N / every week on a weekday
 («Провести» with the amount editable) or posts by itself. Q1 — where upcoming payments show (А «Скоро» on «Обзор»,
 Б banner on the due day only, В «Запланировано» on top of «Операции»); Q2 — where the rule is set (А tile «Повтор» in the
 template editor → sheet, Б the schedule open inside the editor). Common: the list (24 rules), «Провести», notifications,
-edge cases. Today — Sunday 15 November 2026. Only the approved set (#367, А «Капсула», «Единый стиль»).
+edge cases. Owner 2026-11-15: А + А (Б and В dropped). Today — Sunday 15 November 2026. Only the approved set (#367, А «Капсула», «Единый стиль»).
 
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
 """
@@ -18,7 +18,7 @@ from mockup_screens_reports import REP_TABS
 from mockup_screens_fb_290 import block, frame, head, small_link, detail, grid4
 
 ROW = ('rec', 'Регулярные платежи',
-       'Макет #143 — на выбор. Правило поверх шаблона: каждый месяц N-го / каждую неделю / раз в год. По умолчанию напоминает: «Провести» '
+       'Макет #143 — выбрано А + А (владелец 2026-11-15): «Скоро · 7 дней» на «Обзоре», повтор — плиткой в шаблоне. Правило поверх шаблона: каждый месяц N-го / каждую неделю / раз в год. По умолчанию напоминает: «Провести» '
        'открывает шторку с датой платежа, сумму можно поправить (свет, газ — каждый раз разные). «Проводить само» — только с суммой. '
        'Правило синхронизируется; напоминание приходит обоим, проведённое одним исчезает у второго; «само» проводит телефон автора правила.')
 
@@ -96,40 +96,6 @@ def home_a():
     return tab_page('Обзор', body, 'home', REP_TABS, icon_button('search', 'Поиск'))
 
 
-def banner(r, title):
-    name, cat, a, cur, acc_, rule, nxt, kind, auto = r
-    return card('<div style="display: flex; align-items: center; gap: 12px;">%s%s%s</div>'
-                '<div style="display: flex; gap: 8px; margin-top: 10px;">%s%s</div>'
-                % (rule_icon(cat, 40), two_lines(title, '%s · %s · %s' % (name, acc_, rule)), amt(r),
-                   button('Провести', 'primary', None, 0).replace('width: 100%', 'flex: 1'), button('Позже', 'outline', None, 0).replace('width: 100%', 'flex: 1')),
-                pad='14px', extra='margin-top: 10px;')
-
-
-def home_b():
-    body = (balance_hero() + banner(RULES[1], 'Сегодня платёж') + banner(RULES[0], 'Пропущен в пятницу')
-            + tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Без категории', '3', 'операции')) + recent_card(RECENT[:2])
-            + note('Остальные — в «Ещё → Регулярные платежи». Плашка — только в день платежа и пока не проведён.'))
-    return tab_page('Обзор', body, 'home', REP_TABS, icon_button('search', 'Поиск'))
-
-
-def planned_row(r, div=True):
-    name, cat, a, cur, acc_, rule, nxt, kind, auto = r
-    return ('<div style="display: flex; align-items: center; gap: 12px; padding: 8px 14px; min-height: 56px; box-sizing: border-box; opacity: %s; %s">%s%s'
-            '<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">%s%s</span></div>'
-            % ('1' if nxt in ('сегодня', '13 ноя') else '0.6', 'border-top: 1px solid %s;' % DIV if div else '', rule_icon(cat, 36),
-               two_lines(name, acc_ + ' · ' + rule.split(',')[0]), amt(r, 14), when_label(nxt)))
-
-
-def ops_c():
-    head_ = ('<div style="display: flex; gap: 8px; overflow: hidden;">%s</div>' % ''.join(chip(t, t == 'Ноябрь') for t in ['Ноябрь', 'Все счета ▾', 'Категории ▾']))
-    plan = ('<div style="display: flex; align-items: center; margin: 16px 4px 8px;"><span style="flex-grow: 1; font-size: 13px; font-weight: 600; color: %s;">'
-            'Запланировано · 9 до конца месяца</span>%s</div>' % (MUTED, section_link('Свернуть')))
-    rows = card(''.join(planned_row(r, i > 0) for i, r in enumerate(RULES[:5])))
-    past = day('Сегодня, 15 ноября', '−45 300', 'ARS') + card(''.join(tx(*x) for x in RECENT[:3]))
-    return tab_page('Операции', head_ + plan + rows + note('Тап по строке — «Провести». Бледные — ещё не наступили.', 8) + past, 'ops', REP_TABS,
-                    icon_button('search', 'Поиск'))
-
-
 # ---- Q2: where the rule is set ----
 def ed_top(title):
     return ('<div style="display: flex; align-items: center; gap: 4px; height: 60px; padding: 0 8px;">%s<h1 style="margin: 0; font-size: 22px; flex-grow: 1;">%s</h1>%s</div>'
@@ -168,14 +134,6 @@ def repeat_sheet():
     freq, days, how, end = repeat_body()
     body = col(freq, label('День месяца', top=4) + days, label('Как проводить', top=4) + card(how), end, gap=8)
     return scrim(edit_a()) + '<div style="position: absolute; left: 0; right: 0; bottom: 0;">%s</div>' % modal_sheet('Повтор', body, 'Аренда · 650 USD', 'Готово')
-
-
-def edit_b():
-    freq, days, how, end = repeat_body()
-    rep = form_section('ПОВТОР', col(freq, days.replace('height: 36px', 'height: 30px'), gap=8), section_link('пт, 5 дек'))
-    how_ = form_section('КАК ПРОВОДИТЬ', '<div style="display: flex; gap: 6px;">%s%s</div>'
-                        % (chip('Напомнить', True), chip('Проводить само')))
-    return ed_page('Шаблон', tpl_common() + rep + how_)
 
 
 # ---- common ----
@@ -256,14 +214,11 @@ def edge_cases():
 
 
 BOARDS = [  # name, title, fn, row key
-    ('Rec143HomeA', 'Где видно · А (рекомендую): «Скоро · 7 дней» на «Обзоре»', home_a, 'rec'),
-    ('Rec143HomeB', 'Где видно · Б: плашка только в день платежа', home_b, 'rec'),
-    ('Rec143OpsC', 'Где видно · В: «Запланировано» сверху «Операций»', ops_c, 'rec'),
-    ('Rec143EditA', 'Где задать · А (рекомендую): плитка «Повтор» в шаблоне', edit_a, 'rec'),
-    ('Rec143RepeatA', 'Где задать · А: шторка «Повтор»', repeat_sheet, 'rec'),
-    ('Rec143EditB', 'Где задать · Б: повтор раскрыт в шаблоне', edit_b, 'rec'),
-    ('Rec143List', 'Общее: «Регулярные платежи» — 24 правила', list_screen, 'rec'),
-    ('Rec143Post', 'Общее: «Провести» — шторка с датой платежа', post_sheet, 'rec'),
-    ('Rec143Notify', 'Общее: уведомления', notifications, 'rec'),
-    ('Rec143Edge', 'Общее: пропущенные, 31-е, валюта, архив, на двоих', edge_cases, 'rec'),
+    ('Rec143HomeA', 'Выбрано (А): «Скоро · 7 дней» на «Обзоре»', home_a, 'rec'),
+    ('Rec143EditA', 'Выбрано (А): плитка «Повтор» в шаблоне', edit_a, 'rec'),
+    ('Rec143RepeatA', 'Выбрано (А): шторка «Повтор»', repeat_sheet, 'rec'),
+    ('Rec143List', '«Регулярные платежи» — 24 правила', list_screen, 'rec'),
+    ('Rec143Post', '«Провести» — шторка с датой платежа', post_sheet, 'rec'),
+    ('Rec143Notify', 'Уведомления', notifications, 'rec'),
+    ('Rec143Edge', 'Пропущенные, 31-е, валюта, архив, на двоих', edge_cases, 'rec'),
 ]

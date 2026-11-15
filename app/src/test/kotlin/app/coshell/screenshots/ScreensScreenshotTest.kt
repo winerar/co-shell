@@ -3,6 +3,7 @@ package app.coshell.screenshots
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
+import app.coshell.newmark.NewFeatures
 import app.coshell.appearance.AppearanceActions
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
@@ -114,6 +115,15 @@ class ScreensScreenshotTest {
 
     @Test @Config(qualifiers = "+es")
     fun `more spanish`() = shot("more_es") { MoreScreen(MoreActions(), moreSample) }
+
+    /** Board `Fb335A`: the «новое» pill next to a row with something new (#335). */
+    @Test
+    fun `more new mark`() = shot("more_new") { MoreScreen(MoreActions(), moreSample.copy(newMarks = setOf(NewFeatures.RECURRING))) }
+
+    @Test
+    fun `more new mark dark`() = shot("more_new_dark", dark = true) {
+        MoreScreen(MoreActions(), moreSample.copy(newMarks = setOf(NewFeatures.RECURRING)))
+    }
 
     @Test
     fun `home dark`() = shot("home_dark", dark = true) { HomeScreen(homePreviewSample) }

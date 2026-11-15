@@ -39,7 +39,8 @@
   `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.
   `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, color, title, onClick, subtitle)`
-  (#155): иконка в квадрате 32 dp с заливкой цвета (`MenuIcon`; квадрат — раздел, круг — категория), шеврон; группы «Ещё».
+  (#155): иконка в квадрате 32 dp с заливкой цвета (`MenuIcon`; квадрат — раздел, круг — категория), шеврон; группы «Ещё»;
+  `mark` — сразу за заголовком: метка «новое» = `CoShellStatusChip(…, StatusTone.Fresh)` (неон палитры в точке, доска Style2, #335).
 - **Модальные окна (#345, вариант В)** — вопрос: `CoShellAlertDialog` — карточка по центру (иконка в квадрате, вопрос,
   последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`).
   Форма или выбор — только шторка `CoShellModalSheet` (в app — `ui/sheet/ModalSheet`): заголовок + подзаголовок + ×,

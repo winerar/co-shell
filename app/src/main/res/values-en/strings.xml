@@ -16,6 +16,7 @@
 
     <string name="home_total_balance">Total balance</string>
     <string name="home_total_rate_date">At the rate of %1$s</string>
+    <string name="amount_peek_no_rate">no rate</string>
     <string name="home_total_missing">Not counted: %1$s — no rate</string>
     <string name="home_total_show_breakdown">Show by currency</string>
     <string name="home_total_hide_breakdown">Hide breakdown</string>
@@ -372,6 +373,10 @@
     <string name="report_currencies_main">Main</string>
     <string name="report_currencies_add">Add currency</string>
     <string name="report_currencies_menu_hint">Main: %1$s</string>
+    <string name="rates_converter_title">How much is it</string>
+    <string name="rates_converter_today">today\'s rate</string>
+    <string name="rates_converter_pick">Convert from</string>
+    <string name="rates_converter_source">source</string>
     <string name="rates_current">Today\'s rates</string>
     <string name="rates_current_hint">tap to change</string>
     <string name="rates_accounts">Your account currencies</string>

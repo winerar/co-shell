@@ -17,8 +17,8 @@ private val nov9 = LocalDate(2026, 11, 9)
 internal val ratesPreviewSample = RatesUiState(
     isLoading = false,
     current = listOf(
-        CurrentRateItem("AMD", "387,15", nov9, isManual = false, viaPivot = false),
-        CurrentRateItem("ARS", "1 450", LocalDate(2026, 11, 5), isManual = true, viaPivot = false),
+        CurrentRateItem("AMD", "387,15", nov9, isManual = false, viaPivot = false, converted = "38 715"),
+        CurrentRateItem("ARS", "1 450", LocalDate(2026, 11, 5), isManual = true, viaPivot = false, converted = "145 000"),
         CurrentRateItem("RUB", null, null, isManual = false, viaPivot = false),
     ),
     lastDownload = DownloadInfo(nov9, "currency-api/jsdelivr", Instant.parse("2026-11-09T12:00:00Z")),
@@ -29,6 +29,7 @@ internal val ratesPreviewSample = RatesUiState(
         ),
     ),
     refresh = RefreshStatus.Updated,
+    converter = ConverterUi(amountText = "100", from = "USD", options = listOf("USD", "AMD", "ARS", "RUB")),
 )
 
 @Preview(showBackground = true, heightDp = 900)

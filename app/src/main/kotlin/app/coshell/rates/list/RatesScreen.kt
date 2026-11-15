@@ -8,11 +8,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.rates.list.components.AddRateButton
+import app.coshell.rates.list.components.ConverterCard
+import app.coshell.rates.list.components.ConverterKeypadSheet
 import app.coshell.rates.list.components.CurrentRateRow
 import app.coshell.rates.list.components.ManualRateSheet
 import app.coshell.rates.list.components.ManualRateRow
@@ -23,18 +29,28 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.itemsIndexed
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
+import app.coshell.ui.form.ChoiceSheet
+import app.coshell.ui.form.ChoiceOption
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.top.ScreenTopBar
 
-/** "More → Rates": today's rates, "Update now", manual rates, sources. */
+/** "More → Rates": the converter (#319), today's rates with the converted amount, "Update now", manual rates, sources. */
 @Composable
 fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: ManualRateActions = ManualRateActions()) {
+    var keypadOpen by rememberSaveable { mutableStateOf(false) }
+    var pickerOpen by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             ScreenTopBar(stringResource(R.string.rates_title), onBack = actions.onBack)
         },
     ) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+            // «Сколько это» right on top (#319, А): the rows below follow the typed amount.
+            if (state.current.isNotEmpty()) {
+                item(key = "converter") {
+                    ConverterCard(state.converter, onAmountClick = { keypadOpen = true }, onCurrencyClick = { pickerOpen = true })
+                }
+            }
             // Status first (mockup 11): loaded or not, and the refresh button under the thumb's reach.
             item(key = "refresh") { RefreshBlock(state.lastDownload, state.refresh, actions.onRefresh) }
             item(key = "current-header") {
@@ -67,6 +83,19 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         }
     }
 
+    if (keypadOpen) ConverterKeypadSheet(state.converter, actions.onConverterKey, onClosed = { keypadOpen = false })
+    if (pickerOpen) {
+        ChoiceSheet(
+            title = stringResource(R.string.rates_converter_pick),
+            options = state.converter.options.map { ChoiceOption(it, it) },
+            selected = state.converter.from,
+            onPick = { code ->
+                pickerOpen = false
+                actions.onConverterFrom(code)
+            },
+            onDismiss = { pickerOpen = false },
+        )
+    }
     state.editor?.let { ManualRateSheet(it, editorActions) }
     if (state.pendingDelete != null) {
         ConfirmDialog(

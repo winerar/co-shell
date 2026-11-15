@@ -1,30 +1,23 @@
 package app.coshell.reports.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.charts.CoShellBarRow
+import app.coshell.core.designsystem.components.CoShellAvatar
 import app.coshell.core.designsystem.components.CoShellCard
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.MemberRow
 
@@ -56,7 +49,7 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
                         share = "${row.percent}%",
                         fraction = row.fraction,
                         color = color,
-                        leading = { Initial(name, color) },
+                        leading = { CoShellAvatar(name, color) },
                         caption = row.top.joinToString(" · ") { "${it.name ?: deleted} ${it.value}" },
                         onClick = onMember?.let { open -> { open(row.memberId) } },
                     )
@@ -69,13 +62,6 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
                 modifier = Modifier.padding(top = Spacing.xs),
             )
         }
-    }
-}
-
-@Composable
-private fun Initial(name: String, color: Color) {
-    Box(Modifier.size(Sizes.badgeSmall).background(color, CircleShape), contentAlignment = Alignment.Center) {
-        Text(name.take(1).uppercase(), color = inkOn(color), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
     }
 }
 

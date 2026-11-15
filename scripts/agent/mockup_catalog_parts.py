@@ -1,8 +1,8 @@
-"""Bricks of the 37 components that exist in code but not on the «Компоненты» board (#367, `ApprovedComponentsTest.pending`).
+"""Shared bricks of the approved set (#367, А «Капсула», owner 2026-11-15) — boards CompNew/CompChoice/CompRows/CompData.
 
 Drawn after core:designsystem (sizes, colour roles); «Вольт · тёмная» constants only (mockup_theme repaints them).
 """
-from mockup_comp_v2_bricks import *  # noqa: F401,F403
+from mockup_catalog_bricks import *  # noqa: F401,F403
 
 def mix(color, pct):
     """Colour at pct% over whatever is under it (Compose `copy(alpha)`); the hex stays visible to mockup_theme."""

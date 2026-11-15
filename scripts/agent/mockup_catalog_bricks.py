@@ -1,7 +1,7 @@
-"""Bricks for the «Компоненты v2» proposal (#367): components the app uses but the old board never drew.
+"""Base bricks of the approved set (#367): components the app uses that the first board never drew.
 
 Same rule as mockup_bricks: only «Вольт · тёмная» constants — mockup_theme.py repaints them per theme/palette.
-Names after «→» on the boards are the proposed Compose names; code comes only after the owner's «ок».
+Names after «→» on the boards are the Compose names (ApprovedComponentsTest reads every mockup_catalog*.py).
 """
 from mockup_parts import *  # noqa: F401,F403
 

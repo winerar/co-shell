@@ -921,36 +921,36 @@
       "page": "components",
       "is_interactive": true
     },
-    "CompV3New.dc.html": {
+    "CompNew.dc.html": {
       "x": 0,
       "y": 2360,
       "w": 1280,
-      "h": 2440,
-      "title": "Компоненты v3 (#367, на утверждении): New",
+      "h": 1820,
+      "title": "Компоненты · новые (10)",
       "page": "components"
     },
-    "CompV3Choice.dc.html": {
+    "CompChoice.dc.html": {
       "x": 1440,
       "y": 2360,
       "w": 1280,
-      "h": 2000,
-      "title": "Компоненты v3 (#367, на утверждении): Choice",
+      "h": 1330,
+      "title": "Компоненты · выбор (9)",
       "page": "components"
     },
-    "CompV3Rows.dc.html": {
+    "CompRows.dc.html": {
       "x": 0,
-      "y": 5100,
+      "y": 4480,
       "w": 1280,
-      "h": 2280,
-      "title": "Компоненты v3 (#367, на утверждении): Rows",
+      "h": 1540,
+      "title": "Компоненты · строки и шторки (7)",
       "page": "components"
     },
-    "CompV3Data.dc.html": {
+    "CompData.dc.html": {
       "x": 1440,
-      "y": 5100,
+      "y": 4480,
       "w": 1280,
-      "h": 1756,
-      "title": "Компоненты v3 (#367, на утверждении): Data",
+      "h": 1480,
+      "title": "Компоненты · данные и теги (11)",
       "page": "components"
     },
     "Ideas.dc.html": {
@@ -1878,10 +1878,10 @@
     "Flows.dc.html",
     "ThemeSwitchComponents.dc.html",
     "Components.dc.html",
-    "CompV3New.dc.html",
-    "CompV3Choice.dc.html",
-    "CompV3Rows.dc.html",
-    "CompV3Data.dc.html",
+    "CompNew.dc.html",
+    "CompChoice.dc.html",
+    "CompRows.dc.html",
+    "CompData.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2207,7 +2207,7 @@
     "v3": {
       "kind": "title1",
       "page": "components",
-      "text": "Компоненты v3 — на утверждении (#367): А | Б",
+      "text": "Утверждённый набор (#367, А «Капсула»)",
       "x": 0,
       "y": 2110,
       "maxW": 2600,

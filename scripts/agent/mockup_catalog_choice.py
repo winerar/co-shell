@@ -1,5 +1,5 @@
 """«Компоненты v3» — existing choice components (#367, part 1 of 3), each as a function of the rule set v."""
-from mockup_comp_v3_kit import *  # noqa: F401,F403
+from mockup_catalog_kit import *  # noqa: F401,F403
 
 
 def seg(v, labels, chosen, view=False, disabled=False):

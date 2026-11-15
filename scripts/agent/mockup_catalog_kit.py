@@ -1,4 +1,5 @@
-"""«Компоненты v3» (#367, owner 2026-11-15: «по два варианта каждого компонента, везде единый код»).
+"""Rule sets of the component set (#367). Owner 2026-11-15, poll «Компоненты v3»: А «Капсула» everywhere — boards draw v='A';
+Б stays only as history of the choice (do not use it for new bricks).
 
 Two rule sets; every component is drawn in both, so any pick reads as one language:
   А «Капсула» — pills and circles; chosen = neon fill + ink frame + bold; tracks are filled.
@@ -6,7 +7,7 @@ Two rule sets; every component is drawn in both, so any pick reads as one langua
 Both keep the #385 decisions: chosen — ink frame + bold, empty frames and fields — outline, tag labels — ink.
 Only «Вольт · тёмная» constants (mockup_theme repaints them).
 """
-from mockup_comp_v2_parts import *  # noqa: F401,F403
+from mockup_catalog_parts import *  # noqa: F401,F403
 
 RULES = {
     'A': dict(name='Капсула', ctl=999, card=24, tile=20, icon='50%', small=999, h=44),

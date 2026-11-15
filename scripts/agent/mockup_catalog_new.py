@@ -1,5 +1,5 @@
 """«Компоненты v3» — the 10 new components (#367), each as a function of the rule set v ('A' | 'B')."""
-from mockup_comp_v3_kit import *  # noqa: F401,F403
+from mockup_catalog_kit import *  # noqa: F401,F403
 
 
 def icon_btn(v, icon, color=INK):

@@ -1,6 +1,6 @@
 """«Компоненты v3» — existing rows, forms, questions and sheets (#367, part 2 of 3), each as a function of v."""
-from mockup_comp_v3_kit import *  # noqa: F401,F403
-from mockup_comp_v3_choice import seg, pill, radio
+from mockup_catalog_kit import *  # noqa: F401,F403
+from mockup_catalog_choice import seg, pill, radio
 
 
 def menu_rows(v):
@@ -109,6 +109,6 @@ ROWS = [
     ('Поле, ошибка, подсказка', fields, 'CoShellTextField · CoShellSection(title, error) · CoShellHint'),
     ('Карточка-вопрос', confirms, 'CoShellConfirmCard(title, text, confirmLabel, dismissLabel, destructive)'),
     ('Шторка', sheets, 'CoShellModalSheet(title, actionLabel, actionEnabled) · CoShellModalSheetLayout'),
-    ('Шторка ввода и пузырь', entry, 'CoShellSheetLayout · CoShellPeekBubble(lines, footnote)'),
+    ('Шторка ввода и пузырь', entry, 'CoShellSheetLayout · CoShellPeekBubble(lines, footnote) · PeekCard — содержимое пузыря'),
     ('Смена темы', reveal, 'ThemeRevealHost — обёртка приложения'),
 ]

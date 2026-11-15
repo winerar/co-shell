@@ -1,15 +1,10 @@
 package app.coshell.reports.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,15 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.core.designsystem.charts.ChartPair
 import app.coshell.core.designsystem.charts.CoShellPairedColumns
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
+import app.coshell.core.designsystem.components.CoShellDot
+import app.coshell.core.designsystem.theme.AmountStatStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.Income
 import app.coshell.ui.format.formatMonth
@@ -69,7 +66,7 @@ internal fun IncomeCard(income: Income, onMonth: (YearMonth) -> Unit, modifier: 
                 Legend(amounts.income, stringResource(R.string.reports_income_in))
                 Legend(amounts.expense, stringResource(R.string.reports_income_out))
             }
-            HorizontalDivider(Modifier.padding(top = Spacing.m), color = MaterialTheme.colorScheme.outlineVariant)
+            CoShellDivider(Modifier.padding(top = Spacing.m))
             Stats(income)
             RateLine(income)
         }
@@ -93,7 +90,7 @@ private fun Stats(income: Income) {
 private fun Stat(label: String, value: String, color: Color, modifier: Modifier) {
     Column(modifier.semantics(mergeDescendants = true) {}) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
-        Text(value, style = RateTextStyle.copy(fontSize = MaterialTheme.typography.titleSmall.fontSize), color = color, maxLines = 1)
+        Text(value, style = AmountStatStyle, color = color, maxLines = 1)
     }
 }
 
@@ -117,7 +114,7 @@ private fun RateLine(income: Income) {
 @Composable
 private fun Legend(color: Color, label: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        Box(Modifier.size(Spacing.s).background(color, RoundedCornerShape(Spacing.xxs)))
+        CoShellDot(color, size = Spacing.s)
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

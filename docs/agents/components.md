@@ -3,11 +3,13 @@
 Что есть и как пользоваться. Общие правила дизайн-системы — `design-system.md`, движение — `motion.md`.
 
 ## Утверждённый набор (владелец 2026-11-15, #367)
-- Экраны собираются **только** из компонентов доски «Компоненты» (`scripts/agent/mockup_catalog.py` → холст `docs/design/`).
+- Экраны собираются **только** из компонентов досок «Компоненты» (`scripts/agent/mockup_catalog*.py` → холст `docs/design/`):
+  `Components` + утверждённый набор `CompNew`/`CompChoice`/`CompRows`/`CompData` (опрос «Компоненты v3», 2026-11-15: везде **А «Капсула»** —
+  пилюли и круги, выбранное — неон + рамка цветом текста + жирный, невыбранное — на залитой дорожке, радиус карточки 24, плитки 20).
 - Нет нужного компонента или состояния (даже точки, разделителя, аватарки) → макет всех состояний в обеих темах → «ок»
   владельца (опрос) → кирпич на доску «Компоненты» → компонент в `core:designsystem` + в `catalog/` → экран.
-- `ApprovedComponentsTest` (`core:designsystem`): каждый публичный `@Composable` — на доске; `pending` — старые, ещё
-  не утверждённые (только сокращается: утвердил и внёс на доску — убери из списка).
+- `ApprovedComponentsTest` (`core:designsystem`): каждый публичный `@Composable` назван в каком-то `mockup_catalog*.py`; `pending`
+  пуст с 2026-11-15 — не пополнять. Предложения — в других модулях (`mockup_comp_*.py`), в `mockup_catalog*` — только после «ок».
 - `ComponentRuleTest` (`app`): в экранах нельзя Material-виджеты (кроме `Text`, `Icon`, `MaterialTheme`, `Scaffold`, состояния
   снекбара), рисование (`background`, `border`, `clip`, формы, `Canvas`, `Brush`, `Color(0x…)`) и свои стили текста
   (`fontSize`, `fontWeight`, `TextStyle`). Старый код — `app/src/test/resources/component-rule-baseline.txt`: новых нарушений

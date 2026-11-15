@@ -953,6 +953,70 @@
       "title": "Компоненты · данные и теги (11)",
       "page": "components"
     },
+    "Uni1.dc.html": {
+      "x": 0,
+      "y": 6420,
+      "w": 1040,
+      "h": 764,
+      "title": "Единый стиль · выбор (на утверждении)",
+      "page": "components"
+    },
+    "Uni2.dc.html": {
+      "x": 1200,
+      "y": 6420,
+      "w": 1040,
+      "h": 512,
+      "title": "Единый стиль · метки (на утверждении)",
+      "page": "components"
+    },
+    "Uni3.dc.html": {
+      "x": 0,
+      "y": 7484,
+      "w": 1040,
+      "h": 670,
+      "title": "Единый стиль · иконки (на утверждении)",
+      "page": "components"
+    },
+    "Uni4.dc.html": {
+      "x": 1200,
+      "y": 7484,
+      "w": 1040,
+      "h": 634,
+      "title": "Единый стиль · поверхности (на утверждении)",
+      "page": "components"
+    },
+    "Uni5.dc.html": {
+      "x": 0,
+      "y": 8454,
+      "w": 1040,
+      "h": 640,
+      "title": "Единый стиль · строки (на утверждении)",
+      "page": "components"
+    },
+    "Uni6.dc.html": {
+      "x": 1200,
+      "y": 8454,
+      "w": 1040,
+      "h": 534,
+      "title": "Единый стиль · кнопки (на утверждении)",
+      "page": "components"
+    },
+    "Uni7.dc.html": {
+      "x": 0,
+      "y": 9394,
+      "w": 1040,
+      "h": 416,
+      "title": "Единый стиль · полосы (на утверждении)",
+      "page": "components"
+    },
+    "Uni8.dc.html": {
+      "x": 1200,
+      "y": 9394,
+      "w": 1040,
+      "h": 540,
+      "title": "Единый стиль · поля и отметки (на утверждении)",
+      "page": "components"
+    },
     "Ideas.dc.html": {
       "x": 0,
       "y": 0,
@@ -1882,6 +1946,14 @@
     "CompChoice.dc.html",
     "CompRows.dc.html",
     "CompData.dc.html",
+    "Uni1.dc.html",
+    "Uni2.dc.html",
+    "Uni3.dc.html",
+    "Uni4.dc.html",
+    "Uni5.dc.html",
+    "Uni6.dc.html",
+    "Uni7.dc.html",
+    "Uni8.dc.html",
     "Ideas.dc.html",
     "FbModalARate.dc.html",
     "FbModalADay.dc.html",
@@ -2211,6 +2283,15 @@
       "x": 0,
       "y": 2110,
       "maxW": 2600,
+      "w": 240
+    },
+    "unify": {
+      "kind": "title1",
+      "page": "components",
+      "text": "Единый стиль — на утверждении: сейчас → единое",
+      "x": 0,
+      "y": 6170,
+      "maxW": 2400,
       "w": 240
     },
     "fb345": {
@@ -2932,6 +3013,7 @@
     "row14",
     "s14",
     "v3",
+    "unify",
     "fb345",
     "fbS345",
     "fb352",

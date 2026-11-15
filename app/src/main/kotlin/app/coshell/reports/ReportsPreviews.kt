@@ -9,6 +9,13 @@ import app.coshell.reports.ReportsUiState.Bar
 import app.coshell.reports.ReportsUiState.CategoryRow
 import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
+import app.coshell.reports.ReportsUiState.Capital
+import app.coshell.reports.ReportsUiState.CapitalPoint
+import app.coshell.reports.ReportsUiState.Income
+import app.coshell.reports.ReportsUiState.MemberRow
+import app.coshell.reports.ReportsUiState.TopFolder
+import app.coshell.reports.ReportsUiState.WhyRow
+import app.coshell.reports.ReportsUiState.IncomeColumn
 import app.coshell.reports.ReportsUiState.MonthColumn
 import app.coshell.reports.ReportsUiState.Months
 import app.coshell.reports.ReportsUiState.Other
@@ -60,6 +67,46 @@ object ReportsSamples {
         selected = 5,
     )
 
+    /** Board `Rp189IeA`: income next to spending, June … November (November so far). */
+    val income = Income(
+        columns = listOf(1_650 to 1_180, 1_600 to 1_320, 1_700 to 1_090, 1_300 to 1_410, 1_620 to 1_350, 1_580 to 760).mapIndexed { i, (e, s) ->
+            IncomeColumn(YearMonth(2026, 6 + i), "%,d".format(e).replace(',', ' '), "%,d".format(s).replace(',', ' '), e / 1_700f, s / 1_700f)
+        },
+        selected = 5,
+        earned = "1 580",
+        spent = "760",
+        saved = "+820",
+        overspent = false,
+        rate = 51,
+        running = true,
+        averageRate = 19,
+        averageMonths = 5,
+    )
+
+    /** Board `Rp189WhoA`: spending by who added it. */
+    val members = listOf(
+        MemberRow("misha", "Миша", "430", 57, 1f, listOf(TopFolder("Дом", "262"), TopFolder("Продукты", "70"), TopFolder("Кафе", "38"))),
+        MemberRow(null, null, "330", 43, 330 / 430f, listOf(TopFolder("Образование", "120"), TopFolder("Аптека", "70"), TopFolder("Продукты", "51"))),
+    )
+
+    /** Board `Rp189NwB`: a year of month ends (USD), why the last three months changed. */
+    val capital = Capital(
+        value = "8 503",
+        change = "+2 403",
+        falling = false,
+        percent = 39,
+        months = 12,
+        points = listOf(6_100, 6_150, 6_230, 6_090, 6_200, 6_280, 6_750, 6_990, 7_580, 7_440, 7_700, 8_503).mapIndexed { i, v ->
+            val month = YearMonth(2025, 12).let { if (i == 0) it else YearMonth(2026, i) }
+            CapitalPoint(month, "%,d".format(v).replace(',', ' '), v * 100L)
+        },
+        why = listOf(
+            WhyRow(YearMonth(2026, 11), running = true, saved = "+820", savedNegative = false, rates = "-17", total = "+803", totalNegative = false),
+            WhyRow(YearMonth(2026, 10), running = false, saved = "+270", savedNegative = false, rates = "-10", total = "+260", totalNegative = false),
+            WhyRow(YearMonth(2026, 9), running = false, saved = "-110", savedNegative = true, rates = "-30", total = "-140", totalNegative = true),
+        ),
+    )
+
     val state = ReportsUiState(
         period = ReportPeriod.month(YearMonth(2026, 11)),
         today = LocalDate(2026, 11, 11),
@@ -67,6 +114,9 @@ object ReportsSamples {
         currencies = listOf("USD", "ARS", "AMD", "RUB"),
         spending = spending,
         months = months,
+        income = income,
+        members = members,
+        capital = capital,
     )
 
     val empty = state.copy(spending = null)

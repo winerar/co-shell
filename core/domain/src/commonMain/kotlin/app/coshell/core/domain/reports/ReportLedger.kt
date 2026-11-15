@@ -27,7 +27,7 @@ class ReportLedger(
     private val book: RateBook,
     val currency: CurrencyCode,
 ) {
-    private class Entry(val day: LocalDate, val categoryId: String, val amount: Money)
+    private class Entry(val day: LocalDate, val categoryId: String, val amount: Money, val authorId: String?)
 
     private val spending = mutableListOf<Entry>()
     private val income = mutableListOf<Entry>()
@@ -37,10 +37,10 @@ class ReportLedger(
         for (d in days) {
             if (SystemCategories.isAdjustment(d.categoryId)) continue
             when (d.type) {
-                TransactionType.EXPENSE -> spending += Entry(d.day, d.categoryId, d.amount)
+                TransactionType.EXPENSE -> spending += Entry(d.day, d.categoryId, d.amount, d.authorId)
                 TransactionType.INCOME ->
-                    if (types[d.categoryId] == CategoryType.EXPENSE) spending += Entry(d.day, d.categoryId, -d.amount)
-                    else income += Entry(d.day, d.categoryId, d.amount)
+                    if (types[d.categoryId] == CategoryType.EXPENSE) spending += Entry(d.day, d.categoryId, -d.amount, d.authorId)
+                    else income += Entry(d.day, d.categoryId, d.amount, d.authorId)
                 TransactionType.TRANSFER -> Unit
             }
         }
@@ -50,6 +50,10 @@ class ReportLedger(
     fun spent(from: LocalDate, toExclusive: LocalDate): CategorySums = sum(spending, from, toExclusive)
 
     fun earned(from: LocalDate, toExclusive: LocalDate): CategorySums = sum(income, from, toExclusive)
+
+    /** [spent] split by who added the operations (#189); key `null` — unknown author. */
+    fun spentByAuthor(from: LocalDate, toExclusive: LocalDate): Map<String?, CategorySums> =
+        spending.groupBy { it.authorId }.mapValues { (_, entries) -> sum(entries, from, toExclusive) }
 
     fun spent(period: BudgetPeriod): CategorySums = spent(period.start, period.endExclusive)
 

@@ -40,4 +40,14 @@ class ChartMathTest {
         assertEquals(listOf(DonutArc(0f, 360f), DonutArc(0f, 0f)), donutArcs(listOf(5, 0)))
         assertEquals(emptyList<DonutArc>(), donutArcs(listOf(0, -3)))
     }
+
+    @Test
+    fun `a line is fitted to its values with a margin, a flat one sits in the middle`() {
+        val ys = lineFractions(listOf(6_100L, 8_500L, 7_000L))
+        assertEquals(0.15f / 1.25f, ys[0], 0.0001f)
+        assertEquals(1.15f / 1.25f, ys[1], 0.0001f)
+        assertTrue(ys[2] > ys[0] && ys[2] < ys[1])
+        assertEquals(listOf(0.5f, 0.5f), lineFractions(listOf(3L, 3L)))
+        assertEquals(emptyList<Float>(), lineFractions(emptyList()))
+    }
 }

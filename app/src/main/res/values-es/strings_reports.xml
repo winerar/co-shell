@@ -107,4 +107,31 @@
     <string name="review_card_limits">Límites: cumplidos %1$d de %2$d</string>
     <string name="review_card_more">Detalles ›</string>
     <string name="review_card_hide">Ocultar hasta el próximo mes</string>
+    <!-- Ingresos y gastos (#189, board Rp189IeA) -->
+    <string name="reports_income_title">Ingresos y gastos</string>
+    <string name="reports_income_caption">toca un mes</string>
+    <string name="reports_income_in">entró</string>
+    <string name="reports_income_out">salió</string>
+    <string name="reports_income_left">quedó</string>
+    <string name="reports_income_month_in">%1$s · entró</string>
+    <string name="reports_income_so_far">por ahora</string>
+    <string name="reports_income_rate">Ahorraron el %1$d%% de los ingresos</string>
+    <string name="reports_income_average">media de %1$d meses — %2$d%%</string>
+    <string name="reports_income_description">%1$s: entró %2$s, salió %3$s</string>
+    <!-- Quién gastó cuánto (#189, board Rp189WhoA) -->
+    <string name="reports_members_title">Quién gastó cuánto</string>
+    <string name="reports_members_caption">según quién lo anotó</string>
+    <string name="reports_members_me">Yo</string>
+    <string name="reports_members_note">Los gastos son comunes: se reparten según quién anotó la operación.</string>
+    <!-- Patrimonio (#189, board Rp189NwB) -->
+    <string name="reports_capital_title">Patrimonio</string>
+    <string name="reports_capital_caption">todas las cuentas</string>
+    <string name="reports_capital_year">%1$s en el año</string>
+    <string name="reports_capital_months">%1$s en %2$d meses</string>
+    <string name="reports_capital_why">Por qué cambió</string>
+    <string name="reports_capital_saved">ahorrado</string>
+    <string name="reports_capital_rates">tipos</string>
+    <string name="reports_capital_total">total</string>
+    <string name="reports_capital_rates_note">Tipos: todo lo que no es ingreso ni gasto: tipos de cambio, cambios de moneda, ajustes de saldo.</string>
+    <string name="reports_capital_description">Patrimonio por mes: %1$s</string>
 </resources>

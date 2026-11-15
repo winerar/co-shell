@@ -12,4 +12,5 @@
     <string name="recurring_ahead_without">%1$d more — amount on entry</string>
     <string name="recurring_ahead_missing">Not counted: %1$s — no rate</string>
     <string name="recurring_list_empty">No regular payments yet. Turn on «Repeat» in any template — rent, subscriptions, salary.</string>
+    <string name="recurring_menu_hint">Rent, subscriptions, salary</string>
 </resources>

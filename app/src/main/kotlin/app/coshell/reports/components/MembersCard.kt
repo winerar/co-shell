@@ -30,10 +30,10 @@ import app.coshell.reports.ReportsUiState.MemberRow
 
 /**
  * «Кто сколько потратил» (#189, board `Rp189WhoA`): a bar per family member by the operations they added, the folders
- * they spent most on under it. «Я» — everything the others did not add.
+ * they spent most on under it. «Я» — everything the others did not add. A tap opens the member's operations (#373).
  */
 @Composable
-internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier) {
+internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier, onMember: ((String?) -> Unit)? = null) {
     CoShellCard(modifier.fillMaxWidth()) {
         Column(Modifier.padding(Spacing.l)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -58,6 +58,7 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
                         color = color,
                         leading = { Initial(name, color) },
                         caption = row.top.joinToString(" · ") { "${it.name ?: deleted} ${it.value}" },
+                        onClick = onMember?.let { open -> { open(row.memberId) } },
                     )
                 }
             }

@@ -47,6 +47,7 @@ import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
 import app.coshell.transactions.edit.TransactionEditRoute
+import app.coshell.transactions.list.PRESET_MEMBER
 import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
@@ -196,6 +197,11 @@ fun CoShellNavHost(
             ReportsRoute(
                 onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
                 onCategory = { navController.navigate(it) { launchSingleTop = true } },
+                onMember = { preset ->
+                    navController.navigateToTab(TopLevel.TRANSACTIONS)
+                    navController.getBackStackEntry<TransactionsDestination>()
+                        .savedStateHandle[PRESET_MEMBER] = preset.encode()
+                },
             )
         }
         composable<ReportCategoriesDestination> { entry ->

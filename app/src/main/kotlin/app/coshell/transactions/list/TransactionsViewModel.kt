@@ -96,6 +96,9 @@ class TransactionsViewModel @Inject constructor(
     /** «Обзор» → «Внимание»: this month's operations without a category. */
     fun showUncategorizedThisMonth() = onFilter { ListFilter.uncategorizedThisMonth(today()) }
 
+    /** Another screen asked for a ready filter (#373): it replaces whatever was set. */
+    fun show(filter: ListFilter) = onFilter { filter }
+
     private fun today() = clock.now().toLocalDateTime(timeZone).date
 
     /** Rows from Room with what is needed to show and search them; re-queried only when [ListFilter.roomKey] changes. */

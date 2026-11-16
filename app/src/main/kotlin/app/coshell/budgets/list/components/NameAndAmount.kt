@@ -7,38 +7,51 @@ import androidx.compose.ui.unit.Constraints
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
- * The name of a limit and its «spent / limit» (#432): on one line when the amount leaves the name at least
- * [NAME_MIN_SHARE] of the width (or all it needs), the name cut with «…»; otherwise the amount goes whole to its own
- * line under the name, at the end. So a long amount never squeezes the name to nothing and is never cut itself.
+ * The name of a limit, its «spent / limit» and an optional [trailing] (the fold button) (#432): on one line when the
+ * amount leaves the name at least [NAME_MIN_SHARE] of the width (or all it needs), the name cut with «…»; otherwise
+ * the amount goes whole to its own line under the name, across the whole width (under the button too), at the end.
+ * So a long amount never squeezes the name to nothing, never slides under the button and is never cut itself.
  */
 @Composable
-internal fun NameAndAmount(name: @Composable () -> Unit, amount: @Composable () -> Unit, modifier: Modifier = Modifier) {
-    Layout(contents = listOf(name, amount), modifier = modifier) { (nameSlot, amountSlot), constraints ->
+internal fun NameAndAmount(
+    name: @Composable () -> Unit,
+    amount: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    trailing: (@Composable () -> Unit)? = null,
+) {
+    Layout(contents = listOf(name, amount, trailing ?: {}), modifier = modifier) { (nameSlot, amountSlot, trailingSlot), constraints ->
         val nameItem = nameSlot.single()
         val amountItem = amountSlot.single()
         val width = if (constraints.hasBoundedWidth) constraints.maxWidth else Constraints.Infinity
+        val button = trailingSlot.firstOrNull()?.measure(Constraints())
+        val buttonWidth = button?.width ?: 0
+        val lineWidth = if (width == Constraints.Infinity) width else (width - buttonWidth).coerceAtLeast(0)
         val gap = Spacing.s.roundToPx()
         val split = splitLine(
-            width = width,
+            width = lineWidth,
             nameNatural = nameItem.maxIntrinsicWidth(Constraints.Infinity),
             amountNatural = amountItem.maxIntrinsicWidth(Constraints.Infinity),
             gap = gap,
         )
+        val buttonHeight = button?.height ?: 0
         if (split != null) {
             val amountPlaced = amountItem.measure(Constraints(maxWidth = split.amount))
             val namePlaced = nameItem.measure(Constraints(maxWidth = split.name))
-            val lineWidth = if (width == Constraints.Infinity) split.name + gap + amountPlaced.width else width
-            val height = maxOf(namePlaced.height, amountPlaced.height)
-            layout(lineWidth, height) {
+            val total = if (width == Constraints.Infinity) split.name + gap + amountPlaced.width + buttonWidth else width
+            val height = maxOf(namePlaced.height, amountPlaced.height, buttonHeight)
+            layout(total, height) {
                 namePlaced.placeRelative(0, (height - namePlaced.height) / 2)
-                amountPlaced.placeRelative(lineWidth - amountPlaced.width, (height - amountPlaced.height) / 2)
+                amountPlaced.placeRelative(total - buttonWidth - amountPlaced.width, (height - amountPlaced.height) / 2)
+                button?.placeRelative(total - buttonWidth, (height - buttonHeight) / 2)
             }
         } else {
-            val namePlaced = nameItem.measure(Constraints(maxWidth = width))
+            val namePlaced = nameItem.measure(Constraints(maxWidth = lineWidth))
             val amountPlaced = amountItem.measure(Constraints(maxWidth = width))
-            layout(width, namePlaced.height + amountPlaced.height) {
-                namePlaced.placeRelative(0, 0)
-                amountPlaced.placeRelative(width - amountPlaced.width, namePlaced.height)
+            val first = maxOf(namePlaced.height, buttonHeight)
+            layout(width, first + amountPlaced.height) {
+                namePlaced.placeRelative(0, (first - namePlaced.height) / 2)
+                button?.placeRelative(width - buttonWidth, (first - buttonHeight) / 2)
+                amountPlaced.placeRelative(width - amountPlaced.width, first)
             }
         }
     }

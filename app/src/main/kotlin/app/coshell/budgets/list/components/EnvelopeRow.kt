@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -55,26 +54,25 @@ internal fun EnvelopeRow(
     ) {
         CategoryBadge(envelope.icon, envelope.color, size = if (inner) Sizes.badgeSmall else Sizes.badge)
         Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // The fold button is measured outside: a long amount never slides under it (#432).
-                NameAndAmount(
-                    name = {
-                        Text(
-                            envelope.name,
-                            style = if (inner) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    },
-                    amount = { SpentOfLimit(envelope.spent, envelope.limit) },
-                    modifier = Modifier.weight(1f),
-                )
-                if (expanded != null) {
-                    CoShellIconButton(onClick = onToggle) {
-                        CoShellExpandIcon(expanded, stringResource(if (expanded) R.string.budgets_fold else R.string.budgets_unfold))
+            // The fold button is measured first: a long amount never slides under it (#432).
+            NameAndAmount(
+                name = {
+                    Text(
+                        envelope.name,
+                        style = if (inner) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
+                amount = { SpentOfLimit(envelope.spent, envelope.limit) },
+                trailing = expanded?.let { open ->
+                    {
+                        CoShellIconButton(onClick = onToggle) {
+                            CoShellExpandIcon(open, stringResource(if (open) R.string.budgets_fold else R.string.budgets_unfold))
+                        }
                     }
-                }
-            }
+                },
+            )
             // Under the name, the whole width: next to the amounts «папка · 3 категории» would be cut.
             subtitle(envelope)?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)

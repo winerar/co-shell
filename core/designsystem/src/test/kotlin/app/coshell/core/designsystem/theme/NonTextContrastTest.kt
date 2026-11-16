@@ -60,7 +60,7 @@ class NonTextContrastTest {
         text("field text", s.onSurface, s.surfaceContainer)
         text("accent text on background", accentInkFor(s, dark), s.background)
         text("error on background", s.error, s.background)
-        t.heroStops.forEach { text("neon accent text inside the hero card", accentInkFor(s, dark), it) }
+        t.heroStops.forEach { text("neon accent text inside the hero card", if (dark) accentInkFor(s, dark) else t.hero.content, it) }
 
         // Icons and marks.
         shape("tab icon on the bar", s.onSurfaceVariant, s.surfaceContainerHigh)

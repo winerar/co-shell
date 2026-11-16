@@ -33,6 +33,7 @@ import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.tokens.Sizes
@@ -124,7 +125,7 @@ fun CoShellTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    contentColor: Color = accentInk(),
+    contentColor: Color = secondaryInk(),
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }

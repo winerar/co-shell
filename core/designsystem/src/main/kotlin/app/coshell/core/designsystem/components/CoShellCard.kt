@@ -18,6 +18,7 @@ import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 
@@ -81,8 +82,15 @@ private const val TINT_ALPHA = 0.12f
 private fun HeroColors(content: @Composable () -> Unit) {
     val hero = LocalHeroPalette.current
     val scheme = MaterialTheme.colorScheme
-    val inside = remember(scheme, hero) {
-        scheme.copy(onSurface = hero.content, onSurfaceVariant = hero.hint, surfaceContainerHighest = hero.track)
+    val dark = LocalDarkTheme.current
+    val inside = remember(scheme, hero, dark) {
+        scheme.copy(
+            onSurface = hero.content,
+            onSurfaceVariant = hero.hint,
+            surfaceContainerHighest = hero.track,
+            // Accent ink inside the pastel light hero is its own ink: the primary's deep shade has no contrast on a primary gradient.
+            primaryFixedDim = if (dark) scheme.primaryFixedDim else hero.content,
+        )
     }
     CompositionLocalProvider(
         LocalAmountPalette provides LocalAmountPalette.current.copy(expense = hero.expense),

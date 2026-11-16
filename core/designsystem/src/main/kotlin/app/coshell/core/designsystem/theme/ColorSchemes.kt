@@ -12,13 +12,14 @@ import androidx.compose.ui.graphics.lerp
  * (`secondaryContainer`). Neon on white is unreadable as text, so text accents take [accentInk] — the ink.
  */
 internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
-    val n = lightNeutrals(p.backgroundLight, p.accentLight)
+    val n = lightNeutrals(p.backgroundLight, p.primary, p.accentLight)
     return lightColorScheme(
         primary = p.primary,
         onPrimary = p.onPrimary,
         primaryContainer = p.primary,
         onPrimaryContainer = p.onPrimary,
         inversePrimary = p.primary,
+        primaryFixedDim = n.inkPrimary,
         secondary = p.accentLight,
         onSecondary = Color.White,
         secondaryContainer = lerp(p.accentDark, Color.White, 0.78f),
@@ -60,7 +61,8 @@ internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
         onPrimary = p.onPrimary,
         primaryContainer = p.primary,
         onPrimaryContainer = p.onPrimary,
-        inversePrimary = lightNeutrals(p.backgroundLight, p.accentLight).text,
+        inversePrimary = lightNeutrals(p.backgroundLight, p.primary, p.accentLight).text,
+        primaryFixedDim = n.inkPrimary,
         secondary = p.accentDark,
         onSecondary = lerp(p.accentDark, Color.Black, 0.82f),
         secondaryContainer = lerp(p.accentDark, n.background, 0.68f),

@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.FloatingActionButtonElevation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
@@ -24,14 +24,17 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.tokens.Sizes
 
 // Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple, all [Sizes.button] high.
@@ -195,27 +198,23 @@ fun CoShellFab(
     }
 }
 
-/** Pill FAB with an icon and a word («+ Добавить») — the one add button of a list screen. */
+/**
+ * The one add button of a list screen (owner's choice 2026-11-16, #408): a round [Sizes.fab] «+» without text, bottom
+ * right ([label] is only its accessible name: «Новый счёт»). A screen puts it in `Scaffold(floatingActionButton = …)` and
+ * leaves [Sizes.fabClearance] under the list. Board `Add408Acc`; the style of every future add button.
+ */
 @Composable
-fun CoShellExtendedFab(
+fun CoShellAddFab(
+    label: String,
     onClick: () -> Unit,
-    icon: @Composable () -> Unit,
-    text: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = contentColorFor(containerColor),
 ) {
-    val source = remember { MutableInteractionSource() }
-    NoRipple {
-        ExtendedFloatingActionButton(
-            text = text,
-            icon = icon,
-            onClick = onClick,
-            modifier = modifier.height(Sizes.button).tactile(source, Tactile.Control, PillShape, originColor = containerColor),
-            shape = PillShape,
-            containerColor = containerColor,
-            contentColor = contentColor,
-            interactionSource = source,
-        )
-    }
+    val colors = MaterialTheme.colorScheme
+    CoShellFab(
+        onClick = onClick,
+        modifier = modifier.size(Sizes.fab),
+        shape = CircleShape,
+        containerColor = colors.primary,
+        contentColor = colors.onPrimary,
+    ) { Icon(painterResource(R.drawable.ic_add), label, Modifier.size(Sizes.fabIcon)) }
 }

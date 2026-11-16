@@ -127,9 +127,10 @@ def pill(text, kind='lime'):
             % (mix(c, 18), INK, c, text))
 
 
-def fab(text, icon='plus'):
-    return ('<div style="position: absolute; right: 16px; bottom: 24px; height: 48px; padding: 0 20px; border-radius: 999px; background: %s; color: %s; '
-            'font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;">%s%s</div>' % (LIME, ONLIME, svg(icon, ONLIME, 22, 2.2), text))
+def fab(text='', icon='plus'):
+    """The one add button of a list screen (#408, owner 2026-11-16): a round 56 «+» without text, bottom right. `text` is the accessible name only."""
+    return ('<div role="button" aria-label="%s" style="position: absolute; right: 16px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%%; background: %s; '
+            'display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.35);">%s</div>' % (text, LIME, svg(icon, ONLIME, 26, 2.2)))
 
 
 def textarea(placeholder, count, value=''):

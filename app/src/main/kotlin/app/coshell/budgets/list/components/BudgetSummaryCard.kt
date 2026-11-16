@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
@@ -55,6 +56,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         AmountTitleStyle,
         color = if (summary.over) bulletColor(BulletTone.DANGER) else LocalHeroPalette.current.amount,
         modifier = Modifier.padding(top = Spacing.xs),
+        minFontSize = 16.sp, // shrinks, never loses the currency code (#432)
     )
     Text(
         stringResource(R.string.budgets_spent_of, summary.spent, summary.planned),

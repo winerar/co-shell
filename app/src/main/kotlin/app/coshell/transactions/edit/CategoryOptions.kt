@@ -6,6 +6,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.core.model.buildCategoryTree
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
+import app.coshell.ui.form.ChoiceOption
 
 /**
  * Recomputes the category choices for the current type from [all] categories and drops a selection
@@ -64,24 +65,22 @@ internal fun frequentCategories(
 /** How many categories the sheet can choose from — the number on «Все 24» (folders are not counted). */
 internal val List<CategoryGroup>.leafCount: Int get() = sumOf { if (it.isFolder) it.children.size else 1 }
 
-/** A shelf of the «Все категории» sheet: a folder's subcategories under its [title]; `null` — categories without a folder. */
-internal data class CategoryShelf(val title: String?, val items: List<CategoryItem>)
-
-/**
- * Shelves of the «Все категории» sheet (board `Fb290ACats`): categories without a folder first, then each folder with
- * its subcategories. [query] keeps the categories whose name — or whose folder's name — holds it, case ignored.
- */
-internal fun categoryShelves(groups: List<CategoryGroup>, query: String = ""): List<CategoryShelf> {
-    val q = query.trim()
-    fun CategoryItem.fits() = q.isEmpty() || name.contains(q, ignoreCase = true)
-    val loose = CategoryShelf(null, groups.filter { !it.isFolder && it.item.fits() }.map { it.item })
-    val folders = groups.filter { it.isFolder }.map { group ->
-        CategoryShelf(group.item.name, if (group.item.fits()) group.children else group.children.filter { it.fits() })
-    }
-    return (listOf(loose) + folders).filter { it.items.isNotEmpty() }
-}
-
 /** Places of the frequent grid; the eighth one is «Все N» (two rows of four). */
 internal const val FREQUENT_CATEGORIES = 7
 
 private fun Category.toItem() = CategoryItem(id, name, icon, color)
+
+/**
+ * Lines of the category list sheet (#439, poll А): each folder with two or more subcategories under its own caption, then
+ * every category that has no folder — or is alone in it — under [noGroup]. A folder of one is just that category: no
+ * «Дети / Дети» double; its name goes to the subtitle only when it differs.
+ */
+internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String): List<ChoiceOption<String>> {
+    fun CategoryItem.option(group: String?, subtitle: String? = null) = ChoiceOption(id, name, subtitle, group, icon, color, hasBadge = true)
+    val folders = groups.filter { it.children.size > 1 }.flatMap { g -> g.children.map { it.option(g.item.name) } }
+    val loose = groups.filter { it.children.size <= 1 }.map { g ->
+        val only = g.children.firstOrNull()
+        if (only == null) g.item.option(noGroup) else only.option(noGroup, g.item.name.takeUnless { it == only.name })
+    }
+    return folders + loose
+}

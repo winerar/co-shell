@@ -47,4 +47,5 @@ sed -n '/^\*\*Обновлено/p' docs/STATUS.md | clip 300
 sed -n '/^## В работе/,/^## /p' docs/STATUS.md | sed '1,4d;$d' | head -12 | clip 200
 echo "## Tasks (GitHub issues by status; backlog: agent.sh tasks backlog)"
 wait "$board_pid"; cat "$board"; rm -f "$board"
+echo "## Give the owner, as a separate code block to copy: /config model=opusplan"
 echo "## Next: read docs/agents/owner.md and notes.md (in parallel); take an issue → status:in-progress (GitHub MCP)"

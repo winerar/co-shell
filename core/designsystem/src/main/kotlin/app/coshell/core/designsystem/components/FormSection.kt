@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -86,7 +87,8 @@ fun CoShellSectionLink(text: String, onClick: () -> Unit, modifier: Modifier = M
 
 /**
  * A detail of a form as a small filled tile (#290, «Детали» 2×2): an icon, a grey [label] over the [value].
- * [empty] greys the value out — «Без заметки». The whole tile is the tap target.
+ * [empty] greys the value out — «Без заметки». [amount] — the value is a sum: it shrinks to fit instead of ending
+ * in «…» (#378). The whole tile is the tap target.
  */
 @Composable
 fun CoShellDetailTile(
@@ -96,10 +98,11 @@ fun CoShellDetailTile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     empty: Boolean = false,
+    amount: Boolean = false,
 ) {
     TileRow(onClick, modifier, Role.Button) {
         Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
-        TileTexts(label, value, valueMuted = empty)
+        TileTexts(label, value, valueMuted = empty, amount = amount)
     }
 }
 
@@ -198,7 +201,7 @@ private fun TileRow(onClick: () -> Unit, modifier: Modifier, role: Role, content
 }
 
 @Composable
-private fun TileTexts(label: String, value: String, valueMuted: Boolean) {
+private fun TileTexts(label: String, value: String, valueMuted: Boolean, amount: Boolean = false) {
     Column {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
         Text(
@@ -207,6 +210,7 @@ private fun TileTexts(label: String, value: String, valueMuted: Boolean) {
             color = if (valueMuted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
+            autoSize = if (amount) fitAmountAutoSize(min = 10.sp, max = MaterialTheme.typography.bodyMedium.fontSize) else null,
         )
     }
 }

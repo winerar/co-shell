@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,10 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.category.CategoryPalette
@@ -93,16 +96,23 @@ internal fun IconCell(key: String, color: Long?, selected: Boolean, modifier: Mo
 @Composable
 fun ColorStrip(selected: Long?, onSelect: (Long?) -> Unit, onAll: () -> Unit, modifier: Modifier = Modifier, allowNone: Boolean = false) {
     val swatch = selected?.let(CategoryPalette::normalize)
-    val shown = stripColors(CategoryPalette.colors, swatch, if (allowNone) STRIP_COLORS - 1 else STRIP_COLORS)
-    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-        if (allowNone) NoColorDot(selected == null) { onSelect(null) }
-        shown.forEach { color -> ColorDot(color, color == swatch) { onSelect(color) } }
-        Text(
-            "+${CategoryPalette.colors.size - shown.size}",
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = accentInk(),
-            modifier = Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small, role = Role.Button, onClick = onAll),
-        )
+    // On a narrow screen or with a large font fewer swatches stay, so «+17» never gets squeezed into a column.
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        val reserve = MORE_WIDTH * LocalDensity.current.fontScale.coerceAtLeast(1f)
+        val fit = ((maxWidth - reserve) / DOT_OUTER).toInt().coerceIn(MIN_STRIP_COLORS, STRIP_COLORS)
+        val shown = stripColors(CategoryPalette.colors, swatch, if (allowNone) fit - 1 else fit)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            if (allowNone) NoColorDot(selected == null) { onSelect(null) }
+            shown.forEach { color -> ColorDot(color, color == swatch) { onSelect(color) } }
+            Text(
+                "+${CategoryPalette.colors.size - shown.size}",
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = accentInk(),
+                maxLines = 1,
+                softWrap = false,
+                modifier = Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small, role = Role.Button, onClick = onAll),
+            )
+        }
     }
 }
 
@@ -159,6 +169,8 @@ internal fun stripColors(colors: List<Long>, selected: Long?, count: Int): List<
 
 private const val STRIP_ICONS = 6
 private const val STRIP_COLORS = 8
+private const val MIN_STRIP_COLORS = 4
+private val MORE_WIDTH = Sizes.badge
 private val ICON_CELL = Sizes.badge
 private val STRIP_GAP = Spacing.s - Spacing.xxs
 private val DOT_OUTER = Sizes.swatch + Spacing.xs

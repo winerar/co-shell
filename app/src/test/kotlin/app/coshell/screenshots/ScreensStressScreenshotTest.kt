@@ -9,6 +9,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.unit.Density
+import app.coshell.accounts.edit.AccountEditActions
+import app.coshell.accounts.edit.AccountEditScreen
+import app.coshell.accounts.edit.accountEditStressSample
 import app.coshell.accounts.list.AccountsActions
 import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.accountsEmptySample
@@ -16,6 +19,9 @@ import app.coshell.accounts.list.accountsStressSample
 import app.coshell.budgets.list.BudgetsActions
 import app.coshell.budgets.list.BudgetsScreen
 import app.coshell.budgets.list.budgetsStressSample
+import app.coshell.categories.edit.CategoryEditActions
+import app.coshell.categories.edit.CategoryEditScreen
+import app.coshell.categories.edit.categoryEditStressSample
 import app.coshell.categories.list.CategoriesActions
 import app.coshell.categories.list.CategoriesScreen
 import app.coshell.categories.list.categoriesStressSample
@@ -80,6 +86,20 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `reports stress narrow dark`() = shot("reports_stress_narrow_dark", dark = true, fontScale = 1.3f) {
         ReportsScreen(reportsStressSample, ReportsActions())
+    }
+
+    @Test fun `account edit stress light`() = shot("account_edit_stress_light") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `account edit stress narrow dark`() = shot("account_edit_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        AccountEditScreen(accountEditStressSample, AccountEditActions())
+    }
+
+    @Test fun `category edit stress light`() = shot("category_edit_stress_light") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `category edit stress narrow dark`() = shot("category_edit_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        CategoryEditScreen(categoryEditStressSample, CategoryEditActions())
     }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {

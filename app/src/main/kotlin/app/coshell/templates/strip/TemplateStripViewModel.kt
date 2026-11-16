@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.templates.byUsage
 import app.coshell.templates.TemplateCatalog
 import app.coshell.templates.TemplateItem
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +21,7 @@ data class TemplateStripUiState(val items: List<TemplateItem> = emptyList(), val
 class TemplateStripViewModel @Inject constructor(catalog: TemplateCatalog) : ViewModel() {
     val state: StateFlow<TemplateStripUiState> = catalog.observe()
         .map { snapshot -> stripOf(snapshot) }
+        .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TemplateStripUiState())
 
     private companion object {

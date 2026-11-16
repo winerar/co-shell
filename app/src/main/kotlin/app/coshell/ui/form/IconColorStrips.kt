@@ -23,7 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.ColorFill
@@ -35,7 +38,6 @@ import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.designsystem.R as DesignR
 
 /**
  * One line of icons (#290, board `Fb290FA`): six icons in the chosen [color] — the chosen one always among them — and
@@ -62,6 +64,8 @@ fun IconStrip(selected: String?, color: Long?, onSelect: (String) -> Unit, onAll
                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
                 color = accentInk(),
                 maxLines = 1,
+                // «Todas 52» in Spanish is wider than a cell: it shrinks instead of being cut.
+                autoSize = fitAmountAutoSize(min = 7.sp, max = MaterialTheme.typography.labelSmall.fontSize),
             )
         }
     }

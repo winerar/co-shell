@@ -107,8 +107,8 @@ def backup_actions():
 
 
 def backup_auto(msg=''):
-    auto = group([row('Автоматически раз в неделю', 'Папка: Google Диск / Co-Shell', '', switch(True)), row('Последняя копия: вчера, 03:10', 'хранятся последние 8', svg('check', OK))])
-    return inner_screen('Резервная копия', msg + label('Вручную', top=12) + backup_actions() + label('Автокопия') + auto)
+    from mockup_screens_settings import backup_screen  # the same screen as the `Backup` board, switched on (#464)
+    return backup_screen(True, msg)
 
 
 def backup_restore():
@@ -227,7 +227,7 @@ BOARDS = [
     ('FamilyInvited', '13 · Семья: приглашение', family_invited), ('FamilyJoinMode', '13 · Семья: свои операции на телефоне', family_join_mode),
     ('FamilyInviteSent', '13 · Семья: приглашение отправлено', family_invite_sent), ('FamilyInviteDialog', '13 · Семья: пригласить, ошибка адреса', family_invite_dialog),
     ('FamilyOffline', '13 · Семья: нет связи', family_offline), ('FamilyNotConfigured', '13 · Семья: не настроено', family_not_configured),
-    ('BackupAuto', '14 · Копия: автокопия, сохранено', lambda: backup_auto(message('Копия сохранена.', 'ok'))),
+    ('BackupAuto', '14 · Копия: автокопия включена', backup_auto),
     ('BackupError', '14 · Копия: ошибка файла', lambda: backup_auto(message('Это не файл резервной копии Co-Shell.', 'error'))),
     ('BackupRestore', '14 · Копия: восстановить?', backup_restore),
     ('UpdateWhatsNew', '16 · «Что нового» после установки', whats_new),

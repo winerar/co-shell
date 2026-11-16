@@ -17,17 +17,25 @@ def code_badge(code):
 
 
 def rates():
+    # As in the app (#464): the converter on top, the status card with «Курсы обновлены», the add button is the round «+» (fab).
+    conv = hero_card('<div style="font-size: 15px;">Сколько это</div><div style="display: flex; align-items: baseline; gap: 8px; margin-top: 6px;">'
+                     '<span style="%s font-size: 28px; font-weight: 700; color: %s;">100</span><span style="%s font-size: 15px;">USD ▾</span>'
+                     '<span style="flex-grow: 1;"></span><span style="font-size: 12px; color: %s;">курс на сегодня</span></div>' % (MONO, LIME, MONO, HERO_HINT),
+                     pad='14px', radius=20)
     head = hero_card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Курсы на сегодня</div>'
-                     '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>' % (dot_icon('check', CYAN, 40), HERO_HINT, icon_button('refresh', 'Обновить', INK, True)),
+                     '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>'
+                     '<div style="margin-top: 10px; padding: 12px 14px; border-radius: 999px; background: %s; font-size: 14px;">Курсы обновлены</div>'
+                     % (dot_icon('check', CYAN, 40), HERO_HINT, icon_button('refresh', 'Обновить', INK, True), CHIP),
                      pad='12px 12px 12px 14px', radius=20)
     lbl = ('<div style="display: flex; margin: 18px 4px 8px; font-size: 13px;"><span style="flex-grow: 1; font-weight: 600; color: %s;">Валюты ваших счетов</span>'
-           '<span style="color: %s;">тап — задать вручную</span></div>' % (MUTED, MUTED))
+           '<span style="color: %s;">нажмите, чтобы изменить</span></div>' % (MUTED, MUTED))
     rows = group([row('<span style="%s">%s</span>' % (MONO, r), s, code_badge(c), amount(d, '', OK if d.startswith('+') else PINK, 12) if d else '') for c, r, s, d in RATES])
-    manual = ('<div style="display: flex; gap: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><span style="width: 4px; border-radius: 2px; background: %s;"></span>'
-              '<span><div style="%s font-size: 15px;">1 USD = 1 185,00 ARS</div><div style="font-size: 12px; color: %s;">вручную · с 1 ноября · важнее загруженного</div></span></div>'
-              % (VIOLETBG, '#3A2257', VIOLET, MONO, VIOLETINK))
-    foot = '<div style="position: absolute; left: 20px; right: 20px; bottom: 20px;">%s</div>' % note('Источники: fawazahmed0/currency-api и ExchangeRate-API. Курсы обновляются сами раз в день.', 0)
-    return board('Курсы валют', inner_screen('Курсы валют', head + lbl + rows + label('Ручные курсы') + manual + dashed('Добавить курс')) + foot)
+    manual = ('<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><span style="width: 4px; align-self: stretch; border-radius: 2px; background: %s;"></span>'
+              '<span style="flex-grow: 1;"><div style="%s font-size: 15px;">1 USD = 1 185,00 ARS</div><div style="font-size: 12px; color: %s;">вручную · с 1 ноября · важнее загруженного</div></span>%s</div>'
+              % (VIOLETBG, '#3A2257', VIOLET, MONO, VIOLETINK, icon_button('trash', 'Удалить курс', INK)))
+    foot = note('Источники: fawazahmed0/currency-api и ExchangeRate-API. Курсы обновляются сами раз в день.', 14)
+    body = '<div style="display: flex; flex-direction: column; gap: 12px;">' + conv + head + '</div>' + lbl + rows + label('Ручные курсы') + manual + foot
+    return board('Курсы валют', inner_screen('Курсы валют', body) + fab('Добавить курс'))
 
 
 # ---- report currencies (tap a row — it becomes the main one) -------------------------------------------------------
@@ -68,15 +76,28 @@ def family():
     return board('Семья', inner_screen('Семья', body))
 
 
+def backup_screen(enabled=True, msg=''):
+    """«Резервная копия» as in the app (#464): the ring (days to the copy, or off), the folder + switch, manual tiles, the wipe row."""
+    if enabled:
+        hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия включена</h2>'
+                '<div style="text-align: center; font-size: 13px; color: %s; margin-top: 4px;">Последняя: 3 ноября · раз в неделю</div>'
+                % (ring(0.72, '<span style="%s font-size: 40px; font-weight: 700;">2</span><span style="font-size: 12px; color: %s;">дня до копии</span>' % (MONO, MUTED), YELLOW), MUTED))
+        auto = group([row('Папка: Google Диск / Co-Shell', 'тап — выбрать другую', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автоматически раз в неделю', '', '', switch(True))])
+    else:
+        hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия выключена</h2>'
+                '<div style="text-align: center; font-size: 13px; color: %s; margin: 4px 12px 0;">Выберите папку — копия будет сохраняться туда раз в неделю (хранятся последние 8).</div>'
+                % (ring(0, svg('refresh', MUTED, 40), CHIP), MUTED))
+        auto = group([row('Выбрать папку для автокопий', 'на телефоне или Google Диске', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автоматически раз в неделю', '', '', switch(False))])
+    manual = grid([card('%s<div style="margin-top: 14px; font-size: 15px; font-weight: 600;">%s</div><div style="font-size: 12px; color: %s;">%s</div>' % (svg(i, c), t, MUTED, s2), pad='14px')
+                   for i, c, t, s2 in [('download', LIME, 'Сохранить копию', 'в папку или на Диск'), ('upload', CYAN, 'Восстановить', 'записи добавятся к текущим')]], 2)
+    wipe_row = '<div style="margin-top: 14px;">%s</div>' % row('<span style="color: %s;">Стереть все данные</span>' % PINK, 'Начать с чистого листа. Сначала — копия', svg('trash', PINK), chevron(), min_h=56)
+    body = (msg + hero + '<div style="margin-top: 16px;">%s</div>' % auto + label('Вручную') + manual
+            + note('Один файл со всеми данными. Пригодится при смене или сбросе телефона.') + wipe_row)
+    return inner_screen('Резервная копия', body)
+
+
 def backup():
-    hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия включена</h2>'
-            '<div style="text-align: center; font-size: 13px; color: %s; margin-top: 4px;">Последняя: 3 ноября · раз в неделю</div>'
-            % (ring(0.72, '<span style="%s font-size: 40px; font-weight: 700;">2</span><span style="font-size: 12px; color: %s;">дня до копии</span>' % (MONO, MUTED), YELLOW), MUTED))
-    auto = group([row('Папка: Google Диск / Co-Shell', 'тап — выбрать другую', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автоматически раз в неделю', '', '', switch(True))])
-    manual = grid([card('%s<div style="margin-top: 14px; font-size: 15px; font-weight: 600;">%s</div><div style="font-size: 12px; color: %s;">%s</div>' % (svg(i, c), t, MUTED, s), pad='14px')
-                   for i, c, t, s in [('download', LIME, 'Сохранить копию', 'в папку или на Диск'), ('upload', CYAN, 'Восстановить', 'записи добавятся к текущим')]], 2)
-    body = hero + '<div style="margin-top: 16px;">%s</div>' % auto + label('Вручную') + manual + note('Копия — один файл со всеми счетами, категориями, операциями и ручными курсами.')
-    return board('Резервная копия', inner_screen('Резервная копия', body))
+    return board('Резервная копия', backup_screen(False))
 
 
 # ---- wipe: settings → confirm → done --------------------------------------------------------------------------------

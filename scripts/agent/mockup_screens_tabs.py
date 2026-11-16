@@ -46,8 +46,7 @@ def entry_main():
 # ---- accounts ----------------------------------------------------------------------------------------------------
 
 def accounts():
-    acts = icon_button('search', 'Поиск', INK, True) + ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; '
-                                                         'align-items: center; justify-content: center; margin-left: 6px;">%s</span>' % (LIME, svg('plus', ONLIME, 24, 2.2)))
+    acts = icon_button('search', 'Поиск', INK, True)  # «Счета» opens from «Ещё»/«Обзор»: back arrow, no bottom bar; the add button is the round «+» (fab)
 
     def by_type(_):
         out = ''
@@ -73,16 +72,23 @@ def accounts():
     lists = per('v', ['type'], by_type) + per('v', ['cur'], by_cur) + per('v', ['who'], by_who)
     body = (big_total('Всего в общем балансе · 12 счетов', '9 640', 'USD') + '<div style="margin-top: 14px;">%s</div>' % seg
             + '<div style="height: 610px; overflow: hidden;">%s</div>' % lists)
-    return proto('Счета', tab_screen('Счета', body, 'acc', acts), v='type')
+    return proto('Счета', inner_screen('Счета', body, acts) + fab('Добавить счёт'), v='type')
 
 
 # ---- «Ещё» -------------------------------------------------------------------------------------------------------
 
 def more_body():
-    tiles = grid([nav_tile('folder', 'Категории', '34 · 6 папок', LIME, LIMEBG), nav_tile('rate', 'Курсы валют', 'обновлены сегодня', CYAN, CYANBG),
-                  nav_tile('user', 'Семья', 'синхронизировано · 2 чел.', VIOLET, VIOLETBG), nav_tile('download', 'Резервная копия', 'авто · 3 ноября', YELLOW, YELLOWBG),
-                  nav_tile('mail', 'Обратная связь', 'написать о проблеме', PINK, PINKBG)], 2, 10)
-    return tiles + '<div style="margin-top: 14px;">%s</div>' % row('Настройки', 'Тема · Вольт, валюты отчётов, встряхивание, обновление', svg('gear'), chevron(), min_h=56)
+    """«Ещё» as in the app (#464, choice Б): the version card, then three groups of rows — Деньги, Семья и данные, Приложение."""
+    def r(title, sub, icon, c, bg):
+        return row(title, sub, tile_icon(icon, c, bg), chevron())
+    ver = group([row('Co-Shell', 'Версия 0.37 · сборка 400', tile_icon('download', LIME, LIMEBG), chevron())])
+    money = group([r('Счета', 'Карты, наличные, вклады', 'wallet', PINK, PINKBG), r('Категории', 'Подкатегории, иконки и цвета', 'folder', LIME, LIMEBG),
+                   r('Бюджеты', 'Лимиты на месяц, план и факт', 'wallet', PINK, PINKBG), r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN, CYANBG),
+                   r('Курсы валют', 'Обновляются сами раз в день', 'rate', CYAN, CYANBG), r('Валюты итогов', 'Основная: USD', 'rate', VIOLET, VIOLETBG)])
+    data = group([r('Семья', 'Общий бюджет с близкими', 'user', LIME, LIMEBG), r('Резервная копия', 'Сохранить или восстановить данные', 'download', YELLOW, YELLOWBG),
+                  r('Импорт из Wallet', 'Перенести операции из выгрузки CSV', 'download', CYAN, CYANBG)])
+    app = group([r('Внешний вид', 'Лайм · тёмная', 'spark', VIOLET, VIOLETBG), r('Обратная связь', 'Ошибка или идея', 'mail', PINK, PINKBG)])
+    return ver + label('Деньги', top=14) + money + label('Семья и данные', top=14) + data + label('Приложение', top=14) + app
 
 
 def more():

@@ -61,8 +61,9 @@ def home_attention():
 
 def ops_head(chips=None):
     """Filter chips under the «Операции» header; the search itself is a loupe in the header (#394 Б)."""
-    chips = chips or [chip('Тип ▾'), chip('Счёт ▾'), chip('Ноябрь ▾')]
-    return '<div style="display: flex; gap: 8px; margin-top: 4px;">%s</div>' % ''.join(chips)
+    # As in the app: «Тип · Категория · Период · Счёт»; the row scrolls sideways, the last chip peeks out (#464).
+    chips = chips or [chip('Тип ▾'), chip('Категория ▾'), chip('Период ▾'), chip('Счёт ▾')]
+    return '<div style="display: flex; gap: 8px; margin: 4px -16px 0; padding: 0 16px; overflow: hidden; white-space: nowrap;">%s</div>' % ''.join(chips)
 
 
 def loupe():

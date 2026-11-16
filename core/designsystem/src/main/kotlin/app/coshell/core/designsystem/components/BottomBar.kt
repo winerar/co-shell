@@ -142,7 +142,7 @@ private fun BottomBarContent(
         Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Spacing.l),
+            .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = Spacing.l),
     ) {
         Row(
             Modifier
@@ -150,6 +150,7 @@ private fun BottomBarContent(
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
+                .fillEdge(scheme.surfaceContainerHigh, PillShape, scheme.background)
                 .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,

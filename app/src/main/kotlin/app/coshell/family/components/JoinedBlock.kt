@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.data.family.FamilyState
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.ui.list.SectionTitle
@@ -67,7 +67,7 @@ internal fun JoinedBlock(joined: FamilyState.Joined, state: FamilyUiState, actio
         }
         row {
             CoShellListRow(
-                title = { Text(stringResource(R.string.family_invite), color = accentInk()) },
+                title = { Text(stringResource(R.string.family_invite), color = secondaryInk()) },
                 supporting = { Text(stringResource(R.string.family_invite_hint)) },
                 leading = { InviteAvatar() },
                 onClick = { inviting = true },

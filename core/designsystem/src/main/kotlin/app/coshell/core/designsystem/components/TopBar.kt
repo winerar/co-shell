@@ -1,6 +1,17 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
@@ -39,8 +50,8 @@ fun Modifier.topBarScroll(scroll: TopBarScroll): Modifier = nestedScroll(scroll.
 
 /**
  * Screen top bar (board `CompNew`, «Шапка экрана», #367 А): one compact row of [navigationIcon], [title] and [actions].
- * Always solid — the colour of the screen, or the raised fill when [raised] (the selection bar, so the mode is seen at
- * a glance); never tinted or glass. The line under it is the screens' `scrollHairline`.
+ * A floating capsule on the screen's background (the same style as the bottom bar), solid fill, never tinted or glass; [raised] —
+ * the selection bar's brighter fill, so the mode is seen at a glance. A hairline edge appears when the fill melts into the screen.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,15 +63,21 @@ fun CoShellTopBar(
     scroll: TopBarScroll? = null,
     raised: Boolean = false,
 ) {
-    val fill = if (raised) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.background
-    TopAppBar(
-        title = title,
-        modifier = modifier,
-        navigationIcon = navigationIcon,
-        actions = actions,
-        scrollBehavior = scroll?.behavior,
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = fill, scrolledContainerColor = fill),
-    )
+    val scheme = MaterialTheme.colorScheme
+    val fill = if (raised) scheme.surfaceContainerHighest else scheme.surfaceContainerHigh
+    // A narrow floating capsule, like the bottom bar (poll 2026-11-16 #441 «Б»): nothing behind it but the screen.
+    Box(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Sizes.panelInset, vertical = Spacing.s)) {
+        TopAppBar(
+            title = title,
+            modifier = modifier.clip(PillShape).background(fill).fillEdge(fill, PillShape, scheme.background),
+            navigationIcon = navigationIcon,
+            actions = actions,
+            expandedHeight = Sizes.topBarHeight,
+            windowInsets = WindowInsets(0),
+            scrollBehavior = scroll?.behavior,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
+        )
+    }
 }
 
 private const val SCROLLED_PX = 1f

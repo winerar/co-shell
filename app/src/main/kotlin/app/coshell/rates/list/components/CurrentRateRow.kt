@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
@@ -40,7 +41,7 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
         },
         supporting = {
             if (item.isSource) {
-                Text(stringResource(R.string.rates_converter_source), color = accentInk())
+                Text(stringResource(R.string.rates_converter_source), color = secondaryInk())
             } else if (item.rateText == null) {
                 Text(stringResource(R.string.rates_no_rate), color = LocalStatusPalette.current.warning)
             } else {

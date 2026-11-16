@@ -47,18 +47,18 @@ def panel(html):
 
 def bar():
     def tab(key, icon, lbl):
-        return tap('<span aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 64px;">%s</span>'
+        return tap('<span aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 56px;">%s</span>'
                    % (lbl, svg(icon, '{{tabs.%s.ink}}' % key, 24, 1.7)), 'tabs.%s.go' % key)
     plus = ('<span style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; '
             'align-items: center; justify-content: center;">%s</span></span>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
-    return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: %s; '
+    return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; '
             'display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
             '<span style="{{pillStyle}}"></span>%s%s%s%s%s</nav>'
             % (BAR, tab('home', 'home', 'Обзор'), tab('ops', 'list', 'Операции'), plus, tab('acc', 'wallet', 'Счета'), tab('more', 'more', 'Ещё')))
 
 
 def select_bar():
-    return ('<div style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
+    return ('<div style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
             '%s%s</div>' % (BAR, tap('<span style="{{dupSelStyle}}">%sДублировать</span>' % svg('copy', INK, 20), 'dupSel'),
                             tap('<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · {{selCount}}</span>'
                                 % (PINKBG, PINK, svg('trash', PINK, 20)), 'delSel')))
@@ -96,7 +96,7 @@ JS = r'''
     return {
       days, selecting, notSelecting: !selecting, selCount: String(s.sel.length),
       trackStyle: 'display: flex; width: ' + (step * 4) + 'px; height: 844px; transform: translateX(' + (-s.idx * step + lean) + 'px); transition: ' + (s.dragging ? 'none' : 'transform ' + ease) + '; touch-action: pan-y;',
-      pillStyle: 'position: absolute; top: 10px; height: 44px; left: calc(6px + ' + col + ' * ' + slot + ' + 2px); width: calc(' + col + ' - 4px); border-radius: 999px; background: #B8FF2E; transition: ' + (s.dragging ? 'none' : 'left ' + ease) + ';',
+      pillStyle: 'position: absolute; top: 8px; height: 40px; left: calc(6px + ' + col + ' * ' + slot + ' + 2px); width: calc(' + col + ' - 4px); border-radius: 999px; background: #B8FF2E; transition: ' + (s.dragging ? 'none' : 'left ' + ease) + ';',
       tabs: { home: tab(0), ops: tab(1), acc: tab(2), more: tab(3) },
       down: (e) => {
         Object.assign(this.g, { x: e.clientX, y: e.clientY, drag: false, fired: false, active: true });

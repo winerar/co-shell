@@ -18,6 +18,7 @@ import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellChoicePill
+import app.coshell.core.designsystem.components.CoShellConfirmCard
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -43,13 +44,13 @@ import org.robolectric.annotation.GraphicsMode
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [36], qualifiers = "ru-w411dp-h1700dp-xhdpi")
+@Config(sdk = [36], qualifiers = "ru-w411dp-h2400dp-xhdpi")
 class CatalogStressScreenshotTest {
     @get:Rule val compose = createComposeRule()
 
     @Test fun `components stress light`() = shot("components_stress_light") { StressSample() }
 
-    @Test @Config(qualifiers = "ru-w320dp-h1900dp-xhdpi")
+    @Test @Config(qualifiers = "ru-w320dp-h2900dp-xhdpi")
     fun `components stress narrow dark`() = shot("components_stress_narrow_dark", dark = true, fontScale = 1.3f) { StressSample() }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {
@@ -90,6 +91,10 @@ private fun StressSample() {
             CoShellChoicePill("Наличные", selected = true, onClick = {})
             CoShellChoicePill(WORD, selected = false, onClick = {})
         }
+        CoShellConfirmCard(
+            title = LONG, text = "$LONG. $WORD", confirmLabel = "Удалить операцию навсегда", onConfirm = {},
+            dismissLabel = "Оставить как есть", destructive = true,
+        )
         CoShellCard {
             CoShellListRow(title = LONG, subtitle = "$LONG · $WORD", trailing = { Text("−999 999 999,99 USDT") })
             CoShellListRow(title = WORD, subtitle = LONG, subtitleMaxLines = 1, trailing = { Text("0") })

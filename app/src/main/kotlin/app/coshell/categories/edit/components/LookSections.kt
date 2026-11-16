@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFormSection
-import app.coshell.ui.form.ColorStrip
-import app.coshell.ui.form.IconStrip
+import app.coshell.core.designsystem.category.CategoryIcons
+import app.coshell.core.designsystem.components.CoShellColorStrip
+import app.coshell.core.designsystem.components.CoShellIconStrip
 
 /**
  * «Иконка» and «Цвет» (#290, board `Fb290FA`): one line each; «Все 52» and «+12» call [onOpenAll] — the shared
@@ -14,9 +15,9 @@ import app.coshell.ui.form.IconStrip
 @Composable
 internal fun LookSections(icon: String?, color: Long?, onIconSelect: (String) -> Unit, onColorSelect: (Long) -> Unit, onOpenAll: () -> Unit) {
     CoShellFormSection(stringResource(R.string.category_icon)) {
-        IconStrip(icon, color, onIconSelect, onAll = onOpenAll)
+        CoShellIconStrip(icon, onIconSelect, onAll = onOpenAll, allLabel = stringResource(R.string.form_all_count, CategoryIcons.keys.size))
     }
     CoShellFormSection(stringResource(R.string.category_color)) {
-        ColorStrip(color, { picked -> picked?.let(onColorSelect) }, onAll = onOpenAll)
+        CoShellColorStrip(color, { picked -> picked?.let(onColorSelect) }, onAll = onOpenAll, noneLabel = stringResource(R.string.color_none))
     }
 }

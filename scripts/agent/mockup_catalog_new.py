@@ -123,14 +123,16 @@ def dots_status(v):
 
 
 def strips(v):
-    icons = ''.join('<span style="width: 40px; height: 40px; flex: none; border-radius: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
-                    % (r(v, 'icon'), sel(v) if i == 'taxi' else ('background: %s;' % CHIP if v == 'A' else 'box-shadow: inset 0 0 0 1px %s;' % OUTLINE),
-                       svg(i, ink_on_sel(v) if i == 'taxi' else INK2, 20)) for i in ['cart', 'cafe', 'taxi', 'house', 'gift'])
-    colors = ''.join('<span style="width: 32px; height: 32px; flex: none; border-radius: %s; background: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
-                     % ('50%' if v == 'A' else '9px', c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (CARD, INK) if c == '#00B1EA' else '',
-                        svg('check', '#0B0F0A', 16, 2.6) if c == '#00B1EA' else '') for c in ['#F26E22', '#00B1EA', '#EC0000', '#91E668', '#B266FF', '#FFD43B'])
-    return col('<div style="display: flex; gap: 6px;">%s</div>' % icons, '<div style="display: flex; gap: 10px; padding: 4px;">%s</div>' % colors,
-               cap('выбранное — рамка цветом текста; полоса листается, последний — «Все →»'))
+    """Poll #367 (2026-11-16): А — circles 40 (colours) / 44 (icons) in one row, chosen = ring in the ink + check / neon + ring; the rest — «+N» / «Все 52» outline pill."""
+    more = lambda t: '<span style="height: 36px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px %s; display: inline-flex; align-items: center; font-size: 14px; flex: none;">%s</span>' % (OUTLINE, t)
+    icons = ''.join('<span style="width: 44px; height: 44px; flex: none; border-radius: 50%%; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+                    % (sel(v) if i == 'cafe' else 'background: %s;' % CHIP, svg(i, ink_on_sel(v) if i == 'cafe' else INK2, 22)) for i in ['cart', 'cafe', 'taxi', 'house', 'gift'])
+    colors = ''.join('<span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+                     % (c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (CARD, INK) if c == '#00B1EA' else '',
+                        svg('check', '#0B0F0A', 20, 2.6) if c == '#00B1EA' else '') for c in ['#F26E22', '#00B1EA', '#EC0000', '#91E668', '#B266FF'])
+    return col('<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (icons, more('Все 52')),
+               '<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (colors, more('+19')),
+               cap('CoShellIconStrip · CoShellColorStrip; ячейки — CoShellIconCell, CoShellColorDot, CoShellNoColorDot, банк — CoShellBankDot; сколько кругов — по ширине'))
 
 
 def acc_card(v, name, ini, color, ink, kind, bal, cur):

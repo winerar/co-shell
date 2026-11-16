@@ -27,6 +27,8 @@ import app.coshell.budgets.list.components.EnvelopeRow
 import app.coshell.budgets.list.components.MonthStartSheet
 import app.coshell.budgets.list.components.MonthSwitch
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
@@ -56,14 +58,12 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                CoShellIconButton(onClick = { actions.onEdit(null) }) {
-                    Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.budgets_new))
-                }
             }
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.budgets_new), { actions.onEdit(null) }) },
     ) { padding ->
         val month = state.month ?: return@Scaffold
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
             item(key = "month") {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }

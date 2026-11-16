@@ -10,14 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.PaddingValues
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.currencies.list.components.AddCurrencyDialog
 import app.coshell.currencies.list.components.BalancePreviewCard
 import app.coshell.currencies.list.components.ReportCurrencyRow
-import app.coshell.ui.list.ActionRow
 import app.coshell.ui.top.ScreenTopBar
-import app.coshell.core.designsystem.R as DesignR
 
 /** "More → Report currencies": main currency first, tap another to make it main, add / remove. */
 @Composable
@@ -26,8 +27,9 @@ fun ReportCurrenciesScreen(state: ReportCurrenciesUiState, actions: ReportCurren
         topBar = {
             ScreenTopBar(stringResource(R.string.report_currencies_title), onBack = actions.onBack)
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.report_currencies_add), actions.onAdd) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
             item(key = "hint") {
                 Text(
                     text = stringResource(R.string.report_currencies_hint),
@@ -45,9 +47,6 @@ fun ReportCurrenciesScreen(state: ReportCurrenciesUiState, actions: ReportCurren
                     onMakeMain = { actions.onMakeMain(code) },
                     onRemove = { actions.onRemove(code) },
                 )
-            }
-            item(key = "add") {
-                ActionRow(DesignR.drawable.ic_add, stringResource(R.string.report_currencies_add), actions.onAdd)
             }
         }
     }

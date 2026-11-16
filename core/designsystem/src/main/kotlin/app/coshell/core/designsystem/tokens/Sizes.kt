@@ -20,6 +20,9 @@ object Sizes {
     val selectionRing = 2.dp
     /** Space under the last list item so a floating button doesn't cover it: FAB 56 + margins 16 + 16. */
     val fabClearance = 88.dp
+    /** The round add button of a list screen ([app.coshell.core.designsystem.components.CoShellAddFab], #408) and its «+». */
+    val fab = 56.dp
+    val fabIcon = 26.dp
     /** Big status ring in the middle of a single-purpose screen (update, later import/sync). */
     val heroRing = 168.dp
     /** Icon inside [heroRing]. */

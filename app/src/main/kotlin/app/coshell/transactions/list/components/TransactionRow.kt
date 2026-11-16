@@ -55,7 +55,7 @@ internal fun TransactionRow(
     onPeek: (() -> Unit)? = null,
     onPeekEnd: () -> Unit = {},
     /** What the row is drawn on: the list's surface, or transparent inside a card that draws its own fill. */
-    background: Color = MaterialTheme.colorScheme.surface,
+    background: Color = MaterialTheme.colorScheme.background,
 ) {
     val colors = MaterialTheme.colorScheme
     val container by animateColorAsState(

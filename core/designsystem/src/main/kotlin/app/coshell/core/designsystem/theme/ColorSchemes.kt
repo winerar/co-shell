@@ -12,13 +12,14 @@ import androidx.compose.ui.graphics.lerp
  * (`secondaryContainer`). Neon on white is unreadable as text, so text accents take [accentInk] — the ink.
  */
 internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
-    val n = lightNeutrals(p.backgroundLight)
+    val n = lightNeutrals(p.backgroundLight, p.primary, p.accentLight)
     return lightColorScheme(
         primary = p.primary,
         onPrimary = p.onPrimary,
         primaryContainer = p.primary,
         onPrimaryContainer = p.onPrimary,
         inversePrimary = p.primary,
+        primaryFixedDim = n.inkPrimary,
         secondary = p.accentLight,
         onSecondary = Color.White,
         secondaryContainer = lerp(p.accentDark, Color.White, 0.78f),
@@ -33,13 +34,13 @@ internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
         onErrorContainer = CoralInk,
         background = n.background,
         onBackground = n.text,
-        surface = n.background,
+        surface = n.surface,
         onSurface = n.text,
         surfaceVariant = n.high,
         onSurfaceVariant = n.textMuted,
         surfaceTint = p.primary,
-        inverseSurface = darkNeutrals(p.backgroundDark).high,
-        inverseOnSurface = darkNeutrals(p.backgroundDark).text,
+        inverseSurface = darkNeutrals(p.backgroundDark, p.primary, p.accentDark).high,
+        inverseOnSurface = darkNeutrals(p.backgroundDark, p.primary, p.accentDark).text,
         outline = n.line,
         outlineVariant = n.lineSoft,
         surfaceBright = n.bright,
@@ -54,13 +55,14 @@ internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
 
 /** Dark theme of a palette: tinted graphite, neon accents as is (the primary fills with dark ink), no glow. */
 internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
-    val n = darkNeutrals(p.backgroundDark)
+    val n = darkNeutrals(p.backgroundDark, p.primary, p.accentDark)
     return darkColorScheme(
         primary = p.primary,
         onPrimary = p.onPrimary,
         primaryContainer = p.primary,
         onPrimaryContainer = p.onPrimary,
-        inversePrimary = lightNeutrals(p.backgroundLight).text,
+        inversePrimary = lightNeutrals(p.backgroundLight, p.primary, p.accentLight).text,
+        primaryFixedDim = n.inkPrimary,
         secondary = p.accentDark,
         onSecondary = lerp(p.accentDark, Color.Black, 0.82f),
         secondaryContainer = lerp(p.accentDark, n.background, 0.68f),
@@ -75,7 +77,7 @@ internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
         onErrorContainer = CoralPale,
         background = n.background,
         onBackground = n.text,
-        surface = n.background,
+        surface = n.surface,
         onSurface = n.text,
         surfaceVariant = n.high,
         onSurfaceVariant = n.textMuted,

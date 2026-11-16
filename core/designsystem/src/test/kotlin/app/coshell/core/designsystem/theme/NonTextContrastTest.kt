@@ -18,9 +18,6 @@ class NonTextContrastTest {
 
     /** Current minimum (rounded down) of each pair below its target, #385. */
     private val known = mapOf(
-        "checkbox and radio outline on surface" to 1.8,
-        "field fill on surface" to 1.05,
-        "field, chip and card border on surface" to 1.25,
         "neon accent text inside the hero card" to 3.7,
     )
 
@@ -55,6 +52,8 @@ class NonTextContrastTest {
         val out = mutableListOf<Pair>()
         fun text(check: String, fg: Color, bg: Color) { out += Pair(check, name, fg, bg, 4.5) }
         fun shape(check: String, fg: Color, bg: Color) { out += Pair(check, name, fg, bg, 3.0) }
+        // A fill that melts into its background gets a thin edge in its own deep shade (`fillEdge`, #442): the edge is what is checked.
+        fun edged(fill: Color, over: Color) = if (contrast(fill, over) >= 3.0) fill else deepen(fill, over, 3.2f)
 
         // Secondary text: hints, unselected segments, search placeholder, field text, links.
         text("hint on surface", s.onSurfaceVariant, s.surface)
@@ -63,7 +62,7 @@ class NonTextContrastTest {
         text("field text", s.onSurface, s.surfaceContainer)
         text("accent text on background", accentInkFor(s, dark), s.background)
         text("error on background", s.error, s.background)
-        t.heroStops.forEach { text("neon accent text inside the hero card", accentInkFor(s, dark), it) }
+        t.heroStops.forEach { text("neon accent text inside the hero card", if (dark) accentInkFor(s, dark) else t.hero.content, it) }
 
         // Icons and marks.
         shape("tab icon on the bar", s.onSurfaceVariant, s.surfaceContainerHigh)
@@ -73,13 +72,13 @@ class NonTextContrastTest {
 
         // Selected states and component boundaries.
         val sel = selectionColorsFor(s, dark)
-        shape("segment pill on its track", sel.fill, s.surfaceContainerHigh)
-        shape("chip and label pill on its track", sel.fill, s.surfaceContainer)
-        shape("tab pill on the bar", sel.fill, s.surfaceContainerHigh)
-        shape("selected day on surface", sel.fill, s.surface)
+        shape("segment pill on its track", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
+        shape("chip and label pill on its track", edged(sel.fill, s.surfaceContainer), s.surfaceContainer)
+        shape("tab pill on the bar", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
+        shape("selected day on surface", edged(sel.fill, s.surface), s.surface)
         text("selected label on its pill", sel.content, sel.fill)
         shape("checkbox and radio outline on surface", s.outline, s.surface)
-        shape("field fill on surface", s.surfaceContainer, s.surface)
+        // The field itself is bounded by `outlineVariant` (≥ 3:1 below), so its fill is decoration, not a boundary (#442).
         shape("field, chip and card border on surface", s.outlineVariant, s.surface)
 
         // Category and account colours (24, 1.0) on every background they sit on: the fill, or its ring when pale.

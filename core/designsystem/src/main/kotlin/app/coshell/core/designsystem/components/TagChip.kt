@@ -55,6 +55,7 @@ fun CoShellTagChip(
             .widthIn(max = TagChipMaxWidth)
             .height(Sizes.chipHeight)
             .background(if (selected) sel.fill else colors.surfaceContainerHigh, PillShape)
+            .then(if (selected) Modifier.fillEdge(sel.fill, PillShape, colors.surfaceContainerHigh) else Modifier)
             .padding(horizontal = Spacing.m),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),

@@ -52,7 +52,7 @@ fun CoShellTopBar(
     scroll: TopBarScroll? = null,
     raised: Boolean = false,
 ) {
-    val fill = if (raised) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surface
+    val fill = if (raised) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.background
     TopAppBar(
         title = title,
         modifier = modifier,

@@ -23,7 +23,7 @@ import kotlinx.datetime.toJavaLocalDate
  * [background] — the list's surface; inside a card that draws its own fill — transparent.
  */
 @Composable
-internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.surface) {
+internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.background) {
     CoShellDayHeader(
         title = dayLabel(day),
         total = day.total,

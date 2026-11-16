@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -53,7 +54,7 @@ internal class TabPillState {
 internal fun Modifier.tabPillAnchor(state: TabPillState, index: Int): Modifier = onPlaced { state.place(index, it) }
 
 /** The bar side: remembers its coordinates and draws the pill in the selected tab's slot. */
-internal fun Modifier.tabPill(state: TabPillState, color: Color): Modifier =
+internal fun Modifier.tabPill(state: TabPillState, color: Color, edge: BorderStroke? = null): Modifier =
     onPlaced { state.bar = it }.drawBehind {
         val l = state.left.value
         val r = state.right.value
@@ -65,6 +66,7 @@ internal fun Modifier.tabPill(state: TabPillState, color: Color): Modifier =
             size = Size(r - l, h),
             cornerRadius = CornerRadius(h / 2f),
         )
+        drawFillEdge(edge, Offset(l, state.top), Size(r - l, h), h / 2f)
     }
 
 /** Moves the pill to [selected]'s slot: the first time it just appears there, later it flows. */

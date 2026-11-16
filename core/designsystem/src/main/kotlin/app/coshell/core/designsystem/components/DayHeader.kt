@@ -27,7 +27,7 @@ fun CoShellDayHeader(
     total: String?,
     totalColor: Color,
     modifier: Modifier = Modifier,
-    background: Color = MaterialTheme.colorScheme.surface,
+    background: Color = MaterialTheme.colorScheme.background,
 ) {
     // A flow, not a row: the net stays beside the title while its widest amount fits there, otherwise it moves
     // under the title at full width. Either way it takes the rest of its line and wraps only after a «·».

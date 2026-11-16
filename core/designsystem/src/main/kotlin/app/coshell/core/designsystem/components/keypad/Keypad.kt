@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import app.coshell.core.designsystem.R
+import app.coshell.core.designsystem.components.fillEdge
 import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
@@ -130,7 +131,8 @@ private fun ColumnScope.Key(
             .weight(weight)
             .fillMaxWidth()
             .tactileClickable(tactile, shape, onClick = onClick)
-            .background(container, shape),
+            .background(container, shape)
+            .fillEdge(container, shape),
         contentAlignment = Alignment.Center,
     ) {
         androidx.compose.runtime.CompositionLocalProvider(

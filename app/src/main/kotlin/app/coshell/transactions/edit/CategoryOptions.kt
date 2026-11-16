@@ -6,6 +6,9 @@ import app.coshell.core.model.TransactionType
 import app.coshell.core.model.buildCategoryTree
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
+import app.coshell.ui.form.CategoryLine
+import app.coshell.ui.form.ChoiceOption
+import app.coshell.ui.form.categoryLines
 
 /**
  * Recomputes the category choices for the current type from [all] categories and drops a selection
@@ -64,24 +67,18 @@ internal fun frequentCategories(
 /** How many categories the sheet can choose from — the number on «Все 24» (folders are not counted). */
 internal val List<CategoryGroup>.leafCount: Int get() = sumOf { if (it.isFolder) it.children.size else 1 }
 
-/** A shelf of the «Все категории» sheet: a folder's subcategories under its [title]; `null` — categories without a folder. */
-internal data class CategoryShelf(val title: String?, val items: List<CategoryItem>)
-
-/**
- * Shelves of the «Все категории» sheet (board `Fb290ACats`): categories without a folder first, then each folder with
- * its subcategories. [query] keeps the categories whose name — or whose folder's name — holds it, case ignored.
- */
-internal fun categoryShelves(groups: List<CategoryGroup>, query: String = ""): List<CategoryShelf> {
-    val q = query.trim()
-    fun CategoryItem.fits() = q.isEmpty() || name.contains(q, ignoreCase = true)
-    val loose = CategoryShelf(null, groups.filter { !it.isFolder && it.item.fits() }.map { it.item })
-    val folders = groups.filter { it.isFolder }.map { group ->
-        CategoryShelf(group.item.name, if (group.item.fits()) group.children else group.children.filter { it.fits() })
-    }
-    return (listOf(loose) + folders).filter { it.items.isNotEmpty() }
-}
-
 /** Places of the frequent grid; the eighth one is «Все N» (two rows of four). */
 internal const val FREQUENT_CATEGORIES = 7
 
 private fun Category.toItem() = CategoryItem(id, name, icon, color)
+
+/** Lines of the «Все категории» sheet of the entry sheet (#439): a folder's subcategories, or a category without a folder, as [categoryLines]. */
+internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String): List<ChoiceOption<String>> =
+    categoryLines(
+        groups.flatMap { g ->
+            if (g.children.isEmpty()) listOf(g.item.line(null)) else g.children.map { it.line(g.item.name) }
+        },
+        noGroup,
+    )
+
+private fun CategoryItem.line(parent: String?) = CategoryLine(id, name, parent, icon, color)

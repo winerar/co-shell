@@ -45,7 +45,7 @@
   последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`).
   Форма или выбор — только шторка `CoShellModalSheet` (в app — `ui/sheet/ModalSheet`): заголовок + подзаголовок + ×,
   кнопка внизу во всю ширину; числа — своей клавиатурой (`CoShellKeypad`, `showPlus = false` для курса). Выбор одного —
-  `ui/form/ChoiceSheet` (строки с ✓, поиск от 9 вариантов, `extra` — свой код валюты); числа 1–31 — `CoShellDayGrid`;
+  `ui/form/ChoiceSheet` (строки 52 dp с ✓, поиск от 9 вариантов, `extra` — свой код валюты; `group` — подпись над строками, `icon`/`color` — значок категории, название до 2 строк; строки лежат в своей колонке: колонка шторки раздвигает детей на 12 dp; категории (все три выбора: «Все категории», шаблон, лимит) — `ui/form/categoryLines`: группа из одной категории без дубля «X / X», #439); числа 1–31 — `CoShellDayGrid`;
   месяцы/кварталы/годы — `CoShellLabelGrid(labels, selected, columns)` (#140); свои дни — `ui/form/DateRangeSheet`.
   Material-диалоги в app запрещены (`TactileRuleTest`).
 - **Формы** — `CoShellSection` (заголовок + содержимое + красная ошибка), `CoShellHint`, `CoShellMessage`

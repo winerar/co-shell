@@ -7,7 +7,9 @@ import app.coshell.budgets.edit.BudgetEditActions
 import app.coshell.budgets.edit.BudgetEditUiState
 import app.coshell.budgets.edit.BudgetKind
 import app.coshell.ui.form.ChoiceSheet
+import app.coshell.ui.form.CategoryLine
 import app.coshell.ui.form.ChoiceOption
+import app.coshell.ui.form.categoryLines
 
 /** Which list the limit editor has open. */
 enum class BudgetPicker { CATEGORY, CURRENCY }
@@ -19,7 +21,11 @@ internal fun BudgetPickers(picker: BudgetPicker?, state: BudgetEditUiState, acti
         null -> Unit
         BudgetPicker.CATEGORY -> ChoiceSheet(
             title = stringResource(if (state.kind == BudgetKind.FOLDER) R.string.budget_choose_folder else R.string.budget_choose_category),
-            options = state.choices.map { ChoiceOption(it.id, it.name, it.parent) },
+            options = if (state.kind == BudgetKind.FOLDER) {
+                state.choices.map { ChoiceOption(it.id, it.name, icon = it.icon, color = it.color, hasBadge = true) }
+            } else {
+                categoryLines(state.choices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color) }, stringResource(R.string.transaction_categories_no_folder))
+            },
             selected = state.categoryId,
             onPick = { actions.onCategorySelect(it); onClose() },
             onDismiss = onClose,

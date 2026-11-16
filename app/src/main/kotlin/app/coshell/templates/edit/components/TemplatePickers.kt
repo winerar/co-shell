@@ -7,7 +7,9 @@ import app.coshell.R
 import app.coshell.templates.edit.TemplateEditActions
 import app.coshell.templates.edit.TemplateEditUiState
 import app.coshell.ui.form.ChoiceSheet
+import app.coshell.ui.form.CategoryLine
 import app.coshell.ui.form.ChoiceOption
+import app.coshell.ui.form.categoryLines
 
 /** Which list the editor has open. */
 enum class TemplatePicker { ACCOUNT, TO_ACCOUNT, CATEGORY }
@@ -34,7 +36,10 @@ internal fun TemplatePickers(picker: TemplatePicker?, state: TemplateEditUiState
         TemplatePicker.CATEGORY -> ChoiceSheet<String?>(
             title = stringResource(R.string.template_category),
             options = listOf(ChoiceOption<String?>(null, stringResource(R.string.template_category_none))) +
-                state.categoryChoices.map { ChoiceOption<String?>(it.id, it.label) },
+                categoryLines(
+                    state.categoryChoices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color) },
+                    stringResource(R.string.transaction_categories_no_folder),
+                ).map { ChoiceOption<String?>(it.value, it.label, it.subtitle, it.group, it.icon, it.color, it.hasBadge) },
             selected = state.categoryId,
             onPick = { actions.onCategorySelect(it); onClose() },
             onDismiss = onClose,

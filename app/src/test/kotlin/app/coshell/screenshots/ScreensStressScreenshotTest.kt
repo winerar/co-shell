@@ -74,6 +74,10 @@ class ScreensStressScreenshotTest {
 
     @Test fun `accounts empty dark`() = shot("accounts_empty_dark", dark = true) { AccountsScreen(accountsEmptySample, AccountsActions()) }
 
+    @Test fun `home empty dark`() = shot("home_empty_dark", dark = true) { HomeScreen(HomeUiState()) }
+
+    @Test fun `accounts empty light`() = shot("accounts_empty_light") { AccountsScreen(accountsEmptySample, AccountsActions()) }
+
     @Test fun `categories stress light`() = shot("categories_stress_light") { CategoriesScreen(categoriesStressSample, CategoriesActions()) }
 
     @Test @Config(qualifiers = NARROW)

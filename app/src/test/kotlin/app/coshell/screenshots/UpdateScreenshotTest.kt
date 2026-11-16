@@ -59,6 +59,11 @@ class UpdateScreenshotTest {
         PastReleasesScreen(PastReleasesState.Loaded(past, 400), onBack = {}, onRetry = {})
     }
 
+    @Test
+    fun `update available light`() = shot("update_available_light") {
+        UpdateScreen(installed.copy(phase = UpdatePhase.Available(next)), UpdateActions())
+    }
+
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
         compose.setContent { CoShellTheme(darkTheme = dark) { Surface { content() } } }

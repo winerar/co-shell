@@ -111,6 +111,20 @@ class ReportsScreenshotTest {
     @Composable
     private fun drill() = ReportCategoryScreen(ReportCategorySamples.state, onBack = {}, onTransactionClick = {})
 
+    // The other theme of references that had one (#382: every screen in both themes).
+    @Test
+    fun `all categories light`() = shot("report_categories_light") { ReportCategoriesScreen(ReportsSamples.state, onBack = {}) }
+
+    @Test
+    fun `month review limits light`() = shot("month_review_limits_light") {
+        MonthLimitsScreen(MonthReviewSamples.manyLimits, onBack = {}, onLimit = {})
+    }
+
+    @Test
+    fun `home with the month review light`() = shot("home_review_light") {
+        HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample, review = MonthReviewSamples.state)
+    }
+
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
         compose.setContent { CoShellTheme(darkTheme = dark) { Surface { content() } } }

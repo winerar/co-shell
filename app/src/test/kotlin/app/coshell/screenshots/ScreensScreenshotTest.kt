@@ -162,6 +162,26 @@ class ScreensScreenshotTest {
         compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
     }) { TransactionsScreen(transactionsLongSample) }
 
+    // The other theme of references that had one (#382: every screen in both themes).
+    @Test
+    fun `home attention light`() = shot("home_attention_light") {
+        HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention(missingRates = listOf("VES"), uncategorized = 2)))
+    }
+
+    @Test
+    fun `transactions scrolled light`() = shot("transactions_scrolled_light", before = {
+        compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
+    }) { TransactionsScreen(transactionsLongSample) }
+
+    @Test
+    fun `more dark`() = shot("more_dark", dark = true) { MoreScreen(MoreActions(), moreSample) }
+
+    @Test
+    fun `appearance light`() = shot("appearance_light") { AppearanceScreen(AppearanceState(ThemeMode.LIGHT), AppearanceActions()) }
+
+    @Test
+    fun `backup light`() = shot("backup_light") { BackupScreen(BackupUiState(), BackupActions()) }
+
     /** Board `Fb141A` (#141): set filters are lit chips with ✕, the total (4А) under them. */
     @Test
     fun `transactions filtered dark`() = shot("transactions_filtered_dark", dark = true) { TransactionsScreen(transactionsFilteredSample) }

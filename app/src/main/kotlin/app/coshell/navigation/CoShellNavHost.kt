@@ -60,6 +60,10 @@ import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
 import app.coshell.update.notice.UpdatePill
 import app.coshell.wipe.WipeDataRoute
+import app.coshell.gate.InputLockViewModel
+import app.coshell.gate.rememberInputLock
+import app.coshell.home.components.VersionGateBannerState
+import app.coshell.update.components.megabytes
 import kotlinx.datetime.number
 
 @Composable
@@ -68,6 +72,7 @@ fun CoShellNavHost(
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
+    inputLock: InputLockViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -79,19 +84,27 @@ fun CoShellNavHost(
     CrashNotice(crashes)
     val updatePill by updates.pill.collectAsStateWithLifecycle()
     val updateAvailable by updates.available.collectAsStateWithLifecycle()
+    val locked by inputLock.locked.collectAsStateWithLifecycle()
+    // «Обновить» on the gate banner and its note (#334): the download starts if the release is known.
+    val openUpdate = {
+        updateAvailable?.let(updates::startUpdate)
+        navController.navigate(UpdateDestination) { launchSingleTop = true }
+    }
+    val lock = rememberInputLock(locked, openUpdate)
 
     // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
         enabled = shakeEnabled && onTab,
-        onShake = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onShake = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
     )
 
     MainShell(
         navController = navController,
         snackbar = snackbar,
-        onAdd = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onAdd = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
         moreBadge = updateAvailable != null,
+        inputLock = lock,
         overBar = { onBar ->
             UpdatePill(
                 release = updatePill,
@@ -130,6 +143,12 @@ fun CoShellNavHost(
                     },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                 ),
+                gate = if (locked) {
+                    VersionGateBannerState(updateAvailable?.versionName, updateAvailable?.sizeBytes?.let(::megabytes))
+                } else {
+                    null
+                },
+                onUpdate = openUpdate,
             )
         }
         screen<TransactionsDestination> { entry ->

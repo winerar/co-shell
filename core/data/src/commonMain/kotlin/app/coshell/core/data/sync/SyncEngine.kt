@@ -51,6 +51,7 @@ class SyncEngine(
             applied += dao.merge(chunk.toRows(), CURSOR, chunk.last().cursor)
         }
         if (!knowsAllKinds) dao.setState(SyncStateEntity(KINDS, KNOWN_KINDS))
+        notePeerSchema(pulled)
         val paused = isPushPaused()
         val pushed = if (paused) 0 else push()
         dao.setState(SyncStateEntity(LAST_SYNC, clock.now().toEpochMilliseconds().toString()))
@@ -65,6 +66,12 @@ class SyncEngine(
         val previous = dao.state(INTEGRITY)?.substringAfter('|', "")
         // The time is when these problems were first seen: unchanged findings keep it.
         if (previous != summary) dao.setState(SyncStateEntity(INTEGRITY, "${clock.now().toEpochMilliseconds()}|$summary"))
+    }
+
+    /** Keeps the highest sync schema of the pulled records: a newer one closes entry ([VersionGate], #334). */
+    private suspend fun notePeerSchema(pulled: List<RemoteRecord>) {
+        val seen = pulled.maxOfOrNull { SyncPayload.schemaOf(it.record.json) }
+        VersionGate.raised(dao.state(VersionGate.KEY), seen)?.let { dao.setState(SyncStateEntity(VersionGate.KEY, it)) }
     }
 
     /** `true` while the quota pause lasts; an expired pause is cleared. */

@@ -535,6 +535,15 @@
     <string name="sync_banner_sign_in">Войти</string>
     <string name="sync_banner_feedback">Отзыв</string>
     <string name="sync_banner_ok">Понятно</string>
+    <!-- #334: the other phone runs a newer, incompatible version (board Fb334A) -->
+    <string name="gate_banner_title">Нужна версия %1$s</string>
+    <string name="gate_banner_title_any">Нужна новая версия</string>
+    <string name="gate_banner_text">В семье уже обновились, и новые данные эта версия не понимает. Смотреть можно, вносить — после обновления: так ничего не испортится.</string>
+    <string name="gate_banner_update">Обновить</string>
+    <string name="gate_banner_update_size">Обновить · %1$s МБ</string>
+    <string name="gate_locked_note">Вносить и править можно после обновления — так данные семьи не испортятся.</string>
+    <string name="gate_note_later">Позже</string>
+    <string name="gate_add_locked">Добавить — после обновления</string>
     <string name="sync_banner_feedback_prefill">Синхронизация: нет доступа к семье, код %1$s.</string>
     <!-- «Стереть все данные» (board 18, feedback #107) -->
     <string name="wipe_title">Стереть все данные</string>

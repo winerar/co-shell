@@ -13,11 +13,13 @@ import app.coshell.core.domain.importer.wallet.CategoryChoice
 import app.coshell.core.domain.importer.wallet.UnpairedChoice
 import app.coshell.core.domain.importer.wallet.WalletCategoryKey
 import app.coshell.core.model.MoneyFormat
+import app.coshell.gate.LocalInputLock
 
 /** Connects [WalletImportScreen] to its ViewModel, the system «open file» dialog and the back gesture. */
 @Composable
 fun WalletImportRoute(onBack: () -> Unit, viewModel: WalletImportViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     val openFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         it?.let { uri -> viewModel.onFilePicked(uri.toString()) }
     }
@@ -30,7 +32,7 @@ fun WalletImportRoute(onBack: () -> Unit, viewModel: WalletImportViewModel = hil
         actions = WalletImportActions(
             onBack = back,
             onClose = onBack,
-            onPickFile = { openFile.launch(CSV_TYPES) },
+            onPickFile = lock.guard { openFile.launch(CSV_TYPES) },
             onNext = viewModel::next,
             onChooseAccount = viewModel::chooseAccount,
             onTypeBalance = viewModel::typeBalance,

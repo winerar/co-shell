@@ -8,11 +8,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.model.PostMode
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.TransactionType
+import app.coshell.gate.LocalInputLock
 
 /** Connects [TemplateEditScreen] to [TemplateEditViewModel]; closes when the template is saved or deleted. */
 @Composable
 fun TemplateEditRoute(onDone: () -> Unit, viewModel: TemplateEditViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
     TemplateEditScreen(
         state = state,
@@ -28,8 +30,8 @@ fun TemplateEditRoute(onDone: () -> Unit, viewModel: TemplateEditViewModel = hil
             onCategorySelect = viewModel::onCategorySelect,
             onNoteChange = viewModel::onNoteChange,
             onRepeatChange = viewModel::onRepeatChange,
-            onSave = viewModel::save,
-            onDelete = viewModel::delete,
+            onSave = lock.guard(viewModel::save),
+            onDelete = lock.guard(viewModel::delete),
         ),
     )
 }

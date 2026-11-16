@@ -166,9 +166,9 @@ fun CoShellIconButton(
     }
 }
 
-/** Colours of [CoShellIconButton]: the track of choice controls under the icon in ink. */
+/** Colours of [CoShellIconButton]: no track by default, the icon in ink; [container] gives it a track on a coloured surface. */
 @Composable
-fun coShellIconButtonColors(container: Color = MaterialTheme.colorScheme.surfaceContainerHigh): IconButtonColors =
+fun coShellIconButtonColors(container: Color = Color.Transparent): IconButtonColors =
     IconButtonDefaults.iconButtonColors(containerColor = container, contentColor = MaterialTheme.colorScheme.onSurface)
 
 /** Floating action button; the bottom bar's "+" uses `Tactile.Primary`. */

@@ -9,6 +9,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellBottomBar
+import app.coshell.core.designsystem.components.TabDrag
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.motion.LocalAddConfirm
 import kotlin.reflect.KClass
@@ -44,6 +45,7 @@ internal fun MainBottomBar(
     visible: Boolean = true,
     moreBadge: Boolean = false,
     addLocked: Boolean = false,
+    drag: TabDrag? = null,
 ) {
     val tabs = TopLevel.entries
     CoShellBottomBar(
@@ -54,5 +56,6 @@ internal fun MainBottomBar(
         visible = visible,
         addConfirm = LocalAddConfirm.current,
         addLocked = addLocked,
+        drag = drag,
     )
 }

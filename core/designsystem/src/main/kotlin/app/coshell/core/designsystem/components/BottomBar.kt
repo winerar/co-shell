@@ -56,7 +56,7 @@ data class CoShellTab(
  * Bottom bar (design-system.md §«Навигация и жесты», mockups in docs/design/): a floating capsule with
  * icon-only tabs and the round «+» in the middle — the most frequent action is always under the thumb.
  * Active tab: a wide neon pill of the palette's primary that flows from tab to tab (`TabPill.kt`), the
- * icon pops. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ * icon pops; during a tab swipe [drag] makes it follow the finger. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
  *
  * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
  * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
@@ -70,9 +70,10 @@ fun CoShellBottomBar(
     visible: Boolean = true,
     addConfirm: ConfirmPulse? = null,
     addLocked: Boolean = false,
+    drag: TabDrag? = null,
 ) {
     AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
-        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked)
+        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked, drag)
     }
 }
 
@@ -126,6 +127,7 @@ private fun BottomBarContent(
     onAdd: () -> Unit,
     addConfirm: ConfirmPulse?,
     addLocked: Boolean,
+    drag: TabDrag?,
 ) {
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
@@ -134,7 +136,7 @@ private fun BottomBarContent(
     val pillColor = sel.fill
     val pillEdge = fillEdge(pillColor, scheme.surfaceContainerHigh)
     val pill = rememberTabPillState()
-    AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
+    AnimateTabPill(pill, tabs.indexOfFirst { it.selected }, drag)
     // A floating capsule over the screen's background, clear of the system navigation bar.
     // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as its max height,
     // so the bar would take the screen and leave screens 0 px tall (releases #52/#56).

@@ -62,7 +62,7 @@ fun ScreenTopBar(
         navigationIcon = {
             if (onBack != null) {
                 CoShellIconButton(onClick = onBack, enabled = backEnabled, modifier = Modifier.padding(start = Spacing.s)) {
-                    Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
+                    Icon(painterResource(DesignR.drawable.ic_chevron_left), stringResource(R.string.action_back))
                 }
             }
         },

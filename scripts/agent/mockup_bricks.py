@@ -126,9 +126,9 @@ def mix(color, pct):
 
 
 def icon_button(icon, label, color=INK, border=False):
-    """CoShellIconButton: a 48 circle on the filled track (Style6); `border` is kept for old callers and ignored."""
+    """CoShellIconButton: a 48 target without a track — the icon straight on the screen (poll 2026-11-16 «назад»); `border` is ignored."""
     return ('<button type="button" aria-label="%s" style="width: 48px; height: 48px; flex: none; border-radius: 50%%; border: none; '
-            'background: %s; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, CHIP, svg(icon, color)))
+            'background: transparent; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, svg(icon, color)))
 
 
 def nav(active, dot_more=False):

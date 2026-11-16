@@ -42,7 +42,7 @@ def accounts_panel():
 
 
 def panel(html):
-    return '<div style="flex: none; width: 390px; height: 844px; position: relative; overflow: hidden;">%s</div>' % html
+    return '<div style="flex: none; width: 390px; height: 844px; margin-right: 60px; position: relative; overflow: hidden;">%s</div>' % html
 
 
 def bar():
@@ -83,7 +83,11 @@ JS = r'''
     };
     const days = [{ title: 'СЕГОДНЯ', total: '−45 300', cur: 'ARS', color: '#FF5C7F' }, { title: 'ВЧЕРА', total: '+1 200', cur: 'USD', color: '#00F0FF' }]
       .map((d, i) => Object.assign({}, d, { rows: rows.filter((r) => r.day === i).map(mk) })).filter((d) => d.rows.length);
-    const pos = Math.max(0, Math.min(3, s.idx - s.dx / W));
+    // Poll 2026-11-16 «В» (= `TabSwipe.kt`): the screen leans a quarter of the way after the finger (the neighbour is not drawn, a gap shows),
+    // the bar's pill follows the finger — halfway to the neighbour at the 80 px threshold; on release the tab opens with the usual slide.
+    const G = 60, step = W + G, lean = Math.max(-48, Math.min(48, s.dx * 0.25));
+    const edge = (s.dx > 0 && s.idx === 0) || (s.dx < 0 && s.idx === 3);
+    const pos = Math.max(0, Math.min(3, s.idx + (edge ? 0 : Math.max(-1, Math.min(1, -s.dx / 160)))));
     const slot = pos <= 1 ? pos : pos >= 2 ? pos + 1 : 1 + (pos - 1) * 2;
     const ease = s.dragging ? 'none' : '380ms cubic-bezier(.2,.9,.25,1.05)';
     const col = 'calc((100% - 12px) / 5)';
@@ -91,7 +95,7 @@ JS = r'''
     const sr = s.sheet && rows.concat(this.rows()).find((r) => r.id === s.sheet.id);
     return {
       days, selecting, notSelecting: !selecting, selCount: String(s.sel.length),
-      trackStyle: 'display: flex; width: ' + (W * 4) + 'px; height: 844px; transform: translateX(' + (-pos * W) + 'px); transition: ' + (s.dragging ? 'none' : 'transform ' + ease) + '; touch-action: pan-y;',
+      trackStyle: 'display: flex; width: ' + (step * 4) + 'px; height: 844px; transform: translateX(' + (-s.idx * step + lean) + 'px); transition: ' + (s.dragging ? 'none' : 'transform ' + ease) + '; touch-action: pan-y;',
       pillStyle: 'position: absolute; top: 10px; height: 44px; left: calc(6px + ' + col + ' * ' + slot + ' + 2px); width: calc(' + col + ' - 4px); border-radius: 999px; background: #B8FF2E; transition: ' + (s.dragging ? 'none' : 'left ' + ease) + ';',
       tabs: { home: tab(0), ops: tab(1), acc: tab(2), more: tab(3) },
       down: (e) => {

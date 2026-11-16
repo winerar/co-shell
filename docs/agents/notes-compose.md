@@ -25,3 +25,10 @@
 - (11-16, #432) `Row`: элементы без `weight` меряются **по порядку** и раньше взвешенных — длинный текст суммы забирает всю ширину, а кнопка после него получает 0 и уезжает под текст. Кнопку — мерить первой (свой `Layout`, как `NameAndAmount`), сумме — потолок.
 - (11-16, #433) `TextAutoSize.StepBased` при нехватке места на `minFontSize` **обрезает** текст; для денег — `fitAmountAutoSize` (ужимает ниже минимума, пол 4 sp). `TextAutoSize` — публичный интерфейс, свой класс должен иметь `equals`/`hashCode` (data class).
 - (11-16, #439) Тело `CoShellModalSheet` — колонка с `spacedBy(Spacing.m)` (12 dp): строки списка прямо в ней получают лишний промежуток («большие межстрочные») — список класть в свою `Column {}` (так `ChoiceRows`). В Roborazzi у тест-колонки свой `spacedBy(Spacing.l)` — шаг строк в эталоне мерить с поправкой.
+
+## Переезд на компоненты (#367, 2026-11-16)
+- Нарушение правила, которое нечем заменить, почти всегда лечится существующим: метка → `CoShellStatusChip` (+ тон), круг-значок → `IconBadge`, цветные кнопки → `coShellButtonColors(container, content)`, круглое нажатие → `tactileCircleClickable`, размеры значков → токены `Sizes`. Новый компонент — только после опроса и карточки на доске (`ApprovedComponentsTest` ищет **имя** в `mockup_catalog*.py`).
+- Предложения до «ок» — отдельный модуль `mockup_comp_*.py` + `poll-*.json`; после ответа победитель идёт в `mockup_catalog_*`, доски предложений убрать из `gen-mockups.py` и с холста.
+- Скрипт «убрать неиспользуемые импорты» не должен трогать `getValue`/`setValue` (делегаты `by`) — иначе «has no method getValue».
+- Холодный `app:transformDebugClassesWithAsm` может упасть «Cannot load class Hilt_…»: `rm -rf app/build` и `--no-build-cache`.
+- После правки экрана эталоны: `agent.sh shots '*ScreenshotTest*'`, затем посмотреть PNG; текст в коде запрещён даже в `+N` только если это буквы (цифры и знаки можно).

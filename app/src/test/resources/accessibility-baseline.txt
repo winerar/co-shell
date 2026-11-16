@@ -1,0 +1,6 @@
+# Found by ScreensAccessibilityTest (#380), not fixed yet — bug #462 (colour dots and icon cells have no spoken label).
+# A line may only leave this file, never join it. Format: screen | rule | label | size (dp)
+category-edit | no-label | RadioButton | 48x48
+category-edit | no-label | node | 56x56
+entry-sheet | no-label | RadioButton | 48x48
+entry-sheet | no-label | node | 56x56

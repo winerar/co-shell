@@ -81,6 +81,7 @@ Compose и Material 3 (цвета, слои, жесты, анимации, ст�
 - (11-13) `agent.sh test domain '*A*' '*B*'` гоняет только первый фильтр (#317) — несколько классов: весь модуль (`agent.sh test domain`, ~2 мин) и XML по классам.
 - (11-13) Kotlin raw-строка с регэкспом: `$S` — шаблон, а `${'$'}` даёт голый `$` = якорь конца; литеральный доллар — `\${'$'}` (так `AmountInText`).
 - (11-13) `agent.sh poll` пишет в `/tmp/poll`, а Artifact берёт файлы только из рабочей папки/scratchpad — скопировать `cp -r /tmp/poll <scratch>/poll`.
+- (11-16, #380) ATF (`enableAccessibilityChecks()` из `ui-test-junit4-accessibility`) под Robolectric не проверяет ничего: все результаты `NOT_RUN`, `tryPerformAccessibilityChecks()` молча проходит. Доступность проверять по дереву семантики (`SemanticsAudit`); у обхода — пропускать узлы с пустыми `touchBoundsInRoot` (строки списка за экраном).
 - Синхронизация и Firebase — `notes-sync.md`.
 - (11-13) Правила Firebase публикует CI на `dev` (`scripts/ci/deploy-rules.sh`); из облачной сессии доступа к Firebase нет (`gcloud` без аккаунта) — ключ живёт только в секрете GitHub.
 - (11-14) Холст: публикация отказывает, пока не сделан `Artifact read` самого холста (чтения `path` мало). Холст отставал от репо (не было `Fb290*`, `Fb318*`) — перед публикацией сравнить имена досок в живом `project/canvas.json` и в `docs/design/mockups/canvas.json`, слать новые + индекс.

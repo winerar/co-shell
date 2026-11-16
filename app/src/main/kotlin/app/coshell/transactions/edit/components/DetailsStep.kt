@@ -4,7 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -78,11 +79,14 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
  * The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. On the right:
  * «Расход»/«Доход» for a new one, «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Header(state: TransactionEditUiState, actions: TransactionEditActions) {
-    Row(
+    // A flow: when the chips and the words on the right do not fit one line (narrow screen, big font), the words drop
+    // to the next line whole — «Расход» is never broken into letters.
+    FlowRow(
         Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
-        verticalAlignment = Alignment.CenterVertically,
+        itemVerticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
         state.account?.let { AccountChip(it) { actions.onStepChange(EntryStep.ACCOUNT) } }
@@ -101,6 +105,8 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
                 if (state.refund) stringResource(R.string.transaction_refund_label) else stringResource(state.type.labelRes),
                 style = MaterialTheme.typography.labelLarge,
                 color = amountColor(state.type, state.refund),
+                maxLines = 1,
+                softWrap = false,
             )
         }
         if (!state.isNew) {

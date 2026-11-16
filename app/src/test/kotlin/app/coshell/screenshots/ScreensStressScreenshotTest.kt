@@ -9,6 +9,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.unit.Density
+import app.coshell.accounts.edit.AccountEditActions
+import app.coshell.accounts.edit.AccountEditScreen
+import app.coshell.accounts.edit.accountEditStressSample
 import app.coshell.accounts.list.AccountsActions
 import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.accountsEmptySample
@@ -16,6 +19,9 @@ import app.coshell.accounts.list.accountsStressSample
 import app.coshell.budgets.list.BudgetsActions
 import app.coshell.budgets.list.BudgetsScreen
 import app.coshell.budgets.list.budgetsStressSample
+import app.coshell.categories.edit.CategoryEditActions
+import app.coshell.categories.edit.CategoryEditScreen
+import app.coshell.categories.edit.categoryEditStressSample
 import app.coshell.categories.list.CategoriesActions
 import app.coshell.categories.list.CategoriesScreen
 import app.coshell.categories.list.categoriesStressSample
@@ -23,9 +29,16 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.home.homeStressSample
+import app.coshell.recurring.list.RecurringListActions
+import app.coshell.recurring.list.RecurringListScreen
+import app.coshell.recurring.list.recurringListStressSample
 import app.coshell.reports.ReportsActions
 import app.coshell.reports.ReportsScreen
 import app.coshell.reports.reportsStressSample
+import app.coshell.transactions.edit.TransactionEditActions
+import app.coshell.transactions.edit.TransactionEditScreen
+import app.coshell.transactions.edit.entrySheetStressSample
+import app.coshell.transactions.edit.paymentSheetStressSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -80,6 +93,40 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `reports stress narrow dark`() = shot("reports_stress_narrow_dark", dark = true, fontScale = 1.3f) {
         ReportsScreen(reportsStressSample, ReportsActions())
+    }
+
+    @Test fun `account edit stress light`() = shot("account_edit_stress_light") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `account edit stress narrow dark`() = shot("account_edit_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        AccountEditScreen(accountEditStressSample, AccountEditActions())
+    }
+
+    @Test fun `category edit stress light`() = shot("category_edit_stress_light") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `category edit stress narrow dark`() = shot("category_edit_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        CategoryEditScreen(categoryEditStressSample, CategoryEditActions())
+    }
+
+    @Test fun `entry sheet stress light`() = shot("entry_sheet_stress_light") { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `entry sheet stress narrow dark`() = shot("entry_sheet_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        TransactionEditScreen(entrySheetStressSample, TransactionEditActions())
+    }
+
+    @Test fun `recurring stress light`() = shot("recurring_stress_light") { RecurringListScreen(recurringListStressSample, RecurringListActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `recurring stress narrow dark`() = shot("recurring_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        // Without the paused card (it is in the light shot) so the rows fit the narrow frame.
+        RecurringListScreen(recurringListStressSample.copy(paused = emptyList()), RecurringListActions())
+    }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `payment sheet stress narrow dark`() = shot("recurring_post_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        TransactionEditScreen(paymentSheetStressSample, TransactionEditActions())
     }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {

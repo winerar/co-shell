@@ -4,10 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
@@ -18,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -102,21 +107,43 @@ fun CoShellConfirmCard(
                     modifier = Modifier.padding(top = Spacing.s),
                 )
             }
-            Row(Modifier.fillMaxWidth().padding(top = Spacing.l + Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s + Spacing.xxs)) {
-                dismissLabel?.let { label ->
-                    CoShellOutlinedButton(onClick = onDismissClick, modifier = Modifier.weight(1f).height(Sizes.button)) { Text(label) }
+            // Side by side while each button is wide enough for its words; on a narrow screen or with a big font —
+            // one under the other (the main action first), so no label breaks into letters.
+            BoxWithConstraints(Modifier.fillMaxWidth().padding(top = Spacing.l + Spacing.xs)) {
+                val gap = Spacing.s + Spacing.xxs
+                val stacked = dismissLabel != null &&
+                    (maxWidth - gap) / 2 < BUTTON_MIN_WIDTH * LocalDensity.current.fontScale.coerceAtLeast(1f)
+                val confirm: @Composable (Modifier) -> Unit = { m ->
+                    CoShellButton(
+                        onClick = onConfirm,
+                        tactile = Tactile.Primary,
+                        colors = if (destructive) {
+                            ButtonDefaults.buttonColors(containerColor = colors.errorContainer, contentColor = colors.onErrorContainer)
+                        } else {
+                            coShellButtonColors()
+                        },
+                        modifier = m,
+                    ) { Text(confirmLabel) }
                 }
-                CoShellButton(
-                    onClick = onConfirm,
-                    tactile = Tactile.Primary,
-                    colors = if (destructive) {
-                        ButtonDefaults.buttonColors(containerColor = colors.errorContainer, contentColor = colors.onErrorContainer)
-                    } else {
-                        coShellButtonColors()
-                    },
-                    modifier = Modifier.weight(1f).height(Sizes.button),
-                ) { Text(confirmLabel) }
+                val dismiss: @Composable (Modifier) -> Unit = { m ->
+                    dismissLabel?.let { label -> CoShellOutlinedButton(onClick = onDismissClick, modifier = m) { Text(label) } }
+                }
+                if (stacked) {
+                    Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+                        confirm(Modifier.fillMaxWidth().heightIn(min = Sizes.button))
+                        dismiss(Modifier.fillMaxWidth().heightIn(min = Sizes.button))
+                    }
+                } else {
+                    // Equal height of both buttons, growing with a long label instead of cutting it.
+                    Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(gap)) {
+                        dismiss(Modifier.weight(1f).fillMaxHeight().heightIn(min = Sizes.button))
+                        confirm(Modifier.weight(1f).fillMaxHeight().heightIn(min = Sizes.button))
+                    }
+                }
             }
         }
     }
 }
+
+/** Each of two dialog buttons needs at least this (× the font scale) to keep its words whole. */
+private val BUTTON_MIN_WIDTH = 140.dp

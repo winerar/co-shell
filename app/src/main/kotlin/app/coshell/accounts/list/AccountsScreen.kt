@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -128,7 +129,7 @@ private fun Header(state: AccountsUiState, actions: AccountsActions, grouping: G
         state.total?.let { total ->
             Column {
                 Text(stringResource(R.string.accounts_total), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                AmountText(total, style = AmountTitleStyle)
+                AmountText(total, style = AmountTitleStyle, minFontSize = 14.sp)  // shrinks, never cut (#431)
             }
         }
         if (grouping.visible) {

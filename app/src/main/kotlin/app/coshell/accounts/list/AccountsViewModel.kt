@@ -91,7 +91,7 @@ class AccountsViewModel @Inject constructor(
             } else {
                 conversion.book.balanceTotals(sums, listOf(conversion.main), conversion.today).first()
                     .takeIf { it.missing.isEmpty() }
-                    ?.let { "≈ " + moneyFormat.format(it.sum) }
+                    ?.let { "≈" + MoneyFormat.NBSP + moneyFormat.format(it.sum) } // «≈» never wraps away from the amount (#431)
             }
         }
         val toRow = { item: AccountWithBalance -> toRow(item, others, conversion?.main, convert) }

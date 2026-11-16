@@ -1,14 +1,10 @@
 package app.coshell.reports.review.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import app.coshell.core.designsystem.components.CoShellSegmentBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -75,10 +71,6 @@ internal fun LimitsTally(limits: Limits, modifier: Modifier = Modifier) {
         }
         val kept = bulletColor(BulletTone.NORMAL)
         val danger = bulletColor(BulletTone.DANGER)
-        Row(Modifier.fillMaxWidth().padding(top = Spacing.s), horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-            repeat(limits.total) { index ->
-                Box(Modifier.weight(1f).height(Spacing.s).background(if (index < limits.within) kept else danger, RoundedCornerShape(Spacing.xs)))
-            }
-        }
+        CoShellSegmentBar(limits.total, limits.within, kept, danger, Modifier.padding(top = Spacing.s))
     }
 }

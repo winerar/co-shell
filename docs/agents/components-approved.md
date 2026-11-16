@@ -16,5 +16,5 @@
   пуст с 2026-11-15 — не пополнять. Предложения — в других модулях (`mockup_comp_*.py`), в `mockup_catalog*` — только после «ок».
 - `ComponentRuleTest` (`app`): в экранах нельзя Material-виджеты (кроме `Text`, `Icon`, `MaterialTheme`, `Scaffold`, состояния
   снекбара), рисование (`background`, `border`, `clip`, формы, `Canvas`, `Brush`, `Color(0x…)`) и свои стили текста
-  (`fontSize`, `fontWeight`, `TextStyle`). Старый код — `app/src/test/resources/component-rule-baseline.txt`: новых нарушений
+  (`fontSize`, `fontWeight`, `TextStyle`). База нарушений пуста с 2026-11-16 (`app/src/test/resources/component-rule-baseline.txt`, только заголовок): новых нарушений
   нельзя, исправленное — убрать из файла (тест напечатает новый). Не ослаблять правило и не дописывать базу — это обход.

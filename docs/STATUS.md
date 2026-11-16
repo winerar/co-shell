@@ -14,9 +14,11 @@
    (уведомление «≈ по курсу» + «Ввести сумму», шторка с суммой по курсу или пустая с подсказкой). Не проверено на телефоне.
    Фон и уведомления — `app/.../recurring/notify/` (PR #402, #405). Остальной редактор шаблона — ещё старая форма (доработка — #290, после 1.0).
 2. ~~#334~~ сделано (2026-11-16): ввод закрыт при схеме синка партнёра выше своей; на телефоне сработает только после подъёма `SyncPayload.SCHEMA` (покрыто тестами).
-3. **#367** код под утверждённый набор «Капсула»: #385 контраст (решено опросом), #408 одна кнопка «Добавить» (макет), 10 новых компонентов, экраны без нарушений
-   (`ComponentRuleTest`, база 8; `CoShellAccountCard`, `CoShellAvatarStack`, `CoShellTimelineDot`, `scrollHairline` — в `core:designsystem`; счета → чипы выбора; сумма → `CoShellAmountSlot`; ленты цвета и иконок → `CoShellColorStrip`/`CoShellIconStrip` (`Strips.kt`); шапки → `CoShellTopBar` + `TopBarScroll` (`core:designsystem/components/TopBar.kt`); круги → `IconBadge`/`CoShellDot`; `HorizontalDivider` → `CoShellDivider` и стили текста (`Type.kt`: `*StrongStyle`, `Rate*Style`) сделаны 2026-11-16). Хвосты базы: `TopAppBarDefaults` (Screen/SelectionTopBar), `drawWithContent`
-   (`ScrollHairline`) — перенести в `core:designsystem`; **опрос «чем заменить самодельное» (6 мест, база 41) открыт** https://claude.ai/artifact/X9XFJ9EBAxWH5XnQZsJLsn (`docs/design/poll-gap-367.json`, доски `Gap1…6` — `scripts/agent/mockup_comp_gap_367.py`; после ответа — победители на доску «Компоненты», доски `Gap*` с холста убрать); `FeedbackStatusChip` — на общий компонент метки.
+3. **#367** — код под утверждённый набор «Капсула» **сделан** (2026-11-16): `ComponentRuleTest` без базы нарушений (файл `component-rule-baseline.txt` пуст — не пополнять).
+   Опрос «чем заменить самодельное» (`docs/design/poll-gap-367.json`): везде А. Новое в `core:designsystem`: `CoShellTopBar`/`TopBarScroll`, `CoShellLoading`, `CoShellDropdownMenu`,
+   `CoShellDatePicker`/`CoShellDateRangePicker` (обёртки над Material), `CoShellColorStrip`/`CoShellIconStrip` (+ ячейки), `CoShellAmountSlot`, `CoShellAccountCard`, `CoShellAvatarStack`,
+   `CoShellTimelineDot`, `CoShellSegmentBar`, `CoShellDayHeader`, `CoShellStepper`, `scrollHairline`; метки — `CoShellStatusChip` (+ `StatusTone.Manual`). Осталось: закрыть #367 (проверка на телефоне, #381–#382),
+   свой календарь с доски (полоса периода) вместо обёртки — по желанию.
 4. **#374 проверка перед 1.0** (`docs/agents/release-checklist.md`): #378 стресс-скриншоты → #379 en/es, шрифт, 320 dp →
    #380 ATF → #381 палитры → #382 сверка «экран → доска → эталон». Сделано: #376, #377, #383.
    #378 в работе: стресс-эталоны 5 экранов (`ScreensStressScreenshotTest`); #431–#433 починены (суммы не обрезаются:

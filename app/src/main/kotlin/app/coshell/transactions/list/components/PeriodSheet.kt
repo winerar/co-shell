@@ -1,24 +1,18 @@
 package app.coshell.transactions.list.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,8 +21,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
-import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.tokens.PillShape
+import app.coshell.core.designsystem.components.CoShellStepper
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.search.PeriodRange
 import app.coshell.core.domain.search.PeriodRange.Preset
@@ -129,21 +122,5 @@ private fun stepperLabel(period: PeriodRange, today: LocalDate, locale: java.uti
 
 @Composable
 private fun Stepper(label: String, onEarlier: () -> Unit, onLater: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth().height(Sizes.rowDenseMinHeight).background(MaterialTheme.colorScheme.surfaceContainer, PillShape).padding(horizontal = Spacing.xs),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        CoShellIconButton(onClick = onEarlier) {
-            Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.filter_period_earlier), Modifier.rotate(180f))
-        }
-        Text(
-            label,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Center,
-        )
-        CoShellIconButton(onClick = onLater) {
-            Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.filter_period_later))
-        }
-    }
+    CoShellStepper(label, onEarlier, onLater, stringResource(R.string.filter_period_earlier), stringResource(R.string.filter_period_later))
 }

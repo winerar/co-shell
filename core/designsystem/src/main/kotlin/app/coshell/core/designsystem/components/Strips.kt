@@ -1,6 +1,12 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.category.CategoryBadge
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -173,5 +179,19 @@ fun CoShellBankDot(name: String, color: Long, selected: Boolean, size: Dp = Size
             .border(Sizes.selectionRing, if (selected) categoryColor(color) else Color.Transparent, CircleShape),
     ) {
         AccountBadge(name, color, size = size)
+    }
+}
+
+/** A category in a grid of the entry sheet: its badge; the chosen one in a ring of its own colour (the ink without one). */
+@Composable
+fun CoShellCategoryChoice(icon: String?, color: Long?, selected: Boolean, size: Dp = Sizes.badgeSmall) {
+    val target = when {
+        !selected -> Color.Transparent
+        color != null -> categoryColor(color)
+        else -> accentInk()
+    }
+    val ring by animateColorAsState(target, Motion.effects(), label = "categoryRing")
+    Box(Modifier.selectionPop(selected).border(Sizes.selectionRing, ring, CircleShape).padding(Spacing.xxs)) {
+        CategoryBadge(icon, color, size = size)
     }
 }

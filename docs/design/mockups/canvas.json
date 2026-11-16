@@ -1152,54 +1152,6 @@
       "title": "Единый стиль · поля и отметки",
       "page": "components"
     },
-    "Gap1.dc.html": {
-      "x": 0,
-      "y": 10428,
-      "w": 640,
-      "h": 1400,
-      "title": "Предложение · код валюты",
-      "page": "components"
-    },
-    "Gap2.dc.html": {
-      "x": 800,
-      "y": 10428,
-      "w": 640,
-      "h": 870,
-      "title": "Предложение · ручной курс",
-      "page": "components"
-    },
-    "Gap3.dc.html": {
-      "x": 0,
-      "y": 11598,
-      "w": 640,
-      "h": 750,
-      "title": "Предложение · пилюли режима",
-      "page": "components"
-    },
-    "Gap4.dc.html": {
-      "x": 800,
-      "y": 11598,
-      "w": 640,
-      "h": 800,
-      "title": "Предложение · цвет и иконка",
-      "page": "components"
-    },
-    "Gap5.dc.html": {
-      "x": 0,
-      "y": 12698,
-      "w": 640,
-      "h": 720,
-      "title": "Предложение · сумма",
-      "page": "components"
-    },
-    "Gap6.dc.html": {
-      "x": 800,
-      "y": 12698,
-      "w": 640,
-      "h": 630,
-      "title": "Предложение · выбор счёта",
-      "page": "components"
-    },
     "Ideas.dc.html": {
       "x": 0,
       "y": 0,
@@ -2287,12 +2239,6 @@
     "Style6.dc.html",
     "Style7.dc.html",
     "Style8.dc.html",
-    "Gap1.dc.html",
-    "Gap2.dc.html",
-    "Gap3.dc.html",
-    "Gap4.dc.html",
-    "Gap5.dc.html",
-    "Gap6.dc.html",
     "Ideas.dc.html",
     "Fb439CatA.dc.html",
     "Fb439CatB.dc.html",
@@ -2677,15 +2623,6 @@
       "text": "Единый стиль (утверждён): одно правило на семью",
       "x": 0,
       "y": 6300,
-      "maxW": 2400,
-      "w": 240
-    },
-    "gap": {
-      "kind": "title1",
-      "page": "components",
-      "text": "На утверждении (#367): чем заменить самодельное",
-      "x": 0,
-      "y": 10178,
       "maxW": 2400,
       "w": 240
     },
@@ -3461,7 +3398,6 @@
     "s16",
     "v3",
     "unify",
-    "gap",
     "fb439",
     "fbS439",
     "fb408",

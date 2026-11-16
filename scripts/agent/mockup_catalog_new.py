@@ -132,7 +132,7 @@ def strips(v):
                         svg('check', '#0B0F0A', 20, 2.6) if c == '#00B1EA' else '') for c in ['#F26E22', '#00B1EA', '#EC0000', '#91E668', '#B266FF'])
     return col('<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (icons, more('Все 52')),
                '<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (colors, more('+19')),
-               cap('CoShellIconStrip · CoShellColorStrip; ячейки — CoShellIconCell, CoShellColorDot, CoShellNoColorDot, банк — CoShellBankDot; сколько кругов — по ширине'))
+               cap('CoShellIconStrip · CoShellColorStrip; ячейки — CoShellIconCell, CoShellColorDot, CoShellNoColorDot, банк — CoShellBankDot, категория — CoShellCategoryChoice; сколько кругов — по ширине'))
 
 
 def acc_card(v, name, ini, color, ink, kind, bal, cur):

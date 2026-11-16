@@ -36,7 +36,6 @@ import mockup_screens_settings as set_screens  # noqa: E402
 import mockup_catalog as catalog  # noqa: E402
 import mockup_catalog_set as comp_set  # noqa: E402
 import mockup_catalog_style as comp_style  # noqa: E402
-import mockup_comp_gap_367 as comp_gap  # noqa: E402  (#367 proposals, not approved)
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
@@ -108,9 +107,6 @@ def main():
     for name, fn in comp_style.BOARDS:  # «Единый стиль» (poll 2026-11-15, approved), under the approved set
         write(name, fn())
         gen[name] = (dict((n, t) for n, t, _ in comp_style.FAMILIES)[name], False)
-    for name, fn in comp_gap.BOARDS:  # #367 proposals for the owner's poll — remove after the answer
-        write(name, fn())
-        gen[name] = (dict((n, t) for n, t, _ in comp_gap.FAMILIES)[name], False)
     for name, fn, title in [('ThemeSwitch', special.theme_switch, 'Тема макетов'), ('ThemeSwitchFlows', special.theme_switch, 'Тема макетов'),
                             ('ThemeSwitchComponents', special.theme_switch, 'Тема макетов'), ('Settings', special.settings, 'Настройки: тема и палитра перекрашивают холст'),
                             ('Ideas', special.ideas, 'Предложения по улучшению')]:
@@ -173,12 +169,6 @@ def main():
         if i % 2:
             y += max(h, prev_h) + 300
         prev_h = h
-    y += prev_h + 400 if len(comp_style.BOARDS) % 2 else 100
-    notes['gap'] = {'kind': 'title1', 'page': 'components', 'text': 'На утверждении (#367): чем заменить самодельное', 'x': 0, 'y': y - 250, 'maxW': 2400, 'w': 240}
-    for i, (name, _) in enumerate(comp_gap.BOARDS):
-        add(name, (i % 2) * (comp_gap.W + 160), y, comp_gap.W, comp_gap.HEIGHTS[name], 'components')
-        if i % 2:
-            y += comp_gap.HEIGHTS[name] + 300
     add('Ideas', 0, 0, 1280, 1500, 'ideas')
     for r, (n, title, text) in enumerate(fb_screens.FEEDBACK):  # picked feedback variants
         y = 1900 + r * PITCH_Y

@@ -1,31 +1,24 @@
 package app.coshell.transactions.edit.components
 
-import androidx.compose.animation.animateColorAsState
+import app.coshell.core.designsystem.components.CoShellCategoryChoice
 import app.coshell.core.designsystem.theme.LabelMediumBoldStyle
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import app.coshell.core.designsystem.category.CategoryBadge
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.dashedBorder
 import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.accentInk
-import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
@@ -63,16 +56,8 @@ internal fun CategoryGrid(places: List<GridPlace>, selectedId: String?, onSelect
 
 @Composable
 private fun Cell(item: CategoryItem, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
-    val target = when {
-        !selected -> Color.Transparent
-        item.color != null -> categoryColor(item.color)
-        else -> accentInk()
-    }
-    val ring by animateColorAsState(target, Motion.effects(), label = "categoryRing")
     CellColumn(modifier, onClick) {
-        Box(Modifier.selectionPop(selected).border(Sizes.selectionRing, ring, CircleShape).padding(Spacing.xxs)) {
-            CategoryBadge(item.icon, item.color, size = Sizes.badgeSmall)
-        }
+        CoShellCategoryChoice(item.icon, item.color, selected)
         Label(item.name, selected)
     }
 }

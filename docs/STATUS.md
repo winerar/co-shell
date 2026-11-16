@@ -16,7 +16,7 @@
 2. ~~#334~~ сделано (2026-11-16): ввод закрыт при схеме синка партнёра выше своей; на телефоне сработает только после подъёма `SyncPayload.SCHEMA` (покрыто тестами).
 3. **#367** код под утверждённый набор «Капсула»: #385 контраст (решено опросом), #408 одна кнопка «Добавить» (макет), 10 новых компонентов, экраны без нарушений
    (`ComponentRuleTest`, база 41; шапки → `CoShellTopBar` + `TopBarScroll` (`core:designsystem/components/TopBar.kt`); круги → `IconBadge`/`CoShellDot`; `HorizontalDivider` → `CoShellDivider` и стили текста (`Type.kt`: `*StrongStyle`, `Rate*Style`) сделаны 2026-11-16). Хвосты базы: `TopAppBarDefaults` (Screen/SelectionTopBar), `drawWithContent`
-   (`ScrollHairline`) — перенести в `core:designsystem`; `FeedbackStatusChip` — на общий компонент метки.
+   (`ScrollHairline`) — перенести в `core:designsystem`; **опрос «чем заменить самодельное» (6 мест, база 41) открыт** https://claude.ai/artifact/X9XFJ9EBAxWH5XnQZsJLsn (`docs/design/poll-gap-367.json`, доски `Gap1…6` — `scripts/agent/mockup_comp_gap_367.py`; после ответа — победители на доску «Компоненты», доски `Gap*` с холста убрать); `FeedbackStatusChip` — на общий компонент метки.
 4. **#374 проверка перед 1.0** (`docs/agents/release-checklist.md`): #378 стресс-скриншоты → #379 en/es, шрифт, 320 dp →
    #380 ATF → #381 палитры → #382 сверка «экран → доска → эталон». Сделано: #376, #377, #383.
    #378 в работе: стресс-эталоны 5 экранов (`ScreensStressScreenshotTest`); #431–#433 починены (суммы не обрезаются:

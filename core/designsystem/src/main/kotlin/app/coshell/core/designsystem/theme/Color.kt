@@ -73,14 +73,14 @@ internal fun darkNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
 }
 
 /**
- * Light theme (#442, «Б · Два цвета»): the page is plain white (owner: colour only the components), cards ([Neutrals.surface])
- * a wash of the primary's deep shade; lines, headings and selected pills are that shade, blocks and fields take the accent;
- * text is near-black.
+ * Light theme (#442): the page is plain white (owner: colour only the components), cards ([Neutrals.surface]) a wash of the
+ * primary itself (no deep shade of it — the owner refused an extra dark accent); lines are near-black of the text tint,
+ * blocks and fields take the accent. A fill that melts into its background gets a thin edge (`fillEdge`).
  */
 internal fun lightNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
     val page = Color.White
-    val ink = deepen(primary, page, 5.4f)
-    val surface = lerp(page, ink, 0.05f)
+    val text = lerp(Color.Black, bg, 0.1f)
+    val surface = lerp(page, primary, 0.12f)
     return Neutrals(
         lowest = Color.White,
         background = page,
@@ -90,11 +90,11 @@ internal fun lightNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
         high = lerp(page, accent, 0.14f),
         highest = lerp(page, accent, 0.18f),
         bright = Color.White,
-        line = mixToContrast(page, ink, surface, 4.2f),
-        lineSoft = mixToContrast(page, ink, surface, 3.1f),
-        text = lerp(Color.Black, bg, 0.1f),
+        line = mixToContrast(page, text, surface, 4.2f),
+        lineSoft = mixToContrast(page, text, surface, 3.1f),
+        text = text,
         textMuted = lerp(Color.Black, bg, 0.36f),
-        inkPrimary = ink,
+        inkPrimary = text,
     )
 }
 

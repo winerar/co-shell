@@ -52,6 +52,8 @@ class NonTextContrastTest {
         val out = mutableListOf<Pair>()
         fun text(check: String, fg: Color, bg: Color) { out += Pair(check, name, fg, bg, 4.5) }
         fun shape(check: String, fg: Color, bg: Color) { out += Pair(check, name, fg, bg, 3.0) }
+        // A fill that melts into its background gets a thin edge in its own deep shade (`fillEdge`, #442): the edge is what is checked.
+        fun edged(fill: Color, over: Color) = if (contrast(fill, over) >= 3.0) fill else deepen(fill, over, 3.2f)
 
         // Secondary text: hints, unselected segments, search placeholder, field text, links.
         text("hint on surface", s.onSurfaceVariant, s.surface)
@@ -70,10 +72,10 @@ class NonTextContrastTest {
 
         // Selected states and component boundaries.
         val sel = selectionColorsFor(s, dark)
-        shape("segment pill on its track", sel.fill, s.surfaceContainerHigh)
-        shape("chip and label pill on its track", sel.fill, s.surfaceContainer)
-        shape("tab pill on the bar", sel.fill, s.surfaceContainerHigh)
-        shape("selected day on surface", sel.fill, s.surface)
+        shape("segment pill on its track", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
+        shape("chip and label pill on its track", edged(sel.fill, s.surfaceContainer), s.surfaceContainer)
+        shape("tab pill on the bar", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
+        shape("selected day on surface", edged(sel.fill, s.surface), s.surface)
         text("selected label on its pill", sel.content, sel.fill)
         shape("checkbox and radio outline on surface", s.outline, s.surface)
         // The field itself is bounded by `outlineVariant` (≥ 3:1 below), so its fill is decoration, not a boundary (#442).

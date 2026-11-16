@@ -1,12 +1,13 @@
 package app.coshell.accounts.list.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellExpandIcon
@@ -48,14 +51,29 @@ internal fun AccountGroup(
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             val title = group.titleRes?.let { stringResource(it) } ?: group.titleText.orEmpty()
-            Text(
-                title.uppercase(),
-                style = MaterialTheme.typography.labelLarge,
-                color = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else accentInk(),
-            )
-            Text(group.rows.size.toString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Spacer(Modifier.weight(1f))
-            group.total?.let { Text(it, style = RateTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            // Title and total share the width: a long title ends in «…», a huge total shrinks; neither squeezes the other out (#431).
+            Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                Text(
+                    title.uppercase(),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else accentInk(),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+                Text(group.rows.size.toString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            group.total?.let {
+                Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                    Text(
+                        it,
+                        style = RateTextStyle,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        autoSize = TextAutoSize.StepBased(minFontSize = MinTotalSize, maxFontSize = RateTextStyle.fontSize),
+                    )
+                }
+            }
             CoShellExpandIcon(group.expanded, contentDescription = null)
         }
         CoShellExpandable(group.expanded) {
@@ -68,3 +86,5 @@ internal fun AccountGroup(
         }
     }
 }
+
+private val MinTotalSize = 9.sp

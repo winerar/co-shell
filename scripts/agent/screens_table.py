@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Table «screen → board → reference» (#382, release-checklist §5): writes docs/design/screens-table.md.
+
+The mapping below is curated by hand (board = file in docs/design/mockups/, reference = base name of PNGs in
+app/src/test/screenshots/ as `<base>_light.png` / `<base>_dark.png`). Files are checked on disk, so the table
+cannot lie. `--check` fails when the file is stale or a named board does not exist.
+"""
+import glob, os, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BOARDS = os.path.join(ROOT, 'docs/design/mockups')
+SHOTS = os.path.join(ROOT, 'app/src/test/screenshots')
+OUT = os.path.join(ROOT, 'docs/design/screens-table.md')
+
+# (screen, board or None, reference base or None)
+ROWS = [
+    ('Обзор', 'Home', 'home'), ('Обзор: первый запуск', 'HomeEmpty', 'home_empty'),
+    ('Обзор: нет курса', 'HomeAttention', 'home_attention'), ('Обзор: бюджеты', 'BudHome', 'home_budget'),
+    ('Обзор: «Скоро»', 'Rec143HomeA', 'recurring_home'), ('Обзор: итог месяца', 'Mon236A', 'home_review'),
+    ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),
+    ('Операции', 'Operations', 'transactions'), ('Операции: прокрутка', 'OpsScrolled', 'transactions_scrolled'),
+    ('Шторка ввода', 'Main', 'entry_sheet'), ('Шторка: возврат', 'Fb208C', 'entry_refund'),
+    ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),
+    ('Счета', 'Accounts', 'accounts'), ('Счета: пусто', 'AccountsEmpty', 'accounts_empty'),
+    ('Редактор счёта', 'AccountEdit', 'account_edit'),
+    ('Категории', 'Categories', 'categories'), ('Редактор категории', 'CategoryEdit', 'category_edit'),
+    ('Курсы', 'Rates', 'rates'), ('Валюты отчётов', 'ReportCurrencies', 'report_currencies'),
+    ('Семья', 'Family', 'family'), ('Внешний вид', 'Settings', 'appearance'),
+    ('Резервная копия', 'Backup', 'backup'), ('Копия: автоматическая', 'BackupAuto', 'backup_auto'),
+    ('Ещё', 'More', 'more'), ('Обновление', 'Update', 'update_available'),
+    ('Бюджеты', 'BudA', 'budgets'), ('Бюджет: лимит', 'BudDetail', None), ('Бюджет: правка', 'BudEdit', None),
+    ('Отчёты', 'RepA', 'reports'), ('Отчёты: все категории', 'RepAll', 'report_categories'),
+    ('Отчёты: категория', 'RepDrill', 'report_category'), ('Отчёты: тренд', 'Tr238DrillA', 'report_category_trend'),
+    ('Отчёты: картина', 'Rp189IeA', 'reports_picture'), ('Капитал по месяцам', 'Rp189NwDrill', 'capital_month'),
+    ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
+    ('Импорт из Wallet', 'ImportStart', None), ('Отзыв', 'Feedback', 'feedback'), ('Стереть всё', 'Wipe', 'wipe'),
+]
+
+
+# Review 2026-11-16 (#382): board (dark, 390 dp, rendered by `agent.sh render`) next to the reference, one by one.
+FINDINGS = [
+    'Совпадают с досками: «Итог месяца» (+ лимиты), «Отчёты», «Все категории», «Категория», «Тренд», «Капитал по месяцам», «Валюты отчётов», «Обновление», «Семья», шторка ввода, «Провести».',
+    '«Обзор» и «Счета» без данных: на доске карточка (баланс) или значок над текстом и кнопка «+ Добавить счёт»; в коде — только текст и кнопка.',
+    '«Счета»: на доске «+» в шапке и вкладка «Чьи»; в коде круглая «+» внизу справа (`CoShellAddFab`, `AddButtonRuleTest`) — доска старше правила.',
+    '«Операции»: фильтры на доске — чипы «Расходы ✕ / Счёт / Ноябрь»; в коде «Тип / Категория / Период / Счёт» (доска старше Fb141A).',
+    '«Редактор счёта», «Редактор категории»: код — форма без прокрутки (#290, `Fb290*`), доски `AccountEdit`/`CategoryEdit` — прежняя форма.',
+    '«Курсы»: в коде сверху конвертер «Сколько это», на доске его нет; «Ещё», «Резервная копия», «Бюджеты», «Регулярные платежи» — доски старше кода (плитки вместо строк, кольцо «дней до копии» и т. п.).',
+    '«Внешний вид» (код) сопоставлен с доской `Settings` — это прежний экран; актуальные — `Fb154*`, `Fb271*`, `Fb385*`.',
+    'Нет эталона: `BudDetail`, `BudEdit`, `ImportStart` (нужны образцы данных).',
+    'Интерактивные доски (`Wipe`, `Feedback`) в статике показывают первое состояние; эталон — состояние после тапа.',
+]
+
+
+def build():
+    lines, bad = [], []
+    gaps = []
+    for screen, board, ref in ROWS:
+        if board and not os.path.exists(f'{BOARDS}/{board}.dc.html'):
+            bad.append(f'{screen}: нет доски {board}')
+        has = {t: bool(ref) and os.path.exists(f'{SHOTS}/{ref}_{t}.png') for t in ('light', 'dark')}
+        mark = lambda ok: '✓' if ok else '—'
+        lines.append(f'| {screen} | {board or "—"} | {ref or "—"} | {mark(has["light"])} | {mark(has["dark"])} |')
+        if not (has['light'] and has['dark']):
+            gaps.append(f'{screen} ({ref or "нет эталона"}: ' + ', '.join(t for t, ok in has.items() if not ok) + ')')
+    head = ['# Экран → доска → эталон (#382)', '',
+            'Сгенерировано `scripts/agent/screens_table.py` (не править руками). Эталон — `app/src/test/screenshots/<имя>_{light,dark}.png`.', '',
+            '| Экран | Доска | Эталон | светлая | тёмная |', '|---|---|---|---|---|']
+    tail = ['', '## Без полного набора эталонов', ''] + [f'- {g}' for g in gaps]
+    tail += ['', '## Сверка 1 в 1 (2026-11-16)', ''] + [f'- {f}' for f in FINDINGS]
+    return '\n'.join(head + lines + tail) + '\n', bad, gaps
+
+
+if __name__ == '__main__':
+    text, bad, gaps = build()
+    if '--check' in sys.argv:
+        stale = not os.path.exists(OUT) or open(OUT).read() != text
+        for b in bad: print('✗', b)
+        if stale: print('✗ docs/design/screens-table.md устарел — scripts/agent/screens_table.py')
+        sys.exit(1 if bad or stale else 0)
+    open(OUT, 'w').write(text)
+    print(f'{len(ROWS)} rows, {len(gaps)} with gaps')
+    for b in bad: print('✗', b)

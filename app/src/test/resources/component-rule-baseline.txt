@@ -3,10 +3,6 @@ app/coshell/accounts/edit/AccountEditScreen.kt	draw CircleShape	1
 app/coshell/accounts/edit/components/AccountColorSection.kt	draw CircleShape	2
 app/coshell/accounts/edit/components/AccountColorSection.kt	draw border	1
 app/coshell/accounts/edit/components/AccountPreviewCard.kt	draw background	1
-app/coshell/accounts/list/components/AccountGroup.kt	material3 HorizontalDivider	1
-app/coshell/budgets/detail/BudgetDetailScreen.kt	material3 HorizontalDivider	1
-app/coshell/budgets/detail/components/FolderCategories.kt	material3 HorizontalDivider	1
-app/coshell/budgets/list/BudgetsScreen.kt	material3 HorizontalDivider	1
 app/coshell/budgets/list/components/EnvelopeRow.kt	type fontSize	1
 app/coshell/budgets/list/components/MonthStartSheet.kt	draw background	1
 app/coshell/categories/edit/CategoryEditScreen.kt	draw CircleShape	1
@@ -24,7 +20,6 @@ app/coshell/feedback/FeedbackScreen.kt	draw background	1
 app/coshell/feedback/components/FeedbackStatusChip.kt	draw background	1
 app/coshell/feedback/components/SendButton.kt	material3 ButtonDefaults	1
 app/coshell/feedback/detail/FeedbackTimeline.kt	draw Canvas	1
-app/coshell/home/components/HotBudgets.kt	material3 HorizontalDivider	1
 app/coshell/home/components/MonthReviewCard.kt	type fontSize	1
 app/coshell/home/components/SyncBanner.kt	material3 ButtonDefaults	1
 app/coshell/home/components/SyncBanner.kt	type fontWeight	1
@@ -34,14 +29,10 @@ app/coshell/rates/list/components/CurrentRateRow.kt	type fontSize	2
 app/coshell/rates/list/components/CurrentRateRow.kt	type fontWeight	2
 app/coshell/rates/list/components/ManualRateRow.kt	draw RoundedCornerShape	1
 app/coshell/rates/list/components/ManualRateRow.kt	draw background	1
-app/coshell/reports/category/ReportCategoryScreen.kt	material3 HorizontalDivider	1
 app/coshell/reports/components/ReportPeriodSheet.kt	material3 FilterChipDefaults	1
-app/coshell/reports/review/MonthLimitsScreen.kt	material3 HorizontalDivider	1
-app/coshell/reports/review/components/ChangesCard.kt	material3 HorizontalDivider	1
 app/coshell/reports/review/components/ChangesCard.kt	type fontSize	1
 app/coshell/reports/review/components/LimitsCard.kt	draw RoundedCornerShape	1
 app/coshell/reports/review/components/LimitsCard.kt	draw background	1
-app/coshell/reports/review/components/LimitsCard.kt	material3 HorizontalDivider	1
 app/coshell/reports/review/components/ReviewHero.kt	type fontSize	1
 app/coshell/templates/components/TemplateChip.kt	draw background	1
 app/coshell/templates/components/TemplateChip.kt	draw border	1
@@ -95,7 +86,6 @@ app/coshell/ui/top/TabTopBar.kt	material3 TopAppBar	1
 app/coshell/ui/top/TabTopBar.kt	material3 TopAppBarDefaults	1
 app/coshell/ui/top/TabTopBar.kt	material3 TopAppBarScrollBehavior	1
 app/coshell/ui/top/TabTopBar.kt	type fontWeight	1
-app/coshell/update/components/VersionCards.kt	material3 HorizontalDivider	1
 app/coshell/update/past/PastReleaseCard.kt	draw CircleShape	1
 app/coshell/update/past/PastReleaseCard.kt	draw background	1
 app/coshell/update/past/PastReleaseCard.kt	type fontWeight	1

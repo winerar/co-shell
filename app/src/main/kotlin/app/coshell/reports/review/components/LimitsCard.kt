@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,11 +39,11 @@ internal fun LimitsCard(limits: Limits, allTitle: String, onAll: () -> Unit, onO
         LimitsTally(limits)
         limits.over.forEach { envelope ->
             key(envelope.categoryId) {
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                CoShellDivider()
                 EnvelopeRow(envelope, onClick = { onOpen(envelope.categoryId) })
             }
         }
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        CoShellDivider()
         Row(
             Modifier.fillMaxWidth().tactileClickable(onClick = onAll).padding(horizontal = Spacing.l, vertical = Spacing.m),
             verticalAlignment = Alignment.CenterVertically,

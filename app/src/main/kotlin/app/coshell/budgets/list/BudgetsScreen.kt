@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -118,7 +118,7 @@ private fun Envelopes(state: BudgetsUiState, actions: BudgetsActions, modifier: 
 }
 
 @Composable
-private fun Divider() = HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+private fun Divider() = CoShellDivider(Modifier.padding(start = Spacing.l))
 
 @Composable
 private fun EmptyBudgets(onNew: () -> Unit) {

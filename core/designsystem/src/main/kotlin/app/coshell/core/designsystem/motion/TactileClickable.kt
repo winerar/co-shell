@@ -7,6 +7,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 
@@ -52,3 +53,7 @@ fun Modifier.tactileToggleable(
     tactile(source, tactile)
         .toggleable(value = value, interactionSource = source, indication = null, role = role, onValueChange = onValueChange)
 }
+
+/** [tactileClickable] for a round control (a colour dot, a small «✕»): [Tactile.Control] pressed on a circle. */
+fun Modifier.tactileCircleClickable(role: Role? = null, enabled: Boolean = true, onClick: () -> Unit): Modifier =
+    tactileClickable(Tactile.Control, CircleShape, enabled, role, onClick)

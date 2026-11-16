@@ -16,10 +16,10 @@ import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 
 /**
- * Meaning of a [CoShellStatusChip]: new or «сегодня», in work or «пропущен», done, closed; [Fresh] — the «новое» mark on
+ * Meaning of a [CoShellStatusChip]: new or «сегодня», in work or «пропущен», done, closed; [Manual] — a mode or hand-made value (a copy, a manual rate: the violet of view modes); [Fresh] — the «новое» mark on
  * a place with something new in this version (board Style2 «Метки», #335), the palette's neon in the dot.
  */
-enum class StatusTone { New, Work, Done, No, Fresh }
+enum class StatusTone { New, Work, Done, No, Fresh, Manual }
 
 /**
  * A status label (board `CompNew` «Точка и статус», #367 А; shape — board Style2): a 22 dp capsule tinted 18 % with
@@ -54,4 +54,5 @@ private fun statusToneColor(tone: StatusTone): Color = when (tone) {
     StatusTone.Done -> LocalStatusPalette.current.success
     StatusTone.No -> MaterialTheme.colorScheme.onSurfaceVariant
     StatusTone.Fresh -> MaterialTheme.colorScheme.primary
+    StatusTone.Manual -> MaterialTheme.colorScheme.secondary
 }

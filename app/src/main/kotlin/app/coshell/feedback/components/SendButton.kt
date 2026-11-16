@@ -1,10 +1,11 @@
 package app.coshell.feedback.components
 
 import androidx.compose.foundation.layout.Spacer
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,8 +20,8 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 internal fun SendButton(enabled: Boolean, onClick: () -> Unit) {
     CoShellButton(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth()) {
-        Icon(painterResource(DesignR.drawable.ic_send), contentDescription = null, Modifier.size(ButtonDefaults.IconSize))
-        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+        Icon(painterResource(DesignR.drawable.ic_send), contentDescription = null, Modifier.size(Sizes.buttonIcon))
+        Spacer(Modifier.width(Spacing.s))
         Text(stringResource(R.string.feedback_send))
     }
 }

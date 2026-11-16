@@ -394,7 +394,7 @@
     <string name="rates_refresh_failed">Couldn\'t load rates. Check your internet</string>
     <string name="rates_manual">Manual rates</string>
     <string name="rates_manual_hint">A manual rate beats the downloaded one and applies from the chosen date until the next manual one</string>
-    <string name="rates_manual_since">manual · since %1$s</string>
+    <string name="rates_since_date">since %1$s</string>
     <string name="rates_manual_add">Add rate</string>
     <string name="rates_manual_title">Manual rate</string>
     <string name="rates_manual_from">Currency</string>

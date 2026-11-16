@@ -411,7 +411,7 @@
     <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет</string>
     <string name="rates_manual">Ручные курсы</string>
     <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного</string>
-    <string name="rates_manual_since">вручную · с %1$s</string>
+    <string name="rates_since_date">с %1$s</string>
     <string name="rates_manual_add">Добавить курс</string>
     <string name="rates_manual_title">Курс вручную</string>
     <string name="rates_manual_from">Валюта</string>

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -88,7 +88,7 @@ private fun Operations(state: BudgetDetailUiState, actions: BudgetDetailActions,
     CoShellCard(modifier.fillMaxWidth()) {
         state.operations.forEachIndexed { index, row ->
             key(row.id) {
-                if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                if (index > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
                 TransactionRow(row, onClick = actions.onTransactionClick)
             }
         }

@@ -1,6 +1,7 @@
 package app.coshell.reports.review.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.AmountReviewStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -38,7 +39,7 @@ internal fun ReviewHero(state: MonthReviewUiState, modifier: Modifier = Modifier
             ) {
                 AmountText(
                     "${state.saved} ${state.currency}",
-                    AmountTitleStyle.copy(fontSize = 32.sp, lineHeight = 40.sp),
+                    AmountReviewStyle,
                     color = savedColor(state.overspent),
                     minFontSize = 20.sp,
                 )

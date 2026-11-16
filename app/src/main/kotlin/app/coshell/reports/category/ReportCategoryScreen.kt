@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -109,7 +109,7 @@ private fun DayPart(day: Day, position: RowGroupPosition, onTransactionClick: (S
     Column(modifier.fillMaxWidth().rowGroupSegment(position)) {
         DayHeader(day, background = Color.Transparent)
         day.rows.forEachIndexed { index, row ->
-            if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+            if (index > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
             TransactionRow(row, onClick = onTransactionClick, background = Color.Transparent)
         }
     }

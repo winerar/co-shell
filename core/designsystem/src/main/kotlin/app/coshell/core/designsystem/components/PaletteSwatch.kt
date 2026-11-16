@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +39,7 @@ import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.theme.ThemeColors
 import app.coshell.core.designsystem.theme.themeColorsFor
 import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -56,7 +58,7 @@ fun CoShellPaletteSwatch(
 ) {
     val dark = LocalDarkTheme.current
     val colors = remember(palette, dark) { themeColorsFor(palette, dark) }
-    val shape = MaterialTheme.shapes.large
+    val shape = TileShape
     val ink = MaterialTheme.colorScheme.onSurface
     val ring by animateColorAsState(if (selected) ink else Color.Transparent, Motion.effects(), label = "ring")
     Column(
@@ -66,7 +68,9 @@ fun CoShellPaletteSwatch(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
-        Box(Modifier.border(Sizes.selectionRing, ring, shape).padding(Spacing.xxs)) {
+        // A border is drawn inside the box: the padding holds the ring's width plus the gap, and the ring's radius grows by the
+        // same amount, so it stays concentric with the tile's corners.
+        Box(Modifier.border(Sizes.selectionRing, ring, RingShape).padding(RingInset)) {
             MiniScreen(colors, shape)
             if (selected) {
                 Box(
@@ -116,6 +120,9 @@ private fun MiniLine(dot: Color, line: Color) {
     }
 }
 
+private val TileShape = RoundedCornerShape(Radii.large)
+private val RingInset = Sizes.selectionRing + Spacing.xxs
+private val RingShape = RoundedCornerShape(Radii.large + RingInset)
 private const val TILE_RATIO = 0.72f
 private val HERO = 36.dp
 private val DOT = 12.dp

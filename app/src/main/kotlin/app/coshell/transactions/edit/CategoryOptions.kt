@@ -6,7 +6,9 @@ import app.coshell.core.model.TransactionType
 import app.coshell.core.model.buildCategoryTree
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
+import app.coshell.ui.form.CategoryLine
 import app.coshell.ui.form.ChoiceOption
+import app.coshell.ui.form.categoryLines
 
 /**
  * Recomputes the category choices for the current type from [all] categories and drops a selection
@@ -70,17 +72,13 @@ internal const val FREQUENT_CATEGORIES = 7
 
 private fun Category.toItem() = CategoryItem(id, name, icon, color)
 
-/**
- * Lines of the category list sheet (#439, poll А): each folder with two or more subcategories under its own caption, then
- * every category that has no folder — or is alone in it — under [noGroup]. A folder of one is just that category: no
- * «Дети / Дети» double; its name goes to the subtitle only when it differs.
- */
-internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String): List<ChoiceOption<String>> {
-    fun CategoryItem.option(group: String?, subtitle: String? = null) = ChoiceOption(id, name, subtitle, group, icon, color, hasBadge = true)
-    val folders = groups.filter { it.children.size > 1 }.flatMap { g -> g.children.map { it.option(g.item.name) } }
-    val loose = groups.filter { it.children.size <= 1 }.map { g ->
-        val only = g.children.firstOrNull()
-        if (only == null) g.item.option(noGroup) else only.option(noGroup, g.item.name.takeUnless { it == only.name })
-    }
-    return folders + loose
-}
+/** Lines of the «Все категории» sheet of the entry sheet (#439): a folder's subcategories, or a category without a folder, as [categoryLines]. */
+internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String): List<ChoiceOption<String>> =
+    categoryLines(
+        groups.flatMap { g ->
+            if (g.children.isEmpty()) listOf(g.item.line(null)) else g.children.map { it.line(g.item.name) }
+        },
+        noGroup,
+    )
+
+private fun CategoryItem.line(parent: String?) = CategoryLine(id, name, parent, icon, color)

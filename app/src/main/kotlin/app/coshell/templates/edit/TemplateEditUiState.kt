@@ -51,7 +51,15 @@ data class TemplateEditUiState(
     data class AccountChoice(val id: String, val name: String, val currency: String)
 
     /** [label] — «Папка / Категория» for a subcategory. */
-    data class CategoryChoice(val id: String, val label: String, val type: CategoryType)
+    data class CategoryChoice(
+        val id: String,
+        val label: String,
+        val type: CategoryType,
+        val name: String = label,
+        val parent: String? = null,
+        val icon: String? = null,
+        val color: Long? = null,
+    )
 
     val isTransfer: Boolean get() = type == TransactionType.TRANSFER
     val account: AccountChoice? get() = accounts.firstOrNull { it.id == accountId }

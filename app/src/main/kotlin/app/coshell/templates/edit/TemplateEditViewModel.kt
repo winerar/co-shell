@@ -166,7 +166,15 @@ class TemplateEditViewModel @Inject constructor(
         val byId = associateBy { it.id }
         return map { category ->
             val parent = category.parentId?.let { byId[it] }
-            CategoryChoice(category.id, if (parent != null) "${parent.name} / ${category.name}" else category.name, category.type)
+            CategoryChoice(
+                category.id,
+                if (parent != null) "${parent.name} / ${category.name}" else category.name,
+                category.type,
+                name = category.name,
+                parent = parent?.name,
+                icon = category.icon,
+                color = category.color,
+            )
         }.sortedBy { it.label.lowercase() }
     }
 }

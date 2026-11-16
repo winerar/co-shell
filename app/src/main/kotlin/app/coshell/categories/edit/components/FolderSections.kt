@@ -1,5 +1,8 @@
 package app.coshell.categories.edit.components
 
+import app.coshell.core.designsystem.tokens.Sizes
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -88,7 +91,7 @@ internal fun ChildrenChips(candidates: List<Option>, childIds: Set<String>, onTo
             CoShellFilterChip(
                 selected = candidate.id in childIds,
                 onClick = { onToggle(candidate.id) },
-                label = { Text(candidate.name) },
+                label = { Text(candidate.name, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.widthIn(max = Sizes.tileMinHeight)) },
             )
         }
     }

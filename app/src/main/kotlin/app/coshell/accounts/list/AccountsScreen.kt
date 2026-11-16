@@ -1,5 +1,6 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -85,10 +86,11 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
             if (state.isLoading) return@LazyColumn
             if (state.active.isEmpty() && state.archived.isEmpty()) {
                 item {
-                    Text(
+                    CoShellEmptyState(
+                        iconRes = DesignR.drawable.ic_account_balance_wallet,
                         text = stringResource(R.string.accounts_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        actionLabel = stringResource(R.string.accounts_add),
+                        onAction = actions.onAddAccount,
                     )
                 }
                 return@LazyColumn

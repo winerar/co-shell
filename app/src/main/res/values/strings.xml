@@ -46,6 +46,7 @@
     <string name="home_recent_all">Все</string>
     <string name="home_recent_empty">Операций пока нет. Нажмите «+», чтобы добавить первую.</string>
     <string name="home_no_accounts">Счетов пока нет. Начните с того, где лежат деньги: карта, наличные, вклад.</string>
+    <string name="home_total_no_accounts">Счетов пока нет</string>
 
     <string name="transactions_empty">Операций пока нет. Нажмите «+», чтобы добавить первую.</string>
     <string name="transactions_no_category">Без категории</string>

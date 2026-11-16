@@ -15,7 +15,7 @@ private val home = Envelope(
     "home", "Дом", "home", 0xFF00BCD4, 3, "310 000", "400 000 ARS", 0.78f, 0.37f, BulletTone.WARNING, Caption.Ahead("90 000 ARS", 19),
 )
 
-private val sample = BudgetDetailUiState(
+internal val budgetDetailPreviewSample = BudgetDetailUiState(
     month = YearMonth(2026, 11),
     name = "Дом",
     head = BudgetDetailUiState.Head(home, left = "90 000 ARS", over = false, daysLeft = 19, paceToday = "147 000"),
@@ -36,7 +36,7 @@ private val sample = BudgetDetailUiState(
 @Preview(showBackground = true, heightDp = 1000)
 @Composable
 private fun BudgetDetailPreview() {
-    CoShellTheme { BudgetDetailScreen(sample, BudgetDetailActions(), categoryId = "home") }
+    CoShellTheme { BudgetDetailScreen(budgetDetailPreviewSample, BudgetDetailActions(), categoryId = "home") }
 }
 
 @Preview(showBackground = true)

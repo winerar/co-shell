@@ -63,7 +63,7 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `home stress narrow dark`() = shot("home_stress_narrow_dark", dark = true, fontScale = 1.3f) { HomeScreen(homeStressSample) }
 
-    @Test fun `home empty light`() = shot("home_empty_light") { HomeScreen(HomeUiState()) }
+    @Test fun `home empty light`() = shot("home_empty_light") { HomeScreen(HomeUiState(totals = listOf("0,00\u00A0USD"))) }
 
     @Test fun `accounts stress light`() = shot("accounts_stress_light") { AccountsScreen(accountsStressSample, AccountsActions()) }
 
@@ -74,7 +74,7 @@ class ScreensStressScreenshotTest {
 
     @Test fun `accounts empty dark`() = shot("accounts_empty_dark", dark = true) { AccountsScreen(accountsEmptySample, AccountsActions()) }
 
-    @Test fun `home empty dark`() = shot("home_empty_dark", dark = true) { HomeScreen(HomeUiState()) }
+    @Test fun `home empty dark`() = shot("home_empty_dark", dark = true) { HomeScreen(HomeUiState(totals = listOf("0,00\u00A0USD"))) }
 
     @Test fun `accounts empty light`() = shot("accounts_empty_light") { AccountsScreen(accountsEmptySample, AccountsActions()) }
 

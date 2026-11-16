@@ -42,6 +42,7 @@
     <string name="home_recent_all">Todos</string>
     <string name="home_recent_empty">Aún no hay movimientos. Pulsa «+» para añadir el primero.</string>
     <string name="home_no_accounts">Aún no hay cuentas. Empieza por donde tienes el dinero: tarjeta, efectivo, depósito.</string>
+    <string name="home_total_no_accounts">Aún no hay cuentas</string>
 
     <string name="transactions_empty">Aún no hay movimientos. Pulsa «+» para añadir el primero.</string>
     <string name="transactions_no_category">Sin categoría</string>

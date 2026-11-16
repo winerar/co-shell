@@ -1,5 +1,8 @@
 package app.coshell.home
 
+import app.coshell.home.components.EmptyTotalCard
+import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -144,14 +147,15 @@ fun HomeScreen(
             gate?.let { banner -> item(key = "gate") { VersionGateBanner(banner, onUpdate, listItemMotion()) } }
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             if (state.accounts.isEmpty()) {
+                if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 item {
-                    Text(
+                    CoShellEmptyState(
+                        iconRes = DesignR.drawable.ic_account_balance_wallet,
                         text = stringResource(R.string.home_no_accounts),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        actionLabel = stringResource(R.string.accounts_add),
+                        onAction = actions.onAddAccount,
                     )
                 }
-                item { CoShellButton(onClick = actions.onAddAccount) { Text(stringResource(R.string.accounts_add)) } }
                 return@LazyColumn
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }

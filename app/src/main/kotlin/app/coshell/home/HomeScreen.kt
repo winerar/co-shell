@@ -28,6 +28,9 @@ import app.coshell.home.components.HotBudgets
 import app.coshell.home.components.MonthReviewCard
 import app.coshell.home.components.RecentCard
 import app.coshell.home.components.SyncBanner
+import app.coshell.home.components.VersionGateBanner
+import app.coshell.home.components.VersionGateBannerState
+import app.coshell.gate.LocalInputLock
 import app.coshell.home.components.SyncBannerActions
 import app.coshell.home.components.TotalCard
 import app.coshell.home.sync.SyncBannerState
@@ -73,7 +76,10 @@ fun HomeRoute(
     syncViewModel: SyncBannerViewModel = hiltViewModel(),
     budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
     upcomingViewModel: UpcomingViewModel = hiltViewModel(),
+    gate: VersionGateBannerState? = null,
+    onUpdate: () -> Unit = {},
 ) {
+    val lock = LocalInputLock.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
@@ -96,8 +102,10 @@ fun HomeRoute(
         onHideReview = budgetViewModel::hideReview,
         upcoming = upcoming,
         upcomingTotal = upcomingTotal,
-        onPostAll = { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
-        onSkipAll = upcomingViewModel::skipAll,
+        onPostAll = lock.guard1 { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
+        onSkipAll = lock.guard1(upcomingViewModel::skipAll),
+        gate = gate,
+        onUpdate = onUpdate,
     )
 }
 
@@ -119,6 +127,8 @@ fun HomeScreen(
     upcomingTotal: Int = upcoming.size,
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
+    gate: VersionGateBannerState? = null,
+    onUpdate: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     Scaffold(
@@ -131,6 +141,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(Spacing.l),
         ) {
             if (state.isLoading) return@LazyColumn
+            gate?.let { banner -> item(key = "gate") { VersionGateBanner(banner, onUpdate, listItemMotion()) } }
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             if (state.accounts.isEmpty()) {
                 item {

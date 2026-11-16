@@ -77,6 +77,11 @@ fun coShellButtonColors(): ButtonColors {
     return ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
 }
 
+/** Colours of [CoShellButton] in a status colour (a warning card's «Обновить», #334): [container] fill, [content] ink. */
+@Composable
+fun coShellButtonColors(container: Color, content: Color): ButtonColors =
+    ButtonDefaults.buttonColors(containerColor = container, contentColor = content)
+
 @Composable
 private fun tonalButtonColors(): ButtonColors {
     val colors = MaterialTheme.colorScheme

@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.backup.auto.AutoBackupViewModel
+import app.coshell.gate.LocalInputLock
 
 /** Connects [BackupScreen] to its ViewModel and to the system "save as" / "open file" dialogs. */
 @Composable
@@ -17,6 +18,7 @@ fun BackupRoute(
     auto: AutoBackupViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     val autoState by auto.state.collectAsStateWithLifecycle()
     val pickFolder = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
         it?.let { uri -> auto.onFolderPicked(uri.toString()) }
@@ -33,7 +35,7 @@ fun BackupRoute(
         actions = BackupActions(
             onBack = onBack,
             onExport = { createFile.launch(viewModel.suggestedFileName()) },
-            onImport = { openFile.launch(arrayOf(BACKUP_MIME_TYPE, "text/plain", "application/octet-stream", "*/*")) },
+            onImport = lock.guard { openFile.launch(arrayOf(BACKUP_MIME_TYPE, "text/plain", "application/octet-stream", "*/*")) },
             onConfirmImport = viewModel::confirmImport,
             onCancelImport = viewModel::cancelImport,
             onChooseAutoFolder = { pickFolder.launch(null) },

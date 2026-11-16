@@ -6,11 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.model.AccountType
+import app.coshell.gate.LocalInputLock
 
 /** Connects [AccountEditScreen] to its ViewModel. */
 @Composable
 fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
     AccountEditScreen(
         state = state,
@@ -22,9 +24,9 @@ fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltV
             onIncludedInTotalChange = viewModel::onIncludedInTotalChange,
             onColorChange = viewModel::onColorChange,
             onSharedChange = viewModel::onSharedChange,
-            onSave = viewModel::save,
-            onToggleArchived = viewModel::toggleArchived,
-            onDelete = viewModel::delete,
+            onSave = lock.guard(viewModel::save),
+            onToggleArchived = lock.guard(viewModel::toggleArchived),
+            onDelete = lock.guard(viewModel::delete),
             onDismissDeleteBlocked = viewModel::dismissDeleteBlocked,
         ),
     )

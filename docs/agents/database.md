@@ -42,6 +42,8 @@
   обновляются, только если запись победила), при отправке подмешиваются под свои поля (`SyncPayload.withExtras`).
   В каждом `json` — номер схемы синка `v` (`SyncPayload.SCHEMA`, нет — схема 1); внутри `json`, а не полем документа: правила Firestore — `hasOnly`.
   В резервную копию `sync_extras` не попадает; очищается в `wipeSyncedData`.
+- **Схема новее своей** (#334): наибольший `v` из принятых записей — `sync_state["peer_schema"]` (`VersionGate`); выше
+  `SyncPayload.SCHEMA` → ввод закрыт (`app/.../gate/`). Поднимать `SCHEMA` — только когда старая версия испортит данные.
 - **Новая синхронизируемая таблица** = `SyncKind` + `SyncCodec` + все списки в `SyncDao` (pending, clear, merge,
   wipe, markAllPending) + `SyncEngine` + `WipeDao` + бэкап + **`kind` в `firebase/firestore.rules`** (владелец
   публикует правила заново, иначе отправка падает). Образец — шаблоны (#169).

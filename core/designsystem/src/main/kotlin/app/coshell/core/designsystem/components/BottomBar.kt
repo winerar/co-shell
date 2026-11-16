@@ -68,19 +68,33 @@ fun CoShellBottomBar(
     onAdd: () -> Unit,
     visible: Boolean = true,
     addConfirm: ConfirmPulse? = null,
+    addLocked: Boolean = false,
 ) {
     AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
-        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm)
+        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked)
     }
 }
 
 /**
  * The «+»: after a save ([addConfirm] fires) it turns into a check mark with a short warm flash of the
  * palette's third colour (design-refactor Step 4: «Сохранено» — тёплая вспышка), then back.
+ * [locked] — entry is closed until the update (#334, board `Fb334A`): a muted button with a lock.
  */
 @Composable
-private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse?) {
+private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse?, locked: Boolean) {
     val scheme = MaterialTheme.colorScheme
+    if (locked) {
+        CoShellFab(
+            onClick = onAdd,
+            modifier = Modifier.size(Sizes.bottomBarAdd),
+            shape = CircleShape,
+            tactile = Tactile.Primary,
+            containerColor = scheme.surfaceContainerHighest,
+            contentColor = scheme.onSurfaceVariant,
+            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+        ) { Icon(painterResource(R.drawable.ic_lock), label) }
+        return
+    }
     val progress = confirmProgress(addConfirm)
     val p = progress.value.coerceIn(0f, 1f)
     CoShellFab(
@@ -110,6 +124,7 @@ private fun BottomBarContent(
     addLabel: String,
     onAdd: () -> Unit,
     addConfirm: ConfirmPulse?,
+    addLocked: Boolean,
 ) {
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
@@ -139,7 +154,7 @@ private fun BottomBarContent(
             tabs.forEachIndexed { index, tab ->
                 if (index == tabs.size / 2) {
                     Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        AddButton(addLabel, onAdd, addConfirm)
+                        AddButton(addLabel, onAdd, addConfirm, addLocked)
                     }
                 }
                 val iconColor = when {

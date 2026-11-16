@@ -38,12 +38,7 @@ app/coshell/transactions/list/components/PeriodSheet.kt	material3 FilterChipDefa
 app/coshell/transactions/list/components/SelectionActions.kt	material3 ButtonDefaults	1
 app/coshell/ui/form/ColorSection.kt	draw CircleShape	3
 app/coshell/ui/form/ColorSection.kt	draw border	1
-app/coshell/ui/form/DateChips.kt	material3 DatePicker	1
-app/coshell/ui/form/DateChips.kt	material3 DatePickerDefaults	1
 app/coshell/ui/form/DateChips.kt	material3 FilterChipDefaults	1
-app/coshell/ui/form/DateChips.kt	material3 rememberDatePickerState	1
-app/coshell/ui/form/DateRangeSheet.kt	material3 DateRangePicker	1
-app/coshell/ui/form/DateRangeSheet.kt	material3 rememberDateRangePickerState	1
 app/coshell/ui/form/IconColorStrips.kt	draw CircleShape	4
 app/coshell/ui/form/IconColorStrips.kt	draw background	1
 app/coshell/ui/form/IconColorStrips.kt	draw border	2

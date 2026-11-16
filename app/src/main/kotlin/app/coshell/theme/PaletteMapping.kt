@@ -6,17 +6,12 @@ import app.coshell.core.domain.settings.ThemePalette
 /** The saved palette setting → the design system's palette. */
 fun ThemePalette.toDesign(): CoShellPalette = when (this) {
     ThemePalette.LIME -> CoShellPalette.Lime
-    ThemePalette.PASSIONFRUIT -> CoShellPalette.Passionfruit
-    ThemePalette.MANGO -> CoShellPalette.Mango
-    ThemePalette.BILBERRY -> CoShellPalette.Bilberry
-    ThemePalette.FEIJOA -> CoShellPalette.Feijoa
-    ThemePalette.PITAYA -> CoShellPalette.Pitaya
-    ThemePalette.LEMON -> CoShellPalette.Lemon
-    ThemePalette.PEACH -> CoShellPalette.Peach
-    ThemePalette.LYCHEE -> CoShellPalette.Lychee
-    ThemePalette.MELON -> CoShellPalette.Melon
-    ThemePalette.BLUEBERRY -> CoShellPalette.Blueberry
-    ThemePalette.PLUM -> CoShellPalette.Plum
-    ThemePalette.PEAR -> CoShellPalette.Pear
-    ThemePalette.GOOSEBERRY -> CoShellPalette.Gooseberry
+    ThemePalette.GARNET -> CoShellPalette.Garnet
+    ThemePalette.BANANA -> CoShellPalette.Banana
+    ThemePalette.MATE -> CoShellPalette.Mate
+    ThemePalette.ESPRESSO -> CoShellPalette.Espresso
+    ThemePalette.KVAS -> CoShellPalette.Kvas
+    ThemePalette.SAKURA -> CoShellPalette.Sakura
+    ThemePalette.CORNFLOWER -> CoShellPalette.Cornflower
+    ThemePalette.LOTUS -> CoShellPalette.Lotus
 }

@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 @Composable
 fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, columns: Int = 4) {
     val colors = MaterialTheme.colorScheme
+    val sel = selectionColors()
     val shape = PillShape
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         labels.indices.chunked(columns).forEach { row ->
@@ -41,8 +43,7 @@ fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Uni
                         Modifier
                             .weight(1f)
                             .height(Sizes.cellHeight)
-                            .background(if (on) colors.primaryContainer else colors.surfaceContainerHigh, shape)
-                            .then(if (on) Modifier.border(Sizes.selectionRing, colors.onSurface, shape) else Modifier)
+                            .background(if (on) sel.fill else colors.surfaceContainerHigh, shape)
                             .semantics { this.selected = on }
                             .tactileClickable(Tactile.Control, shape, role = Role.RadioButton) { onSelect(index) },
                         contentAlignment = Alignment.Center,
@@ -51,7 +52,7 @@ fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Uni
                             labels[index],
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = if (on) FontWeight.Bold else FontWeight.Normal,
-                            color = if (on) colors.onPrimaryContainer else colors.onSurfaceVariant,
+                            color = if (on) sel.content else colors.onSurfaceVariant,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )

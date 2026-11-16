@@ -27,11 +27,11 @@ import app.coshell.core.designsystem.tokens.Spacing
 
 /** Board `RepA` in numbers: November so far, the grey ghost — October. Name, USD, share, October USD, palette colour. */
 private val structure = listOf(
-    Triple("Дом", 290L to 300L, 9),
-    Triple("Продукты", 121L to 180L, 2),
-    Triple("Образование", 120L to 160L, 5),
+    Triple("Дом", 290L to 300L, 8),
+    Triple("Продукты", 121L to 180L, 18),
+    Triple("Образование", 120L to 160L, 14),
     Triple("Кафе", 89L to 110L, 0),
-    Triple("Аптека", 70L to 40L, 7),
+    Triple("Аптека", 70L to 40L, 12),
 )
 private val months = listOf("июн" to 1180L, "июл" to 1320L, "авг" to 1090L, "сен" to 1410L, "окт" to 1350L, "ноя" to 760L)
 

@@ -22,8 +22,8 @@ THEMES = [
      'FF5C7A', 'C60B3D', '0A0903', 'FFFBE5', ['FFF08A', 'FFE0B0', 'D8D2FF'], 'жёлтый + индиго'),
     ('Mate', 'Мате', 'Напитки', 'пастель', 'B5D98A', '1A2A08', 'FFA77A', 'A1451A', 'EAD88A', '6E5E00', '6BE0D8', '016D67',
      'FF7088', 'BE1140', '0B0D08', 'F6F8EC', ['D7EDBF', 'F5DCC5', 'C6EEE9'], 'травяной + медный'),
-    ('Espresso', 'Эспрессо', 'Напитки', 'неон', 'FF7A2E', '2B0E00', '4DA6FF', '1F5FA8', 'EBC096', '7A4E1E', '7FE0B0', '006F47',
-     'FF5C8A', 'C0084C', '110B08', 'FBF6F0', ['FFC7A3', 'C8E0FF', 'F7E2CC'], 'медный + электрик'),
+    ('Espresso', 'Эспрессо', 'Напитки', 'неон', 'C67F4D', '1F0C00', '4DA6FF', '1F5FA8', 'EBC096', '7A4E1E', '7FE0B0', '006F47',
+     'FF5C8A', 'C0084C', '110B08', 'FBF6F0', ['E8C3A3', 'C8E0FF', 'F2DDC9'], 'кофейный + электрик'),
     ('Kvas', 'Квас', 'Напитки', 'неон', 'FFB020', '2A1700', '3DDBD9', '036D73', 'FF7A5C', 'AE3818', '9CF06B', '3B6E03',
      'FF5C7A', 'C4063B', '0D0904', 'FFF8EB', ['FFD98A', 'FFE9C8', 'B8F0EE'], 'янтарь + бирюза'),
     ('Sakura', 'Сакура', 'Растения', 'пастель', 'FFB3CF', '3A0A1E', '8EE6A0', '0A7030', 'C9B6FF', '5B3FD0', '7FD0FF', '00658A',
@@ -78,6 +78,20 @@ def surface_light(c):
     return contrast(c, '000000') > contrast(c, 'FFFFFF')
 
 
+def readable_on(color, backgrounds, toward, need=4.6):
+    """`color` moved toward `toward` in 5 % steps until it reads on every background (Theme.kt does the same)."""
+    c, k = color, 0.0
+    while min(contrast(c, b) for b in backgrounds) < need and k < 1:
+        k += 0.05
+        c = mix(color, toward, k)
+    return c
+
+
+def hero_strong(t):
+    """Light hero gradient «Б»: the primary itself, a lighter primary, a light accent."""
+    return [t['primary'], mix(t['primary'], 'FFFFFF', .3), mix(t['accentDark'], 'FFFFFF', .2)]
+
+
 def theme(row):
     return dict(zip(KEYS, row))
 
@@ -128,6 +142,15 @@ def audit(t, dark):
     need('border/card', s['border'], s['card'], 3)
     if dark:
         need('primary/background', s['primary'], s['background'], 3)
+        bg = t['bgDark']
+        stops = [mix(bg, t[k], a) for k, a in (('primary', .30), ('incomeDark', .16), ('accentDark', .24))]
+        amount = readable_on(t['primary'], stops, toward='FFFFFF')
+        for i, stop in enumerate(stops):
+            need('hero amount/stop%d' % i, amount, stop, 4.5)
+            need('hero text/stop%d' % i, s['text'], stop, 4.5)
+    else:  # hero «Б» (owner 2026-11-16): strong light gradient from the primary, dark ink on it
+        for i, stop in enumerate(hero_strong(t)):
+            need('hero ink/stop%d' % i, s['text'], stop, 4.5)
     for name, d, lt in SWATCHES:
         fill = d if dark else lt
         need('sw %s ink' % name, INK, fill, 4.5)

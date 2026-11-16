@@ -18,11 +18,6 @@ class NonTextContrastTest {
 
     /** Current minimum (rounded down) of each pair below its target, #385. */
     private val known = mapOf(
-        "tag label in its colour on its wash" to 3.5,
-        "segment Choice pill on its track" to 1.0,
-        "segment Filter pill on its track" to 1.0,
-        "tab pill on the bar" to 1.0,
-        "selected day on surface" to 1.15,
         "checkbox and radio outline on surface" to 1.8,
         "field fill on surface" to 1.05,
         "field, chip and card border on surface" to 1.25,
@@ -77,20 +72,24 @@ class NonTextContrastTest {
         shape("progress on surface", progressColorsFor(s, dark).indicator, s.surface)
 
         // Selected states and component boundaries.
-        shape("segment Choice pill on its track", s.primary, s.surfaceContainer)
-        shape("segment Filter pill on its track", s.secondaryContainer, s.surfaceContainer)
-        shape("tab pill on the bar", if (dark) s.primary else s.primaryContainer, s.surfaceContainerHigh)
-        shape("selected day on surface", s.primaryContainer, s.surface)
+        val sel = selectionColorsFor(s, dark)
+        shape("segment pill on its track", sel.fill, s.surfaceContainerHigh)
+        shape("chip and label pill on its track", sel.fill, s.surfaceContainer)
+        shape("tab pill on the bar", sel.fill, s.surfaceContainerHigh)
+        shape("selected day on surface", sel.fill, s.surface)
+        text("selected label on its pill", sel.content, sel.fill)
         shape("checkbox and radio outline on surface", s.outline, s.surface)
         shape("field fill on surface", s.surfaceContainer, s.surface)
         shape("field, chip and card border on surface", s.outlineVariant, s.surface)
 
-        // Category and account colours (36 swatches) on every background they sit on.
-        CategoryPalette.swatches.forEachIndexed { i, swatch ->
-            val c = Color(if (dark) swatch.stored else swatch.light)
-            listOf(s.surface, s.background, s.surfaceContainer).forEach { bg -> shape("category colour #$i on its background", c, bg) }
+        // Category and account colours (24, 1.0) on every background they sit on: the fill, or its ring when pale.
+        CategoryPalette.colors.forEachIndexed { i, stored ->
+            val c = Color(stored)
+            listOf(s.surface, s.background, s.surfaceContainer).forEach { bg ->
+                shape("category colour #$i on its background", CategoryPalette.ring(c, bg) ?: c, bg)
+            }
             text("text on a card in category colour #$i", s.onSurface, c.copy(alpha = CARD_TINT).compositeOver(s.surface))
-            text("tag label in its colour on its wash", c, c.copy(alpha = TAG_FILL).compositeOver(s.background))
+            text("tag label (ink, board Style2) on its wash", s.onSurface, c.copy(alpha = TAG_FILL).compositeOver(s.background))
         }
         return out
     }

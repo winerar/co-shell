@@ -37,3 +37,18 @@ internal fun progressColorsFor(scheme: ColorScheme, dark: Boolean) =
     } else {
         ProgressColors(scheme.inverseSurface, scheme.primary)
     }
+
+/** Colours of anything chosen: a segment, chip, tab, day, check mark. */
+@Immutable
+data class SelectionColors(val fill: Color, val content: Color)
+
+/**
+ * Chosen state (owner's choice 2026-11-16, «чернильная пилюля», #385): dark theme — the neon fill with its dark ink;
+ * light theme — an ink fill (`onSurface`) with the neon as the label. Neon on white is ~1:1 to the track, ink is 12–17:1.
+ */
+@Composable
+@ReadOnlyComposable
+fun selectionColors(): SelectionColors = selectionColorsFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
+
+internal fun selectionColorsFor(scheme: ColorScheme, dark: Boolean): SelectionColors =
+    if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.onSurface, scheme.primary)

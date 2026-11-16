@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.ColorFill
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.dashedBorder
 import app.coshell.core.designsystem.motion.Tactile
@@ -116,7 +117,7 @@ internal fun ColorDot(color: Long, selected: Boolean, onClick: () -> Unit) {
             .then(if (selected) Modifier.border(Sizes.selectionRing, MaterialTheme.colorScheme.onSurface, CircleShape) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
-        Box(Modifier.size(if (selected) Sizes.swatch - Spacing.xs else Sizes.swatch).clip(CircleShape).background(categoryColor(color)))
+        ColorFill(color, size = if (selected) Sizes.swatch - Spacing.xs else Sizes.swatch)
     }
 }
 

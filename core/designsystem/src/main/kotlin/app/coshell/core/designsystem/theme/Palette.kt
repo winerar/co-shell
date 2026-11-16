@@ -4,71 +4,50 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 /**
- * Colour palettes of the app, named after fruits (#271, owner's choice 2026-11-12); picked in «Внешний вид → Тема»,
- * each with a light and a dark variant. Seven juicy (neon; the former Вольт, Мохито, Манго, Ультра, Лагуна, Сакура
- * renamed — Мохито became the violet [Passionfruit] — plus [Lemon]) and seven soft (pastel). [Lime] is the default.
- * Specs — `PaletteSpecs.kt` (juicy), `PaletteSpecsSoft.kt` (soft).
+ * Colour themes of the app (1.0, owner's choice 2026-11-16, #354): three fruits, three drinks, three plants — each with a
+ * main colour (neon or pastel) and a second, near-complementary one; picked in «Внешний вид → Тема», light and dark.
+ * [Lime] is the default. Specs — `PaletteSpecs.kt`.
  */
 enum class CoShellPalette {
-    /** Acid lime #B8FF2E, cyan income, violet accent, acid-yellow warmth. Default (was «Вольт»). */
+    /** Acid lime #B8FF2E + violet. Default. */
     Lime,
 
-    /** Violet #A66BFF with the yellow of the pulp, sky-blue income (replaces «Мохито»). */
-    Passionfruit,
+    /** Ruby #FF3D6E + turquoise; expense in coral so it does not merge with the ruby. */
+    Garnet,
 
-    /** Warm sunset: mango #FF8A3D, raspberry accent, gold. */
-    Mango,
+    /** Banana yellow #FFE135 + indigo. */
+    Banana,
 
-    /** Cold neon: electric blue #3D7BFF, magenta accent, lime (was «Ультра»). */
-    Bilberry,
+    /** Pastel herbal green #B5D98A + copper. */
+    Mate,
 
-    /** Sea and sun: turquoise #2EE6C5, coral accent, sand (was «Лагуна»). */
-    Feijoa,
+    /** Coffee brown #C67F4D + electric blue. */
+    Espresso,
 
-    /** Pink #FF7AB8, mint accent, lavender (was «Сакура»). */
-    Pitaya,
+    /** Amber #FFB020 + turquoise. */
+    Kvas,
 
-    /** Sunny yellow #FFE14D, indigo accent, lime. */
-    Lemon,
+    /** Pastel blossom pink #FFB3CF + leaf green. */
+    Sakura,
 
-    /** Soft: peach #FFB38A, lavender, mint income. */
-    Peach,
+    /** Cornflower blue #5C8DFF + wheat gold. */
+    Cornflower,
 
-    /** Soft: lychee pink #F4A7C0, sage, sky income. */
-    Lychee,
-
-    /** Soft: melon #EDD27E, lilac, green income. */
-    Melon,
-
-    /** Soft: blueberry #A3BFFA, peach accent, mint income. */
-    Blueberry,
-
-    /** Soft: plum #C3A6F0, pear green, teal income. */
-    Plum,
-
-    /** Soft: pear #C8E39A, lilac, sky income. */
-    Pear,
-
-    /** Soft: gooseberry #9EE6CF, pink accent, blue income. */
-    Gooseberry,
+    /** Pastel lilac #CDB4FF + lotus-leaf green. */
+    Lotus,
     ;
 
     internal val spec: PaletteSpec
         get() = when (this) {
             Lime -> LimeSpec
-            Passionfruit -> PassionfruitSpec
-            Mango -> MangoSpec
-            Bilberry -> BilberrySpec
-            Feijoa -> FeijoaSpec
-            Pitaya -> PitayaSpec
-            Lemon -> LemonSpec
-            Peach -> PeachSpec
-            Lychee -> LycheeSpec
-            Melon -> MelonSpec
-            Blueberry -> BlueberrySpec
-            Plum -> PlumSpec
-            Pear -> PearSpec
-            Gooseberry -> GooseberrySpec
+            Garnet -> GarnetSpec
+            Banana -> BananaSpec
+            Mate -> MateSpec
+            Espresso -> EspressoSpec
+            Kvas -> KvasSpec
+            Sakura -> SakuraSpec
+            Cornflower -> CornflowerSpec
+            Lotus -> LotusSpec
         }
 }
 
@@ -91,6 +70,4 @@ internal data class PaletteSpec(
     val expenseLight: Color,
     val backgroundDark: Color,
     val backgroundLight: Color,
-    /** Light theme hero card (main block of «Обзор»): gradient stops under the dark text ink. */
-    val heroLight: List<Color>,
 )

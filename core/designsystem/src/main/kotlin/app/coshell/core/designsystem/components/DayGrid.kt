@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 @Composable
 fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, days: Int = 31, markedDay: Int? = null) {
     val colors = MaterialTheme.colorScheme
+    val sel = selectionColors()
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         (1..days).chunked(DAYS_IN_ROW).forEach { week ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
@@ -42,8 +44,7 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
                         Box(
                             Modifier
                                 .size(Sizes.cellHeight)
-                                .background(if (on) colors.primaryContainer else Color.Transparent, CircleShape)
-                                .then(if (on) Modifier.border(Sizes.selectionRing, colors.onSurface, CircleShape) else Modifier)
+                                .background(if (on) sel.fill else Color.Transparent, CircleShape)
                                 .semantics { this.selected = on }
                                 .tactileClickable(Tactile.Control, CircleShape, role = Role.RadioButton) { onSelect(day) },
                             contentAlignment = Alignment.Center,
@@ -52,7 +53,7 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
                                 day.toString(),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = if (on) FontWeight.Bold else FontWeight.Normal,
-                                color = if (on) colors.onPrimaryContainer else colors.onSurface,
+                                color = if (on) sel.content else colors.onSurface,
                             )
                             if (day == markedDay && !on) {
                                 Box(

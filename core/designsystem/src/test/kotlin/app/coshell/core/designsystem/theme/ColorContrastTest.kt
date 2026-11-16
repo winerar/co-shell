@@ -7,7 +7,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** WCAG contrast of every neon palette: text ≥ 4.5, icons and large amounts ≥ 3. */
+/** WCAG contrast of every theme (1.0: 9 themes × light/dark): text ≥ 4.5, icons and states ≥ 3. */
 class ColorContrastTest {
     private val themes = CoShellPalette.entries.flatMap { palette ->
         listOf(false, true).map { dark -> "$palette ${if (dark) "dark" else "light"}" to themeColorsFor(palette, dark) }
@@ -31,6 +31,23 @@ class ColorContrastTest {
     fun darkThemeNeonIsReadableAsText() = themes.filter { it.first.endsWith("dark") }.forEach { (name, t) ->
         assertContrast("$name primary on surface", t.scheme.primary, t.scheme.surface, 4.5)
         assertContrast("$name secondary on surface", t.scheme.secondary, t.scheme.surface, 4.5)
+    }
+
+    @Test
+    fun selectedStateStandsOutAndItsLabelReads() = themes.forEach { (name, t) ->
+        // «Чернильная пилюля» (owner 2026-11-16, #385): ≥ 3 against the track and the bar, label ≥ 4.5 on the fill.
+        val s = t.scheme
+        val sel = selectionColorsFor(s, name.endsWith("dark"))
+        assertContrast("$name selected on track", sel.fill, s.surfaceContainerHigh, 3.0)
+        assertContrast("$name selected on surface", sel.fill, s.surface, 3.0)
+        assertContrast("$name selected label", sel.content, sel.fill, 4.5)
+    }
+
+    @Test
+    fun nineThemes() {
+        assertEquals(9, CoShellPalette.entries.size)
+        val primaries = CoShellPalette.entries.map { it.spec.primary }
+        assertEquals("every theme has its own main colour", 9, primaries.toSet().size)
     }
 
     @Test
@@ -61,8 +78,8 @@ class ColorContrastTest {
         t.heroStops.forEach { stop ->
             assertContrast("$name hero ink on $stop", t.hero.content, stop, 4.5)
             assertContrast("$name hero hint on $stop", t.hero.hint, stop, 4.5)
-            // The main amount is large text (≥ 24 sp): WCAG asks 3.0.
-            assertContrast("$name hero amount on $stop", t.hero.amount, stop, 3.0)
+            // The main amount is large text (WCAG asks 3.0), but the owner wants good contrast in the dark theme too (2026-11-16).
+            assertContrast("$name hero amount on $stop", t.hero.amount, stop, 4.5)
             assertContrast("$name hero overspent on $stop", t.hero.expense, stop, 4.5)
             assertContrast("$name hero warning on $stop", t.hero.warning, stop, 4.5)
         }

@@ -2,6 +2,7 @@ package app.coshell.core.designsystem.category
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +18,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.theme.LocalDarkTheme
 
 /**
- * A category's icon in a circle tinted 18 % with its colour (board Style3; shade for the current theme). Used everywhere a category is
+ * A category's icon in a circle filled with its colour, dark glyph (1.0, #105; board Palette24). Used everywhere a category is
  * shown: category list, transaction list, pickers. Missing colour → neutral grey.
  */
 @Composable
@@ -29,24 +30,48 @@ fun CategoryBadge(icon: String?, color: Long?, modifier: Modifier = Modifier, si
 @Composable
 fun categoryColor(stored: Long): Color = Color(CategoryPalette.display(stored, LocalDarkTheme.current))
 
-/** Same circle for any drawable, e.g. transfers in the transaction list. `null` [color] = neutral. */
+/**
+ * Same circle for any drawable, e.g. transfers in the transaction list. Filled with [color] and a dark glyph (1.0, #105:
+ * the 24 colours read the same in both themes); a pale fill gets a thin ring of its deeper shade ([CategoryPalette.ring]).
+ * `null` [color] = neutral container with a grey glyph.
+ */
 @Composable
 fun IconBadge(@DrawableRes iconRes: Int, color: Color?, modifier: Modifier = Modifier, size: Dp = Sizes.badge) {
-    val tint = color ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val scheme = MaterialTheme.colorScheme
+    val fill = color ?: scheme.surfaceContainerHighest
+    val ring = color?.let { CategoryPalette.ring(it, scheme.surface) }
     Box(
         modifier = modifier
             .size(size)
-            .background(tint.copy(alpha = ICON_TINT), CircleShape),
+            .background(fill, CircleShape)
+            .then(if (ring != null) Modifier.border(Sizes.hairline * RING_WIDTH, ring, CircleShape) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             painter = painterResource(iconRes),
             contentDescription = null,
-            tint = tint,
+            tint = if (color == null) scheme.onSurfaceVariant else inkOn(fill),
             modifier = Modifier.size(size * 0.55f),
         )
     }
 }
 
-/** Every icon holder is a circle of its colour at 18 % (board Style3); only an account and a member are filled. */
-internal const val ICON_TINT = 0.18f
+/** Ring of a pale badge: 1.5 hairlines. */
+private const val RING_WIDTH = 1.5f
+
+/**
+ * A palette colour as a circle of [size] (1.0, #105): the picker dots, the colour strips. A pale fill gets the same thin
+ * ring as [IconBadge]. [content] sits on it in the dark ink (a check mark of the chosen colour).
+ */
+@Composable
+fun ColorFill(color: Long, modifier: Modifier = Modifier, size: Dp = Sizes.badge, content: @Composable () -> Unit = {}) {
+    val fill = categoryColor(color)
+    val ring = CategoryPalette.ring(fill, MaterialTheme.colorScheme.surface)
+    Box(
+        modifier = modifier
+            .size(size)
+            .background(fill, CircleShape)
+            .then(if (ring != null) Modifier.border(Sizes.hairline * RING_WIDTH, ring, CircleShape) else Modifier),
+        contentAlignment = Alignment.Center,
+    ) { content() }
+}

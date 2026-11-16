@@ -2,6 +2,8 @@
 """Poll boards for the 1.0 app icon (#426): variants of the shell-purse on launcher masks and home screens.
 
 Usage: python3 scripts/agent/mockup_icon_426.py <out-dir>  → <out-dir>/img/*.png (Playwright, ×2).
+Render check by Android itself: put PNGs <Variant>-<px>.png into <out-dir>/android (a throwaway Robolectric test with
+@GraphicsMode(NATIVE) drawing the vector_xml() output; 2026-11-16 it matched Chromium pixel for pixel).
 Geometry — icon_426.py (the same paths go into the Android vectors after the owner's «ок»).
 """
 import os
@@ -30,9 +32,9 @@ def two_tone(uid):
     return '<defs>%s</defs>%s%s%s' % (CLIP % uid, full, left, rest)
 
 
-def outline(color, color2):
+def outline(color, color2, thin=False):
     out = []
-    for d, c, w in I.outline_layers(S, color, color2):
+    for d, c, w in I.outline_layers(S, color, color2, THIN if thin else 4.6, thin):
         out.append('<path d="%s" fill="%s"%s/>' % (d, c, '' if w == 0 else ' stroke="%s" stroke-width="%s" fill-opacity="0" '
                                                    'stroke-linecap="round" stroke-linejoin="round"' % (c, w)))
     return ''.join(out)
@@ -44,7 +46,10 @@ VARIANTS = {
     'C': ('Градиент 1.0', [LIME, CYAN], lambda u: I.svg_paths(I.layers(S, INK, INK, INK, '#7A2BD6'))),
     'D': ('Две створки', GRAPHITE, two_tone),
     'E': ('Жирная линия', GRAPHITE, lambda u: outline(LIME, VIOLET)),
+    'F': ('Лайм на графите, тонкая линия', GRAPHITE, lambda u: outline(LIME, VIOLET, True)),
 }
+THIN = 2.6  # the 0.x icon used 2.4; ≥ 1.7 px at mdpi (48 dp × 1)
+LETTER = dict(zip('ABCDEF', 'АБВГДЕ'))
 MONO = {'light': ('#D9E7C6', '#2C3A1C'), 'dark': ('#2A3322', '#D3EBB0')}
 _uid = [0]
 
@@ -57,7 +62,7 @@ def icon(v, size, mask='circle', mono=None):
     if mono:
         bgc, fgc = MONO[mono]
         paint = '<rect x="0" y="0" width="108" height="108" fill="%s"/>' % bgc
-        art = (outline(fgc, fgc) if v == 'E' else I.svg_paths(I.layers(S, fgc, fgc, fgc, fgc)))
+        art = (outline(fgc, fgc, v == 'F') if v in 'EF' else I.svg_paths(I.layers(S, fgc, fgc, fgc, fgc)))
     else:
         if isinstance(bg, list):
             paint = ('<defs><linearGradient id="g%s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/>'
@@ -115,17 +120,46 @@ def board(v):
             '<div class="row" style="gap:26px;align-items:flex-start">%s<div style="display:flex;flex-direction:column;gap:12px;align-items:center;'
             'margin-left:auto">%s<span class="cap">мелкие размеры</span></div></div>'
             '<div class="row" style="gap:20px">%s%s</div></div>'
-            % ('АБВГД'['ABCDE'.index(v)], VARIANTS[v][0], masks, '<div class="row" style="gap:14px">%s</div>' % small,
+            % (LETTER[v], VARIANTS[v][0], masks, '<div class="row" style="gap:14px">%s</div>' % small,
                home(rows, True, 456), home(rows, False, 456)))
     return page(body, 980, 384)
 
 
 def compare():
-    names = {v: 'АБВГД'['ABCDE'.index(v)] for v in VARIANTS}
+    names = dict(LETTER)
     body = ('<div style="padding:24px;display:flex;flex-direction:column;gap:16px">%s%s%s%s</div>'
             % (caption('Все варианты рядом — тёмные обои'), home(list(VARIANTS), True, 932, 64, names),
                caption('Светлые обои'), home(list(VARIANTS), False, 932, 64, names)))
     return page(body, 980, 400)
+
+
+PX = (48, 72, 96, 144, 192)  # launcher icon 48 dp at mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi
+
+
+def quality(vs, src='px'):
+    """Render check (#426): the icon at real launcher pixel sizes and a pixel zoom of the smallest.
+
+    src 'android' — PNGs drawn by Android itself (Robolectric native graphics, see Usage), else Chromium (Skia, the same result).
+    """
+    rows = []
+    for v in vs:
+        real = ''.join('<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><img src="../%s/%s-%d.png" '
+                       'style="width:%dpx;height:%dpx"><span class="cap">%d px</span></div>' % (src, v, n, n, n, n) for n in PX)
+        zoom = ''.join('<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><img src="../%s/%s-%d.png" '
+                       'style="width:%dpx;height:%dpx;image-rendering:pixelated"><span class="cap">%d px × %d</span></div>'
+                       % (src, v, n, n * k, n * k, n, k) for n, k in ((48, 4), (72, 3)))
+        rows.append('<div style="display:flex;flex-direction:column;gap:10px"><div style="font-size:17px;font-weight:700;color:#EEF5E6">'
+                    '%s · %s</div><div class="row" style="gap:22px;align-items:flex-end">%s<div style="width:1px;align-self:stretch;'
+                    'background:#2A302A"></div>%s</div></div>' % (LETTER[v], VARIANTS[v][0], real, zoom))
+    body = ('<div style="padding:22px;display:flex;flex-direction:column;gap:22px">%s%s</div>'
+            % (caption('Качество отрисовки%s: слева — настоящий размер (1 точка = 1 пиксель телефона; у ваших телефонов — около 144 px), '
+                       'справа — увеличение без сглаживания' % (' — рисует сам Android' if src == 'android' else '')), ''.join(rows)))
+    return page(body, 1180, 120 + 270 * len(vs))
+
+
+def tiny(v, n):
+    return ('<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;width:%dpx;height:%dpx;background:transparent}'
+            '</style></head><body>%s</body></html>' % (n, n, icon(v, n)))
 
 
 def page(body, w, h):
@@ -141,14 +175,23 @@ def main():
     os.makedirs(os.path.join(out, 'html'), exist_ok=True)
     pages = {'Icon426' + v: board(v) for v in VARIANTS}
     pages['Icon426All'] = compare()
+    pages['Icon426Quality'] = quality('AF', 'android' if os.path.isdir(os.path.join(out, 'android')) else 'px')
     for name, html in pages.items():
         open(os.path.join(out, 'html', name + '.html'), 'w', encoding='utf-8').write(html)
+    os.makedirs(os.path.join(out, 'pxhtml'), exist_ok=True)
+    for v in 'AF':
+        for n in PX:
+            open(os.path.join(out, 'pxhtml', '%s-%d.html' % (v, n)), 'w', encoding='utf-8').write(tiny(v, n))
     js = os.path.join(out, 'render.js')
     open(js, 'w').write('''const { chromium } = require('playwright'); const fs = require('fs'); const path = require('path');
 (async () => { const [dir] = process.argv.slice(2); const b = await chromium.launch(); fs.mkdirSync(path.join(dir, 'img'), { recursive: true });
+fs.mkdirSync(path.join(dir, 'px'), { recursive: true });
+for (const f of fs.readdirSync(path.join(dir, 'pxhtml'))) { const n = +/-(\\d+)\\.html/.exec(f)[1];
+ const p = await b.newPage({ viewport: { width: n, height: n }, deviceScaleFactor: 1 }); await p.goto('file://' + path.join(dir, 'pxhtml', f));
+ await p.screenshot({ path: path.join(dir, 'px', f.replace('.html', '.png')), omitBackground: true }); await p.close(); }
 for (const f of fs.readdirSync(path.join(dir, 'html'))) { const html = fs.readFileSync(path.join(dir, 'html', f), 'utf8');
  const m = /width:(\\d+)px;height:(\\d+)px;background/.exec(html);
- const p = await b.newPage({ viewport: { width: +m[1], height: +m[2] }, deviceScaleFactor: 2 }); await p.goto('file://' + path.join(dir, 'html', f));
+ const p = await b.newPage({ viewport: { width: +m[1], height: +m[2] }, deviceScaleFactor: f.includes('Quality') ? 1 : 2 }); await p.goto('file://' + path.join(dir, 'html', f));
  await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, 'img', f.replace('.html', '.png')) }); await p.close(); }
 await b.close(); })();''')
     subprocess.run(['node', js, os.path.abspath(out)], check=True, cwd=out)

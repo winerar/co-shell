@@ -59,7 +59,7 @@ class Shape:
         d += 'C%s %s %s Z' % (_pt(j[-1][0] + 1, self.side - 10), _pt(xl - 3, self.top + 3), _pt(xl, self.top))
         return d
 
-    def ribs(self, w0=1.6, w1=3.2):
+    def ribs(self, w0=2.1, w1=3.4):  # narrow end ≥ 1.4 px at mdpi
         apex = (CX, self.top - 2)
         out = []
         for x, y in self.junctions()[1:-1]:
@@ -74,7 +74,7 @@ class Shape:
 
     def frame(self):
         """Kiss-lock frame: a rounded bar a little wider than the neck, a gap above the body."""
-        x0, x1, y0, y1, r = CX - self.neck - 2, CX + self.neck + 2, self.top - 9, self.top - 2.2, 3.4
+        x0, x1, y0, y1, r = CX - self.neck - 2, CX + self.neck + 2, self.top - 9, self.top - 2.9, 3.05  # gap ≥ 2 px at mdpi
         return ('M%s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s Z'
                 % (_pt(x0 + r, y0), _pt(x1 - r, y0), _f(r), _f(r), _pt(x1, y0 + r), _pt(x1, y1 - r), _f(r), _f(r), _pt(x1 - r, y1),
                    _pt(x0 + r, y1), _f(r), _f(r), _pt(x0, y1 - r), _pt(x0, y0 + r), _f(r), _f(r), _pt(x0 + r, y0)))
@@ -86,14 +86,32 @@ class Shape:
         stem = 'M%s L%s L%s L%s Z' % (_pt(cx - 1.3, cy), _pt(cx - 1.4 - side * .6, y0 + .5), _pt(cx + 1.4 - side * .6, y0 + .5), _pt(cx + 1.3, cy))
         return circle(cx, cy, r) + ' ' + stem
 
+    def frame_line(self):
+        """Kiss-lock frame for the thin-line style: one stroke (a closed outline blurs into a lump at 48 px)."""
+        y = self.top - 6
+        return 'M%s L%s' % (_pt(CX - self.neck - .5, y), _pt(CX + self.neck + .5, y))
+
+    def ball_ring(self, side):
+        """Clasp ball for the thin-line style: a ring on a short stem (stroked)."""
+        y0 = self.top - 9
+        cx, cy, r = CX + side * 5, y0 - 4.6, 3.6
+        return circle(cx, cy, r) + ' M%s L%s' % (_pt(cx - side * .3, cy + r), _pt(cx - side * .9, y0 + 3))
+
 
 def layers(shape, body, frame, ball1, ball2, ribs=True):
     """Foreground layers: (pathData, fill, evenOdd)."""
     return [(shape.body(ribs), body, True), (shape.frame(), frame, False), (shape.ball(-1), ball1, False), (shape.ball(1), ball2, False)]
 
 
-def outline_layers(shape, color, color2, width=4.6):
-    """Bold-line variant: the same outline as strokes (pathData, stroke, width)."""
+def outline_layers(shape, color, color2, width=4.6, thin=False):
+    """Line variants: the same outline as strokes (pathData, colour, width; width 0 = filled).
+
+    Bold (Д): frame and ribs a little thinner than the edge, filled clasp balls. Thin (Е, #426 note): one width everywhere,
+    clasp balls as rings — the line style of the 0.x icon with the scallop edge.
+    """
+    if thin:
+        return [(shape.body_outline(), color, width), (shape.frame_line(), color, width), (' '.join(_rib_lines(shape)), color, width),
+                (shape.ball_ring(-1), color, width), (shape.ball_ring(1), color2, width)]
     return [(shape.body_outline(), color, width), (shape.frame(), color, width * .8)] + \
            [(p, color, width * .7) for p in [' '.join(_rib_lines(shape))]] + [(shape.ball(-1), color, 0), (shape.ball(1), color2, 0)]
 
@@ -115,10 +133,18 @@ def svg_paths(fills):
     return ''.join(out)
 
 
-def vector_xml(fills, comment):
-    """Android VectorDrawable for the adaptive-icon foreground / monochrome layer."""
-    body = ''.join('    <path\n        android:fillColor="%s"%s\n        android:pathData="%s" />\n'
-                   % (c, '\n        android:fillType="evenOdd"' if even else '', d) for d, c, even in fills)
+def vector_xml(layers, comment):
+    """Android VectorDrawable for the adaptive-icon foreground / monochrome layer.
+
+    layers: (pathData, colour, mode) — mode True/False: fill (evenOdd or not), a number > 0: stroke of that width, 0: fill.
+    """
+    def one(d, c, mode):
+        if mode is True or mode is False or mode == 0:
+            even = '\n        android:fillType="evenOdd"' if mode is True else ''
+            return '    <path\n        android:fillColor="%s"%s\n        android:pathData="%s" />\n' % (c, even, d)
+        return ('    <path\n        android:strokeColor="%s"\n        android:strokeWidth="%s"\n        android:strokeLineCap="round"\n'
+                '        android:strokeLineJoin="round"\n        android:pathData="%s" />\n' % (c, _f(mode), d))
+    body = ''.join(one(*x) for x in layers)
     return ('<?xml version="1.0" encoding="utf-8"?>\n<!-- %s -->\n<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
             '    android:width="108dp"\n    android:height="108dp"\n    android:viewportWidth="108"\n    android:viewportHeight="108">\n%s</vector>\n'
             % (comment, body))

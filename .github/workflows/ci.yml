@@ -93,6 +93,7 @@ jobs:
         run: |
           python3 -m unittest discover -s scripts -p 'test_*.py'
           python3 -m unittest discover -s scripts/ci -p 'test_*.py'
+          python3 -m unittest discover -s scripts/agent -p 'test_*.py'
 
       # Before the automerge step below: a PR with broken rules is not merged.
       - name: Firebase rules tests (emulator)

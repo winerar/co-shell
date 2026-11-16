@@ -35,8 +35,8 @@ import app.coshell.ui.bar.ReplaceBottomBar
 import app.coshell.ui.list.LoadMoreEffect
 import app.coshell.ui.top.TabOrSelectionTopBar
 import app.coshell.ui.top.TabSearch
-import app.coshell.ui.top.rememberTabScrollBehavior
-import app.coshell.ui.top.tabScroll
+import app.coshell.core.designsystem.components.rememberTabScrollBehavior
+import app.coshell.core.designsystem.components.tabScroll
 import kotlinx.datetime.LocalDate
 
 /**

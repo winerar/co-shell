@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import app.coshell.core.designsystem.components.TabScroll
+import app.coshell.core.designsystem.components.rememberTabScrollBehavior
+import app.coshell.core.designsystem.components.tabScroll
 
 /**
  * The scroll of the inner screen around it, for [ScreenTopBar]'s hairline (#394 Б). Null outside [ScreenScrollHost]

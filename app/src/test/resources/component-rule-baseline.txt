@@ -75,17 +75,6 @@ app/coshell/ui/form/IconColorStrips.kt	draw clip	1
 app/coshell/ui/form/IconColorStrips.kt	type fontWeight	2
 app/coshell/ui/hero/StatusCard.kt	draw CircleShape	1
 app/coshell/ui/hero/StatusCard.kt	draw background	1
-app/coshell/ui/top/ScreenTopBar.kt	material3 TopAppBar	1
-app/coshell/ui/top/ScreenTopBar.kt	material3 TopAppBarDefaults	1
-app/coshell/ui/top/ScreenTopBar.kt	type fontWeight	1
-app/coshell/ui/top/ScrollHairline.kt	draw drawWithContent	1
-app/coshell/ui/top/SelectionTopBar.kt	material3 TopAppBar	1
-app/coshell/ui/top/SelectionTopBar.kt	material3 TopAppBarDefaults	1
-app/coshell/ui/top/SelectionTopBar.kt	type fontWeight	1
-app/coshell/ui/top/TabTopBar.kt	material3 TopAppBar	1
-app/coshell/ui/top/TabTopBar.kt	material3 TopAppBarDefaults	1
-app/coshell/ui/top/TabTopBar.kt	material3 TopAppBarScrollBehavior	1
-app/coshell/ui/top/TabTopBar.kt	type fontWeight	1
 app/coshell/update/past/PastReleaseCard.kt	draw CircleShape	1
 app/coshell/update/past/PastReleaseCard.kt	draw background	1
 app/coshell/update/past/PastReleaseCard.kt	type fontWeight	1

@@ -30,8 +30,8 @@ import app.coshell.reports.components.ReportChoice
 import app.coshell.reports.components.ReportPeriodSheet
 import app.coshell.reports.components.SpendingCard
 import app.coshell.ui.top.TabTopBar
-import app.coshell.ui.top.rememberTabScrollBehavior
-import app.coshell.ui.top.tabScroll
+import app.coshell.core.designsystem.components.rememberTabScrollBehavior
+import app.coshell.core.designsystem.components.tabScroll
 import kotlinx.datetime.YearMonth
 
 /**

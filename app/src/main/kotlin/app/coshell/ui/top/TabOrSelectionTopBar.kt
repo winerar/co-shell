@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import app.coshell.core.designsystem.components.TabScroll
 import app.coshell.core.designsystem.tokens.Motion
 
 /**
@@ -42,7 +43,7 @@ fun TabOrSelectionTopBar(
         },
         label = "selectionHeader",
     ) { selecting ->
-        if (selecting) SelectionTopBar(lastCount, onClearSelection, scroll)
+        if (selecting) SelectionTopBar(lastCount, onClearSelection)
         else TabTopBar(title, scroll, subtitle, search)
     }
 }

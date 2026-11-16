@@ -37,8 +37,8 @@ import app.coshell.home.sync.SyncBannerState
 import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.reports.review.MonthReviewUiState
 import app.coshell.ui.top.TabTopBar
-import app.coshell.ui.top.rememberTabScrollBehavior
-import app.coshell.ui.top.tabScroll
+import app.coshell.core.designsystem.components.rememberTabScrollBehavior
+import app.coshell.core.designsystem.components.tabScroll
 import app.coshell.home.upcoming.UpcomingCard
 import app.coshell.home.upcoming.UpcomingRow
 import app.coshell.home.upcoming.UpcomingViewModel

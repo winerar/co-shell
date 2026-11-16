@@ -11,4 +11,4 @@
   очищают и закрывают. В «Операциях» строки поиска над чипами больше нет.
 - `ScreenTopBar` — внутренние экраны; сплошная, линия при прокрутке (#394 Б) — из `LocalScreenScroll`, который ставит
   `ScreenScrollHost` на каждый экран навигации (`navigation/ScreenDestination.kt`: `screen<T>` вместо `composable<T>`).
-  Линия — общий `Modifier.scrollHairline`. Макет-страница: `docs/design/topbar-headers.html`.
+  Каркас всех трёх — `CoShellTopBar(kind = Tab | Screen | Selection, scrolled, navigation, actions, title)` в `core:designsystem` (#367): 64 dp, стиль заголовка по виду отдаёт слот `title`, линия при прокрутке внутри; `TabScroll`/`rememberTabScrollBehavior`/`tabScroll` — там же. Макет-страница: `docs/design/topbar-headers.html`.

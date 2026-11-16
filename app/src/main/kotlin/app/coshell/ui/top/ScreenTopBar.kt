@@ -5,21 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellTopBar
+import app.coshell.core.designsystem.components.TopBarKind
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.R as DesignR
 
@@ -33,7 +31,6 @@ import app.coshell.core.designsystem.R as DesignR
  * [onBack] null hides «Назад» (a finished wipe has nowhere to go back to); [backEnabled] false greys it out
  * while work must not be interrupted. [subtitle] — a second muted line (the import wizard's step).
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenTopBar(
     title: String,
@@ -42,37 +39,25 @@ fun ScreenTopBar(
     subtitle: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
-    val surface = MaterialTheme.colorScheme.surface
-    TopAppBar(
-        modifier = Modifier.scrollHairline(LocalScreenScroll.current?.scrolled == true),
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = surface, scrolledContainerColor = surface),
-        title = {
-            Column {
-                Text(
-                    title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                if (subtitle != null) {
-                    Text(
-                        subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-        },
-        navigationIcon = {
-            if (onBack != null) {
-                CoShellIconButton(onClick = onBack, enabled = backEnabled, modifier = Modifier.padding(start = Spacing.s)) {
+    CoShellTopBar(
+        kind = TopBarKind.Screen,
+        scrolled = LocalScreenScroll.current?.scrolled == true,
+        navigation = onBack?.let { back ->
+            {
+                CoShellIconButton(onClick = back, enabled = backEnabled, modifier = Modifier.padding(start = Spacing.s)) {
                     Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
                 }
             }
         },
         actions = { TopBarActions(actions) },
-    )
+    ) { style ->
+        Column {
+            Text(title, style = style, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (subtitle != null) {
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
 }
 
 /** Actions of a top bar: 48 dp circles (board Style6) with a small gap between them and from the edge. */

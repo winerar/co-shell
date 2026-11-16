@@ -25,8 +25,8 @@ import app.coshell.more.components.moreSections
 import app.coshell.newmark.NewFeatures
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.TabTopBar
-import app.coshell.ui.top.rememberTabScrollBehavior
-import app.coshell.ui.top.tabScroll
+import app.coshell.core.designsystem.components.rememberTabScrollBehavior
+import app.coshell.core.designsystem.components.tabScroll
 
 // Menu tab (board 154А, #155): the version card on top, then the rarely used sections as rows in three groups
 // (Деньги · Семья и данные · Приложение). The former «Настройки» screen is gone: its items live in the groups.

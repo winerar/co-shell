@@ -1,5 +1,6 @@
 package app.coshell.transactions.list
 
+import androidx.compose.runtime.Immutable
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.domain.tags.TagUsage
 import app.coshell.core.model.Account
@@ -21,7 +22,9 @@ data class FilterChoices(
 ) {
     data class AccountChoice(val id: String, val name: String, val currency: String, val color: Long?)
 
-    /** A loose category or a folder with its [children]; choosing a folder chooses [ids] — it and all of them. */
+    /** A loose category or a folder with its [children]; choosing a folder chooses [ids] — it and all of them.
+     * Recursive, so the Compose compiler cannot infer it: immutable by construction (#383). */
+    @Immutable
     data class CategoryChoice(
         val id: String,
         val name: String,

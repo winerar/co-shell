@@ -4,7 +4,7 @@
 Labels are the source of truth the agent reads and writes; the board is the owner's view.
 - every open issue is on the board; its Status column follows its `status:*` label;
 - a closed issue goes to «Готово» (closed = merged into dev: `Fixes #N`, dev is the default branch);
-- the owner moved a card (the item changed after the issue's last label change) → the label
+- the owner moved a card (its Status value changed after the issue's last label change) → the label
   follows the board; «Готово» on an open issue closes it;
 - field «Тип» (story / feature / bug / question / owner check) follows the type label, one way:
   the owner can group or filter the board by it.
@@ -16,11 +16,15 @@ import json
 import os
 import sys
 import urllib.request
+from datetime import datetime, timedelta
 
 API = "https://api.github.com"
 FIELD = "Status"
 DONE = "Готово"
 TRIAGE = "status:triage"
+# «Moved by the owner» = the card's Status value changed after the last label change. Not the card's own
+# updatedAt: GitHub bumps it on any change of the issue, which reverted the agent's label changes (2026-11-15).
+OWNER_MOVE_GRACE = timedelta(minutes=2)
 # label → column, in board order; «Готово» is the last column
 COLUMNS = [
     ("status:triage", "Разобрать", "RED"),
@@ -57,12 +61,23 @@ def decide(issue, item):
     want = LABEL_TO_COLUMN.get(status_label(issue["labels"]), LABEL_TO_COLUMN[TRIAGE])
     if item is None or item["status"] == want:
         return (want if item is None else None), None, False
-    moved_by_owner = item["status"] and (item["updated_at"] or "") > (issue["labels_at"] or "")
+    moved_by_owner = item["status"] and moved_after(item["updated_at"], issue["labels_at"])
     if moved_by_owner and item["status"] == DONE:
         return None, None, True
     if moved_by_owner and item["status"] in COLUMN_TO_LABEL:
         return None, COLUMN_TO_LABEL[item["status"]], False
     return want, None, False
+
+
+def moved_after(card_at, labels_at):
+    """The card's Status changed well after the last status-label change (ISO-8601 UTC strings).
+
+    Unknown label time → the label wins: GraphQL timelineItems returned no label events at all (2026-11-15),
+    and «no events» read as «the owner moved it» reverted every label the agent set."""
+    if not labels_at or not card_at:
+        return False
+    parse = lambda t: datetime.fromisoformat(t.replace("Z", "+00:00"))
+    return parse(card_at) > parse(labels_at) + OWNER_MOVE_GRACE
 
 
 def type_of(labels):
@@ -105,6 +120,23 @@ def rest(token, method, path, payload=None):
         return resp.read()
 
 
+def status_labels_at(events):
+    """Time of the last `status:*` labeled/unlabeled event in REST issue events (oldest first), or None."""
+    times = [e["created_at"] for e in events if e.get("event") in ("labeled", "unlabeled")
+             and (e.get("label") or {}).get("name", "").startswith("status:")]
+    return max(times) if times else None
+
+
+def issue_events(token, repo, number):
+    events, page = [], 1
+    while True:
+        batch = json.loads(rest(token, "GET", f"/repos/{repo}/issues/{number}/events?per_page=100&page={page}"))
+        events += batch
+        if len(batch) < 100:
+            return events
+        page += 1
+
+
 def drop_status(token, repo, number, labels):
     old = status_label(labels)
     if old:
@@ -115,7 +147,7 @@ PROJECT_Q = """query($owner:String!,$number:Int!,$after:String){user(login:$owne
  id field(name:"Status"){... on ProjectV2SingleSelectField{id options{id name}}}
  kind:field(name:"Тип"){... on ProjectV2SingleSelectField{id options{id name}}}
  items(first:100,after:$after){pageInfo{hasNextPage endCursor} nodes{id updatedAt
-  fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name}}
+  fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name updatedAt}}
   kind:fieldValueByName(name:"Тип"){... on ProjectV2ItemFieldSingleSelectValue{name}}
   content{... on Issue{number repository{nameWithOwner}}}}}}}}"""
 
@@ -190,7 +222,8 @@ def main():
         for n in page["items"]["nodes"]:
             c = n["content"] or {}
             if c.get("repository", {}).get("nameWithOwner") == repo:
-                items[c["number"]] = {"id": n["id"], "updated_at": n["updatedAt"],
+                value = n["fieldValueByName"] or {}
+                items[c["number"]] = {"id": n["id"], "updated_at": value.get("updatedAt") or n["updatedAt"],
                                       "status": None if reset else (n["fieldValueByName"] or {}).get("name"),
                                       "kind": None if kind_reset else (n["kind"] or {}).get("name")}
     issues = {}
@@ -205,6 +238,9 @@ def main():
     for number, issue in sorted(issues.items()):
         item = items.get(number)
         column, label, close = decide(issue, item)
+        if label or close:  # the board would override the label: check the label time over REST first
+            issue["labels_at"] = status_labels_at(issue_events(rtoken, repo, number))
+            column, label, close = decide(issue, item)
         if item is None and column:
             item = {"id": graphql(ptoken, ADD_M, project=project, content=issue["id"])["addProjectV2ItemById"]["item"]["id"]}
         if column:
@@ -218,6 +254,7 @@ def main():
                 graphql(ptoken, CLEAR_M, project=project, item=item["id"], field=kind["id"])
             print(f"#{number}: {TYPE_FIELD} → {want or '—'}")
         if label:
+            print(f"#{number}: card «{item['status']}» set {item['updated_at']}, labels changed {issue['labels_at']}")
             drop_status(rtoken, repo, number, issue["labels"])
             rest(rtoken, "POST", f"/repos/{repo}/issues/{number}/labels", {"labels": [label]})
             print(f"#{number}: board → {label}")

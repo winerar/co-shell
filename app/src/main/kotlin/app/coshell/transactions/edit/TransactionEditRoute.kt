@@ -15,6 +15,7 @@ import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.strip.TemplateStripViewModel
 import kotlinx.datetime.LocalDate
+import app.coshell.gate.LocalInputLock
 
 /** Connects [TransactionEditScreen] to its ViewModel. */
 @Composable
@@ -28,6 +29,7 @@ fun TransactionEditRoute(
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     val haptics = LocalHapticFeedback.current
     val addConfirm = LocalAddConfirm.current
     var saving by remember { mutableStateOf(false) }
@@ -60,24 +62,29 @@ fun TransactionEditRoute(
             onRefundToggle = viewModel::onRefundToggle,
             onReceiptCurrencyChange = viewModel::onReceiptCurrencyChange,
             onReceiptAmountChange = viewModel::onReceiptAmountChange,
-            onSave = {
+            onSave = lock.guard {
                 saving = true
                 viewModel.save()
             },
-            onDelete = viewModel::delete,
+            onDelete = lock.guard(viewModel::delete),
             onDuplicate = { viewModel.transactionId?.let(onDuplicate) },
             onStepChange = viewModel::onStepChange,
             onKeypadTarget = viewModel::onKeypadTarget,
             onTemplatePick = viewModel::onTemplatePick,
             onTemplateClear = viewModel::onTemplateClear,
+            onPaymentSkip = lock.guard(viewModel::onPaymentSkip),
             onAllTemplates = onAllTemplates,
             onNewTemplate = onNewTemplate,
-            onSaveAsTemplate = viewModel::saveAsTemplate,
+            onSaveAsTemplate = lock.guard2(viewModel::saveAsTemplate),
             onTagToggle = viewModel::onTagToggle,
-            onTagCreate = viewModel::onTagCreate,
+            onTagCreate = lock.guard2(viewModel::onTagCreate),
             onKey = { key ->
-                if (key == KeypadKey.Done) saving = true
-                viewModel.onKey(key)
+                if (key == KeypadKey.Done && lock.locked) {
+                    lock.onBlocked()
+                } else {
+                    if (key == KeypadKey.Done) saving = true
+                    viewModel.onKey(key)
+                }
             },
         ),
     )
@@ -108,6 +115,8 @@ data class TransactionEditActions(
     val onKey: (KeypadKey) -> Unit = {},
     val onTemplatePick: (String) -> Unit = {},
     val onTemplateClear: () -> Unit = {},
+    /** «Пропустить этот раз» of a payment from «Скоро» (#404). */
+    val onPaymentSkip: () -> Unit = {},
     val onAllTemplates: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },

@@ -14,12 +14,15 @@ import app.coshell.R
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.CoShellStatusChip
+import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.more.components.VersionCard
 import app.coshell.more.components.moreSections
+import app.coshell.newmark.NewFeatures
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
@@ -37,12 +40,16 @@ data class MoreState(
     val mainCurrency: String? = null,
     /** «Вольт · тёмная» under «Внешний вид». */
     val appearance: String? = null,
+    /** Keys of the rows that wear the «новое» pill (#335, `NewFeatures`). */
+    val newMarks: Set<String> = emptySet(),
 )
 
 data class MoreActions(
     val onCategories: () -> Unit = {},
     val onAccounts: () -> Unit = {},
     val onBudgets: () -> Unit = {},
+    /** «Регулярные платежи»: always reachable here, also when «Скоро» on «Обзор» is hidden (#403). */
+    val onRecurring: () -> Unit = {},
     val onRates: () -> Unit = {},
     val onReportCurrencies: () -> Unit = {},
     val onFamily: () -> Unit = {},
@@ -54,6 +61,8 @@ data class MoreActions(
     val onOpenUpdate: () -> Unit = {},
     /** «Обновить» on the card: the download starts right away and the update screen opens. */
     val onStartUpdate: () -> Unit = {},
+    /** A row with the «новое» pill was opened: the pill goes away. */
+    val onOpenedNew: (String) -> Unit = {},
 )
 
 @Composable
@@ -82,13 +91,22 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                 SectionTitle(stringResource(section.title))
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index + 1)) {
                     section.items.forEach { item ->
+                        val isNew = item.newKey != null && item.newKey in state.newMarks
                         row {
                             CoShellMenuRow(
                                 icon = item.icon,
                                 color = categoryColor(item.color),
                                 title = stringResource(item.title),
                                 subtitle = item.subtitle,
-                                onClick = item.onClick,
+                                onClick = {
+                                    if (isNew) actions.onOpenedNew(item.newKey!!)
+                                    item.onClick()
+                                },
+                                mark = if (isNew) {
+                                    { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
+                                } else {
+                                    null
+                                },
                             )
                         }
                     }
@@ -101,7 +119,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · системная")) }
+    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · системная", newMarks = setOf(NewFeatures.RECURRING))) }
 }
 
 @Preview(showBackground = true)

@@ -14,6 +14,7 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TemplateSyncTest {
     private val ars = CurrencyCode("ARS")
@@ -52,6 +53,19 @@ class TemplateSyncTest {
         a.tick(2_000); a.templates.deleteTemplate("coffee")
         a.engine.sync(); b.engine.sync()
         assertNull(b.templates.getTemplate("coffee"))
+    }
+
+    @Test
+    fun `payment in another currency travels with both currencies and reads safely for an older version`() = runTest {
+        val rent = TransactionTemplate("rent", "Аренда", TransactionType.EXPENSE, "card", ars, Money(650_00, CurrencyCode("USD")))
+        a.templates.saveTemplate(rent)
+        a.engine.sync(); b.engine.sync()
+
+        assertEquals(rent, b.templates.getTemplate("rent"))
+        val json = server.records.single().record.json
+        // An older version reads only `currency`: 650 USD on an ARS account — the account no longer fits, nothing in ARS.
+        assertTrue("\"currency\":\"USD\"" in json, json)
+        assertTrue("\"accountCurrency\":\"ARS\"" in json, json)
     }
 
     @Test

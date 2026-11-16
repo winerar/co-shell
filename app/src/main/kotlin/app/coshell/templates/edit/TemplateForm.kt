@@ -1,6 +1,7 @@
 package app.coshell.templates.edit
 
 import app.coshell.core.model.Account
+import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.transactions.edit.parsePositiveAmount
@@ -12,6 +13,7 @@ internal sealed interface TemplateFormResult {
         val accountError: Boolean = false,
         val toAccountError: Boolean = false,
         val amountError: Boolean = false,
+        val amountCurrencyError: Boolean = false,
     ) : TemplateFormResult
 }
 
@@ -19,6 +21,7 @@ internal sealed interface TemplateFormResult {
  * Checks the typed form and builds the template. Pure: no repositories. A blank amount is fine («спросим
  * при вводе»); a transfer needs a second, different account and never keeps a category.
  * «Повтор» is kept; «Проводить само» becomes «Напомнить» once the amount is cleared or the type became a transfer.
+ * «Платёж в другой валюте» (#415) needs a valid code other than the account's and an amount (it is the receipt).
  */
 internal fun buildTemplate(
     form: TemplateEditUiState,
@@ -31,14 +34,16 @@ internal fun buildTemplate(
     val toAccount = form.toAccountId?.let { accountsById[it] }.takeIf { form.isTransfer }
     val toAccountError = form.isTransfer && (toAccount == null || toAccount.id == account?.id)
 
+    val foreignCurrency = form.amountCurrency?.trim()?.let(CurrencyCode::parseOrNull).takeIf { form.isForeign }
+    val currencyError = form.isForeign && account != null && (foreignCurrency == null || foreignCurrency == account.currency)
     var amount: Money? = null
-    var amountError = false
+    var amountError = form.isForeign && form.amount.isBlank()
     if (form.amount.isNotBlank() && account != null) {
-        amount = parsePositiveAmount(form.amount, account.currency).money
+        amount = parsePositiveAmount(form.amount, foreignCurrency ?: account.currency).money
         amountError = amount == null
     }
-    if (name.isEmpty() || account == null || toAccountError || amountError) {
-        return TemplateFormResult.Invalid(name.isEmpty(), account == null, toAccountError, amountError)
+    if (name.isEmpty() || account == null || toAccountError || amountError || currencyError) {
+        return TemplateFormResult.Invalid(name.isEmpty(), account == null, toAccountError, amountError, currencyError)
     }
     return TemplateFormResult.Valid(
         TransactionTemplate(

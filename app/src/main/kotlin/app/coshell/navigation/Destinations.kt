@@ -143,6 +143,11 @@ data class TransactionEditDestination(
     val copyFrom: String? = null,
     /** A new operation filled from this template (tap in «Все шаблоны»), dated today. */
     val templateId: String? = null,
+    /**
+     * «Провести» a regular payment (#143): with [templateId], the operation is dated this day (ISO `2026-11-15`) and,
+     * once saved, every payment of the template up to it counts as handled.
+     */
+    val paymentDate: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
@@ -150,8 +155,13 @@ data class TransactionEditDestination(
         const val ARG_TYPE = "type"
         const val ARG_COPY_FROM = "copyFrom"
         const val ARG_TEMPLATE_ID = "templateId"
+        const val ARG_PAYMENT_DATE = "paymentDate"
     }
 }
+
+/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment. */
+@Serializable
+data object RecurringListDestination
 
 /** «Все шаблоны»: search, «Часто», groups by type and category (#104). */
 @Serializable

@@ -3,6 +3,7 @@ package app.coshell.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
@@ -44,6 +46,7 @@ import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.rates.list.RatesRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
+import app.coshell.recurring.list.RecurringListRoute
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
 import app.coshell.transactions.edit.TransactionEditRoute
@@ -57,6 +60,10 @@ import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
 import app.coshell.update.notice.UpdatePill
 import app.coshell.wipe.WipeDataRoute
+import app.coshell.gate.InputLockViewModel
+import app.coshell.gate.rememberInputLock
+import app.coshell.home.components.VersionGateBannerState
+import app.coshell.update.components.megabytes
 import kotlinx.datetime.number
 
 @Composable
@@ -65,6 +72,8 @@ fun CoShellNavHost(
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
+    inputLock: InputLockViewModel = hiltViewModel(),
+    paymentLinks: PaymentLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -75,19 +84,27 @@ fun CoShellNavHost(
     CrashNotice(crashes)
     val updatePill by updates.pill.collectAsStateWithLifecycle()
     val updateAvailable by updates.available.collectAsStateWithLifecycle()
+    val locked by inputLock.locked.collectAsStateWithLifecycle()
+    // «Обновить» on the gate banner and its note (#334): the download starts if the release is known.
+    val openUpdate = {
+        updateAvailable?.let(updates::startUpdate)
+        navController.navigate(UpdateDestination) { launchSingleTop = true }
+    }
+    val lock = rememberInputLock(locked, openUpdate)
 
     // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
         enabled = shakeEnabled && onTab,
-        onShake = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onShake = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
     )
 
     MainShell(
         navController = navController,
         snackbar = snackbar,
-        onAdd = { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onAdd = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
         moreBadge = updateAvailable != null,
+        inputLock = lock,
         overBar = { onBar ->
             UpdatePill(
                 release = updatePill,
@@ -121,7 +138,17 @@ fun CoShellNavHost(
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
                     onReview = { month -> navController.navigate(MonthReviewDestination(month.year, month.month.number)) { launchSingleTop = true } },
+                    onPostPayment = { templateId, date ->
+                        navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
+                    },
+                    onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                 ),
+                gate = if (locked) {
+                    VersionGateBannerState(updateAvailable?.versionName, updateAvailable?.sizeBytes?.let(::megabytes))
+                } else {
+                    null
+                },
+                onUpdate = openUpdate,
             )
         }
         screen<TransactionsDestination> { entry ->
@@ -152,6 +179,13 @@ fun CoShellNavHost(
             TemplatesRoute(
                 onBack = { navController.popBackStack() },
                 onUse = { navController.navigate(TransactionEditDestination(templateId = it)) { launchSingleTop = true } },
+                onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
+                onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+            )
+        }
+        screen<RecurringListDestination> {
+            RecurringListRoute(
+                onBack = { navController.popBackStack() },
                 onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
                 onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
             )
@@ -314,6 +348,18 @@ fun CoShellNavHost(
         }
         dialog<CategoryEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> CategoryEditRoute(onDone = close) }
+        }
+    }
+
+    // «Изменить сумму» / «Провести» on a payment reminder (#405): the «Провести» sheet on that payment.
+    if (paymentLinks != null) {
+        val link by paymentLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val payment = link ?: return@LaunchedEffect
+            navController.navigate(TransactionEditDestination(templateId = payment.templateId, paymentDate = payment.date.toString())) {
+                launchSingleTop = true
+            }
+            paymentLinks.consumed()
         }
     }
 }

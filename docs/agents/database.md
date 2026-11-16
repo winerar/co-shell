@@ -22,6 +22,8 @@
    (переименование, перенос данных).
 4. Тест миграции на JVM — `jvmTest/.../MigrationTest.kt` (`MigrationTestHelper` из `room-testing` +
    `BundledSQLiteDriver`): создать старую версию, вставить данные SQL-ом, мигрировать, проверить.
+   `MigrationToLatestTest` сам проверяет каждую версию → текущую одним прыжком (строка в каждой таблице
+   строится по JSON схемы), что схемы идут без пропусков до `version` и что нет `fallbackToDestructiveMigration`.
 5. `fallbackToDestructiveMigration` **запрещён**: до этапа 4 данные живут только на телефоне.
 
 ## Таблицы по схемам
@@ -40,6 +42,8 @@
   обновляются, только если запись победила), при отправке подмешиваются под свои поля (`SyncPayload.withExtras`).
   В каждом `json` — номер схемы синка `v` (`SyncPayload.SCHEMA`, нет — схема 1); внутри `json`, а не полем документа: правила Firestore — `hasOnly`.
   В резервную копию `sync_extras` не попадает; очищается в `wipeSyncedData`.
+- **Схема новее своей** (#334): наибольший `v` из принятых записей — `sync_state["peer_schema"]` (`VersionGate`); выше
+  `SyncPayload.SCHEMA` → ввод закрыт (`app/.../gate/`). Поднимать `SCHEMA` — только когда старая версия испортит данные.
 - **Новая синхронизируемая таблица** = `SyncKind` + `SyncCodec` + все списки в `SyncDao` (pending, clear, merge,
   wipe, markAllPending) + `SyncEngine` + `WipeDao` + бэкап + **`kind` в `firebase/firestore.rules`** (владелец
   публикует правила заново, иначе отправка падает). Образец — шаблоны (#169).
@@ -69,3 +73,5 @@
   бюджеты и подкатегории переходят к категории из копии. Разбор и сборка JSON — на `Dispatchers.Default`.
 - UI: `app/.../backup/` — файл выбирает системный диалог (Storage Access Framework), чтение/запись —
   `DocumentStorage` (интерфейс; на Android — `ContentResolverDocumentStorage`). Перед импортом — подтверждение.
+- Круг «копия → «Стереть всё» → восстановить» в той же базе даёт ту же копию байт в байт и ставит строки
+  в синк — `BackupWipeRestoreTest` (#383). Новая сущность в копии — заполнить её и там.

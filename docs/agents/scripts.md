@@ -53,6 +53,7 @@
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |
+| `stability` (`compose-stability.py`) | отчёты компилятора Compose для `app` (`--rerun`, ~1,5 мин) → падает на нестабильном классе состояния (`*UiState*`, `*State`) (#383) |
 
 Скрипты CI и для владельца — в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
 `material-symbol-to-vector.py`, `test-rules.sh`) и `scripts/ci/`.

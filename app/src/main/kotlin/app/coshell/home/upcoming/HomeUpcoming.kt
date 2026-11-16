@@ -1,0 +1,52 @@
+package app.coshell.home.upcoming
+
+import app.coshell.core.domain.recurring.PaymentState
+import app.coshell.core.domain.recurring.activePayments
+import app.coshell.core.domain.recurring.upcomingPayments
+import app.coshell.core.model.Account
+import app.coshell.core.model.Category
+import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.TransactionTemplate
+import app.coshell.templates.TemplateItem
+import app.coshell.templates.toItem
+import kotlinx.datetime.LocalDate
+
+/**
+ * One row of «Скоро · 7 дней» on «Обзоре» (#143, board `Rec143HomeA`).
+ * @property date the oldest payment not handled yet — «Провести» opens the sheet on this day.
+ * @property missed overdue payments (1 — «пропущен», 2+ — «пропущено 2»); 0 for today and later.
+ * @property auto «Проводить само» and not overdue: «само» instead of «Провести».
+ * @property bulk 2+ missed with an amount: «Провести оба» / «Пропустить» under the row (#406, board `Rec143Edge`).
+ */
+data class UpcomingRow(
+    val item: TemplateItem,
+    val date: LocalDate,
+    val state: PaymentState,
+    val missed: Int = 0,
+    val auto: Boolean = false,
+    val bulk: Boolean = false,
+)
+
+/**
+ * Regular payments of the next days for «Обзор»: missed first, then by date ([upcomingPayments]). Paused ones (account
+ * archived, #406) are left out — «Регулярные платежи» says why. [accounts] — archived ones included.
+ */
+fun buildUpcomingRows(
+    templates: List<TransactionTemplate>,
+    accounts: Map<String, Account>,
+    categories: Map<String, Category>,
+    moneyFormat: MoneyFormat,
+    today: LocalDate,
+): List<UpcomingRow> = upcomingPayments(activePayments(templates, accounts), today).map { payment ->
+    val template = payment.template
+    UpcomingRow(
+        item = template.toItem(accounts, categories, moneyFormat),
+        date = payment.date,
+        state = payment.state,
+        missed = payment.missed.size,
+        // A missed «само» payment could not post itself (account archived, category gone): by hand then.
+        auto = template.postsByItself && payment.state != PaymentState.MISSED,
+        // A payment in another currency is entered one by one (#415): what was debited differs each time.
+        bulk = payment.missed.size > 1 && template.amount != null && !template.isForeign,
+    )
+}

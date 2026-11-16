@@ -29,6 +29,11 @@ data class TransactionDraft(
     val gaps: Set<TemplateGap> = emptySet(),
     /** The template the draft came from — for the «Из шаблона» pill. */
     val templateId: String? = null,
+    /**
+     * The template's amount in another currency (#415, «Аренда · 650 USD» from an ARS account): the receipt; what
+     * leaves the account is counted by the rate in the sheet. Set only when [accountId] is.
+     */
+    val receipt: Money? = null,
 )
 
 /**
@@ -78,7 +83,8 @@ fun draftFrom(
         date = now,
         accountId = usableAccount?.id,
         // The amount is in the account's currency: without the account it means nothing.
-        amount = template.amount.takeIf { usableAccount != null },
+        amount = template.amount.takeIf { usableAccount != null && !template.isForeign },
+        receipt = template.amount.takeIf { usableAccount != null && template.isForeign },
         categoryId = usableCategory?.id,
         toAccountId = usableTarget?.id,
         note = template.note,

@@ -37,9 +37,10 @@ import app.coshell.ui.sheet.ModalSheet
 /**
  * «⚡ Испанский ✕» — the operation is being filled from a template (mockup `TplEntry`); the violet of
  * view modes, like «Копия · сегодня». [onClear] null — just a label (the template was saved right now).
+ * A payment from «Скоро» shows «⟳ Свет · 15 нояб.» with [icon] `ic_refresh` (board `Rec143Post`).
  */
 @Composable
-internal fun TemplatePill(name: String, onClear: (() -> Unit)?) {
+internal fun TemplatePill(name: String, onClear: (() -> Unit)?, icon: Int = DesignR.drawable.ic_bolt) {
     val colors = MaterialTheme.colorScheme
     val clickable = if (onClear != null) Modifier.tactileClickable(Tactile.Control, PillShape, onClick = onClear) else Modifier
     Row(
@@ -47,7 +48,7 @@ internal fun TemplatePill(name: String, onClear: (() -> Unit)?) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
-        Icon(painterResource(DesignR.drawable.ic_bolt), null, Modifier.size(Sizes.tileIcon), tint = colors.onSecondaryContainer)
+        Icon(painterResource(icon), null, Modifier.size(Sizes.tileIcon), tint = colors.onSecondaryContainer)
         Text(
             name,
             style = MaterialTheme.typography.labelLarge,
@@ -67,12 +68,25 @@ internal fun TemplatePill(name: String, onClear: (() -> Unit)?) {
     }
 }
 
-/** «Из шаблона · сумму можно поправить» under the amount; without a remembered amount — «введите сумму». */
+/**
+ * «Из шаблона · сумму можно поправить» under the amount; without a remembered amount — «введите сумму».
+ * A payment paid before says how much it was: «В прошлый раз 41 300 · в среднем 44 000» (#404).
+ */
 @Composable
-internal fun templateHint(state: TransactionEditUiState): String? = when {
-    state.templateName == null -> null
-    state.amount.isBlank() -> stringResource(R.string.template_hint_enter_amount)
-    else -> stringResource(R.string.template_hint_amount)
+internal fun templateHint(state: TransactionEditUiState): String? {
+    val last = state.payment?.last
+    val average = state.payment?.average
+    val account = state.account
+    return when {
+        state.templateName == null -> null
+        // A payment in another currency without a rate (#415, board `Rec415NoRate`): the user enters what was debited.
+        state.payment != null && state.hasReceipt && state.amount.isBlank() && account != null ->
+            stringResource(R.string.payment_hint_no_rate, state.receiptCurrency, account.currency)
+        last != null && average != null -> stringResource(R.string.payment_hint_last_average, last, average)
+        last != null -> stringResource(R.string.payment_hint_last, last)
+        state.amount.isBlank() -> stringResource(R.string.template_hint_enter_amount)
+        else -> stringResource(R.string.template_hint_amount)
+    }
 }
 
 /**

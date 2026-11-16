@@ -6,11 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.model.CategoryType
+import app.coshell.gate.LocalInputLock
 
 /** Connects [CategoryEditScreen] to its ViewModel. */
 @Composable
 fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
     CategoryEditScreen(
         state = state,
@@ -22,9 +24,9 @@ fun CategoryEditRoute(onDone: () -> Unit, viewModel: CategoryEditViewModel = hil
             onColorChange = viewModel::onColorChange,
             onParentChange = viewModel::onParentChange,
             onToggleChild = viewModel::onToggleChild,
-            onSave = viewModel::save,
-            onToggleArchived = viewModel::toggleArchived,
-            onDelete = viewModel::delete,
+            onSave = lock.guard(viewModel::save),
+            onToggleArchived = lock.guard(viewModel::toggleArchived),
+            onDelete = lock.guard(viewModel::delete),
             onDismissDeleteBlocked = viewModel::dismissDeleteBlocked,
         ),
     )

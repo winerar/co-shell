@@ -69,3 +69,20 @@ internal val entrySheetSample: TransactionEditUiState = TransactionEditUiState(
         recentIds = listOf("аня", "на двоих"),
     ),
 )
+
+/** «Провести» of «Свет» from «Скоро» (#404, board `Rec143Post`): the payment pill, «Пропустить этот раз» and history. */
+internal val paymentSheetSample: TransactionEditUiState = entrySheetSample.copy(
+    amount = "48 200",
+    accountId = "ars",
+    categoryId = "utilities",
+    frequentCategories = frequentCategories(sampleCategories24, listOf("utilities", "rent", "phone", "internet", "shop", "cafe", "taxi"), "utilities"),
+    date = LocalDate(2026, 11, 15),
+    today = LocalDate(2026, 11, 15),
+    note = "Edenor, ноябрь",
+    receiptEnabled = false,
+    receiptAmount = "",
+    keypadTarget = TransactionEditUiState.KeypadTarget.AMOUNT,
+    tagIds = emptyList(),
+    templateName = "Свет",
+    payment = PaymentUi("Свет", LocalDate(2026, 11, 15), last = "41 300", average = "44 000"),
+)

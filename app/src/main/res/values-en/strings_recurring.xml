@@ -24,4 +24,23 @@
     <string name="recurring_next_payment">Next payment: %1$s.</string>
     <string name="recurring_off_hint">Without a repeat, the template works as usual.</string>
     <string name="recurring_missed_value">%1$s · missed</string>
+    <string name="recurring_soon_title">Coming up · %1$d days</string>
+    <string name="recurring_post">Record</string>
+    <string name="recurring_state_today">today</string>
+    <string name="recurring_state_missed">missed</string>
+    <string name="recurring_state_missed_many">missed %1$d</string>
+    <string name="recurring_auto_short">auto</string>
+    <string name="recurring_post_a11y">Record “%1$s”</string>
+    <!-- Notifications (#143, board Rec143Notify). -->
+    <string name="recurring_channel">Regular payments</string>
+    <string name="recurring_channel_hint">A reminder on the payment day and a note when a payment records itself</string>
+    <string name="recurring_notify_today">Payment today: %1$s</string>
+    <string name="recurring_notify_today_amount">Payment today: %1$s · %2$s</string>
+    <plurals name="recurring_notify_today_many">
+        <item quantity="one">%1$d payment today</item>
+        <item quantity="other">%1$d payments today</item>
+    </plurals>
+    <string name="recurring_notify_posted">Recorded: %1$s · %2$s</string>
+    <string name="recurring_notify_amount_later">enter the amount when recording</string>
+    <string name="recurring_open">Open</string>
 </resources>

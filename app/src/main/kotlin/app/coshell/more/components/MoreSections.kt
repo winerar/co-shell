@@ -9,18 +9,23 @@ import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.importer.wallet.components.ImportColors
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreState
+import app.coshell.newmark.NewFeatures
 import app.coshell.core.designsystem.R as DesignR
 
 /** A group of «Ещё» under its [title]. */
 internal data class MoreSection(@StringRes val title: Int, val items: List<MoreItem>)
 
-/** One row: icon on a square of a palette [color] (stored value), title, a line about the section. */
+/**
+ * One row: icon on a square of a palette [color] (stored value), title, a line about the section; [newKey] — its key in
+ * `NewFeatures` when the place can wear the «новое» pill (#335).
+ */
 internal data class MoreItem(
     @DrawableRes val icon: Int,
     @StringRes val title: Int,
     val color: Long,
     val subtitle: String?,
     val onClick: () -> Unit,
+    val newKey: String? = null,
 )
 
 /**
@@ -37,6 +42,7 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
                 MoreItem(DesignR.drawable.ic_account_balance_wallet, R.string.accounts_title, c[0], stringResource(R.string.accounts_menu_hint), actions.onAccounts),
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[9], stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[1], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
+                MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[5], stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
                 MoreItem(DesignR.drawable.ic_currency_exchange, R.string.rates_title, c[6], stringResource(R.string.rates_menu_hint), actions.onRates),
                 MoreItem(
                     DesignR.drawable.ic_payments,

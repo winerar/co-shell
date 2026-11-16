@@ -6,11 +6,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.core.designsystem.components.keypad.KeypadKey
 import kotlinx.datetime.LocalDate
+import app.coshell.gate.LocalInputLock
 
 /** Connects [RatesScreen] to [RatesViewModel]. */
 @Composable
 fun RatesRoute(onBack: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     RatesScreen(
         state = state,
         actions = RatesActions(
@@ -20,7 +22,7 @@ fun RatesRoute(onBack: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) 
             onAddManual = viewModel::addManual,
             onManualClick = viewModel::editManual,
             onManualDelete = viewModel::askDelete,
-            onConfirmDelete = viewModel::confirmDelete,
+            onConfirmDelete = lock.guard(viewModel::confirmDelete),
             onCancelDelete = viewModel::cancelDelete,
             onConverterKey = viewModel::onConverterKey,
             onConverterFrom = viewModel::onConverterFrom,
@@ -31,7 +33,7 @@ fun RatesRoute(onBack: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) 
             onRateChange = viewModel::onRateChange,
             onDateSelect = viewModel::onDateSelect,
             onDatePicked = viewModel::onDatePicked,
-            onSave = viewModel::saveManual,
+            onSave = lock.guard(viewModel::saveManual),
             onDismiss = viewModel::dismissEditor,
         ),
     )

@@ -49,11 +49,15 @@ import app.coshell.ui.format.formatDayMonth
 /**
  * «Сумма» of the entry sheet (#290, board `Fb290A`): the big amount; for a transfer between currencies the arriving
  * amount under it; with a receipt in another currency the caption says «· списано» and a dashed line «Чек 13 300 ARS
- * · курс · ✕» closes the card. «+ Чек» on the right of the caption switches the receipt on.
+ * · курс · ✕» closes the card. «+ Чек» on the right of the caption switches the receipt on; for a payment from
+ * «Скоро» it is «Пропустить этот раз» (#404).
  */
 @Composable
 internal fun AmountBlock(state: TransactionEditUiState, actions: TransactionEditActions, amountColor: Color) {
-    val receiptLink: (@Composable () -> Unit)? = if (!state.isTransfer && !state.hasReceipt) {
+    val receiptLink: (@Composable () -> Unit)? = if (state.payment != null) {
+        // A payment from «Скоро» (board `Rec143Post`): the caption offers to skip it instead.
+        { CoShellSectionLink(stringResource(R.string.payment_skip), onClick = actions.onPaymentSkip) }
+    } else if (!state.isTransfer && !state.hasReceipt) {
         { CoShellSectionLink(stringResource(R.string.entry_receipt_add), onClick = { actions.onReceiptToggle(true) }) }
     } else {
         null

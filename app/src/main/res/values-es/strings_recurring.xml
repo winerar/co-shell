@@ -24,4 +24,24 @@
     <string name="recurring_next_payment">Próximo pago: %1$s.</string>
     <string name="recurring_off_hint">Sin repetición, la plantilla funciona como siempre.</string>
     <string name="recurring_missed_value">%1$s · pendiente</string>
+    <string name="recurring_soon_title">Próximos · %1$d días</string>
+    <string name="recurring_post">Registrar</string>
+    <string name="recurring_state_today">hoy</string>
+    <string name="recurring_state_missed">vencido</string>
+    <string name="recurring_state_missed_many">vencidos %1$d</string>
+    <string name="recurring_auto_short">auto</string>
+    <string name="recurring_post_a11y">Registrar «%1$s»</string>
+    <!-- Notificaciones (#143, tablero Rec143Notify). -->
+    <string name="recurring_channel">Pagos recurrentes</string>
+    <string name="recurring_channel_hint">Un recordatorio el día del pago y un aviso cuando un pago se registra solo</string>
+    <string name="recurring_notify_today">Pago de hoy: %1$s</string>
+    <string name="recurring_notify_today_amount">Pago de hoy: %1$s · %2$s</string>
+    <plurals name="recurring_notify_today_many">
+        <item quantity="one">%1$d pago hoy</item>
+        <item quantity="many">%1$d pagos hoy</item>
+        <item quantity="other">%1$d pagos hoy</item>
+    </plurals>
+    <string name="recurring_notify_posted">Registrado: %1$s · %2$s</string>
+    <string name="recurring_notify_amount_later">el importe se ingresa al registrar</string>
+    <string name="recurring_open">Abrir</string>
 </resources>

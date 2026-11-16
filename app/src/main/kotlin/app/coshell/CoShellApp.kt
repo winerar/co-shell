@@ -13,6 +13,8 @@ import app.coshell.currencies.data.LegacyReportCurrencies
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
+import app.coshell.recurring.notify.RecurringPaymentsScheduler
+import app.coshell.recurring.notify.ReminderWatch
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -30,6 +32,7 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var legacyReportCurrencies: LegacyReportCurrencies
     @Inject lateinit var workerFactory: HiltWorkerFactory
     @Inject lateinit var crashLog: CrashLog
+    @Inject lateinit var reminderWatch: ReminderWatch
 
     /** Lives as long as the process; for short one-off startup work only. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -54,6 +57,9 @@ class CoShellApp : Application(), Configuration.Provider {
             ensureLabelTags()
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
+            RecurringPaymentsScheduler.schedule(this@CoShellApp)
         }
+        // The payment reminder goes away once the payment is handled here or on the other phone (#406).
+        appScope.launch { reminderWatch.run() }
     }
 }

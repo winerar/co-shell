@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Short buzz when a shake opens the new-transaction screen. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Regular payments: «Сегодня платёж» at 9:00 and «Проведено» with «Отменить» (#143). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".CoShellApp"
@@ -28,6 +30,12 @@
         </activity>
         <receiver
             android:name=".update.install.InstallResultReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".recurring.notify.UndoPaymentReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".recurring.notify.ReminderActionReceiver"
             android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"

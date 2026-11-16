@@ -255,6 +255,8 @@
     <string name="action_undo">Deshacer</string>
     <string name="appearance_title">Apariencia</string>
     <string name="appearance_input_section">Introducción de datos</string>
+    <!-- The pill next to a place with something new in this version (#335) -->
+    <string name="new_mark">nuevo</string>
     <string name="more_section_money">Dinero</string>
     <string name="more_section_family_data">Familia y datos</string>
     <string name="more_section_app">Aplicación</string>
@@ -513,6 +515,15 @@
     <string name="sync_banner_sign_in">Iniciar sesión</string>
     <string name="sync_banner_feedback">Comentario</string>
     <string name="sync_banner_ok">Entendido</string>
+    <!-- #334: the other phone runs a newer, incompatible version (board Fb334A) -->
+    <string name="gate_banner_title">Se necesita la versión %1$s</string>
+    <string name="gate_banner_title_any">Se necesita una versión nueva</string>
+    <string name="gate_banner_text">Alguien de la familia ya actualizó y esta versión no entiende los datos nuevos. Puedes mirar; añadir y editar, después de actualizar: así nada se estropea.</string>
+    <string name="gate_banner_update">Actualizar</string>
+    <string name="gate_banner_update_size">Actualizar · %1$s MB</string>
+    <string name="gate_locked_note">Podrás añadir y editar después de actualizar: así los datos de la familia no se estropean.</string>
+    <string name="gate_note_later">Más tarde</string>
+    <string name="gate_add_locked">Añadir — después de actualizar</string>
     <string name="sync_banner_feedback_prefill">Sincronización: sin acceso a la familia, código %1$s.</string>
     <string name="wipe_title">Borrar todos los datos</string>
     <string name="wipe_menu_hint">Empezar desde cero. Antes, una copia</string>

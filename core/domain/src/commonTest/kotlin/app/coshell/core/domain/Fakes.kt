@@ -1,6 +1,14 @@
 package app.coshell.core.domain
 
 import app.coshell.core.domain.budgets.BudgetRepository
+import app.coshell.core.domain.rates.DownloadInfo
+import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.rates.RatesSnapshot
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.ExchangeRate
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import app.coshell.core.model.Account
 import app.coshell.core.model.Budget
 import app.coshell.core.model.AccountWithBalance
@@ -84,4 +92,19 @@ class FakeBudgetRepository : BudgetRepository {
     override suspend fun applyBudgets(save: List<Budget>, deleteIds: List<String>) {
         items.value = items.value - deleteIds.toSet() + save.associateBy { it.id }
     }
+}
+
+/** Rates for use cases that convert ([rates] — every known rate); the download side is not used. */
+class FakeExchangeRateRepository : ExchangeRateRepository {
+    val rates = MutableStateFlow<List<ExchangeRate>>(emptyList())
+    override fun observeRates(): Flow<List<ExchangeRate>> = rates
+    override fun observeManualRates(): Flow<List<ExchangeRate>> = flowOf(emptyList())
+    override suspend fun saveManualRate(rate: ExchangeRate) { rates.value += rate }
+    override suspend fun deleteManualRate(date: LocalDate, a: CurrencyCode, b: CurrencyCode) = Unit
+    override suspend fun saveDownloaded(snapshot: RatesSnapshot) = Unit
+    override fun observeLatestDownload(): Flow<DownloadInfo?> = flowOf(null)
+    override suspend fun latestDownloadedDate(): LocalDate? = null
+    override suspend fun downloadedDates(): Set<LocalDate> = emptySet()
+    override suspend fun operationDates(timeZone: TimeZone): Set<LocalDate> = emptySet()
+    override suspend fun usedCurrencies(): Set<CurrencyCode> = emptySet()
 }

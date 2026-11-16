@@ -29,6 +29,8 @@ import app.coshell.core.designsystem.components.CoShellSnackbarHost
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.motion.PressOrigin
+import app.coshell.gate.InputLock
+import app.coshell.gate.LocalInputLock
 import app.coshell.ui.bar.BottomBarSlot
 import app.coshell.ui.bar.LocalBottomBarSlot
 
@@ -42,6 +44,7 @@ internal fun MainShell(
     snackbar: SnackbarHostState,
     onAdd: () -> Unit,
     moreBadge: Boolean = false,
+    inputLock: InputLock = InputLock(),
     overBar: @Composable BoxScope.(onTab: Boolean) -> Unit = {},
     graph: NavGraphBuilder.() -> Unit,
 ) {
@@ -61,8 +64,8 @@ internal fun MainShell(
     // A tab screen may put its own buttons in place of the tabs (selection mode, 19В).
     val slot = remember { BottomBarSlot() }
 
-    CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot) {
-        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot), origins, overBar)
+    CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot, LocalInputLock provides inputLock) {
+        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked), origins, overBar)
     }
 }
 
@@ -117,13 +120,19 @@ private fun Bar(bar: BarState, onTab: (TopLevel) -> Unit, onAdd: () -> Unit) {
     var shown by remember { mutableStateOf(buttons) }
     if (buttons != null) shown = buttons
     Box {
-        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge)
+        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, addLocked = bar.addLocked)
         CoShellActionBar(visible = bar.visible && buttons != null) { shown?.invoke(this) }
     }
 }
 
-/** What the bottom bar shows: the tab it highlights, whether it is on screen, the dot on «Ещё», a screen's buttons. */
-private data class BarState(val screen: NavDestination?, val visible: Boolean, val moreBadge: Boolean, val slot: BottomBarSlot)
+/** What the bottom bar shows: the tab it highlights, whether it is on screen, the dot on «Ещё», a screen's buttons, the «+» locked (#334). */
+private data class BarState(
+    val screen: NavDestination?,
+    val visible: Boolean,
+    val moreBadge: Boolean,
+    val slot: BottomBarSlot,
+    val addLocked: Boolean = false,
+)
 
 /** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */
 internal fun NavHostController.navigateToTab(tab: TopLevel) {

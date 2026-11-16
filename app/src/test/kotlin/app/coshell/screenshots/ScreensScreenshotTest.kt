@@ -3,6 +3,7 @@ package app.coshell.screenshots
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
+import app.coshell.newmark.NewFeatures
 import app.coshell.appearance.AppearanceActions
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
@@ -56,6 +57,7 @@ import app.coshell.currencies.list.ReportCurrenciesActions
 import app.coshell.currencies.list.ReportCurrenciesScreen
 import app.coshell.currencies.list.reportCurrenciesPreviewSample
 import app.coshell.home.HomeScreen
+import app.coshell.home.components.VersionGateBannerState
 import app.coshell.home.HomeUiState
 import app.coshell.home.homeBudgetPreviewSample
 import app.coshell.home.homePreviewSample
@@ -115,6 +117,15 @@ class ScreensScreenshotTest {
     @Test @Config(qualifiers = "+es")
     fun `more spanish`() = shot("more_es") { MoreScreen(MoreActions(), moreSample) }
 
+    /** Board `Fb335A`: the «новое» pill next to a row with something new (#335). */
+    @Test
+    fun `more new mark`() = shot("more_new") { MoreScreen(MoreActions(), moreSample.copy(newMarks = setOf(NewFeatures.RECURRING))) }
+
+    @Test
+    fun `more new mark dark`() = shot("more_new_dark", dark = true) {
+        MoreScreen(MoreActions(), moreSample.copy(newMarks = setOf(NewFeatures.RECURRING)))
+    }
+
     @Test
     fun `home dark`() = shot("home_dark", dark = true) { HomeScreen(homePreviewSample) }
 
@@ -128,6 +139,12 @@ class ScreensScreenshotTest {
     @Test
     fun `home budget dark`() = shot("home_budget_dark", dark = true) {
         HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample)
+    }
+
+    /** Board `Fb334A` (#334): the other phone runs a newer version — looking is open, entry waits for the update. */
+    @Test
+    fun `home version gate light`() = shot("home_gate_light") {
+        HomeScreen(homePreviewSample, gate = VersionGateBannerState("0.41", "5,6"))
     }
 
     @Test

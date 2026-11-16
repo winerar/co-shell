@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reminder actions and the switch (#405, board Rec143Notify). -->
+<resources>
+    <string name="recurring_notify_total">%1$s · ≈ %2$s</string>
+    <string name="recurring_action_post_amount">Провести %1$s</string>
+    <string name="recurring_action_change_amount">Изменить сумму</string>
+    <string name="recurring_action_tomorrow">Завтра</string>
+    <string name="appearance_notifications_section">Уведомления</string>
+    <string name="reminders_title">Напоминания о платежах</string>
+    <string name="reminders_hint">В 9:00 в день платежа</string>
+    <!-- A payment in another currency (#415, poll 3 «Д»): the debited amount is always entered. -->
+    <string name="recurring_action_enter_amount">Ввести сумму</string>
+    <string name="recurring_notify_by_rate">≈ %1$s по курсу</string>
+    <string name="recurring_notify_enter_debited">введите, сколько списали</string>
+    <string name="payment_hint_no_rate">Курса %1$s → %2$s нет — введите, сколько списали</string>
+    <!-- Template editor: «Платёж в другой валюте» (#415, board Rec415B). -->
+    <string name="template_foreign_title">Платёж в другой валюте</string>
+    <string name="template_foreign_subtitle">сумма — как в чеке, списанное спросим</string>
+    <string name="template_foreign_amount_hint">Как в чеке. Сколько списали со счёта — спросим при проведении, подставим по курсу</string>
+    <string name="template_foreign_currency_error">Нужна другая валюта, не как у счёта: USD, EUR…</string>
+    <string name="recurring_auto_no_foreign">платёж в другой валюте проводите вы — сумма списания своя</string>
+</resources>

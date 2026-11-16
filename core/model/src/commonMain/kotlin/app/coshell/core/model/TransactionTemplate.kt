@@ -5,8 +5,10 @@ package app.coshell.core.model
  *
  * [currency] is the currency of [accountId]; it is stored so that a template without an amount
  * still shows its currency, and so that a changed account can be noticed. [amount] is optional:
- * `null` means "ask every time". A transfer template remembers the target account, the amount
- * that arrives is entered when the template is used.
+ * `null` means "ask every time". It is usually in [currency]; an expense or income may name another
+ * one (rent 650 USD paid from an ARS account, #415) — then it is the receipt, and what leaves the
+ * account is counted by the rate of the day ([isForeign]). A transfer template remembers the target
+ * account, the amount that arrives is entered when the template is used.
  */
 data class TransactionTemplate(
     val id: String,
@@ -30,7 +32,9 @@ data class TransactionTemplate(
         }
         amount?.let {
             require(it.isPositive) { "Template amount must be positive, got $it" }
-            require(it.currency == currency) { "Template amount must be in the account currency" }
+            require(it.currency == currency || type != TransactionType.TRANSFER) {
+                "A transfer template amount must be in the account currency"
+            }
         }
         when (type) {
             TransactionType.TRANSFER -> {
@@ -41,4 +45,14 @@ data class TransactionTemplate(
                 require(toAccountId == null) { "Only transfers have a target account" }
         }
     }
+
+    /** The amount is in another currency than the account's (#415): it is the receipt, the debited amount is entered when posting. */
+    val isForeign: Boolean get() = amount != null && amount.currency != currency
+
+    /**
+     * «Проводить само» works: [PostMode.AUTO] and the amount in the account currency. A payment in another currency is
+     * always posted by hand (#415, owner's poll 3 «Д»): the bank's rate is not the official one. Not an `init` rule —
+     * an older version or the other phone may still store such a template as AUTO.
+     */
+    val postsByItself: Boolean get() = schedule?.mode == PostMode.AUTO && !isForeign
 }

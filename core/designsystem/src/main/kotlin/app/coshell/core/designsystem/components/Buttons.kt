@@ -2,6 +2,7 @@ package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -36,9 +37,13 @@ import app.coshell.core.designsystem.tokens.Sizes
 // Buttons of the app: Material 3 buttons with the [Tactile] motion instead of the ripple, all [Sizes.button] high.
 // Screens use these, never the Material ones (design-system.md §«Движение»).
 
+/** Filled tones of [CoShellButton] (board `CompNew` «Кнопки: оттенки»): the main neon one, the quiet violet one. */
+enum class ButtonTone { Primary, Tonal }
+
 /**
  * Filled pill button. [tactile] — `Primary` for the main action of a screen («Сохранить»).
- * Neon Mint fill with dark ink in both themes, like the «+» (owner's choice 2026-11-09 — no deep teal/green).
+ * Neon Mint fill with dark ink in both themes, like the «+» (owner's choice 2026-11-09 — no deep teal/green);
+ * [ButtonTone.Tonal] — a secondary action that repeats in a list («Провести» in «Скоро»).
  */
 @Composable
 fun CoShellButton(
@@ -46,7 +51,9 @@ fun CoShellButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     tactile: Tactile = Tactile.Control,
-    colors: ButtonColors = coShellButtonColors(),
+    tone: ButtonTone = ButtonTone.Primary,
+    colors: ButtonColors = if (tone == ButtonTone.Tonal) tonalButtonColors() else coShellButtonColors(),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
@@ -56,6 +63,7 @@ fun CoShellButton(
             modifier = modifier.heightIn(min = Sizes.button).tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
+            contentPadding = contentPadding,
             interactionSource = source,
             content = content,
         )
@@ -67,6 +75,17 @@ fun CoShellButton(
 fun coShellButtonColors(): ButtonColors {
     val colors = MaterialTheme.colorScheme
     return ButtonDefaults.buttonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer)
+}
+
+/** Colours of [CoShellButton] in a status colour (a warning card's «Обновить», #334): [container] fill, [content] ink. */
+@Composable
+fun coShellButtonColors(container: Color, content: Color): ButtonColors =
+    ButtonDefaults.buttonColors(containerColor = container, contentColor = content)
+
+@Composable
+private fun tonalButtonColors(): ButtonColors {
+    val colors = MaterialTheme.colorScheme
+    return ButtonDefaults.buttonColors(containerColor = colors.secondaryContainer, contentColor = colors.onSecondaryContainer)
 }
 
 /** Outlined pill button — secondary actions. [color] tints the label and the border (the family's violet). */

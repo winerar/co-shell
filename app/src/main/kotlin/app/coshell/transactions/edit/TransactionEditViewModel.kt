@@ -9,6 +9,7 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.recurring.autoPaymentId
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
@@ -78,6 +79,9 @@ class TransactionEditViewModel @Inject constructor(
     private var pendingTemplateId: String? = savedStateHandle[TransactionEditDestination.ARG_TEMPLATE_ID]
     /** The template the form was filled from; its usage is counted when the operation is saved. */
     private var templateId: String? = null
+    /** «Провести» from «Скоро» (#143): the payment's day; applied with the route's template, cleared with it. */
+    private var paymentDate: LocalDate? = savedStateHandle.get<String>(TransactionEditDestination.ARG_PAYMENT_DATE)
+        ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
 
     private var existing: Transaction? = null
     /** Labels of the edited or copied operation: references the form does not change keep their form. */
@@ -198,13 +202,34 @@ class TransactionEditViewModel @Inject constructor(
     /** «✕» on the template pill: back to an empty new operation. */
     fun onTemplateClear() {
         templateId = null
+        paymentDate = null
+        _state.update { it.copy(payment = null) }
         viewModelScope.launch { load() }
+    }
+
+    /** «Пропустить этот раз» (#404): the payment is done without an operation; the sheet closes. */
+    fun onPaymentSkip() {
+        val id = templateId ?: return
+        val day = paymentDate ?: return
+        if (_state.value.isDone) return
+        viewModelScope.launch {
+            entryTemplates.paid(id, day)
+            _state.update { it.copy(isDone = true) }
+        }
     }
 
     private suspend fun applyTemplate(id: String) {
         val (draft, name) = entryTemplates.draft(id, clock.now(), accountsById, allCategories) ?: return
+        // Another template picked in the strip is an ordinary operation, not the payment.
+        if (id != templateId && templateId != null) paymentDate = null
         templateId = id
-        _state.update { it.filledFrom(draft, name, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds) }
+        val day = paymentDate
+        val payment = day?.let { paymentUi(name, it, entryTemplates.history(id, it, timeZone), moneyFormat) }
+        _state.update { form ->
+            form.filledFrom(draft, name, moneyFormat).let { if (day != null) it.copy(date = day, payment = payment) else it }
+                .withDebitSuggestion(converter, moneyFormat)
+                .withCategoryOptions(allCategories, recentCategoryIds)
+        }
     }
 
     /** «Сохранить как шаблон» for the saved operation (not for unsaved edits in the form). */
@@ -334,11 +359,17 @@ class TransactionEditViewModel @Inject constructor(
             is FormResult.Valid -> result.form
         }
         val date = dateWithTime(existing?.date ?: clock.now(), current.date, timeZone)
-        val transaction = buildTransaction(existing, form, date, ids, sourceLabels)
+        // A payment gets the id of its template and day, as «Проводить само» does: both phones posting it before
+        // they sync write one record, and «В прошлый раз» finds it (#404).
+        val paymentId = templateId?.let { id -> paymentDate?.let { autoPaymentId(id, it) } }
+        val transaction = buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
                 SaveTransactionUseCase.Result.Saved -> {
-                    templateId?.let { entryTemplates.used(it) }
+                    templateId?.let { id ->
+                        entryTemplates.used(id)
+                        paymentDate?.let { entryTemplates.paid(id, it) }
+                    }
                     _state.update { it.copy(isDone = true) }
                 }
                 is SaveTransactionUseCase.Result.Invalid -> _state.update { it.withError(result.reason) }

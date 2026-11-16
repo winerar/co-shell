@@ -72,19 +72,22 @@ def when_label(nxt):
 
 
 def post_btn(text='Провести'):
+    # Approved tonal button (CompNew «Кнопки: оттенки»): the grey capsule was not in the set.
     return ('<span style="height: 48px; padding: 0 16px; border-radius: 999px; background: %s; color: %s; font-size: 14px; font-weight: 600; display: inline-flex; '
-            'align-items: center; flex: none;">%s</span>' % (CHIP, INK, text))
+            'align-items: center; flex: none;">%s</span>' % (VIOLETPILL, VIOLETINK, text))
 
 
 def soon_row(r, div=True):
     name, cat, a, cur, acc_, rule, nxt, kind, auto = r
     date = {'13 ноя': 'пт, 13 ноя', '17 ноя': 'вт, 17 ноя', '18 ноя': 'ср, 18 ноя'}.get(nxt, nxt)
     when = when_label(nxt) if nxt in ('сегодня', '13 ноя') else '<span style="font-size: 12px; color: %s;">%s</span>' % (MUTED, date)
+    # Code (2026-11-15): the amount sits next to the label/date — on the right it left no room for the name; wraps on a narrow phone.
+    line2 = '<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px;">%s%s</span>' % (when, amt(r, 12).replace('сумма при вводе', 'при вводе'))
     left = ('<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3px;"><span style="font-size: 15px; '
-            'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%%;">%s</span>%s</span>' % (name, when))
+            'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%%;">%s</span>%s</span>' % (name, line2))
     act = post_btn() if not auto else '<span style="font-size: 12px; color: %s; width: 64px; text-align: right;">само</span>' % MUTED
-    return ('<div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 14px; min-height: 64px; box-sizing: border-box; %s">%s%s%s%s</div>'
-            % ('border-top: 1px solid %s;' % DIV if div else '', rule_icon(cat, 36), left, amt(r, 14).replace('сумма при вводе', '<span style="display: inline-block; text-align: right;">сумма<br>при вводе</span>'), act))
+    return ('<div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 14px; min-height: 64px; box-sizing: border-box; %s">%s%s%s</div>'
+            % ('border-top: 1px solid %s;' % DIV if div else '', rule_icon(cat, 36), left, act))
 
 
 # ---- Q1: where upcoming payments show ----

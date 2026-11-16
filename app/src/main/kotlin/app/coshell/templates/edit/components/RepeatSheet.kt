@@ -97,6 +97,7 @@ internal fun ColumnScope.RepeatSheetBody(draft: RepeatDraft, state: TemplateEdit
 private fun ModeRows(mode: PostMode, state: TemplateEditUiState, onPick: (PostMode) -> Unit) {
     val autoHint = when {
         state.isTransfer -> R.string.recurring_auto_no_transfer
+        state.isForeign -> R.string.recurring_auto_no_foreign
         !state.canPostAuto -> R.string.recurring_auto_needs_amount
         else -> R.string.recurring_auto_hint
     }
@@ -134,7 +135,7 @@ private fun hintText(draft: RepeatDraft, state: TemplateEditUiState): String {
 private fun sheetSubtitle(state: TemplateEditUiState): String? {
     val name = state.name.trim().ifEmpty { return null }
     val amount = state.amount.trim().takeIf { it.isNotEmpty() } ?: return name
-    return stringResource(R.string.template_account_value, name, listOfNotNull(amount, state.account?.currency).joinToString(" "))
+    return stringResource(R.string.template_account_value, name, listOfNotNull(amount, state.amountCurrencyShown).joinToString(" "))
 }
 
 /** Every month has it: no «last day» note needed. */

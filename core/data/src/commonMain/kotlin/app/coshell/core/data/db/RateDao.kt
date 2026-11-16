@@ -45,7 +45,8 @@ interface RateDao {
            UNION SELECT currency FROM transactions WHERE deleted = 0
            UNION SELECT to_currency FROM transactions WHERE deleted = 0 AND to_currency IS NOT NULL
            UNION SELECT original_currency FROM transactions WHERE deleted = 0 AND original_currency IS NOT NULL
-           UNION SELECT currency FROM budgets WHERE deleted = 0""",
+           UNION SELECT currency FROM budgets WHERE deleted = 0
+           UNION SELECT currency FROM templates WHERE deleted = 0 AND amount_minor IS NOT NULL""",
     )
     suspend fun usedCurrencies(): List<String>
 }

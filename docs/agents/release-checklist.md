@@ -50,9 +50,9 @@
 - [x] **[есть]** Только утверждённые компоненты: `ApprovedComponentsTest`, `ComponentRuleTest`; `pending` пуст (2026-11-15); к 1.0 — пуста база и код совпадает с досками (#367).
 
 ## 6. Правила проекта (золотые правила `AGENTS.md`)
-- [ ] **[добавить]** Проверка в `check`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
-- [ ] **[добавить]** Lint `HardcodedText`/`MissingTranslation` — ошибкой; поиск строковых литералов в `Text(…)`;
-  каждая строка есть во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`).
+- [x] **[есть, #377]** `ProjectRulesTest`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
+- [x] **[есть, #377]** Lint `HardcodedText`/`MissingTranslation`/`ExtraTranslation`/`MissingQuantity` — ошибкой; литералы в `Text(…)` —
+  `HardcodedTextTest`; каждая строка во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`) — `TranslationsTest`.
 - [ ] **[агент]** Тексты: словарь `glossary.md`, краткость и тон (`texts.md`), одно название сущности везде.
 - [ ] Размеры файлов и документация — `session-end.sh` зелёный; `STATUS`, `ROADMAP`, `feature-map.md` актуальны.
 
@@ -62,14 +62,15 @@
 
 ## 8. Производительность (`performance.md`, release-сборка)
 - [ ] **[владелец]** Холодный запуск < 500 мс, прокрутка без рывков на 120 Гц (HWUI-столбцы), PSS < 150 МБ.
-- [ ] **[добавить]** Отчёты компилятора Compose — нет нестабильных классов в UiState; `baseline-prof.txt` актуален.
+- [x] **[есть]** Нет нестабильных классов состояний — `agent.sh stability` (2026-11-15: 245 стабильных, 0 нестабильных состояний);
+  `baseline-prof.txt` покрывает весь `app.coshell` — `BaselineProfileTest` (#383). Перед релизом — прогнать `stability`.
 - [ ] `agent.sh scale` на 10 000 операций — в пределах прошлых замеров (`notes.md`); APK < 15 МБ.
 - [ ] Поиск по коду: нет `observeTransactions()` без периода/`limit`, нет `stateIn` без `.offMain()`, у `LazyColumn` есть `key`.
 - [ ] R8: release-сборка запускается и проходит основной сценарий (ввод, синк, отчёт, копия).
 
 ## 9. Данные и надёжность
-- [ ] **[есть/добавить]** `MigrationTest` — с каждой выпущенной версии схемы до текущей; `fallbackToDestructiveMigration` нет.
-- [ ] Резервная копия: создать → стереть всё → восстановить = те же данные (тест + на телефоне).
+- [x] **[есть]** С каждой выпущенной версии схемы до текущей, `fallbackToDestructiveMigration` нет — `MigrationToLatestTest` (#383).
+- [ ] Резервная копия: создать → стереть всё → восстановить = те же данные (тест есть — `BackupWipeRestoreTest`; **[владелец]** на телефоне).
 - [ ] **[владелец]** Обновление с последней `0.N` до 1.0 поверх: данные, тема, вход в «Семью» на месте (#299, #217).
 - [ ] Синк на двоих: офлайн-правки, конфликт, старая версия у партнёра (#340, #334); правила Firebase — тесты зелёные.
 

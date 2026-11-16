@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.gate.LocalInputLock
 
 /**
  * Key in the «Операции» tab's SavedStateHandle: `true` shows this month's operations without a category
@@ -40,6 +41,7 @@ fun TransactionsRoute(
         }
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     val selection by viewModel.selection.collectAsStateWithLifecycle()
     val peek by viewModel.peek.collectAsStateWithLifecycle()
     TransactionsScreen(
@@ -57,7 +59,7 @@ fun TransactionsRoute(
                 viewModel.clearSelection()
                 onDuplicate(id)
             },
-            onDeleteSelected = viewModel::deleteSelected,
+            onDeleteSelected = lock.guard(viewModel::deleteSelected),
             onPeek = viewModel::onPeek,
             onPeekEnd = viewModel::onPeekEnd,
         ),

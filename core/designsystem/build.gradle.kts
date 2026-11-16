@@ -23,6 +23,8 @@ android {
 
     lint {
         ignoreTestSources = true // no tests to ship; saves the lintAnalyze*Test tasks
+        // Golden rule 9 (#377): text only in resources, in every language of AppLanguage.SUPPORTED.
+        error += setOf("HardcodedText", "MissingTranslation", "ExtraTranslation", "MissingQuantity")
     }
 
     testOptions {

@@ -32,6 +32,9 @@ import app.coshell.home.homeStressSample
 import app.coshell.reports.ReportsActions
 import app.coshell.reports.ReportsScreen
 import app.coshell.reports.reportsStressSample
+import app.coshell.transactions.edit.TransactionEditActions
+import app.coshell.transactions.edit.TransactionEditScreen
+import app.coshell.transactions.edit.entrySheetStressSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -100,6 +103,13 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `category edit stress narrow dark`() = shot("category_edit_stress_narrow_dark", dark = true, fontScale = 1.3f) {
         CategoryEditScreen(categoryEditStressSample, CategoryEditActions())
+    }
+
+    @Test fun `entry sheet stress light`() = shot("entry_sheet_stress_light") { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `entry sheet stress narrow dark`() = shot("entry_sheet_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        TransactionEditScreen(entrySheetStressSample, TransactionEditActions())
     }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {

@@ -5,7 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -98,6 +99,7 @@ internal fun AmountBlock(state: TransactionEditUiState, actions: TransactionEdit
  * «Чек 13 300 ARS ▾ ··· 1 USDT = 1 015 ARS ✕»: the receipt amount (a tap — the keypad types here), its currency
  * (a tap — the currency sheet), the rate of the purchase and «✕» that drops the receipt.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ReceiptLine(state: TransactionEditUiState, actions: TransactionEditActions) {
     var currencyOpen by rememberSaveable { mutableStateOf(false) }
@@ -113,7 +115,8 @@ private fun ReceiptLine(state: TransactionEditUiState, actions: TransactionEditA
     )
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
         Box(Modifier.fillMaxWidth().height(Sizes.hairline).background(MaterialTheme.colorScheme.outlineVariant))
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+        // A flow: on a narrow screen with a big amount the currency, the rate and «✕» drop to a second line.
+        FlowRow(itemVerticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             Text(stringResource(R.string.entry_receipt), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Column(
                 Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small) { actions.onKeypadTarget(KeypadTarget.RECEIPT) }

@@ -1,0 +1,73 @@
+name: "Эмулятор: R8-сборка на Android"
+
+# The release build (R8, shrunk resources) on a real Android emulator: cold start, tabs, night mode, font scale 2.0,
+# monkey, memory, reinstall over itself (scripts/ci/emulator-smoke.sh). Costs ~15 min of Actions, so it does not run on
+# PRs: release.yml calls it once a week before the release; by hand — Actions → this workflow → Run workflow.
+on:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: dev
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Ветка или коммит"
+        type: string
+        default: dev
+
+permissions:
+  contents: read
+
+jobs:
+  emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          # Only main writes the cache (default branch); dev/PR caches are scoped to their own branches.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      # Same R8 release as the phones get, plus the x86_64 copy of native libraries (app/build.gradle.kts, -PemulatorAbi)
+      # and the debug key. No lint/tests here: `check` on the PR and dev already ran them.
+      - name: Build the release APK for the emulator
+        run: ./gradlew assembleRelease -PemulatorAbi=x86_64 --console=plain
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Smoke test on the emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: scripts/ci/emulator-smoke.sh app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: emulator-logs
+          path: |
+            logcat.txt
+            monkey.log
+          if-no-files-found: ignore
+          retention-days: 14

@@ -2,6 +2,8 @@ package app.coshell.categories.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import app.coshell.core.designsystem.motion.tactileCircleClickable
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +49,7 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
         titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
     ) {
         if (state.isLoading) return@EditSheetLayout
+        val lookLabel = stringResource(R.string.form_icon_and_color)
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
             // The badge as it will look in lists, beside the name; a tap opens «Иконка и цвет».
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
@@ -54,7 +57,9 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
                     icon = state.icon,
                     color = state.color,
                     size = Sizes.badgeLarge,
-                    modifier = Modifier.tactileCircleClickable { lookOpen = true },
+                    modifier = Modifier
+                        .semantics { contentDescription = lookLabel }
+                        .tactileCircleClickable { lookOpen = true },
                 )
                 CoShellTextField(
                     value = state.name,

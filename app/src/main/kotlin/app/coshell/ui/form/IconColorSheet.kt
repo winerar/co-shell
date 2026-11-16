@@ -53,11 +53,13 @@ internal fun IconColorContent(
     showIcons: Boolean = true,
     allowNone: Boolean = false,
 ) {
+    val colorLabel = rememberColorLabel()
+    val iconLabel = rememberIconLabel()
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         if (showIcons) {
             SheetCaption(stringResource(R.string.form_icons_count, CategoryIcons.keys.size))
             Grid(CategoryIcons.keys, ICON_COLUMNS, Spacing.s - Spacing.xxs) { key, cell ->
-                Row(cell, horizontalArrangement = Arrangement.Center) { CoShellIconCell(key, key == icon, ICON_CELL) { onIconSelect(key) } }
+                Row(cell, horizontalArrangement = Arrangement.Center) { CoShellIconCell(key, key == icon, iconLabel(key), ICON_CELL) { onIconSelect(key) } }
             }
         }
         SheetCaption(stringResource(R.string.form_colors_count, CategoryPalette.colors.size))
@@ -65,7 +67,7 @@ internal fun IconColorContent(
         val items: List<Long?> = (if (allowNone) listOf(null) else emptyList<Long?>()) + CategoryPalette.colors
         Grid(items, COLOR_COLUMNS, Spacing.xs) { item, cell ->
             Row(cell, horizontalArrangement = Arrangement.Center) {
-                if (item == null) CoShellNoColorDot(color == null, stringResource(R.string.color_none), COLOR_CELL) { onColorSelect(null) } else CoShellColorDot(item, item == swatch, COLOR_CELL) { onColorSelect(item) }
+                if (item == null) CoShellNoColorDot(color == null, stringResource(R.string.color_none), COLOR_CELL) { onColorSelect(null) } else CoShellColorDot(item, item == swatch, colorLabel(item), COLOR_CELL) { onColorSelect(item) }
             }
         }
     }

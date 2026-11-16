@@ -21,6 +21,7 @@ import app.coshell.core.designsystem.components.CoShellSection
 internal fun ColorSection(selected: Long?, onSelect: (Long?) -> Unit, allowNone: Boolean = false) {
     // A colour saved before the neon palette shows as its neon swatch.
     val selectedSwatch = selected?.let(CategoryPalette::normalize)
+    val label = rememberColorLabel()
     CoShellSection(stringResource(R.string.category_color)) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
@@ -28,7 +29,7 @@ internal fun ColorSection(selected: Long?, onSelect: (Long?) -> Unit, allowNone:
         ) {
             if (allowNone) CoShellNoColorDot(selected == null, stringResource(R.string.color_none)) { onSelect(null) }
             CategoryPalette.colors.forEach { color ->
-                CoShellColorDot(color, color == selectedSwatch) { onSelect(color) }
+                CoShellColorDot(color, color == selectedSwatch, label(color)) { onSelect(color) }
             }
         }
     }

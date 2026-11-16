@@ -398,7 +398,7 @@
     <string name="rates_refresh_failed">No se pudieron cargar los cambios. Revisa internet</string>
     <string name="rates_manual">Cambios manuales</string>
     <string name="rates_manual_hint">Un cambio manual manda sobre el descargado y rige desde la fecha elegida hasta el siguiente manual</string>
-    <string name="rates_manual_since">manual · desde el %1$s</string>
+    <string name="rates_since_date">desde el %1$s</string>
     <string name="rates_manual_add">Añadir cambio</string>
     <string name="rates_manual_title">Cambio manual</string>
     <string name="rates_manual_from">Moneda</string>

@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -33,6 +32,7 @@ import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.tokens.Sizes
@@ -66,6 +66,7 @@ fun CoShellButton(
             modifier = modifier.heightIn(min = Sizes.button).tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
+            border = fillEdge(colors.containerColor),
             contentPadding = contentPadding,
             interactionSource = source,
             content = content,
@@ -124,7 +125,7 @@ fun CoShellTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    contentColor: Color = accentInk(),
+    contentColor: Color = secondaryInk(),
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
@@ -187,7 +188,7 @@ fun CoShellFab(
         FloatingActionButton(
             onClick = onClick,
             // The fill flows into the sheet the «+» opens (issue #63).
-            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor),
+            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor).fillEdge(containerColor, shape),
             shape = shape,
             containerColor = containerColor,
             contentColor = contentColor,

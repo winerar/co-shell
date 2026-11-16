@@ -132,6 +132,7 @@ private fun BottomBarContent(
     // One pill flows between tabs (TabPill.kt) instead of one per tab.
     val sel = selectionColors()
     val pillColor = sel.fill
+    val pillEdge = fillEdge(pillColor, scheme.surfaceContainerHigh)
     val pill = rememberTabPillState()
     AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
     // A floating capsule over the screen's background, clear of the system navigation bar.
@@ -149,7 +150,7 @@ private fun BottomBarContent(
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
-                .tabPill(pill, pillColor)
+                .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,
         ) {

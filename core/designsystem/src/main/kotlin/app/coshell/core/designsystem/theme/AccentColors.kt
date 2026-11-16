@@ -9,14 +9,19 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Accent for text and thin lines: links, section headers, text buttons, focused fields, the selected tab.
- * Dark theme — the palette's neon itself; light theme — the ink: neon on white is unreadable, and the owner
- * dropped deep shades of the accent (2026-11-09). Fills use `colorScheme.primary` / `primaryContainer`.
+ * Dark theme — the palette's neon itself; light theme — the ink (neon on white is unreadable, and the owner refused an extra deep shade of the
+ * primary, #442: links take the palette's accent via [secondaryInk]). Fills use `colorScheme.primary` / `primaryContainer`.
  */
 @Composable
 @ReadOnlyComposable
 fun accentInk(): Color = accentInkFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
 
 internal fun accentInkFor(scheme: ColorScheme, dark: Boolean): Color = if (dark) scheme.primary else scheme.onSurface
+
+/** Ink of links and text buttons (#442): the accent (`secondary`), readable on white; headings and the selected tab take [accentInk]. */
+@Composable
+@ReadOnlyComposable
+fun secondaryInk(): Color = MaterialTheme.colorScheme.secondary
 
 /** Colours of a progress indicator: the moving part and the track under it. */
 @Immutable
@@ -33,7 +38,7 @@ fun progressColors(): ProgressColors = progressColorsFor(MaterialTheme.colorSche
 /** Progress colours: graphite on the neon in the light theme, the neon on graphite in the dark one. */
 internal fun progressColorsFor(scheme: ColorScheme, dark: Boolean) =
     if (dark) {
-        ProgressColors(scheme.primary, scheme.outlineVariant)
+        ProgressColors(scheme.primary, scheme.surfaceContainerHighest)
     } else {
         ProgressColors(scheme.inverseSurface, scheme.primary)
     }
@@ -44,11 +49,11 @@ data class SelectionColors(val fill: Color, val content: Color)
 
 /**
  * Chosen state (owner's choice 2026-11-16, «чернильная пилюля», #385): dark theme — the neon fill with its dark ink;
- * light theme — an ink fill (`onSurface`) with the neon as the label. Neon on white is ~1:1 to the track, ink is 12–17:1.
+ * light theme — the neon itself with its dark ink (#442: no extra deep shade; the fill melts into the track, so it gets a thin edge — `fillEdge`).
  */
 @Composable
 @ReadOnlyComposable
 fun selectionColors(): SelectionColors = selectionColorsFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
 
 internal fun selectionColorsFor(scheme: ColorScheme, dark: Boolean): SelectionColors =
-    if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.onSurface, scheme.primary)
+    if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.primary, scheme.onPrimary)

@@ -1,6 +1,7 @@
 package app.coshell.home.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -74,7 +75,7 @@ internal fun MonthReviewCard(state: MonthReviewUiState, onOpen: () -> Unit, onHi
                         withStyle(SpanStyle(color = colors[index])) { append("${names[index]} ${change.difference}") }
                     }
                 },
-                style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+                style = RateSmallStyle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.s),

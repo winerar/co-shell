@@ -1,42 +1,23 @@
 package app.coshell.feedback.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import app.coshell.core.designsystem.components.StatusTone
+import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.tokens.PillShape
-import app.coshell.core.designsystem.tokens.Sizes
-import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.feedback.FeedbackStage
 import app.coshell.core.domain.feedback.FeedbackStatus
 
-/** Status pill of a sent message (board Fb157A): lime — done, violet — in work, grey — waiting or postponed. */
+/** Status label of a sent message (board `CompNew` «Точка и статус»): done — green, in work — amber, waiting or postponed — grey. */
 @Composable
 internal fun FeedbackStatusChip(status: FeedbackStatus, modifier: Modifier = Modifier) {
-    val scheme = MaterialTheme.colorScheme
-    val (bg, fg) = when (status.stage) {
-        FeedbackStage.DONE -> scheme.primary to scheme.onPrimary
-        FeedbackStage.IN_PROGRESS -> scheme.secondaryContainer to scheme.onSecondaryContainer
-        FeedbackStage.SENT, FeedbackStage.RECEIVED -> scheme.surfaceContainerHighest to scheme.onSurface
-        FeedbackStage.LATER, FeedbackStage.CLOSED -> scheme.surfaceContainerHighest to scheme.onSurfaceVariant
+    val tone = when (status.stage) {
+        FeedbackStage.DONE -> StatusTone.Done
+        FeedbackStage.IN_PROGRESS -> StatusTone.Work
+        FeedbackStage.SENT, FeedbackStage.RECEIVED, FeedbackStage.LATER, FeedbackStage.CLOSED -> StatusTone.No
     }
-    Text(
-        feedbackStatusLabel(status),
-        style = MaterialTheme.typography.labelMedium,
-        color = fg,
-        maxLines = 1,
-        modifier = modifier
-            .background(bg, PillShape)
-            .heightIn(min = Sizes.labelHeight)
-            .wrapContentHeight()
-            .padding(horizontal = Spacing.s, vertical = Spacing.xxs),
-    )
+    CoShellStatusChip(feedbackStatusLabel(status), tone, modifier)
 }
 
 @Composable

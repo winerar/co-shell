@@ -163,7 +163,7 @@ DATA = [
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
     ('Шкала бюджета', bullets, 'CoShellBullet(fraction, tone = Ok | Ahead | Over | Idle, mark)'),
     ('Мини-столбики', minis, 'CoShellMiniBars(values, color, elapsed, highlight)'),
-    ('Строка-столбик', bar_rows, 'CoShellBarRow(label, value, share, fraction, ghost, badge)'),
+    ('Строка-столбик', bar_rows, 'CoShellBarRow(label, value, share, fraction, ghost, badge) · CoShellSegmentBar(total, kept) — «Уложились 4 из 6» · CoShellDayHeader(title, total)'),
     ('Столбцы по месяцам', columns, 'CoShellColumns(columns, selected, average)'),
     ('Кольцо', donuts, 'CoShellDonut(slices, description, content)'),
     ('Теги — выбор', tag_chips, 'CoShellTagChip(name, color, selected, removeLabel) · CoShellTagMoreChip'),

@@ -3,5 +3,5 @@
     <style name="Theme.CoShell" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
     </style>
-    <color name="window_background">#FFF9FFE9</color>
+    <color name="window_background">#FFFFFFFF</color>
 </resources>

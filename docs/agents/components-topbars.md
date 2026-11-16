@@ -12,3 +12,8 @@
 - `ScreenTopBar` — внутренние экраны; сплошная, линия при прокрутке (#394 Б) — из `LocalScreenScroll`, который ставит
   `ScreenScrollHost` на каждый экран навигации (`navigation/ScreenDestination.kt`: `screen<T>` вместо `composable<T>`).
   Линия — общий `Modifier.scrollHairline`. Макет-страница: `docs/design/topbar-headers.html`.
+
+## Из `core:designsystem` (#367)
+- `CoShellTopBar` + `TopBarScroll` (`components/TopBar.kt`) — единственная обёртка над Material `TopAppBar`; `TabTopBar`/`ScreenTopBar`/`SelectionTopBar` собираются на ней.
+- `CoShellLoading(size)` — круглая загрузка (24 в строке, 44 на экране), `CoShellDropdownMenu` + `CoShellMenuItem(checked, destructive, enabled)` — меню (доска `CompNew`, вариант А).
+- `CoShellDatePicker` / `CoShellDateRangePicker` (`components/DatePickers.kt`) — обёртка над Material-календарём с цветами выбора темы; состояние — `rememberDatePick` / `rememberDateRangePick` (миллисекунды UTC). Свой календарь с доски (полоса периода) — позже.

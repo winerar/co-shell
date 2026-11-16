@@ -1,7 +1,6 @@
 package app.coshell.core.designsystem.components
 
 import app.coshell.core.designsystem.theme.selectionColors
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -71,7 +70,7 @@ fun CoShellFilterChip(
                 selectedLeadingIconColor = sel.content,
                 selectedTrailingIconColor = sel.content,
             ),
-            border = null,
+            border = if (selected) fillEdge(sel.fill, colors.surfaceContainerHigh) else null,
             interactionSource = source,
         )
     }
@@ -111,7 +110,7 @@ fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
         return
     }
     val sel = selectionColors()
-    Box(box.background(sel.fill, shape), contentAlignment = Alignment.Center) {
+    Box(box.background(sel.fill, shape).fillEdge(sel.fill, shape), contentAlignment = Alignment.Center) {
         if (state == ToggleableState.On) {
             Icon(painterResource(R.drawable.ic_check), contentDescription = null, tint = sel.content, modifier = Modifier.size(14.dp))
         } else {

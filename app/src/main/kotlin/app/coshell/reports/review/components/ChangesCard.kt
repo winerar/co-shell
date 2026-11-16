@@ -1,11 +1,12 @@
 package app.coshell.reports.review.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,7 +40,7 @@ internal fun ChangesCard(changes: List<Change>, onOpen: (String) -> Unit, modifi
     CoShellCard(modifier.fillMaxWidth()) {
         changes.forEachIndexed { index, change ->
             key(change.categoryId) {
-                if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                if (index > 0) CoShellDivider()
                 ChangeRow(change, onClick = { onOpen(change.categoryId) })
             }
         }
@@ -59,7 +60,7 @@ private fun ChangeRow(change: Change, onClick: () -> Unit) {
             Text(categoryName(change.name), style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
                 stringResource(R.string.review_change_usual, change.amount, change.usual),
-                style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+                style = RateSmallStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
             )

@@ -1,6 +1,7 @@
 package app.coshell.templates.components
 
 import androidx.compose.foundation.horizontalScroll
+import app.coshell.core.designsystem.theme.LabelStrongStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.dashedBorder
@@ -48,8 +48,7 @@ fun TemplateStrip(
         Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.templates_title),
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.SemiBold,
+                style = LabelStrongStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f),
             )

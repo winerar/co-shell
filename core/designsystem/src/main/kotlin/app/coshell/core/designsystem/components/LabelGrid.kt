@@ -2,7 +2,6 @@ package app.coshell.core.designsystem.components
 
 import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +43,7 @@ fun CoShellLabelGrid(labels: List<String>, selected: Int, onSelect: (Int) -> Uni
                             .weight(1f)
                             .height(Sizes.cellHeight)
                             .background(if (on) sel.fill else colors.surfaceContainerHigh, shape)
+                            .then(if (on) Modifier.fillEdge(sel.fill, shape, colors.surfaceContainerHigh) else Modifier)
                             .semantics { this.selected = on }
                             .tactileClickable(Tactile.Control, shape, role = Role.RadioButton) { onSelect(index) },
                         contentAlignment = Alignment.Center,

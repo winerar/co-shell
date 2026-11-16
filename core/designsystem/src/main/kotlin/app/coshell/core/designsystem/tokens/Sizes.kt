@@ -25,6 +25,10 @@ object Sizes {
     val fabIcon = 26.dp
     /** Big status ring in the middle of a single-purpose screen (update, later import/sync). */
     val heroRing = 168.dp
+
+    /** [CoShellLoading]: in a row / alone on a screen (board `CompNew`). */
+    val loadingRow = 24.dp
+    val loadingScreen = 44.dp
     /** Icon inside [heroRing]. */
     val heroIcon = 56.dp
     /** Stroke of [heroRing]. */
@@ -69,6 +73,9 @@ object Sizes {
     val button = 48.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
+    val chipIcon = 18.dp
+    /** Account badge inside a choice chip. */
+    val chipBadge = 24.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
     val tabSwipe = 80.dp
     /** Segment of CoShellSegmented: 36 dp, with the track's [segmentInset] the control is a 44 dp cell (board Style1). */
@@ -81,6 +88,9 @@ object Sizes {
     val chipHeight = 36.dp
     /** Cell of a choice grid, a day of the month (LabelGrid, DayGrid; board Style1). */
     val cellHeight = 44.dp
+    /** Amount typed on the keypad ([app.coshell.core.designsystem.components.CoShellAmountSlot]): with a label / the main one. */
+    val amountSlot = 64.dp
+    val amountSlotMain = 72.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
     val timelineDot = 12.dp
     /** Every bar — budget bullet, bar row, progress (board Style7: one bar 8 dp with a mark). */

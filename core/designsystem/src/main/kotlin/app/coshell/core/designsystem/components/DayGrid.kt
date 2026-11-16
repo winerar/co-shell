@@ -2,7 +2,6 @@ package app.coshell.core.designsystem.components
 
 import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +44,7 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
                             Modifier
                                 .size(Sizes.cellHeight)
                                 .background(if (on) sel.fill else Color.Transparent, CircleShape)
+                                .then(if (on) Modifier.fillEdge(sel.fill, CircleShape) else Modifier)
                                 .semantics { this.selected = on }
                                 .tactileClickable(Tactile.Control, CircleShape, role = Role.RadioButton) { onSelect(day) },
                             contentAlignment = Alignment.Center,

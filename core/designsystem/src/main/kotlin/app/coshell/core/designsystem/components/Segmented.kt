@@ -27,7 +27,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +54,7 @@ fun CoShellSegmented(
     val colors = MaterialTheme.colorScheme
     val sel = selectionColors()
     val pill = sel.fill
+    val edge = fillEdge(pill, colors.surfaceContainerHigh)
     val ink = sel.content
     val position by animateFloatAsState(selected.toFloat(), Motion.spatial(), label = "segmentPill")
     val count = labels.size.coerceAtLeast(1)
@@ -76,6 +76,7 @@ fun CoShellSegmented(
                     size = Size(width, size.height),
                     cornerRadius = CornerRadius(size.height / 2f),
                 )
+                drawFillEdge(edge, Offset(width * at, 0f), Size(width, size.height), size.height / 2f)
             }
             .selectableGroup(),
     ) {

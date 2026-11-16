@@ -1,16 +1,12 @@
 package app.coshell.ui.form
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +18,9 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.R
 import app.coshell.ui.sheet.ModalSheet
+import app.coshell.core.designsystem.components.CoShellDatePicker
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.components.rememberDatePick
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlinx.datetime.DateTimeUnit
@@ -68,7 +65,7 @@ fun DateChips(
                 Icon(
                     painterResource(DesignR.drawable.ic_calendar_today),
                     contentDescription = null,
-                    modifier = Modifier.size(FilterChipDefaults.IconSize),
+                    modifier = Modifier.size(Sizes.chipIcon),
                 )
             },
         )
@@ -86,29 +83,16 @@ fun DateChips(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerSheet(initialMillisUtc: Long, onDismiss: () -> Unit, onConfirm: (Long) -> Unit) {
-    val pickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillisUtc)
+    val pick = rememberDatePick(initialMillisUtc)
     ModalSheet(
         title = stringResource(R.string.date_pick_title),
         actionLabel = stringResource(R.string.keypad_done),
-        onAction = { close -> pickerState.selectedDateMillis?.let(onConfirm) ?: close() },
+        onAction = { close -> pick.millis?.let(onConfirm) ?: close() },
         onClosed = onDismiss,
     ) {
-        // Today and the current year in the text accent; the selected day — Neon Mint fill with ink.
-        val ink = accentInk()
-        DatePicker(
-            state = pickerState,
-            title = null,
-            headline = null,
-            showModeToggle = false,
-            colors = DatePickerDefaults.colors(
-                todayContentColor = ink,
-                todayDateBorderColor = ink,
-                currentYearContentColor = ink,
-            ),
-        )
+        CoShellDatePicker(pick)
     }
 }
 

@@ -123,14 +123,16 @@ def dots_status(v):
 
 
 def strips(v):
-    icons = ''.join('<span style="width: 40px; height: 40px; flex: none; border-radius: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
-                    % (r(v, 'icon'), sel(v) if i == 'taxi' else ('background: %s;' % CHIP if v == 'A' else 'box-shadow: inset 0 0 0 1px %s;' % OUTLINE),
-                       svg(i, ink_on_sel(v) if i == 'taxi' else INK2, 20)) for i in ['cart', 'cafe', 'taxi', 'house', 'gift'])
-    colors = ''.join('<span style="width: 32px; height: 32px; flex: none; border-radius: %s; background: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
-                     % ('50%' if v == 'A' else '9px', c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (CARD, INK) if c == '#00B1EA' else '',
-                        svg('check', '#0B0F0A', 16, 2.6) if c == '#00B1EA' else '') for c in ['#F26E22', '#00B1EA', '#EC0000', '#91E668', '#B266FF', '#FFD43B'])
-    return col('<div style="display: flex; gap: 6px;">%s</div>' % icons, '<div style="display: flex; gap: 10px; padding: 4px;">%s</div>' % colors,
-               cap('выбранное — рамка цветом текста; полоса листается, последний — «Все →»'))
+    """Poll #367 (2026-11-16): А — circles 40 (colours) / 44 (icons) in one row, chosen = ring in the ink + check / neon + ring; the rest — «+N» / «Все 52» outline pill."""
+    more = lambda t: '<span style="height: 36px; padding: 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px %s; display: inline-flex; align-items: center; font-size: 14px; flex: none;">%s</span>' % (OUTLINE, t)
+    icons = ''.join('<span style="width: 44px; height: 44px; flex: none; border-radius: 50%%; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+                    % (sel(v) if i == 'cafe' else 'background: %s;' % CHIP, svg(i, ink_on_sel(v) if i == 'cafe' else INK2, 22)) for i in ['cart', 'cafe', 'taxi', 'house', 'gift'])
+    colors = ''.join('<span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+                     % (c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (CARD, INK) if c == '#00B1EA' else '',
+                        svg('check', '#0B0F0A', 20, 2.6) if c == '#00B1EA' else '') for c in ['#F26E22', '#00B1EA', '#EC0000', '#91E668', '#B266FF'])
+    return col('<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (icons, more('Все 52')),
+               '<div style="display: flex; gap: 8px; align-items: center;">%s%s</div>' % (colors, more('+19')),
+               cap('CoShellIconStrip · CoShellColorStrip; ячейки — CoShellIconCell, CoShellColorDot, CoShellNoColorDot, банк — CoShellBankDot, категория — CoShellCategoryChoice; сколько кругов — по ширине'))
 
 
 def acc_card(v, name, ini, color, ink, kind, bal, cur):
@@ -159,6 +161,18 @@ def buttons(v):
                cap('основная · контур · опасная · тональная · текстом · выключена 40 %'))
 
 
+def amount_slot(v):
+    """Poll #367 А (2026-11-16): frame outline r16, label on top, mono number 28, currency pill; active — ink frame 2 dp, error — red."""
+    def slot(label, num, cur, frame, w=2, msg=None, msg_color=MUTED):
+        f = ('<div style="min-height: 64px; padding: 8px 16px; box-sizing: border-box; border-radius: 16px; background: %s; box-shadow: inset 0 0 0 %dpx %s; display: flex; align-items: center; '
+             'justify-content: space-between;"><span style="display: flex; flex-direction: column;">%s<span style="%s font-size: 28px; font-weight: 500;">%s</span></span>'
+             '<span style="height: 36px; padding: 0 14px; border-radius: 999px; background: %s; display: inline-flex; align-items: center; font-size: 14px;">%s</span></div>'
+             % (FIELD, w, frame, '<span style="font-size: 12px; color: %s;">%s</span>' % (MUTED, label) if label else '', MONO, num, CHIP, cur))
+        return f + ('<div style="font-size: 12px; color: %s; padding: 0 16px;">%s</div>' % (msg_color, msg) if msg else '')
+    return col(slot('', '1 250,00', 'USD', INK, 2), slot('Чек', '13 300', 'ARS', OUTLINE, 1, '1 USDT = 1 015 ARS'), slot('', '0', 'USD', PINK, 2, 'Введите сумму', PINK),
+               cap('CoShellAmountSlot: в покое — рамка outline 1 dp; клавиатура пишет сюда — рамка цветом текста 2 dp; ошибка — красная; валюта — плашка'))
+
+
 NEW = [
     ('Шапка экрана', top_bars, 'TopAppBar ×3 → CoShellTopBar(kind = Tab | Screen | Selection, scrolled)'),
     ('Выпадающее меню', menu, 'DropdownMenu → CoShellDropdownMenu · CoShellMenuItem(checked, destructive, enabled)'),
@@ -166,7 +180,8 @@ NEW = [
     ('Выбор периода', date_range, 'DateRangePicker → CoShellDateRangePicker'),
     ('Разделитель и загрузка', divider_loading, 'HorizontalDivider → CoShellDivider · CircularProgressIndicator → CoShellLoading(size)'),
     ('Аватар участника', avatars, 'CoShellAvatar(size, you, online) · CoShellAvatarStack'),
-    ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone)'),
+    ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone) · CoShellTimelineDot(reached, lineReached)'),
+    ('Сумма на клавиатуре', amount_slot, 'AmountSlot → CoShellAmountSlot(label, currency | trailing, active, isError, main)'),
     ('Выбор иконки и цвета', strips, 'CoShellIconStrip · CoShellColorStrip'),
     ('Превью карточки счёта', acc_cards, 'CoShellAccountCard (цвет банка, чернила по контрасту)'),
     ('Кнопки: оттенки', buttons, 'CoShellButton(tone = Primary | Outline | Danger | Tonal | Text, enabled)'),

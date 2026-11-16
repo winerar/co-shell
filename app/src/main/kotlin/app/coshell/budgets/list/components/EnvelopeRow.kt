@@ -1,6 +1,7 @@
 package app.coshell.budgets.list.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -106,10 +107,10 @@ private fun SpentOfLimit(spent: String, limit: String) {
             append(spent)
             withStyle(SpanStyle(color = muted)) { append(" / $limit") }
         },
-        style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+        style = RateSmallStyle,
         maxLines = 1,
         // Even alone on its line the amount may not fit (320 dp, large font): it shrinks, never loses the code.
-        autoSize = fitAmountAutoSize(min = MinAmountSize, max = MaterialTheme.typography.bodySmall.fontSize),
+        autoSize = fitAmountAutoSize(min = MinAmountSize, max = RateSmallStyle.fontSize),
     )
 }
 

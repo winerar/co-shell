@@ -6,13 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 /**
- * Line between rows or under a block (board `CompNew`, «Разделитель и загрузка», #367 А): 1 dp `outlineVariant`;
- * [faint] — half as strong, between rows of one small table. Indent with [modifier] (`padding(start = …)`).
+ * Line between rows or under a block (board `CompNew`, «Разделитель и загрузка», #367 А): 1 dp `outlineVariant` at 55 %;
+ * [faint] — about half as strong, between rows of one small table. Indent with [modifier] (`padding(start = …)`).
  */
 @Composable
 fun CoShellDivider(modifier: Modifier = Modifier, faint: Boolean = false) {
     val color = MaterialTheme.colorScheme.outlineVariant
-    HorizontalDivider(modifier, color = if (faint) color.copy(alpha = FAINT) else color)
+    HorizontalDivider(modifier, color = if (faint) color.copy(alpha = FAINT) else color.copy(alpha = LINE))
 }
 
-private const val FAINT = 0.5f
+private const val LINE = 0.55f
+private const val FAINT = 0.3f

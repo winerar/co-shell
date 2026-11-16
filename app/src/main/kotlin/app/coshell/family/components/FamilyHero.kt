@@ -1,6 +1,7 @@
 package app.coshell.family.components
 
 import app.coshell.core.designsystem.components.CoShellDot
+import app.coshell.core.designsystem.components.CoShellAvatarStack
 import app.coshell.core.designsystem.theme.RateSmallStyle
 import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -17,11 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -29,7 +25,6 @@ import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.Member
@@ -93,24 +88,11 @@ internal fun SyncNowButton(enabled: Boolean, onClick: () -> Unit) {
     }
 }
 
-/**
- * Avatars overlapping; each one cuts a ring out of the one under it, so the card's gradient shows through
- * (an offscreen layer: [BlendMode.Clear] erases the avatars, not the card).
- */
+/** Avatars overlapping ([CoShellAvatarStack]); at most [MAX_STACKED]. */
 @Composable
 private fun StackedAvatars(members: List<Member>) {
-    Row(Modifier.graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }) {
-        members.take(MAX_STACKED).forEachIndexed { index, member ->
-            val shift = if (index == 0) {
-                Modifier
-            } else {
-                Modifier.offset(x = -Spacing.m * index).drawBehind {
-                    drawCircle(Color.Black, radius = size.minDimension / 2 + Sizes.avatarRing.toPx(), blendMode = BlendMode.Clear)
-                }
-            }
-            MemberAvatar(member, index, size = Sizes.badgeLarge, modifier = shift)
-        }
-    }
+    val shown = members.take(MAX_STACKED)
+    CoShellAvatarStack(shown.size) { index, shift -> MemberAvatar(shown[index], index, size = Sizes.badgeLarge, modifier = shift) }
 }
 
 @Composable

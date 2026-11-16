@@ -1,6 +1,7 @@
 package app.coshell.ui.top
 
 import androidx.compose.animation.AnimatedContent
+import app.coshell.core.designsystem.components.scrollHairline
 import app.coshell.core.designsystem.theme.LargeTitleStyle
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn

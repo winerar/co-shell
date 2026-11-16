@@ -1,6 +1,6 @@
 package app.coshell.budgets.list.components
 
-import androidx.compose.foundation.background
+import app.coshell.core.designsystem.components.CoShellCard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,15 +53,17 @@ internal fun MonthStartSheet(current: Int, month: YearMonth?, onPick: (Int) -> U
 @Composable
 private fun PeriodLine(month: YearMonth, day: Int) {
     val period = budgetPeriod(month, day)
-    Row(
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerHighest, MaterialTheme.shapes.medium).padding(Spacing.m),
-        horizontalArrangement = Arrangement.spacedBy(Spacing.s + Spacing.xxs),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-        Text(
-            stringResource(R.string.budgets_start_period, formatMonthYear(month), formatDayMonth(period.start), formatDayMonth(period.lastDay)),
-            style = MaterialTheme.typography.bodyMedium,
-        )
+    CoShellCard(Modifier.fillMaxWidth()) {
+        Row(
+            Modifier.padding(Spacing.m),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.s + Spacing.xxs),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            Text(
+                stringResource(R.string.budgets_start_period, formatMonthYear(month), formatDayMonth(period.start), formatDayMonth(period.lastDay)),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }

@@ -180,7 +180,7 @@ NEW = [
     ('Выбор периода', date_range, 'DateRangePicker → CoShellDateRangePicker'),
     ('Разделитель и загрузка', divider_loading, 'HorizontalDivider → CoShellDivider · CircularProgressIndicator → CoShellLoading(size)'),
     ('Аватар участника', avatars, 'CoShellAvatar(size, you, online) · CoShellAvatarStack'),
-    ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone)'),
+    ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone) · CoShellTimelineDot(reached, lineReached)'),
     ('Сумма на клавиатуре', amount_slot, 'AmountSlot → CoShellAmountSlot(label, currency | trailing, active, isError, main)'),
     ('Выбор иконки и цвета', strips, 'CoShellIconStrip · CoShellColorStrip'),
     ('Превью карточки счёта', acc_cards, 'CoShellAccountCard (цвет банка, чернила по контрасту)'),

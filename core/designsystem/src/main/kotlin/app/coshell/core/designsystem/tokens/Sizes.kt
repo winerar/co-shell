@@ -90,4 +90,7 @@ object Sizes {
 
     /** Height of the date range picker in its sheet (#345): about three months on screen. */
     val rangePicker = 440.dp
+
+    /** A control row (arrows + month + pill) is split in two below this width × the font scale (#379). */
+    val narrowRow = 340.dp
 }

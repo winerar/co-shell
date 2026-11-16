@@ -5,6 +5,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,12 +20,14 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.RateTextStyle
@@ -39,6 +43,7 @@ import app.coshell.core.designsystem.tokens.Spacing
  * [badgeDescription] («на 45 процентов больше обычного») and [ghostDescription] («в октябре 300»); [caption] — a grey
  * line under the bar («Дом 262 · Продукты 70», #189). A tap — [onClick].
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CoShellBarRow(
     label: String,
@@ -68,17 +73,18 @@ fun CoShellBarRow(
     ) {
         leading?.invoke()
         Column(Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                )
-                badge?.let { Box(Modifier.padding(start = Spacing.s)) { it() } }
-                ValueAndShare(value, share)
-            }
+            LabelAndValue(
+                label = {
+                    Text(label, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                },
+                trailing = {
+                    // A flow: when even the value alone is wide, the pill goes above it rather than squeezing it.
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s, Alignment.End), itemVerticalAlignment = Alignment.CenterVertically) {
+                        badge?.invoke()
+                        ValueAndShare(value, share)
+                    }
+                },
+            )
             ChartBar(fraction, color, ghost, Modifier.padding(top = Spacing.xs))
             caption?.let {
                 Text(
@@ -88,6 +94,36 @@ fun CoShellBarRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+            }
+        }
+    }
+}
+
+/**
+ * The name on the left, the value (with the pill) on the right. The name keeps at least [LABEL_MIN_WIDTH] — when the
+ * value would leave it less, the value moves under the name (aligned to the end) instead of squeezing the name to «Ко…».
+ */
+@Composable
+private fun LabelAndValue(label: @Composable () -> Unit, trailing: @Composable () -> Unit) {
+    Layout(content = { label(); trailing() }) { measurables, constraints ->
+        val max = constraints.maxWidth
+        val loose = Constraints(maxWidth = max)
+        val trailingNatural = measurables[1].measure(loose)
+        val gap = Spacing.m.roundToPx()
+        val sideBySide = max - trailingNatural.width - gap >= LABEL_MIN_WIDTH.roundToPx()
+        val labelPlaceable = measurables[0].measure(
+            Constraints(maxWidth = if (sideBySide) max - trailingNatural.width - gap else max),
+        )
+        if (sideBySide) {
+            val height = maxOf(labelPlaceable.height, trailingNatural.height)
+            layout(max, height) {
+                labelPlaceable.placeRelative(0, (height - labelPlaceable.height) / 2)
+                trailingNatural.placeRelative(max - trailingNatural.width, (height - trailingNatural.height) / 2)
+            }
+        } else {
+            layout(max, labelPlaceable.height + trailingNatural.height) {
+                labelPlaceable.placeRelative(0, 0)
+                trailingNatural.placeRelative(max - trailingNatural.width, labelPlaceable.height)
             }
         }
     }
@@ -104,7 +140,7 @@ private fun ValueAndShare(value: String, share: String?) {
         },
         style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
         maxLines = 1,
-        modifier = Modifier.padding(start = Spacing.s),
+        softWrap = false,
     )
 }
 
@@ -131,5 +167,6 @@ private fun ChartBar(fraction: Float, color: Color, ghost: Float?, modifier: Mod
     }
 }
 
+private val LABEL_MIN_WIDTH = 96.dp
 private val GHOST_OVERHANG = 3.dp
 private val GHOST_WIDTH = 2.dp

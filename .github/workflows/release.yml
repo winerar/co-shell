@@ -1,12 +1,20 @@
 name: "Релиз: выкатить dev на телефоны"
 
+# Weekly (from RELEASES_FROM, Mondays): a release of everything accumulated in dev; skipped when dev has nothing but
+# docs (scripts/ci/release_needed.py). Before the merge the R8 build runs on an emulator (emulator.yml).
 # Owner's button: Actions → «Релиз: выкатить dev на телефоны» → Run workflow. Creates (or updates) the PR dev → main with the
 # family section of docs/whats-new.md, the merged PRs and `Fixes #N`, merges it and dispatches CI on
 # main, which publishes the build to the phones. A merge made with GITHUB_TOKEN does not trigger push
 # workflows — hence the explicit dispatch. Setup and details: docs/setup/release.md.
 on:
+  schedule:
+    - cron: "17 5 * * 1" # Monday 05:17 UTC (schedules run from the copy in main)
   workflow_dispatch:
     inputs:
+      skip_emulator:
+        description: "Без проверки в эмуляторе (срочный выпуск)"
+        type: boolean
+        default: false
       pr_only:
         description: "Только создать PR dev → main, не вливать"
         type: boolean
@@ -26,7 +34,46 @@ permissions:
   actions: write
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      go: ${{ steps.plan.outputs.go }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Is a release needed?
+        id: plan
+        env:
+          RELEASES_FROM: "2026-12-01" # weekly releases start in December (owner, 2026-11-16)
+        run: |
+          go=true
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            git fetch -q origin main dev
+            if [[ "$(date -u +%F)" < "$RELEASES_FROM" ]]; then
+              go=false; echo "Weekly releases start $RELEASES_FROM"
+            elif [ "$(git rev-list --no-merges --count origin/main..origin/dev)" -eq 0 ]; then
+              go=false; echo "dev has no new commits"
+            else
+              go=$(git diff --name-only origin/main...origin/dev | python3 scripts/ci/release_needed.py)
+              [ "$go" = true ] || echo "dev has only docs changes"
+            fi
+          fi
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+          [ "$go" = true ] || echo "Release skipped: nothing to ship" | tee -a "$GITHUB_STEP_SUMMARY"
+
+  emulator:
+    needs: plan
+    if: needs.plan.outputs.go == 'true' && !inputs.skip_emulator
+    uses: ./.github/workflows/emulator.yml
+    with:
+      ref: dev
+
   release:
+    needs: [plan, emulator]
+    # The emulator is skipped only by the owner's tick; a failed emulator stops the release.
+    if: ${{ !cancelled() && needs.plan.outputs.go == 'true' && (needs.emulator.result == 'success' || needs.emulator.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -82,7 +129,8 @@ jobs:
 
       - name: Release notes
         env:
-          ALLOW: ${{ inputs.allow_no_whats_new }}
+          # The weekly run never waits for the owner to write a new section.
+          ALLOW: ${{ inputs.allow_no_whats_new || github.event_name == 'schedule' }}
         run: |
           flag=(); [ "$ALLOW" = true ] && flag=(--allow-no-whats-new)
           python3 scripts/release_notes.py "${flag[@]}" > notes.txt || { code=$?

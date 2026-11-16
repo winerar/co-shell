@@ -72,7 +72,10 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")
             // Family phones are ARM: the bundled SQLite's x86 copies only served emulators (#264, −1 МБ).
-            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+            // `-PemulatorAbi=x86_64` (CI, emulator.yml): the same R8 build with the x86 copy, signed with the debug key.
+            val emulatorAbi = providers.gradleProperty("emulatorAbi").orNull
+            ndk { abiFilters += listOfNotNull("arm64-v8a", "armeabi-v7a", emulatorAbi) }
+            if (emulatorAbi != null) signingConfig = signingConfigs.getByName("debug")
             // Only release builds update themselves; the URL comes from CI (public releases repo).
             val updateUrl = providers.environmentVariable("UPDATE_BASE_URL").orNull.orEmpty()
             buildConfigField("String", "UPDATE_BASE_URL", "\"$updateUrl\"")

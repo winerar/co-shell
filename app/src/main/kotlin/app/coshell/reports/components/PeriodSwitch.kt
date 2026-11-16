@@ -44,7 +44,7 @@ internal fun PeriodSwitch(
             title,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .weight(1f)

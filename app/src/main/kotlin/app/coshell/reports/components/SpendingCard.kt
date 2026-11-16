@@ -1,6 +1,8 @@
 package app.coshell.reports.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +35,7 @@ import app.coshell.reports.isMore
  * largest top-level categories as bars with the previous period's grey mark (a tap — «Из чего сложилось»), «Другое» and
  * «Все категории».
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun SpendingCard(
     spending: Spending,
@@ -47,9 +50,17 @@ internal fun SpendingCard(
             Text(stringResource(R.string.reports_spending_title), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
             ghostCaption?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
-        Row(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            Text(spending.total, style = AmountTitleStyle)
-            Text(currency, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(bottom = Spacing.xxs))
+        // A flow: a currency code never breaks into letters — when it does not fit beside the total, it goes under it.
+        FlowRow(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            Text(spending.total, style = AmountTitleStyle, modifier = Modifier.alignByBaseline())
+            Text(
+                currency,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                softWrap = false,
+                modifier = Modifier.alignByBaseline(),
+            )
         }
         spending.comparison?.let { comparison ->
             val status = LocalStatusPalette.current

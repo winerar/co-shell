@@ -32,3 +32,14 @@ internal val entrySheetStressSample: TransactionEditUiState = run {
         ),
     )
 }
+
+/** «Провести» with a payment named 50+ characters and billion-sized history (#378). */
+internal val paymentSheetStressSample: TransactionEditUiState = paymentSheetSample.copy(
+    amount = "999 999 999,99",
+    templateName = "Коммунальные платежи и обслуживание квартиры в Буэнос-Айресе",
+    payment = PaymentUi(
+        "Коммунальные платежи и обслуживание квартиры в Буэнос-Айресе",
+        kotlinx.datetime.LocalDate(2026, 11, 15),
+        last = "999 999 999,99", average = "999 999 999,99",
+    ),
+)

@@ -29,12 +29,16 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.home.homeStressSample
+import app.coshell.recurring.list.RecurringListActions
+import app.coshell.recurring.list.RecurringListScreen
+import app.coshell.recurring.list.recurringListStressSample
 import app.coshell.reports.ReportsActions
 import app.coshell.reports.ReportsScreen
 import app.coshell.reports.reportsStressSample
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditScreen
 import app.coshell.transactions.edit.entrySheetStressSample
+import app.coshell.transactions.edit.paymentSheetStressSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -110,6 +114,19 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `entry sheet stress narrow dark`() = shot("entry_sheet_stress_narrow_dark", dark = true, fontScale = 1.3f) {
         TransactionEditScreen(entrySheetStressSample, TransactionEditActions())
+    }
+
+    @Test fun `recurring stress light`() = shot("recurring_stress_light") { RecurringListScreen(recurringListStressSample, RecurringListActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `recurring stress narrow dark`() = shot("recurring_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        // Without the paused card (it is in the light shot) so the rows fit the narrow frame.
+        RecurringListScreen(recurringListStressSample.copy(paused = emptyList()), RecurringListActions())
+    }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `payment sheet stress narrow dark`() = shot("recurring_post_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        TransactionEditScreen(paymentSheetStressSample, TransactionEditActions())
     }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {

@@ -52,7 +52,11 @@ fun CoShellFormSection(
             Modifier.padding(horizontal = Spacing.m, vertical = Spacing.s),
             verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs),
         ) {
-            Row(Modifier.fillMaxWidth().heightIn(min = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                Modifier.fillMaxWidth().heightIn(min = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+            ) {
                 Text(
                     title.uppercase(),
                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.06.em),

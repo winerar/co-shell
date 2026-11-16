@@ -3,6 +3,7 @@ package app.coshell.core.designsystem.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +18,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 fun CoShellLinearProgress(modifier: Modifier = Modifier) {
     val colors = progressColors()
     LinearProgressIndicator(
-        modifier = modifier.fillMaxWidth().height(Sizes.bullet),
+        modifier = modifier.fillMaxWidth().height(Sizes.bullet).fillEdge(colors.track, CircleShape),
         color = colors.indicator,
         trackColor = colors.track,
         strokeCap = StrokeCap.Round,
@@ -31,7 +32,7 @@ fun CoShellLinearProgress(progress: () -> Float, modifier: Modifier = Modifier) 
     val shown by animateFloatAsState(progress(), Motion.spatial(), label = "progress")
     LinearProgressIndicator(
         progress = { shown },
-        modifier = modifier.fillMaxWidth().height(Sizes.bullet),
+        modifier = modifier.fillMaxWidth().height(Sizes.bullet).fillEdge(colors.track, CircleShape),
         color = colors.indicator,
         trackColor = colors.track,
         strokeCap = StrokeCap.Round,

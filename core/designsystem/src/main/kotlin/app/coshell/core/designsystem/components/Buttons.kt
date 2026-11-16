@@ -67,6 +67,7 @@ fun CoShellButton(
             modifier = modifier.heightIn(min = Sizes.button).tactile(source, tactile, PillShape, enabled).smoothResize(),
             enabled = enabled,
             colors = colors,
+            border = fillEdge(colors.containerColor),
             contentPadding = contentPadding,
             interactionSource = source,
             content = content,
@@ -188,7 +189,7 @@ fun CoShellFab(
         FloatingActionButton(
             onClick = onClick,
             // The fill flows into the sheet the «+» opens (issue #63).
-            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor),
+            modifier = modifier.tactile(source, tactile, shape, originColor = containerColor).fillEdge(containerColor, shape),
             shape = shape,
             containerColor = containerColor,
             contentColor = contentColor,

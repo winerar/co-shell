@@ -1,10 +1,9 @@
 package app.coshell.family.components
 
-import androidx.compose.foundation.background
+import app.coshell.core.designsystem.components.CoShellDot
 import app.coshell.core.designsystem.theme.RateSmallStyle
 import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -64,7 +62,7 @@ internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFr
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                Box(Modifier.size(Sizes.bullet).background(freshness.color(), CircleShape))
+                CoShellDot(freshness.color(), size = Sizes.bullet)
                 Text(status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                 Text(
                     stringResource(R.string.family_sync_speed),

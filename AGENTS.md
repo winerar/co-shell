@@ -26,7 +26,7 @@
 | [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |
-| [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
+| [docs/agents/design-system.md](docs/agents/design-system.md), [design-navigation.md](docs/agents/design-navigation.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
 | [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |

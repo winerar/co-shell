@@ -64,6 +64,8 @@ fun CoShellTagMore(count: Int, modifier: Modifier = Modifier) {
     Text(
         "+$count",
         modifier = modifier,
+        maxLines = 1,
+        softWrap = false,
         style = MaterialTheme.typography.labelSmall,
         fontSize = 11.sp,
         color = MaterialTheme.colorScheme.onSurfaceVariant,

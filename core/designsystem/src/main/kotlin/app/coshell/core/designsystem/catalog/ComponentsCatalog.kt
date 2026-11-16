@@ -94,8 +94,8 @@ fun ComponentsCatalog() {
             }
             CoShellSectionLabel("Деньги")
             CoShellRowGroup {
-                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
-                row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
+                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[8]), "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
+                row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[13]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
             }
         }
     }
@@ -127,8 +127,8 @@ fun SegmentedSample() {
 fun MembersSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
-            CoShellAvatar("Аня", categoryColor(CategoryPalette.colors[3]))
-            CoShellAvatar("Миша", categoryColor(CategoryPalette.colors[6]))
+            CoShellAvatar("Аня", categoryColor(CategoryPalette.colors[18]))
+            CoShellAvatar("Миша", categoryColor(CategoryPalette.colors[13]))
             CoShellDot(LocalAmountPalette.current.income)
             Text("пришло", style = MaterialTheme.typography.labelSmall)
             CoShellDot(LocalAmountPalette.current.expense)
@@ -213,6 +213,6 @@ private fun PalettesLightPreview() = CoShellTheme(darkTheme = false) { Surface {
 
 @Preview(name = "Palettes · dark · Mango", showBackground = true)
 @Composable
-private fun PalettesDarkPreview() = CoShellTheme(darkTheme = true, palette = CoShellPalette.Mango) {
-    Surface { PalettesRow(CoShellPalette.Mango) }
+private fun PalettesDarkPreview() = CoShellTheme(darkTheme = true, palette = CoShellPalette.Kvas) {
+    Surface { PalettesRow(CoShellPalette.Kvas) }
 }

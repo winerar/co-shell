@@ -69,6 +69,9 @@ private fun Row.withTags(t: Transaction, tagsById: Map<String, Tag>): Row {
     )
 }
 
+/** Between the per-currency nets of a day: a non-breaking space before the dot, a plain one after. */
+internal const val TOTAL_SEPARATOR = "${MoneyFormat.NBSP}· "
+
 /** Net per currency in the order the currencies first appear; zero nets are left out. */
 private fun Day.withTotal(items: List<Transaction>, moneyFormat: MoneyFormat): Day {
     val nets = linkedMapOf<CurrencyCode, Long>()
@@ -82,7 +85,8 @@ private fun Day.withTotal(items: List<Transaction>, moneyFormat: MoneyFormat): D
     }
     val shown = nets.filterValues { it != 0L }
     if (shown.isEmpty()) return this
-    val text = shown.entries.joinToString(" · ") { (currency, minor) ->
+    // The amounts themselves never break; a long net wraps only after a «·», which stays with the amount before it.
+    val text = shown.entries.joinToString(TOTAL_SEPARATOR) { (currency, minor) ->
         val money = Money(minor, currency)
         if (minor > 0) "+" + moneyFormat.format(money) else moneyFormat.format(money)
     }

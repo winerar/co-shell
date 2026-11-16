@@ -42,4 +42,4 @@ internal fun AutoBackupSection(state: AutoBackupUiState, onChooseFolder: () -> U
 }
 
 // Yellow from the category palette, as on the board.
-private const val FOLDER_COLOR = 10
+private const val FOLDER_COLOR = 7

@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -129,7 +130,8 @@ private fun BottomBarContent(
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
     // One pill flows between tabs (TabPill.kt) instead of one per tab.
-    val pillColor = if (dark) scheme.primary else scheme.primaryContainer
+    val sel = selectionColors()
+    val pillColor = sel.fill
     val pill = rememberTabPillState()
     AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
     // A floating capsule over the screen's background, clear of the system navigation bar.
@@ -159,8 +161,7 @@ private fun BottomBarContent(
                 }
                 val iconColor = when {
                     !tab.selected -> scheme.onSurfaceVariant
-                    dark -> scheme.onPrimary
-                    else -> scheme.onPrimaryContainer
+                    else -> sel.content
                 }
                 val tint by animateColorAsState(iconColor, Motion.effects(), label = "tabIcon")
                 CoShellBarTab(

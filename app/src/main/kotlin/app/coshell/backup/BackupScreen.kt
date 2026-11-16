@@ -99,5 +99,5 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
 }
 
 // Tile colours from the category palette: lime-green for saving, cyan for restoring (mockup 14).
-private const val MANUAL_SAVE_COLOR = 9
-private const val MANUAL_RESTORE_COLOR = 6
+private const val MANUAL_SAVE_COLOR = 8
+private const val MANUAL_RESTORE_COLOR = 13

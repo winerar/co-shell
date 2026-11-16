@@ -14,6 +14,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 import app.coshell.core.designsystem.motion.LocalTactileLight
 import app.coshell.core.designsystem.tokens.CoShellShapes
 
@@ -112,30 +113,31 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
             hero = HeroPalette(
                 brush = Brush.linearGradient(stops),
                 content = scheme.onSurface,
-                amount = scheme.primary,
-                hint = lerp(Color.White, p.backgroundDark, HERO_HINT_DARK),
+                amount = readableOn(p.primary, stops, Color.White),
+                hint = readableOn(lerp(Color.White, p.backgroundDark, HERO_HINT_DARK), stops, Color.White),
                 track = HERO_TRACK_DARK,
-                expense = lerp(p.expenseDark, Color.White, HERO_ALERT_SHIFT_DARK),
-                warning = StatusColors.WarningDark,
+                expense = readableOn(lerp(p.expenseDark, Color.White, HERO_ALERT_SHIFT_DARK), stops, Color.White),
+                warning = readableOn(StatusColors.WarningDark, stops, Color.White),
             ),
             heroStops = stops,
         )
     } else {
         val scheme = lightSchemeOf(p)
+        val stops = heroLightStops(p)
         ThemeColors(
             scheme = scheme,
             amounts = AmountPalette(p.incomeLight, p.expenseLight, scheme.onSurfaceVariant),
             status = StatusPalette(StatusColors.WarningLight, p.incomeLight),
             hero = HeroPalette(
-                brush = Brush.linearGradient(p.heroLight),
+                brush = Brush.linearGradient(stops),
                 content = scheme.onSurface,
                 amount = scheme.onSurface,
-                hint = scheme.onSurfaceVariant,
+                hint = readableOn(scheme.onSurfaceVariant, stops, scheme.onSurface),
                 track = scheme.onSurface.copy(alpha = HERO_TRACK_LIGHT_ALPHA),
-                expense = lerp(p.expenseLight, Color.Black, HERO_ALERT_SHIFT_LIGHT),
-                warning = lerp(StatusColors.WarningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT),
+                expense = readableOn(lerp(p.expenseLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
+                warning = readableOn(lerp(StatusColors.WarningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
             ),
-            heroStops = p.heroLight,
+            heroStops = stops,
         )
     }
 }
@@ -146,6 +148,39 @@ internal fun heroDarkStops(p: PaletteSpec): List<Color> = listOf(
     lerp(p.backgroundDark, p.incomeDark, 0.16f),
     lerp(p.backgroundDark, p.accentDark, 0.24f),
 )
+
+/**
+ * Light hero gradient (owner 2026-11-16, «Б»: more of the theme's colour): the primary itself, a lighter primary, a light
+ * accent — dark ink reads on each (`ColorContrastTest`).
+ */
+internal fun heroLightStops(p: PaletteSpec): List<Color> = listOf(
+    p.primary,
+    lerp(p.primary, Color.White, 0.3f),
+    lerp(p.accentDark, Color.White, 0.2f),
+)
+
+/**
+ * [color] moved towards [toward] in 5 % steps until it reads (≥ 4.6:1) on every one of [backgrounds] — the neon amount
+ * on the dark hero gradient of Гранат, Эспрессо, Василёк. Same rule as `readable_on` in scripts/agent/themes_1_0.py.
+ */
+internal fun readableOn(color: Color, backgrounds: List<Color>, toward: Color): Color {
+    var k = 0f
+    var c = color
+    while (backgrounds.minOf { contrastRatio(c, it) } < READABLE && k < 1f) {
+        k += READABLE_STEP
+        c = lerp(color, toward, k)
+    }
+    return c
+}
+
+internal fun contrastRatio(a: Color, b: Color): Float {
+    val la = a.luminance() + 0.05f
+    val lb = b.luminance() + 0.05f
+    return maxOf(la, lb) / minOf(la, lb)
+}
+
+private const val READABLE = 4.6f
+private const val READABLE_STEP = 0.05f
 
 private val HERO_TRACK_DARK = Color.White.copy(alpha = 0.16f)
 private const val HERO_TRACK_LIGHT_ALPHA = 0.14f

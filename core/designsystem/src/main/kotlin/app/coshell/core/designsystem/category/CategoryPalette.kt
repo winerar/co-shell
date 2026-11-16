@@ -1,76 +1,131 @@
 package app.coshell.core.designsystem.category
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
+
 /**
- * Category colours: 18 neon hues (owner's choice, design-questions §2) + 6 warm + 12 pastel/acid ones. `Category.color` stores
- * the neon value ([Swatch.stored], ARGB); on screen it is shown by theme — neon in the dark theme,
- * a deeper shade of the same hue in the light one (readable on white). See [display].
+ * Category, account and tag colours (1.0, owner's choice 2026-11-16, #105): 24 colours, the same fill in both themes, dark
+ * ink on each (≥ 4.6:1), any two at ΔE2000 ≥ 16.5. A pale fill that reads under 3:1 on its surface gets a thin ring of its
+ * own deeper shade ([ring]). Values and the audit — scripts/agent/themes_1_0.py.
  *
- * Colours saved before the neon palette (Material colours) are not migrated in the database:
- * [display] and [normalize] map them to the swatch in the same place, so old data and the
- * other phone (sync) keep working.
+ * Older colours are not migrated in the database (sync with the other phone keeps working): the 36 colours of 0.x and the
+ * Material colours before them are shown as the nearest of the 24 ([display]) and picked as it ([normalize]).
  */
 object CategoryPalette {
-    /** One palette colour: [stored] — neon, in the database and dark theme; [light] — for the light theme. */
-    data class Swatch(val stored: Long, val light: Long)
-
-    val swatches: List<Swatch> = listOf(
-        Swatch(0xFFFF5470, 0xFFC8203A), // red
-        Swatch(0xFFFF4FD8, 0xFFB5168F), // pink
-        Swatch(0xFFD36BFF, 0xFF8F24BF), // purple
-        Swatch(0xFF9D7BFF, 0xFF6236E0), // violet
-        Swatch(0xFF6E8BFF, 0xFF3049D1), // indigo
-        Swatch(0xFF38B6FF, 0xFF0069A8), // blue
-        Swatch(0xFF2BE4FF, 0xFF007785), // cyan
-        Swatch(0xFF00E5C0, 0xFF00806B), // mint
-        Swatch(0xFF4DFF88, 0xFF0B7F3D), // green
-        Swatch(0xFFA8FF3E, 0xFF4D7F00), // lime
-        Swatch(0xFFF5FF3D, 0xFF6E7300), // yellow
-        Swatch(0xFFFFD43B, 0xFF8A5F00), // amber
-        Swatch(0xFFFFA53D, 0xFFA65300), // orange
-        Swatch(0xFFFF7A3D, 0xFFC23F00), // flame
-        Swatch(0xFFFFB38A, 0xFF9C4E26), // peach (was brown)
-        Swatch(0xFF8FB3CC, 0xFF4A6B80), // steel
-        Swatch(0xFFB0B8C4, 0xFF5F6874), // silver
-        Swatch(0xFF7A8494, 0xFF454D5A), // graphite
-        // Warm, softer hues (design-refactor §palette). Appended: legacy mapping zips by index.
-        Swatch(0xFFFF8A65, 0xFFB8431F), // coral
-        Swatch(0xFFE07A5F, 0xFFA3432A), // terracotta
-        Swatch(0xFFFF8FA3, 0xFFB0304A), // rose
-        Swatch(0xFFFFC46B, 0xFF8F5A00), // honey
-        Swatch(0xFFD9A066, 0xFF8A5A24), // caramel
-        Swatch(0xFFF2D0A4, 0xFF7D5A2E), // sand
-        // Volt-style pastels and acid/deep tones (owner 2026-11-09: «больше цветов»). Appended, see above.
-        Swatch(0xFFC9B6FF, 0xFF6A4FC9), // lavender
-        Swatch(0xFF9FD8FF, 0xFF1F6FA3), // sky
-        Swatch(0xFF9BF5D6, 0xFF1A7A5E), // seafoam
-        Swatch(0xFFF4F59A, 0xFF6E6A12), // lemon cream
-        Swatch(0xFFFFB3D1, 0xFFA8336A), // blush
-        Swatch(0xFFE89BFF, 0xFF8A2EA8), // orchid
-        Swatch(0xFFD6F5FF, 0xFF3A6E80), // ice
-        Swatch(0xFFDFFF00, 0xFF5F6E00), // chartreuse
-        Swatch(0xFF7A7AFF, 0xFF2E2EC2), // ultramarine
-        Swatch(0xFFB5C23A, 0xFF59621A), // olive
-        Swatch(0xFFC9B27C, 0xFF6E5C30), // khaki
-        Swatch(0xFF3DDC97, 0xFF0E7A4F), // jade
+    /** Stored values offered in the colour pickers, in the order of the picker grid (warm → cold → pink). */
+    val colors: List<Long> = listOf(
+        RED,
+        CORAL,
+        ORANGE,
+        PEACH,
+        CARAMEL,
+        AMBER,
+        SAND,
+        YELLOW,
+        LIME,
+        SAGE,
+        GREEN,
+        SEAFOAM,
+        TEAL,
+        CYAN,
+        SKY,
+        STEEL,
+        PERIWINKLE,
+        INDIGO,
+        VIOLET,
+        LAVENDER,
+        MAGENTA,
+        MAUVE,
+        PINK,
+        BLUSH,
     )
 
-    /** Stored values offered in the category editor. */
-    val colors: List<Long> = swatches.map { it.stored }
+    private const val RED = 0xFFFF2039L
+    private const val CORAL = 0xFFFF8D85L
+    private const val ORANGE = 0xFFFF7A00L
+    private const val PEACH = 0xFFFFD4BAL
+    private const val CARAMEL = 0xFF9E7756L
+    private const val AMBER = 0xFFE0A800L
+    private const val SAND = 0xFFBCB38FL
+    private const val YELLOW = 0xFFF2E640L
+    private const val LIME = 0xFF95C11FL
+    private const val SAGE = 0xFF759273L
+    private const val GREEN = 0xFF0EEF82L
+    private const val SEAFOAM = 0xFFAEDFD9L
+    private const val TEAL = 0xFF00C2A2L
+    private const val CYAN = 0xFF08CEFEL
+    private const val SKY = 0xFF019DFDL
+    private const val STEEL = 0xFF9DADBBL
+    private const val PERIWINKLE = 0xFFD7D9FFL
+    private const val INDIGO = 0xFF6077DBL
+    private const val VIOLET = 0xFFB15FFEL
+    private const val LAVENDER = 0xFFE5A6FDL
+    private const val MAGENTA = 0xFFE501B6L
+    private const val MAUVE = 0xFF9E7087L
+    private const val PINK = 0xFFFF79B4L
+    private const val BLUSH = 0xFFFECBDCL
 
-    /** Material colours of the pre-neon palette, in the same order as [swatches]. */
-    private val legacy: List<Long> = listOf(
-        0xFFF44336, 0xFFE91E63, 0xFF9C27B0, 0xFF673AB7,
-        0xFF3F51B5, 0xFF2196F3, 0xFF00BCD4, 0xFF009688,
-        0xFF4CAF50, 0xFF8BC34A, 0xFFCDDC39, 0xFFFFC107,
-        0xFFFF9800, 0xFFFF5722, 0xFF795548, 0xFF607D8B,
-        0xFF9E9E9E, 0xFF757575,
+    /** 0.x colours (36 neon/warm/pastel, then the Material ones before them) → the nearest of [colors]. */
+    private val legacy: Map<Long, Long> = mapOf(
+        0xFFFF5470L to RED, // red
+        0xFFFF4FD8L to MAGENTA, // pink
+        0xFFD36BFFL to VIOLET, // purple
+        0xFF9D7BFFL to VIOLET, // violet
+        0xFF6E8BFFL to INDIGO, // indigo
+        0xFF38B6FFL to SKY, // blue
+        0xFF2BE4FFL to CYAN, // cyan
+        0xFF00E5C0L to TEAL, // mint
+        0xFF4DFF88L to GREEN, // green
+        0xFFA8FF3EL to LIME, // lime
+        0xFFF5FF3DL to YELLOW, // yellow
+        0xFFFFD43BL to AMBER, // amber
+        0xFFFFA53DL to AMBER, // orange
+        0xFFFF7A3DL to ORANGE, // flame
+        0xFFFFB38AL to PEACH, // peach (was brown)
+        0xFF8FB3CCL to STEEL, // steel
+        0xFFB0B8C4L to STEEL, // silver
+        0xFF7A8494L to STEEL, // graphite
+        0xFFFF8A65L to CORAL, // coral
+        0xFFE07A5FL to CORAL, // terracotta
+        0xFFFF8FA3L to PINK, // rose
+        0xFFFFC46BL to AMBER, // honey
+        0xFFD9A066L to CARAMEL, // caramel
+        0xFFF2D0A4L to PEACH, // sand
+        0xFFC9B6FFL to LAVENDER, // lavender
+        0xFF9FD8FFL to CYAN, // sky
+        0xFF9BF5D6L to SEAFOAM, // seafoam
+        0xFFF4F59AL to YELLOW, // lemon cream
+        0xFFFFB3D1L to BLUSH, // blush
+        0xFFE89BFFL to LAVENDER, // orchid
+        0xFFD6F5FFL to SEAFOAM, // ice
+        0xFFDFFF00L to YELLOW, // chartreuse
+        0xFF7A7AFFL to INDIGO, // ultramarine
+        0xFFB5C23AL to LIME, // olive
+        0xFFC9B27CL to SAND, // khaki
+        0xFF3DDC97L to GREEN, // jade
+        0xFFF44336L to RED,
+        0xFFE91E63L to PINK,
+        0xFF9C27B0L to VIOLET,
+        0xFF673AB7L to VIOLET,
+        0xFF3F51B5L to INDIGO,
+        0xFF2196F3L to SKY,
+        0xFF00BCD4L to CYAN,
+        0xFF009688L to TEAL,
+        0xFF4CAF50L to GREEN,
+        0xFF8BC34AL to LIME,
+        0xFFCDDC39L to YELLOW,
+        0xFFFFC107L to AMBER,
+        0xFFFF9800L to ORANGE,
+        0xFFFF5722L to ORANGE,
+        0xFF795548L to CARAMEL,
+        0xFF607D8BL to STEEL,
+        0xFF9E9E9EL to STEEL,
+        0xFF757575L to STEEL,
     )
 
-    private val byStored: Map<Long, Swatch> =
-        swatches.associateBy { it.stored } + legacy.zip(swatches).toMap()
-
-    /** Palette value for [color]: a pre-neon colour becomes its neon swatch; anything else is kept. */
-    fun normalize(color: Long): Long = byStored[color]?.stored ?: color
+    /** Palette value for [color]: an older colour becomes the nearest of the 24; anything else is kept. */
+    fun normalize(color: Long): Long = legacy[color] ?: color
 
     /**
      * A palette colour picked from [key] (a tag id): the same on every phone and every run — FNV-1a, not
@@ -85,9 +140,33 @@ object CategoryPalette {
         return colors[(hash % colors.size).toInt()]
     }
 
-    /** ARGB to draw [color] with in the given theme; colours outside the palette are drawn as stored. */
-    fun display(color: Long, dark: Boolean): Long {
-        val swatch = byStored[color] ?: return color
-        return if (dark) swatch.stored else swatch.light
+    /** ARGB to draw [color] with: the same in both themes since 1.0; an older colour as the nearest of the 24. */
+    @Suppress("UNUSED_PARAMETER")
+    fun display(color: Long, dark: Boolean): Long = normalize(color)
+
+    /**
+     * Ring for a fill that reads under 3:1 on [surface] (peach, yellow, periwinkle… on white): the same colour moved
+     * towards black (light surface) or white (dark) until it reaches 3:1; `null` when the fill is visible by itself.
+     */
+    fun ring(fill: Color, surface: Color): Color? {
+        if (contrast(fill, surface) >= RING_TARGET) return null
+        val toward = if (surface.luminance() > HALF) Color.Black else Color.White
+        var k = 0f
+        var c = fill
+        while (contrast(c, surface) < RING_TARGET && k < 1f) {
+            k += RING_STEP
+            c = lerp(fill, toward, k)
+        }
+        return c
     }
+
+    private fun contrast(a: Color, b: Color): Float {
+        val la = a.luminance() + 0.05f
+        val lb = b.luminance() + 0.05f
+        return maxOf(la, lb) / minOf(la, lb)
+    }
+
+    private const val RING_TARGET = 3f
+    private const val RING_STEP = 0.05f
+    private const val HALF = 0.5f
 }

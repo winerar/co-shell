@@ -20,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.category.ColorFill
+import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
@@ -59,17 +61,12 @@ internal fun ColorSection(selected: Long?, onSelect: (Long?) -> Unit, allowNone:
                 }
             }
             CategoryPalette.colors.forEach { color ->
-                Box(
-                    modifier = Modifier
-                        .tactileClickable(Tactile.Control, CircleShape) { onSelect(color) }
-                        .selectionPop(color == selectedSwatch)
-                        .size(Sizes.badge)
-                        .clip(CircleShape)
-                        .background(categoryColor(color)),
-                    contentAlignment = Alignment.Center,
+                ColorFill(
+                    color,
+                    Modifier.tactileClickable(Tactile.Control, CircleShape) { onSelect(color) }.selectionPop(color == selectedSwatch),
                 ) {
                     if (color == selectedSwatch) {
-                        Icon(painterResource(DesignR.drawable.ic_check), contentDescription = null, tint = MaterialTheme.colorScheme.surface)
+                        Icon(painterResource(DesignR.drawable.ic_check), contentDescription = null, tint = inkOn(categoryColor(color)))
                     }
                 }
             }

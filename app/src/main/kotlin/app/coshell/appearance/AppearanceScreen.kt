@@ -23,20 +23,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.domain.settings.PaletteGroup
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.PaletteGrid
-import app.coshell.theme.components.titleRes
 import app.coshell.theme.components.ThemeModePicker
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.ScreenTopBar
@@ -44,7 +43,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Ещё → Внешний вид» (board Fb154Look, #155; the former «Настройки» without the items that moved to «Ещё»):
- * language (#352), theme, the fruit palettes (juicy and soft rows, #271), the shake gesture and payment reminders (#405) —
+ * language (#352), theme, the nine colour themes in one grid (1.0, #354), the shake gesture and payment reminders (#405) —
  * the preferences of this phone, not of the family.
  */
 @Composable
@@ -108,10 +107,8 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
             item { LanguageRowGroup(state.language, actions.onLanguageClick) }
             item { SectionTitle(stringResource(R.string.theme_title)) }
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
-            PaletteGroup.entries.forEach { group ->
-                item { SectionTitle(stringResource(group.titleRes)) }
-                item { PaletteGrid(group, selected = state.palette, onSelect = actions.onPaletteChange) }
-            }
+            item { CoShellHint(stringResource(R.string.palette_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
+            item { PaletteGrid(selected = state.palette, onSelect = actions.onPaletteChange, modifier = Modifier.padding(bottom = Spacing.l)) }
             item { SectionTitle(stringResource(R.string.appearance_input_section)) }
             item {
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
@@ -161,13 +158,13 @@ private fun LanguageRowGroup(language: LanguageRow, onClick: () -> Unit) {
 }
 
 /** Blue of the palette. */
-private const val LANGUAGE_COLOR = 5
+private const val LANGUAGE_COLOR = 14
 
 /** Lime-green of the palette, as the «+» it opens. */
-private const val SHAKE_COLOR = 9
+private const val SHAKE_COLOR = 8
 
 /** The colour of «Регулярные платежи» in «Ещё». */
-private const val REMINDERS_COLOR = 5
+private const val REMINDERS_COLOR = 14
 
 @Preview(showBackground = true)
 @Composable
@@ -178,5 +175,5 @@ private fun AppearanceScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AppearanceScreenDarkPreview() {
-    CoShellTheme(darkTheme = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK, ThemePalette.MANGO), AppearanceActions()) }
+    CoShellTheme(darkTheme = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK, ThemePalette.KVAS), AppearanceActions()) }
 }

@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -52,9 +53,9 @@ fun CoShellSegmented(
     swipe: SegmentSwipe? = null,
 ) {
     val colors = MaterialTheme.colorScheme
-    val pill = colors.primaryContainer
-    val ink = colors.onPrimaryContainer
-    val frame = colors.onSurface
+    val sel = selectionColors()
+    val pill = sel.fill
+    val ink = sel.content
     val position by animateFloatAsState(selected.toFloat(), Motion.spatial(), label = "segmentPill")
     val count = labels.size.coerceAtLeast(1)
     val ownSwipe = rememberSegmentSwipe()
@@ -74,14 +75,6 @@ fun CoShellSegmented(
                     topLeft = Offset(width * at, 0f),
                     size = Size(width, size.height),
                     cornerRadius = CornerRadius(size.height / 2f),
-                )
-                val ring = Sizes.selectionRing.toPx()
-                drawRoundRect(
-                    color = frame,
-                    topLeft = Offset(width * at + ring / 2, ring / 2),
-                    size = Size(width - ring, size.height - ring),
-                    cornerRadius = CornerRadius((size.height - ring) / 2f),
-                    style = Stroke(ring),
                 )
             }
             .selectableGroup(),

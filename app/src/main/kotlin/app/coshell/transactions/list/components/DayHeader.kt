@@ -4,17 +4,18 @@ import app.coshell.core.designsystem.components.SectionTone
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
@@ -29,32 +30,34 @@ import kotlinx.datetime.toJavaLocalDate
 
 /**
  * Day title in accent capitals: "СЕГОДНЯ", "ВЧЕРА" or a short date, with the day's net on the right.
+ * The title keeps its width; a long net of several currencies wraps after a «·» (aligned to the end), never the title.
  * [background] — the list's surface; inside a card that draws its own fill — transparent.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.surface) {
     val text = dayLabel(day)
-    Row(
+    // A flow, not a row: the net stays beside the title while its widest amount fits there, otherwise it moves
+    // under the title at full width. Either way it takes the rest of its line and wraps only after a «·».
+    FlowRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(background)
             .padding(horizontal = Spacing.l, vertical = Spacing.s),
-        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.m),
     ) {
-        CoShellSectionLabel(text, Modifier.weight(1f), tone = SectionTone.Accent)
-        day.total?.let { total ->
-            Text(
-                total,
-                style = RateTextStyle,
-                color = when (day.totalTone) {
-                    Kind.EXPENSE -> LocalAmountPalette.current.expense
-                    Kind.INCOME -> LocalAmountPalette.current.income
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                },
-                maxLines = 1,
-            )
-        }
+        CoShellSectionLabel(text, Modifier.alignByBaseline(), tone = SectionTone.Accent)
+        Text(
+            day.total.orEmpty(),
+            style = RateTextStyle,
+            color = when (day.totalTone) {
+                Kind.EXPENSE -> LocalAmountPalette.current.expense
+                Kind.INCOME -> LocalAmountPalette.current.income
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+            },
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f).alignByBaseline(),
+        )
     }
 }
 

@@ -84,4 +84,4 @@ internal fun VersionCard(
 }
 
 /** Lime-green of the palette, as «Категории»: the app's own colour. */
-private const val VERSION_COLOR = 9
+private const val VERSION_COLOR = 8

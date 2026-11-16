@@ -2,6 +2,7 @@ package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactileClickable
@@ -134,8 +136,23 @@ private fun RowLayout(
                 }
             }
         }
-        if (trailing != null) CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = trailing)
+        if (trailing != null) {
+            // Measured before the title: capped so a huge amount cannot squeeze the title down to nothing.
+            Box(Modifier.capWidth(TRAILING_MAX_SHARE), contentAlignment = Alignment.CenterEnd) {
+                CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = trailing)
+            }
+        }
     }
+}
+
+/** At most this share of what the leading slot leaves goes to the trailing one; the rest stays for the title. */
+private const val TRAILING_MAX_SHARE = 0.6f
+
+/** Measures the content with its max width cut to [share] of the incoming one. */
+private fun Modifier.capWidth(share: Float): Modifier = layout { measurable, constraints ->
+    val max = if (constraints.hasBoundedWidth) (constraints.maxWidth * share).toInt() else constraints.maxWidth
+    val placeable = measurable.measure(constraints.copy(minWidth = 0, maxWidth = max.coerceAtLeast(0)))
+    layout(placeable.width, placeable.height) { placeable.placeRelative(0, 0) }
 }
 
 /** Material's "disabled" opacity. */

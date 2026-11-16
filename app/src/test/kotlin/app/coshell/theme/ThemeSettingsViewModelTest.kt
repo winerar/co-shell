@@ -41,8 +41,8 @@ class ThemeSettingsViewModelTest {
         val vm = ThemeSettingsViewModel(settings)
         vm.palette.first { it == ThemePalette.LIME }
 
-        vm.setPalette(ThemePalette.MANGO)
-        vm.palette.first { it == ThemePalette.MANGO }
-        assertEquals(ThemePalette.MANGO, settings.palette.value)
+        vm.setPalette(ThemePalette.KVAS)
+        vm.palette.first { it == ThemePalette.KVAS }
+        assertEquals(ThemePalette.KVAS, settings.palette.value)
     }
 }

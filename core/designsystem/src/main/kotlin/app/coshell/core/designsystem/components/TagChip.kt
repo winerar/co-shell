@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -46,14 +47,14 @@ fun CoShellTagChip(
 ) {
     val ink = categoryColor(color)
     val colors = MaterialTheme.colorScheme
+    val sel = selectionColors()
     Row(
         modifier
             .tactileClickable(Tactile.Control, PillShape, role = Role.Checkbox, onClick = onClick)
             .selectionPop(selected)
             .widthIn(max = TagChipMaxWidth)
             .height(Sizes.chipHeight)
-            .background(if (selected) colors.primaryContainer else colors.surfaceContainerHigh, PillShape)
-            .then(if (selected) Modifier.border(Sizes.selectionRing, colors.onSurface, PillShape) else Modifier)
+            .background(if (selected) sel.fill else colors.surfaceContainerHigh, PillShape)
             .padding(horizontal = Spacing.m),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
@@ -63,13 +64,13 @@ fun CoShellTagChip(
             name,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-            color = if (selected) colors.onPrimaryContainer else colors.onSurfaceVariant,
+            color = if (selected) sel.content else colors.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f, fill = false),
         )
         if (removeLabel != null) {
-            Icon(painterResource(R.drawable.ic_close), removeLabel, Modifier.size(CloseSize), tint = if (selected) colors.onPrimaryContainer else colors.onSurfaceVariant)
+            Icon(painterResource(R.drawable.ic_close), removeLabel, Modifier.size(CloseSize), tint = if (selected) sel.content else colors.onSurfaceVariant)
         }
     }
 }

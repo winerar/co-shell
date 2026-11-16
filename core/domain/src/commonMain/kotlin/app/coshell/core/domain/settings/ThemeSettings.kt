@@ -23,42 +23,47 @@ enum class ThemeMode {
     }
 }
 
-/** The two rows of «Внешний вид → Тема» (#271): bright neon or pastel. */
-enum class PaletteGroup { JUICY, SOFT }
-
 /**
- * Colour palette of the app, named after fruits (#271, owner's choice 2026-11-12). Device-only like [ThemeMode].
- * Seven juicy ones (the former neon palettes renamed, plus [LEMON]) and seven soft pastel ones. [LIME] is the default.
- * Stored by [name]; names saved before #271 map through [parse] so the phone keeps its choice.
+ * Colour theme of the app (1.0, owner's choice 2026-11-16, #354): fruits, drinks, plants — one list. Device-only like
+ * [ThemeMode]. [LIME] is the default. Stored by [name]; the 14 fruit palettes of 0.x and the names before them map
+ * through [parse] to the nearest new theme, so the phone keeps a close look.
  */
-enum class ThemePalette(val group: PaletteGroup) {
-    LIME(PaletteGroup.JUICY),
-    PASSIONFRUIT(PaletteGroup.JUICY),
-    MANGO(PaletteGroup.JUICY),
-    BILBERRY(PaletteGroup.JUICY),
-    FEIJOA(PaletteGroup.JUICY),
-    PITAYA(PaletteGroup.JUICY),
-    LEMON(PaletteGroup.JUICY),
-    PEACH(PaletteGroup.SOFT),
-    LYCHEE(PaletteGroup.SOFT),
-    MELON(PaletteGroup.SOFT),
-    BLUEBERRY(PaletteGroup.SOFT),
-    PLUM(PaletteGroup.SOFT),
-    PEAR(PaletteGroup.SOFT),
-    GOOSEBERRY(PaletteGroup.SOFT),
+enum class ThemePalette {
+    LIME,
+    GARNET,
+    BANANA,
+    MATE,
+    ESPRESSO,
+    KVAS,
+    SAKURA,
+    CORNFLOWER,
+    LOTUS,
     ;
 
     companion object {
-        /** Names saved before the fruit names (#271): Вольт → Лайм, Мохито → Маракуйя, Ультра → Черника… */
+        /** Palettes of 0.x (#271 fruits and the names before them) → the nearest 1.0 theme. */
         private val legacy = mapOf(
             "VOLT" to LIME,
-            "MOJITO" to PASSIONFRUIT,
-            "ULTRA" to BILBERRY,
-            "LAGOON" to FEIJOA,
-            "SAKURA" to PITAYA,
+            "MOJITO" to LOTUS,
+            "ULTRA" to CORNFLOWER,
+            "LAGOON" to LIME,
+            "SAKURA" to SAKURA,
+            "PASSIONFRUIT" to LOTUS,
+            "MANGO" to KVAS,
+            "BILBERRY" to CORNFLOWER,
+            "FEIJOA" to LIME,
+            "PITAYA" to SAKURA,
+            "LEMON" to BANANA,
+            "PEACH" to ESPRESSO,
+            "LYCHEE" to SAKURA,
+            "MELON" to ESPRESSO,
+            "BLUEBERRY" to CORNFLOWER,
+            "PLUM" to LOTUS,
+            "PEAR" to MATE,
+            "GOOSEBERRY" to MATE,
         )
 
-        /** Palette saved as [name] (or a pre-#271 name); unknown or missing → [LIME]. */
+        /** Theme saved as [name] (or a 0.x name); unknown or missing → [LIME]. */
         fun parse(stored: String?): ThemePalette =
             entries.firstOrNull { it.name == stored } ?: legacy[stored] ?: LIME
     }

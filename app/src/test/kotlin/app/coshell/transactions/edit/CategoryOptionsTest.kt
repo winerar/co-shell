@@ -40,16 +40,27 @@ class CategoryOptionsTest {
     }
 
     @Test
-    fun `shelves go folderless first, then by folder`() {
-        val shelves = categoryShelves(groups)
-        assertEquals(listOf(null, "Еда", "Дом"), shelves.map { it.title })
-        assertEquals(8, shelves.first().items.size)
+    fun `choice lines put folders with several children first and the rest under no group`() {
+        val lines = categoryChoiceOptions(groups, "Остальные")
+        assertEquals(groups.leafCount, lines.size)
+        assertEquals(listOf("Еда", "Дом", "Остальные"), lines.map { it.group }.distinct())
+        assertEquals(true, lines.all { it.hasBadge })
     }
 
     @Test
-    fun `search keeps matches and a matching folder keeps all its children`() {
-        assertEquals(listOf("Еда" to listOf("кафе")), categoryShelves(groups, " каф").map { it.title to ids(it.items) })
-        assertEquals(listOf("Еда" to listOf("продукты", "кафе")), categoryShelves(groups, "ЕДА").map { it.title to ids(it.items) })
-        assertEquals(emptyList<CategoryShelf>(), categoryShelves(groups, "нет такого"))
+    fun `a folder of one is just its category without a double`() {
+        val same = CategoryGroup(CategoryItem("kids", "Дети"), listOf(CategoryItem("kids2", "Дети")))
+        val other = CategoryGroup(CategoryItem("home", "Дом"), listOf(CategoryItem("repair", "Ремонт")))
+        val lines = categoryChoiceOptions(listOf(same, other), "Остальные")
+        assertEquals(listOf("Дети", "Ремонт"), lines.map { it.label })
+        assertEquals(listOf("kids2", "repair"), lines.map { it.value })
+        assertEquals(listOf(null, "Дом"), lines.map { it.subtitle })
+        assertEquals(listOf("Остальные"), lines.map { it.group }.distinct())
+    }
+
+    @Test
+    fun `a folder with no children is a plain category and a folder with children is not a line`() {
+        val lines = categoryChoiceOptions(groups, "Остальные")
+        assertEquals(false, lines.any { it.value == "еда" || it.value == "дом" })
     }
 }

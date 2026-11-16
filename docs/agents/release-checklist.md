@@ -72,7 +72,7 @@
 - [x] **[есть]** Нет нестабильных классов состояний — `agent.sh stability` (2026-11-15: 245 стабильных, 0 нестабильных состояний);
   `baseline-prof.txt` покрывает весь `app.coshell` — `BaselineProfileTest` (#383). Перед релизом — прогнать `stability`.
 - [ ] `agent.sh scale` на 10 000 операций — в пределах прошлых замеров (`notes.md`); APK < 15 МБ.
-- [ ] Поиск по коду: нет `observeTransactions()` без периода/`limit`, нет `stateIn` без `.offMain()`, у `LazyColumn` есть `key`.
+- [x] **[агент, 2026-11-16]** Поиск по коду: все `observeTransactions()` с периодом/`limit`; `stateIn` с тяжёлым `combine`/`map` — через `.offMain()` (добавлено в `ReportCurrenciesViewModel`, `TemplateStripViewModel`, `FamilyViewModel`; остальные — тонкие настройки без вычислений); у всех `items(…)` есть `key`.
 - [x] **[есть, эмулятор]** R8: release-сборка на эмуляторе — старт, вкладки, ночная тема, шрифт 2.0, monkey, память (`emulator.yml`, перед каждым релизом). Основной сценарий с вводом и синком — не автоматизирован.
 
 ## 9. Данные и надёжность

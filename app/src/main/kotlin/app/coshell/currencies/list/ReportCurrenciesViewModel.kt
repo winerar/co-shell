@@ -8,11 +8,10 @@ import app.coshell.core.domain.settings.ReportCurrencies
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
-import kotlin.time.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +19,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
 /** Edits the report currency list: add, remove, make main (list rules — [ReportCurrencies]). */
 @HiltViewModel
@@ -48,7 +49,7 @@ class ReportCurrenciesViewModel @Inject constructor(
             adding = form,
             preview = balancePreview(accountList, rateList, list, today, moneyFormat),
         )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, ReportCurrenciesUiState())
+    }.offMain().stateIn(viewModelScope, SharingStarted.Eagerly, ReportCurrenciesUiState())
 
     fun openAdd() {
         viewModelScope.launch {

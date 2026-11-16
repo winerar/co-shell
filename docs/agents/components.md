@@ -53,7 +53,7 @@
 - **Шторка и панель** — `CoShellSheet` + `CoShellSheetLayout` (действие закреплено внизу, `titleAction` — текст-кнопка
   в строке заголовка, «Сбросить» в фильтрах; вне навигации — внутри `Dialog(properties = CoShellSheetDialogProperties)`), `CoShellBottomBar`
   (`CoShellTab`: иконка, подпись, выбрана, `badge` — неоновая точка «есть новое»; «+» в середине, `addConfirm` —
-  галочка после сохранения) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
+  галочка после сохранения, `addLocked` — приглушённый «+» с замком, ввод закрыт до обновления, #334) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
   строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).
   **Тег** — `CoShellTagPill(name, color)` (точка + имя в пилюле цвета тега, ≤ 132 dp), `CoShellTagMore(n)` — «+N»,
   `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.

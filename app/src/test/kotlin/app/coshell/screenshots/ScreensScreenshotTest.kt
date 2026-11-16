@@ -57,6 +57,7 @@ import app.coshell.currencies.list.ReportCurrenciesActions
 import app.coshell.currencies.list.ReportCurrenciesScreen
 import app.coshell.currencies.list.reportCurrenciesPreviewSample
 import app.coshell.home.HomeScreen
+import app.coshell.home.components.VersionGateBannerState
 import app.coshell.home.HomeUiState
 import app.coshell.home.homeBudgetPreviewSample
 import app.coshell.home.homePreviewSample
@@ -138,6 +139,12 @@ class ScreensScreenshotTest {
     @Test
     fun `home budget dark`() = shot("home_budget_dark", dark = true) {
         HomeScreen(homePreviewSample, budget = homeBudgetPreviewSample)
+    }
+
+    /** Board `Fb334A` (#334): the other phone runs a newer version — looking is open, entry waits for the update. */
+    @Test
+    fun `home version gate light`() = shot("home_gate_light") {
+        HomeScreen(homePreviewSample, gate = VersionGateBannerState("0.41", "5,6"))
     }
 
     @Test

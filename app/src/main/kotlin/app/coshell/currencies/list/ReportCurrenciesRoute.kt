@@ -4,20 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.gate.LocalInputLock
 
 /** Connects [ReportCurrenciesScreen] to [ReportCurrenciesViewModel]. */
 @Composable
 fun ReportCurrenciesRoute(onBack: () -> Unit, viewModel: ReportCurrenciesViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     ReportCurrenciesScreen(
         state = state,
         actions = ReportCurrenciesActions(
             onBack = onBack,
-            onMakeMain = viewModel::makeMain,
-            onRemove = viewModel::remove,
+            onMakeMain = lock.guard1(viewModel::makeMain),
+            onRemove = lock.guard1(viewModel::remove),
             onAdd = viewModel::openAdd,
             onCodeChange = viewModel::onCodeChange,
-            onConfirmAdd = viewModel::confirmAdd,
+            onConfirmAdd = lock.guard(viewModel::confirmAdd),
             onDismissAdd = viewModel::dismissAdd,
         ),
     )

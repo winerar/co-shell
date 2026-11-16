@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.YearMonth
+import app.coshell.gate.LocalInputLock
 
 /** Connects [BudgetEditScreen] to [BudgetEditViewModel]; closes when the limit is saved or removed. */
 @Composable
@@ -16,6 +17,7 @@ fun BudgetEditRoute(
     viewModel: BudgetEditViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lock = LocalInputLock.current
     LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
     BudgetEditScreen(
         state = state,
@@ -28,8 +30,8 @@ fun BudgetEditRoute(
             onRolloverChange = viewModel::onRolloverChange,
             onNoteChange = viewModel::onNoteChange,
             onOpenInside = { id -> state.month?.let { onOpenCategory(id, it) } },
-            onSave = viewModel::save,
-            onRemove = viewModel::remove,
+            onSave = lock.guard(viewModel::save),
+            onRemove = lock.guard(viewModel::remove),
         ),
     )
 }

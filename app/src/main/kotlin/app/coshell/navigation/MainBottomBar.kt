@@ -43,14 +43,16 @@ internal fun MainBottomBar(
     onAdd: () -> Unit,
     visible: Boolean = true,
     moreBadge: Boolean = false,
+    addLocked: Boolean = false,
 ) {
     val tabs = TopLevel.entries
     CoShellBottomBar(
         tabs = tabs.map { CoShellTab(it.icon, stringResource(it.label), selected = current.isOn(it), badge = moreBadge && it == TopLevel.MORE) },
         onTab = { onTab(tabs[it]) },
-        addLabel = stringResource(R.string.transaction_add),
+        addLabel = stringResource(if (addLocked) R.string.gate_add_locked else R.string.transaction_add),
         onAdd = onAdd,
         visible = visible,
         addConfirm = LocalAddConfirm.current,
+        addLocked = addLocked,
     )
 }

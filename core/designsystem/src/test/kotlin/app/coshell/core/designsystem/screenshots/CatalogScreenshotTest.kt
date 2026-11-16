@@ -77,6 +77,23 @@ class CatalogScreenshotTest {
         )
     }
 
+    /** #334, board `Fb334A`: entry closed until the update — the «+» is muted, with a lock. */
+    @Test
+    fun `bottom bar locked dark`() = shot("bottom_bar_locked_dark", dark = true) {
+        CoShellBottomBar(
+            tabs = listOf(
+                CoShellTab(R.drawable.ic_home, "Обзор", selected = true),
+                CoShellTab(R.drawable.ic_receipt_long, "Операции", selected = false),
+                CoShellTab(R.drawable.ic_account_balance_wallet, "Счета", selected = false),
+                CoShellTab(R.drawable.ic_more_horiz, "Ещё", selected = false),
+            ),
+            onTab = {},
+            addLabel = "Добавить — после обновления",
+            onAdd = {},
+            addLocked = true,
+        )
+    }
+
     @Test
     fun `segmented dark`() = shot("segmented_dark", dark = true) { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
 

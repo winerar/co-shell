@@ -1,6 +1,9 @@
 package app.coshell.budgets.list.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,13 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
-import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.charts.bulletColor
+import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
@@ -33,20 +38,23 @@ internal fun BudgetSummaryCard(summary: BudgetsUiState.Summary, modifier: Modifi
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SummaryContent(summary: BudgetsUiState.Summary) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    // A flow: the title keeps its words whole, «ещё 19 дней» drops under it when the line is too narrow.
+    FlowRow(Modifier.fillMaxWidth(), itemVerticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
         Text(
             stringResource(if (summary.over) R.string.budgets_over else R.string.budgets_left),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.weight(1f),
         )
         summary.daysLeft?.let { days ->
             Text(
                 pluralStringResource(R.plurals.budgets_days_left, days, days),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -55,6 +63,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         AmountTitleStyle,
         color = if (summary.over) bulletColor(BulletTone.DANGER) else LocalHeroPalette.current.amount,
         modifier = Modifier.padding(top = Spacing.xs),
+        minFontSize = 16.sp, // shrinks, never loses the currency code (#432)
     )
     Text(
         stringResource(R.string.budgets_spent_of, summary.spent, summary.planned),

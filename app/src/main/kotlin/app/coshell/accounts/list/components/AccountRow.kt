@@ -1,7 +1,6 @@
 package app.coshell.accounts.list.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +13,7 @@ import app.coshell.R
 import app.coshell.accounts.labelRes
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
@@ -59,7 +59,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
                         style = RateTextStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
-                        autoSize = TextAutoSize.StepBased(minFontSize = MinAmountSize, maxFontSize = RateTextStyle.fontSize),
+                        autoSize = fitAmountAutoSize(min = MinAmountSize, max = RateTextStyle.fontSize),
                     )
                 }
             }

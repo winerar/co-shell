@@ -52,6 +52,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 onClick = { balanceOpen = true },
                 modifier = Modifier.weight(1f),
                 empty = state.initialBalance.isBlank(),
+                amount = true,
             )
         }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }

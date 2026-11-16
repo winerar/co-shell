@@ -16,7 +16,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditScreen
 import app.coshell.transactions.edit.TransactionEditUiState
-import app.coshell.transactions.edit.components.AllCategoriesContent
+import app.coshell.transactions.edit.categoryChoiceOptions
+import app.coshell.ui.form.ChoiceRows
 import app.coshell.transactions.edit.entrySheetSample
 import app.coshell.transactions.edit.paymentSheetSample
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -62,7 +63,15 @@ class EntrySheetScreenshotTest {
 
     @Composable
     private fun allCategories() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
-        AllCategoriesContent(entrySheetSample.categories, entrySheetSample.categoryId, onSelect = {})
+        ChoiceRows(
+            options = categoryChoiceOptions(entrySheetSample.categories, "Без группы"),
+            selected = entrySheetSample.categoryId,
+            query = "",
+            onQueryChange = {},
+            showSearch = true,
+            searchPlaceholder = "Найти категорию",
+            onPick = {},
+        )
     }
 
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {

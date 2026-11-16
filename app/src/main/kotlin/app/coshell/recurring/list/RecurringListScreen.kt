@@ -10,22 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
-import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.recurring.list.components.MonthAheadCard
@@ -47,12 +45,9 @@ import kotlinx.datetime.YearMonth
 fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActions) {
     Scaffold(
         topBar = {
-            ScreenTopBar(stringResource(R.string.recurring_list_title), onBack = actions.onBack) {
-                CoShellIconButton(onClick = actions.onNew) {
-                    Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.recurring_list_new))
-                }
-            }
+            ScreenTopBar(stringResource(R.string.recurring_list_title), onBack = actions.onBack)
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.recurring_list_new), actions.onNew) },
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.isEmpty) {
@@ -61,7 +56,7 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
         }
         LazyColumn(
             Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = Spacing.xl),
+            contentPadding = PaddingValues(bottom = Sizes.fabClearance),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (state.total >= SEARCH_FROM) {

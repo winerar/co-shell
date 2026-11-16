@@ -25,7 +25,8 @@ import app.coshell.ui.format.formatDayMonthShort
 @Composable
 internal fun RecurringPaymentRow(row: RecurringRow, onClick: () -> Unit) {
     CoShellListRow(
-        title = { Text(row.item.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        // Two lines: beside a wide amount on a narrow screen the name wraps instead of shrinking to «Платё…».
+        title = { Text(row.item.name, maxLines = 2, overflow = TextOverflow.Ellipsis) },
         supporting = { Text(subtitle(row), maxLines = 2, overflow = TextOverflow.Ellipsis) },
         leading = { TemplateBadge(row.item) },
         trailing = {

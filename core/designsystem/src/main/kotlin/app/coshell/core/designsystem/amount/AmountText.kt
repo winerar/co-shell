@@ -1,6 +1,5 @@
 package app.coshell.core.designsystem.amount
 
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,8 @@ import androidx.compose.ui.unit.em
 /**
  * A formatted amount («1 234,50 USD», from `MoneyFormat`): the number in [color], the currency
  * code after it smaller and grey (owner's choice, design-questions §3). Fraction digits stay the
- * same size. [minFontSize] — shrink a long amount down to it instead of wrapping.
+ * same size. [minFontSize] — shrink a long amount down to it instead of wrapping; if even that does not fit, it
+ * shrinks further so the amount is never cut ([fitAmountAutoSize]).
  */
 @Composable
 fun AmountText(
@@ -37,7 +37,7 @@ fun AmountText(
         modifier = modifier,
         maxLines = 1,
         autoSize = if (minFontSize == TextUnit.Unspecified) null
-        else TextAutoSize.StepBased(minFontSize = minFontSize, maxFontSize = style.fontSize),
+        else fitAmountAutoSize(min = minFontSize, max = style.fontSize),
     )
 }
 

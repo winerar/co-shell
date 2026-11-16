@@ -11,18 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellButton
-import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
@@ -40,18 +38,15 @@ import app.coshell.ui.top.ScreenTopBar
 fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
     Scaffold(
         topBar = {
-            ScreenTopBar(stringResource(R.string.templates_title), onBack = actions.onBack) {
-                CoShellIconButton(onClick = actions.onNew) {
-                    Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.template_new))
-                }
-            }
+            ScreenTopBar(stringResource(R.string.templates_title), onBack = actions.onBack)
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.template_new), actions.onNew) },
     ) { padding ->
         if (state.isEmpty) {
             EmptyTemplates(actions.onNew, Modifier.padding(padding))
             return@Scaffold
         }
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
             item(key = "search") {
                 CoShellSearchField(
                     value = state.query,

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.accounts.list.AccountsUiState
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellExpandIcon
 import app.coshell.core.designsystem.motion.CoShellExpandable
@@ -70,7 +70,7 @@ internal fun AccountGroup(
                         style = RateTextStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
-                        autoSize = TextAutoSize.StepBased(minFontSize = MinTotalSize, maxFontSize = RateTextStyle.fontSize),
+                        autoSize = fitAmountAutoSize(min = MinTotalSize, max = RateTextStyle.fontSize),
                     )
                 }
             }

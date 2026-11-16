@@ -15,8 +15,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import androidx.compose.foundation.layout.PaddingValues
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.rates.list.components.AddRateButton
 import app.coshell.rates.list.components.ConverterCard
 import app.coshell.rates.list.components.ConverterKeypadSheet
 import app.coshell.rates.list.components.CurrentRateRow
@@ -27,6 +28,7 @@ import app.coshell.rates.list.components.RatesSources
 import app.coshell.rates.list.components.RefreshBlock
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
 import app.coshell.ui.form.ChoiceSheet
@@ -43,8 +45,9 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         topBar = {
             ScreenTopBar(stringResource(R.string.rates_title), onBack = actions.onBack)
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.rates_manual_add), actions.onAddManual) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
             // «Сколько это» right on top (#319, А): the rows below follow the typed amount.
             if (state.current.isNotEmpty()) {
                 item(key = "converter") {
@@ -75,9 +78,6 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             }
             items(state.manual, key = { "manual-${it.rate.date}-${it.rate.from}-${it.rate.to}" }) { item ->
                 ManualRateRow(item, onClick = { actions.onManualClick(item) }, onDelete = { actions.onManualDelete(item) })
-            }
-            item(key = "manual-add") {
-                AddRateButton(actions.onAddManual)
             }
             item(key = "sources") { RatesSources() }
         }

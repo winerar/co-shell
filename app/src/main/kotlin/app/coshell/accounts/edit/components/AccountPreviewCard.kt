@@ -1,6 +1,5 @@
 package app.coshell.accounts.edit.components
 
-import androidx.compose.runtime.getValue
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -12,13 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.labelRes
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -59,7 +61,8 @@ internal fun AccountPreviewCard(state: AccountEditUiState, modifier: Modifier = 
             color = ink,
             style = AmountTitleStyle,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            // The typed balance shrinks to fit — a cut amount shows a wrong number (#378).
+            autoSize = fitAmountAutoSize(min = 10.sp, max = AmountTitleStyle.fontSize),
             modifier = Modifier.padding(top = Spacing.s),
         )
     }

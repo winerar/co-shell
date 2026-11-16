@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -18,8 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.motion.tactileCombinedClickable
@@ -114,7 +117,31 @@ private fun RowLayout(
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
-    Row(
+    val gap = Spacing.l
+    val minText = TEXT_MIN_WIDTH * LocalDensity.current.fontScale.coerceAtLeast(1f)
+    Layout(
+        content = {
+            if (leading != null) {
+                Box(Modifier.layoutId(Slot.Leading)) {
+                    CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = leading)
+                }
+            }
+            Column(Modifier.layoutId(Slot.Text), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
+                CompositionLocalProvider(LocalContentColor provides colors.onSurface) {
+                    ProvideTextStyle(typography.bodyLarge, title)
+                }
+                if (supporting != null) {
+                    CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant) {
+                        ProvideTextStyle(if (dense) typography.bodySmall else typography.bodyMedium, supporting)
+                    }
+                }
+            }
+            if (trailing != null) {
+                Box(Modifier.layoutId(Slot.Trailing), contentAlignment = Alignment.CenterEnd) {
+                    CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = trailing)
+                }
+            }
+        },
         modifier = modifier
             .fillMaxWidth()
             .smoothResize() // a subtitle may appear or wrap to two lines (issue #64)
@@ -122,38 +149,42 @@ private fun RowLayout(
             .heightIn(min = if (dense) Sizes.rowDenseMinHeight else Sizes.rowMinHeight)
             .padding(horizontal = Spacing.l, vertical = if (dense) Spacing.s else Spacing.m)
             .alpha(if (enabled) 1f else DisabledAlpha),
-        horizontalArrangement = Arrangement.spacedBy(Spacing.l),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (leading != null) CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = leading)
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-            CompositionLocalProvider(LocalContentColor provides colors.onSurface) {
-                ProvideTextStyle(typography.bodyLarge, title)
-            }
-            if (supporting != null) {
-                CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant) {
-                    ProvideTextStyle(if (dense) typography.bodySmall else typography.bodyMedium, supporting)
-                }
-            }
-        }
-        if (trailing != null) {
-            // Measured before the title: capped so a huge amount cannot squeeze the title down to nothing.
-            Box(Modifier.capWidth(TRAILING_MAX_SHARE), contentAlignment = Alignment.CenterEnd) {
-                CompositionLocalProvider(LocalContentColor provides colors.onSurfaceVariant, content = trailing)
+    ) { measurables, constraints ->
+        val gapPx = gap.roundToPx()
+        val loose = constraints.copy(minWidth = 0, minHeight = 0)
+        val leadingP = measurables.firstOrNull { it.layoutId == Slot.Leading }?.measure(loose)
+        val left = (leadingP?.width?.plus(gapPx)) ?: 0
+        val room = (constraints.maxWidth - left).coerceAtLeast(0)
+        val trailingM = measurables.firstOrNull { it.layoutId == Slot.Trailing }
+        val textM = measurables.first { it.layoutId == Slot.Text }
+        // The amount stays beside the text while the text keeps [minText]; otherwise it goes under it (end-aligned),
+        // so a huge amount never squeezes the words into columns of letters.
+        val trailingNatural = trailingM?.measure(Constraints(maxWidth = room))
+        val beside = trailingNatural == null || room - trailingNatural.width - gapPx >= minText.roundToPx()
+        val textP = textM.measure(
+            Constraints(maxWidth = if (beside && trailingNatural != null) room - trailingNatural.width - gapPx else room),
+        )
+        val trailingP = trailingNatural
+        val contentH = if (beside) maxOf(textP.height, trailingP?.height ?: 0) else textP.height + (trailingP?.height ?: 0) + Spacing.xxs.roundToPx()
+        val height = maxOf(contentH, leadingP?.height ?: 0).coerceIn(constraints.minHeight, constraints.maxHeight.coerceAtLeast(constraints.minHeight))
+        layout(constraints.maxWidth, height) {
+            leadingP?.placeRelative(0, (height - leadingP.height) / 2)
+            if (beside) {
+                textP.placeRelative(left, (height - textP.height) / 2)
+                trailingP?.placeRelative(constraints.maxWidth - trailingP.width, (height - trailingP.height) / 2)
+            } else {
+                val top = (height - contentH) / 2
+                textP.placeRelative(left, top)
+                trailingP?.placeRelative(constraints.maxWidth - trailingP.width, top + textP.height + Spacing.xxs.roundToPx())
             }
         }
     }
 }
 
-/** At most this share of what the leading slot leaves goes to the trailing one; the rest stays for the title. */
-private const val TRAILING_MAX_SHARE = 0.6f
+private enum class Slot { Leading, Text, Trailing }
 
-/** Measures the content with its max width cut to [share] of the incoming one. */
-private fun Modifier.capWidth(share: Float): Modifier = layout { measurable, constraints ->
-    val max = if (constraints.hasBoundedWidth) (constraints.maxWidth * share).toInt() else constraints.maxWidth
-    val placeable = measurable.measure(constraints.copy(minWidth = 0, maxWidth = max.coerceAtLeast(0)))
-    layout(placeable.width, placeable.height) { placeable.placeRelative(0, 0) }
-}
+/** The text of a row keeps at least this much (× the font scale) beside the amount; less — the amount goes under it. */
+private val TEXT_MIN_WIDTH = 120.dp
 
 /** Material's "disabled" opacity. */
 private const val DisabledAlpha = 0.38f

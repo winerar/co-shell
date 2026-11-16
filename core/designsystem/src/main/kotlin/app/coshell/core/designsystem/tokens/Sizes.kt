@@ -74,6 +74,8 @@ object Sizes {
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     val chipIcon = 18.dp
+    /** Account badge inside a choice chip. */
+    val chipBadge = 24.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */
     val tabSwipe = 80.dp
     /** Segment of CoShellSegmented: 36 dp, with the track's [segmentInset] the control is a 44 dp cell (board Style1). */

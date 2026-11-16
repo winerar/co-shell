@@ -1,17 +1,11 @@
 package app.coshell.transactions.edit.components
 
 import app.coshell.core.designsystem.components.SectionTone
-import app.coshell.core.designsystem.theme.AmountCellStyle
 import app.coshell.core.designsystem.components.CoShellSectionLabel
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,34 +18,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.accounts.groupByAccountType
 import app.coshell.accounts.groupLabelRes
-import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.AccountBadge
-import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellSearchField
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.selectionPop
-import app.coshell.core.designsystem.motion.tactileClickable
-import app.coshell.core.designsystem.theme.RateTextStyle
-import app.coshell.core.designsystem.theme.accentInk
-import app.coshell.core.designsystem.tokens.Motion
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.widthIn
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 
-private const val COLUMNS = 3
 private const val SEARCH_FROM = 7
 
 /**
  * Step 1 of the entry sheet: «Откуда списали?» — the recent accounts big on top, then every account in a
- * 3-column grid by group, a search field at the very bottom (under the thumb) once there are many.
+ * wrapping chips by group, a search field at the very bottom (under the thumb) once there are many.
  * A tap picks the account and the sheet moves on.
  */
 @Composable
@@ -81,21 +68,13 @@ internal fun AccountPicker(
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             val recent = recentIds.mapNotNull { id -> choices.firstOrNull { it.id == id } }
-            if (query.isBlank() && recent.size > 1 && choices.size > COLUMNS + 1) {
+            if (query.isBlank() && recent.size >= RECENT_MIN && choices.size > RECENT_MIN + 2) {
                 GroupTitle(stringResource(R.string.picker_recent), accent = true)
-                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                    recent.forEach { RecentTile(it, it.id == selectedId, Modifier.weight(1f)) { onSelect(it.id) } }
-                    repeat(RECENT_SLOTS - recent.size) { Box(Modifier.weight(1f)) }
-                }
+                AccountChips(recent, selectedId, onSelect)
             }
             groupByAccountType(found) { it.type }.forEach { (type, items) ->
                 GroupTitle(stringResource(type.groupLabelRes).uppercase())
-                items.chunked(COLUMNS).forEach { line ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                        line.forEach { AccountTile(it, it.id == selectedId, Modifier.weight(1f)) { onSelect(it.id) } }
-                        repeat(COLUMNS - line.size) { Box(Modifier.weight(1f)) }
-                    }
-                }
+                AccountChips(items, selectedId, onSelect)
             }
             if (found.isEmpty()) {
                 Text(
@@ -117,64 +96,24 @@ internal fun AccountPicker(
     }
 }
 
-private const val RECENT_SLOTS = 4
+private const val RECENT_MIN = 2
 
 @Composable
 private fun GroupTitle(text: String, accent: Boolean = false) =
     CoShellSectionLabel(text, Modifier.padding(top = Spacing.s), tone = if (accent) SectionTone.Accent else SectionTone.Muted)
 
+/** Accounts as choice chips (poll #367 А): the account's badge and its name; the chosen one is neon with a frame. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RecentTile(account: AccountOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
-    val ring by animateColorAsState(ringColor(account, selected), Motion.effects(), label = "recentRing")
-    val shape = MaterialTheme.shapes.large
-    Column(
-        modifier = modifier
-            .tactileClickable(Tactile.Control, shape, onClick = onClick)
-            .selectionPop(selected)
-            .border(Sizes.selectionRing, ring, shape)
-            .padding(vertical = Spacing.s, horizontal = Spacing.xs),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Spacing.xs),
-    ) {
-        AccountBadge(account.name, account.color)
-        Text(account.name, style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+private fun AccountChips(accounts: List<AccountOption>, selectedId: String?, onSelect: (String) -> Unit) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        accounts.forEach { account ->
+            CoShellFilterChip(
+                selected = account.id == selectedId,
+                onClick = { onSelect(account.id) },
+                label = { Text(account.name, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.widthIn(max = Sizes.tileMinHeight)) },
+                leadingIcon = { AccountBadge(account.name, account.color, size = Sizes.chipBadge) },
+            )
+        }
     }
-}
-
-@Composable
-private fun AccountTile(account: AccountOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
-    val ring by animateColorAsState(
-        ringColor(account, selected, idle = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)),
-        Motion.effects(),
-        label = "tileRing",
-    )
-    val shape = MaterialTheme.shapes.large
-    Column(
-        modifier = modifier
-            .heightIn(min = Sizes.accountTile)
-            .tactileClickable(Tactile.Control, shape, onClick = onClick)
-            .selectionPop(selected)
-            .background(if (selected) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainer, shape)
-            .border(Sizes.selectionRing, ring, shape)
-            .padding(Spacing.m),
-        verticalArrangement = Arrangement.spacedBy(Spacing.xs),
-    ) {
-        AccountBadge(account.name, account.color, size = Sizes.badgeSmall)
-        Text(account.name, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        // A long balance shrinks to fit the tile instead of losing its currency to «…» (board `Main`).
-        AmountText(
-            account.balance.ifEmpty { account.currency },
-            AmountCellStyle,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            minFontSize = 8.sp,
-        )
-    }
-}
-
-/** Recent tiles have no frame until picked; grid tiles keep a soft one. */
-@Composable
-private fun ringColor(account: AccountOption, selected: Boolean, idle: Color = Color.Transparent): Color = when {
-    !selected -> idle
-    account.color != null -> categoryColor(account.color)
-    else -> accentInk()
 }

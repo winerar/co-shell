@@ -49,11 +49,14 @@ VARIANTS = {
     'F': ('Лайм на графите, тонкая линия', GRAPHITE, lambda u: outline(LIME, VIOLET, True)),
     'G': ('Силуэт проще', GRAPHITE, lambda u: I.svg_paths(I.layers(SHAPES['G'], LIME, LIME, LIME, VIOLET))),
     'H': ('Силуэт-минимум', GRAPHITE, lambda u: I.svg_paths(I.layers(SHAPES['H'], LIME, LIME, LIME, VIOLET))),
+    'I': ('Силуэт, ровные линии', GRAPHITE, lambda u: I.svg_paths(I.layers(SHAPES['I'], LIME, LIME, LIME, VIOLET))),
+    'J': ('Силуэт, ровные линии потолще', GRAPHITE, lambda u: I.svg_paths(I.layers(SHAPES['J'], LIME, LIME, LIME, VIOLET))),
 }
 # Round 3 (#426 note «залитая, упрощённая геометрия»): 3 scallops; Ж — 2 thick ribs, balls on the frame; З — no frame and no ribs, one silhouette.
-SHAPES = {'G': I.Shape(lobes=3, stems=False, rib=(2.8, 4.2)), 'H': I.Shape(lobes=3, stems=False, gap=None, rib=None, top=44)}
+# Round 4 (#426 «упрости сами линии — без изменения толщины»): А's silhouette, every cut one width.
+SHAPES = {'I': I.Shape(even=2.6), 'J': I.Shape(even=3.2), 'G': I.Shape(lobes=3, stems=False, rib=(2.8, 4.2)), 'H': I.Shape(lobes=3, stems=False, gap=None, rib=None, top=44)}
 THIN = 2.6  # the 0.x icon used 2.4; ≥ 1.7 px at mdpi (48 dp × 1)
-LETTER = dict(zip('ABCDEFGH', 'АБВГДЕЖЗ'))
+LETTER = dict(zip('ABCDEFGHIJ', 'АБВГДЕЖЗИК'))
 MONO = {'light': ('#D9E7C6', '#2C3A1C'), 'dark': ('#2A3322', '#D3EBB0')}
 _uid = [0]
 
@@ -182,10 +185,12 @@ def main():
     pages['Icon426Quality'] = quality('AF', 'android' if os.path.isdir(os.path.join(out, 'android')) else 'px')
     pages['Icon426Quality3'] = quality('AGH')
     pages['Icon426All3'] = compare('AGHF')
+    pages['Icon426Quality4'] = quality('AIJ')
+    pages['Icon426All4'] = compare('AIJ')
     for name, html in pages.items():
         open(os.path.join(out, 'html', name + '.html'), 'w', encoding='utf-8').write(html)
     os.makedirs(os.path.join(out, 'pxhtml'), exist_ok=True)
-    for v in 'AFGH':
+    for v in 'AFGHIJ':
         for n in PX:
             open(os.path.join(out, 'pxhtml', '%s-%d.html' % (v, n)), 'w', encoding='utf-8').write(tiny(v, n))
     js = os.path.join(out, 'render.js')

@@ -35,11 +35,15 @@ def circle(cx, cy, r):
 class Shape:
     """Proportions of the shell-purse. lobes — scallops on the bottom edge."""
 
-    def __init__(self, lobes=5, top=48.5, bottom_mid=82.0, side=68.0, half=27.0, neck=17.0, gap=2.9, stems=True, rib=(2.1, 3.4)):
+    def __init__(self, lobes=5, top=48.5, bottom_mid=82.0, side=68.0, half=27.0, neck=17.0, gap=2.9, stems=True, rib=(2.1, 3.4), even=None):
         """gap — frame-to-body gap (None: no frame, the balls sit on a rounded body top — one silhouette); stems — clasp balls on stems or sitting on the frame;
         rib — rib widths at the clasp end and at the edge (None — no ribs)."""
         self.lobes, self.top, self.bottom_mid, self.side, self.half, self.neck = lobes, top, bottom_mid, side, half, neck
         self.gap, self.stems, self.rib = gap, stems, rib
+        self.stem, self.rib_start = 2.6, 9.5
+        if even:  # owner #426 round 3: every line one width — ribs, the clasp gap and the stems
+            self.rib, self.gap, self.stem = (even, even), even, even
+            self.rib_start = 9.5 + even * 1.6  # even ribs need room where they converge
 
     def junctions(self):
         pts = []
@@ -79,7 +83,7 @@ class Shape:
         for x, y in self.junctions()[1:-1]:
             dx, dy = x - apex[0], y - apex[1]
             ln = math.hypot(dx, dy)
-            s0, s1 = 9.5 / ln, (ln - 4.2) / ln
+            s0, s1 = self.rib_start / ln, (ln - 4.2) / ln
             out.append(capsule(apex[0] + dx * s0, apex[1] + dy * s0, apex[0] + dx * s1, apex[1] + dy * s1, w0, w1))
         return out
 
@@ -102,7 +106,8 @@ class Shape:
             base = self.top + 1 if self.gap is None else y0
             return circle(CX + side * 6.6, base - 3.4, 4.4)
         cx, cy, r = CX + side * 4.6, y0 - 6.2, 4.4
-        stem = 'M%s L%s L%s L%s Z' % (_pt(cx - 1.3, cy), _pt(cx - 1.4 - side * .6, y0 + .5), _pt(cx + 1.4 - side * .6, y0 + .5), _pt(cx + 1.3, cy))
+        h = self.stem / 2
+        stem = 'M%s L%s L%s L%s Z' % (_pt(cx - h, cy), _pt(cx - h - side * .6, y0 + .5), _pt(cx + h - side * .6, y0 + .5), _pt(cx + h, cy))
         return circle(cx, cy, r) + ' ' + stem
 
     def frame_line(self):

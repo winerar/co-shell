@@ -18,9 +18,6 @@ class NonTextContrastTest {
 
     /** Current minimum (rounded down) of each pair below its target, #385. */
     private val known = mapOf(
-        "checkbox and radio outline on surface" to 1.8,
-        "field fill on surface" to 1.05,
-        "field, chip and card border on surface" to 1.25,
         "neon accent text inside the hero card" to 3.7,
     )
 
@@ -79,7 +76,7 @@ class NonTextContrastTest {
         shape("selected day on surface", sel.fill, s.surface)
         text("selected label on its pill", sel.content, sel.fill)
         shape("checkbox and radio outline on surface", s.outline, s.surface)
-        shape("field fill on surface", s.surfaceContainer, s.surface)
+        // The field itself is bounded by `outlineVariant` (≥ 3:1 below), so its fill is decoration, not a boundary (#442).
         shape("field, chip and card border on surface", s.outlineVariant, s.surface)
 
         // Category and account colours (24, 1.0) on every background they sit on: the fill, or its ring when pale.

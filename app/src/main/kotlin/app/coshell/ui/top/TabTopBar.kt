@@ -80,7 +80,7 @@ fun TabTopBar(
     val scale by animateFloatAsState(if (scrolled) SCROLLED_TITLE_SCALE else 1f, Motion.spatial(), label = "titleScale")
     val enter = remember { Animatable(1f) }
     LaunchedEffect(Unit) { enter.animateTo(0f, Motion.spatial()) }
-    val surface = MaterialTheme.colorScheme.surface
+    val surface = MaterialTheme.colorScheme.background
     Column(Modifier.scrollHairline(scrolled)) {
         TopAppBar(
             title = {

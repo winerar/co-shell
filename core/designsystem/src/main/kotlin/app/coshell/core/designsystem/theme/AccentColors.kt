@@ -33,7 +33,7 @@ fun progressColors(): ProgressColors = progressColorsFor(MaterialTheme.colorSche
 /** Progress colours: graphite on the neon in the light theme, the neon on graphite in the dark one. */
 internal fun progressColorsFor(scheme: ColorScheme, dark: Boolean) =
     if (dark) {
-        ProgressColors(scheme.primary, scheme.outlineVariant)
+        ProgressColors(scheme.primary, scheme.surfaceContainerHighest)
     } else {
         ProgressColors(scheme.inverseSurface, scheme.primary)
     }
@@ -44,11 +44,11 @@ data class SelectionColors(val fill: Color, val content: Color)
 
 /**
  * Chosen state (owner's choice 2026-11-16, «чернильная пилюля», #385): dark theme — the neon fill with its dark ink;
- * light theme — an ink fill (`onSurface`) with the neon as the label. Neon on white is ~1:1 to the track, ink is 12–17:1.
+ * light theme — the accent (`secondary`) fill with a white label (#442: the owner asked for a palette colour instead of black). Neon on white is ~1:1 to the track.
  */
 @Composable
 @ReadOnlyComposable
 fun selectionColors(): SelectionColors = selectionColorsFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
 
 internal fun selectionColorsFor(scheme: ColorScheme, dark: Boolean): SelectionColors =
-    if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.onSurface, scheme.primary)
+    if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.secondary, scheme.onSecondary)

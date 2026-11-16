@@ -42,7 +42,7 @@ fun ScreenTopBar(
     subtitle: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
-    val surface = MaterialTheme.colorScheme.surface
+    val surface = MaterialTheme.colorScheme.background
     TopAppBar(
         modifier = Modifier.scrollHairline(LocalScreenScroll.current?.scrolled == true),
         colors = TopAppBarDefaults.topAppBarColors(containerColor = surface, scrolledContainerColor = surface),

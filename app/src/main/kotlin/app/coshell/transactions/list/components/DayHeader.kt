@@ -35,7 +35,7 @@ import kotlinx.datetime.toJavaLocalDate
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.surface) {
+internal fun DayHeader(day: Day, background: Color = MaterialTheme.colorScheme.background) {
     val text = dayLabel(day)
     // A flow, not a row: the net stays beside the title while its widest amount fits there, otherwise it moves
     // under the title at full width. Either way it takes the rest of its line and wraps only after a «·».

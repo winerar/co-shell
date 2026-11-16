@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.lerp
 internal data class Neutrals(
     val lowest: Color,
     val background: Color,
+    val surface: Color,
     val low: Color,
     val container: Color,
     val high: Color,
@@ -22,39 +23,53 @@ internal data class Neutrals(
     val textMuted: Color,
 )
 
-/** Dark theme: graphite-like blocks lighten towards white in small steps; no borders needed. */
-internal fun darkNeutrals(bg: Color) = Neutrals(
-    lowest = lerp(bg, Color.Black, 0.35f),
-    background = bg,
-    low = lerp(bg, Color.White, 0.03f),
-    container = lerp(bg, Color.White, 0.055f),
-    high = lerp(bg, Color.White, 0.085f),
-    highest = lerp(bg, Color.White, 0.115f),
-    bright = lerp(bg, Color.White, 0.14f),
-    line = lerp(bg, Color.White, 0.26f),
-    lineSoft = lerp(bg, Color.White, 0.15f),
-    text = lerp(Color.White, bg, 0.08f),
-    textMuted = lerp(Color.White, bg, 0.38f),
-)
+/**
+ * Dark theme (#442): graphite with a hint of the primary; cards ([Neutrals.surface]) a touch of the accent;
+ * lines are the accent itself (`outlineVariant` — borders, `outline` — checkbox outlines), saturated enough for 3:1.
+ */
+internal fun darkNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
+    val page = lerp(bg, primary, 0.06f)
+    return Neutrals(
+        lowest = lerp(page, Color.Black, 0.35f),
+        background = page,
+        surface = lerp(page, accent, 0.07f),
+        low = lerp(page, Color.White, 0.03f),
+        container = lerp(page, accent, 0.14f),
+        high = lerp(page, accent, 0.2f),
+        highest = lerp(page, accent, 0.26f),
+        bright = lerp(page, Color.White, 0.14f),
+        line = lerp(page, accent, 0.72f),
+        lineSoft = lerp(page, accent, 0.66f),
+        text = lerp(Color.White, page, 0.08f),
+        textMuted = lerp(Color.White, page, 0.32f),
+    )
+}
 
-/** Light theme: white with the palette's tint, blocks darken a little, text is near-black of the same tint. */
-internal fun lightNeutrals(bg: Color) = Neutrals(
-    lowest = Color.White,
-    background = bg,
-    low = lerp(bg, Color.Black, 0.035f),
-    container = lerp(bg, Color.Black, 0.06f),
-    high = lerp(bg, Color.Black, 0.085f),
-    highest = lerp(bg, Color.Black, 0.11f),
-    bright = Color.White,
-    line = lerp(bg, Color.Black, 0.48f),
-    lineSoft = lerp(bg, Color.Black, 0.17f),
-    text = lerp(Color.Black, bg, 0.1f),
-    textMuted = lerp(Color.Black, bg, 0.36f),
-)
+/**
+ * Light theme (#442, «Б · Два цвета»): the page is plain white (owner: colour only the components), cards ([Neutrals.surface]) are
+ * near-white, blocks, lines and fields take the accent; text is near-black.
+ */
+internal fun lightNeutrals(bg: Color, accent: Color): Neutrals {
+    val page = Color.White
+    return Neutrals(
+        lowest = Color.White,
+        background = page,
+        surface = lerp(Color.White, accent, 0.04f),
+        low = lerp(page, accent, 0.06f),
+        container = lerp(page, accent, 0.1f),
+        high = lerp(page, accent, 0.14f),
+        highest = lerp(page, accent, 0.18f),
+        bright = Color.White,
+        line = lerp(page, accent, 0.78f),
+        lineSoft = lerp(page, accent, 0.7f),
+        text = lerp(Color.Black, bg, 0.1f),
+        textMuted = lerp(Color.Black, bg, 0.36f),
+    )
+}
 
 /** States that Material has no slot for: budget warning (80 %), "no rate". Same in every palette. */
 object StatusColors {
-    val WarningLight = Color(0xFF8A5F00)
+    val WarningLight = Color(0xFF7A5400)
     val WarningDark = Color(0xFFFFD43B)
 }
 

@@ -552,7 +552,7 @@
     <string name="templates_section_income">Ingresos · por categoría, A→Z</string>
     <string name="templates_section_transfer">Transferencias</string>
     <string name="templates_hint">Pulsa para un movimiento nuevo con la plantilla. Mantén pulsado para editar o eliminar.</string>
-    <string name="templates_empty">Una plantilla es un atajo para movimientos que se repiten: alquiler, clases, café. Guarda la cuenta, la categoría, la nota y, si quieres, el importe.</string>
+    <string name="templates_empty">Una plantilla es un atajo para movimientos que se repiten: alquiler, clases, café. Guarda la cuenta, la categoría, la nota y, si quieres, el importe. Pulsa «+» para crear la primera.</string>
     <string name="template_new">Nueva plantilla</string>
     <string name="template_edit_title">Plantilla</string>
     <string name="template_amount_on_entry">importe al anotar</string>

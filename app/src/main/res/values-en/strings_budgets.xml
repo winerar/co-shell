@@ -42,7 +42,7 @@
     <string name="budgets_fold">Collapse subcategories</string>
     <string name="budgets_unfold">Expand subcategories</string>
     <string name="budgets_empty_title">No limits for this month</string>
-    <string name="budgets_empty_text">Set a monthly limit for a category — the app will show what\'s left and warn you if spending runs ahead of pace.</string>
+    <string name="budgets_empty_text">Set a monthly limit for a category — the app will show what\'s left and warn you if spending runs ahead of pace. Tap “+” to add the first one.</string>
     <string name="budgets_hint">The bar is what\'s spent, the mark is today\'s pace. Limit changes apply from the chosen month.</string>
 
     <string name="budget_detail_edit">Edit limit</string>

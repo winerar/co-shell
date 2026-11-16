@@ -59,7 +59,7 @@
 - [x] **[есть, #377]** `ProjectRulesTest`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
 - [x] **[есть, #377]** Lint `HardcodedText`/`MissingTranslation`/`ExtraTranslation`/`MissingQuantity` — ошибкой; литералы в `Text(…)` —
   `HardcodedTextTest`; каждая строка во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`) — `TranslationsTest`.
-- [ ] **[агент]** Тексты: словарь `glossary.md`, краткость и тон (`texts.md`), одно название сущности везде.
+- [x] **[агент, 2026-11-16]** Тексты ru/en/es прогнаны по словарю (транзакция, папка, чек, конверт, бэкап, черновик, отправитель, жаргон, Firebase/GitHub): единственное — «чек/receipt/recibo» в строках шаблона с другой валютой → «Сумма покупки» (`template_foreign_*`). «Папка» осталась только про папку для файлов (копии) — это верно.
 - [ ] Размеры файлов и документация — `session-end.sh` зелёный; `STATUS`, `ROADMAP`, `feature-map.md` актуальны.
 
 ## 7. Доступность и движение

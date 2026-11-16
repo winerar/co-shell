@@ -15,8 +15,8 @@
     <string name="payment_hint_no_rate">No hay cambio %1$s → %2$s: ingresa el importe cargado</string>
     <!-- Template editor: «Платёж в другой валюте» (#415, board Rec415B). -->
     <string name="template_foreign_title">Pago en otra moneda</string>
-    <string name="template_foreign_subtitle">importe del recibo; preguntamos lo cargado</string>
-    <string name="template_foreign_amount_hint">Como en el recibo. Al registrar preguntamos cuánto se cargó y lo sugerimos al cambio</string>
+    <string name="template_foreign_subtitle">importe de la compra; preguntamos lo cargado</string>
+    <string name="template_foreign_amount_hint">Importe de la compra. Al registrar preguntamos cuánto se cargó y lo sugerimos al cambio</string>
     <string name="template_foreign_currency_error">Elige otra moneda, distinta de la cuenta: USD, EUR…</string>
     <string name="recurring_auto_no_foreign">un pago en otra moneda lo registras tú: el importe cargado varía</string>
 </resources>

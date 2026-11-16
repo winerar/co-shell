@@ -40,14 +40,14 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
             R.string.more_section_money,
             listOf(
                 MoreItem(DesignR.drawable.ic_account_balance_wallet, R.string.accounts_title, c[0], stringResource(R.string.accounts_menu_hint), actions.onAccounts),
-                MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[9], stringResource(R.string.categories_menu_hint), actions.onCategories),
-                MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[1], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
-                MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[5], stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
-                MoreItem(DesignR.drawable.ic_currency_exchange, R.string.rates_title, c[6], stringResource(R.string.rates_menu_hint), actions.onRates),
+                MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[8], stringResource(R.string.categories_menu_hint), actions.onCategories),
+                MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[20], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
+                MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[14], stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
+                MoreItem(DesignR.drawable.ic_currency_exchange, R.string.rates_title, c[13], stringResource(R.string.rates_menu_hint), actions.onRates),
                 MoreItem(
                     DesignR.drawable.ic_payments,
                     R.string.report_currencies_title,
-                    c[4],
+                    c[17],
                     state.mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
                     actions.onReportCurrencies,
                 ),
@@ -56,16 +56,16 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
         MoreSection(
             R.string.more_section_family_data,
             listOf(
-                MoreItem(DesignR.drawable.ic_group, R.string.family_title, c[8], stringResource(R.string.family_menu_hint), actions.onFamily),
-                MoreItem(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, c[11], stringResource(R.string.backup_menu_hint), actions.onBackup),
+                MoreItem(DesignR.drawable.ic_group, R.string.family_title, c[10], stringResource(R.string.family_menu_hint), actions.onFamily),
+                MoreItem(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, c[5], stringResource(R.string.backup_menu_hint), actions.onBackup),
                 MoreItem(DesignR.drawable.ic_download, R.string.import_title, c[ImportColors.MENU], stringResource(R.string.import_menu_hint), actions.onImport),
             ),
         ),
         MoreSection(
             R.string.more_section_app,
             listOf(
-                MoreItem(DesignR.drawable.ic_contrast, R.string.appearance_title, c[2], state.appearance, actions.onAppearance),
-                MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[18], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
+                MoreItem(DesignR.drawable.ic_contrast, R.string.appearance_title, c[18], state.appearance, actions.onAppearance),
+                MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[1], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
             ),
         ),
     )

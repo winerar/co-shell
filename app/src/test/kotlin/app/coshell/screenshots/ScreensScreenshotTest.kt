@@ -241,8 +241,8 @@ class ScreensScreenshotTest {
     fun `appearance dark`() = shot("appearance_dark", dark = true) { AppearanceScreen(AppearanceState(ThemeMode.DARK), AppearanceActions()) }
 
     @Test
-    fun `appearance peach light`() = shot("appearance_peach_light", palette = CoShellPalette.Peach) {
-        AppearanceScreen(AppearanceState(ThemeMode.LIGHT, ThemePalette.PEACH), AppearanceActions())
+    fun `appearance espresso light`() = shot("appearance_espresso_light", palette = CoShellPalette.Espresso) {
+        AppearanceScreen(AppearanceState(ThemeMode.LIGHT, ThemePalette.ESPRESSO), AppearanceActions())
     }
 
     /** Board `Fb352A` / `Fb352Update`: the language list (body; in the app it sits in a `CoShellSheet`). */

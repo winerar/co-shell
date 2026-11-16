@@ -27,26 +27,29 @@ class ThemeModeTest {
 
     @Test
     fun paletteParseFallsBackToLime() {
-        assertEquals(ThemePalette.MANGO, ThemePalette.parse("MANGO"))
-        assertEquals(ThemePalette.PEACH, ThemePalette.parse("PEACH"))
+        assertEquals(ThemePalette.KVAS, ThemePalette.parse("KVAS"))
+        assertEquals(ThemePalette.LOTUS, ThemePalette.parse("LOTUS"))
         assertEquals(ThemePalette.LIME, ThemePalette.parse(null))
         assertEquals(ThemePalette.LIME, ThemePalette.parse("MINT"))
     }
 
     @Test
-    fun paletteSavedBeforeFruitNamesIsKept() {
-        // #271: the phone keeps its choice after the rename; Мохито became the violet Маракуйя.
+    fun palettesOf0xMoveToTheNearestTheme() {
+        // 1.0 (#354): 14 fruit palettes → 9 themes; the names before the fruits (#271) too.
+        assertEquals(ThemePalette.LOTUS, ThemePalette.parse("PASSIONFRUIT"))
+        assertEquals(ThemePalette.KVAS, ThemePalette.parse("MANGO"))
+        assertEquals(ThemePalette.CORNFLOWER, ThemePalette.parse("BILBERRY"))
+        assertEquals(ThemePalette.SAKURA, ThemePalette.parse("PITAYA"))
+        assertEquals(ThemePalette.BANANA, ThemePalette.parse("LEMON"))
+        assertEquals(ThemePalette.ESPRESSO, ThemePalette.parse("PEACH"))
+        assertEquals(ThemePalette.MATE, ThemePalette.parse("PEAR"))
         assertEquals(ThemePalette.LIME, ThemePalette.parse("VOLT"))
-        assertEquals(ThemePalette.PASSIONFRUIT, ThemePalette.parse("MOJITO"))
-        assertEquals(ThemePalette.BILBERRY, ThemePalette.parse("ULTRA"))
-        assertEquals(ThemePalette.FEIJOA, ThemePalette.parse("LAGOON"))
-        assertEquals(ThemePalette.PITAYA, ThemePalette.parse("SAKURA"))
+        assertEquals(ThemePalette.LOTUS, ThemePalette.parse("MOJITO"))
     }
 
     @Test
-    fun sevenJuicyAndSevenSoft() {
-        val groups = ThemePalette.entries.groupBy { it.group }
-        assertEquals(7, groups.getValue(PaletteGroup.JUICY).size)
-        assertEquals(7, groups.getValue(PaletteGroup.SOFT).size)
+    fun nineThemesInOneList() {
+        assertEquals(9, ThemePalette.entries.size)
+        assertEquals(ThemePalette.LIME, ThemePalette.entries.first())
     }
 }

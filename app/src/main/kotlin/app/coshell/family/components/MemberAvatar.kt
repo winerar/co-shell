@@ -56,4 +56,4 @@ internal fun memberInitial(member: Member): String =
     (member.name.ifBlank { member.email }).firstOrNull { it.isLetterOrDigit() }?.uppercase() ?: "·"
 
 /** Avatar colours of members, in join order: violet, cyan, then warm ones (mockup 13). */
-private val MemberColors: List<Long> = listOf(3, 6, 5, 2).map { CategoryPalette.colors[it] }
+private val MemberColors: List<Long> = listOf(18, 13, 14, 20).map { CategoryPalette.colors[it] }

@@ -21,6 +21,6 @@ class AccountInitialsTest {
     @Test
     fun inkReadsOnFill() {
         assertEquals(Color.White, inkOn(Color(0xFF0A2896)))
-        assertEquals(Color(0xFF111611), inkOn(Color(0xFFFFDD2D)))
+        assertEquals(Color(0xFF0B0B0B), inkOn(Color(0xFFFFDD2D)))
     }
 }

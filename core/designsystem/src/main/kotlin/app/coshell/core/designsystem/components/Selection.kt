@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,6 +51,7 @@ fun CoShellFilterChip(
 ) {
     val source = remember { MutableInteractionSource() }
     val colors = MaterialTheme.colorScheme
+    val sel = selectionColors()
     NoRipple {
         FilterChip(
             selected = selected,
@@ -64,12 +66,12 @@ fun CoShellFilterChip(
                 containerColor = colors.surfaceContainerHigh,
                 labelColor = colors.onSurfaceVariant,
                 iconColor = colors.onSurfaceVariant,
-                selectedContainerColor = colors.primaryContainer,
-                selectedLabelColor = colors.onPrimaryContainer,
-                selectedLeadingIconColor = colors.onPrimaryContainer,
-                selectedTrailingIconColor = colors.onPrimaryContainer,
+                selectedContainerColor = sel.fill,
+                selectedLabelColor = sel.content,
+                selectedLeadingIconColor = sel.content,
+                selectedTrailingIconColor = sel.content,
             ),
-            border = if (selected) BorderStroke(Sizes.selectionRing, colors.onSurface) else null,
+            border = null,
             interactionSource = source,
         )
     }
@@ -108,11 +110,12 @@ fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
         Box(box.border(2.dp, colors.outline, shape))
         return
     }
-    Box(box.background(colors.primaryContainer, shape).border(Sizes.selectionRing, colors.onSurface, shape), contentAlignment = Alignment.Center) {
+    val sel = selectionColors()
+    Box(box.background(sel.fill, shape), contentAlignment = Alignment.Center) {
         if (state == ToggleableState.On) {
-            Icon(painterResource(R.drawable.ic_check), contentDescription = null, tint = colors.onPrimaryContainer, modifier = Modifier.size(14.dp))
+            Icon(painterResource(R.drawable.ic_check), contentDescription = null, tint = sel.content, modifier = Modifier.size(14.dp))
         } else {
-            Box(Modifier.size(width = 10.dp, height = 2.dp).background(colors.onPrimaryContainer))
+            Box(Modifier.size(width = 10.dp, height = 2.dp).background(sel.content))
         }
     }
 }
@@ -124,12 +127,12 @@ fun CoShellCheckMark(state: ToggleableState, modifier: Modifier = Modifier) {
 @Composable
 fun CoShellRadioMark(selected: Boolean, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
+    val sel = selectionColors()
     Box(
         modifier.size(22.dp).selectionPop(selected)
-            .then(if (selected) Modifier.background(colors.primaryContainer, CircleShape) else Modifier)
-            .border(Sizes.selectionRing, if (selected) colors.onSurface else colors.outline, CircleShape),
+            .then(if (selected) Modifier.background(sel.fill, CircleShape) else Modifier.border(Sizes.selectionRing, colors.outline, CircleShape)),
         contentAlignment = Alignment.Center,
     ) {
-        if (selected) Box(Modifier.size(8.dp).background(colors.onPrimaryContainer, CircleShape))
+        if (selected) Box(Modifier.size(8.dp).background(sel.content, CircleShape))
     }
 }

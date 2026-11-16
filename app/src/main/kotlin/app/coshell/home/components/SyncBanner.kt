@@ -1,13 +1,13 @@
 package app.coshell.home.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.components.coShellButtonColors
 import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -73,7 +73,7 @@ fun SyncBanner(state: SyncBannerState, actions: SyncBannerActions, modifier: Mod
                         SyncIssueKind.QUOTA -> actions.onDismiss
                     },
                     enabled = !state.isBusy,
-                    colors = ButtonDefaults.buttonColors(containerColor = warning, contentColor = MaterialTheme.colorScheme.surface),
+                    colors = coShellButtonColors(warning, MaterialTheme.colorScheme.surface),
                 ) {
                     Text(stringResource(buttonLabel(state.kind)))
                 }

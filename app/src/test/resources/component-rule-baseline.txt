@@ -8,14 +8,11 @@ app/coshell/categories/edit/CategoryEditScreen.kt	draw CircleShape	1
 app/coshell/currencies/list/components/ReportCurrencyRow.kt	draw background	1
 app/coshell/family/components/FamilyHero.kt	draw drawBehind	1
 app/coshell/feedback/components/FeedbackStatusChip.kt	draw background	1
-app/coshell/feedback/components/SendButton.kt	material3 ButtonDefaults	1
 app/coshell/feedback/detail/FeedbackTimeline.kt	draw Canvas	1
-app/coshell/home/components/SyncBanner.kt	material3 ButtonDefaults	1
 app/coshell/rates/list/components/CurrentRateRow.kt	draw RoundedCornerShape	1
 app/coshell/rates/list/components/CurrentRateRow.kt	draw background	1
 app/coshell/rates/list/components/ManualRateRow.kt	draw RoundedCornerShape	1
 app/coshell/rates/list/components/ManualRateRow.kt	draw background	1
-app/coshell/reports/components/ReportPeriodSheet.kt	material3 FilterChipDefaults	1
 app/coshell/reports/review/components/LimitsCard.kt	draw RoundedCornerShape	1
 app/coshell/reports/review/components/LimitsCard.kt	draw background	1
 app/coshell/templates/components/TemplateChip.kt	draw background	1
@@ -31,14 +28,10 @@ app/coshell/transactions/edit/components/CategoryGrid.kt	draw border	1
 app/coshell/transactions/edit/components/DetailsStep.kt	draw background	1
 app/coshell/transactions/edit/components/TemplateBits.kt	draw background	1
 app/coshell/transactions/list/components/DayHeader.kt	draw background	1
-app/coshell/transactions/list/components/FilterBar.kt	material3 FilterChipDefaults	1
 app/coshell/transactions/list/components/FilterMenuChip.kt	draw CircleShape	2
 app/coshell/transactions/list/components/PeriodSheet.kt	draw background	1
-app/coshell/transactions/list/components/PeriodSheet.kt	material3 FilterChipDefaults	1
-app/coshell/transactions/list/components/SelectionActions.kt	material3 ButtonDefaults	1
 app/coshell/ui/form/ColorSection.kt	draw CircleShape	3
 app/coshell/ui/form/ColorSection.kt	draw border	1
-app/coshell/ui/form/DateChips.kt	material3 FilterChipDefaults	1
 app/coshell/ui/form/IconColorStrips.kt	draw CircleShape	4
 app/coshell/ui/form/IconColorStrips.kt	draw background	1
 app/coshell/ui/form/IconColorStrips.kt	draw border	2
@@ -46,4 +39,3 @@ app/coshell/ui/form/IconColorStrips.kt	draw clip	1
 app/coshell/ui/top/ScrollHairline.kt	draw drawWithContent	1
 app/coshell/update/past/PastReleaseCard.kt	draw CircleShape	1
 app/coshell/update/past/PastReleaseCard.kt	draw background	1
-app/coshell/wipe/components/WipeConfirm.kt	material3 ButtonDefaults	1

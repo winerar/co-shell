@@ -1,13 +1,13 @@
 package app.coshell.wipe.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.components.coShellButtonColors
 import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
 import app.coshell.core.designsystem.theme.TitleStrongStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -70,7 +70,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
         CoShellButton(
             onClick = { onWipe(confirmWord) },
             enabled = state.canWipe(confirmWord),
-            colors = ButtonDefaults.buttonColors(containerColor = danger, contentColor = MaterialTheme.colorScheme.onError),
+            colors = coShellButtonColors(danger, MaterialTheme.colorScheme.onError),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(stringResource(R.string.wipe_button))

@@ -15,7 +15,7 @@
    Фон и уведомления — `app/.../recurring/notify/` (PR #402, #405). Остальной редактор шаблона — ещё старая форма (доработка — #290, после 1.0).
 2. ~~#334~~ сделано (2026-11-16): ввод закрыт при схеме синка партнёра выше своей; на телефоне сработает только после подъёма `SyncPayload.SCHEMA` (покрыто тестами).
 3. **#367** код под утверждённый набор «Капсула»: #385 контраст (решено опросом), #408 одна кнопка «Добавить» (макет), 10 новых компонентов, экраны без нарушений
-   (`ComponentRuleTest`, база 58; шапки → `CoShellTopBar` + `TopBarScroll` (`core:designsystem/components/TopBar.kt`); круги → `IconBadge`/`CoShellDot`; `HorizontalDivider` → `CoShellDivider` и стили текста (`Type.kt`: `*StrongStyle`, `Rate*Style`) сделаны 2026-11-16). Хвосты базы: `TopAppBarDefaults` (Screen/SelectionTopBar), `drawWithContent`
+   (`ComponentRuleTest`, база 50; шапки → `CoShellTopBar` + `TopBarScroll` (`core:designsystem/components/TopBar.kt`); круги → `IconBadge`/`CoShellDot`; `HorizontalDivider` → `CoShellDivider` и стили текста (`Type.kt`: `*StrongStyle`, `Rate*Style`) сделаны 2026-11-16). Хвосты базы: `TopAppBarDefaults` (Screen/SelectionTopBar), `drawWithContent`
    (`ScrollHairline`) — перенести в `core:designsystem`; `FeedbackStatusChip` — на общий компонент метки.
 4. **#374 проверка перед 1.0** (`docs/agents/release-checklist.md`): #378 стресс-скриншоты → #379 en/es, шрифт, 320 dp →
    #380 ATF → #381 палитры → #382 сверка «экран → доска → эталон». Сделано: #376, #377, #383.

@@ -1,10 +1,10 @@
 package app.coshell.ui.form
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,7 +65,7 @@ fun DateChips(
                 Icon(
                     painterResource(DesignR.drawable.ic_calendar_today),
                     contentDescription = null,
-                    modifier = Modifier.size(FilterChipDefaults.IconSize),
+                    modifier = Modifier.size(Sizes.chipIcon),
                 )
             },
         )

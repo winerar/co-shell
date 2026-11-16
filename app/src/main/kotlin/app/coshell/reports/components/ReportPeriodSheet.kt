@@ -1,11 +1,11 @@
 package app.coshell.reports.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -106,7 +106,7 @@ internal fun ReportPeriodSheet(
                 onClick = { pickingDays = true },
                 label = { Text(period?.let { periodTitle(it) } ?: stringResource(R.string.reports_pick_days)) },
                 leadingIcon = {
-                    Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize))
+                    Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, modifier = Modifier.size(Sizes.chipIcon))
                 },
             )
         }

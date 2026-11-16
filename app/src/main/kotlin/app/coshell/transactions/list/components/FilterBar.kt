@@ -1,6 +1,7 @@
 package app.coshell.transactions.list.components
 
 import androidx.compose.foundation.horizontalScroll
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.FilterChipDefaults
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.search.AmountQuery
@@ -124,7 +124,7 @@ private fun AmountHint(query: AmountQuery) {
         AmountQuery.Kind.AT_MOST -> stringResource(R.string.amount_hint_at_most, bounds[0])
     }
     Row(Modifier.padding(horizontal = Spacing.xs), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        Icon(painterResource(DesignR.drawable.ic_check), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(FilterChipDefaults.IconSize))
+        Icon(painterResource(DesignR.drawable.ic_check), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(Sizes.chipIcon))
         Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

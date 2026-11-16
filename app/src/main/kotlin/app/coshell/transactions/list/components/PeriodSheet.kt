@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -104,7 +103,7 @@ internal fun ColumnScope.PeriodChoices(filter: ListFilter, today: LocalDate, onF
             )
         },
         leadingIcon = {
-            Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize))
+            Icon(painterResource(DesignR.drawable.ic_calendar_today), contentDescription = null, modifier = Modifier.size(Sizes.chipIcon))
         },
     )
     CoShellHint(stringResource(R.string.filter_period_note))

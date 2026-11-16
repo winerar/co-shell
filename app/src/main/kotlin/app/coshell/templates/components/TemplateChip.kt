@@ -1,7 +1,6 @@
 package app.coshell.templates.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import app.coshell.core.designsystem.theme.LabelStrongStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,14 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -30,32 +27,23 @@ import app.coshell.templates.TemplateItem
 /** A template as a chip: category badge, name, amount or «сумма при вводе» (mockups `TplA`, `TplAll` «Часто»). */
 @Composable
 fun TemplateChip(item: TemplateItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val shape = MaterialTheme.shapes.large
-    Row(
-        modifier = modifier
-            .tactileClickable(Tactile.Control, shape, onClick = onClick)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh, shape)
-            .border(Sizes.hairline, MaterialTheme.colorScheme.outlineVariant, shape)
-            .padding(start = Spacing.xs + Spacing.xxs, end = Spacing.m, top = Spacing.xs + Spacing.xxs, bottom = Spacing.xs + Spacing.xxs),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.s),
-    ) {
-        TemplateBadge(item)
-        Column(Modifier.widthIn(max = Sizes.tileMinHeight)) {
-            Text(
-                item.name,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(
-                item.amount.ifEmpty { stringResource(R.string.template_amount_on_entry) },
-                style = RateTextStyle,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+    CoShellCard(modifier, onClick = onClick) {
+        Row(
+            Modifier.padding(start = Spacing.xs + Spacing.xxs, end = Spacing.m, top = Spacing.xs + Spacing.xxs, bottom = Spacing.xs + Spacing.xxs),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+        ) {
+            TemplateBadge(item)
+            Column(Modifier.widthIn(max = Sizes.tileMinHeight)) {
+                Text(item.name, style = LabelStrongStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    item.amount.ifEmpty { stringResource(R.string.template_amount_on_entry) },
+                    style = RateTextStyle,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }

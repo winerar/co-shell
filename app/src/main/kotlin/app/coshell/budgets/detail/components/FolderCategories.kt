@@ -2,7 +2,7 @@ package app.coshell.budgets.detail.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +31,7 @@ internal fun FolderCategories(
     CoShellCard(modifier.fillMaxWidth()) {
         categories.forEachIndexed { index, inner ->
             key(inner.categoryId) {
-                if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                if (index > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
                 when (inner) {
                     is Inner.Limited -> EnvelopeRow(inner.envelope, onClick = { onOpenEnvelope(inner.categoryId) })
                     is Inner.Plain -> PlainRow(inner, onClick = { onAddLimit(inner.categoryId) })

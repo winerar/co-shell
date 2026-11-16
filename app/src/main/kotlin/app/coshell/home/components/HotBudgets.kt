@@ -3,8 +3,7 @@ package app.coshell.home.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
@@ -28,7 +27,7 @@ internal fun HotBudgets(envelopes: List<BudgetsUiState.Envelope>, onOpen: (Strin
             envelopes.forEachIndexed { index, envelope ->
                 key(envelope.categoryId) {
                     if (index > 0) {
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                        CoShellDivider(Modifier.padding(start = Spacing.l))
                     }
                     EnvelopeRow(envelope, onClick = { onOpen(envelope.categoryId) })
                 }

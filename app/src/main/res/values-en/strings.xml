@@ -394,7 +394,7 @@
     <string name="rates_refresh_failed">Couldn\'t load rates. Check your internet</string>
     <string name="rates_manual">Manual rates</string>
     <string name="rates_manual_hint">A manual rate beats the downloaded one and applies from the chosen date until the next manual one</string>
-    <string name="rates_manual_since">manual · since %1$s</string>
+    <string name="rates_since_date">since %1$s</string>
     <string name="rates_manual_add">Add rate</string>
     <string name="rates_manual_title">Manual rate</string>
     <string name="rates_manual_from">Currency</string>
@@ -545,7 +545,7 @@
     <string name="templates_section_income">Income · by category, A→Z</string>
     <string name="templates_section_transfer">Transfers</string>
     <string name="templates_hint">Tap for a new transaction from the template. Hold to edit or delete.</string>
-    <string name="templates_empty">A template is a shortcut for repeating transactions: rent, lessons, coffee. It keeps the account, category, note and, if you like, the amount.</string>
+    <string name="templates_empty">A template is a shortcut for repeating transactions: rent, lessons, coffee. It keeps the account, category, note and, if you like, the amount. Tap “+” to create the first one.</string>
     <string name="template_new">New template</string>
     <string name="template_edit_title">Template</string>
     <string name="template_amount_on_entry">amount on entry</string>

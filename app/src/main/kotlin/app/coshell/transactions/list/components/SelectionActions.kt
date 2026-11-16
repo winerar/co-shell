@@ -1,11 +1,11 @@
 package app.coshell.transactions.list.components
 
 import androidx.compose.foundation.layout.RowScope
+import app.coshell.core.designsystem.components.coShellButtonColors
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +35,7 @@ internal fun RowScope.SelectionActions(count: Int, onDuplicate: () -> Unit, onDe
     CoShellButton(
         onClick = onDelete,
         modifier = Modifier.weight(1f).height(Sizes.actionBarButton),
-        colors = ButtonDefaults.buttonColors(containerColor = colors.errorContainer, contentColor = colors.onErrorContainer),
+        colors = coShellButtonColors(colors.errorContainer, colors.onErrorContainer),
     ) {
         Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = null, modifier = Modifier.size(Sizes.buttonIcon))
         Spacer(Modifier.width(Spacing.s))

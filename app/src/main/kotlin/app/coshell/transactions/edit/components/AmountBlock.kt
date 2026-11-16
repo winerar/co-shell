@@ -1,21 +1,9 @@
 package app.coshell.transactions.edit.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,20 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.CoShellAmountSlot
+import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFormSection
+import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellTagMoreChip
 import app.coshell.core.designsystem.components.CoShellSectionLink
-import app.coshell.core.designsystem.components.keypad.AmountKeys
-import app.coshell.core.designsystem.amount.RollingAmountText
 import app.coshell.core.designsystem.motion.CoShellExpandable
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.tactileClickable
-import app.coshell.core.designsystem.theme.accentInk
-import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
@@ -95,59 +79,35 @@ internal fun AmountBlock(state: TransactionEditUiState, actions: TransactionEdit
 }
 
 /**
- * «Чек 13 300 ARS ▾ ··· 1 USDT = 1 015 ARS ✕»: the receipt amount (a tap — the keypad types here), its currency
- * (a tap — the currency sheet), the rate of the purchase and «✕» that drops the receipt.
+ * «Чек 13 300 ARS ▾ ··· 1 USDT = 1 015 ARS ✕»: the receipt amount (a tap — the keypad types here) with its currency
+ * pill (a tap — the currency sheet), the rate of the purchase under it and «✕» that drops the receipt.
  */
 @Composable
 private fun ReceiptLine(state: TransactionEditUiState, actions: TransactionEditActions) {
     var currencyOpen by rememberSaveable { mutableStateOf(false) }
-    val active = state.keypadTarget == KeypadTarget.RECEIPT
-    val line by animateColorAsState(
-        when {
-            state.receiptAmountError != null -> MaterialTheme.colorScheme.error
-            active -> accentInk()
-            else -> Color.Transparent
-        },
-        Motion.effects(),
-        label = "receiptLine",
-    )
+    val error = state.receiptAmountError?.let { stringResource(it.messageRes) }
+        ?: state.receiptCurrencyError?.let { stringResource(it.messageRes) }
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-        Box(Modifier.fillMaxWidth().height(Sizes.hairline).background(MaterialTheme.colorScheme.outlineVariant))
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-            Text(stringResource(R.string.entry_receipt), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Column(
-                Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small) { actions.onKeypadTarget(KeypadTarget.RECEIPT) }
-                    .padding(vertical = Spacing.xxs),
-            ) {
-                RollingAmountText(
-                    AmountKeys.display(AmountKeys.normalize(state.receiptAmount)).ifEmpty { "0" },
-                    style = AmountTitleStyle,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Box(Modifier.width(Sizes.currencyChipWidth).height(Sizes.selectionRing).background(line, MaterialTheme.shapes.small))
-            }
-            Text(
-                state.receiptCurrency.ifEmpty { stringResource(R.string.transaction_receipt_currency) } + " ▾",
-                style = MaterialTheme.typography.labelLarge,
-                color = accentInk(),
-                modifier = Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small) { currencyOpen = true }.padding(Spacing.xs),
+        CoShellDivider()
+        Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+            CoShellAmountSlot(
+                text = state.receiptAmount,
+                onClick = { actions.onKeypadTarget(KeypadTarget.RECEIPT) },
+                modifier = Modifier.weight(1f),
+                label = stringResource(R.string.entry_receipt),
+                trailing = {
+                    CoShellTagMoreChip(
+                        state.receiptCurrency.ifEmpty { stringResource(R.string.transaction_receipt_currency) } + " ▾",
+                        onClick = { currencyOpen = true },
+                    )
+                },
+                active = state.keypadTarget == KeypadTarget.RECEIPT,
+                isError = state.receiptAmountError != null || state.receiptCurrencyError != null,
+                message = error ?: receiptRateText(state),
             )
-            Spacer(Modifier.weight(1f))
-            receiptRateText(state)?.let {
-                Text(it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            CoShellIconButton(onClick = { actions.onReceiptToggle(false) }) {
+                Icon(painterResource(DesignR.drawable.ic_close), stringResource(R.string.entry_receipt_remove))
             }
-            Icon(
-                painterResource(DesignR.drawable.ic_close),
-                contentDescription = stringResource(R.string.entry_receipt_remove),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.tactileClickable(Tactile.Control, CircleShape) { actions.onReceiptToggle(false) }
-                    .padding(Spacing.xs).size(Sizes.searchIcon),
-            )
-        }
-        val error = state.receiptAmountError?.let { stringResource(it.messageRes) }
-            ?: state.receiptCurrencyError?.let { stringResource(it.messageRes) }
-        if (error != null) {
-            Text(error, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         }
     }
     if (currencyOpen) ReceiptCurrencySheet(state, actions, onClosed = { currencyOpen = false })

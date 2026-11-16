@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryBadge
@@ -20,8 +21,8 @@ import app.coshell.core.designsystem.charts.CoShellBarRow
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTitleStyle
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.theme.LocalStatusPalette
+import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.Bar
@@ -46,9 +47,16 @@ internal fun SpendingCard(
     modifier: Modifier = Modifier,
 ) {
     CoShellCard(modifier.fillMaxWidth()) {
-        Row(Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.l), verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(R.string.reports_spending_title), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
-            ghostCaption?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        // A flow: the title keeps its words whole, «черта — октябрь» drops under it when the line is too narrow.
+        FlowRow(
+            Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.l),
+            itemVerticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+        ) {
+            Text(stringResource(R.string.reports_spending_title), style = MaterialTheme.typography.titleSmall)
+            ghostCaption?.let {
+                Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.End, modifier = Modifier.weight(1f))
+            }
         }
         // A flow: a currency code never breaks into letters — when it does not fit beside the total, it goes under it.
         FlowRow(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {

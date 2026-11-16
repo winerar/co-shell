@@ -411,7 +411,7 @@
     <string name="rates_refresh_failed">Не удалось загрузить курсы. Проверьте интернет</string>
     <string name="rates_manual">Ручные курсы</string>
     <string name="rates_manual_hint">Ручной курс важнее загруженного и действует с выбранной даты до следующего ручного</string>
-    <string name="rates_manual_since">вручную · с %1$s</string>
+    <string name="rates_since_date">с %1$s</string>
     <string name="rates_manual_add">Добавить курс</string>
     <string name="rates_manual_title">Курс вручную</string>
     <string name="rates_manual_from">Валюта</string>
@@ -575,7 +575,7 @@
     <string name="templates_section_income">Доходы · по категориям, А→Я</string>
     <string name="templates_section_transfer">Переводы</string>
     <string name="templates_hint">Нажмите — новая операция по шаблону. Удерживайте — изменить или удалить.</string>
-    <string name="templates_empty">Шаблон — заготовка для повторяющихся операций: аренда, уроки, кофе. Хранит счёт, категорию, заметку и, если нужно, сумму.</string>
+    <string name="templates_empty">Шаблон — заготовка для повторяющихся операций: аренда, уроки, кофе. Хранит счёт, категорию, заметку и, если нужно, сумму. Нажмите «+», чтобы создать первый.</string>
     <string name="template_new">Новый шаблон</string>
     <string name="template_edit_title">Шаблон</string>
     <string name="template_amount_on_entry">сумма при вводе</string>

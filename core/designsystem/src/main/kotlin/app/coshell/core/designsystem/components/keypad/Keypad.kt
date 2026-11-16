@@ -21,8 +21,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.components.fillEdge
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -85,7 +87,14 @@ fun CoShellKeypad(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(painterResource(R.drawable.ic_check), contentDescription = null)
-                    Text(doneLabel, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                    // «Провести» on a narrow screen with a big font shrinks to fit, never breaks into «Прове / сти».
+                    Text(
+                        doneLabel,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        autoSize = fitAmountAutoSize(min = 8.sp, max = MaterialTheme.typography.labelLarge.fontSize),
+                    )
                 }
             }
         }

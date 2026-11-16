@@ -1,10 +1,12 @@
 package app.coshell.transactions.edit.components
 
-import androidx.compose.foundation.background
+import app.coshell.core.designsystem.components.StatusTone
+import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,7 +34,6 @@ import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.keypad.CoShellKeypad
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.theme.LocalAmountPalette
-import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
@@ -78,11 +79,14 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
  * The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. On the right:
  * «Расход»/«Доход» for a new one, «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Header(state: TransactionEditUiState, actions: TransactionEditActions) {
-    Row(
+    // A flow: when the chips and the words on the right do not fit one line (narrow screen, big font), the words drop
+    // to the next line whole — «Расход» is never broken into letters.
+    FlowRow(
         Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
-        verticalAlignment = Alignment.CenterVertically,
+        itemVerticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
         state.account?.let { AccountChip(it) { actions.onStepChange(EntryStep.ACCOUNT) } }
@@ -101,6 +105,8 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
                 if (state.refund) stringResource(R.string.transaction_refund_label) else stringResource(state.type.labelRes),
                 style = MaterialTheme.typography.labelLarge,
                 color = amountColor(state.type, state.refund),
+                maxLines = 1,
+                softWrap = false,
             )
         }
         if (!state.isNew) {
@@ -122,16 +128,10 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
     }
 }
 
-/** «Копия · сегодня»: a quiet violet pill, the colour of view modes (review 2026-11-10). */
+/** «Копия · сегодня»: the label of a copy (poll #367 А) — violet in the dot, like every mode. */
 @Composable
 private fun CopyLabel() {
-    val colors = MaterialTheme.colorScheme
-    Text(
-        stringResource(R.string.transaction_copy_today),
-        style = MaterialTheme.typography.labelLarge,
-        color = colors.onSecondaryContainer,
-        modifier = Modifier.background(colors.secondaryContainer, PillShape).padding(horizontal = Spacing.m, vertical = Spacing.xs + Spacing.xxs),
-    )
+    CoShellStatusChip(stringResource(R.string.transaction_copy_today), StatusTone.Manual)
 }
 
 /** A refund is money coming in: the income colour, though the sheet is on «Расход» (#208). */

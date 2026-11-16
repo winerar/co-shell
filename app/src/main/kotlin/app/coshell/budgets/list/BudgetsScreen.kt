@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
+import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,7 +29,6 @@ import app.coshell.budgets.list.components.MonthSwitch
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.CoShellAddFab
-import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellIconButton
@@ -68,7 +67,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }
             if (state.isEmpty) {
-                item(key = "empty") { EmptyBudgets(onNew = { actions.onEdit(null) }) }
+                item(key = "empty") { EmptyBudgets() }
                 return@LazyColumn
             }
             state.summary?.let { summary ->
@@ -118,10 +117,10 @@ private fun Envelopes(state: BudgetsUiState, actions: BudgetsActions, modifier: 
 }
 
 @Composable
-private fun Divider() = HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+private fun Divider() = CoShellDivider(Modifier.padding(start = Spacing.l))
 
 @Composable
-private fun EmptyBudgets(onNew: () -> Unit) {
+private fun EmptyBudgets() {
     Column(Modifier.fillMaxWidth().padding(Spacing.l)) {
         Text(stringResource(R.string.budgets_empty_title), style = MaterialTheme.typography.titleMedium)
         Text(
@@ -130,6 +129,5 @@ private fun EmptyBudgets(onNew: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = Spacing.s),
         )
-        CoShellButton(onClick = onNew, modifier = Modifier.padding(top = Spacing.l)) { Text(stringResource(R.string.budgets_new)) }
     }
 }

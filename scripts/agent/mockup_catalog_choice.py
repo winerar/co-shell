@@ -121,7 +121,7 @@ def fab_bar(v):
 
 
 CHOICE = [
-    ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled)'),
+    ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),
     ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty)'),

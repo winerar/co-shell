@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
+import app.coshell.core.designsystem.components.CoShellColorDot
+import app.coshell.core.designsystem.components.CoShellIconCell
+import app.coshell.core.designsystem.components.CoShellNoColorDot
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -55,7 +57,7 @@ internal fun IconColorContent(
         if (showIcons) {
             SheetCaption(stringResource(R.string.form_icons_count, CategoryIcons.keys.size))
             Grid(CategoryIcons.keys, ICON_COLUMNS, Spacing.s - Spacing.xxs) { key, cell ->
-                IconCell(key, color, key == icon, cell.height(ICON_CELL)) { onIconSelect(key) }
+                Row(cell, horizontalArrangement = Arrangement.Center) { CoShellIconCell(key, key == icon, ICON_CELL) { onIconSelect(key) } }
             }
         }
         SheetCaption(stringResource(R.string.form_colors_count, CategoryPalette.colors.size))
@@ -63,7 +65,7 @@ internal fun IconColorContent(
         val items: List<Long?> = (if (allowNone) listOf(null) else emptyList<Long?>()) + CategoryPalette.colors
         Grid(items, COLOR_COLUMNS, Spacing.xs) { item, cell ->
             Row(cell, horizontalArrangement = Arrangement.Center) {
-                if (item == null) NoColorDot(color == null) { onColorSelect(null) } else ColorDot(item, item == swatch) { onColorSelect(item) }
+                if (item == null) CoShellNoColorDot(color == null, stringResource(R.string.color_none), COLOR_CELL) { onColorSelect(null) } else CoShellColorDot(item, item == swatch, COLOR_CELL) { onColorSelect(item) }
             }
         }
     }
@@ -89,3 +91,4 @@ private fun <T> Grid(items: List<T>, columns: Int, gap: Dp, cell: @Composable (T
 private const val ICON_COLUMNS = 8
 private const val COLOR_COLUMNS = 10
 private val ICON_CELL = Sizes.badgeSmall + Spacing.xs
+private val COLOR_CELL = Sizes.swatch + Spacing.xs

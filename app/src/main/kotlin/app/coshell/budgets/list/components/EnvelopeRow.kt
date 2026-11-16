@@ -16,15 +16,17 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
+import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.components.CoShellExpandIcon
 import app.coshell.core.designsystem.components.CoShellIconButton
-import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
@@ -54,14 +56,19 @@ internal fun EnvelopeRow(
         CategoryBadge(envelope.icon, envelope.color, size = if (inner) Sizes.badgeSmall else Sizes.badge)
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    envelope.name,
-                    style = if (inner) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                // The fold button is measured outside: a long amount never slides under it (#432).
+                NameAndAmount(
+                    name = {
+                        Text(
+                            envelope.name,
+                            style = if (inner) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    amount = { SpentOfLimit(envelope.spent, envelope.limit) },
                     modifier = Modifier.weight(1f),
                 )
-                SpentOfLimit(envelope.spent, envelope.limit)
                 if (expanded != null) {
                     CoShellIconButton(onClick = onToggle) {
                         CoShellExpandIcon(expanded, stringResource(if (expanded) R.string.budgets_fold else R.string.budgets_unfold))
@@ -103,9 +110,13 @@ private fun SpentOfLimit(spent: String, limit: String) {
         },
         style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
         maxLines = 1,
-        modifier = Modifier.padding(start = Spacing.s),
+        // Even alone on its line the amount may not fit (320 dp, large font): it shrinks, never loses the code.
+        autoSize = fitAmountAutoSize(min = MinAmountSize, max = MaterialTheme.typography.bodySmall.fontSize),
     )
 }
+
+/** A long «spent / limit» shrinks down to this size before it is shrunk to fit at any size. */
+private val MinAmountSize = 10.sp
 
 @Composable
 private fun subtitle(envelope: Envelope): String? {

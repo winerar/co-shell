@@ -104,7 +104,7 @@ class Shape:
         y0 = self.top - 9
         if not self.stems:  # sitting on the frame (or the body top): nothing thin; two clear balls, not one blob
             base = self.top + 1 if self.gap is None else y0
-            return circle(CX + side * 6.6, base - 3.4, 4.4)
+            return circle(CX + side * 4.4, base - 3.4, 4.4)  # touching (owner, #426)
         cx, cy, r = CX + side * 4.6, y0 - 6.2, 4.4
         h = self.stem / 2
         stem = 'M%s L%s L%s L%s Z' % (_pt(cx - h, cy), _pt(cx - h - side * .6, y0 + .5), _pt(cx + h - side * .6, y0 + .5), _pt(cx + h, cy))

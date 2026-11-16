@@ -246,6 +246,18 @@ jobs:
           CI_GREEN_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: bash scripts/ci/automerge.sh "${{ github.head_ref || github.ref_name }}" || echo "::warning::automerge failed"
 
+      # #381: contact sheets of the catalogs and main screens in every palette × light / dark (not references).
+      - name: Upload palette contact sheets
+        if: always() && steps.changes.outputs.code == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: palette-sheets
+          path: |
+            core/designsystem/build/palette-sheets/
+            app/build/palette-sheets/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Upload reports on failure
         if: failure()
         uses: actions/upload-artifact@v7

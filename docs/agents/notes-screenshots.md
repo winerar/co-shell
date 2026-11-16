@@ -1,4 +1,5 @@
 # Заметки: скриншоты, Robolectric, Roborazzi
+- (11-16, #381) Контакт-листы без эталонов: `captureRoboImage("build/…", roborazziOptions = RoborazziOptions(taskType = Record))` пишет файл и в режиме verify. Менять содержимое внутри одной композиции нельзя — снимок отстаёт на кадр: один экран на тест, внутри тест меняет только тему состоянием (+ `advanceTimeByFrame()`, `waitForIdle()`). Высота окна каталога `h2600dp`, иначе обрежется.
 
 Часть `notes.md` (тот же формат). Правила снимков — `build-and-test.md` §«Тесты».
 

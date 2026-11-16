@@ -35,8 +35,11 @@ def circle(cx, cy, r):
 class Shape:
     """Proportions of the shell-purse. lobes — scallops on the bottom edge."""
 
-    def __init__(self, lobes=5, top=48.5, bottom_mid=82.0, side=68.0, half=27.0, neck=17.0):
+    def __init__(self, lobes=5, top=48.5, bottom_mid=82.0, side=68.0, half=27.0, neck=17.0, gap=2.9, stems=True, rib=(2.1, 3.4)):
+        """gap — frame-to-body gap (None: no frame, the balls sit on a rounded body top — one silhouette); stems — clasp balls on stems or sitting on the frame;
+        rib — rib widths at the clasp end and at the edge (None — no ribs)."""
         self.lobes, self.top, self.bottom_mid, self.side, self.half, self.neck = lobes, top, bottom_mid, side, half, neck
+        self.gap, self.stems, self.rib = gap, stems, rib
 
     def junctions(self):
         pts = []
@@ -50,16 +53,27 @@ class Shape:
         """Purse body: narrow under the clasp, flaring down to a scalloped edge (an upside-down scallop shell)."""
         j = self.junctions()
         xr, xl = CX + self.neck, CX - self.neck
-        d = 'M%s L%s ' % (_pt(xl, self.top), _pt(xr, self.top))
-        d += 'C%s %s %s ' % (_pt(xr + 3, self.top + 3), _pt(j[0][0] - 1, self.side - 10), _pt(*j[0]))
+        if self.gap is None:  # no frame: rounded shoulders instead of a bar
+            d = 'M%s L%s Q%s %s ' % (_pt(xl + 4, self.top), _pt(xr - 4, self.top), _pt(xr, self.top), _pt(xr + 1, self.top + 3.5))
+            d += 'C%s %s %s ' % (_pt(xr + 3, self.top + 7), _pt(j[0][0] - 1, self.side - 10), _pt(*j[0]))
+        else:
+            d = 'M%s L%s ' % (_pt(xl, self.top), _pt(xr, self.top))
+            d += 'C%s %s %s ' % (_pt(xr + 3, self.top + 3), _pt(j[0][0] - 1, self.side - 10), _pt(*j[0]))
         for a, b in zip(j, j[1:]):
             chord = math.dist(a, b)
             r = chord / 2 * 1.04
             d += 'A%s,%s 0 0,1 %s ' % (_f(r), _f(r), _pt(*b))
-        d += 'C%s %s %s Z' % (_pt(j[-1][0] + 1, self.side - 10), _pt(xl - 3, self.top + 3), _pt(xl, self.top))
+        if self.gap is None:
+            d += 'C%s %s %s Q%s %s Z' % (_pt(j[-1][0] + 1, self.side - 10), _pt(xl - 3, self.top + 7), _pt(xl - 1, self.top + 3.5),
+                                         _pt(xl, self.top), _pt(xl + 4, self.top))
+        else:
+            d += 'C%s %s %s Z' % (_pt(j[-1][0] + 1, self.side - 10), _pt(xl - 3, self.top + 3), _pt(xl, self.top))
         return d
 
-    def ribs(self, w0=2.1, w1=3.4):  # narrow end ≥ 1.4 px at mdpi
+    def ribs(self):  # narrow end ≥ 1.4 px at mdpi
+        if not self.rib:
+            return []
+        w0, w1 = self.rib
         apex = (CX, self.top - 2)
         out = []
         for x, y in self.junctions()[1:-1]:
@@ -70,11 +84,13 @@ class Shape:
         return out
 
     def body(self, ribs=True):
-        return self.body_outline() + (' ' + ' '.join(self.ribs()) if ribs else '')
+        return self.body_outline() + (' ' + ' '.join(self.ribs()) if ribs and self.rib else '')
 
     def frame(self):
         """Kiss-lock frame: a rounded bar a little wider than the neck, a gap above the body."""
-        x0, x1, y0, y1, r = CX - self.neck - 2, CX + self.neck + 2, self.top - 9, self.top - 2.9, 3.05  # gap ≥ 2 px at mdpi
+        if self.gap is None:
+            return ''
+        x0, x1, y0, y1, r = CX - self.neck - 2, CX + self.neck + 2, self.top - 9, self.top - self.gap, 3.05  # gap ≥ 2 px at mdpi
         return ('M%s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s L%s A%s,%s 0 0,1 %s Z'
                 % (_pt(x0 + r, y0), _pt(x1 - r, y0), _f(r), _f(r), _pt(x1, y0 + r), _pt(x1, y1 - r), _f(r), _f(r), _pt(x1 - r, y1),
                    _pt(x0 + r, y1), _f(r), _f(r), _pt(x0, y1 - r), _pt(x0, y0 + r), _f(r), _f(r), _pt(x0 + r, y0)))
@@ -82,6 +98,9 @@ class Shape:
     def ball(self, side):
         """Clasp ball: one per family member (side −1 / +1)."""
         y0 = self.top - 9
+        if not self.stems:  # sitting on the frame (or the body top): nothing thin; two clear balls, not one blob
+            base = self.top + 1 if self.gap is None else y0
+            return circle(CX + side * 6.6, base - 3.4, 4.4)
         cx, cy, r = CX + side * 4.6, y0 - 6.2, 4.4
         stem = 'M%s L%s L%s L%s Z' % (_pt(cx - 1.3, cy), _pt(cx - 1.4 - side * .6, y0 + .5), _pt(cx + 1.4 - side * .6, y0 + .5), _pt(cx + 1.3, cy))
         return circle(cx, cy, r) + ' ' + stem
@@ -100,7 +119,8 @@ class Shape:
 
 def layers(shape, body, frame, ball1, ball2, ribs=True):
     """Foreground layers: (pathData, fill, evenOdd)."""
-    return [(shape.body(ribs), body, True), (shape.frame(), frame, False), (shape.ball(-1), ball1, False), (shape.ball(1), ball2, False)]
+    out = [(shape.body(ribs), body, True), (shape.frame(), frame, False), (shape.ball(-1), ball1, False), (shape.ball(1), ball2, False)]
+    return [x for x in out if x[0]]
 
 
 def outline_layers(shape, color, color2, width=4.6, thin=False):

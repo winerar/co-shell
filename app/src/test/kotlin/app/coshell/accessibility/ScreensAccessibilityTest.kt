@@ -4,10 +4,6 @@ import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
@@ -58,38 +54,38 @@ import org.robolectric.annotation.GraphicsMode
 class ScreensAccessibilityTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private val screens: List<Pair<String, @Composable () -> Unit>> = listOf(
-        "home" to { HomeScreen(homeStressSample) },
-        "accounts" to { AccountsScreen(accountsStressSample, AccountsActions()) },
-        "categories" to { CategoriesScreen(categoriesStressSample, CategoriesActions()) },
-        "budgets" to { BudgetsScreen(budgetsStressSample, BudgetsActions()) },
-        "reports" to { ReportsScreen(reportsStressSample, ReportsActions()) },
-        "account-edit" to { AccountEditScreen(accountEditStressSample, AccountEditActions()) },
-        "category-edit" to { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) },
-        "entry-sheet" to { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) },
-        "recurring" to { RecurringListScreen(recurringListStressSample, RecurringListActions()) },
-    )
+    @Test fun `home`() = audit("home") { HomeScreen(homeStressSample) }
 
-    @Test fun `tap targets and labels match the baseline`() {
+    @Test fun `accounts`() = audit("accounts") { AccountsScreen(accountsStressSample, AccountsActions()) }
+
+    @Test fun `categories`() = audit("categories") { CategoriesScreen(categoriesStressSample, CategoriesActions()) }
+
+    @Test fun `budgets`() = audit("budgets") { BudgetsScreen(budgetsStressSample, BudgetsActions()) }
+
+    @Test fun `reports`() = audit("reports") { ReportsScreen(reportsStressSample, ReportsActions()) }
+
+    @Test fun `account edit`() = audit("account-edit") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
+
+    @Test fun `category edit`() = audit("category-edit") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+
+    @Test fun `entry sheet`() = audit("entry-sheet") { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) }
+
+    @Test fun `recurring`() = audit("recurring") { RecurringListScreen(recurringListStressSample, RecurringListActions()) }
+
+    /** One screen per test: swapping the content inside one composition leaves the old semantics for a frame. */
+    private fun audit(name: String, content: @Composable () -> Unit) {
         var density = 1f
-        var current by mutableIntStateOf(0)
         compose.mainClock.autoAdvance = false
         compose.setContent {
             density = LocalDensity.current.density
-            CoShellTheme { Surface { key(current) { screens[current].second() } } }
+            CoShellTheme { Surface { content() } }
         }
-        val found = sortedSetOf<String>()
-        screens.forEachIndexed { i, (name, _) ->
-            compose.runOnIdle { current = i }
-            compose.mainClock.advanceTimeBy(3_000L)
-            val root = compose.onRoot().fetchSemanticsNode()
-            found += SemanticsAudit.audit(root, density).map { "$name | $it" }
-        }
-        if (System.getProperty("accessibility.print") == "true" || found != baseline()) {
-            println("ACCESSIBILITY-FOUND\n" + found.joinToString("\n"))
-        }
-        val fresh = found - baseline()
-        assertEquals("New accessibility violations (fix them, do not add to the baseline):\n${fresh.joinToString("\n")}", emptySet<String>(), fresh)
+        compose.mainClock.advanceTimeBy(3_000L)
+        val found = SemanticsAudit.audit(compose.onRoot().fetchSemanticsNode(), density).map { "$name | $it" }.toSortedSet()
+        val known = baseline().filter { it.startsWith("$name | ") }.toSet()
+        if (System.getProperty("accessibility.print") == "true" || found != known) println("ACCESSIBILITY-FOUND $name\n" + found.joinToString("\n"))
+        val fresh = found - known
+        assertEquals("New accessibility violations on $name (fix them, do not add to the baseline):\n${fresh.joinToString("\n")}", emptySet<String>(), fresh)
     }
 
     private fun baseline(): Set<String> = File("src/test/resources/accessibility-baseline.txt")

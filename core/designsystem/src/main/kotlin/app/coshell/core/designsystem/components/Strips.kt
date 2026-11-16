@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import app.coshell.core.designsystem.R
@@ -52,6 +53,7 @@ fun CoShellColorStrip(
     onSelect: (Long?) -> Unit,
     onAll: () -> Unit,
     noneLabel: String,
+    colorLabel: (Long) -> String,
     modifier: Modifier = Modifier,
     allowNone: Boolean = false,
 ) {
@@ -61,7 +63,7 @@ fun CoShellColorStrip(
         val shown = stripColors(CategoryPalette.colors, swatch, slots)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             if (allowNone) CoShellNoColorDot(selected == null, noneLabel) { onSelect(null) }
-            shown.forEach { color -> CoShellColorDot(color, color == swatch) { onSelect(color) } }
+            shown.forEach { color -> CoShellColorDot(color, color == swatch, colorLabel(color)) { onSelect(color) } }
             CoShellTagMoreChip("+${CategoryPalette.colors.size - shown.size}", onAll)
         }
     }
@@ -77,23 +79,25 @@ fun CoShellIconStrip(
     onSelect: (String) -> Unit,
     onAll: () -> Unit,
     allLabel: String,
+    iconLabel: (String) -> String,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier.fillMaxWidth()) {
         val shown = stripIcons(CategoryIcons.keys, selected, stripSlots(maxWidth, Sizes.cellHeight, LocalDensity.current.fontScale).coerceAtLeast(MIN_SLOTS))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
-            shown.forEach { key -> CoShellIconCell(key, key == selected) { onSelect(key) } }
+            shown.forEach { key -> CoShellIconCell(key, key == selected, iconLabel(key)) { onSelect(key) } }
             CoShellTagMoreChip(allLabel, onAll)
         }
     }
 }
 
-/** A palette colour as a circle of [size]; the chosen one shrinks inside a ring of the ink and shows a check mark. */
+/** A palette colour as a circle of [size], spoken as [label]; the chosen one shrinks inside a ring of the ink and shows a check mark. */
 @Composable
-fun CoShellColorDot(color: Long, selected: Boolean, size: Dp = Sizes.badge, onClick: () -> Unit) {
+fun CoShellColorDot(color: Long, selected: Boolean, label: String, size: Dp = Sizes.badge, onClick: () -> Unit) {
     Box(
         Modifier
             .size(size)
+            .semantics { contentDescription = label; this.selected = selected }
             .tactileCircleClickable(role = Role.RadioButton, onClick = onClick)
             .selectionPop(selected)
             .then(if (selected) Modifier.border(Sizes.selectionRing, MaterialTheme.colorScheme.onSurface, CircleShape) else Modifier),
@@ -111,6 +115,7 @@ fun CoShellNoColorDot(selected: Boolean, label: String, size: Dp = Sizes.badge, 
     Box(
         Modifier
             .size(size)
+            .semantics { this.selected = selected }
             .tactileCircleClickable(role = Role.RadioButton, onClick = onClick)
             .selectionPop(selected),
         contentAlignment = Alignment.Center,
@@ -131,11 +136,12 @@ fun CoShellNoColorDot(selected: Boolean, label: String, size: Dp = Sizes.badge, 
 
 /** An icon in a circle of [size] on the track; the chosen one — like every chosen: neon, a ring of the ink. */
 @Composable
-fun CoShellIconCell(key: String, selected: Boolean, size: Dp = Sizes.cellHeight, onClick: () -> Unit) {
+fun CoShellIconCell(key: String, selected: Boolean, label: String, size: Dp = Sizes.cellHeight, onClick: () -> Unit) {
     val sel = selectionColors()
     Box(
         Modifier
             .size(size)
+            .semantics { contentDescription = label; this.selected = selected }
             .tactileCircleClickable(role = Role.RadioButton, onClick = onClick)
             .selectionPop(selected)
             .background(if (selected) sel.fill else MaterialTheme.colorScheme.surfaceContainerHigh, CircleShape)

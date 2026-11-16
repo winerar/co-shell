@@ -1,5 +1,7 @@
 package app.coshell.reports.components
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -21,6 +24,7 @@ import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -36,29 +40,34 @@ internal fun PeriodSwitch(
     onOpenSheet: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        CoShellIconButton(onClick = onPrevious) {
-            Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.reports_previous), Modifier.rotate(180f))
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        // The currency pill goes under «‹ Ноябрь 2026 ›» on a narrow screen or with a big font: the month keeps its words.
+        val stacked = maxWidth < Sizes.narrowRow * LocalDensity.current.fontScale.coerceAtLeast(1f)
+        val pill: @Composable (Modifier) -> Unit = { m ->
+            CoShellFilterChip(selected = false, onClick = onOpenSheet, label = { Text("$currency ▾") }, modifier = m)
         }
-        Text(
-            title,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .weight(1f)
-                .tactileClickable(Tactile.Control, role = Role.Button, onClick = onOpenSheet)
-                .padding(vertical = Spacing.s),
-        )
-        CoShellIconButton(onClick = onNext) {
-            Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.reports_next))
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                CoShellIconButton(onClick = onPrevious) {
+                    Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.reports_previous), Modifier.rotate(180f))
+                }
+                Text(
+                    title,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f)
+                        .tactileClickable(Tactile.Control, role = Role.Button, onClick = onOpenSheet)
+                        .padding(vertical = Spacing.s),
+                )
+                CoShellIconButton(onClick = onNext) {
+                    Icon(painterResource(DesignR.drawable.ic_chevron_right), stringResource(R.string.reports_next))
+                }
+                if (!stacked) pill(Modifier.padding(start = Spacing.xs))
+            }
+            if (stacked) pill(Modifier)
         }
-        CoShellFilterChip(
-            selected = false,
-            onClick = onOpenSheet,
-            label = { Text("$currency ▾") },
-            modifier = Modifier.padding(start = Spacing.xs),
-        )
     }
 }

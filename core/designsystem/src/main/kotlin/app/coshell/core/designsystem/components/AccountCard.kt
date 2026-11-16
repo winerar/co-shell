@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -51,7 +53,15 @@ fun CoShellAccountCard(
             Text(name, color = ink, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
             Text(kind, color = ink, style = MaterialTheme.typography.labelLarge)
         }
-        Text(balance, color = ink, style = AmountTitleStyle, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = Spacing.s))
+        Text(
+            balance,
+            color = ink,
+            style = AmountTitleStyle,
+            maxLines = 1,
+            // The typed balance shrinks to fit — a cut amount shows a wrong number (#378).
+            autoSize = fitAmountAutoSize(min = 10.sp, max = AmountTitleStyle.fontSize),
+            modifier = Modifier.padding(top = Spacing.s),
+        )
     }
 }
 

@@ -29,6 +29,8 @@ import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.sp
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 
 /**
  * An amount typed on the keypad (board `CompNew`, «Сумма», poll #367 А): a field of the form's look — frame `outline`,
@@ -74,7 +76,14 @@ fun CoShellAmountSlot(
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                if (label != null) Text(label, style = MaterialTheme.typography.labelMedium, color = if (isError) scheme.error else scheme.onSurfaceVariant)
+                if (label != null) Text(
+                    label,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (isError) scheme.error else scheme.onSurfaceVariant,
+                    maxLines = 1,
+                    // The label shrinks instead of breaking into letters next to a wide pill (320 dp, font ×2).
+                    autoSize = fitAmountAutoSize(min = 8.sp, max = MaterialTheme.typography.labelMedium.fontSize),
+                )
                 RollingAmountText(
                     AmountKeys.display(AmountKeys.normalize(text)),
                     style = if (main) AmountSlotStyle else AmountTitleStyle,

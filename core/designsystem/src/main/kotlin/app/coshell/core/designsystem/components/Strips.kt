@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
@@ -56,7 +57,7 @@ fun CoShellColorStrip(
 ) {
     val swatch = selected?.let(CategoryPalette::normalize)
     BoxWithConstraints(modifier.fillMaxWidth()) {
-        val slots = (stripSlots(maxWidth, Sizes.badge) - if (allowNone) 1 else 0).coerceAtLeast(MIN_SLOTS)
+        val slots = (stripSlots(maxWidth, Sizes.badge, LocalDensity.current.fontScale) - if (allowNone) 1 else 0).coerceAtLeast(MIN_SLOTS)
         val shown = stripColors(CategoryPalette.colors, swatch, slots)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             if (allowNone) CoShellNoColorDot(selected == null, noneLabel) { onSelect(null) }
@@ -79,7 +80,7 @@ fun CoShellIconStrip(
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier.fillMaxWidth()) {
-        val shown = stripIcons(CategoryIcons.keys, selected, stripSlots(maxWidth, Sizes.cellHeight).coerceAtLeast(MIN_SLOTS))
+        val shown = stripIcons(CategoryIcons.keys, selected, stripSlots(maxWidth, Sizes.cellHeight, LocalDensity.current.fontScale).coerceAtLeast(MIN_SLOTS))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             shown.forEach { key -> CoShellIconCell(key, key == selected) { onSelect(key) } }
             CoShellTagMoreChip(allLabel, onAll)
@@ -150,8 +151,9 @@ fun CoShellIconCell(key: String, selected: Boolean, size: Dp = Sizes.cellHeight,
     }
 }
 
-/** How many circles of [cell] fit [width] next to the «+N» chip ([MORE_WIDTH]). */
-internal fun stripSlots(width: Dp, cell: Dp): Int = ((width - MORE_WIDTH + Spacing.s) / (cell + Spacing.s)).toInt()
+/** How many circles of [cell] fit [width] next to the «+N» chip ([MORE_WIDTH], which grows with the font [fontScale]). */
+internal fun stripSlots(width: Dp, cell: Dp, fontScale: Float = 1f): Int =
+    ((width - MORE_WIDTH * fontScale.coerceAtLeast(1f) + Spacing.s) / (cell + Spacing.s)).toInt()
 
 /** The first [count] icon keys; a chosen key further down takes the last place, so it is always seen. */
 internal fun stripIcons(keys: List<String>, selected: String?, count: Int): List<String> {

@@ -12,6 +12,6 @@
     <string name="recurring_ahead_none">No quedan pagos en %1$s</string>
     <string name="recurring_ahead_without">%1$d más — importe al anotar</string>
     <string name="recurring_ahead_missing">Sin contar: %1$s — no hay tipo de cambio</string>
-    <string name="recurring_list_empty">Aún no hay pagos recurrentes. Activa «Repetición» en cualquier plantilla: alquiler, suscripciones, sueldo.</string>
+    <string name="recurring_list_empty">Aún no hay pagos recurrentes. Activa «Repetición» en cualquier plantilla: alquiler, suscripciones, sueldo. Pulsa «+» para crear una plantilla.</string>
     <string name="recurring_menu_hint">Alquiler, suscripciones, sueldo</string>
 </resources>

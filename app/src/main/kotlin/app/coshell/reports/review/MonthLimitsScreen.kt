@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +25,7 @@ import app.coshell.budgets.list.BudgetsUiState.Envelope
 import app.coshell.budgets.list.components.EnvelopeRow
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
@@ -68,7 +67,7 @@ fun MonthLimitsScreen(state: MonthReviewUiState, onBack: () -> Unit, onLimit: (c
             item(key = "tally") { CoShellCard(side.fillMaxWidth().padding(vertical = Spacing.m)) { LimitsTally(limits) } }
             itemsIndexed(shown, key = { _, envelope -> envelope.categoryId }) { index, envelope ->
                 Column(side.fillMaxWidth().rowGroupSegment(RowGroupPosition(index, shown.size))) {
-                    if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    if (index > 0) CoShellDivider()
                     EnvelopeRow(envelope, onClick = { onLimit(envelope.categoryId) })
                 }
             }

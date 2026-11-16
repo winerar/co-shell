@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,6 +21,7 @@ import app.coshell.budgets.detail.components.FolderCategories
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.tokens.Spacing
@@ -88,7 +88,7 @@ private fun Operations(state: BudgetDetailUiState, actions: BudgetDetailActions,
     CoShellCard(modifier.fillMaxWidth()) {
         state.operations.forEachIndexed { index, row ->
             key(row.id) {
-                if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                if (index > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
                 TransactionRow(row, onClick = actions.onTransactionClick)
             }
         }

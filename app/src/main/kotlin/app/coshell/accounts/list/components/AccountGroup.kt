@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellExpandIcon
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.motion.Tactile
@@ -79,7 +79,7 @@ internal fun AccountGroup(
         CoShellExpandable(group.expanded) {
             CoShellCard(Modifier.fillMaxWidth()) {
                 group.rows.forEachIndexed { index, row ->
-                    if (index > 0) HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = Spacing.l))
+                    if (index > 0) CoShellDivider(Modifier.padding(start = Spacing.l))
                     AccountRow(row, onAccountClick)
                 }
             }

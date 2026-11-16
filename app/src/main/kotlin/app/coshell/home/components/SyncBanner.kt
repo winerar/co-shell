@@ -1,6 +1,7 @@
 package app.coshell.home.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.data.sync.SyncIssueKind
@@ -53,7 +53,7 @@ fun SyncBanner(state: SyncBannerState, actions: SyncBannerActions, modifier: Mod
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 Icon(painterResource(DesignR.drawable.ic_sync), contentDescription = null, tint = warning, modifier = Modifier.size(Sizes.tileIcon))
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-                    Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, color = warning)
+                    Text(title, style = TitleSmallStrongStyle, color = warning)
                     Text(listOfNotNull(pending, text).joinToString(" "), style = MaterialTheme.typography.bodyMedium)
                     state.lastSync?.let {
                         Text(

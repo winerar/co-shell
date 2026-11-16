@@ -1,6 +1,7 @@
 package app.coshell.templates.components
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.theme.LabelStrongStyle
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
@@ -44,8 +44,7 @@ fun TemplateChip(item: TemplateItem, onClick: () -> Unit, modifier: Modifier = M
         Column(Modifier.widthIn(max = Sizes.tileMinHeight)) {
             Text(
                 item.name,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.SemiBold,
+                style = LabelStrongStyle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

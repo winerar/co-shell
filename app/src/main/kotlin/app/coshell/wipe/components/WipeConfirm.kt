@@ -1,6 +1,8 @@
 package app.coshell.wipe.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
+import app.coshell.core.designsystem.theme.TitleStrongStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
@@ -35,7 +36,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellCard(tint = danger) {
             Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                Text(stringResource(R.string.wipe_family_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = danger)
+                Text(stringResource(R.string.wipe_family_title), style = TitleStrongStyle, color = danger)
                 Text(stringResource(R.string.wipe_family_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 state.counts?.let { Counts(it, Modifier.padding(vertical = Spacing.s)) }
                 Text(stringResource(R.string.wipe_kept), style = MaterialTheme.typography.bodySmall)
@@ -45,7 +46,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
             Row(Modifier.padding(Spacing.l), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 Icon(painterResource(DesignR.drawable.ic_file_save), contentDescription = null, tint = LocalStatusPalette.current.success)
                 Column(verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-                    Text(stringResource(R.string.wipe_backup_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.wipe_backup_title), style = TitleSmallStrongStyle)
                     Text(stringResource(R.string.wipe_backup_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }

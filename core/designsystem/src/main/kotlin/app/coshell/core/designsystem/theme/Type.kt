@@ -89,3 +89,50 @@ val AmountCellStyle = RateTextStyle.copy(fontSize = 12.sp, lineHeight = 16.sp)
 
 /** [AmountCellStyle] for the total row. */
 val AmountCellStrongStyle = AmountCellStyle.copy(fontWeight = FontWeight.SemiBold)
+
+// Emphasis variants of the word styles (#367): screens take these instead of `.copy(fontWeight = …)`.
+
+/** Tab-screen title under the top bar. */
+val LargeTitleStyle = CoShellTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+
+/** Title of an inner screen, a selection bar or a hero card. */
+val ScreenTitleStyle = CoShellTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
+
+/** Dialog / block title in a warning colour. */
+val TitleStrongStyle = CoShellTypography.titleMedium.copy(fontWeight = FontWeight.Bold)
+
+/** Small block title (banner, option title). */
+val TitleSmallStrongStyle = CoShellTypography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
+
+/** Row title that must stand out (the red «Стереть данные» row). */
+val BodyStrongStyle = CoShellTypography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+
+/** Name on a template chip, header of a strip. */
+val LabelStrongStyle = CoShellTypography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
+
+/** Initial inside an avatar. */
+val LabelBoldStyle = CoShellTypography.labelLarge.copy(fontWeight = FontWeight.Bold)
+
+/** Count on a category tile. */
+val LabelMediumBoldStyle = CoShellTypography.labelMedium.copy(fontWeight = FontWeight.Bold)
+
+/** «Все 52» / «+29» on icon and colour strips. */
+val LabelMediumStrongStyle = CoShellTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+
+/** Caption on an icon strip. */
+val LabelSmallStrongStyle = CoShellTypography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
+
+/** Rate under a total, caption size (12 sp, row line height). */
+val RateSmallStyle = RateTextStyle.copy(fontSize = 12.sp)
+
+/** Converted amount on a rate row. */
+val RateConvertedStyle = RateTextStyle.copy(fontSize = 17.sp, fontWeight = FontWeight.Bold)
+
+/** Currency code in a chip. */
+val RateChipStyle = RateTextStyle.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold)
+
+/** Month total at the top of the review: [AmountTitleStyle] at 32 sp. */
+val AmountReviewStyle = AmountTitleStyle.copy(fontSize = 32.sp, lineHeight = 40.sp)
+
+/** Release version on a past-release card. */
+val AmountTitleStrongStyle = AmountTitleStyle.copy(fontWeight = FontWeight.Bold)

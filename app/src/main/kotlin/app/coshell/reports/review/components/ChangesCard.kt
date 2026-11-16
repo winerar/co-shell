@@ -1,6 +1,7 @@
 package app.coshell.reports.review.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,7 +60,7 @@ private fun ChangeRow(change: Change, onClick: () -> Unit) {
             Text(categoryName(change.name), style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
                 stringResource(R.string.review_change_usual, change.amount, change.usual),
-                style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+                style = RateSmallStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
             )

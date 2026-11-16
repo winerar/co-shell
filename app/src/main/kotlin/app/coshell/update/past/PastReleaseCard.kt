@@ -1,6 +1,7 @@
 package app.coshell.update.past
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.theme.AmountTitleStrongStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
@@ -39,7 +39,7 @@ internal fun PastReleaseCard(release: ReleaseNote, isInstalled: Boolean, expande
     CoShellCard(Modifier.fillMaxWidth(), onClick = onToggle) {
         Column(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                Text(release.versionName, style = AmountTitleStyle.copy(fontWeight = FontWeight.Bold))
+                Text(release.versionName, style = AmountTitleStrongStyle)
                 if (isInstalled) InstalledBadge()
                 Spacer(Modifier.weight(1f))
                 Text(

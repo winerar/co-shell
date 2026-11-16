@@ -1,6 +1,8 @@
 package app.coshell.rates.list.components
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.theme.RateChipStyle
+import app.coshell.core.designsystem.theme.RateConvertedStyle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -56,7 +57,7 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
             {
                 Text(
                     value,
-                    style = RateTextStyle.copy(fontSize = ConvertedText, fontWeight = FontWeight.Bold),
+                    style = RateConvertedStyle,
                     color = if (item.isSource) accentInk() else MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                 )
@@ -76,12 +77,10 @@ private fun CurrencyChip(code: String) {
     ) {
         Text(
             code,
-            style = RateTextStyle.copy(fontSize = ChipText, fontWeight = FontWeight.Bold),
+            style = RateChipStyle,
             color = LocalStatusPalette.current.warning,
             maxLines = 1,
         )
     }
 }
 
-private val ChipText = 11.sp
-private val ConvertedText = 17.sp

@@ -1,6 +1,8 @@
 package app.coshell.ui.form
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.theme.LabelMediumStrongStyle
+import app.coshell.core.designsystem.theme.LabelSmallStrongStyle
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryIcons
 import app.coshell.core.designsystem.category.CategoryPalette
@@ -56,7 +57,7 @@ fun IconStrip(selected: String?, color: Long?, onSelect: (String) -> Unit, onAll
         ) {
             Text(
                 stringResource(R.string.form_all_count, keys.size),
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                style = LabelSmallStrongStyle,
                 color = accentInk(),
                 maxLines = 1,
             )
@@ -99,7 +100,7 @@ fun ColorStrip(selected: Long?, onSelect: (Long?) -> Unit, onAll: () -> Unit, mo
         shown.forEach { color -> ColorDot(color, color == swatch) { onSelect(color) } }
         Text(
             "+${CategoryPalette.colors.size - shown.size}",
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+            style = LabelMediumStrongStyle,
             color = accentInk(),
             modifier = Modifier.tactileClickable(Tactile.Control, MaterialTheme.shapes.small, role = Role.Button, onClick = onAll),
         )

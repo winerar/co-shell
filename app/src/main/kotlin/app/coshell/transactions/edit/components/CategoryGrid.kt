@@ -1,6 +1,7 @@
 package app.coshell.transactions.edit.components
 
 import androidx.compose.animation.animateColorAsState
+import app.coshell.core.designsystem.theme.LabelMediumBoldStyle
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.categoryColor
@@ -85,7 +85,7 @@ private fun AllCell(place: GridPlace.All, modifier: Modifier) {
             Modifier.padding(Spacing.xxs).size(Sizes.badgeSmall).dashedBorder(MaterialTheme.colorScheme.outline, Sizes.badgeSmall / 2),
             contentAlignment = Alignment.Center,
         ) {
-            Text(place.count.toString(), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = ink)
+            Text(place.count.toString(), style = LabelMediumBoldStyle, color = ink)
         }
         Text(place.label, style = MaterialTheme.typography.labelMedium, color = ink, maxLines = 1)
     }

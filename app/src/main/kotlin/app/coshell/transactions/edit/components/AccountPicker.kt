@@ -1,6 +1,7 @@
 package app.coshell.transactions.edit.components
 
 import app.coshell.core.designsystem.components.SectionTone
+import app.coshell.core.designsystem.theme.AmountCellStyle
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -163,7 +164,7 @@ private fun AccountTile(account: AccountOption, selected: Boolean, modifier: Mod
         // A long balance shrinks to fit the tile instead of losing its currency to «…» (board `Main`).
         AmountText(
             account.balance.ifEmpty { account.currency },
-            RateTextStyle.copy(fontSize = 12.sp, lineHeight = 16.sp),
+            AmountCellStyle,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             minFontSize = 8.sp,
         )

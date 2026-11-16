@@ -1,6 +1,7 @@
 package app.coshell.ui.top
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -16,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
@@ -50,8 +50,7 @@ fun ScreenTopBar(
             Column {
                 Text(
                     title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                    style = ScreenTitleStyle,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

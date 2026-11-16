@@ -1,6 +1,7 @@
 package app.coshell.ui.top
 
 import androidx.compose.animation.AnimatedContent
+import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,7 +24,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.tokens.Motion
@@ -54,7 +54,7 @@ fun SelectionTopBar(count: Int, onClear: () -> Unit, scroll: TabScroll) {
 /** «Выбрано 3» with only the number rolling; the words around it come from the translated string. */
 @Composable
 private fun SelectedCount(count: Int) {
-    val style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+    val style = ScreenTitleStyle
     val full = stringResource(R.string.transactions_selected, count)
     val digits = count.toString()
     val at = full.indexOf(digits)

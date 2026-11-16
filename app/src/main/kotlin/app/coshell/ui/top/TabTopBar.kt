@@ -1,6 +1,7 @@
 package app.coshell.ui.top
 
 import androidx.compose.animation.AnimatedContent
+import app.coshell.core.designsystem.theme.LargeTitleStyle
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -26,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.tokens.Motion
@@ -114,8 +114,7 @@ private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, scal
     Column {
         Text(
             title,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
+            style = LargeTitleStyle,
             maxLines = 1,
             modifier = Modifier.graphicsLayer {
                 transformOrigin = TransformOrigin(0f, 0.5f)

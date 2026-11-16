@@ -1,6 +1,8 @@
 package app.coshell.family.components
 
 import androidx.compose.foundation.background
+import app.coshell.core.designsystem.theme.RateSmallStyle
+import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +27,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
@@ -53,8 +54,7 @@ internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFr
                 Column {
                     Text(
                         stringResource(R.string.family_budget_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
+                        style = ScreenTitleStyle,
                     )
                     Text(
                         pluralStringResource(R.plurals.family_members_count, members.size, members.size),
@@ -68,7 +68,7 @@ internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFr
                 Text(status, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                 Text(
                     stringResource(R.string.family_sync_speed),
-                    style = RateTextStyle.copy(fontSize = MaterialTheme.typography.labelMedium.fontSize),
+                    style = RateSmallStyle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                 )

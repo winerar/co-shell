@@ -23,6 +23,9 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.home.homeStressSample
+import app.coshell.reports.ReportsActions
+import app.coshell.reports.ReportsScreen
+import app.coshell.reports.reportsStressSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -70,6 +73,13 @@ class ScreensStressScreenshotTest {
     @Test @Config(qualifiers = NARROW)
     fun `budgets stress narrow dark`() = shot("budgets_stress_narrow_dark", dark = true, fontScale = 1.3f) {
         BudgetsScreen(budgetsStressSample, BudgetsActions())
+    }
+
+    @Test fun `reports stress light`() = shot("reports_stress_light") { ReportsScreen(reportsStressSample, ReportsActions()) }
+
+    @Test @Config(qualifiers = NARROW)
+    fun `reports stress narrow dark`() = shot("reports_stress_narrow_dark", dark = true, fontScale = 1.3f) {
+        ReportsScreen(reportsStressSample, ReportsActions())
     }
 
     private fun shot(name: String, dark: Boolean = false, fontScale: Float = 1f, content: @Composable () -> Unit) {

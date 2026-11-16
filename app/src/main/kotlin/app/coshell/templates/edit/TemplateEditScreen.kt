@@ -23,6 +23,7 @@ import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.templates.edit.components.ForeignCurrencyBlock
 import app.coshell.templates.edit.components.RepeatBlock
 import app.coshell.templates.edit.components.TemplatePickers
 import app.coshell.templates.edit.components.TemplatePicker
@@ -34,7 +35,8 @@ import app.coshell.ui.top.ScreenTopBar
 
 /**
  * Template editor (mockup `TplEdit`): type, name, account (for a transfer — both), amount that may stay
- * empty, category, note, «Детали» with «Повтор» (#143); «Сохранить» and, for an existing template, «Удалить».
+ * empty, «Платёж в другой валюте» (#415, board `Rec415B`), category, note, «Детали» with «Повтор» (#143); «Сохранить» and,
+ * for an existing template, «Удалить».
  */
 @Composable
 fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions) {
@@ -79,8 +81,9 @@ fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions)
                 label = stringResource(R.string.template_amount),
                 currency = state.amountCurrencyShown,
                 error = stringResource(R.string.template_amount_error).takeIf { state.amountError },
-                hint = stringResource(R.string.template_amount_hint),
+                hint = stringResource(if (state.isForeign) R.string.template_foreign_amount_hint else R.string.template_amount_hint),
             )
+            if (!state.isTransfer) ForeignCurrencyBlock(state, actions)
             if (!state.isTransfer) {
                 ChoiceField(
                     label = stringResource(R.string.template_category),

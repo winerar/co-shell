@@ -16,12 +16,16 @@ import app.coshell.MainActivity
 import app.coshell.R
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.rates.CurrencyConverter
+import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.recurring.PostedPayment
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.TransactionTemplate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.datetime.LocalDate
 
 /**
@@ -35,12 +39,14 @@ class PaymentNotices @Inject constructor(
     private val accounts: AccountRepository,
     private val categories: CategoryRepository,
     private val money: MoneyFormat,
+    private val rates: ExchangeRateRepository,
 ) {
     private val manager = NotificationManagerCompat.from(context)
 
     /**
      * «Сегодня платёж: …» for [templates] due on [day]. One with an amount: «Провести 650 USD» (posts here) and
      * «Изменить сумму»; without: «Провести» (the sheet) and «Завтра»; several: «N платежей сегодня · ≈ [total]».
+     * In another currency (#415, board `Rec415AskAlways`): «≈ 682 500 ARS по курсу» and «Ввести сумму» — never posted here.
      */
     suspend fun remind(templates: List<TransactionTemplate>, day: LocalDate, total: Money? = null) {
         val first = templates.firstOrNull() ?: return
@@ -48,7 +54,14 @@ class PaymentNotices @Inject constructor(
             val account = accounts.getAccount(first.accountId)?.name.orEmpty()
             val amount = first.amount
             val sheet = PaymentLinks.intent(context, PaymentLink(first.id, day))
-            if (amount != null) {
+            if (amount != null && first.isForeign) {
+                val rate = CurrencyConverter(RateBook.of(rates.observeRates().first())).convert(amount, first.currency, day)
+                val hint = rate?.let { context.getString(R.string.recurring_notify_by_rate, money.format(it.money)) }
+                    ?: context.getString(R.string.recurring_notify_enter_debited)
+                builder(context.getString(R.string.recurring_notify_today_amount, first.name, money.format(amount)), listOf(account, hint).filter { it.isNotEmpty() }.joinToString(SEP))
+                    .addAction(0, context.getString(R.string.recurring_action_enter_amount), sheet)
+                    .addAction(0, context.getString(R.string.recurring_action_tomorrow), ReminderActionReceiver.snooze(context, listOf(first.id), day))
+            } else if (amount != null) {
                 builder(context.getString(R.string.recurring_notify_today_amount, first.name, money.format(amount)), account)
                     .addAction(0, context.getString(R.string.recurring_action_post_amount, money.format(amount)), ReminderActionReceiver.post(context, first.id, day))
                     .addAction(0, context.getString(R.string.recurring_action_change_amount), sheet)

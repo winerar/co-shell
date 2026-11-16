@@ -2,7 +2,6 @@ package app.coshell.recurring.list
 
 import app.coshell.core.domain.recurring.PaymentState
 import app.coshell.core.domain.recurring.ScheduledPayment
-import app.coshell.core.model.PostMode
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.TemplateItem
@@ -98,7 +97,7 @@ internal fun recurringList(
 
 private fun ScheduledPayment.toRow(item: TemplateItem): RecurringRow? {
     val schedule = template.schedule ?: return null
-    return RecurringRow(item, schedule.recurrence, schedule.mode == PostMode.AUTO, date, state, missed)
+    return RecurringRow(item, schedule.recurrence, template.postsByItself, date, state, missed)
 }
 
 private fun RecurringRow.matches(chip: PaymentFilter): Boolean = when (chip) {

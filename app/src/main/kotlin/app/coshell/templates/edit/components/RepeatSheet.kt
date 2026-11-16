@@ -97,6 +97,7 @@ internal fun ColumnScope.RepeatSheetBody(draft: RepeatDraft, state: TemplateEdit
 private fun ModeRows(mode: PostMode, state: TemplateEditUiState, onPick: (PostMode) -> Unit) {
     val autoHint = when {
         state.isTransfer -> R.string.recurring_auto_no_transfer
+        state.isForeign -> R.string.recurring_auto_no_foreign
         !state.canPostAuto -> R.string.recurring_auto_needs_amount
         else -> R.string.recurring_auto_hint
     }

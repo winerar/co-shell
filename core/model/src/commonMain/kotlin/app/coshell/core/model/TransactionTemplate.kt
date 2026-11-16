@@ -46,6 +46,13 @@ data class TransactionTemplate(
         }
     }
 
-    /** The amount is in another currency than the account's (#415): posted by the rate of the day, kept as the receipt. */
+    /** The amount is in another currency than the account's (#415): it is the receipt, the debited amount is entered when posting. */
     val isForeign: Boolean get() = amount != null && amount.currency != currency
+
+    /**
+     * «Проводить само» works: [PostMode.AUTO] and the amount in the account currency. A payment in another currency is
+     * always posted by hand (#415, owner's poll 3 «Д»): the bank's rate is not the official one. Not an `init` rule —
+     * an older version or the other phone may still store such a template as AUTO.
+     */
+    val postsByItself: Boolean get() = schedule?.mode == PostMode.AUTO && !isForeign
 }

@@ -26,10 +26,15 @@ data class TemplateEditUiState(
     val amount: String = "",
     val amountError: Boolean = false,
     /**
-     * Currency of [amount] when it differs from the account's (#415, «Аренда · 650 USD» from an ARS account); `null` —
-     * the account's. Kept from the template so that editing does not turn 650 USD into 650 ARS.
+     * «Платёж в другой валюте» (#415, board `Rec415B`): [amount] is in [amountCurrency], not the account's («Аренда · 650 USD»
+     * from an ARS account); what is debited is entered when posting. Not for a transfer.
      */
+    val foreign: Boolean = false,
+    /** The code typed or picked for [foreign]; kept when the box is unticked, so ticking again brings it back. */
     val amountCurrency: String? = null,
+    val amountCurrencyError: Boolean = false,
+    /** Chips for [foreign]: currencies of the accounts and of the template; [foreignChoices] drops the account's. */
+    val currencyChoices: List<String> = emptyList(),
     /** Every usable category; the screen offers [categoryChoices] — those of the current [type]. */
     val categories: List<CategoryChoice> = emptyList(),
     /** Optional: without it the entry sheet asks for the category. Never set for a transfer. */
@@ -50,13 +55,19 @@ data class TemplateEditUiState(
 
     val isTransfer: Boolean get() = type == TransactionType.TRANSFER
     val account: AccountChoice? get() = accounts.firstOrNull { it.id == accountId }
-    /** The currency [amount] is typed in: [amountCurrency] for an expense or income, else the account's. */
-    val amountCurrencyShown: String? get() = amountCurrency?.takeIf { !isTransfer && it != account?.currency } ?: account?.currency
+    /** [foreign] counts for an expense or income only. */
+    val isForeign: Boolean get() = foreign && !isTransfer
+    /** The currency [amount] is typed in: [amountCurrency] for a payment in another currency, else the account's. */
+    val amountCurrencyShown: String? get() = amountCurrency?.takeIf { isForeign && it.isNotBlank() } ?: account?.currency
+    val foreignChoices: List<String> get() = currencyChoices.filter { it != account?.currency }
     val toAccount: AccountChoice? get() = accounts.firstOrNull { it.id == toAccountId }
     val category: CategoryChoice? get() = categories.firstOrNull { it.id == categoryId }
 
-    /** «Проводить само» needs an amount and is not for a transfer (the arriving amount is typed then). */
-    val canPostAuto: Boolean get() = !isTransfer && amount.isNotBlank()
+    /**
+     * «Проводить само» needs an amount and is not for a transfer (the arriving amount is typed then) nor for a payment in
+     * another currency (#415, poll 3 «Д»: what was debited is always entered by hand).
+     */
+    val canPostAuto: Boolean get() = !isTransfer && !isForeign && amount.isNotBlank()
 
     /** What the template will do on the payment day: «Проводить само» falls back to «Напомнить» once it cannot. */
     val postMode: PostMode get() = schedule?.mode?.takeIf { it == PostMode.REMIND || canPostAuto } ?: PostMode.REMIND

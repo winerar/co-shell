@@ -76,8 +76,12 @@ internal fun TemplatePill(name: String, onClear: (() -> Unit)?, icon: Int = Desi
 internal fun templateHint(state: TransactionEditUiState): String? {
     val last = state.payment?.last
     val average = state.payment?.average
+    val account = state.account
     return when {
         state.templateName == null -> null
+        // A payment in another currency without a rate (#415, board `Rec415NoRate`): the user enters what was debited.
+        state.payment != null && state.hasReceipt && state.amount.isBlank() && account != null ->
+            stringResource(R.string.payment_hint_no_rate, state.receiptCurrency, account.currency)
         last != null && average != null -> stringResource(R.string.payment_hint_last_average, last, average)
         last != null -> stringResource(R.string.payment_hint_last, last)
         state.amount.isBlank() -> stringResource(R.string.template_hint_enter_amount)

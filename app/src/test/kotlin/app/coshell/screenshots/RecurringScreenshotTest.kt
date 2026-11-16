@@ -49,6 +49,18 @@ class RecurringScreenshotTest {
     @Test
     fun `template with a repeat light`() = shot("recurring_template_light") { template() }
 
+    /** «Платёж в другой валюте» ticked (#415, board `Rec415B`): 650 USD from an ARS account. */
+    @Test
+    fun `template paid in another currency dark`() = shot("recurring_template_foreign_dark", dark = true) {
+        TemplateEditScreen(
+            STATE.copy(
+                accounts = listOf(TemplateEditUiState.AccountChoice("galicia", "Galicia", "ARS")), accountId = "galicia",
+                foreign = true, amountCurrency = "USD", currencyChoices = listOf("ARS", "USD", "EUR"),
+            ),
+            TemplateEditActions(),
+        )
+    }
+
     @Test
     fun `repeat sheet dark`() = shot("recurring_sheet_dark", dark = true) { sheet() }
 

@@ -27,7 +27,7 @@
 | Семья | `FamilySignedOut`, `FamilyNoAccess`, `FamilyInvited`, `FamilyJoinMode`, `Family`, `FamilyInviteSent`, `FamilyInviteDialog`, `FamilyOffline`, `FamilyNotConfigured` | `family/` |
 | Настройки, копия, стирание, отзыв | `Settings`, `Backup`, `BackupAuto`, `BackupError`, `BackupRestore`, `Wipe` (слово СТЕРЕТЬ), `WipeFailed`, `Feedback`, `FeedbackSent`, `FeedbackError` | `settings/`, `theme/`, `backup/`, `wipe/`, `feedback/` |
 | Шаблоны | `TplA` (шторка «+», выбран А), `TplAll` (32 шаблона), `TplEntry`, `TplSave`, `TplEdit` | `templates/` (`strip/`, `list/`, `edit/`), пилюля и диалог — `transactions/edit/components/TemplateBits`; доски — `mockup_screens_{templates,budgets,reports,review}.py` |
-| Регулярные платежи (#143, выбрано А + А) | `Rec143HomeA` («Скоро» на «Обзоре»), `Rec143EditA` + `Rec143RepeatA` (повтор в шаблоне), `Rec143List` (24), `Rec143Post`, `Rec143Notify`, `Rec143Edge`; ряд «Валюта платежа» (#415, выбрано Б + В; «всегда спрашивать?» — опрос 3 https://claude.ai/artifact/SHjh9HjBduKi45nk9baxfR): `Rec415B` (галочка в шаблоне), без курса — `Rec415NoRate`, `Rec415NoRateTyped`, `Rec415NoRateWhere`; опрос 3 — `Rec415AskSheet`, `Rec415AskAlways` (Д), `Rec415AutoFix` (Е) (`mockup_screens_rec415.py`) | данные: `core:domain/recurring/`; в коде: «Скоро», «Повтор», «Регулярные платежи» (`recurring_list_*`) |
+| Регулярные платежи (#143, выбрано А + А) | `Rec143HomeA` («Скоро» на «Обзоре»), `Rec143EditA` + `Rec143RepeatA` (повтор в шаблоне), `Rec143List` (24), `Rec143Post`, `Rec143Notify`, `Rec143Edge`; ряд «Валюта платежа» (#415, выбрано Б + В + Д, в коде): `Rec415B` (галочка в шаблоне), без курса — `Rec415NoRate`, `Rec415NoRateTyped`, `Rec415NoRateWhere`; опрос 3 — `Rec415AskSheet`, `Rec415AskAlways` (Д), `Rec415AutoFix` (Е) (`mockup_screens_rec415.py`) | данные: `core:domain/recurring/`; в коде: «Скоро», «Повтор», «Регулярные платежи» (`recurring_list_*`) |
 | Бюджеты | `BudA` (выбран А), `BudMany` (18 лимитов), `BudDetail`, `BudEdit`, `BudHome`, `BudFirst` | `budgets/` (#167, #103); `BudHome` — `home/budget/`, `home/components/{BudgetTile,HotBudgets}` (#184) |
 | Отчёты | `RepA` (выбран А), `RepAll` (24 категории), `RepDrill`, `RepPeriod` | `reports/`, `reports/all/` (#140), `reports/category/` (`RepDrill`, #188) |
 | Картина целиком (#189, выбрано А · Б · А) | `Rp189IeA`, `Rp189NwB`, `Rp189WhoA`, `Rp189NwDrill` (24 счёта), `Rp189Edge` | `reports/components/IncomeCard`, `CapitalCard`, `MembersCard`; `NwDrill` — `reports/capital/CapitalMonthScreen` (#373) |
@@ -52,6 +52,9 @@
 на «Счетах» в коде есть сворачиваемая группа «Архив · N», на доске (v37) архива нет.
 Сверка #203 (2026-11-12): «Семья» и «Курсы» приведены к доскам (эталоны `family_*`, `rates_*`); без данных пока —
 «вошёл · N операций» у участника и изменение курса за день. Стрелка «назад» в коде — Material, на досках — шеврон (на всех экранах).
+#415 (2026-11-15): редактор шаблона — ещё старая форма (#290), галочка «Платёж в другой валюте» стоит под полем суммы, а не отдельным
+блоком, как на `Rec415B`; в шторке без курса — тихая подсказка `CoShellHint`, а не жёлтое сообщение `Rec415NoRate`/`Rec415AskSheet`
+(у `CoShellMessage` нет вида «внимание» — добавить при #290).
 
 ## Живые страницы выбора
 - Шапки экранов (2026-11-15, **выбрано А «Живая строка» без прозрачности**): https://claude.ai/artifact/NP35nzegZZGF6qHeTQpu5T — копия

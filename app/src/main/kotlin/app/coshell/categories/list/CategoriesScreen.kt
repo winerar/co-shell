@@ -6,18 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.categories.labelRes
 import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
-import app.coshell.core.designsystem.components.CoShellExtendedFab
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.rememberSegmentSwipe
 import app.coshell.core.designsystem.components.segmentSwipe
@@ -37,12 +34,8 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
             ScreenTopBar(stringResource(R.string.categories_title), onBack = actions.onBack)
         },
         floatingActionButton = {
-            // One «+» for categories and folders: the kind is chosen in the editor (owner 2026-11-09).
-            CoShellExtendedFab(
-                onClick = { actions.onOpen(CategoryEditDestination(type = type)) },
-                icon = { Icon(painterResource(DesignR.drawable.ic_add), contentDescription = null) },
-                text = { Text(stringResource(R.string.categories_add)) },
-            )
+            // One «+» for categories and groups: the kind is chosen in the editor (owner 2026-11-09, round — #408).
+            CoShellAddFab(stringResource(R.string.categories_add), onClick = { actions.onOpen(CategoryEditDestination(type = type)) })
         },
     ) { padding ->
         // Expenses / income: a way of looking at the list — the violet pill (К3); the list swipes too (#173).

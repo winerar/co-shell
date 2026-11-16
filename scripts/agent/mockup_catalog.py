@@ -65,7 +65,7 @@ def components():
         section('Кнопки', stack(button('Сохранить', mt=0), button('Отмена', 'outline', None, 0), button('Удалить', 'danger', 'trash', 0), button('Синхронизировать', 'violet', 'refresh', 0),
                                 line(icon_button('search', 'Поиск', INK, True), icon_button('back', 'Назад'), button('Все →', 'text', None, 0).replace('width: 100%', 'width: auto; padding: 0 12px')),
                                 dashed('Добавить', 0), frame(fab('Добавить'), 90, 'background: transparent;')),
-                'button(text, kind) → CoShellButton · CoShellOutlinedButton · CoShellTextButton · icon_button → CoShellIconButton · fab → CoShellExtendedFab · dashed'),
+                'button(text, kind) → CoShellButton · CoShellOutlinedButton · CoShellTextButton · icon_button → CoShellIconButton · fab(label) → CoShellAddFab (круг 56 с «+», внизу справа: одна кнопка добавления на экран-список, #408) · dashed'),
         section('Выбор', stack(line(chip('Все', True), chip('Расходы'), chip('Еда', dot=LIME), chip('Счёт ▾'), chip('＋ В папку', dashed=True)),
                                per('seg', ['a', 'b', 'c'], lambda v: segmented(['Расход', 'Доход', 'Перевод'], {'a': 'Расход', 'b': 'Доход', 'c': 'Перевод'}[v], 'lime', ['go_seg_a', 'go_seg_b', 'go_seg_c'])),
                                segmented(['По типу', 'По валюте', 'Чьи'], 'По типу'), line(switch(True), switch(False)),

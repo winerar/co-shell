@@ -7,10 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.accounts.labelRes
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.theme.AmountTextStyle
@@ -31,13 +34,14 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
     }
     val base = listOfNotNull(type, personal).joinToString(" · ")
     CoShellListRow(
-        title = { Text(row.name, maxLines = 1) },
+        title = { Text(row.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         modifier = modifier,
         supporting = {
             Text(
                 if (row.excludedFromTotal) stringResource(R.string.account_excluded_suffix, base) else base,
                 color = if (row.excludedFromTotal) LocalStatusPalette.current.warning else MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
         },
         leading = { AccountBadge(row.name, row.color) },
@@ -47,10 +51,22 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
                     text = row.balance,
                     style = AmountTextStyle,
                     color = if (row.isNegative) palette.expense else MaterialTheme.colorScheme.onSurface,
+                    minFontSize = MinAmountSize,
                 )
-                row.converted?.let { Text(it, style = RateTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                row.converted?.let {
+                    Text(
+                        it,
+                        style = RateTextStyle,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        autoSize = fitAmountAutoSize(min = MinAmountSize, max = RateTextStyle.fontSize),
+                    )
+                }
             }
         },
         onClick = { onClick(row.id) },
     )
 }
+
+/** A long balance shrinks down to this instead of losing its currency code (#431), as in the operations list. */
+private val MinAmountSize = 9.sp

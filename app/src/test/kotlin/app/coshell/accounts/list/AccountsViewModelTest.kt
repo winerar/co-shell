@@ -3,9 +3,13 @@ package app.coshell.accounts.list
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.testing.FakeAccountRepository
+import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -38,5 +42,20 @@ class AccountsViewModelTest {
         val labels = vm.buildState(items, showArchived = false, others = mapOf("wife" to "Маша")).active.associate { it.id to it.personalOf }
         assertEquals(mapOf("shared" to null, "mine" to "", "hers" to "Маша"), labels)
         assertEquals(listOf(null, null, null), vm.buildState(items, showArchived = false).active.map { it.personalOf })
+    }
+
+    @Test
+    fun `converted balance keeps the approx sign glued to the amount`() {
+        val usd = CurrencyCode("USD")
+        val vm = AccountsViewModel(FakeAccountRepository(), MoneyFormat.RU)
+        val rates = listOf(ExchangeRate(LocalDate(2026, 11, 10), usd, ars, Rate.parse("1000"), RateOrigin.DOWNLOADED))
+        val state = vm.buildState(
+            listOf(AccountWithBalance(Account("a", "Карта", ars), Money(1_000_000_00, ars))),
+            showArchived = false,
+            conversion = Conversion(rates, usd, LocalDate(2026, 11, 10)),
+        )
+        // A no-break space: when there is no room the amount shrinks, «≈» is not left alone on the line (#431).
+        assertEquals("≈\u00A01\u202F000,00\u00A0USD", state.active.single().converted)
+        assertEquals(state.active.single().converted, state.total)
     }
 }

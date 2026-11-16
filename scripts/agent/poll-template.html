@@ -41,6 +41,7 @@ section { background: var(--card); border: 1px solid var(--line); border-radius:
 .shots { display: flex; gap: 8px; overflow-x: auto; }
 .shots button { padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: none; cursor: zoom-in; flex: none; }
 .shots img { display: block; width: 150px; height: auto; }
+.shots button.wide { flex: 1 1 100%; } .shots button.wide img { width: 100%; } /* landscape boards (icons, palettes) */
 .common { display: flex; flex-direction: column; gap: 8px; }
 .common h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
 label.note { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
@@ -73,7 +74,9 @@ const src = name => 'img/' + name + '.png';
 
 function shot(name) {
   const b = el('button', { type: 'button', ariaLabel: 'Открыть крупно' });
-  b.append(el('img', { src: src(name), alt: 'Макет ' + name, loading: 'lazy', width: 150, height: 325 }));
+  const img = el('img', { src: src(name), alt: 'Макет ' + name, loading: 'lazy', width: 150, height: 325 });
+  img.addEventListener('load', () => { if (img.naturalWidth > img.naturalHeight) { b.classList.add('wide'); img.removeAttribute('height'); } });
+  b.append(img);
   b.addEventListener('click', () => { document.getElementById('zoomImg').src = src(name); document.getElementById('zoom').showModal(); });
   return b;
 }

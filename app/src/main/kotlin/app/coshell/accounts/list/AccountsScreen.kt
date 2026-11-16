@@ -15,11 +15,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.SegmentSwipe
@@ -69,11 +71,9 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
                 CoShellIconButton(onClick = actions.onToggleSearch) {
                     Icon(painterResource(DesignR.drawable.ic_search), stringResource(R.string.accounts_search))
                 }
-                CoShellIconButton(onClick = actions.onAddAccount) {
-                    Icon(painterResource(DesignR.drawable.ic_add), stringResource(R.string.accounts_add))
-                }
             }
         },
+        floatingActionButton = { CoShellAddFab(stringResource(R.string.accounts_add), actions.onAddAccount) },
     ) { padding ->
         LazyColumn(
             // The groupings swipe like tabs (#173); from the first or last one the swipe goes to the next tab.
@@ -128,7 +128,7 @@ private fun Header(state: AccountsUiState, actions: AccountsActions, grouping: G
         state.total?.let { total ->
             Column {
                 Text(stringResource(R.string.accounts_total), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                AmountText(total, style = AmountTitleStyle)
+                AmountText(total, style = AmountTitleStyle, minFontSize = 14.sp)  // shrinks, never cut (#431)
             }
         }
         if (grouping.visible) {

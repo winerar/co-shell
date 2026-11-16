@@ -18,3 +18,5 @@
   снекбара), рисование (`background`, `border`, `clip`, формы, `Canvas`, `Brush`, `Color(0x…)`) и свои стили текста
   (`fontSize`, `fontWeight`, `TextStyle`). База нарушений пуста с 2026-11-16 (`app/src/test/resources/component-rule-baseline.txt`, только заголовок): новых нарушений
   нельзя, исправленное — убрать из файла (тест напечатает новый). Не ослаблять правило и не дописывать базу — это обход.
+- `CoShellEmptyState(iconRes, text, actionLabel, onAction)`: пустой экран (значок в плитке, фраза, «+ Добавить…»; доски `HomeEmpty`, `AccountsEmpty`, кирпич `empty`; #464). На «Обзоре» над ним — `EmptyTotalCard` с нулём.
+- `CoShellFilterChip`: подпись — одна строка с «…» (`maxLines = 1`, `overflow = Ellipsis`, `widthIn(max = Sizes.tileMinHeight)`), если в ней пользовательский текст (названия счетов, категорий, значения фильтра); высота чипа фиксирована (#455).

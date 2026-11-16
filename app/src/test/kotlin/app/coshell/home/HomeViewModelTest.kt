@@ -71,6 +71,14 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `without accounts the total is zero in the main report currency (the empty Overview card)`() {
+        val state = viewModel.buildState(emptyList(), emptyList(), emptyList(), listOf(usd, ars), nov9)
+
+        assertEquals(MoneyFormat.RU.format(Money(0, usd)), state.totals.first())
+        assertEquals(0, state.accounts.size)
+    }
+
+    @Test
     fun `currencies without rates are left out and named`() {
         val withRub = accounts + AccountWithBalance(Account("d", "Сбер", rub), Money(1_000_00, rub))
 

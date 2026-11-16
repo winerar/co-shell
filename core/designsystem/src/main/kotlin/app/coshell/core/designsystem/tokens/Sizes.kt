@@ -86,6 +86,9 @@ object Sizes {
     val chipHeight = 36.dp
     /** Cell of a choice grid, a day of the month (LabelGrid, DayGrid; board Style1). */
     val cellHeight = 44.dp
+    /** Amount typed on the keypad ([app.coshell.core.designsystem.components.CoShellAmountSlot]): with a label / the main one. */
+    val amountSlot = 64.dp
+    val amountSlotMain = 72.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
     val timelineDot = 12.dp
     /** Every bar — budget bullet, bar row, progress (board Style7: one bar 8 dp with a mark). */

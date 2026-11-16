@@ -161,6 +161,18 @@ def buttons(v):
                cap('основная · контур · опасная · тональная · текстом · выключена 40 %'))
 
 
+def amount_slot(v):
+    """Poll #367 А (2026-11-16): frame outline r16, label on top, mono number 28, currency pill; active — ink frame 2 dp, error — red."""
+    def slot(label, num, cur, frame, w=2, msg=None, msg_color=MUTED):
+        f = ('<div style="min-height: 64px; padding: 8px 16px; box-sizing: border-box; border-radius: 16px; background: %s; box-shadow: inset 0 0 0 %dpx %s; display: flex; align-items: center; '
+             'justify-content: space-between;"><span style="display: flex; flex-direction: column;">%s<span style="%s font-size: 28px; font-weight: 500;">%s</span></span>'
+             '<span style="height: 36px; padding: 0 14px; border-radius: 999px; background: %s; display: inline-flex; align-items: center; font-size: 14px;">%s</span></div>'
+             % (FIELD, w, frame, '<span style="font-size: 12px; color: %s;">%s</span>' % (MUTED, label) if label else '', MONO, num, CHIP, cur))
+        return f + ('<div style="font-size: 12px; color: %s; padding: 0 16px;">%s</div>' % (msg_color, msg) if msg else '')
+    return col(slot('', '1 250,00', 'USD', INK, 2), slot('Чек', '13 300', 'ARS', OUTLINE, 1, '1 USDT = 1 015 ARS'), slot('', '0', 'USD', PINK, 2, 'Введите сумму', PINK),
+               cap('CoShellAmountSlot: в покое — рамка outline 1 dp; клавиатура пишет сюда — рамка цветом текста 2 dp; ошибка — красная; валюта — плашка'))
+
+
 NEW = [
     ('Шапка экрана', top_bars, 'TopAppBar ×3 → CoShellTopBar(kind = Tab | Screen | Selection, scrolled)'),
     ('Выпадающее меню', menu, 'DropdownMenu → CoShellDropdownMenu · CoShellMenuItem(checked, destructive, enabled)'),
@@ -169,6 +181,7 @@ NEW = [
     ('Разделитель и загрузка', divider_loading, 'HorizontalDivider → CoShellDivider · CircularProgressIndicator → CoShellLoading(size)'),
     ('Аватар участника', avatars, 'CoShellAvatar(size, you, online) · CoShellAvatarStack'),
     ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone)'),
+    ('Сумма на клавиатуре', amount_slot, 'AmountSlot → CoShellAmountSlot(label, currency | trailing, active, isError, main)'),
     ('Выбор иконки и цвета', strips, 'CoShellIconStrip · CoShellColorStrip'),
     ('Превью карточки счёта', acc_cards, 'CoShellAccountCard (цвет банка, чернила по контрасту)'),
     ('Кнопки: оттенки', buttons, 'CoShellButton(tone = Primary | Outline | Danger | Tonal | Text, enabled)'),

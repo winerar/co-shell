@@ -10,8 +10,6 @@ app/coshell/templates/components/TemplateChip.kt	draw border	1
 app/coshell/transactions/edit/components/AccountChip.kt	draw border	1
 app/coshell/transactions/edit/components/AccountPicker.kt	draw background	1
 app/coshell/transactions/edit/components/AccountPicker.kt	draw border	2
-app/coshell/transactions/edit/components/AmountBlock.kt	draw background	2
-app/coshell/transactions/edit/components/AmountSlot.kt	draw background	1
 app/coshell/transactions/edit/components/CategoryGrid.kt	draw CircleShape	1
 app/coshell/transactions/edit/components/CategoryGrid.kt	draw border	1
 app/coshell/transactions/list/components/DayHeader.kt	draw background	1

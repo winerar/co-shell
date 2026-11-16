@@ -136,3 +136,6 @@ val AmountReviewStyle = AmountTitleStyle.copy(fontSize = 32.sp, lineHeight = 40.
 
 /** Release version on a past-release card. */
 val AmountTitleStrongStyle = AmountTitleStyle.copy(fontWeight = FontWeight.Bold)
+
+/** The amount in a [app.coshell.core.designsystem.components.CoShellAmountSlot] of the entry sheet: [AmountTitleStyle] at 28 sp. */
+val AmountSlotStyle = AmountTitleStyle.copy(fontSize = 28.sp, lineHeight = 36.sp)

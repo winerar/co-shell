@@ -10,7 +10,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from colorlab import contrast, de00, mix  # noqa: E402
+from colorlab import contrast, de00, mix, with_lum  # noqa: E402
 
 # name: (ru, group, kind, primary, onPrimary, accent d/l, tertiary d/l, income d/l, expense d/l, bg d/l, hero light ×3, note)
 THEMES = [
@@ -22,30 +22,60 @@ THEMES = [
      'FF5C7A', 'C60B3D', '0A0903', 'FFFBE5', ['FFF08A', 'FFE0B0', 'D8D2FF'], 'жёлтый + индиго'),
     ('Mate', 'Мате', 'Напитки', 'пастель', 'B5D98A', '1A2A08', 'FFA77A', 'A1451A', 'EAD88A', '6E5E00', '6BE0D8', '016D67',
      'FF7088', 'BE1140', '0B0D08', 'F6F8EC', ['D7EDBF', 'F5DCC5', 'C6EEE9'], 'травяной + медный'),
-    ('Espresso', 'Эспрессо', 'Напитки', 'пастель', 'EBC096', '2B1708', '8EBBFF', '2D5FA8', 'C9B3FF', '5B3FD0', '7FE0B0', '006F47',
-     'FF6B6B', 'BE1529', '110B08', 'FBF6F0', ['F3D9BF', 'D9E6FF', 'F7E7D6'], 'крема + голубой'),
+    ('Espresso', 'Эспрессо', 'Напитки', 'неон', 'FF7A2E', '2B0E00', '4DA6FF', '1F5FA8', 'EBC096', '7A4E1E', '7FE0B0', '006F47',
+     'FF5C8A', 'C0084C', '110B08', 'FBF6F0', ['FFC7A3', 'C8E0FF', 'F7E2CC'], 'медный + электрик'),
     ('Kvas', 'Квас', 'Напитки', 'неон', 'FFB020', '2A1700', '3DDBD9', '036D73', 'FF7A5C', 'AE3818', '9CF06B', '3B6E03',
      'FF5C7A', 'C4063B', '0D0904', 'FFF8EB', ['FFD98A', 'FFE9C8', 'B8F0EE'], 'янтарь + бирюза'),
     ('Sakura', 'Сакура', 'Растения', 'пастель', 'FFB3CF', '3A0A1E', '8EE6A0', '0A7030', 'C9B6FF', '5B3FD0', '7FD0FF', '00658A',
      'FF6B5C', 'C0181A', '120A0E', 'FFF5F8', ['FFD6E4', 'FFE9F0', 'D2F3DA'], 'розовый + листва'),
     ('Cornflower', 'Василёк', 'Растения', 'неон', '5C8DFF', '000B2A', 'FFCC4D', '7A5600', 'FF7A5C', 'B33114', '6BF08F', '01712F',
      'FF5C8A', 'C0084C', '060912', 'F4F7FF', ['BFD3FF', 'FFE9B0', 'D4E0FF'], 'синий + пшеничный'),
-    ('Lotus', 'Лотос', 'Растения', 'неон', 'D06BFF', '22003A', 'C7F25C', '4C6902', 'FF8AC8', 'AD2C6B', '5CE6FF', '05697F',
-     'FF5C6E', 'C3013A', '0E0814', 'FBF5FF', ['ECCBFF', 'E8F7C2', 'FFD6EC'], 'орхидея + лист лотоса'),
+    ('Lotus', 'Лотос', 'Растения', 'пастель', 'CDB4FF', '1E0A3A', 'C7F25C', '4C6902', 'FF8AC8', 'AD2C6B', '5CE6FF', '05697F',
+     'FF5C6E', 'C3013A', '0E0814', 'FBF5FF', ['ECCBFF', 'E8F7C2', 'FFD6EC'], 'сиреневый + лист лотоса'),
 ]
 KEYS = ['id', 'ru', 'group', 'kind', 'primary', 'onPrimary', 'accentDark', 'accentLight', 'tertiaryDark', 'tertiaryLight',
         'incomeDark', 'incomeLight', 'expenseDark', 'expenseLight', 'bgDark', 'bgLight', 'heroLight', 'note']
 
-# 24 icon colours: name, dark theme fill (stored), light theme fill. Ink on both — INK. ΔE2000 ≥ 10 in each theme.
+# 24 icon colours (v2, owner 2026-11-16: v1's deeper light shades looked alike): the same fill in both themes, ink INK on it;
+# ΔE2000 ≥ 16 between any two. A fill under 3:1 on its surface gets a thin ring of its own deeper shade (ring()).
 SWATCHES = [
-    ('red', 'FF5468', 'EE435B'), ('terracotta', 'D9765F', 'DD4D35'), ('orange', 'FF8A3D', 'D36503'), ('peach', 'FFB08F', 'C37859'),
-    ('caramel', 'C98B55', 'A47441'), ('amber', 'FFC233', 'AE861E'), ('sand', 'E6D2A6', '948558'), ('yellow', 'F2E640', '888303'),
-    ('lime', 'B4F03C', '679202'), ('sage', 'A9D9A0', '618750'), ('green', '4CE07A', '069E4A'), ('seafoam', 'A6EEDD', '719386'),
-    ('teal', '2FE0C8', '009584'), ('cyan', '3CD3F5', '0391AB'), ('sky', '6FB2FF', '4485D1'), ('steel', '9DADBB', '768896'),
-    ('periwinkle', 'B8C6FF', '727DAD'), ('indigo', '8A8CFF', '7C86FB'), ('violet', 'B47CFF', '9F65EA'), ('lavender', 'DDBBFF', '9A79B6'),
-    ('magenta', 'EE5FE0', 'E131D4'), ('mauve', 'C48FB0', '95758B'), ('pink', 'FF7AAE', 'D8508B'), ('blush', 'FFBBD6', 'C37D8E'),
+    ('red', 'FF2039', 'FF2039'),
+    ('coral', 'FF8D85', 'FF8D85'),
+    ('orange', 'FF7A00', 'FF7A00'),
+    ('peach', 'FFD4BA', 'FFD4BA'),
+    ('caramel', '9E7756', '9E7756'),
+    ('amber', 'E0A800', 'E0A800'),
+    ('sand', 'BCB38F', 'BCB38F'),
+    ('yellow', 'F2E640', 'F2E640'),
+    ('lime', '95C11F', '95C11F'),
+    ('sage', '759273', '759273'),
+    ('green', '0EEF82', '0EEF82'),
+    ('seafoam', 'AEDFD9', 'AEDFD9'),
+    ('teal', '00C2A2', '00C2A2'),
+    ('cyan', '08CEFE', '08CEFE'),
+    ('sky', '019DFD', '019DFD'),
+    ('steel', '9DADBB', '9DADBB'),
+    ('periwinkle', 'D7D9FF', 'D7D9FF'),
+    ('indigo', '6077DB', '6077DB'),
+    ('violet', 'B15FFE', 'B15FFE'),
+    ('lavender', 'E5A6FD', 'E5A6FD'),
+    ('magenta', 'E501B6', 'E501B6'),
+    ('mauve', '9E7087', '9E7087'),
+    ('pink', 'FF79B4', 'FF79B4'),
+    ('blush', 'FECBDC', 'FECBDC'),
 ]
 INK = '0B0B0B'
+
+
+def ring(fill, surface):
+    """Ring for a pale fill (< 3:1 on the surface): the same hue, deep enough for 3:1; None when not needed."""
+    if contrast(fill, surface) >= 3:
+        return None
+    return with_lum(fill, 0.2) if surface_light(surface) else with_lum(fill, 0.45)
+
+
+def surface_light(c):
+    return contrast(c, '000000') > contrast(c, 'FFFFFF')
 
 
 def theme(row):
@@ -101,7 +131,8 @@ def audit(t, dark):
     for name, d, lt in SWATCHES:
         fill = d if dark else lt
         need('sw %s ink' % name, INK, fill, 4.5)
-        need('sw %s/card' % name, fill, s['card'], 3)
+        r = ring(fill, s['card'])
+        need('sw %s/card' % name, r or fill, s['card'], 3)
     return rows
 
 

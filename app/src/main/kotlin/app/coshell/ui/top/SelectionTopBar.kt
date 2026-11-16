@@ -9,12 +9,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellTopBar
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.R as DesignR
 
@@ -35,19 +33,17 @@ import app.coshell.core.designsystem.R as DesignR
  * header ([TabOrSelectionTopBar]); the number rolls up when it grows and down when it falls (header poll А).
  * Solid raised fill, so the mode is visible at a glance.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionTopBar(count: Int, onClear: () -> Unit, scroll: TabScroll) {
-    val fill = MaterialTheme.colorScheme.surfaceContainerHigh
-    TopAppBar(
+    CoShellTopBar(
         navigationIcon = {
             CoShellIconButton(onClick = onClear) {
                 Icon(painterResource(DesignR.drawable.ic_close), contentDescription = stringResource(R.string.transactions_selection_clear))
             }
         },
         title = { SelectedCount(count) },
-        scrollBehavior = scroll.behavior,
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = fill, scrolledContainerColor = fill),
+        scroll = scroll,
+        raised = true,
     )
 }
 

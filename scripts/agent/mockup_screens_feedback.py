@@ -138,7 +138,6 @@ def feedback_detail():
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Fb154A', 'А · «Ещё»: разделы строками, версия сверху (выбрано)', more_list, 154),
     ('Fb154Tabs', 'А · Вкладки и плитки: выбираете сами', tabs_and_tiles, 154),
     ('Fb154Home', 'А · «Обзор»: правка плиток', home_tiles_edit, 154),
     ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),

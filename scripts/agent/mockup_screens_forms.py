@@ -143,4 +143,7 @@ def colors():
     return html.replace('  renderVals() { return {__C__}; }', '  renderVals() {' + js + '  }')
 
 
-BOARDS = [('Categories', categories), ('CategoryEdit', category_edit), ('AccountEdit', account_edit), ('Colors', colors)]
+from mockup_screens_fb_290 import acc_form_a, cat_form_a  # noqa: E402  (the chosen #290 form «А» = the app's editors)
+
+# CategoryEdit / AccountEdit are the editors the app has since #290 (the old boards `category_edit` / `account_edit` above are gone from the canvas).
+BOARDS = [('Categories', categories), ('CategoryEdit', lambda: board('Категория', cat_form_a())), ('AccountEdit', lambda: board('Счёт', acc_form_a())), ('Colors', colors)]

@@ -45,7 +45,7 @@
     <string name="budgets_fold">Plegar subcategorías</string>
     <string name="budgets_unfold">Desplegar subcategorías</string>
     <string name="budgets_empty_title">No hay límites para este mes</string>
-    <string name="budgets_empty_text">Fija un límite mensual para una categoría — la app mostrará lo que queda y te avisará si gastas más rápido de lo previsto.</string>
+    <string name="budgets_empty_text">Fija un límite mensual para una categoría — la app mostrará lo que queda y te avisará si gastas más rápido de lo previsto. Pulsa «+» para añadir el primero.</string>
     <string name="budgets_hint">La barra es lo gastado; la marca, el ritmo de hoy. Los cambios del límite rigen desde el mes elegido.</string>
 
     <string name="budget_detail_edit">Cambiar el límite</string>

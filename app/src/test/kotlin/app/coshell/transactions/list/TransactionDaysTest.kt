@@ -146,6 +146,17 @@ class TransactionDaysTest {
     }
 
     @Test
+    fun `a net of several currencies breaks only after a dot, never inside an amount`() {
+        val day = build(
+            Transaction("e", TransactionType.EXPENSE, "card", Money(5_000_00, ars), at(8, 10)),
+            Transaction("i", TransactionType.EXPENSE, "cash", Money(1_93, usd), at(8, 9)),
+        ).single()
+        assertEquals("-5${g}000,00${nbsp}ARS${nbsp}· -1,93${nbsp}USD", day.total)
+        // The only plain space — the one place a line may break — follows the dot.
+        assertEquals(listOf("-5${g}000,00${nbsp}ARS${nbsp}·", "-1,93${nbsp}USD"), day.total!!.split(' '))
+    }
+
+    @Test
     fun `mixed day has no tone and a day of transfers no total`() {
         val mixed = build(
             Transaction("e", TransactionType.EXPENSE, "card", Money(100_00, ars), at(8, 9)),

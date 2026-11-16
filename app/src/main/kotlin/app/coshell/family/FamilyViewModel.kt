@@ -10,6 +10,7 @@ import app.coshell.core.domain.family.isPlausibleEmail
 import app.coshell.core.domain.family.normalizeEmail
 import app.coshell.family.data.GoogleSignInResult
 import app.coshell.ui.format.formatDayTime
+import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -39,7 +40,7 @@ class FamilyViewModel @Inject constructor(
         local, service.state, syncDao.observePendingCount(), syncDao.observeState(SyncEngine.LAST_SYNC),
     ) { ui, family, pending, lastSync ->
         ui.copy(family = family, pending = pending, lastSync = lastSync?.toLongOrNull()?.let(::formatTime))
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState(family = service.state.value))
+    }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState(family = service.state.value))
 
     init {
         busy { service.load(); service.refresh(); loadInvites() }

@@ -1,6 +1,7 @@
 package app.coshell.currencies.list.components
 
-import androidx.compose.foundation.background
+import app.coshell.core.designsystem.components.StatusTone
+import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +21,6 @@ import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.theme.AmountTitleStyle
-import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.R as DesignR
@@ -57,13 +57,7 @@ internal fun ReportCurrencyRow(
                 modifier = Modifier.weight(1f),
             )
             if (isMain) {
-                Text(
-                    stringResource(R.string.report_currencies_main),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.background(MaterialTheme.colorScheme.primary, PillShape)
-                        .padding(horizontal = Spacing.s, vertical = Spacing.xxs),
-                )
+                CoShellStatusChip(stringResource(R.string.report_currencies_main), StatusTone.Done)
             }
             if (canRemove) {
                 CoShellIconButton(onClick = onRemove) {

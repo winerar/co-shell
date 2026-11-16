@@ -1,6 +1,7 @@
 package app.coshell.update.past
 
-import androidx.compose.foundation.background
+import app.coshell.core.designsystem.components.StatusTone
+import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.theme.AmountTitleStrongStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -79,12 +79,5 @@ internal fun PastReleaseCard(release: ReleaseNote, isInstalled: Boolean, expande
 
 @Composable
 private fun InstalledBadge() {
-    Text(
-        stringResource(R.string.update_past_installed),
-        style = MaterialTheme.typography.labelSmall,
-        color = accentInk(),
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f), CircleShape)
-            .padding(horizontal = Spacing.s, vertical = Spacing.xxs),
-    )
+    CoShellStatusChip(stringResource(R.string.update_past_installed), StatusTone.Done)
 }

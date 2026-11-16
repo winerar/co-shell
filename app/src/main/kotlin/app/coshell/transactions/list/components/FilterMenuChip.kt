@@ -1,7 +1,7 @@
 package app.coshell.transactions.list.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.CircleShape
+import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +17,6 @@ import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellDropdownMenu
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellMenuItem
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.tactileClickable
 
 /**
  * A filter chip with a drop-down of choices: shows the chosen value and lights up while a filter is set.
@@ -37,7 +35,7 @@ internal fun FilterMenuChip(label: String, selected: Boolean, options: List<Pair
                     Icon(
                         painterResource(DesignR.drawable.ic_close),
                         contentDescription = stringResource(R.string.filter_clear, label),
-                        modifier = Modifier.tactileClickable(Tactile.Control, CircleShape, onClick = onClear),
+                        modifier = Modifier.tactileCircleClickable(onClick = onClear),
                     )
                 } else {
                     Icon(painterResource(DesignR.drawable.ic_keyboard_arrow_down), contentDescription = null)
@@ -64,7 +62,7 @@ internal fun FilterSheetChip(label: String, selected: Boolean, onClick: () -> Un
                 Icon(
                     painterResource(DesignR.drawable.ic_close),
                     contentDescription = stringResource(R.string.filter_clear, label),
-                    modifier = Modifier.tactileClickable(Tactile.Control, CircleShape, onClick = onClear),
+                    modifier = Modifier.tactileCircleClickable(onClick = onClear),
                 )
             } else {
                 Icon(painterResource(DesignR.drawable.ic_keyboard_arrow_down), contentDescription = null)

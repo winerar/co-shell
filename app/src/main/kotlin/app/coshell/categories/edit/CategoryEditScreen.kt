@@ -1,9 +1,9 @@
 package app.coshell.categories.edit
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,8 +23,6 @@ import app.coshell.categories.edit.components.WhatSection
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.TextKeyboard
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.form.ConfirmDeleteDialog
@@ -56,7 +54,7 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
                     icon = state.icon,
                     color = state.color,
                     size = Sizes.badgeLarge,
-                    modifier = Modifier.tactileClickable(Tactile.Control, CircleShape) { lookOpen = true },
+                    modifier = Modifier.tactileCircleClickable { lookOpen = true },
                 )
                 CoShellTextField(
                     value = state.name,

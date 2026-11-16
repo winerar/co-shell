@@ -1,6 +1,7 @@
 package app.coshell.transactions.edit.components
 
 import androidx.compose.animation.animateColorAsState
+import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -140,7 +140,7 @@ private fun ReceiptLine(state: TransactionEditUiState, actions: TransactionEditA
                 painterResource(DesignR.drawable.ic_close),
                 contentDescription = stringResource(R.string.entry_receipt_remove),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.tactileClickable(Tactile.Control, CircleShape) { actions.onReceiptToggle(false) }
+                modifier = Modifier.tactileCircleClickable { actions.onReceiptToggle(false) }
                     .padding(Spacing.xs).size(Sizes.searchIcon),
             )
         }

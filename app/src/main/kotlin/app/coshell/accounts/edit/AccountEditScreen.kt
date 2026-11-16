@@ -1,9 +1,9 @@
 package app.coshell.accounts.edit
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +22,6 @@ import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellSwitchLine
 import app.coshell.core.designsystem.components.CoShellTextField
-import app.coshell.core.designsystem.motion.Tactile
-import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.form.ConfirmDeleteDialog
@@ -55,7 +53,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     state.name,
                     state.color,
                     size = Sizes.badgeLarge,
-                    modifier = Modifier.tactileClickable(Tactile.Control, CircleShape) { colorsOpen = true },
+                    modifier = Modifier.tactileCircleClickable { colorsOpen = true },
                 )
                 CoShellTextField(
                     value = state.name,

@@ -33,8 +33,6 @@ app/coshell/transactions/edit/components/TemplateBits.kt	draw background	1
 app/coshell/transactions/list/components/DayHeader.kt	draw background	1
 app/coshell/transactions/list/components/FilterBar.kt	material3 FilterChipDefaults	1
 app/coshell/transactions/list/components/FilterMenuChip.kt	draw CircleShape	2
-app/coshell/transactions/list/components/FilterMenuChip.kt	material3 DropdownMenu	1
-app/coshell/transactions/list/components/FilterMenuChip.kt	material3 DropdownMenuItem	1
 app/coshell/transactions/list/components/PeriodSheet.kt	draw background	1
 app/coshell/transactions/list/components/PeriodSheet.kt	material3 FilterChipDefaults	1
 app/coshell/transactions/list/components/SelectionActions.kt	material3 ButtonDefaults	1
@@ -53,5 +51,4 @@ app/coshell/ui/form/IconColorStrips.kt	draw clip	1
 app/coshell/ui/top/ScrollHairline.kt	draw drawWithContent	1
 app/coshell/update/past/PastReleaseCard.kt	draw CircleShape	1
 app/coshell/update/past/PastReleaseCard.kt	draw background	1
-app/coshell/update/past/PastReleasesScreen.kt	material3 CircularProgressIndicator	1
 app/coshell/wipe/components/WipeConfirm.kt	material3 ButtonDefaults	1

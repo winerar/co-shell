@@ -25,6 +25,10 @@ object Sizes {
     val fabIcon = 26.dp
     /** Big status ring in the middle of a single-purpose screen (update, later import/sync). */
     val heroRing = 168.dp
+
+    /** [CoShellLoading]: in a row / alone on a screen (board `CompNew`). */
+    val loadingRow = 24.dp
+    val loadingScreen = 44.dp
     /** Icon inside [heroRing]. */
     val heroIcon = 56.dp
     /** Stroke of [heroRing]. */

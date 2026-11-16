@@ -2,9 +2,6 @@ package app.coshell.transactions.list.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +14,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.CoShellDropdownMenu
 import app.coshell.core.designsystem.components.CoShellFilterChip
+import app.coshell.core.designsystem.components.CoShellMenuItem
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
 
@@ -45,9 +44,9 @@ internal fun FilterMenuChip(label: String, selected: Boolean, options: List<Pair
                 }
             },
         )
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }, shape = MaterialTheme.shapes.large) {
+        CoShellDropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             options.forEach { (text, pick) ->
-                DropdownMenuItem(text = { Text(text) }, onClick = { open = false; pick() })
+                CoShellMenuItem(text, onClick = { open = false; pick() })
             }
         }
     }

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
+import app.coshell.core.designsystem.components.CoShellLoading
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.top.ScreenTopBar
@@ -44,7 +45,7 @@ fun PastReleasesScreen(state: PastReleasesState, onBack: () -> Unit, onRetry: ()
     Scaffold(topBar = { ScreenTopBar(stringResource(R.string.update_past_title), onBack = onBack) }) { padding ->
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (state) {
-                PastReleasesState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
+                PastReleasesState.Loading -> CoShellLoading(Modifier.align(Alignment.Center), size = Sizes.loadingScreen)
                 PastReleasesState.Failed -> Message(
                     stringResource(R.string.update_past_error),
                     action = { CoShellButton(onClick = onRetry) { Text(stringResource(R.string.update_past_retry)) } },

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Build the owner's poll page: pick a mockup variant per question (format approved 2026-11-13).
 
-Usage: poll-page.py <spec.json> <out-dir>
+Usage: poll-page.py <spec.json> <out-dir> [--img <dir>]
+--img: take ready <dir>/<Board>.png (standalone mockups, e.g. mockup_icon_426.py) instead of rendering canvas boards.
 spec.json: {"title": "...", "h1": "...", "intro": "...", "questions": [
   {"id": "i129", "num": "#129", "title": "...", "lead": "...",
    "opts": [{"v": "A", "t": "А: ...", "rec": true, "d": "...", "img": ["Fb129A"]}, ...],
@@ -32,13 +33,25 @@ def boards(spec):
 
 
 def main():
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    ready = None
+    if "--img" in args:
+        i = args.index("--img")
+        ready, args = args[i + 1], args[:i] + args[i + 2:]
+    if len(args) != 2:
         sys.exit(__doc__)
-    spec = json.load(open(sys.argv[1], encoding="utf-8"))
-    out = sys.argv[2]
+    spec = json.load(open(args[0], encoding="utf-8"))
+    out = args[1]
     img = os.path.join(out, "img")
     os.makedirs(img, exist_ok=True)
     names = boards(spec)
+    if ready:
+        missing = [n for n in names if not os.path.exists(os.path.join(ready, n + ".png"))]
+        if missing:
+            sys.exit("нет картинок: " + ", ".join(missing))
+        for n in names:
+            shutil.copy(os.path.join(ready, n + ".png"), os.path.join(img, n + ".png"))
+        names = []
     path = lambda n: os.path.join(ROOT, "docs/design/mockups", n.split("@")[0] + ".dc.html")  # noqa: E731
     missing = [path(n) for n in names if not os.path.exists(path(n))]
     if missing:
@@ -56,7 +69,7 @@ def main():
         page = page.replace("__" + key.upper() + "__", html.escape(spec[key]))
     page = page.replace("__QUESTIONS__", qs)
     open(os.path.join(out, "index.html"), "w", encoding="utf-8").write(page)
-    print(f"{out}/index.html · досок: {len(names)}")
+    print(f"{out}/index.html · картинок: {len(os.listdir(img))}")
 
 
 if __name__ == "__main__":

@@ -26,14 +26,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellPeekBubble
-import app.coshell.core.designsystem.components.CoShellTagMore
-import app.coshell.core.designsystem.components.CoShellTagPill
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.motion.holdToPeek
@@ -107,9 +106,10 @@ internal fun TransactionRow(
                 if (peek != null) {
                     CoShellPeekBubble(peek.lines, stringResource(R.string.home_total_rate_date, formatDayMonth(peek.date)))
                 }
-                AmountText(row.amount, style = AmountTextStyle, color = row.amountColor())
+                // A huge amount shrinks rather than wraps or pushes the category out (the row caps its width).
+                AmountText(row.amount, style = AmountTextStyle, color = row.amountColor(), minFontSize = MinAmountSize)
                 row.secondaryAmount?.let {
-                    AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant, minFontSize = MinAmountSize)
                 }
             }
         },
@@ -117,19 +117,6 @@ internal fun TransactionRow(
         onLongClick = { onLongClick(row.id) },
         containerColor = container,
     )
-}
-
-/** Up to two tag pills and «+N» under the account line (board `Fb129AOps`). */
-@Composable
-private fun RowTags(row: RowState) {
-    Row(
-        Modifier.padding(top = Spacing.xs),
-        horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        row.tags.forEach { CoShellTagPill(it.name, it.color) }
-        if (row.moreTags > 0) CoShellTagMore(row.moreTags)
-    }
 }
 
 /** Badge of a chosen row: a solid circle of the accent with a dark check mark, as in mockup 19В. */
@@ -147,6 +134,9 @@ private fun CheckBadge() {
         )
     }
 }
+
+/** The smallest a long amount shrinks to. */
+private val MinAmountSize = 9.sp
 
 /** Accent tint over the screen's surface for a chosen row. */
 private const val SelectedTint = 0.10f

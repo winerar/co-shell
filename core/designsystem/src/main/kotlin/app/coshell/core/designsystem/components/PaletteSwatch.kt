@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.theme.themeColorsFor
 import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -46,7 +48,7 @@ fun CoShellPaletteSwatch(
 ) {
     val dark = LocalDarkTheme.current
     val colors = remember(palette, dark) { themeColorsFor(palette, dark) }
-    val shape = MaterialTheme.shapes.large
+    val shape = TileShape
     val ring by animateColorAsState(if (selected) accentInk() else Color.Transparent, Motion.effects(), label = "ring")
     Column(
         modifier
@@ -55,7 +57,9 @@ fun CoShellPaletteSwatch(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
-        Box(Modifier.border(Sizes.selectionRing, ring, shape).padding(Spacing.xxs)) {
+        // A border is drawn inside the box: the padding holds the ring's width plus the gap, else the ring lies on the
+        // tile's edge. Its radius grows by the same amount, so the ring stays concentric with the tile's corners.
+        Box(Modifier.border(Sizes.selectionRing, ring, RingShape).padding(RingInset)) {
             Box(
                 Modifier
                     .size(TILE)
@@ -80,6 +84,9 @@ fun CoShellPaletteSwatch(
 }
 
 private val TILE = 56.dp
+private val TileShape = RoundedCornerShape(Radii.large)
+private val RingInset = Sizes.selectionRing + Spacing.xxs
+private val RingShape = RoundedCornerShape(Radii.large + RingInset)
 private val DOT = 24.dp
 private val DOT_INSET = 10.dp
 private val SMALL_DOT = 12.dp

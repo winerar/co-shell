@@ -14,6 +14,6 @@
     <string name="recurring_ahead_none">До конца %1$s платежей больше нет</string>
     <string name="recurring_ahead_without">ещё %1$d — сумма при вводе</string>
     <string name="recurring_ahead_missing">Без учёта: %1$s — нет курса</string>
-    <string name="recurring_list_empty">Регулярных платежей пока нет. Отметьте «Повтор» в любом шаблоне — аренда, подписки, зарплата.</string>
+    <string name="recurring_list_empty">Регулярных платежей пока нет. Отметьте «Повтор» в любом шаблоне — аренда, подписки, зарплата. Нажмите «+», чтобы создать шаблон.</string>
     <string name="recurring_menu_hint">Аренда, подписки, зарплата</string>
 </resources>

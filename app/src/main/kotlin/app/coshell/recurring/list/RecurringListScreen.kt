@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.CoShellAddFab
-import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
@@ -51,7 +50,7 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.isEmpty) {
-            EmptyList(actions.onNew, Modifier.padding(padding))
+            EmptyList(Modifier.padding(padding))
             return@Scaffold
         }
         LazyColumn(
@@ -135,13 +134,12 @@ private fun monthTitle(month: YearMonth, currentYear: Int?): String =
     if (month.year == currentYear) formatMonth(month.firstDay).replaceFirstChar { it.titlecase() } else formatMonthYear(month)
 
 @Composable
-private fun EmptyList(onNew: () -> Unit, modifier: Modifier = Modifier) {
+private fun EmptyList(modifier: Modifier = Modifier) {
     Column(modifier.fillMaxSize().padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
         Text(
             stringResource(R.string.recurring_list_empty),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        CoShellButton(onClick = onNew) { Text(stringResource(R.string.template_new)) }
     }
 }

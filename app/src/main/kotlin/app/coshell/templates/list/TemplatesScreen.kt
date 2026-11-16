@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.CoShellAddFab
-import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
@@ -43,7 +42,7 @@ fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
         floatingActionButton = { CoShellAddFab(stringResource(R.string.template_new), actions.onNew) },
     ) { padding ->
         if (state.isEmpty) {
-            EmptyTemplates(actions.onNew, Modifier.padding(padding))
+            EmptyTemplates(Modifier.padding(padding))
             return@Scaffold
         }
         LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
@@ -91,14 +90,13 @@ fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
 }
 
 @Composable
-private fun EmptyTemplates(onNew: () -> Unit, modifier: Modifier = Modifier) {
+private fun EmptyTemplates(modifier: Modifier = Modifier) {
     Column(modifier.fillMaxSize().padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
         Text(
             stringResource(R.string.templates_empty),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        CoShellButton(onClick = onNew) { Text(stringResource(R.string.template_new)) }
     }
 }
 

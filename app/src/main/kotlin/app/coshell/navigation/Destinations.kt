@@ -82,6 +82,12 @@ data object AppearanceDestination
 data object ScreensSettingsDestination
 
 @Serializable
+data object HomeSettingsDestination
+
+@Serializable
+data object HomeDetailsSettingsDestination
+
+@Serializable
 data object OpsSettingsDestination
 
 @Serializable

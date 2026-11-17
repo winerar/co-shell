@@ -2,6 +2,7 @@ package app.coshell.home.upcoming
 
 import app.coshell.core.domain.recurring.PaymentState
 import app.coshell.core.domain.recurring.activePayments
+import app.coshell.core.domain.recurring.SOON_DAYS
 import app.coshell.core.domain.recurring.upcomingPayments
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -37,7 +38,8 @@ fun buildUpcomingRows(
     categories: Map<String, Category>,
     moneyFormat: MoneyFormat,
     today: LocalDate,
-): List<UpcomingRow> = upcomingPayments(activePayments(templates, accounts), today).map { payment ->
+    days: Int = SOON_DAYS,
+): List<UpcomingRow> = upcomingPayments(activePayments(templates, accounts), today, days).map { payment ->
     val template = payment.template
     UpcomingRow(
         item = template.toItem(accounts, categories, moneyFormat),

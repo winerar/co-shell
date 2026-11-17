@@ -15,6 +15,8 @@ MoreDestination	More
 SettingsDestination	Set1Root
 AppearanceDestination	Set1Look
 ScreensSettingsDestination	Set1Screens
+HomeSettingsDestination	Set1Home
+HomeDetailsSettingsDestination	Set1HomeMore
 OpsSettingsDestination	Set1Ops
 ReportsSettingsDestination	Set1Reports
 AccountsSettingsDestination	Set1Accounts

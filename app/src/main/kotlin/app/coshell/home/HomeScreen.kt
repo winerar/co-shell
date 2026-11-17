@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.domain.settings.HomeCard
+import app.coshell.settings.LocalScreenOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -134,6 +137,15 @@ fun HomeScreen(
     onUpdate: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
+    // The cards this phone shows, without those that have nothing to say now (no gap is left for them).
+    val cards = LocalScreenOptions.current.home.visible.filter { card ->
+        when (card) {
+            HomeCard.REVIEW -> review?.month != null
+            HomeCard.UPCOMING -> upcoming.isNotEmpty()
+            HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
+            HomeCard.TILES, HomeCard.RECENT -> true
+        }
+    }
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
         modifier = Modifier.tabScroll(scroll),
@@ -159,33 +171,34 @@ fun HomeScreen(
                 return@LazyColumn
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
-            review?.month?.let { month ->
-                item(key = "review") {
-                    MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, Modifier.staggeredEntrance(1))
+            // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
+            itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
+                val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))
+                when (card) {
+                    HomeCard.REVIEW -> review?.month?.let { month ->
+                        MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
+                    }
+                    HomeCard.UPCOMING -> if (upcoming.isNotEmpty()) {
+                        UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll)
+                    }
+                    HomeCard.TILES -> HomeTiles(
+                        state,
+                        onTransactions = actions.onTransactions,
+                        onRates = actions.onRates,
+                        onUncategorized = actions.onUncategorized,
+                        modifier = entrance,
+                        budget = budget?.summary,
+                        onBudgets = actions.onBudgets,
+                    )
+                    HomeCard.HOT -> budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
+                        HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = entrance)
+                    }
+                    HomeCard.RECENT -> RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, entrance)
                 }
-            }
-            if (upcoming.isNotEmpty()) {
-                item(key = "upcoming") { UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, Modifier.staggeredEntrance(1), onPostAll, onSkipAll) }
-            }
-            item {
-                HomeTiles(
-                    state,
-                    onTransactions = actions.onTransactions,
-                    onRates = actions.onRates,
-                    onUncategorized = actions.onUncategorized,
-                    modifier = Modifier.staggeredEntrance(1),
-                    budget = budget?.summary,
-                    onBudgets = actions.onBudgets,
-                )
-            }
-            budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
-                item(key = "hot") {
-                    HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = Modifier.staggeredEntrance(2))
-                }
-            }
-            item {
-                RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, Modifier.staggeredEntrance(3))
             }
         }
     }
 }
+
+/** The cascade of the first showing stops growing after this many cards. */
+private const val MAX_ENTRANCE = 3

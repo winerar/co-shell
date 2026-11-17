@@ -35,7 +35,17 @@ data class ScreenOptions(
     val haptics: Boolean = true,
     /** «Данные и копия → Сеть»: sync only on Wi-Fi (or another unmetered network), not on mobile data. */
     val syncWifiOnly: Boolean = false,
-)
+    /** «Обзор»: the cards and their order, how many days «Скоро» looks ahead, how many «Последние» show. */
+    val home: HomeLayout = HomeLayout(),
+    val soonDays: Int = 7,
+    val recentCount: Int = 5,
+) {
+    companion object {
+        /** What «Скоро» and «Последние» offer. */
+        val SOON_DAYS = listOf(3, 7, 14, 30)
+        val RECENT_COUNTS = listOf(3, 5, 10)
+    }
+}
 
 /** [ScreenOptions] of this phone: read as a flow, changed as a whole (the caller copies what it flips). */
 interface ScreenOptionsStore {

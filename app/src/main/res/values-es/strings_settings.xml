@@ -22,7 +22,7 @@
     <string name="density_hint">Densidad de filas en Movimientos y Cuentas. La compacta muestra aproximadamente una cuarta parte más de filas.</string>
     <string name="settings_screens_title">Pantallas</string>
     <string name="settings_screens_intro">Qué muestra cada pantalla y cómo se abre.</string>
-    <string name="settings_screens_items">Movimientos · informes · cuentas</string>
+    <string name="settings_screens_items">Resumen · movimientos · cuentas</string>
     <string name="settings_ops_items">Cuenta, etiquetas y nota en la fila</string>
     <string name="settings_reports_items">Periodo · comparación con el anterior</string>
     <string name="settings_accounts_items">Agrupación · archivadas</string>
@@ -57,4 +57,28 @@
     <string name="settings_notices_when">Cuándo</string>
     <string name="settings_notices_time">Hora del recordatorio</string>
     <string name="settings_notices_hour">%1$d:00</string>
+    <string name="settings_home_intro">Mantén ⠿ y arrastra para ordenar el Resumen. Una tarjeta desactivada no se muestra.</string>
+    <string name="settings_home_cards">Tarjetas</string>
+    <string name="settings_home_balance">Saldo</string>
+    <string name="settings_home_balance_hint">siempre arriba</string>
+    <string name="settings_home_review">Resumen del mes</string>
+    <string name="settings_home_review_hint">en los primeros días del mes</string>
+    <string name="settings_home_upcoming">Pronto</string>
+    <string name="settings_home_upcoming_hint">pagos recurrentes</string>
+    <string name="settings_home_tiles">Mosaicos</string>
+    <string name="settings_home_tiles_hint">gastos y presupuesto</string>
+    <string name="settings_home_hot">Presupuesto en riesgo</string>
+    <string name="settings_home_hot_hint">cuando un límite peligra</string>
+    <string name="settings_home_recent">Últimos movimientos</string>
+    <string name="settings_home_recent_hint">últimos: %1$d</string>
+    <string name="settings_home_drag">Arrastrar</string>
+    <string name="settings_home_details">Detalles</string>
+    <string name="settings_home_details_title">«Pronto» y «Últimos»</string>
+    <string name="settings_home_details_hint">«Pronto» a %1$d días · últimos: %2$d</string>
+    <string name="settings_home_soon_title">«Pronto»: mostrar pagos de los próximos</string>
+    <string name="settings_home_days">%1$d d</string>
+    <string name="settings_home_recent_section">Últimos movimientos</string>
+    <string name="settings_home_recent_title">Cuántos mostrar</string>
+    <string name="settings_home_items">Tarjetas · «Pronto» · «Últimos»</string>
+    <string name="settings_reset">Restablecer</string>
 </resources>

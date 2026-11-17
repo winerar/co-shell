@@ -2,6 +2,7 @@ package app.coshell.settings
 
 import android.content.Context
 import androidx.core.content.edit
+import app.coshell.core.domain.settings.HomeLayout
 import app.coshell.core.domain.settings.ReportsStart
 import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
@@ -47,6 +48,9 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             reportsCompare = prefs.getBoolean(REP_COMPARE, d.reportsCompare),
             haptics = prefs.getBoolean(HAPTICS, d.haptics),
             syncWifiOnly = prefs.getBoolean(SYNC_WIFI, d.syncWifiOnly),
+            home = HomeLayout.parse(prefs.getString(HOME, null)),
+            soonDays = prefs.getInt(SOON_DAYS, d.soonDays).takeIf { it in ScreenOptions.SOON_DAYS } ?: d.soonDays,
+            recentCount = prefs.getInt(RECENT_COUNT, d.recentCount).takeIf { it in ScreenOptions.RECENT_COUNTS } ?: d.recentCount,
         )
     }
 
@@ -60,6 +64,9 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putBoolean(REP_COMPARE, o.reportsCompare)
         putBoolean(HAPTICS, o.haptics)
         putBoolean(SYNC_WIFI, o.syncWifiOnly)
+        putString(HOME, o.home.encode())
+        putInt(SOON_DAYS, o.soonDays)
+        putInt(RECENT_COUNT, o.recentCount)
     }
 
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
@@ -76,6 +83,9 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val ACC_ARCHIVED = "acc_archived"
         private const val REP_START = "rep_start"
         private const val REP_COMPARE = "rep_compare"
+        private const val HOME = "home_layout"
+        private const val SOON_DAYS = "home_soon_days"
+        private const val RECENT_COUNT = "home_recent_count"
         private const val HAPTICS = "haptics"
         private const val SYNC_WIFI = KEY_SYNC_WIFI
     }

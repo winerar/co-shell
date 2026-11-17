@@ -18,6 +18,8 @@ import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.settings.AccountsSettingsRoute
+import app.coshell.settings.HomeDetailsRoute
+import app.coshell.settings.HomeSettingsRoute
 import app.coshell.settings.DataSettingsRoute
 import app.coshell.settings.OpsSettingsRoute
 import app.coshell.settings.ReportsSettingsRoute
@@ -320,12 +322,17 @@ fun CoShellNavHost(
         }
         screen<ScreensSettingsDestination> {
             ScreensSettingsScreen(
+                onHome = { navController.navigate(HomeSettingsDestination) },
                 onOps = { navController.navigate(OpsSettingsDestination) },
                 onReports = { navController.navigate(ReportsSettingsDestination) },
                 onAccounts = { navController.navigate(AccountsSettingsDestination) },
                 onBack = { navController.popBackStack() },
             )
         }
+        screen<HomeSettingsDestination> {
+            HomeSettingsRoute(onDetails = { navController.navigate(HomeDetailsSettingsDestination) }, onBack = { navController.popBackStack() })
+        }
+        screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
         screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }

@@ -22,7 +22,7 @@
     <string name="density_hint">Плотность строк в «Операциях» и «Счетах». Компактная — на экран помещается примерно на четверть строк больше.</string>
     <string name="settings_screens_title">Экраны</string>
     <string name="settings_screens_intro">Что показывать на экране и как он открывается.</string>
-    <string name="settings_screens_items">Операции · отчёты · счета</string>
+    <string name="settings_screens_items">Обзор · операции · счета</string>
     <string name="settings_ops_items">Счёт, теги и заметка в строке</string>
     <string name="settings_reports_items">Период · сравнение с прошлым</string>
     <string name="settings_accounts_items">Группировка · архивные</string>
@@ -57,4 +57,28 @@
     <string name="settings_notices_when">Когда</string>
     <string name="settings_notices_time">Время напоминания</string>
     <string name="settings_notices_hour">%1$d:00</string>
+    <string name="settings_home_intro">Держите ⠿ и тяните — порядок на «Обзоре». Выключенная карточка не показывается.</string>
+    <string name="settings_home_cards">Карточки</string>
+    <string name="settings_home_balance">Баланс</string>
+    <string name="settings_home_balance_hint">всегда сверху</string>
+    <string name="settings_home_review">Итог месяца</string>
+    <string name="settings_home_review_hint">в первые дни месяца</string>
+    <string name="settings_home_upcoming">Скоро</string>
+    <string name="settings_home_upcoming_hint">регулярные платежи</string>
+    <string name="settings_home_tiles">Плитки</string>
+    <string name="settings_home_tiles_hint">траты и бюджет</string>
+    <string name="settings_home_hot">Горит в бюджете</string>
+    <string name="settings_home_hot_hint">когда лимит под угрозой</string>
+    <string name="settings_home_recent">Последние операции</string>
+    <string name="settings_home_recent_hint">последних: %1$d</string>
+    <string name="settings_home_drag">Перетащить</string>
+    <string name="settings_home_details">Подробности</string>
+    <string name="settings_home_details_title">«Скоро» и «Последние»</string>
+    <string name="settings_home_details_hint">«Скоро» на %1$d дн. · последних: %2$d</string>
+    <string name="settings_home_soon_title">«Скоро»: показывать платежи на</string>
+    <string name="settings_home_days">%1$d дн.</string>
+    <string name="settings_home_recent_section">Последние операции</string>
+    <string name="settings_home_recent_title">Сколько показывать</string>
+    <string name="settings_home_items">Карточки · «Скоро» · «Последние»</string>
+    <string name="settings_reset">Вернуть стандартные</string>
 </resources>

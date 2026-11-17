@@ -8,6 +8,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.appearance.AppearanceActions
 import app.coshell.settings.AccountsSettingsScreen
+import app.coshell.settings.HomeDetailsScreen
+import app.coshell.settings.HomeSettingsScreen
+import app.coshell.core.domain.settings.HomeCard
+import app.coshell.core.domain.settings.HomeLayout
 import app.coshell.settings.DataSettingsScreen
 import app.coshell.settings.OpsSettingsScreen
 import app.coshell.settings.ReportsSettingsScreen
@@ -397,10 +401,10 @@ class ScreensScreenshotTest {
     }
 
     @Test
-    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}) }
+    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}, {}) }
 
     @Test
-    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}) }
+    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}, {}) }
 
     @Test
     fun `settings ops light`() = shot("settings_ops_light") { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
@@ -419,6 +423,18 @@ class ScreensScreenshotTest {
 
     @Test
     fun `settings accounts dark`() = shot("settings_accounts_dark", dark = true) { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings home light`() = shot("settings_home_light") { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}) }
+
+    @Test
+    fun `settings home dark`() = shot("settings_home_dark", dark = true) { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}) }
+
+    @Test
+    fun `settings home details light`() = shot("settings_home_details_light") { HomeDetailsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings home details dark`() = shot("settings_home_details_dark", dark = true) { HomeDetailsScreen(ScreenOptions(), {}, {}) }
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

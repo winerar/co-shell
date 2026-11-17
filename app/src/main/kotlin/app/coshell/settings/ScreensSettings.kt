@@ -30,13 +30,14 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** «Экраны»: the list of screens that have options. */
 @Composable
-fun ScreensSettingsScreen(onOps: () -> Unit, onReports: () -> Unit, onAccounts: () -> Unit, onBack: () -> Unit) {
+fun ScreensSettingsScreen(onHome: () -> Unit, onOps: () -> Unit, onReports: () -> Unit, onAccounts: () -> Unit, onBack: () -> Unit) {
     val c = CategoryPalette.colors
     GroupScaffold(R.string.settings_screens_title, onBack) {
         item { CoShellHint(stringResource(R.string.settings_screens_intro), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
         item { SectionTitle(stringResource(R.string.settings_screens_title)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                row { CoShellMenuRow(DesignR.drawable.ic_home, categoryColor(c[8]), stringResource(R.string.nav_home), onHome, subtitle = stringResource(R.string.settings_home_items)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_receipt_long, categoryColor(c[13]), stringResource(R.string.nav_transactions), onOps, subtitle = stringResource(R.string.settings_ops_items)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_bar_chart, categoryColor(c[18]), stringResource(R.string.reports_title), onReports, subtitle = stringResource(R.string.settings_reports_items)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, categoryColor(c[0]), stringResource(R.string.nav_accounts), onAccounts, subtitle = stringResource(R.string.settings_accounts_items)) }

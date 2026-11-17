@@ -28,6 +28,12 @@
 | Семья | Family | family | ✓ | ✓ |
 | Настройки | Set1Root | settings | ✓ | ✓ |
 | Внешний вид | Set1Look | appearance | ✓ | ✓ |
+| Настройки: экраны | Set1Screens | settings_screens | ✓ | ✓ |
+| Настройки: обзор | Set1Home | settings_home | ✓ | ✓ |
+| Настройки: обзор, подробности | Set1HomeMore | settings_home_details | ✓ | ✓ |
+| Настройки: операции | Set1Ops | settings_ops | ✓ | ✓ |
+| Настройки: отчёты | Set1Reports | settings_reports | ✓ | ✓ |
+| Настройки: счета | Set1Accounts | settings_accounts | ✓ | ✓ |
 | Настройки: деньги и даты | Set1Money | settings_money | ✓ | ✓ |
 | Настройки: ввод операции | Set1Entry | settings_input | ✓ | ✓ |
 | Настройки: уведомления | Set1Notices | settings_notices | ✓ | ✓ |

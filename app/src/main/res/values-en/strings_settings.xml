@@ -22,7 +22,7 @@
     <string name="density_hint">Row density in Transactions and Accounts. Compact fits about a quarter more rows on the screen.</string>
     <string name="settings_screens_title">Screens</string>
     <string name="settings_screens_intro">What a screen shows and how it opens.</string>
-    <string name="settings_screens_items">Transactions · reports · accounts</string>
+    <string name="settings_screens_items">Overview · transactions · accounts</string>
     <string name="settings_ops_items">Account, tags and note in the row</string>
     <string name="settings_reports_items">Period · comparison with the previous one</string>
     <string name="settings_accounts_items">Grouping · archived</string>
@@ -57,4 +57,28 @@
     <string name="settings_notices_when">When</string>
     <string name="settings_notices_time">Reminder time</string>
     <string name="settings_notices_hour">%1$d:00</string>
+    <string name="settings_home_intro">Hold ⠿ and drag to set the order on Overview. A card that is switched off is not shown.</string>
+    <string name="settings_home_cards">Cards</string>
+    <string name="settings_home_balance">Balance</string>
+    <string name="settings_home_balance_hint">always on top</string>
+    <string name="settings_home_review">Month summary</string>
+    <string name="settings_home_review_hint">in the first days of a month</string>
+    <string name="settings_home_upcoming">Soon</string>
+    <string name="settings_home_upcoming_hint">regular payments</string>
+    <string name="settings_home_tiles">Tiles</string>
+    <string name="settings_home_tiles_hint">spending and budget</string>
+    <string name="settings_home_hot">Budget alert</string>
+    <string name="settings_home_hot_hint">when a limit is at risk</string>
+    <string name="settings_home_recent">Latest transactions</string>
+    <string name="settings_home_recent_hint">latest: %1$d</string>
+    <string name="settings_home_drag">Drag</string>
+    <string name="settings_home_details">Details</string>
+    <string name="settings_home_details_title">«Soon» and «Latest»</string>
+    <string name="settings_home_details_hint">«Soon» for %1$d days · latest: %2$d</string>
+    <string name="settings_home_soon_title">«Soon»: show payments for</string>
+    <string name="settings_home_days">%1$d d</string>
+    <string name="settings_home_recent_section">Latest transactions</string>
+    <string name="settings_home_recent_title">How many to show</string>
+    <string name="settings_home_items">Cards · «Soon» · «Latest»</string>
+    <string name="settings_reset">Restore defaults</string>
 </resources>

@@ -10,6 +10,8 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.AuthorFilter
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.partner.PartnerChange
+import app.coshell.core.domain.partner.PartnerChanges
 import app.coshell.core.model.ACCOUNT_ORDER
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
@@ -157,4 +159,10 @@ class RoomBudgetRepository(
         val stamp = stamper.stamp()
         budgets.apply(save.map { it.toEntity(stamp) }, deleteIds, stamp.now, stamp.by)
     }
+}
+
+/** [PartnerChanges] over the transactions table: rows whose last writer is another member. */
+class RoomPartnerChanges(private val transactions: TransactionDao) : PartnerChanges {
+    override suspend fun since(sinceMs: Long, myUid: String): List<PartnerChange> =
+        transactions.changedByOthers(sinceMs, myUid).map { PartnerChange(it.toModel(), it.updatedAt, it.updatedBy.orEmpty()) }
 }

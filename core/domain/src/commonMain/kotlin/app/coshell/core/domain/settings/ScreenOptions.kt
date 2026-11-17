@@ -70,11 +70,17 @@ data class ScreenOptions(
     val weekStart: WeekStart = WeekStart.SYSTEM,
     /** «Ввод операции → Шторка «+»»: the account (and with it the currency) the sheet opens on; `null` — the one used last. */
     val entryAccountId: String? = null,
+    /** «Уведомления → Трата партнёра»: tell about the other member's expenses from [partnerSpendMin] whole units of the main currency. */
+    val partnerSpend: Boolean = false,
+    val partnerSpendMin: Int = 50,
 ) {
     companion object {
         /** What «Скоро» and «Последние» offer. */
         val SOON_DAYS = listOf(3, 7, 14, 30)
         val RECENT_COUNTS = listOf(3, 5, 10)
+
+        /** The thresholds of «Трата партнёра» (0 — every expense). */
+        val PARTNER_MINIMUMS = listOf(0, 10, 50, 100, 500, 1000)
     }
 }
 

@@ -3,7 +3,9 @@ package app.coshell.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
+import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Account
+import kotlinx.coroutines.flow.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +18,15 @@ import kotlinx.coroutines.launch
  * flag is the account's own `excludedFromTotal`, so it is shared by the family and synced like any account edit.
  */
 @HiltViewModel
-class SettingsAccountsViewModel @Inject constructor(private val accounts: AccountRepository) : ViewModel() {
+class SettingsAccountsViewModel @Inject constructor(
+    private val accounts: AccountRepository,
+    reportCurrencies: ReportCurrencySettings,
+) : ViewModel() {
+
+    /** The main report currency («50 USD» in «Трата партнёра»). */
+    val mainCurrency: StateFlow<String> = reportCurrencies.currencies.map { (it.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first()).value }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), ReportCurrencySettings.DEFAULT.first().value)
+
 
     val list: StateFlow<List<Account>> =
         accounts.observeAccounts(includeArchived = false).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())

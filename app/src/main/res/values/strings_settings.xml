@@ -10,7 +10,7 @@
     <string name="settings_input_items">Встряхнуть · вибрация</string>
     <string name="settings_input_quick">Быстрый ввод</string>
     <string name="settings_notices_title">Уведомления</string>
-    <string name="settings_notices_items">Платежи · время</string>
+    <string name="settings_notices_items">Платежи · время · траты партнёра</string>
     <string name="settings_notices_payments">Платежи</string>
     <string name="settings_data_title">Данные и копия</string>
     <string name="settings_data_items">Копия · импорт · Wi-Fi · стереть</string>
@@ -107,4 +107,13 @@
     <string name="settings_ops_amount_account">В валюте счёта</string>
     <string name="settings_ops_amount_main">И в основной</string>
     <string name="settings_ops_amount_hint">Вторая строка «≈ …» по курсу дня операции. Удержание суммы всё равно показывает её во всех валютах итогов.</string>
+    <string name="settings_notices_family">Семья</string>
+    <string name="settings_notices_partner">Трата партнёра</string>
+    <string name="settings_notices_partner_hint">уведомление, когда внесли операцию</string>
+    <string name="settings_notices_min">Только от суммы</string>
+    <string name="settings_notices_min_any">любой</string>
+    <string name="settings_notices_partner_note">Без сервера: уведомление приходит при синхронизации — сразу, если приложение открыто, иначе фоновым синком (раз в час). Переводы, импорт и свои операции не сообщаются.</string>
+    <string name="partner_spend_title">%1$s: %2$s</string>
+    <string name="partner_spend_channel">Траты семьи</string>
+    <string name="partner_spend_channel_hint">Когда другой участник вносит расход</string>
 </resources>

@@ -107,4 +107,13 @@
     <string name="settings_ops_amount_account">In the account currency</string>
     <string name="settings_ops_amount_main">And in the main one</string>
     <string name="settings_ops_amount_hint">A second line «≈ …» at the rate of the day of the transaction. Holding an amount still shows it in all totals currencies.</string>
+    <string name="settings_notices_family">Family</string>
+    <string name="settings_notices_partner">Partner’s spending</string>
+    <string name="settings_notices_partner_hint">a notice when a transaction is added</string>
+    <string name="settings_notices_min">Only from an amount</string>
+    <string name="settings_notices_min_any">any</string>
+    <string name="settings_notices_partner_note">No server: the notice comes with a sync — at once if the app is open, otherwise with the background sync (hourly). Transfers, imports and your own transactions are not reported.</string>
+    <string name="partner_spend_title">%1$s: %2$s</string>
+    <string name="partner_spend_channel">Family spending</string>
+    <string name="partner_spend_channel_hint">When another member adds an expense</string>
 </resources>

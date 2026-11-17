@@ -107,4 +107,13 @@
     <string name="settings_ops_amount_account">En la moneda de la cuenta</string>
     <string name="settings_ops_amount_main">Y en la principal</string>
     <string name="settings_ops_amount_hint">Una segunda línea «≈ …» al tipo del día del movimiento. Al mantener pulsado un importe se ve en todas las monedas de los totales.</string>
+    <string name="settings_notices_family">Familia</string>
+    <string name="settings_notices_partner">Gasto de la pareja</string>
+    <string name="settings_notices_partner_hint">aviso cuando se añade un movimiento</string>
+    <string name="settings_notices_min">Solo desde un importe</string>
+    <string name="settings_notices_min_any">cualquiera</string>
+    <string name="settings_notices_partner_note">Sin servidor: el aviso llega con la sincronización — al instante si la app está abierta, si no con la sincronización en segundo plano (cada hora). Transferencias, importaciones y tus propios movimientos no se avisan.</string>
+    <string name="partner_spend_title">%1$s: %2$s</string>
+    <string name="partner_spend_channel">Gastos de la familia</string>
+    <string name="partner_spend_channel_hint">Cuando otro miembro añade un gasto</string>
 </resources>

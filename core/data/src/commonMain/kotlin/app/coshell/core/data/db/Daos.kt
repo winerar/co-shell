@@ -85,6 +85,13 @@ interface TransactionDao {
         authorIds: List<String> = emptyList(),
     ): Flow<List<TransactionEntity>>
 
+    /** Expenses that another member wrote or changed after [sinceMs] (what sync pulled); for «Трата партнёра». */
+    @Query(
+        """SELECT * FROM transactions WHERE deleted = 0 AND type = 'EXPENSE' AND import_source IS NULL
+           AND updated_at > :sinceMs AND updated_by IS NOT NULL AND updated_by != :myUid ORDER BY updated_at""",
+    )
+    suspend fun changedByOthers(sinceMs: Long, myUid: String): List<TransactionEntity>
+
     @Query("SELECT * FROM transactions WHERE id = :id AND deleted = 0")
     suspend fun get(id: String): TransactionEntity?
 

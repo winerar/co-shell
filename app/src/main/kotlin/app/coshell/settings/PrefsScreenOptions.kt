@@ -53,6 +53,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             home = HomeLayout.parse(prefs.getString(HOME, null)),
             soonDays = prefs.getInt(SOON_DAYS, d.soonDays).takeIf { it in ScreenOptions.SOON_DAYS } ?: d.soonDays,
             entryAccountId = prefs.getString(ENTRY_ACCOUNT, null)?.takeIf { it.isNotEmpty() },
+            partnerSpend = prefs.getBoolean(PARTNER, d.partnerSpend),
+            partnerSpendMin = prefs.getInt(PARTNER_MIN, d.partnerSpendMin).takeIf { it in ScreenOptions.PARTNER_MINIMUMS } ?: d.partnerSpendMin,
             weekStart = WeekStart.parse(prefs.getString(WEEK_START, null)),
             recentCount = prefs.getInt(RECENT_COUNT, d.recentCount).takeIf { it in ScreenOptions.RECENT_COUNTS } ?: d.recentCount,
         )
@@ -73,6 +75,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putInt(SOON_DAYS, o.soonDays)
         putInt(RECENT_COUNT, o.recentCount)
         putString(WEEK_START, o.weekStart.name)
+        putBoolean(PARTNER, o.partnerSpend)
+        putInt(PARTNER_MIN, o.partnerSpendMin)
         putString(ENTRY_ACCOUNT, o.entryAccountId.orEmpty())
     }
 
@@ -92,6 +96,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val REP_START = "rep_start"
         private const val REP_COMPARE = "rep_compare"
         private const val ENTRY_ACCOUNT = "entry_account"
+        private const val PARTNER = "partner_spend"
+        private const val PARTNER_MIN = "partner_spend_min"
         private const val WEEK_START = "week_start"
         private const val HOME = "home_layout"
         private const val SOON_DAYS = "home_soon_days"

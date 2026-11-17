@@ -29,6 +29,7 @@ class ForegroundSync(
     private val family: FamilyService,
     private val dao: SyncDao,
     private val bell: FamilyBell,
+    private val partner: PartnerSpendNotifier,
 ) {
     suspend fun run(scope: CoroutineScope) {
         family.load()
@@ -46,6 +47,7 @@ class ForegroundSync(
         val backoff = PollBackoff(POLL_MS, POLL_MS, fastIdleRuns = 0)
         pollForever(backoff, wake, onError = { Log.w(TAG, "Foreground sync failed: ${it.message}") }) {
             val result = if (SyncNetwork.allowedNow(context)) family.sync() else null
+            partner.afterSync(result)
             result != null && (result.pulled > 0 || result.pushed > 0)
         }
     }
@@ -58,7 +60,9 @@ class ForegroundSync(
             .collectLatest { uids ->
                 if (uids == null) return@collectLatest
                 bell.rings(uids, onError = { Log.i(TAG, "Bell: ${it.message}") }).conflate().collect {
-                    if (SyncNetwork.allowedNow(context)) runCatching { family.sync() }.onFailure { Log.w(TAG, "Sync on ring failed: ${it.message}") }
+                    if (SyncNetwork.allowedNow(context)) {
+                        runCatching { family.sync() }.onSuccess { partner.afterSync(it) }.onFailure { Log.w(TAG, "Sync on ring failed: ${it.message}") }
+                    }
                     onRing()
                 }
             }

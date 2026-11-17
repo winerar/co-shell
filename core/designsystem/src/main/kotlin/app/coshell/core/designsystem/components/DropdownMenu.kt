@@ -44,6 +44,8 @@ fun CoShellDropdownMenu(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         shape = RoundedCornerShape(MENU_RADIUS),
+        shadowElevation = 0.dp,
+        tonalElevation = 0.dp,
         content = content,
     )
 }

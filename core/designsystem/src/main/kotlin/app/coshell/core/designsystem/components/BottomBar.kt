@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -92,7 +91,6 @@ private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse
             tactile = Tactile.Primary,
             containerColor = scheme.surfaceContainerHighest,
             contentColor = scheme.onSurfaceVariant,
-            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
         ) { Icon(painterResource(R.drawable.ic_lock), label) }
         return
     }
@@ -105,7 +103,6 @@ private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse
         tactile = Tactile.Primary,
         containerColor = lerp(scheme.primary, scheme.tertiary, p),
         contentColor = lerp(scheme.onPrimary, scheme.onTertiary, p),
-        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
     ) {
         MorphIcon(
             progress = { progress.value },

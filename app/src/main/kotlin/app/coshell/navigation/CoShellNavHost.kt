@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.export.ExportRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
 import app.coshell.settings.HomeDetailsRoute
@@ -360,10 +361,12 @@ fun CoShellNavHost(
             DataSettingsRoute(
                 onBackup = { navController.navigate(BackupDestination) },
                 onImport = { navController.navigate(WalletImportDestination) },
+                onExport = { navController.navigate(ExportDestination) },
                 onWipe = { navController.navigate(WipeDataDestination) },
                 onBack = { navController.popBackStack() },
             )
         }
+        screen<ExportDestination> { ExportRoute(onBack = { navController.popBackStack() }) }
         screen<WipeDataDestination> {
             WipeDataRoute(
                 onBack = { navController.popBackStack() },

@@ -29,6 +29,7 @@ CategoriesDestination	Categories
 BackupDestination	Backup
 WalletImportDestination	ImportStart
 WipeDataDestination	Wipe
+ExportDestination	Fb204Export
 FamilyDestination	Family
 UpdateDestination	Update
 PastReleasesDestination	-	список прошлых версий — подэкран «Обновления», отдельного шага нет

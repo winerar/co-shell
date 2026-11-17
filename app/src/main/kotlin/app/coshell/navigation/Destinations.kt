@@ -124,6 +124,9 @@ data object WalletImportDestination
 data object WipeDataDestination
 
 @Serializable
+data object ExportDestination
+
+@Serializable
 data object FamilyDestination
 
 @Serializable

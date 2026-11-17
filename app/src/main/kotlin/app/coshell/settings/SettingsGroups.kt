@@ -335,6 +335,7 @@ fun MoneySettingsScreen(weekStart: WeekStart, onWeekStart: (WeekStart) -> Unit, 
 fun DataSettingsRoute(
     onBackup: () -> Unit,
     onImport: () -> Unit,
+    onExport: () -> Unit,
     onWipe: () -> Unit,
     onBack: () -> Unit,
     viewModel: ScreenOptionsViewModel = hiltViewModel(),
@@ -344,7 +345,7 @@ fun DataSettingsRoute(
     DataSettingsScreen(
         wifiOnly = options.syncWifiOnly,
         onWifiOnlyChange = { v -> viewModel.change(after = { SyncScheduler.schedulePeriodic(context) }) { it.copy(syncWifiOnly = v) } },
-        onBackup = onBackup, onImport = onImport, onWipe = onWipe, onBack = onBack,
+        onBackup = onBackup, onImport = onImport, onExport = onExport, onWipe = onWipe, onBack = onBack,
     )
 }
 
@@ -354,6 +355,7 @@ fun DataSettingsScreen(
     onWifiOnlyChange: (Boolean) -> Unit,
     onBackup: () -> Unit,
     onImport: () -> Unit,
+    onExport: () -> Unit,
     onWipe: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -363,6 +365,7 @@ fun DataSettingsScreen(
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row { CoShellMenuRow(DesignR.drawable.ic_settings_backup_restore, categoryColor(c[5]), stringResource(R.string.backup_title), onBackup) }
+                row { CoShellMenuRow(DesignR.drawable.ic_upload, categoryColor(c[18]), stringResource(R.string.export_title), onExport, subtitle = stringResource(R.string.export_menu_hint)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_download, categoryColor(c[ImportColors.MENU]), stringResource(R.string.import_title), onImport) }
             }
         }
@@ -396,5 +399,5 @@ internal fun GroupScaffold(title: Int, onBack: () -> Unit, content: androidx.com
 @Preview(showBackground = true)
 @Composable
 private fun DataSettingsPreview() {
-    CoShellTheme { DataSettingsScreen(false, {}, {}, {}, {}, {}) }
+    CoShellTheme { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
 }

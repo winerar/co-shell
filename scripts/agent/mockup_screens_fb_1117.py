@@ -169,21 +169,6 @@ def tips_first():
     return scrim() + sheet(inner, 300)
 
 
-# ---- #471 past imports row ------------------------------------------------------------------------------------------
-
-def import_row():
-    def past(name, sub):
-        undo = ('<div style="display: flex; justify-content: flex-end; margin-top: 8px;"><span style="height: 36px; padding: 0 14px; border-radius: 999px; '
-                'border: 1px solid %s; color: %s; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">Отменить импорт</span></div>' % (LINE2, PINK))
-        return ('<div style="padding: 12px 16px; {{div}}"><div style="display: flex; gap: 12px; align-items: flex-start;">%s<div style="min-width: 0;">'
-                '<div style="font-size: 15px;">%s</div><div style="font-size: 12px; color: %s; margin-top: 2px;">%s</div></div></div>%s</div>' % (svg('file'), name, MUTED, sub, undo))
-    rows_ = group([past('10 нояб. 2026 · операций: 1 284', 'wallet-2026-11.csv · с 3 янв. 2024 по 9 нояб. 2026'),
-                   past('2 нояб. 2026 · операций: 37', 'wallet-2026-11-02.csv · с 25 окт. по 1 нояб. 2026')])
-    body = (note('В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь.', 4)
-            + button('Выбрать файл CSV', 'primary', 'file', 16) + label('Прошлые импорты') + rows_)
-    return inner_screen('Импорт из Wallet', body)
-
-
 BOARDS = [  # name, title, fn, issue number
     ('Fb204Export', '#204 А: экспорт в CSV — период, счета, «Выгрузить»', export, 1117),
     ('Fb204More', '#204 А: «Экспорт в CSV» в «Ещё»', export_more, 1117),
@@ -193,5 +178,4 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb440About', '#440 А: «О приложении» вместе с обновлением', about_update, 1117),
     ('Fb322Tips', '#322 А: «Чаевые» в шторке — 10 % / 15 % / своя, счёт и категория', tips, 1117),
     ('Fb322First', '#322 А: первый раз — куда записывать чаевые', tips_first, 1117),
-    ('Fb471Row', '#471 А: «Отменить импорт» под строкой', import_row, 1117),
 ]

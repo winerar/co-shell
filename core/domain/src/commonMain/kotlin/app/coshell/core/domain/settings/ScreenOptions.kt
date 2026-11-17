@@ -31,6 +31,10 @@ data class ScreenOptions(
     /** «Отчёты»: the period they open on and whether the previous period is compared. */
     val reportsStart: ReportsStart = ReportsStart.MONTH,
     val reportsCompare: Boolean = true,
+    /** «Ввод операции → Отклик»: vibration on taps and on a saved transaction. */
+    val haptics: Boolean = true,
+    /** «Данные и копия → Сеть»: sync only on Wi-Fi (or another unmetered network), not on mobile data. */
+    val syncWifiOnly: Boolean = false,
 )
 
 /** [ScreenOptions] of this phone: read as a flow, changed as a whole (the caller copies what it flips). */

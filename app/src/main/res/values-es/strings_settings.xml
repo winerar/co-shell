@@ -7,13 +7,13 @@
     <string name="settings_money_items">Monedas de los totales</string>
     <string name="settings_money_family">Para toda la familia</string>
     <string name="settings_input_title">Introducir movimientos</string>
-    <string name="settings_input_items">Agitar</string>
+    <string name="settings_input_items">Agitar · vibración</string>
     <string name="settings_input_quick">Entrada rápida</string>
     <string name="settings_notices_title">Notificaciones</string>
     <string name="settings_notices_items">Pagos</string>
     <string name="settings_notices_payments">Pagos</string>
     <string name="settings_data_title">Datos y copia</string>
-    <string name="settings_data_items">Copia · importar · borrar</string>
+    <string name="settings_data_items">Copia · importar · Wi-Fi · borrar</string>
     <string name="settings_data_section">Datos</string>
     <string name="settings_data_careful">Cuidado</string>
     <string name="density_section">Listas</string>
@@ -48,4 +48,10 @@
     <string name="settings_accounts_archive">Archivo</string>
     <string name="settings_accounts_show_archived">Mostrar cuentas archivadas</string>
     <string name="settings_accounts_archived_hint">abajo, en gris</string>
+    <string name="settings_input_feedback">Respuesta</string>
+    <string name="settings_input_haptics">Vibración</string>
+    <string name="settings_input_haptics_hint">toques y al guardar un movimiento</string>
+    <string name="settings_data_network">Red</string>
+    <string name="settings_data_wifi">Sincronizar solo con Wi-Fi</string>
+    <string name="settings_data_wifi_hint">si no, también con datos móviles</string>
 </resources>

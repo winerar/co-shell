@@ -30,9 +30,12 @@ import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.settings.ListDensityViewModel
 import app.coshell.settings.LocalScreenOptions
+import app.coshell.settings.NoHaptics
 import app.coshell.settings.ScreenOptionsViewModel
 import app.coshell.core.designsystem.components.LocalCompactLists
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalHapticFeedback
 import app.coshell.theme.rememberRevealedSystemDark
 import app.coshell.theme.toDesign
 import app.coshell.update.install.InstallEvents
@@ -95,7 +98,10 @@ class MainActivity : ComponentActivity() {
                     onDispose {}
                 }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {
-                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options) {
+                    val systemHaptics = LocalHapticFeedback.current
+                    // «Ввод операции → Вибрация»: off — every tap of the app stays silent.
+                    val haptics = remember(systemHaptics, options.haptics) { if (options.haptics) systemHaptics else NoHaptics }
+                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics) {
                         CoShellNavHost(paymentLinks = paymentLinks)
                     }
                     // The one-time language question over «Обзор» (#352).

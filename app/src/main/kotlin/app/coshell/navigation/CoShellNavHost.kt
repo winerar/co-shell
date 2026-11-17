@@ -18,7 +18,7 @@ import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.settings.AccountsSettingsRoute
-import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.DataSettingsRoute
 import app.coshell.settings.OpsSettingsRoute
 import app.coshell.settings.ReportsSettingsRoute
 import app.coshell.settings.ScreensSettingsScreen
@@ -342,7 +342,7 @@ fun CoShellNavHost(
             NoticeSettingsRoute(onBack = { navController.popBackStack() })
         }
         screen<DataSettingsDestination> {
-            DataSettingsScreen(
+            DataSettingsRoute(
                 onBackup = { navController.navigate(BackupDestination) },
                 onImport = { navController.navigate(WalletImportDestination) },
                 onWipe = { navController.navigate(WipeDataDestination) },

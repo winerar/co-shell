@@ -368,10 +368,10 @@ class ScreensScreenshotTest {
     fun `settings money dark`() = shot("settings_money_dark", dark = true) { MoneySettingsScreen({}, {}) }
 
     @Test
-    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, {}) }
+    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, true, {}, {}) }
 
     @Test
-    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, {}) }
+    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, true, {}, {}) }
 
     @Test
     fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, {}) }
@@ -380,10 +380,10 @@ class ScreensScreenshotTest {
     fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, {}) }
 
     @Test
-    fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen({}, {}, {}, {}) }
+    fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}) }
 
     @Test
-    fun `settings data dark`() = shot("settings_data_dark", dark = true) { DataSettingsScreen({}, {}, {}, {}) }
+    fun `settings data dark`() = shot("settings_data_dark", dark = true) { DataSettingsScreen(false, {}, {}, {}, {}, {}) }
 
     /** «Плотность списков» — compact: the same accounts, about a quarter more rows per screen. */
     @Test

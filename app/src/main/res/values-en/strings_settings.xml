@@ -7,13 +7,13 @@
     <string name="settings_money_items">Totals currencies</string>
     <string name="settings_money_family">For the whole family</string>
     <string name="settings_input_title">Entering transactions</string>
-    <string name="settings_input_items">Shake</string>
+    <string name="settings_input_items">Shake · vibration</string>
     <string name="settings_input_quick">Quick entry</string>
     <string name="settings_notices_title">Notifications</string>
     <string name="settings_notices_items">Payments</string>
     <string name="settings_notices_payments">Payments</string>
     <string name="settings_data_title">Data and backup</string>
-    <string name="settings_data_items">Backup · import · wipe</string>
+    <string name="settings_data_items">Backup · import · Wi-Fi · wipe</string>
     <string name="settings_data_section">Data</string>
     <string name="settings_data_careful">Careful</string>
     <string name="density_section">Lists</string>
@@ -48,4 +48,10 @@
     <string name="settings_accounts_archive">Archive</string>
     <string name="settings_accounts_show_archived">Show archived accounts</string>
     <string name="settings_accounts_archived_hint">at the bottom, in grey</string>
+    <string name="settings_input_feedback">Feedback</string>
+    <string name="settings_input_haptics">Vibration</string>
+    <string name="settings_input_haptics_hint">taps and a saved transaction</string>
+    <string name="settings_data_network">Network</string>
+    <string name="settings_data_wifi">Sync on Wi-Fi only</string>
+    <string name="settings_data_wifi_hint">otherwise — on mobile data too</string>
 </resources>

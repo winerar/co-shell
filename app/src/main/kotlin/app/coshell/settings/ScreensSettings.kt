@@ -49,7 +49,7 @@ fun ScreensSettingsScreen(onOps: () -> Unit, onReports: () -> Unit, onAccounts: 
 @Composable
 fun OpsSettingsRoute(onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hiltViewModel()) {
     val o by viewModel.options.collectAsStateWithLifecycle()
-    OpsSettingsScreen(o, viewModel::change, onBack)
+    OpsSettingsScreen(o, { f -> viewModel.change(change = f) }, onBack)
 }
 
 @Composable
@@ -85,7 +85,7 @@ fun OpsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Screen
 @Composable
 fun ReportsSettingsRoute(onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hiltViewModel()) {
     val o by viewModel.options.collectAsStateWithLifecycle()
-    ReportsSettingsScreen(o, viewModel::change, onBack)
+    ReportsSettingsScreen(o, { f -> viewModel.change(change = f) }, onBack)
 }
 
 @Composable
@@ -119,7 +119,7 @@ fun ReportsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Sc
 @Composable
 fun AccountsSettingsRoute(onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hiltViewModel()) {
     val o by viewModel.options.collectAsStateWithLifecycle()
-    AccountsSettingsScreen(o, viewModel::change, onBack)
+    AccountsSettingsScreen(o, { f -> viewModel.change(change = f) }, onBack)
 }
 
 @Composable

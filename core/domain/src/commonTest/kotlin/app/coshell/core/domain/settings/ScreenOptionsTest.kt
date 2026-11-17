@@ -13,6 +13,7 @@ class ScreenOptionsTest {
         assertEquals(listOf(false, false), listOf(o.accountsByCurrency, o.accountsShowArchived))
         assertEquals(ReportsStart.MONTH, o.reportsStart)
         assertEquals(true, o.reportsCompare)
+        assertEquals(true, o.haptics)
     }
 
     @Test

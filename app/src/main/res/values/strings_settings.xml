@@ -7,13 +7,13 @@
     <string name="settings_money_items">Валюты итогов</string>
     <string name="settings_money_family">Для всей семьи</string>
     <string name="settings_input_title">Ввод операции</string>
-    <string name="settings_input_items">Встряхнуть</string>
+    <string name="settings_input_items">Встряхнуть · вибрация</string>
     <string name="settings_input_quick">Быстрый ввод</string>
     <string name="settings_notices_title">Уведомления</string>
     <string name="settings_notices_items">Платежи</string>
     <string name="settings_notices_payments">Платежи</string>
     <string name="settings_data_title">Данные и копия</string>
-    <string name="settings_data_items">Копия · импорт · стереть</string>
+    <string name="settings_data_items">Копия · импорт · Wi-Fi · стереть</string>
     <string name="settings_data_section">Данные</string>
     <string name="settings_data_careful">Осторожно</string>
     <string name="density_section">Списки</string>
@@ -48,4 +48,10 @@
     <string name="settings_accounts_archive">Архив</string>
     <string name="settings_accounts_show_archived">Показывать архивные счета</string>
     <string name="settings_accounts_archived_hint">внизу, серым</string>
+    <string name="settings_input_feedback">Отклик</string>
+    <string name="settings_input_haptics">Вибрация</string>
+    <string name="settings_input_haptics_hint">касания и успешное сохранение</string>
+    <string name="settings_data_network">Сеть</string>
+    <string name="settings_data_wifi">Синхронизировать только по Wi-Fi</string>
+    <string name="settings_data_wifi_hint">иначе — и по мобильной сети</string>
 </resources>

@@ -22,7 +22,11 @@ class ScreenOptionsViewModel @Inject constructor(private val store: ScreenOption
     val options: StateFlow<ScreenOptions> =
         store.options.stateIn(viewModelScope, SharingStarted.Eagerly, ScreenOptions())
 
-    fun change(change: (ScreenOptions) -> ScreenOptions) {
-        viewModelScope.launch { store.update(change) }
+    /** Saves [change]; [after] runs once it is written (for things that read the saved file, like the sync schedule). */
+    fun change(after: () -> Unit = {}, change: (ScreenOptions) -> ScreenOptions) {
+        viewModelScope.launch {
+            store.update(change)
+            after()
+        }
     }
 }

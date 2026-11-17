@@ -2,10 +2,8 @@ package app.coshell.family.sync
 
 import android.content.Context
 import androidx.work.BackoffPolicy
-import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -19,14 +17,12 @@ import java.util.concurrent.TimeUnit
 object SyncScheduler {
     private const val PERIODIC = "sync-periodic"
     private const val SOON = "sync-soon"
-    private val network = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-
     fun schedulePeriodic(context: Context) {
         val request = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS)
-            .setConstraints(network)
+            .setConstraints(SyncNetwork.constraints(context))
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
             .build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC, ExistingPeriodicWorkPolicy.KEEP, request)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC, ExistingPeriodicWorkPolicy.UPDATE, request)
     }
 
     /**
@@ -35,7 +31,7 @@ object SyncScheduler {
      */
     fun syncSoon(context: Context) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
-            .setConstraints(network)
+            .setConstraints(SyncNetwork.constraints(context))
             .setInitialDelay(1, TimeUnit.SECONDS)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .build()

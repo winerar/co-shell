@@ -45,7 +45,7 @@ class ForegroundSync(
         family.refresh()
         val backoff = PollBackoff(POLL_MS, POLL_MS, fastIdleRuns = 0)
         pollForever(backoff, wake, onError = { Log.w(TAG, "Foreground sync failed: ${it.message}") }) {
-            val result = family.sync()
+            val result = if (SyncNetwork.allowedNow(context)) family.sync() else null
             result != null && (result.pulled > 0 || result.pushed > 0)
         }
     }
@@ -58,7 +58,7 @@ class ForegroundSync(
             .collectLatest { uids ->
                 if (uids == null) return@collectLatest
                 bell.rings(uids, onError = { Log.i(TAG, "Bell: ${it.message}") }).conflate().collect {
-                    runCatching { family.sync() }.onFailure { Log.w(TAG, "Sync on ring failed: ${it.message}") }
+                    if (SyncNetwork.allowedNow(context)) runCatching { family.sync() }.onFailure { Log.w(TAG, "Sync on ring failed: ${it.message}") }
                     onRing()
                 }
             }

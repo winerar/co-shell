@@ -45,6 +45,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             accountsShowArchived = prefs.getBoolean(ACC_ARCHIVED, d.accountsShowArchived),
             reportsStart = ReportsStart.parse(prefs.getString(REP_START, null)),
             reportsCompare = prefs.getBoolean(REP_COMPARE, d.reportsCompare),
+            haptics = prefs.getBoolean(HAPTICS, d.haptics),
+            syncWifiOnly = prefs.getBoolean(SYNC_WIFI, d.syncWifiOnly),
         )
     }
 
@@ -56,17 +58,25 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putBoolean(ACC_ARCHIVED, o.accountsShowArchived)
         putString(REP_START, o.reportsStart.name)
         putBoolean(REP_COMPARE, o.reportsCompare)
+        putBoolean(HAPTICS, o.haptics)
+        putBoolean(SYNC_WIFI, o.syncWifiOnly)
     }
 
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
 
-    private companion object {
-        const val OPS_ACCOUNT = "ops_account"
-        const val OPS_TAGS = "ops_tags"
-        const val OPS_NOTE = "ops_note"
-        const val ACC_CURRENCY = "acc_by_currency"
-        const val ACC_ARCHIVED = "acc_archived"
-        const val REP_START = "rep_start"
-        const val REP_COMPARE = "rep_compare"
+    companion object {
+        /** The file and key the background sync reads without Hilt (`SyncNetwork`). */
+        const val FILE = "settings"
+        const val KEY_SYNC_WIFI = "sync_wifi_only"
+
+        private const val OPS_ACCOUNT = "ops_account"
+        private const val OPS_TAGS = "ops_tags"
+        private const val OPS_NOTE = "ops_note"
+        private const val ACC_CURRENCY = "acc_by_currency"
+        private const val ACC_ARCHIVED = "acc_archived"
+        private const val REP_START = "rep_start"
+        private const val REP_COMPARE = "rep_compare"
+        private const val HAPTICS = "haptics"
+        private const val SYNC_WIFI = KEY_SYNC_WIFI
     }
 }

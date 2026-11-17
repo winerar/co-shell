@@ -11,7 +11,6 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
@@ -179,7 +178,6 @@ fun CoShellFab(
     shape: Shape = FloatingActionButtonDefaults.shape,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = contentColorFor(containerColor),
-    elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
     tactile: Tactile = Tactile.Control,
     content: @Composable () -> Unit,
 ) {
@@ -192,7 +190,8 @@ fun CoShellFab(
             shape = shape,
             containerColor = containerColor,
             contentColor = contentColor,
-            elevation = elevation,
+            // No shadows in the design (owner 2026-11-16, #477): depth is fill and edge only.
+            elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
             interactionSource = source,
             content = content,
         )

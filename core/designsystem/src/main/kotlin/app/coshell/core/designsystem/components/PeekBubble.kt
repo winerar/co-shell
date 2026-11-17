@@ -52,7 +52,6 @@ fun PeekCard(lines: List<PeekLine>, footnote: String, modifier: Modifier = Modif
     Surface(
         shape = MaterialTheme.shapes.large,
         color = scheme.surfaceContainerHigh,
-        shadowElevation = 12.dp,
         modifier = modifier
             .widthIn(min = 180.dp, max = 280.dp)
             .border(1.dp, scheme.outlineVariant, MaterialTheme.shapes.large),

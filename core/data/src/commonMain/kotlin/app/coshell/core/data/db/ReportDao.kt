@@ -17,6 +17,16 @@ data class ReportDayRow(
     @ColumnInfo(name = "author_member_id") val authorId: String? = null,
 )
 
+/** One day of one account, category and type — a row of [ReportDao.observeAccountDays] (#242). */
+data class ReportAccountDayRow(
+    @ColumnInfo(name = "epoch_day") val epochDay: Long,
+    @ColumnInfo(name = "account_id") val accountId: String,
+    @ColumnInfo(name = "category_id") val categoryId: String,
+    val type: String,
+    val currency: String,
+    @ColumnInfo(name = "amount_minor") val amountMinor: Long,
+)
+
 /** How one account's balance moved in one day — a row of [ReportDao.observeBalanceDays]; a day may repeat. */
 data class BalanceDayRow(
     @ColumnInfo(name = "epoch_day") val epochDay: Long,
@@ -40,6 +50,17 @@ interface ReportDao {
            GROUP BY epoch_day, category_id, type, currency, author_member_id""",
     )
     fun observeDays(fromMs: Long, toMs: Long, offsetMs: Long): Flow<List<ReportDayRow>>
+
+    /** «Чем платили» (#242): as [observeDays], but by the account the money left instead of by author. */
+    @Query(
+        """SELECT (date + :offsetMs) / 86400000 AS epoch_day, account_id, category_id, type, currency,
+                  SUM(amount_minor) AS amount_minor
+           FROM transactions
+           WHERE deleted = 0 AND type IN ('EXPENSE', 'INCOME') AND category_id IS NOT NULL
+             AND date >= :fromMs AND date < :toMs
+           GROUP BY epoch_day, account_id, category_id, type, currency""",
+    )
+    fun observeAccountDays(fromMs: Long, toMs: Long, offsetMs: Long): Flow<List<ReportAccountDayRow>>
 
     /**
      * «Капитал» (#189): the balance change of each account by day over the whole history — expenses and outgoing

@@ -8,14 +8,15 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,23 +60,27 @@ private fun CoShellSnackbar(data: SnackbarData) {
     val scheme = MaterialTheme.colorScheme
     val left = timeLeft(data)
     val timed = data.visuals.duration != SnackbarDuration.Indefinite
-    Snackbar(
+    // Own frame instead of Material `Snackbar`: that one has a fixed shadow (owner 2026-11-16, #477: no shadows).
+    Surface(
         modifier = Modifier.padding(Spacing.m),
         shape = MaterialTheme.shapes.large,
-        action = data.visuals.actionLabel?.let { label ->
-            {
+        color = scheme.inverseSurface,
+        contentColor = scheme.inverseOnSurface,
+        shadowElevation = 0.dp,
+    ) {
+        Row(Modifier.padding(start = Spacing.m, end = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f).padding(vertical = Spacing.m)) {
+                Text(data.visuals.message, style = MaterialTheme.typography.bodyMedium)
+                if (timed) Box(
+                    Modifier.fillMaxWidth().padding(top = Spacing.xs).height(TIME_LINE).drawBehind {
+                        val w = size.width * left()
+                        drawRect(scheme.inversePrimary.copy(alpha = 0.7f), Offset.Zero, Size(w, size.height))
+                    },
+                )
+            }
+            data.visuals.actionLabel?.let { label ->
                 CoShellTextButton(onClick = data::performAction, contentColor = scheme.inversePrimary) { Text(label) }
             }
-        },
-    ) {
-        Column {
-            Text(data.visuals.message)
-            if (timed) Box(
-                Modifier.fillMaxWidth().padding(top = Spacing.xs).height(TIME_LINE).drawBehind {
-                    val w = size.width * left()
-                    drawRect(scheme.inversePrimary.copy(alpha = 0.7f), Offset.Zero, Size(w, size.height))
-                },
-            )
         }
     }
 }

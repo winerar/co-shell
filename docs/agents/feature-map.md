@@ -32,6 +32,7 @@
 по полкам `categoryShelves`), `DetailsBlock` (плитки 2×2; шторки даты и заметки — `DetailSheets.kt`); образец — `EntrySheetSamples.kt`.
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
 Отчёты: расчёт (#187) — `core:domain/reports/`: `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
+Расчёты без экранов (экраны — отдельные задачи): `CategoryMonthTable`/`categoryMonthTable` + `YearSummary` (#239, таблица «категории × месяцы», итог года), `PaidWith`/`paidWith` (#242, «Чем платили»; данные — `ReportRepository.observeAccountDays` ← `ReportDao.observeAccountDays`).
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
 `categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; «Итог месяца» (#235) — `monthReview`
 (остаток, норма сбережений, `reviewStart`), `usualChanges` (3 главных изменения к среднему за 3 мес., порог 5 % обычных трат), `limitsTally`;

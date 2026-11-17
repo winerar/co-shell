@@ -34,17 +34,26 @@ import app.coshell.ui.format.formatDayMonth
  * «Сумма» of the entry sheet (#290, board `Fb290A`): the big amount; for a transfer between currencies the arriving
  * amount under it; with a receipt in another currency the caption says «· списано» and a dashed line «Чек 13 300 ARS
  * · курс · ✕» closes the card. «+ Чек» on the right of the caption switches the receipt on; for a payment from
- * «Скоро» it is «Пропустить этот раз» (#404).
+ * «Скоро» it is «Пропустить этот раз» (#404). A new expense also has «＋ Чаевые» there (#322).
  */
 @Composable
 internal fun AmountBlock(state: TransactionEditUiState, actions: TransactionEditActions, amountColor: Color) {
     val receiptLink: (@Composable () -> Unit)? = if (state.payment != null) {
         // A payment from «Скоро» (board `Rec143Post`): the caption offers to skip it instead.
         { CoShellSectionLink(stringResource(R.string.payment_skip), onClick = actions.onPaymentSkip) }
-    } else if (!state.isTransfer && !state.hasReceipt) {
-        { CoShellSectionLink(stringResource(R.string.entry_receipt_add), onClick = { actions.onReceiptToggle(true) }) }
     } else {
-        null
+        val receipt = !state.isTransfer && !state.hasReceipt
+        val tip = state.tipAvailable
+        if (receipt || tip) {
+            {
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m), verticalAlignment = Alignment.CenterVertically) {
+                    if (tip) CoShellSectionLink(stringResource(R.string.entry_tip_add), onClick = actions.onTipOpen)
+                    if (receipt) CoShellSectionLink(stringResource(R.string.entry_receipt_add), onClick = { actions.onReceiptToggle(true) })
+                }
+            }
+        } else {
+            null
+        }
     }
     CoShellFormSection(
         title = stringResource(if (state.hasReceipt) R.string.entry_section_amount_debited else R.string.entry_section_amount),

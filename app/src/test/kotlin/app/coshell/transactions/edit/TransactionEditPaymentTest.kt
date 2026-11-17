@@ -25,6 +25,7 @@ import app.coshell.testing.FakeTemplateRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import app.coshell.testing.fakeEntryTags
+import app.coshell.testing.fakeEntryTip
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.undo.UndoCenter
@@ -90,6 +91,7 @@ class TransactionEditPaymentTest {
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories, templates, transactions = transactions),
         entryTags = fakeEntryTags(),
+        entryTip = fakeEntryTip(categories, transactions),
     )
 
     private suspend fun handledThrough() = templates.getTemplate("cleaning")!!.schedule!!.handledThrough

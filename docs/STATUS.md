@@ -47,7 +47,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1502 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1518 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -74,3 +74,4 @@
 2026-11-17, `ccr-60fdd1c5-ab85as`: `CsvExport` (#204), `Reorder` (#338, шаг 1024), чаевые 10/15 % (#322) — без экранов. **#136**: `EntryForms.kt` (VM 425 → 343), тест — 3 файла + база.
 Доски выбранных вариантов (`mockup_screens_fb_1117.py`, на холст **не опубликованы**) → опрос «ок»: https://claude.ai/artifact/LB1RRK9L8XhwPxcHnDZem8 (`docs/design/poll-boards-1117.json`).
 Дальше: ответы (`ArtifactData list`, `answers`) → экраны #204, #338, #180, #440, #322, #471; доски — на холст и в основные ряды.
+2026-11-17, `ccr-03af6349-ndbuad`: **#322 чаевые — сделано** по доскам `Fb322Tips`/`Fb322Own`/`Fb322First` («Ок» владельца): «＋ Чаевые» в блоке суммы → `TipSheet` (10/15 %/своя, счёт, категория), две операции, счёт и категория запоминаются (`PrefsTipSettings`). Тесты `TransactionEditTipTest`, эталоны `entry_tip_*`. Не проверено на телефоне (#220). `TransactionEditViewModel` — 426 строк: блок чаевых вынести в класс.

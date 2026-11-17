@@ -20,6 +20,7 @@ import app.coshell.testing.FakeTemplateUsage
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import app.coshell.testing.fakeEntryTags
+import app.coshell.testing.fakeEntryTip
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.undo.UndoCenter
@@ -69,6 +70,7 @@ class TransactionEditRefundTest {
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories, FakeTemplateRepository(), FakeTemplateUsage()),
         entryTags = fakeEntryTags(),
+        entryTip = fakeEntryTip(categories, transactions),
     )
 
     @Test

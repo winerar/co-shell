@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- A tip as a separate entry from another account (#322) -->
+    <string name="entry_tip_add">+ Tip</string>
+    <string name="tip_title">Tip</string>
+    <string name="tip_note">Tip</string>
+    <string name="tip_base">Of %1$s</string>
+    <string name="tip_percent">%1$d%%</string>
+    <string name="tip_own">Custom amount</string>
+    <string name="tip_amount_empty">Enter an amount</string>
+    <string name="tip_converted">≈ %1$s at today\'s rate</string>
+    <string name="tip_no_rate">No rate for the tip account — pick an account in the receipt currency</string>
+    <string name="tip_account">Tip account</string>
+    <string name="tip_category">Tip category</string>
+    <string name="tip_category_choose">Choose</string>
+    <string name="tip_category_title">Where should tips go?</string>
+    <string name="tip_category_hint">We ask once. To change it, use the “Tip category” row.</string>
+    <string name="tip_category_same">Same as the purchase</string>
+    <string name="tip_category_same_hint">The category of each purchase</string>
+    <string name="tip_category_new_hint">New category</string>
+    <string name="tip_save">Save both entries</string>
+    <string name="tip_failed">The tip was not saved — add it as a separate entry</string>
+</resources>

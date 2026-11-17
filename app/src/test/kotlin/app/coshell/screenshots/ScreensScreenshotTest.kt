@@ -374,10 +374,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, true, {}, {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, {}) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, {}) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, {}) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, {}) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}) }

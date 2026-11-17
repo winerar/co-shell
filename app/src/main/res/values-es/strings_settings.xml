@@ -10,7 +10,7 @@
     <string name="settings_input_items">Agitar · vibración</string>
     <string name="settings_input_quick">Entrada rápida</string>
     <string name="settings_notices_title">Notificaciones</string>
-    <string name="settings_notices_items">Pagos</string>
+    <string name="settings_notices_items">Pagos · hora</string>
     <string name="settings_notices_payments">Pagos</string>
     <string name="settings_data_title">Datos y copia</string>
     <string name="settings_data_items">Copia · importar · Wi-Fi · borrar</string>
@@ -54,4 +54,7 @@
     <string name="settings_data_network">Red</string>
     <string name="settings_data_wifi">Sincronizar solo con Wi-Fi</string>
     <string name="settings_data_wifi_hint">si no, también con datos móviles</string>
+    <string name="settings_notices_when">Cuándo</string>
+    <string name="settings_notices_time">Hora del recordatorio</string>
+    <string name="settings_notices_hour">%1$d:00</string>
 </resources>

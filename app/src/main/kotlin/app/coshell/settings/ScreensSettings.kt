@@ -150,7 +150,7 @@ fun AccountsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> S
 
 /** A setting with a few values: its title over the segments, in a group. */
 @Composable
-private fun PickCard(title: String, labels: List<String>, selected: Int, onSelect: (Int) -> Unit) {
+internal fun PickCard(title: String, labels: List<String>, selected: Int, onSelect: (Int) -> Unit) {
     CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
         row {
             Column(Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.m)) {

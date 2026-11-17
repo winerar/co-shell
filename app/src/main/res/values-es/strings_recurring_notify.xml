@@ -6,7 +6,7 @@
     <string name="recurring_action_change_amount">Cambiar importe</string>
     <string name="recurring_action_tomorrow">Mañana</string>
     <string name="reminders_title">Recordatorios de pagos</string>
-    <string name="reminders_hint">A las 9:00 el día del pago</string>
+    <string name="reminders_hint">El día del pago</string>
     <!-- A payment in another currency (#415, poll 3 «Д»): the debited amount is always entered. -->
     <string name="recurring_action_enter_amount">Ingresar importe</string>
     <string name="recurring_notify_by_rate">≈ %1$s al cambio</string>

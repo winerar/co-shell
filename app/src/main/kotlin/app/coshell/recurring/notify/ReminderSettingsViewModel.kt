@@ -19,4 +19,15 @@ class ReminderSettingsViewModel @Inject constructor(private val settings: Remind
     fun setEnabled(enabled: Boolean) {
         viewModelScope.launch { settings.setEnabled(enabled) }
     }
+
+    /** «Время напоминания»; the default until loaded. */
+    val hour: StateFlow<Int> = settings.hour.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ReminderSettings.DEFAULT_HOUR)
+
+    /** Saves the hour; [after] runs once it is written (the daily job is planned again from the saved file). */
+    fun setHour(hour: Int, after: () -> Unit = {}) {
+        viewModelScope.launch {
+            settings.setHour(hour)
+            after()
+        }
+    }
 }

@@ -10,7 +10,7 @@
     <string name="settings_input_items">Встряхнуть · вибрация</string>
     <string name="settings_input_quick">Быстрый ввод</string>
     <string name="settings_notices_title">Уведомления</string>
-    <string name="settings_notices_items">Платежи</string>
+    <string name="settings_notices_items">Платежи · время</string>
     <string name="settings_notices_payments">Платежи</string>
     <string name="settings_data_title">Данные и копия</string>
     <string name="settings_data_items">Копия · импорт · Wi-Fi · стереть</string>
@@ -54,4 +54,7 @@
     <string name="settings_data_network">Сеть</string>
     <string name="settings_data_wifi">Синхронизировать только по Wi-Fi</string>
     <string name="settings_data_wifi_hint">иначе — и по мобильной сети</string>
+    <string name="settings_notices_when">Когда</string>
+    <string name="settings_notices_time">Время напоминания</string>
+    <string name="settings_notices_hour">%1$d:00</string>
 </resources>

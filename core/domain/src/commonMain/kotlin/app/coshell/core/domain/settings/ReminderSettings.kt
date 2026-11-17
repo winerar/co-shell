@@ -11,4 +11,16 @@ interface ReminderSettings {
     val enabled: Flow<Boolean>
 
     suspend fun setEnabled(enabled: Boolean)
+
+    /** The hour of the reminder on the phone's clock («Уведомления → Время напоминания»); [DEFAULT_HOUR] by default. */
+    val hour: Flow<Int>
+
+    suspend fun setHour(hour: Int)
+
+    companion object {
+        const val DEFAULT_HOUR = 9
+
+        /** The hours «Время напоминания» offers. */
+        val HOURS = listOf(8, 9, 12, 18)
+    }
 }

@@ -23,6 +23,8 @@ import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.importer.wallet.components.ImportColors
+import app.coshell.core.domain.settings.ReminderSettings
+import app.coshell.recurring.notify.RecurringPaymentsScheduler
 import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.shake.ShakeSettingsViewModel
 import app.coshell.ui.list.SectionTitle
@@ -83,15 +85,23 @@ fun InputSettingsScreen(
     }
 }
 
-/** «Уведомления»: payment reminders. */
+/** «Уведомления»: payment reminders and their time. */
 @Composable
 fun NoticeSettingsRoute(onBack: () -> Unit, viewModel: ReminderSettingsViewModel = hiltViewModel()) {
     val enabled by viewModel.enabled.collectAsStateWithLifecycle()
-    NoticeSettingsScreen(enabled, viewModel::setEnabled, onBack)
+    val hour by viewModel.hour.collectAsStateWithLifecycle()
+    val context = LocalContext.current.applicationContext
+    NoticeSettingsScreen(
+        remindersEnabled = enabled,
+        onRemindersChange = viewModel::setEnabled,
+        hour = hour,
+        onHourChange = { h -> viewModel.setHour(h, after = { RecurringPaymentsScheduler.schedule(context, replace = true) }) },
+        onBack = onBack,
+    )
 }
 
 @Composable
-fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean) -> Unit, onBack: () -> Unit) {
+fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean) -> Unit, hour: Int, onHourChange: (Int) -> Unit, onBack: () -> Unit) {
     GroupScaffold(R.string.settings_notices_title, onBack) {
         item { SectionTitle(stringResource(R.string.settings_notices_payments)) }
         item {
@@ -106,6 +116,15 @@ fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean)
                     )
                 }
             }
+        }
+        item { SectionTitle(stringResource(R.string.settings_notices_when)) }
+        item {
+            PickCard(
+                title = stringResource(R.string.settings_notices_time),
+                labels = ReminderSettings.HOURS.map { stringResource(R.string.settings_notices_hour, it) },
+                selected = ReminderSettings.HOURS.indexOf(hour).coerceAtLeast(0),
+                onSelect = { onHourChange(ReminderSettings.HOURS[it]) },
+            )
         }
     }
 }

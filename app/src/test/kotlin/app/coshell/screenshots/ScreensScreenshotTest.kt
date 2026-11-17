@@ -4,6 +4,8 @@ import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
 import app.coshell.newmark.NewFeatures
+import androidx.compose.runtime.CompositionLocalProvider
+import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.appearance.AppearanceActions
 import app.coshell.settings.DataSettingsScreen
 import app.coshell.settings.InputSettingsScreen
@@ -377,6 +379,17 @@ class ScreensScreenshotTest {
 
     @Test
     fun `settings data dark`() = shot("settings_data_dark", dark = true) { DataSettingsScreen({}, {}, {}, {}) }
+
+    /** «Плотность списков» — compact: the same accounts, about a quarter more rows per screen. */
+    @Test
+    fun `accounts compact light`() = shot("accounts_compact_light") {
+        CompositionLocalProvider(LocalCompactLists provides true) { AccountsScreen(accountsPreviewSample, AccountsActions(onBack = {})) }
+    }
+
+    @Test
+    fun `appearance compact dark`() = shot("appearance_compact_dark", dark = true) {
+        AppearanceScreen(AppearanceState(ThemeMode.DARK, compactLists = true), AppearanceActions())
+    }
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

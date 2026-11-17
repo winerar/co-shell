@@ -27,6 +27,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.core.designsystem.components.CoShellPeekBubble
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
@@ -76,6 +77,7 @@ internal fun TransactionRow(
     }
     val title = row.titleText()
     CoShellListRow(
+        compact = LocalCompactLists.current,
         title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supporting = {
             if (row.tags.isEmpty()) {

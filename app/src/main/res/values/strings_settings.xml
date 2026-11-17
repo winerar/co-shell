@@ -2,7 +2,7 @@
 <resources>
     <string name="settings_title">Настройки</string>
     <string name="settings_intro">Настройки этого телефона. Валюты итогов — общие для семьи.</string>
-    <string name="settings_look_items">Язык · тема · палитра</string>
+    <string name="settings_look_items">Язык · тема · палитра · плотность списков</string>
     <string name="settings_money_title">Деньги и даты</string>
     <string name="settings_money_items">Валюты итогов</string>
     <string name="settings_money_family">Для всей семьи</string>
@@ -16,4 +16,8 @@
     <string name="settings_data_items">Копия · импорт · стереть</string>
     <string name="settings_data_section">Данные</string>
     <string name="settings_data_careful">Осторожно</string>
+    <string name="density_section">Списки</string>
+    <string name="density_comfortable">Обычная</string>
+    <string name="density_compact">Компактная</string>
+    <string name="density_hint">Плотность строк в «Операциях» и «Счетах». Компактная — на экран помещается примерно на четверть строк больше.</string>
 </resources>

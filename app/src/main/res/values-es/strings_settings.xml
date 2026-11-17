@@ -2,7 +2,7 @@
 <resources>
     <string name="settings_title">Ajustes</string>
     <string name="settings_intro">Ajustes de este teléfono. Las monedas de los totales son comunes a la familia.</string>
-    <string name="settings_look_items">Idioma · tema · paleta</string>
+    <string name="settings_look_items">Idioma · tema · paleta · densidad de listas</string>
     <string name="settings_money_title">Dinero y fechas</string>
     <string name="settings_money_items">Monedas de los totales</string>
     <string name="settings_money_family">Para toda la familia</string>
@@ -16,4 +16,8 @@
     <string name="settings_data_items">Copia · importar · borrar</string>
     <string name="settings_data_section">Datos</string>
     <string name="settings_data_careful">Cuidado</string>
+    <string name="density_section">Listas</string>
+    <string name="density_comfortable">Normal</string>
+    <string name="density_compact">Compacta</string>
+    <string name="density_hint">Densidad de filas en Movimientos y Cuentas. La compacta muestra aproximadamente una cuarta parte más de filas.</string>
 </resources>

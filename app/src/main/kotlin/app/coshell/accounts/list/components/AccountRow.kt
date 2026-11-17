@@ -16,6 +16,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
@@ -34,6 +35,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
     }
     val base = listOfNotNull(type, personal).joinToString(" · ")
     CoShellListRow(
+        compact = LocalCompactLists.current,
         title = { Text(row.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         modifier = modifier,
         supporting = {

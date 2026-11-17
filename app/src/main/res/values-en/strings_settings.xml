@@ -153,4 +153,5 @@
     <string name="settings_home_tile_budget">Budget of the month</string>
     <string name="settings_home_tile_uncategorized">Uncategorized</string>
     <string name="settings_home_tiles_note">The «Attention» tile (no rate) takes the second place by itself when needed. While there are no budgets, «Uncategorized» stands in for «Budget».</string>
+    <string name="home_edit_hide">Hide</string>
 </resources>

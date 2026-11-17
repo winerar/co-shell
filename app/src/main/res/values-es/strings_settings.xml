@@ -153,4 +153,5 @@
     <string name="settings_home_tile_budget">Presupuesto del mes</string>
     <string name="settings_home_tile_uncategorized">Sin categoría</string>
     <string name="settings_home_tiles_note">El mosaico «Atención» (sin tipo de cambio) ocupa el segundo lugar solo cuando hace falta. Mientras no haya presupuestos, «Sin categoría» ocupa el lugar de «Presupuesto».</string>
+    <string name="home_edit_hide">Ocultar</string>
 </resources>

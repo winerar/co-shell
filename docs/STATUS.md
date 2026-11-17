@@ -47,7 +47,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1559 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1576 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -75,6 +75,6 @@
 Доски выбранных вариантов (`mockup_screens_fb_1117.py`, на холст **не опубликованы**) → опрос «ок»: https://claude.ai/artifact/LB1RRK9L8XhwPxcHnDZem8 (`docs/design/poll-boards-1117.json`).
 Дальше: ответы (`ArtifactData list`, `answers`) → экраны #204, #338, #180, #440, #322, #471; доски — на холст и в основные ряды.
 2026-11-17, `ccr-03af6349-ndbuad`: **#322 чаевые — сделано** по доскам `Fb322Tips`/`Fb322Own`/`Fb322First` («Ок» владельца): «＋ Чаевые» в блоке суммы → `TipSheet` (10/15 %/своя, счёт, категория), две операции, счёт и категория запоминаются (`PrefsTipSettings`). Тесты `TransactionEditTipTest`, эталоны `entry_tip_*`. Не проверено на телефоне (#220). `TransactionEditViewModel` — 426 строк: блок чаевых вынести в класс.
-2026-11-17, `ccr-0aefad18-ogdchi`: **«Настройки»** (опрос https://claude.ai/artifact/6xp7FXYLLmZnfqmQRQNJcH — везде «Ок»; `settings/`, доски `Set1*` и `Flows` на холсте v70). Сделано: корень и группы; плотность списков (`LocalCompactLists`);
-`ScreenOptions` (`core:domain/settings`, `PrefsScreenOptions`): «Обзор» (`HomeLayout` — порядок ⠿ и скрытие, «Скоро» 3–30 дн., «Последние»), «Операции», «Отчёты», «Счета»; вибрация (`NoHaptics`); время напоминания; синк по Wi-Fi (`SyncNetwork`).
-Осталось с досок `Set1*` — опрос https://claude.ai/artifact/DSDYhCP45AZ7JbPxt5NFVs («Настройки: что дальше»; спека `docs/design/poll-settings-next.json`, ответы — `ArtifactData list answers`) (правка «Обзора» удержанием, плитки, счета в балансе, сумма в основной, счёт в шторке, неделя, «за N дней», трата партнёра #326, CSV #204). Не проверено на телефоне (#220).
+2026-11-17, `ccr-0aefad18-ogdchi`: **«Настройки и кастомизация» — сделано целиком** (опросы https://claude.ai/artifact/6xp7FXYLLmZnfqmQRQNJcH и https://claude.ai/artifact/DSDYhCP45AZ7JbPxt5NFVs: везде «Ок»/«А»; `settings/`, доски `Set1*`, `Fb204Export` на холсте).
+`ScreenOptions` (`core:domain/settings`, `PrefsScreenOptions`, `LocalScreenOptions`): «Обзор» (`HomeLayout`: порядок и скрытие в настройках и удержанием на экране `home/HomeEdit.kt`; «Скоро» 3–30 дн.; «Последние»; две плитки; счета в балансе), «Операции» (счёт/теги/заметка, «≈» в основной), «Отчёты», «Счета», плотность, вибрация, неделя, счёт в шторке «+».
+Уведомления: время, «за N дней» (`paymentsAhead`), трата партнёра (`PartnerSpendNotifier` после синка, #326). Данные: синк по Wi-Fi (`SyncNetwork`), экспорт CSV (`export/`, #204). Не сделано: «Курсы» как выбор плитки, начало месяца в «Деньги и даты». Не проверено на телефоне (#220): перетаскивание, уведомления, шаринг файла.

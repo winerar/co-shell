@@ -31,6 +31,8 @@
 | Настройки: экраны | Set1Screens | settings_screens | ✓ | ✓ |
 | Настройки: обзор | Set1Home | settings_home | ✓ | ✓ |
 | Настройки: обзор, подробности | Set1HomeMore | settings_home_details | ✓ | ✓ |
+| Экспорт в CSV | Fb204Export | export | ✓ | ✓ |
+| Настройки: счета в балансе | Set1Balance | settings_balance | ✓ | ✓ |
 | Настройки: операции | Set1Ops | settings_ops | ✓ | ✓ |
 | Настройки: отчёты | Set1Reports | settings_reports | ✓ | ✓ |
 | Настройки: счета | Set1Accounts | settings_accounts | ✓ | ✓ |

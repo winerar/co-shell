@@ -153,4 +153,5 @@
     <string name="settings_home_tile_budget">Бюджет месяца</string>
     <string name="settings_home_tile_uncategorized">Без категории</string>
     <string name="settings_home_tiles_note">Плитка «Внимание» (нет курса) появляется сама на втором месте, когда нужно. Пока бюджетов нет, вместо «Бюджета» — «Без категории».</string>
+    <string name="home_edit_hide">Скрыть</string>
 </resources>

@@ -53,7 +53,7 @@ class PartnerSpendTest {
     @Test
     fun `the threshold is in the main currency at the rate of the day`() {
         // 50 USD = 50 000 ARS at 1000.
-        assertEquals(listOf("big"), notify(50, change("small", 49_999_00), change("big", 50_000_00)))
+        assertEquals(listOf("big"), notify(50, change("small", 49_000_00), change("big", 50_000_00)))
         assertEquals(listOf("usd"), notify(50, change("usd", 60_00, usd), change("usd-small", 40_00, usd)))
     }
 

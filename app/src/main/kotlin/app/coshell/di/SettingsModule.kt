@@ -2,6 +2,8 @@ package app.coshell.di
 
 import app.coshell.core.domain.quickentry.TipSettings
 import app.coshell.core.domain.settings.ListDensitySettings
+import app.coshell.core.domain.settings.ScreenOptionsStore
+import app.coshell.settings.PrefsScreenOptions
 import app.coshell.core.domain.settings.MonthReviewSettings
 import app.coshell.core.domain.settings.ReminderSettings
 import app.coshell.core.domain.settings.ThemeSettings
@@ -40,6 +42,9 @@ interface SettingsModule {
 
     @Binds
     fun bindTipSettings(impl: PrefsTipSettings): TipSettings
+
+    @Binds
+    fun bindScreenOptions(impl: PrefsScreenOptions): ScreenOptionsStore
 
     @Binds
     fun bindListDensitySettings(impl: PrefsListDensitySettings): ListDensitySettings

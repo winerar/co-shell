@@ -7,7 +7,12 @@ import app.coshell.newmark.NewFeatures
 import androidx.compose.runtime.CompositionLocalProvider
 import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.appearance.AppearanceActions
+import app.coshell.settings.AccountsSettingsScreen
 import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.OpsSettingsScreen
+import app.coshell.settings.ReportsSettingsScreen
+import app.coshell.settings.ScreensSettingsScreen
+import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.settings.InputSettingsScreen
 import app.coshell.settings.MoneySettingsScreen
 import app.coshell.settings.NoticeSettingsScreen
@@ -390,6 +395,30 @@ class ScreensScreenshotTest {
     fun `appearance compact dark`() = shot("appearance_compact_dark", dark = true) {
         AppearanceScreen(AppearanceState(ThemeMode.DARK, compactLists = true), AppearanceActions())
     }
+
+    @Test
+    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}) }
+
+    @Test
+    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}) }
+
+    @Test
+    fun `settings ops light`() = shot("settings_ops_light") { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
+
+    @Test
+    fun `settings ops dark`() = shot("settings_ops_dark", dark = true) { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
+
+    @Test
+    fun `settings reports light`() = shot("settings_reports_light") { ReportsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings reports dark`() = shot("settings_reports_dark", dark = true) { ReportsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings accounts light`() = shot("settings_accounts_light") { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings accounts dark`() = shot("settings_accounts_dark", dark = true) { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

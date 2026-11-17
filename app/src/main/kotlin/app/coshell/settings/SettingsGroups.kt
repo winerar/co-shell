@@ -124,7 +124,7 @@ fun DataSettingsScreen(onBackup: () -> Unit, onImport: () -> Unit, onWipe: () ->
 }
 
 @Composable
-private fun GroupScaffold(title: Int, onBack: () -> Unit, content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit) {
+internal fun GroupScaffold(title: Int, onBack: () -> Unit, content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit) {
     Scaffold(topBar = { ScreenTopBar(stringResource(title), onBack = onBack) }) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding), content = content)
     }

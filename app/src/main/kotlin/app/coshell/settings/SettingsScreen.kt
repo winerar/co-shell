@@ -24,6 +24,7 @@ import app.coshell.core.designsystem.R as DesignR
 data class SettingsActions(
     val onBack: () -> Unit = {},
     val onLook: () -> Unit = {},
+    val onScreens: () -> Unit = {},
     val onMoney: () -> Unit = {},
     val onInput: () -> Unit = {},
     val onNotices: () -> Unit = {},
@@ -44,6 +45,7 @@ fun SettingsScreen(actions: SettingsActions) {
             item {
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                     group(DesignR.drawable.ic_contrast, R.string.appearance_title, c[18], R.string.settings_look_items, actions.onLook)
+                    group(DesignR.drawable.ic_home, R.string.settings_screens_title, c[8], R.string.settings_screens_items, actions.onScreens)
                     group(DesignR.drawable.ic_payments, R.string.settings_money_title, c[17], R.string.settings_money_items, actions.onMoney)
                     group(DesignR.drawable.ic_add, R.string.settings_input_title, c[8], R.string.settings_input_items, actions.onInput)
                     group(DesignR.drawable.ic_refresh, R.string.settings_notices_title, c[14], R.string.settings_notices_items, actions.onNotices)

@@ -28,6 +28,7 @@ import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.LocalCompactLists
+import app.coshell.settings.LocalScreenOptions
 import app.coshell.core.designsystem.components.CoShellPeekBubble
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
@@ -66,13 +67,20 @@ internal fun TransactionRow(
     )
     val refundLabel = stringResource(R.string.transaction_refund_row)
     val income = LocalAmountPalette.current.income
-    val subtitle = remember(row, refundLabel, income) {
+    val options = LocalScreenOptions.current
+    val subtitle = remember(row, refundLabel, income, options) {
         buildAnnotatedString {
             if (row.refund) {
                 withStyle(SpanStyle(color = income)) { append(refundLabel) }
                 append(" · ")
             }
-            append(listOfNotNull(row.subtitle, row.author, row.note.ifBlank { null }).joinToString(" · "))
+            append(
+                listOfNotNull(
+                    row.subtitle.takeIf { options.opsShowAccount },
+                    row.author,
+                    row.note.ifBlank { null }.takeIf { options.opsShowNote },
+                ).joinToString(" · "),
+            )
         }
     }
     val title = row.titleText()
@@ -80,7 +88,7 @@ internal fun TransactionRow(
         compact = LocalCompactLists.current,
         title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supporting = {
-            if (row.tags.isEmpty()) {
+            if (row.tags.isEmpty() || !options.opsShowTags) {
                 Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
             } else {
                 Column {

@@ -7,7 +7,11 @@ import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.rates.balanceTotals
+import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ReportCurrencySettings
+import app.coshell.core.domain.settings.ScreenOptionsStore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
@@ -52,9 +56,18 @@ class AccountsViewModel @Inject constructor(
     reportCurrencies: ReportCurrencySettings? = null,
     clock: Clock = Clock.System,
     timeZone: TimeZone = TimeZone.currentSystemDefault(),
+    screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     private val view = MutableStateFlow(AccountsView())
+
+    init {
+        // «Настройки → Экраны → Счета»: how the list opens (grouping, archive); the user's taps override it afterwards.
+        viewModelScope.launch {
+            val o = screenOptions.options.first()
+            view.update { it.copy(grouping = if (o.accountsByCurrency) AccountGrouping.CURRENCY else it.grouping, showArchived = o.accountsShowArchived || it.showArchived) }
+        }
+    }
 
     private val conversion = combine(
         rates?.observeRates() ?: flowOf(emptyList()),

@@ -12,6 +12,11 @@ import app.coshell.testing.FakeAccountRepository
 import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ScreenOptions
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.test.runTest
 
 class AccountsViewModelTest {
     private val ars = CurrencyCode("ARS")
@@ -57,5 +62,19 @@ class AccountsViewModelTest {
         // A no-break space: when there is no room the amount shrinks, «≈» is not left alone on the line (#431).
         assertEquals("≈\u00A01\u202F000,00\u00A0USD", state.active.single().converted)
         assertEquals(state.active.single().converted, state.total)
+    }
+
+    @Test
+    fun `opens grouped by currency with the archive when the settings say so`() = runTest {
+        val repo = FakeAccountRepository().apply {
+            items.value = mapOf(
+                "a" to Account("a", "Карта", ars),
+                "b" to Account("b", "Старая", ars, archived = true),
+            )
+        }
+        val vm = AccountsViewModel(repo, MoneyFormat.RU, screenOptions = InMemoryScreenOptions(ScreenOptions(accountsByCurrency = true, accountsShowArchived = true)))
+        vm.state.launchIn(backgroundScope)
+        val state = vm.state.first { it.grouping == AccountGrouping.CURRENCY }
+        assertEquals(true, state.showArchived)
     }
 }

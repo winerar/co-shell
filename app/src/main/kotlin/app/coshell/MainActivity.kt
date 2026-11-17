@@ -29,6 +29,8 @@ import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.settings.ListDensityViewModel
+import app.coshell.settings.LocalScreenOptions
+import app.coshell.settings.ScreenOptionsViewModel
 import app.coshell.core.designsystem.components.LocalCompactLists
 import androidx.compose.runtime.CompositionLocalProvider
 import app.coshell.theme.rememberRevealedSystemDark
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
     private val themeSettings: ThemeSettingsViewModel by viewModels()
     private val listDensity: ListDensityViewModel by viewModels()
+    private val screenOptions: ScreenOptionsViewModel by viewModels()
 
     // Interface language is the app's, not the phone's (AppLanguage).
     override fun attachBaseContext(newBase: Context) = super.attachBaseContext(AppLanguage.wrap(newBase))
@@ -78,6 +81,7 @@ class MainActivity : ComponentActivity() {
             val mode by themeSettings.mode.collectAsStateWithLifecycle()
             val palette by themeSettings.palette.collectAsStateWithLifecycle()
             val compactLists by listDensity.compact.collectAsStateWithLifecycle()
+            val options by screenOptions.options.collectAsStateWithLifecycle()
             // A theme or palette switch opens as a circle from the tapped control (motion/ThemeReveal);
             // so does the phone's own dark-mode switch with «Как в системе» (#230, SystemDarkReveal).
             ThemeRevealHost {
@@ -91,7 +95,7 @@ class MainActivity : ComponentActivity() {
                     onDispose {}
                 }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {
-                    CompositionLocalProvider(LocalCompactLists provides compactLists) {
+                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options) {
                         CoShellNavHost(paymentLinks = paymentLinks)
                     }
                     // The one-time language question over «Обзор» (#352).

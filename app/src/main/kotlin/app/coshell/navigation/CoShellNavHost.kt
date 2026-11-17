@@ -17,7 +17,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.OpsSettingsRoute
+import app.coshell.settings.ReportsSettingsRoute
+import app.coshell.settings.ScreensSettingsScreen
 import app.coshell.settings.InputSettingsRoute
 import app.coshell.settings.MoneySettingsScreen
 import app.coshell.settings.NoticeSettingsRoute
@@ -303,6 +307,7 @@ fun CoShellNavHost(
                 SettingsActions(
                     onBack = { navController.popBackStack() },
                     onLook = { navController.navigate(AppearanceDestination) },
+                    onScreens = { navController.navigate(ScreensSettingsDestination) },
                     onMoney = { navController.navigate(MoneySettingsDestination) },
                     onInput = { navController.navigate(InputSettingsDestination) },
                     onNotices = { navController.navigate(NoticeSettingsDestination) },
@@ -313,6 +318,17 @@ fun CoShellNavHost(
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
         }
+        screen<ScreensSettingsDestination> {
+            ScreensSettingsScreen(
+                onOps = { navController.navigate(OpsSettingsDestination) },
+                onReports = { navController.navigate(ReportsSettingsDestination) },
+                onAccounts = { navController.navigate(AccountsSettingsDestination) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
+        screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
+        screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<MoneySettingsDestination> {
             MoneySettingsScreen(
                 onCurrencies = { navController.navigate(ReportCurrenciesDestination) },

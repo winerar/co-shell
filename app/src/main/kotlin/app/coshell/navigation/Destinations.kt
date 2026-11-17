@@ -79,6 +79,18 @@ data object SettingsDestination
 data object AppearanceDestination
 
 @Serializable
+data object ScreensSettingsDestination
+
+@Serializable
+data object OpsSettingsDestination
+
+@Serializable
+data object ReportsSettingsDestination
+
+@Serializable
+data object AccountsSettingsDestination
+
+@Serializable
 data object MoneySettingsDestination
 
 @Serializable

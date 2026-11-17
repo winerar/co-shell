@@ -26,6 +26,8 @@ ROWS = [
     ('Категории', 'Categories', 'categories'), ('Редактор категории', 'CategoryEdit', 'category_edit'),
     ('Курсы', 'Rates', 'rates'), ('Валюты отчётов', 'ReportCurrencies', 'report_currencies'),
     ('Семья', 'Family', 'family'), ('Настройки', 'Set1Root', 'settings'), ('Внешний вид', 'Set1Look', 'appearance'),
+    ('Настройки: экраны', 'Set1Screens', 'settings_screens'), ('Настройки: операции', 'Set1Ops', 'settings_ops'),
+    ('Настройки: отчёты', 'Set1Reports', 'settings_reports'), ('Настройки: счета', 'Set1Accounts', 'settings_accounts'),
     ('Настройки: деньги и даты', 'Set1Money', 'settings_money'), ('Настройки: ввод операции', 'Set1Entry', 'settings_input'),
     ('Настройки: уведомления', 'Set1Notices', 'settings_notices'), ('Настройки: данные и копия', 'Set1Data', 'settings_data'),
     ('Резервная копия', 'Backup', 'backup'), ('Копия: автоматическая', 'BackupAuto', 'backup_auto'),

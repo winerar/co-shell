@@ -12,7 +12,12 @@ MonthReviewDestination	Mon236Screen
 MonthReviewLimitsDestination	Mon236Limits
 AccountEditDestination	AccountEdit
 MoreDestination	More
-AppearanceDestination	Settings
+SettingsDestination	Set1Root
+AppearanceDestination	Set1Look
+MoneySettingsDestination	Set1Money
+InputSettingsDestination	Set1Entry
+NoticeSettingsDestination	Set1Notices
+DataSettingsDestination	Set1Data
 CategoriesDestination	Categories
 BackupDestination	Backup
 WalletImportDestination	ImportStart

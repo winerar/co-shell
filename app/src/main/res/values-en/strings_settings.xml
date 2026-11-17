@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_intro">Settings of this phone. Totals currencies are shared by the family.</string>
+    <string name="settings_look_items">Language · theme · palette</string>
+    <string name="settings_money_title">Money and dates</string>
+    <string name="settings_money_items">Totals currencies</string>
+    <string name="settings_money_family">For the whole family</string>
+    <string name="settings_input_title">Entering transactions</string>
+    <string name="settings_input_items">Shake</string>
+    <string name="settings_input_quick">Quick entry</string>
+    <string name="settings_notices_title">Notifications</string>
+    <string name="settings_notices_items">Payments</string>
+    <string name="settings_notices_payments">Payments</string>
+    <string name="settings_data_title">Data and backup</string>
+    <string name="settings_data_items">Backup · import · wipe</string>
+    <string name="settings_data_section">Data</string>
+    <string name="settings_data_careful">Careful</string>
+</resources>

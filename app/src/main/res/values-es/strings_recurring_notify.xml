@@ -5,7 +5,6 @@
     <string name="recurring_action_post_amount">Registrar %1$s</string>
     <string name="recurring_action_change_amount">Cambiar importe</string>
     <string name="recurring_action_tomorrow">Mañana</string>
-    <string name="appearance_notifications_section">Notificaciones</string>
     <string name="reminders_title">Recordatorios de pagos</string>
     <string name="reminders_hint">A las 9:00 el día del pago</string>
     <!-- A payment in another currency (#415, poll 3 «Д»): the debited amount is always entered. -->

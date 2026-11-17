@@ -15,7 +15,7 @@
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
-`appearance/` — «Внешний вид» (язык, тема, палитра, встряхивание; бывшие «Настройки», #155); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
+`settings/` — «Ещё → Настройки»: корень из групп (`SettingsScreen`) и экраны «Деньги и даты», «Ввод операции» (встряхнуть), «Уведомления» (напоминания), «Данные и копия» (`SettingsGroups.kt`; доски `Set1*`, план — `docs/design/settings-customization.md`); `appearance/` — «Настройки → Внешний вид» (язык, тема, палитра); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
 (`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Метка «новое» (#335): ключи мест — `newmark/NewFeatures` (новое место → ключ + `MoreItem.newKey`), правило 7 дней / до открытия —
 `core:domain/newmark/NewMarks`, хранение на телефоне — `newmark/PrefsNewMarkStore`, `di/NewMarkModule` (обновление или чистая установка).

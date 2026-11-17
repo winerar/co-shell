@@ -5,6 +5,12 @@ import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
 import app.coshell.newmark.NewFeatures
 import app.coshell.appearance.AppearanceActions
+import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.InputSettingsScreen
+import app.coshell.settings.MoneySettingsScreen
+import app.coshell.settings.NoticeSettingsScreen
+import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsScreen
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
 import app.coshell.language.LanguageChoice
@@ -341,6 +347,36 @@ class ScreensScreenshotTest {
             lastSync = "сегодня 12:03",
         )
     }
+
+    @Test
+    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsActions()) }
+
+    @Test
+    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsActions()) }
+
+    @Test
+    fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen({}, {}) }
+
+    @Test
+    fun `settings money dark`() = shot("settings_money_dark", dark = true) { MoneySettingsScreen({}, {}) }
+
+    @Test
+    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, {}) }
+
+    @Test
+    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, {}) }
+
+    @Test
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, {}) }
+
+    @Test
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, {}) }
+
+    @Test
+    fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen({}, {}, {}, {}) }
+
+    @Test
+    fun `settings data dark`() = shot("settings_data_dark", dark = true) { DataSettingsScreen({}, {}, {}, {}) }
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

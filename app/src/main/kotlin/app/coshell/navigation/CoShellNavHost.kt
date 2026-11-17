@@ -17,6 +17,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.InputSettingsRoute
+import app.coshell.settings.MoneySettingsScreen
+import app.coshell.settings.NoticeSettingsRoute
+import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsScreen
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -292,8 +298,40 @@ fun CoShellNavHost(
                 },
             )
         }
+        screen<SettingsDestination> {
+            SettingsScreen(
+                SettingsActions(
+                    onBack = { navController.popBackStack() },
+                    onLook = { navController.navigate(AppearanceDestination) },
+                    onMoney = { navController.navigate(MoneySettingsDestination) },
+                    onInput = { navController.navigate(InputSettingsDestination) },
+                    onNotices = { navController.navigate(NoticeSettingsDestination) },
+                    onData = { navController.navigate(DataSettingsDestination) },
+                ),
+            )
+        }
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
+        }
+        screen<MoneySettingsDestination> {
+            MoneySettingsScreen(
+                onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        screen<InputSettingsDestination> {
+            InputSettingsRoute(onBack = { navController.popBackStack() })
+        }
+        screen<NoticeSettingsDestination> {
+            NoticeSettingsRoute(onBack = { navController.popBackStack() })
+        }
+        screen<DataSettingsDestination> {
+            DataSettingsScreen(
+                onBackup = { navController.navigate(BackupDestination) },
+                onImport = { navController.navigate(WalletImportDestination) },
+                onWipe = { navController.navigate(WipeDataDestination) },
+                onBack = { navController.popBackStack() },
+            )
         }
         screen<WipeDataDestination> {
             WipeDataRoute(

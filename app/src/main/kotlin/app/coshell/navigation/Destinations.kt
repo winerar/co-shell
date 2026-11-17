@@ -73,7 +73,22 @@ data class AccountEditDestination(val accountId: String? = null) {
 data object MoreDestination
 
 @Serializable
+data object SettingsDestination
+
+@Serializable
 data object AppearanceDestination
+
+@Serializable
+data object MoneySettingsDestination
+
+@Serializable
+data object InputSettingsDestination
+
+@Serializable
+data object NoticeSettingsDestination
+
+@Serializable
+data object DataSettingsDestination
 
 @Serializable
 data object CategoriesDestination

@@ -2,6 +2,7 @@ package app.coshell.transactions.edit
 
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.TransactionType
+import app.coshell.transactions.edit.tip.TipUi
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -74,6 +75,8 @@ data class TransactionEditUiState(
     val tagIds: List<String> = emptyList(),
     /** Every live tag and the recent ones — the pill row and the «Теги» sheet. */
     val tags: TagChoices = TagChoices(),
+    /** The «Чаевые» sheet (#322); `null` — closed. */
+    val tip: TipUi? = null,
 ) {
     data class AccountOption(
         val id: String,
@@ -109,6 +112,9 @@ data class TransactionEditUiState(
     val toAccount: AccountOption? get() = accounts.firstOrNull { it.id == toAccountId }
 
     val isTransfer: Boolean get() = type == TransactionType.TRANSFER
+
+    /** «＋ Чаевые» (#322): a new purchase, not a refund and not a payment from «Скоро». */
+    val tipAvailable: Boolean get() = isNew && type == TransactionType.EXPENSE && !refund && payment == null
 
     /** A transfer between currencies needs the arriving amount too. */
     val needsToAmount: Boolean

@@ -2,7 +2,9 @@ package app.coshell.transactions.edit
 
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.testing.FakeTemplateUsage
+import app.coshell.testing.FakeTipSettings
 import app.coshell.testing.fakeEntryTags
+import app.coshell.testing.fakeEntryTip
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.model.TransactionTemplate
@@ -62,6 +64,9 @@ abstract class TransactionEditTestBase {
         categories.saveCategory(Category("salary", "Зарплата", CategoryType.INCOME))
     }
 
+    protected val rates = FakeExchangeRateRepository()
+    protected val tipSettings = FakeTipSettings()
+
     protected val templates = FakeTemplateRepository()
     protected val usage = FakeTemplateUsage()
 
@@ -87,10 +92,11 @@ abstract class TransactionEditTestBase {
         moneyFormat = MoneyFormat.RU,
         clock = object : Clock { override fun now(): Instant = now },
         timeZone = zone,
-        rates = FakeExchangeRateRepository(),
+        rates = rates,
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories, templates, usage),
         entryTags = fakeEntryTags(),
+        entryTip = fakeEntryTip(categories, transactions, tipSettings),
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

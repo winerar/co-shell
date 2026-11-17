@@ -6,6 +6,7 @@ These boards draw the picked variants (static, one state) for the «ок» befor
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
+from mockup_screens_fb_nov14 import key
 
 FEEDBACK = [
     (1117, 'Решения опроса 2026-11-17 · бэклог',
@@ -151,21 +152,37 @@ def tips():
                '<span style="font-size: 13px; color: %s;">отдельной операцией</span></div><div style="margin-top: 10px;">%s</div>'
                '<div style="margin: 12px -14px -14px;">%s</div>'
                % (MUTED, block('p10'),
-                  group([row('Наличные USD', 'Счёт чаевых · как в прошлый раз', badge('$', '#9AA594', '#0B0F0A', 36, 11), chevron()),
-                         row('Чаевые', 'Категория · выбрана при первом разе', dot_icon('gift', '#FF8FA3', 36), chevron())])
+                  group([row('Счёт чаевых', 'Наличные USD', badge('$', '#9AA594', '#0B0F0A', 36, 11), chevron()),
+                         row('Категория чаевых', 'Чаевые', dot_icon('gift', '#FF8FA3', 36), chevron())])
                   .replace('border-radius: 24px', 'border-radius: 0 0 24px 24px')),
                pad='14px', extra='margin: 14px 16px 0;')
     inner = head + tip + '<div style="padding: 0 16px;">%s</div>' % button('Сохранить две операции', 'primary', 'check', 16)
     return scrim() + sheet(inner, 150)
 
 
+def tips_own():
+    """«Своя сумма»: the amount is typed on the keypad inside the sheet; «Готово» saves both operations."""
+    ok = ('<span style="border-radius: 16px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px;">%sГотово</span>'
+          % (LIME, ONLIME, svg('check', ONLIME, 22, 2.2)))
+    pad = ('<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 54px; gap: 6px; margin-top: 12px;">%s</div>'
+           % (key('7') + key('8') + key('9') + key('⌫', KEY2, INK, 20) + key('4') + key('5') + key('6') + '<span></span>'
+              + key('1') + key('2') + key('3') + ok.replace('border-radius: 16px;', 'border-radius: 16px; grid-row: span 2;', 1) + key(',') + key('0') + key('000', KEY, INK, 18)))
+    chips_ = '<div style="display: flex; gap: 8px;">%s</div>' % (chip('10 %') + chip('15 %') + chip_on('Своя сумма'))
+    rows = group([row('Счёт чаевых', 'Наличные ARS', badge('$', '#9AA594', '#0B0F0A', 36, 11), chevron()),
+                  row('Категория чаевых', 'Чаевые', dot_icon('gift', '#FF8FA3', 36), chevron())])
+    inner = ('<div style="padding: 6px 20px 0;"><b style="font-size: 22px;">Чаевые</b><div style="font-size: 13px; color: %s;">От суммы 13 300 ARS</div>'
+             '<div style="margin-top: 12px;">%s</div><div style="margin-top: 8px; %s font-size: 30px; font-weight: 700; color: %s;">500 <span style="font-size: 16px; color: %s;">ARS</span></div>'
+             '<div style="margin: 6px -4px 0;">%s</div>%s</div>' % (MUTED, chips_, MONO, PINK, MUTED, rows, pad))
+    return scrim() + sheet(inner, 56)
+
+
 def tips_first():
     """First «＋ Чаевые»: which category to put tips in (asked once, changed in «Ещё»)."""
-    cats = group([row(n, s, dot_icon(i, c, 36), svg('check', LIME, 22, 2.4) if n == 'Чаевые' else '')
-                  for n, s, i, c in [('Чаевые', 'новая категория', 'gift', '#FF8FA3'), ('Кафе', 'как у покупки', 'cafe', '#FF9800'),
+    cats = group([row(n, s, dot_icon(i, c, 36), svg('check', LIME, 22, 2.4) if n == 'Как у покупки' else '')
+                  for n, s, i, c in [('Как у покупки', 'категория каждой покупки', 'cafe', '#FF9800'), ('Чаевые', 'новая категория', 'gift', '#FF8FA3'),
                                      ('Рестораны и бары', 'Еда', 'cafe', '#FF7A59'), ('Прочее', '', 'more', '#9AA594')]])
     inner = ('<div style="padding: 6px 20px 0;"><b style="font-size: 22px;">Куда записывать чаевые?</b><div style="font-size: 13px; color: %s; margin-top: 4px;">'
-             'Спросим один раз. Поменять — «Ещё → Категории».</div><div style="margin-top: 14px;">%s</div>%s</div>' % (MUTED, cats, button('Готово', mt=16)))
+             'Спросим один раз. Поменять — строка «Категория чаевых».</div><div style="margin-top: 14px;">%s</div></div>' % (MUTED, cats))
     return scrim() + sheet(inner, 300)
 
 
@@ -177,5 +194,6 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb180Types', '#180 В: девять типов счёта, долг со знаком минус', account_types, 1117),
     ('Fb440About', '#440 А: «О приложении» вместе с обновлением', about_update, 1117),
     ('Fb322Tips', '#322 А: «Чаевые» в шторке — 10 % / 15 % / своя, счёт и категория', tips, 1117),
+    ('Fb322Own', '#322 А: «Своя сумма» — клавиатура в шторке, «Готово» сохраняет обе операции', tips_own, 1117),
     ('Fb322First', '#322 А: первый раз — куда записывать чаевые', tips_first, 1117),
 ]

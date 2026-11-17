@@ -17,6 +17,7 @@ import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.fakeEntryTags
+import app.coshell.testing.fakeEntryTip
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
@@ -70,6 +71,7 @@ class DebitSuggestionTest {
             deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
             entryTemplates = fakeEntryTemplates(accounts, categories),
             entryTags = fakeEntryTags(),
+            entryTip = fakeEntryTip(categories, transactions),
         ).also { it.onReceiptToggle(true) } // account "card" (USDT), receipt in ARS
     }
 

@@ -86,3 +86,13 @@ internal val paymentSheetSample: TransactionEditUiState = entrySheetSample.copy(
     templateName = "Свет",
     payment = PaymentUi("Свет", LocalDate(2026, 11, 15), last = "41 300", average = "44 000"),
 )
+
+/** «Чаевые» of the sample purchase (#322, board `Fb322Tips`): 10 % of the 13 300 ARS receipt from the cash account. */
+internal val tipSheetSample = app.coshell.transactions.edit.tip.TipUi(
+    percent = 10,
+    accountId = "ars",
+    categoryId = "cafe",
+    baseText = "13 300 ARS",
+    tipText = "1 330 ARS",
+    canSave = true,
+)

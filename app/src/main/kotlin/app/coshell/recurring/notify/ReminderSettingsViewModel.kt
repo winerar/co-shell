@@ -30,4 +30,11 @@ class ReminderSettingsViewModel @Inject constructor(private val settings: Remind
             after()
         }
     }
+
+    /** «Предупреждать за»: 0 until loaded. */
+    val daysBefore: StateFlow<Int> = settings.daysBefore.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
+    fun setDaysBefore(days: Int) {
+        viewModelScope.launch { settings.setDaysBefore(days) }
+    }
 }

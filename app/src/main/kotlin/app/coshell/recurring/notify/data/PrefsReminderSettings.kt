@@ -42,11 +42,23 @@ class PrefsReminderSettings @Inject constructor(@ApplicationContext context: Con
         io { prefs.edit { putInt(KEY_HOUR, hour) } }
     }
 
+    private val daysState = MutableStateFlow<Int?>(null)
+
+    override val daysBefore: Flow<Int> = daysState
+        .onStart { if (daysState.value == null) daysState.compareAndSet(null, io { prefs.getInt(KEY_DAYS, 0).takeIf { it in ReminderSettings.DAYS_BEFORE } ?: 0 }) }
+        .filterNotNull()
+
+    override suspend fun setDaysBefore(days: Int) {
+        daysState.value = days
+        io { prefs.edit { putInt(KEY_DAYS, days) } }
+    }
+
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
 
     companion object {
         private const val KEY_ENABLED = "payment_reminders"
         private const val KEY_HOUR = "reminder_hour"
+        private const val KEY_DAYS = "reminder_days_before"
 
         private fun storedHour(prefs: android.content.SharedPreferences): Int =
             prefs.getInt(KEY_HOUR, ReminderSettings.DEFAULT_HOUR).takeIf { it in 0..23 } ?: ReminderSettings.DEFAULT_HOUR

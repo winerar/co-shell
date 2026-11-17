@@ -18,4 +18,6 @@
     <string name="template_foreign_amount_hint">Сумма покупки. Сколько списали со счёта — спросим при проведении, подставим по курсу</string>
     <string name="template_foreign_currency_error">Нужна другая валюта, не как у счёта: USD, EUR…</string>
     <string name="recurring_auto_no_foreign">платёж в другой валюте проводите вы — сумма списания своя</string>
+    <string name="recurring_notify_ahead_tomorrow">Завтра платёж</string>
+    <string name="recurring_notify_ahead">Платёж через %1$d дн.</string>
 </resources>

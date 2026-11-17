@@ -178,18 +178,29 @@ fun BalanceAccountsScreen(accounts: List<Account>, onInTotal: (String, Boolean) 
 fun NoticeSettingsRoute(onBack: () -> Unit, viewModel: ReminderSettingsViewModel = hiltViewModel()) {
     val enabled by viewModel.enabled.collectAsStateWithLifecycle()
     val hour by viewModel.hour.collectAsStateWithLifecycle()
+    val daysBefore by viewModel.daysBefore.collectAsStateWithLifecycle()
     val context = LocalContext.current.applicationContext
     NoticeSettingsScreen(
         remindersEnabled = enabled,
         onRemindersChange = viewModel::setEnabled,
         hour = hour,
         onHourChange = { h -> viewModel.setHour(h, after = { RecurringPaymentsScheduler.schedule(context, replace = true) }) },
+        daysBefore = daysBefore,
+        onDaysBeforeChange = viewModel::setDaysBefore,
         onBack = onBack,
     )
 }
 
 @Composable
-fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean) -> Unit, hour: Int, onHourChange: (Int) -> Unit, onBack: () -> Unit) {
+fun NoticeSettingsScreen(
+    remindersEnabled: Boolean,
+    onRemindersChange: (Boolean) -> Unit,
+    hour: Int,
+    onHourChange: (Int) -> Unit,
+    daysBefore: Int,
+    onDaysBeforeChange: (Int) -> Unit,
+    onBack: () -> Unit,
+) {
     GroupScaffold(R.string.settings_notices_title, onBack) {
         item { SectionTitle(stringResource(R.string.settings_notices_payments)) }
         item {
@@ -212,6 +223,14 @@ fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean)
                 labels = ReminderSettings.HOURS.map { stringResource(R.string.settings_notices_hour, it) },
                 selected = ReminderSettings.HOURS.indexOf(hour).coerceAtLeast(0),
                 onSelect = { onHourChange(ReminderSettings.HOURS[it]) },
+            )
+        }
+        item {
+            PickCard(
+                title = stringResource(R.string.settings_notices_before),
+                labels = ReminderSettings.DAYS_BEFORE.map { if (it == 0) stringResource(R.string.settings_notices_same_day) else stringResource(R.string.settings_notices_days, it) },
+                selected = ReminderSettings.DAYS_BEFORE.indexOf(daysBefore).coerceAtLeast(0),
+                onSelect = { onDaysBeforeChange(ReminderSettings.DAYS_BEFORE[it]) },
             )
         }
     }

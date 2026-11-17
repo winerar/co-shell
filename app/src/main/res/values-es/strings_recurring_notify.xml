@@ -18,4 +18,6 @@
     <string name="template_foreign_amount_hint">Importe de la compra. Al registrar preguntamos cuánto se cargó y lo sugerimos al cambio</string>
     <string name="template_foreign_currency_error">Elige otra moneda, distinta de la cuenta: USD, EUR…</string>
     <string name="recurring_auto_no_foreign">un pago en otra moneda lo registras tú: el importe cargado varía</string>
+    <string name="recurring_notify_ahead_tomorrow">Mañana hay un pago</string>
+    <string name="recurring_notify_ahead">Pago en %1$d días</string>
 </resources>

@@ -99,4 +99,7 @@
     <string name="settings_balance_all">All · shared by the family</string>
     <string name="settings_balance_except">All but %1$d · shared by the family</string>
     <string name="settings_home_balance_section">Balance</string>
+    <string name="settings_notices_before">Warn in advance</string>
+    <string name="settings_notices_same_day">On the day</string>
+    <string name="settings_notices_days">%1$d d</string>
 </resources>

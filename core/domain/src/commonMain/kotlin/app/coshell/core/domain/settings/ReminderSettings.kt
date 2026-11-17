@@ -17,10 +17,18 @@ interface ReminderSettings {
 
     suspend fun setHour(hour: Int)
 
+    /** «Предупреждать за»: 0 — only on the day, 1 or 3 — one more reminder that many days before. */
+    val daysBefore: Flow<Int>
+
+    suspend fun setDaysBefore(days: Int)
+
     companion object {
         const val DEFAULT_HOUR = 9
 
         /** The hours «Время напоминания» offers. */
         val HOURS = listOf(8, 9, 12, 18)
+
+        /** The values «Предупреждать за» offers. */
+        val DAYS_BEFORE = listOf(0, 1, 3)
     }
 }

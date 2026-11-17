@@ -99,4 +99,7 @@
     <string name="settings_balance_all">Todas · común a la familia</string>
     <string name="settings_balance_except">Todas menos %1$d · común a la familia</string>
     <string name="settings_home_balance_section">Saldo</string>
+    <string name="settings_notices_before">Avisar con antelación</string>
+    <string name="settings_notices_same_day">El mismo día</string>
+    <string name="settings_notices_days">%1$d d</string>
 </resources>

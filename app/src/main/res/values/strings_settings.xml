@@ -99,4 +99,7 @@
     <string name="settings_balance_all">Все · общая для семьи</string>
     <string name="settings_balance_except">Все, кроме %1$d · общая для семьи</string>
     <string name="settings_home_balance_section">Баланс</string>
+    <string name="settings_notices_before">Предупреждать за</string>
+    <string name="settings_notices_same_day">В день</string>
+    <string name="settings_notices_days">%1$d дн.</string>
 </resources>

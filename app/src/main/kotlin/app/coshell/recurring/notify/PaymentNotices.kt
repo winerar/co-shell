@@ -81,6 +81,14 @@ class PaymentNotices @Inject constructor(
         show(REMINDER_ID, builder.setOnlyAlertOnce(true).build())
     }
 
+    /** «Предупреждать за N дней»: one quiet notice — «Завтра платёж» / «Платёж через 3 дн.» with the names. */
+    fun ahead(templates: List<TransactionTemplate>, daysBefore: Int) {
+        if (templates.isEmpty()) return
+        val title = if (daysBefore == 1) context.getString(R.string.recurring_notify_ahead_tomorrow) else context.getString(R.string.recurring_notify_ahead, daysBefore)
+        val text = templates.joinToString(SEP) { t -> t.amount?.let { "${t.name} ${money.format(it)}" } ?: t.name }
+        show(AHEAD_ID, builder(title, text).addAction(0, context.getString(R.string.recurring_open), openApp()).build())
+    }
+
     /** The reminder is still on screen (not swiped away, not answered). */
     fun reminderShown(): Boolean = manager.activeNotifications.any { it.id == REMINDER_ID }
 
@@ -141,6 +149,7 @@ class PaymentNotices @Inject constructor(
         const val CHANNEL = "recurring_payments"
         private const val GROUP_POSTED = "recurring_posted"
         private const val REMINDER_ID = 143
+        private const val AHEAD_ID = 144
         private const val SEP = " · "
 
         /** One notification per posted operation, so «Отменить» knows which one. */

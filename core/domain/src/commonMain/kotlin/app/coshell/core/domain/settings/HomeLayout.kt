@@ -18,6 +18,18 @@ enum class HomeCard {
     RECENT,
 }
 
+/** What a tile of «Обзор» can show («Плитки · две»). The «Внимание» tile (no rate) takes the second place by itself when needed. */
+enum class HomeTile {
+    /** Spending of the month. */
+    SPENDING,
+
+    /** The budget of the month. */
+    BUDGET,
+
+    /** Operations without a category. */
+    UNCATEGORIZED,
+}
+
 /**
  * Which cards «Обзор» shows and in what order — «Настройки → Экраны → Обзор» (board `Set1Home`). Per phone. A card the app gets
  * later is unknown to a saved layout: it joins at the end, shown.

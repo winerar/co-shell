@@ -146,4 +146,11 @@
     <string name="export_type_expense">Расход</string>
     <string name="export_type_income">Доход</string>
     <string name="export_type_transfer">Перевод</string>
+    <string name="settings_home_tiles_section">Плитки · две</string>
+    <string name="settings_home_tile_first">Первая</string>
+    <string name="settings_home_tile_second">Вторая</string>
+    <string name="settings_home_tile_spending">Траты за месяц</string>
+    <string name="settings_home_tile_budget">Бюджет месяца</string>
+    <string name="settings_home_tile_uncategorized">Без категории</string>
+    <string name="settings_home_tiles_note">Плитка «Внимание» (нет курса) появляется сама на втором месте, когда нужно. Пока бюджетов нет, вместо «Бюджета» — «Без категории».</string>
 </resources>

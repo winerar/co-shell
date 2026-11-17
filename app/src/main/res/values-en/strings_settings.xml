@@ -146,4 +146,11 @@
     <string name="export_type_expense">Expense</string>
     <string name="export_type_income">Income</string>
     <string name="export_type_transfer">Transfer</string>
+    <string name="settings_home_tiles_section">Tiles · two</string>
+    <string name="settings_home_tile_first">First</string>
+    <string name="settings_home_tile_second">Second</string>
+    <string name="settings_home_tile_spending">Spending of the month</string>
+    <string name="settings_home_tile_budget">Budget of the month</string>
+    <string name="settings_home_tile_uncategorized">Uncategorized</string>
+    <string name="settings_home_tiles_note">The «Attention» tile (no rate) takes the second place by itself when needed. While there are no budgets, «Uncategorized» stands in for «Budget».</string>
 </resources>

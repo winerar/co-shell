@@ -44,4 +44,15 @@ class ScreenOptionsTest {
         assertEquals(7, WeekStart.SYSTEM.days(DayOfWeek.WEDNESDAY).distinct().size)
         assertEquals(WeekStart.SYSTEM, WeekStart.parse("???"))
     }
+
+    @Test
+    fun `the two tiles are never the same one`() {
+        val o = ScreenOptions()
+        assertEquals(HomeTile.SPENDING to HomeTile.BUDGET, o.tileFirst to o.tileSecond)
+        val swapped = o.withFirst(HomeTile.BUDGET)
+        assertEquals(HomeTile.BUDGET to HomeTile.SPENDING, swapped.tileFirst to swapped.tileSecond)
+        val third = o.withSecond(HomeTile.UNCATEGORIZED)
+        assertEquals(HomeTile.SPENDING to HomeTile.UNCATEGORIZED, third.tileFirst to third.tileSecond)
+        assertEquals(HomeTile.UNCATEGORIZED to HomeTile.SPENDING, third.withSecond(HomeTile.SPENDING).let { it.tileFirst to it.tileSecond })
+    }
 }

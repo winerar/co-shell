@@ -3,6 +3,7 @@ package app.coshell.settings
 import android.content.Context
 import androidx.core.content.edit
 import app.coshell.core.domain.settings.HomeLayout
+import app.coshell.core.domain.settings.HomeTile
 import app.coshell.core.domain.settings.ReportsStart
 import app.coshell.core.domain.settings.WeekStart
 import app.coshell.core.domain.settings.ScreenOptions
@@ -56,9 +57,13 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             partnerSpend = prefs.getBoolean(PARTNER, d.partnerSpend),
             partnerSpendMin = prefs.getInt(PARTNER_MIN, d.partnerSpendMin).takeIf { it in ScreenOptions.PARTNER_MINIMUMS } ?: d.partnerSpendMin,
             weekStart = WeekStart.parse(prefs.getString(WEEK_START, null)),
+            tileFirst = tile(TILE_FIRST, d.tileFirst),
+            tileSecond = tile(TILE_SECOND, d.tileSecond),
             recentCount = prefs.getInt(RECENT_COUNT, d.recentCount).takeIf { it in ScreenOptions.RECENT_COUNTS } ?: d.recentCount,
         )
     }
+
+    private fun tile(key: String, default: HomeTile): HomeTile = HomeTile.entries.firstOrNull { it.name == prefs.getString(key, null) } ?: default
 
     private fun write(o: ScreenOptions) = prefs.edit {
         putBoolean(OPS_ACCOUNT, o.opsShowAccount)
@@ -74,6 +79,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putString(HOME, o.home.encode())
         putInt(SOON_DAYS, o.soonDays)
         putInt(RECENT_COUNT, o.recentCount)
+        putString(TILE_FIRST, o.tileFirst.name)
+        putString(TILE_SECOND, o.tileSecond.name)
         putString(WEEK_START, o.weekStart.name)
         putBoolean(PARTNER, o.partnerSpend)
         putInt(PARTNER_MIN, o.partnerSpendMin)
@@ -99,6 +106,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val PARTNER = "partner_spend"
         private const val PARTNER_MIN = "partner_spend_min"
         private const val WEEK_START = "week_start"
+        private const val TILE_FIRST = "home_tile_first"
+        private const val TILE_SECOND = "home_tile_second"
         private const val HOME = "home_layout"
         private const val SOON_DAYS = "home_soon_days"
         private const val RECENT_COUNT = "home_recent_count"

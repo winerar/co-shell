@@ -9,6 +9,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import app.coshell.ui.form.ChoiceSheet
+import app.coshell.ui.form.ChoiceOption
+import app.coshell.core.domain.settings.HomeTile
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -178,6 +182,7 @@ fun HomeDetailsRoute(onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hil
 
 @Composable
 fun HomeDetailsScreen(options: ScreenOptions, change: ((ScreenOptions) -> ScreenOptions) -> Unit, onBack: () -> Unit) {
+    var picking by rememberSaveable { mutableIntStateOf(-1) } // 0 — the first tile, 1 — the second
     GroupScaffold(R.string.settings_home_details_title, onBack) {
         item {
             PickCard(
@@ -196,6 +201,28 @@ fun HomeDetailsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Screen
                 onSelect = { i -> change { it.copy(recentCount = ScreenOptions.RECENT_COUNTS[i]) } },
             )
         }
+        item { SectionTitle(stringResource(R.string.settings_home_tiles_section)) }
+        item {
+            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s)) {
+                row {
+                    CoShellMenuRow(DesignR.drawable.ic_payments, categoryColor(CategoryPalette.colors[8]), stringResource(R.string.settings_home_tile_first), { picking = 0 }, subtitle = stringResource(options.tileFirst.titleRes))
+                }
+                row {
+                    CoShellMenuRow(DesignR.drawable.ic_bar_chart, categoryColor(CategoryPalette.colors[13]), stringResource(R.string.settings_home_tile_second), { picking = 1 }, subtitle = stringResource(options.tileSecond.titleRes))
+                }
+            }
+        }
+        item { CoShellHint(stringResource(R.string.settings_home_tiles_note), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
+    }
+    if (picking >= 0) {
+        val second = picking == 1
+        ChoiceSheet(
+            title = stringResource(if (second) R.string.settings_home_tile_second else R.string.settings_home_tile_first),
+            options = HomeTile.entries.map { ChoiceOption(it, stringResource(it.titleRes)) },
+            selected = if (second) options.tileSecond else options.tileFirst,
+            onPick = { tile -> change { if (second) it.withSecond(tile) else it.withFirst(tile) }; picking = -1 },
+            onDismiss = { picking = -1 },
+        )
     }
 }
 
@@ -224,3 +251,10 @@ private fun ResetLink(enabled: Boolean, onClick: () -> Unit) {
         CoShellTextButton(onClick = onClick, enabled = enabled) { Text(stringResource(R.string.settings_reset)) }
     }
 }
+
+private val HomeTile.titleRes: Int
+    get() = when (this) {
+        HomeTile.SPENDING -> R.string.settings_home_tile_spending
+        HomeTile.BUDGET -> R.string.settings_home_tile_budget
+        HomeTile.UNCATEGORIZED -> R.string.settings_home_tile_uncategorized
+    }

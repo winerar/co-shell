@@ -146,4 +146,11 @@
     <string name="export_type_expense">Gasto</string>
     <string name="export_type_income">Ingreso</string>
     <string name="export_type_transfer">Transferencia</string>
+    <string name="settings_home_tiles_section">Mosaicos · dos</string>
+    <string name="settings_home_tile_first">Primero</string>
+    <string name="settings_home_tile_second">Segundo</string>
+    <string name="settings_home_tile_spending">Gastos del mes</string>
+    <string name="settings_home_tile_budget">Presupuesto del mes</string>
+    <string name="settings_home_tile_uncategorized">Sin categoría</string>
+    <string name="settings_home_tiles_note">El mosaico «Atención» (sin tipo de cambio) ocupa el segundo lugar solo cuando hace falta. Mientras no haya presupuestos, «Sin categoría» ocupa el lugar de «Presupuesto».</string>
 </resources>

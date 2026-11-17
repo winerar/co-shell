@@ -66,6 +66,9 @@ data class ScreenOptions(
     val home: HomeLayout = HomeLayout(),
     val soonDays: Int = 7,
     val recentCount: Int = 5,
+    /** «Плитки · две»: the first and the second tile of «Обзор»; never the same one twice. */
+    val tileFirst: HomeTile = HomeTile.SPENDING,
+    val tileSecond: HomeTile = HomeTile.BUDGET,
     /** «Деньги и даты»: the first day of a week in «Повторе» of a template. */
     val weekStart: WeekStart = WeekStart.SYSTEM,
     /** «Ввод операции → Шторка «+»»: the account (and with it the currency) the sheet opens on; `null` — the one used last. */
@@ -74,6 +77,11 @@ data class ScreenOptions(
     val partnerSpend: Boolean = false,
     val partnerSpendMin: Int = 50,
 ) {
+    /** [tile] goes to the first place; if it was the second one, the two swap. */
+    fun withFirst(tile: HomeTile): ScreenOptions = if (tile == tileSecond) copy(tileFirst = tile, tileSecond = tileFirst) else copy(tileFirst = tile)
+
+    fun withSecond(tile: HomeTile): ScreenOptions = if (tile == tileFirst) copy(tileSecond = tile, tileFirst = tileSecond) else copy(tileSecond = tile)
+
     companion object {
         /** What «Скоро» and «Последние» offer. */
         val SOON_DAYS = listOf(3, 7, 14, 30)

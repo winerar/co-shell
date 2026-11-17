@@ -16,8 +16,8 @@ import app.coshell.core.model.TransactionType
  */
 object Tips {
 
-    /** Quick choices in the sheet; «Своя сумма» is typed on the keypad. */
-    val PERCENTS = listOf(5, 10, 15)
+    /** Quick choices in the sheet (owner 2026-11-17, #322 А: 10 % / 15 %); «Своя сумма» is typed on the keypad. */
+    val PERCENTS = listOf(10, 15)
 
     /** What the percent is taken from: the receipt amount when there is one. */
     fun base(main: Transaction): Money = main.originalAmount ?: main.amount

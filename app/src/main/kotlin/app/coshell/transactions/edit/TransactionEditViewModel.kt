@@ -15,21 +15,14 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
-import app.coshell.core.model.CategoryType
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
-import app.coshell.core.model.tagIds
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
-import app.coshell.core.designsystem.components.keypad.AmountKeys
 import app.coshell.core.designsystem.components.keypad.KeypadKey
-import app.coshell.core.model.Currencies
-import app.coshell.core.model.CurrencyCode
-import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
-import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
 import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -138,56 +131,15 @@ class TransactionEditViewModel @Inject constructor(
             tags = _state.value.tags,
         )
         val loaded = when {
-            transaction != null -> formOf(transaction, base)
+            transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
             // «Дублировать»: the same operation as a new one today, straight on the amount.
-            template != null -> formOf(template, base).copy(isNew = true, isCopy = true, date = base.today)
-            else -> newForm(base, accountList, recent)
+            template != null -> entryFormOf(template, base, allCategories, moneyFormat, timeZone).copy(isNew = true, isCopy = true, date = base.today)
+            else -> newEntryForm(base, initialType, accountList, recent)
         }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
         pendingTemplateId?.let { applyTemplate(it) }
         pendingTemplateId = null
     }
-
-    /** A new transaction starts on today and on the account used last. */
-    private fun newForm(
-        base: TransactionEditUiState,
-        accountList: List<Account>,
-        recent: List<Transaction>,
-    ): TransactionEditUiState {
-        val lastAccount = recent.firstOrNull()?.accountId
-        return base.copy(
-            isNew = true,
-            type = initialType,
-            accountId = lastAccount?.takeIf { it in accountsById } ?: accountList.firstOrNull()?.id,
-            date = base.today,
-            // Owner 2026-11-09: the account is chosen first, even when the last one is preselected.
-            step = TransactionEditUiState.EntryStep.ACCOUNT,
-        )
-    }
-
-    private fun formOf(transaction: Transaction, base: TransactionEditUiState): TransactionEditUiState {
-        // An income in an expense category is a refund (#208): edited as an expense with «↩ Возврат» on.
-        val refund = transaction.type == TransactionType.INCOME &&
-            allCategories.any { it.id == transaction.categoryId && it.type == CategoryType.EXPENSE }
-        return formFields(transaction, base).copy(type = if (refund) TransactionType.EXPENSE else transaction.type, refund = refund)
-    }
-
-    private fun formFields(transaction: Transaction, base: TransactionEditUiState) = base.copy(
-        isNew = false,
-        step = TransactionEditUiState.EntryStep.DETAILS,
-        type = transaction.type,
-        amount = moneyFormat.formatForEditing(transaction.amount),
-        toAmount = transaction.toAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
-        accountId = transaction.accountId,
-        toAccountId = transaction.toAccountId,
-        categoryId = transaction.categoryId,
-        date = transaction.date.toLocalDateTime(timeZone).date,
-        note = transaction.note,
-        receiptEnabled = transaction.originalAmount != null,
-        receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
-        receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
-        tagIds = transaction.tagIds,
-    )
 
     // endregion
 
@@ -283,15 +235,12 @@ class TransactionEditViewModel @Inject constructor(
 
     /** A keypad key types into [TransactionEditUiState.keypadTarget]; «Готово» saves. */
     fun onKey(key: KeypadKey) {
-        val current = _state.value
         if (key == KeypadKey.Done) return save()
-        when (current.keypadTarget) {
-            KeypadTarget.AMOUNT ->
-                onAmountChange(AmountKeys.apply(current.amount, key, current.account?.fractionDigits ?: 2))
-            KeypadTarget.TO_AMOUNT ->
-                onToAmountChange(AmountKeys.apply(current.toAmount, key, current.toAccount?.fractionDigits ?: 2))
-            KeypadTarget.RECEIPT ->
-                onReceiptAmountChange(AmountKeys.apply(current.receiptAmount, key, fractionDigitsOf(current.receiptCurrency)))
+        val (target, text) = _state.value.typed(key)
+        when (target) {
+            KeypadTarget.AMOUNT -> onAmountChange(text)
+            KeypadTarget.TO_AMOUNT -> onToAmountChange(text)
+            KeypadTarget.RECEIPT -> onReceiptAmountChange(text)
         }
     }
 
@@ -386,37 +335,6 @@ class TransactionEditViewModel @Inject constructor(
     }
 
     // endregion
-
-    private fun TransactionEditUiState.withErrors(errors: FormErrors) = copy(
-        accountError = errors.accountError,
-        amountError = errors.amountError,
-        toAccountError = errors.toAccountError,
-        toAmountError = errors.toAmountError,
-        categoryError = errors.categoryError,
-        receiptCurrencyError = errors.receiptCurrencyError,
-        receiptAmountError = errors.receiptAmountError,
-    )
-
-    /** Use case refusals that the form could not foresee (e.g. an account deleted on the other phone). */
-    private fun TransactionEditUiState.withError(reason: SaveTransactionUseCase.Reason) = when (reason) {
-        SaveTransactionUseCase.Reason.ACCOUNT_NOT_FOUND,
-        SaveTransactionUseCase.Reason.CURRENCY_MISMATCH,
-        -> copy(accountError = true)
-        SaveTransactionUseCase.Reason.TARGET_ACCOUNT_NOT_FOUND,
-        SaveTransactionUseCase.Reason.TARGET_CURRENCY_MISMATCH,
-        -> copy(toAccountError = ToAccountError.REQUIRED)
-        SaveTransactionUseCase.Reason.CATEGORY_NOT_FOUND,
-        SaveTransactionUseCase.Reason.CATEGORY_TYPE_MISMATCH,
-        -> copy(categoryError = true, categoryId = null)
-        SaveTransactionUseCase.Reason.ORIGINAL_CURRENCY_INVALID ->
-            copy(receiptCurrencyError = TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT)
-    }
-
-    private fun Account.toOption(balance: String) =
-        AccountOption(id, name, currency.value, type, color, balance, Currencies.info(currency).fractionDigits)
-
-    private fun fractionDigitsOf(code: String): Int =
-        CurrencyCode.parseOrNull(code)?.let { Currencies.info(it).fractionDigits } ?: 2
 
     private companion object {
         const val RECENT_ACCOUNTS = 4

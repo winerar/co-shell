@@ -79,6 +79,16 @@ fun OpsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Screen
                 }
             }
         }
+        item { SectionTitle(stringResource(R.string.settings_ops_amount_section)) }
+        item {
+            PickCard(
+                title = stringResource(R.string.settings_ops_amount_title),
+                labels = listOf(stringResource(R.string.settings_ops_amount_account), stringResource(R.string.settings_ops_amount_main)),
+                selected = if (options.opsAmountInMain) 1 else 0,
+                onSelect = { i -> change { it.copy(opsAmountInMain = i == 1) } },
+            )
+        }
+        item { CoShellHint(stringResource(R.string.settings_ops_amount_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
     }
 }
 

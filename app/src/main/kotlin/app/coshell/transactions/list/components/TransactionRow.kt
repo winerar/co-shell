@@ -113,7 +113,7 @@ internal fun TransactionRow(
                 }
                 // A huge amount shrinks rather than wraps or pushes the category out (the row caps its width).
                 AmountText(row.amount, style = AmountTextStyle, color = row.amountColor(), minFontSize = MinAmountSize)
-                row.secondaryAmount?.let {
+                (row.secondaryAmount ?: row.inMain.takeIf { options.opsAmountInMain })?.let {
                     AmountText(it, style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant, minFontSize = MinAmountSize)
                 }
             }

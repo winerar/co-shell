@@ -50,6 +50,8 @@ data class ScreenOptions(
     val opsShowAccount: Boolean = true,
     val opsShowTags: Boolean = true,
     val opsShowNote: Boolean = true,
+    /** «Операции»: under the amount, «≈ …» in the main report currency at the rate of the day of the operation. */
+    val opsAmountInMain: Boolean = false,
     /** «Счета»: grouped by currency instead of type, and the archive shown at the start. */
     val accountsByCurrency: Boolean = false,
     val accountsShowArchived: Boolean = false,

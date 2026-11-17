@@ -43,6 +43,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             opsShowAccount = prefs.getBoolean(OPS_ACCOUNT, d.opsShowAccount),
             opsShowTags = prefs.getBoolean(OPS_TAGS, d.opsShowTags),
             opsShowNote = prefs.getBoolean(OPS_NOTE, d.opsShowNote),
+            opsAmountInMain = prefs.getBoolean(OPS_MAIN, d.opsAmountInMain),
             accountsByCurrency = prefs.getBoolean(ACC_CURRENCY, d.accountsByCurrency),
             accountsShowArchived = prefs.getBoolean(ACC_ARCHIVED, d.accountsShowArchived),
             reportsStart = ReportsStart.parse(prefs.getString(REP_START, null)),
@@ -61,6 +62,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putBoolean(OPS_ACCOUNT, o.opsShowAccount)
         putBoolean(OPS_TAGS, o.opsShowTags)
         putBoolean(OPS_NOTE, o.opsShowNote)
+        putBoolean(OPS_MAIN, o.opsAmountInMain)
         putBoolean(ACC_CURRENCY, o.accountsByCurrency)
         putBoolean(ACC_ARCHIVED, o.accountsShowArchived)
         putString(REP_START, o.reportsStart.name)
@@ -83,6 +85,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
 
         private const val OPS_ACCOUNT = "ops_account"
         private const val OPS_TAGS = "ops_tags"
+        private const val OPS_MAIN = "ops_amount_main"
         private const val OPS_NOTE = "ops_note"
         private const val ACC_CURRENCY = "acc_by_currency"
         private const val ACC_ARCHIVED = "acc_archived"

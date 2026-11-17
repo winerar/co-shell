@@ -102,4 +102,9 @@
     <string name="settings_notices_before">Warn in advance</string>
     <string name="settings_notices_same_day">On the day</string>
     <string name="settings_notices_days">%1$d d</string>
+    <string name="settings_ops_amount_section">Amount</string>
+    <string name="settings_ops_amount_title">Show in the row</string>
+    <string name="settings_ops_amount_account">In the account currency</string>
+    <string name="settings_ops_amount_main">And in the main one</string>
+    <string name="settings_ops_amount_hint">A second line «≈ …» at the rate of the day of the transaction. Holding an amount still shows it in all totals currencies.</string>
 </resources>

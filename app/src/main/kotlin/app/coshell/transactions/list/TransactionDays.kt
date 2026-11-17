@@ -1,5 +1,7 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.domain.rates.CurrencyConverter
+import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.model.Category
@@ -57,6 +59,26 @@ internal fun buildTransactionDays(
                 },
             ).withTotal(items, moneyFormat)
         }
+}
+
+/**
+ * «≈ -1 220 USD» under the amount (`opsAmountInMain`): the main currency at the rate of the day of each operation. A row in
+ * the main currency, one without a rate and one that already has a second amount (receipt, transfer) stay as they are.
+ */
+internal fun List<Day>.withAmountsInMain(on: Boolean, main: CurrencyCode?, book: RateBook, moneyFormat: MoneyFormat): List<Day> {
+    if (!on || main == null) return this
+    val converter = CurrencyConverter(book)
+    return map { day ->
+        day.copy(
+            rows = day.rows.map { row ->
+                val money = row.money
+                if (money == null || money.currency == main || row.secondaryAmount != null) return@map row
+                val converted = converter.convert(money, main, day.date) ?: return@map row
+                val sign = row.amount.takeWhile { it == '-' || it == '+' }
+                row.copy(inMain = "≈ $sign${moneyFormat.format(converted.money)}")
+            },
+        )
+    }
 }
 
 private fun Row.withTags(t: Transaction, tagsById: Map<String, Tag>): Row {

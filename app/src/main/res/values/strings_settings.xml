@@ -102,4 +102,9 @@
     <string name="settings_notices_before">Предупреждать за</string>
     <string name="settings_notices_same_day">В день</string>
     <string name="settings_notices_days">%1$d дн.</string>
+    <string name="settings_ops_amount_section">Сумма</string>
+    <string name="settings_ops_amount_title">Показывать в строке</string>
+    <string name="settings_ops_amount_account">В валюте счёта</string>
+    <string name="settings_ops_amount_main">И в основной</string>
+    <string name="settings_ops_amount_hint">Вторая строка «≈ …» по курсу дня операции. Удержание суммы всё равно показывает её во всех валютах итогов.</string>
 </resources>

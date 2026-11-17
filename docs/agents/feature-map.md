@@ -102,3 +102,5 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `core:data/db/ImportDao` + `repository/RoomImportRepository`. Экран-мастер — `app/.../importer/wallet/`
 (черновик выбора — `WalletImportDraft`, шаги — `components/*Step.kt`), копия перед импортом — `importer/PreImportBackup`.
 Несовместимая версия у второго участника (#334): `core:data/sync/VersionGate.kt` (`peer_schema` пишет `SyncEngine` при pull), замок ввода — `app/.../gate/` (`InputLock` + `LocalInputLock.guard`, окно — `InputLockNote.kt`), плашка — `home/components/VersionGateBanner`, «+» с замком — `CoShellBottomBar(addLocked)`; провод — `CoShellNavHost` → `MainShell`.
+Экспорт CSV (#204, экран — после «ок»): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
+Ручной порядок (#338, экран — после «ок»): `core:domain/Reorder` — новые `sortOrder` при перетаскивании (меняется одна строка, шаг 1024).

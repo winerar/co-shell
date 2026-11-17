@@ -1,6 +1,8 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.model.Account
+import kotlin.time.Instant
+import app.coshell.core.model.Transaction
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.TransactionType
@@ -115,5 +117,19 @@ class TransactionFormTest {
         assertEquals("1 ARS = 1\u00A0050 USD", receiptRateText(base.copy(amount = "1 050", receiptAmount = "1")))
         assertEquals(null, receiptRateText(base.copy(receiptAmount = "")))
         assertEquals("0,0067", formatRate(app.coshell.core.model.Rate.parse("0.0067")))
+    }
+
+    @Test
+    fun `a new entry opens on the account of the settings, else on the last one, else on the first`() {
+        val base = TransactionEditUiState()
+        val accounts = listOf(card, cash, wallet)
+        val recent = listOf(Transaction("t", TransactionType.EXPENSE, wallet.id, Money(1_00, ars), Instant.fromEpochSeconds(0)))
+
+        fun opened(preferred: String?) = newEntryForm(base, TransactionType.EXPENSE, accounts, recent, preferred).accountId
+
+        assertEquals("cash", opened("cash"))
+        assertEquals("wallet", opened(null))
+        assertEquals("wallet", opened("gone"))
+        assertEquals("card", newEntryForm(base, TransactionType.EXPENSE, accounts, emptyList(), null).accountId)
     }
 }

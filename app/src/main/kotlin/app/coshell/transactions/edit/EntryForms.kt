@@ -28,13 +28,15 @@ internal fun newEntryForm(
     type: TransactionType,
     accounts: List<Account>,
     recent: List<Transaction>,
+    /** «Настройки → Ввод операции → Всегда этот счёт»; `null` — the account used last. */
+    preferredAccountId: String? = null,
 ): TransactionEditUiState {
     val known = accounts.mapTo(HashSet()) { it.id }
     val lastAccount = recent.firstOrNull()?.accountId
     return base.copy(
         isNew = true,
         type = type,
-        accountId = lastAccount?.takeIf { it in known } ?: accounts.firstOrNull()?.id,
+        accountId = preferredAccountId?.takeIf { it in known } ?: lastAccount?.takeIf { it in known } ?: accounts.firstOrNull()?.id,
         date = base.today,
         step = EntryStep.ACCOUNT,
     )

@@ -1,7 +1,32 @@
 package app.coshell.core.domain.settings
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.DayOfWeek
 import kotlinx.coroutines.flow.MutableStateFlow
+
+/** «Деньги и даты → Неделя начинается с»: Monday, Sunday or what the phone says. */
+enum class WeekStart {
+    MONDAY,
+    SUNDAY,
+    SYSTEM,
+    ;
+
+    /** The seven days in the order of a week that starts as chosen; [systemFirst] is the phone's own first day. */
+    fun days(systemFirst: DayOfWeek): List<DayOfWeek> {
+        val first = when (this) {
+            MONDAY -> DayOfWeek.MONDAY
+            SUNDAY -> DayOfWeek.SUNDAY
+            SYSTEM -> systemFirst
+        }
+        val all = DayOfWeek.entries
+        return all.drop(first.ordinal) + all.take(first.ordinal)
+    }
+
+    companion object {
+        /** Saved as [name]; unknown or missing → [SYSTEM]. */
+        fun parse(stored: String?): WeekStart = entries.firstOrNull { it.name == stored } ?: SYSTEM
+    }
+}
 
 /** The period «Отчёты» open on. */
 enum class ReportsStart {
@@ -39,6 +64,10 @@ data class ScreenOptions(
     val home: HomeLayout = HomeLayout(),
     val soonDays: Int = 7,
     val recentCount: Int = 5,
+    /** «Деньги и даты»: the first day of a week in «Повторе» of a template. */
+    val weekStart: WeekStart = WeekStart.SYSTEM,
+    /** «Ввод операции → Шторка «+»»: the account (and with it the currency) the sheet opens on; `null` — the one used last. */
+    val entryAccountId: String? = null,
 ) {
     companion object {
         /** What «Скоро» and «Последние» offer. */

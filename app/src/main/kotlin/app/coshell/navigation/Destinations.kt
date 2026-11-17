@@ -88,6 +88,9 @@ data object HomeSettingsDestination
 data object HomeDetailsSettingsDestination
 
 @Serializable
+data object BalanceAccountsDestination
+
+@Serializable
 data object OpsSettingsDestination
 
 @Serializable

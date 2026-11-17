@@ -7,7 +7,12 @@ import app.coshell.newmark.NewFeatures
 import androidx.compose.runtime.CompositionLocalProvider
 import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.appearance.AppearanceActions
+import app.coshell.core.model.Account
+import app.coshell.core.model.CurrencyCode
+import app.coshell.settings.AccountChoice
 import app.coshell.settings.AccountsSettingsScreen
+import app.coshell.settings.BalanceAccountsScreen
+import app.coshell.core.domain.settings.WeekStart
 import app.coshell.settings.HomeDetailsScreen
 import app.coshell.settings.HomeSettingsScreen
 import app.coshell.core.domain.settings.HomeCard
@@ -366,16 +371,16 @@ class ScreensScreenshotTest {
     fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsActions()) }
 
     @Test
-    fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen({}, {}) }
+    fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }
 
     @Test
-    fun `settings money dark`() = shot("settings_money_dark", dark = true) { MoneySettingsScreen({}, {}) }
+    fun `settings money dark`() = shot("settings_money_dark", dark = true) { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }
 
     @Test
-    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, true, {}, {}) }
+    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, true, {}, {}) }
+    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
     fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, {}) }
@@ -425,16 +430,26 @@ class ScreensScreenshotTest {
     fun `settings accounts dark`() = shot("settings_accounts_dark", dark = true) { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
 
     @Test
-    fun `settings home light`() = shot("settings_home_light") { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}) }
+    fun `settings home light`() = shot("settings_home_light") { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}, 2, {}) }
 
     @Test
-    fun `settings home dark`() = shot("settings_home_dark", dark = true) { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}) }
+    fun `settings home dark`() = shot("settings_home_dark", dark = true) { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}, 2, {}) }
 
     @Test
     fun `settings home details light`() = shot("settings_home_details_light") { HomeDetailsScreen(ScreenOptions(), {}, {}) }
 
     @Test
     fun `settings home details dark`() = shot("settings_home_details_dark", dark = true) { HomeDetailsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings balance light`() = shot("settings_balance_light") {
+        BalanceAccountsScreen(listOf(Account("a", "Galicia", CurrencyCode("ARS")), Account("b", "Копилка", CurrencyCode("USD"), excludedFromTotal = true)), { _, _ -> }, {})
+    }
+
+    @Test
+    fun `settings balance dark`() = shot("settings_balance_dark", dark = true) {
+        BalanceAccountsScreen(listOf(Account("a", "Galicia", CurrencyCode("ARS")), Account("b", "Копилка", CurrencyCode("USD"), excludedFromTotal = true)), { _, _ -> }, {})
+    }
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)

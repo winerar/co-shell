@@ -6,6 +6,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import app.coshell.core.domain.settings.ScreenOptions
+import app.coshell.core.model.Account
+import app.coshell.ui.form.ChoiceSheet
+import app.coshell.ui.form.ChoiceOption
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -16,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSwitchRow
@@ -24,6 +33,7 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.importer.wallet.components.ImportColors
 import app.coshell.core.domain.settings.ReminderSettings
+import app.coshell.core.domain.settings.WeekStart
 import app.coshell.recurring.notify.RecurringPaymentsScheduler
 import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.shake.ShakeSettingsViewModel
@@ -34,26 +44,35 @@ import app.coshell.core.designsystem.R as DesignR
 // The group screens of «Настройки» (boards Set1Entry, Set1Notices, Set1Money, Set1Data). Only what exists today:
 // the rest of each board (partner spending, week start…) lands one setting at a time.
 
-/** «Ввод операции»: the shake gesture. */
+/** «Ввод операции»: shake, the account the «+» sheet opens on, vibration. */
 @Composable
 fun InputSettingsRoute(
     onBack: () -> Unit,
     viewModel: ShakeSettingsViewModel = hiltViewModel(),
     screens: ScreenOptionsViewModel = hiltViewModel(),
+    accounts: SettingsAccountsViewModel = hiltViewModel(),
 ) {
     val enabled by viewModel.enabled.collectAsStateWithLifecycle()
     val options by screens.options.collectAsStateWithLifecycle()
-    InputSettingsScreen(enabled, viewModel::setEnabled, options.haptics, { v -> screens.change { it.copy(haptics = v) } }, onBack)
+    val list by accounts.list.collectAsStateWithLifecycle()
+    InputSettingsScreen(enabled, viewModel::setEnabled, options, { f -> screens.change(change = f) }, list.map { AccountChoice(it.id, it.name, it.currency.value) }, onBack)
 }
+
+/** An account to pick in the settings: its currency goes with it. */
+data class AccountChoice(val id: String, val name: String, val currency: String)
 
 @Composable
 fun InputSettingsScreen(
     shakeEnabled: Boolean,
     onShakeChange: (Boolean) -> Unit,
-    hapticsEnabled: Boolean,
-    onHapticsChange: (Boolean) -> Unit,
+    options: ScreenOptions,
+    change: ((ScreenOptions) -> ScreenOptions) -> Unit,
+    accounts: List<AccountChoice>,
     onBack: () -> Unit,
 ) {
+    var picking by rememberSaveable { mutableStateOf(false) }
+    val chosen = accounts.firstOrNull { it.id == options.entryAccountId }
+    val always = options.entryAccountId != null
     GroupScaffold(R.string.settings_input_title, onBack) {
         item { SectionTitle(stringResource(R.string.settings_input_quick)) }
         item {
@@ -69,6 +88,37 @@ fun InputSettingsScreen(
                 }
             }
         }
+        item { SectionTitle(stringResource(R.string.settings_input_sheet)) }
+        item {
+            PickCard(
+                title = stringResource(R.string.settings_input_account_title),
+                labels = listOf(stringResource(R.string.settings_input_last), stringResource(R.string.settings_input_always)),
+                selected = if (always) 1 else 0,
+                onSelect = { i ->
+                    if (i == 0) change { it.copy(entryAccountId = null) }
+                    else if (accounts.isNotEmpty()) {
+                        // «Всегда этот»: the first account until the person picks another.
+                        change { it.copy(entryAccountId = it.entryAccountId ?: accounts.first().id) }
+                        picking = true
+                    }
+                },
+            )
+        }
+        if (always) {
+            item {
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s)) {
+                    row {
+                        CoShellMenuRow(
+                            DesignR.drawable.ic_account_balance_wallet, categoryColor(CategoryPalette.colors[0]),
+                            stringResource(R.string.settings_input_account),
+                            { picking = true },
+                            subtitle = chosen?.let { "${it.name} · ${it.currency}" } ?: stringResource(R.string.settings_input_account_gone),
+                        )
+                    }
+                }
+            }
+            item { CoShellHint(stringResource(R.string.settings_input_account_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
+        }
         item { SectionTitle(stringResource(R.string.settings_input_feedback)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
@@ -76,9 +126,47 @@ fun InputSettingsScreen(
                     CoShellSwitchRow(
                         title = stringResource(R.string.settings_input_haptics),
                         subtitle = stringResource(R.string.settings_input_haptics_hint),
-                        checked = hapticsEnabled,
-                        onCheckedChange = onHapticsChange,
+                        checked = options.haptics,
+                        onCheckedChange = { v -> change { it.copy(haptics = v) } },
                     )
+                }
+            }
+        }
+    }
+    if (picking) {
+        ChoiceSheet(
+            title = stringResource(R.string.settings_input_account),
+            options = accounts.map { ChoiceOption(it.id, it.name, it.currency) },
+            selected = options.entryAccountId,
+            onPick = { id -> change { it.copy(entryAccountId = id) }; picking = false },
+            onDismiss = { picking = false },
+        )
+    }
+}
+
+/** «Счета в общем балансе»: every live account with a switch — the flag of the account editor, shared by the family. */
+@Composable
+fun BalanceAccountsRoute(onBack: () -> Unit, viewModel: SettingsAccountsViewModel = hiltViewModel()) {
+    val list by viewModel.list.collectAsStateWithLifecycle()
+    BalanceAccountsScreen(list, viewModel::setInTotal, onBack)
+}
+
+@Composable
+fun BalanceAccountsScreen(accounts: List<Account>, onInTotal: (String, Boolean) -> Unit, onBack: () -> Unit) {
+    GroupScaffold(R.string.settings_balance_title, onBack) {
+        item { CoShellHint(stringResource(R.string.settings_balance_intro), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
+        item { SectionTitle(stringResource(R.string.settings_balance_accounts)) }
+        item {
+            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                accounts.forEach { account ->
+                    row {
+                        CoShellSwitchRow(
+                            title = account.name,
+                            subtitle = account.currency.value,
+                            checked = !account.excludedFromTotal,
+                            onCheckedChange = { onInTotal(account.id, it) },
+                        )
+                    }
                 }
             }
         }
@@ -129,9 +217,16 @@ fun NoticeSettingsScreen(remindersEnabled: Boolean, onRemindersChange: (Boolean)
     }
 }
 
-/** «Деньги и даты»: what is shared by the family. */
+/** «Деньги и даты»: what is shared by the family and the first day of the week. */
 @Composable
-fun MoneySettingsScreen(onCurrencies: () -> Unit, onBack: () -> Unit) {
+fun MoneySettingsRoute(onCurrencies: () -> Unit, onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hiltViewModel()) {
+    val options by viewModel.options.collectAsStateWithLifecycle()
+    MoneySettingsScreen(options.weekStart, { w -> viewModel.change { it.copy(weekStart = w) } }, onCurrencies, onBack)
+}
+
+@Composable
+fun MoneySettingsScreen(weekStart: WeekStart, onWeekStart: (WeekStart) -> Unit, onCurrencies: () -> Unit, onBack: () -> Unit) {
+    val starts = WeekStart.entries
     GroupScaffold(R.string.settings_money_title, onBack) {
         item { SectionTitle(stringResource(R.string.settings_money_family)) }
         item {
@@ -143,6 +238,15 @@ fun MoneySettingsScreen(onCurrencies: () -> Unit, onBack: () -> Unit) {
                     )
                 }
             }
+        }
+        item { SectionTitle(stringResource(R.string.settings_money_phone)) }
+        item {
+            PickCard(
+                title = stringResource(R.string.settings_money_week),
+                labels = listOf(R.string.settings_money_week_mon, R.string.settings_money_week_sun, R.string.settings_money_week_system).map { stringResource(it) },
+                selected = starts.indexOf(weekStart),
+                onSelect = { onWeekStart(starts[it]) },
+            )
         }
     }
 }

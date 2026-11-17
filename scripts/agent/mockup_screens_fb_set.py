@@ -155,6 +155,23 @@ def entry():
     return inner_screen('Ввод операции', body)
 
 
+def entry_account():
+    """«Ввод операции» with «Всегда этот»: the account (and with it the currency) the «+» sheet opens on."""
+    body = (label('Быстрый ввод', top=4) + group([sw('Встряхнуть — новая операция', 'встряхните телефон в приложении', True)])
+            + label('Шторка «+»') + pick_row('Счёт и валюта', ['Последние', 'Всегда этот'], 'Всегда этот')
+            + '<div style="height: 10px;"></div>' + group([r('Счёт', 'Galicia · ARS', 'wallet', YELLOW, YELLOWBG)])
+            + note('Шторка открывается с этим счётом и его валютой; сменить можно в самой шторке.', 8)
+            + label('Отклик') + group([sw('Вибрация', 'касания и успешное сохранение', True)]))
+    return inner_screen('Ввод операции', body)
+
+
+def balance():
+    """«Обзор → Баланс → Счета в общем балансе»: the same flags as in the account editor, in one list; shared by the family."""
+    g = group([sw('Galicia', 'ARS · карта', True), sw('USDT-карта', 'USDT · карта', True), sw('Bybit', 'USDT · биржа', True),
+               sw('Копилка', 'USD · наличные', False), sw('Кредитка', 'RUB · карта', False)])
+    return inner_screen('Счета в общем балансе', note('Что входит в «Общий баланс» на «Обзоре». Общая для всей семьи.', 4) + label('Счета', top=10) + g)
+
+
 def notices():
     body = (label('Платежи', top=4) + group([sw('Напоминания о платежах', 'за день до срока и в день платежа', True)])
             + label('Когда') + pick_row('Время напоминания', ['8:00', '9:00', '12:00', '18:00'], '9:00')
@@ -191,6 +208,8 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1Accounts', 'Счета: группировка и архив', accounts, 1118),
     ('Set1Money', 'Деньги и даты', money, 1118),
     ('Set1Entry', 'Ввод операции', entry, 1118),
+    ('Set1EntryAcc', 'Ввод операции: всегда этот счёт', entry_account, 1118),
+    ('Set1Balance', 'Обзор: счета в общем балансе', balance, 1118),
     ('Set1Notices', 'Уведомления', notices, 1118),
     ('Set1Data', 'Данные и копия', data, 1118),
 ]

@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.settings.LocalScreenOptions
+import app.coshell.settings.systemFirstDay
 import app.coshell.core.designsystem.components.CoShellDayGrid
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellLabelGrid
@@ -67,11 +69,13 @@ internal fun ColumnScope.RepeatSheetBody(draft: RepeatDraft, state: TemplateEdit
         }
         RepeatKind.WEEK -> {
             CoShellSectionLabel(stringResource(R.string.recurring_weekday))
+            // «Настройки → Деньги и даты → Неделя начинается с»: the days in the order of that week.
+            val week = LocalScreenOptions.current.weekStart.days(systemFirstDay())
             CoShellLabelGrid(
-                labels = DayOfWeek.entries.map { formatWeekdayShort(it) },
-                selected = draft.weekday.ordinal,
-                onSelect = { onChange(draft.copy(weekday = DayOfWeek.entries[it])) },
-                columns = DayOfWeek.entries.size,
+                labels = week.map { formatWeekdayShort(it) },
+                selected = week.indexOf(draft.weekday),
+                onSelect = { onChange(draft.copy(weekday = week[it])) },
+                columns = week.size,
             )
         }
         RepeatKind.YEAR -> {

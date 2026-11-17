@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
@@ -68,6 +70,7 @@ class TransactionEditViewModel @Inject constructor(
     private val entryTemplates: EntryTemplates,
     private val entryTags: EntryTags,
     private val entryTip: EntryTip,
+    private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -144,7 +147,7 @@ class TransactionEditViewModel @Inject constructor(
             transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
             // «Дублировать»: the same operation as a new one today, straight on the amount.
             template != null -> entryFormOf(template, base, allCategories, moneyFormat, timeZone).copy(isNew = true, isCopy = true, date = base.today)
-            else -> newEntryForm(base, initialType, accountList, recent)
+            else -> newEntryForm(base, initialType, accountList, recent, screenOptions.options.first().entryAccountId)
         }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
         pendingTemplateId?.let { applyTemplate(it) }

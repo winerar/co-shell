@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.content.edit
 import app.coshell.core.domain.settings.HomeLayout
 import app.coshell.core.domain.settings.ReportsStart
+import app.coshell.core.domain.settings.WeekStart
 import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -50,6 +51,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             syncWifiOnly = prefs.getBoolean(SYNC_WIFI, d.syncWifiOnly),
             home = HomeLayout.parse(prefs.getString(HOME, null)),
             soonDays = prefs.getInt(SOON_DAYS, d.soonDays).takeIf { it in ScreenOptions.SOON_DAYS } ?: d.soonDays,
+            entryAccountId = prefs.getString(ENTRY_ACCOUNT, null)?.takeIf { it.isNotEmpty() },
+            weekStart = WeekStart.parse(prefs.getString(WEEK_START, null)),
             recentCount = prefs.getInt(RECENT_COUNT, d.recentCount).takeIf { it in ScreenOptions.RECENT_COUNTS } ?: d.recentCount,
         )
     }
@@ -67,6 +70,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putString(HOME, o.home.encode())
         putInt(SOON_DAYS, o.soonDays)
         putInt(RECENT_COUNT, o.recentCount)
+        putString(WEEK_START, o.weekStart.name)
+        putString(ENTRY_ACCOUNT, o.entryAccountId.orEmpty())
     }
 
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
@@ -83,6 +88,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val ACC_ARCHIVED = "acc_archived"
         private const val REP_START = "rep_start"
         private const val REP_COMPARE = "rep_compare"
+        private const val ENTRY_ACCOUNT = "entry_account"
+        private const val WEEK_START = "week_start"
         private const val HOME = "home_layout"
         private const val SOON_DAYS = "home_soon_days"
         private const val RECENT_COUNT = "home_recent_count"

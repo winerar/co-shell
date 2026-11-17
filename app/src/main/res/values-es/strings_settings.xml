@@ -4,7 +4,7 @@
     <string name="settings_intro">Ajustes de este teléfono. Las monedas de los totales son comunes a la familia.</string>
     <string name="settings_look_items">Idioma · tema · paleta · densidad de listas</string>
     <string name="settings_money_title">Dinero y fechas</string>
-    <string name="settings_money_items">Monedas de los totales</string>
+    <string name="settings_money_items">Monedas de los totales · inicio de semana</string>
     <string name="settings_money_family">Para toda la familia</string>
     <string name="settings_input_title">Introducir movimientos</string>
     <string name="settings_input_items">Agitar · vibración</string>
@@ -81,4 +81,22 @@
     <string name="settings_home_recent_title">Cuántos mostrar</string>
     <string name="settings_home_items">Tarjetas · «Pronto» · «Últimos»</string>
     <string name="settings_reset">Restablecer</string>
+    <string name="settings_money_phone">En este teléfono</string>
+    <string name="settings_money_week">La semana empieza el</string>
+    <string name="settings_money_week_mon">Lun</string>
+    <string name="settings_money_week_sun">Dom</string>
+    <string name="settings_money_week_system">Como el sistema</string>
+    <string name="settings_input_sheet">La hoja «+»</string>
+    <string name="settings_input_account_title">Cuenta y moneda</string>
+    <string name="settings_input_last">La última</string>
+    <string name="settings_input_always">Siempre esta</string>
+    <string name="settings_input_account">Cuenta</string>
+    <string name="settings_input_account_gone">elige una cuenta</string>
+    <string name="settings_input_account_hint">La hoja se abre con esta cuenta y su moneda; puedes cambiarla en la hoja.</string>
+    <string name="settings_balance_title">Cuentas en el saldo total</string>
+    <string name="settings_balance_intro">Lo que suma el «Saldo total» del Resumen. Común a toda la familia.</string>
+    <string name="settings_balance_accounts">Cuentas</string>
+    <string name="settings_balance_all">Todas · común a la familia</string>
+    <string name="settings_balance_except">Todas menos %1$d · común a la familia</string>
+    <string name="settings_home_balance_section">Saldo</string>
 </resources>

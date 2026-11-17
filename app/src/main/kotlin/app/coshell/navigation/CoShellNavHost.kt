@@ -18,6 +18,7 @@ import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.settings.AccountsSettingsRoute
+import app.coshell.settings.BalanceAccountsRoute
 import app.coshell.settings.HomeDetailsRoute
 import app.coshell.settings.HomeSettingsRoute
 import app.coshell.settings.DataSettingsRoute
@@ -25,7 +26,7 @@ import app.coshell.settings.OpsSettingsRoute
 import app.coshell.settings.ReportsSettingsRoute
 import app.coshell.settings.ScreensSettingsScreen
 import app.coshell.settings.InputSettingsRoute
-import app.coshell.settings.MoneySettingsScreen
+import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsScreen
@@ -330,14 +331,21 @@ fun CoShellNavHost(
             )
         }
         screen<HomeSettingsDestination> {
-            HomeSettingsRoute(onDetails = { navController.navigate(HomeDetailsSettingsDestination) }, onBack = { navController.popBackStack() })
+            HomeSettingsRoute(
+                onDetails = { navController.navigate(HomeDetailsSettingsDestination) },
+                onBalance = { navController.navigate(BalanceAccountsDestination) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        screen<BalanceAccountsDestination> {
+            BalanceAccountsRoute(onBack = { navController.popBackStack() })
         }
         screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
         screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<MoneySettingsDestination> {
-            MoneySettingsScreen(
+            MoneySettingsRoute(
                 onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onBack = { navController.popBackStack() },
             )

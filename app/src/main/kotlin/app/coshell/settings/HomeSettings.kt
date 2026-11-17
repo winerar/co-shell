@@ -47,13 +47,27 @@ import app.coshell.core.designsystem.R as DesignR
 // the two tiles are still to come.
 
 @Composable
-fun HomeSettingsRoute(onDetails: () -> Unit, onBack: () -> Unit, viewModel: ScreenOptionsViewModel = hiltViewModel()) {
+fun HomeSettingsRoute(
+    onDetails: () -> Unit,
+    onBalance: () -> Unit,
+    onBack: () -> Unit,
+    viewModel: ScreenOptionsViewModel = hiltViewModel(),
+    accounts: SettingsAccountsViewModel = hiltViewModel(),
+) {
     val o by viewModel.options.collectAsStateWithLifecycle()
-    HomeSettingsScreen(o, { f -> viewModel.change(change = f) }, onDetails, onBack)
+    val list by accounts.list.collectAsStateWithLifecycle()
+    HomeSettingsScreen(o, { f -> viewModel.change(change = f) }, onDetails, onBalance, list.count { it.excludedFromTotal }, onBack)
 }
 
 @Composable
-fun HomeSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> ScreenOptions) -> Unit, onDetails: () -> Unit, onBack: () -> Unit) {
+fun HomeSettingsScreen(
+    options: ScreenOptions,
+    change: ((ScreenOptions) -> ScreenOptions) -> Unit,
+    onDetails: () -> Unit,
+    onBalance: () -> Unit,
+    excludedAccounts: Int,
+    onBack: () -> Unit,
+) {
     val layout = options.home
     GroupScaffold(R.string.nav_home, onBack) {
         item { CoShellHint(stringResource(R.string.settings_home_intro), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
@@ -74,6 +88,18 @@ fun HomeSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Scree
                         DesignR.drawable.ic_calendar_today, categoryColor(CategoryPalette.colors[8]),
                         stringResource(R.string.settings_home_details_title), onDetails,
                         subtitle = stringResource(R.string.settings_home_details_hint, options.soonDays, options.recentCount),
+                    )
+                }
+            }
+        }
+        item { SectionTitle(stringResource(R.string.settings_home_balance_section)) }
+        item {
+            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                row {
+                    CoShellMenuRow(
+                        DesignR.drawable.ic_account_balance_wallet, categoryColor(CategoryPalette.colors[5]),
+                        stringResource(R.string.settings_balance_title), onBalance,
+                        subtitle = if (excludedAccounts == 0) stringResource(R.string.settings_balance_all) else stringResource(R.string.settings_balance_except, excludedAccounts),
                     )
                 }
             }

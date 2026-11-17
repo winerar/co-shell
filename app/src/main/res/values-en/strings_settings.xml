@@ -4,7 +4,7 @@
     <string name="settings_intro">Settings of this phone. Totals currencies are shared by the family.</string>
     <string name="settings_look_items">Language · theme · palette · list density</string>
     <string name="settings_money_title">Money and dates</string>
-    <string name="settings_money_items">Totals currencies</string>
+    <string name="settings_money_items">Totals currencies · week start</string>
     <string name="settings_money_family">For the whole family</string>
     <string name="settings_input_title">Entering transactions</string>
     <string name="settings_input_items">Shake · vibration</string>
@@ -81,4 +81,22 @@
     <string name="settings_home_recent_title">How many to show</string>
     <string name="settings_home_items">Cards · «Soon» · «Latest»</string>
     <string name="settings_reset">Restore defaults</string>
+    <string name="settings_money_phone">On this phone</string>
+    <string name="settings_money_week">Week starts on</string>
+    <string name="settings_money_week_mon">Mon</string>
+    <string name="settings_money_week_sun">Sun</string>
+    <string name="settings_money_week_system">As in the system</string>
+    <string name="settings_input_sheet">The «+» sheet</string>
+    <string name="settings_input_account_title">Account and currency</string>
+    <string name="settings_input_last">Last used</string>
+    <string name="settings_input_always">Always this</string>
+    <string name="settings_input_account">Account</string>
+    <string name="settings_input_account_gone">pick an account</string>
+    <string name="settings_input_account_hint">The sheet opens with this account and its currency; you can change it in the sheet.</string>
+    <string name="settings_balance_title">Accounts in the total balance</string>
+    <string name="settings_balance_intro">What the «Total balance» on Overview adds up. Shared by the whole family.</string>
+    <string name="settings_balance_accounts">Accounts</string>
+    <string name="settings_balance_all">All · shared by the family</string>
+    <string name="settings_balance_except">All but %1$d · shared by the family</string>
+    <string name="settings_home_balance_section">Balance</string>
 </resources>

@@ -4,7 +4,7 @@
     <string name="settings_intro">Настройки этого телефона. Валюты итогов — общие для семьи.</string>
     <string name="settings_look_items">Язык · тема · палитра · плотность списков</string>
     <string name="settings_money_title">Деньги и даты</string>
-    <string name="settings_money_items">Валюты итогов</string>
+    <string name="settings_money_items">Валюты итогов · начало недели</string>
     <string name="settings_money_family">Для всей семьи</string>
     <string name="settings_input_title">Ввод операции</string>
     <string name="settings_input_items">Встряхнуть · вибрация</string>
@@ -81,4 +81,22 @@
     <string name="settings_home_recent_title">Сколько показывать</string>
     <string name="settings_home_items">Карточки · «Скоро» · «Последние»</string>
     <string name="settings_reset">Вернуть стандартные</string>
+    <string name="settings_money_phone">На этом телефоне</string>
+    <string name="settings_money_week">Неделя начинается с</string>
+    <string name="settings_money_week_mon">Пн</string>
+    <string name="settings_money_week_sun">Вс</string>
+    <string name="settings_money_week_system">Как в системе</string>
+    <string name="settings_input_sheet">Шторка «+»</string>
+    <string name="settings_input_account_title">Счёт и валюта</string>
+    <string name="settings_input_last">Последние</string>
+    <string name="settings_input_always">Всегда этот</string>
+    <string name="settings_input_account">Счёт</string>
+    <string name="settings_input_account_gone">выберите счёт</string>
+    <string name="settings_input_account_hint">Шторка открывается с этим счётом и его валютой; сменить можно в самой шторке.</string>
+    <string name="settings_balance_title">Счета в общем балансе</string>
+    <string name="settings_balance_intro">Что входит в «Общий баланс» на «Обзоре». Общая для всей семьи.</string>
+    <string name="settings_balance_accounts">Счета</string>
+    <string name="settings_balance_all">Все · общая для семьи</string>
+    <string name="settings_balance_except">Все, кроме %1$d · общая для семьи</string>
+    <string name="settings_home_balance_section">Баланс</string>
 </resources>

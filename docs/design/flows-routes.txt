@@ -17,6 +17,7 @@ AppearanceDestination	Set1Look
 ScreensSettingsDestination	Set1Screens
 HomeSettingsDestination	Set1Home
 HomeDetailsSettingsDestination	Set1HomeMore
+BalanceAccountsDestination	Set1Balance
 OpsSettingsDestination	Set1Ops
 ReportsSettingsDestination	Set1Reports
 AccountsSettingsDestination	Set1Accounts

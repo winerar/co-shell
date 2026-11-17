@@ -3,6 +3,7 @@ package app.coshell.core.domain.settings
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.first
+import kotlinx.datetime.DayOfWeek
 import kotlinx.coroutines.test.runTest
 
 class ScreenOptionsTest {
@@ -30,5 +31,17 @@ class ScreenOptionsTest {
         val o = store.options.first()
         assertEquals(false, o.opsShowNote)
         assertEquals(true, o.opsShowTags)
+    }
+
+    @Test
+    fun `the week starts as chosen and keeps all seven days`() {
+        val mon = WeekStart.MONDAY.days(DayOfWeek.SUNDAY)
+        assertEquals(DayOfWeek.entries, mon)
+        val sun = WeekStart.SUNDAY.days(DayOfWeek.MONDAY)
+        assertEquals(listOf(DayOfWeek.SUNDAY, DayOfWeek.MONDAY), sun.take(2))
+        assertEquals(DayOfWeek.SATURDAY, sun.last())
+        assertEquals(DayOfWeek.SATURDAY, WeekStart.SYSTEM.days(DayOfWeek.SATURDAY).first())
+        assertEquals(7, WeekStart.SYSTEM.days(DayOfWeek.WEDNESDAY).distinct().size)
+        assertEquals(WeekStart.SYSTEM, WeekStart.parse("???"))
     }
 }

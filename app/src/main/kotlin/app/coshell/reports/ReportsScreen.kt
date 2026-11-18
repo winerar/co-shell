@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.tokens.Sizes
@@ -60,8 +61,8 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
-            Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance),
+            Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (period == null) return@LazyColumn

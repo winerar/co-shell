@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellTextField
@@ -49,7 +50,7 @@ fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions)
     ) { padding ->
         if (state.isLoading) return@Scaffold
         Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(Spacing.l),
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)).padding(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             TypeSelector(state.type, actions.onTypeChange)

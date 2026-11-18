@@ -23,6 +23,7 @@ import app.coshell.R
 import app.coshell.budgets.edit.components.BudgetPickers
 import app.coshell.budgets.edit.components.BudgetPicker
 import app.coshell.budgets.edit.components.InsideFolder
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
@@ -59,7 +60,7 @@ fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
     ) { padding ->
         if (state.isLoading || month == null) return@Scaffold
         Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(Spacing.l),
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)).padding(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (!state.locked) KindSelector(state.kind, actions.onKindChange)

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.tokens.Spacing
@@ -39,7 +40,7 @@ fun MonthReviewScreen(state: MonthReviewUiState, actions: MonthReviewActions = M
     ) { padding ->
         if (state.isLoading || month == null) return@Scaffold
         val side = Modifier.padding(horizontal = Spacing.l)
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(top = Spacing.xs, bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(top = Spacing.xs, bottom = Spacing.xl))) {
             item(key = "hero") { ReviewHero(state, side) }
             if (state.usualMonths == 0) {
                 item(key = "noHistory") {

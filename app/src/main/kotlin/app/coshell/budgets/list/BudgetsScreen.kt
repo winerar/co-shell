@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +63,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
         floatingActionButton = { CoShellAddFab(stringResource(R.string.budgets_new), { actions.onEdit(null) }) },
     ) { padding ->
         val month = state.month ?: return@Scaffold
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             item(key = "month") {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }

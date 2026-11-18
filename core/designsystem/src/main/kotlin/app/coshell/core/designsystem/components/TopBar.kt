@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -69,7 +70,7 @@ fun CoShellTopBar(
     Box(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Sizes.panelInset, vertical = Spacing.s)) {
         TopAppBar(
             title = title,
-            modifier = modifier.clip(PillShape).background(fill),
+            modifier = modifier.clip(PillShape).background(fill).border(Sizes.hairline, scheme.outlineVariant, PillShape),
             navigationIcon = navigationIcon,
             actions = actions,
             expandedHeight = Sizes.topBarHeight,

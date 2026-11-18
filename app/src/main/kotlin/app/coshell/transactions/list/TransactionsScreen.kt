@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.core.designsystem.tokens.Sizes
@@ -93,8 +94,8 @@ fun TransactionsScreen(
         if (state.isLoading) return@Scaffold
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = Sizes.fabClearance),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance)),
         ) {
             if (state.days.isNotEmpty() || state.filter.isActive) {
                 item(key = "filters") { FilterBar(state, actions.onFilter, Modifier.padding(bottom = Spacing.s)) }

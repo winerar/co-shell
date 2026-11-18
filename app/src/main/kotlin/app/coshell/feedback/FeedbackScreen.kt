@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import android.os.Build
 import app.coshell.BuildConfig
 import app.coshell.R
+import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellTextButton
@@ -54,7 +55,7 @@ fun FeedbackScreen(state: FeedbackUiState, actions: FeedbackActions) {
             ScreenTopBar(stringResource(R.string.feedback_title), onBack = actions.onBack)
         },
     ) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
+        Column(Modifier.fillMaxSize().padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding() + LocalBottomBarInset.current).imePadding()) {
             Column(
                 modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(Spacing.l),
                 verticalArrangement = Arrangement.spacedBy(Spacing.m),

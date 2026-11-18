@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.wipe.components.WipeDataRow
 import app.coshell.backup.auto.AutoBackupUiState
@@ -38,7 +39,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
         },
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             // Board Backup: the countdown to the next automatic copy first (is the family's data safe?),

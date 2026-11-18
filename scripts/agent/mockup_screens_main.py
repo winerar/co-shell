@@ -139,9 +139,11 @@ def accounts_search():
 def keypad(save='Готово'):
     k = lambda t, bg=KEY, col=INK, sz=22: ('<span style="border-radius: 16px; background: %s; color: %s; font-size: %dpx; %s display: flex; align-items: center; justify-content: center;">%s</span>'
                                            % (bg, col, sz, MONO, t))
+    # K2 (owner 2026-11-18, #291): right column ⌫ · + · − · «Готово» (one row, wide); every key ≥ 48 dp
     keys = (k('7') + k('8') + k('9') + k('⌫', KEY2, INK, 20) + k('4') + k('5') + k('6') + k('+', KEY2, LIME, 24) + k('1') + k('2') + k('3')
-            + '<span style="grid-row: span 2; border-radius: 18px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">%s%s</span>'
-            % (LIME, ONLIME, svg('check', ONLIME, 26, 2.2), save) + k(',') + k('0') + k('000', KEY, INK, 18))
+            + k('−', KEY2, LIME, 24) + k(',') + k('0') + k('000', KEY, INK, 18)
+            + '<span style="border-radius: 18px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px;">%s%s</span>'
+            % (LIME, ONLIME, svg('check', ONLIME, 22, 2.2), save))
     return '<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 54px; gap: 6px;">%s</div>' % keys
 
 

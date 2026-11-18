@@ -12,11 +12,14 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.MoneyParser
 import kotlinx.datetime.LocalDate
 
-/** The keypad sum in [currency]: terms added up, an unfinished «12,» read as «12»; nothing typed is zero. */
-internal fun keypadMoney(text: String, currency: CurrencyCode): Money =
-    text.split(AmountKeys.PLUS)
-        .mapNotNull { MoneyParser.parseOrNull(it.trimEnd(','), currency) }
-        .fold(Money.zero(currency)) { sum, term -> sum + term }
+/** The keypad sum in [currency]: terms added up or taken away, an unfinished «12,» read as «12»; nothing typed, or less than zero, is zero. */
+internal fun keypadMoney(text: String, currency: CurrencyCode): Money {
+    val sum = AmountKeys.terms(text).foldIndexed(Money.zero(currency)) { index, sum, term ->
+        val money = MoneyParser.parseOrNull(term.text.trimEnd(','), currency) ?: return@foldIndexed sum
+        if (term.subtract && index > 0) sum - money else sum + money
+    }
+    return if (sum.amountMinor < 0) Money.zero(currency) else sum
+}
 
 /**
  * [amount] in each of [currencies] at [date] as bare numbers, a zero fraction hidden («101 500», «100,10»);

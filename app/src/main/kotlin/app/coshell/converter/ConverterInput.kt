@@ -51,8 +51,8 @@ internal data class ConverterInput(
     fun forAll(): ConverterInput = if (active == ConverterSide.TO) copy(from = to, to = from, active = ConverterSide.FROM) else this
 
     companion object {
-        /** A currency without a fraction (JPY) cannot keep «12,5»: the fraction of every term goes («12,5 + 3,25» → «12 + 3»). */
+        /** A currency without a fraction (JPY) cannot keep «12,5»: the fraction of every term goes («12,5 + 3,25 − 1,5» → «12 + 3 − 1»). */
         fun fitFraction(text: String, currency: CurrencyCode): String =
-            if (Currencies.info(currency).fractionDigits == 0) text.split(AmountKeys.PLUS).joinToString(AmountKeys.PLUS) { it.substringBefore(',') } else text
+            if (Currencies.info(currency).fractionDigits == 0) AmountKeys.mapTerms(text) { it.substringBefore(',') } else text
     }
 }

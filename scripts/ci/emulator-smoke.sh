@@ -56,7 +56,10 @@ missing=()
 for tab in "Overview|Обзор|Home" "Transactions|Операции" "Accounts|Счета" "More|Ещё"; do
   echo "$xml" | grep -Eq "text=\"($tab)\"|content-desc=\"($tab)\"" || missing+=("$tab")
 done
-if [ ${#missing[@]} -gt 0 ]; then bad "tabs not on screen: ${missing[*]}"; note "Bottom bar" "❌" "missing: ${missing[*]}"; else note "Bottom bar" "✅" "4 tabs visible"; fi
+if [ ${#missing[@]} -gt 0 ]; then
+  echo "$xml" > ui-fail.xml; adb exec-out screencap -p > ui-fail.png 2>/dev/null || true
+  adb shell dumpsys activity activities 2>/dev/null | grep -E "topResumedActivity|mResumedActivity" | head -3
+  bad "tabs not on screen: ${missing[*]}"; note "Bottom bar" "❌" "missing: ${missing[*]}"; else note "Bottom bar" "✅" "4 tabs visible"; fi
 
 # 3. Night mode and font scale on the fly: no crash, still alive (#230).
 adb shell cmd uimode night yes >/dev/null; sleep 2

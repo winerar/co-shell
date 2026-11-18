@@ -51,12 +51,28 @@ check_clean "Start"
 
 # 2. Bottom bar: every tab label is on screen (labels are values/strings.xml → en on the emulator, ru fallback).
 sleep 3
+# Tap the centre of the first node whose text matches $1 (regex); returns 1 if there is none.
+tap_text() {
+  local b; b=$(echo "$xml" | grep -oE "text=\"($1)\"[^>]*bounds=\"\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]\"" | head -1 | grep -oE '[0-9]+' | tail -4 | tr '\n' ' ')
+  [ -n "$b" ] || return 1
+  set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 ))
+}
+# Over the tabs there can be the first-launch «App language» sheet (confirm it) or a system «isn't responding» dialog
+# of a slow emulator (press «Wait»); up to 4 tries.
+for _ in 1 2 3 4; do
+  xml=$(ui)
+  tap_text "Done|Готово|Hecho" || tap_text "Wait|Подождать|Esperar" || break
+  sleep 3
+done
 xml=$(ui)
 missing=()
-for tab in "Overview|Обзор|Home" "Transactions|Операции" "Accounts|Счета" "More|Ещё"; do
+for tab in "Overview|Обзор|Home" "Transactions|Операции" "Reports|Отчёты|Informes" "More|Ещё"; do
   echo "$xml" | grep -Eq "text=\"($tab)\"|content-desc=\"($tab)\"" || missing+=("$tab")
 done
-if [ ${#missing[@]} -gt 0 ]; then bad "tabs not on screen: ${missing[*]}"; note "Bottom bar" "❌" "missing: ${missing[*]}"; else note "Bottom bar" "✅" "4 tabs visible"; fi
+if [ ${#missing[@]} -gt 0 ]; then
+  echo "$xml" > ui-fail.xml; adb exec-out screencap -p > ui-fail.png 2>/dev/null || true
+  adb shell dumpsys activity activities 2>/dev/null | grep -E "topResumedActivity|mResumedActivity" | head -3
+  bad "tabs not on screen: ${missing[*]}"; note "Bottom bar" "❌" "missing: ${missing[*]}"; else note "Bottom bar" "✅" "4 tabs visible"; fi
 
 # 3. Night mode and font scale on the fly: no crash, still alive (#230).
 adb shell cmd uimode night yes >/dev/null; sleep 2

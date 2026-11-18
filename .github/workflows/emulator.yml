@@ -69,5 +69,7 @@ jobs:
           path: |
             logcat.txt
             monkey.log
+            ui-fail.xml
+            ui-fail.png
           if-no-files-found: ignore
           retention-days: 14

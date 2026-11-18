@@ -325,6 +325,14 @@
     <string name="update_version_new">Nueva</string>
     <string name="update_version_yours">Tu versión</string>
     <string name="update_version_build">compilación %1$d</string>
+    <string name="update_updated_title">Actualizado a %1$s</string>
+    <string name="update_note_new">Nuevo</string>
+    <string name="update_note_fixed">Corregido</string>
+    <plurals name="update_builds_ahead">
+        <item quantity="one">+%1$d compilación</item>
+        <item quantity="many">+%1$d compilaciones</item>
+        <item quantity="other">+%1$d compilaciones</item>
+    </plurals>
     <string name="update_version_installed_on">instalada el\n%1$s</string>
     <string name="transaction_refund_label">Gasto → devolución</string>
     <string name="transaction_refund_hint">Devolución: el dinero volvió a la cuenta, los gastos de «%1$s» bajarán</string>

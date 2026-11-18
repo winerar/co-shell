@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.components.fillEdge
 import app.coshell.core.designsystem.theme.progressColors
 import app.coshell.core.designsystem.tokens.Spacing
 import kotlin.math.roundToInt
@@ -50,6 +51,7 @@ fun CoShellLine(
 ) {
     val entrance = rememberChartEntrance()
     val accent = progressColors().indicator
+    val edge = fillEdge(accent)?.brush
     val guide = MaterialTheme.colorScheme.outlineVariant
     val marker = MaterialTheme.colorScheme.outline
     val ring = MaterialTheme.colorScheme.surfaceContainer
@@ -75,11 +77,13 @@ fun CoShellLine(
             }
             clipRect(right = size.width * entrance.value + DOT_RADIUS.toPx()) {
                 drawPath(area, accent.copy(alpha = FILL_ALPHA))
+                edge?.let { drawPath(line, it, style = Stroke(LINE_WIDTH.toPx() + 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)) }
                 drawPath(line, accent, style = Stroke(LINE_WIDTH.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
                 at.getOrNull(selected)?.let { p ->
                     drawLine(marker, Offset(p.x, 0f), Offset(p.x, size.height), strokeWidth = 1.dp.toPx())
                     drawCircle(ring, DOT_RADIUS.toPx() + 2.dp.toPx(), p)
                     drawCircle(accent, DOT_RADIUS.toPx(), p)
+                    edge?.let { drawCircle(it, DOT_RADIUS.toPx(), p, style = Stroke(1.dp.toPx())) }
                 }
             }
         }

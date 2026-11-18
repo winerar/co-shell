@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -51,7 +52,7 @@ fun Modifier.topBarScroll(scroll: TopBarScroll): Modifier = nestedScroll(scroll.
 /**
  * Screen top bar (board `CompNew`, «Шапка экрана», #367 А): one compact row of [navigationIcon], [title] and [actions].
  * A floating capsule on the screen's background (the same style as the bottom bar), solid fill, never tinted or glass; [raised] —
- * the selection bar's brighter fill, so the mode is seen at a glance. A hairline edge appears when the fill melts into the screen.
+ * the selection bar's brighter fill, so the mode is seen at a glance.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +70,7 @@ fun CoShellTopBar(
     Box(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Sizes.panelInset, vertical = Spacing.s)) {
         TopAppBar(
             title = title,
-            modifier = modifier.clip(PillShape).background(fill).fillEdge(fill, PillShape, scheme.background),
+            modifier = modifier.clip(PillShape).background(fill).border(Sizes.hairline, scheme.outlineVariant, PillShape),
             navigationIcon = navigationIcon,
             actions = actions,
             expandedHeight = Sizes.topBarHeight,

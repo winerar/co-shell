@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -211,7 +212,7 @@ fun CoShellAddFab(
     val colors = MaterialTheme.colorScheme
     CoShellFab(
         onClick = onClick,
-        modifier = modifier.size(Sizes.fab),
+        modifier = modifier.padding(bottom = LocalBottomBarInset.current).size(Sizes.fab),
         shape = CircleShape,
         containerColor = colors.primary,
         contentColor = colors.onPrimary,

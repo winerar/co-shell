@@ -43,6 +43,8 @@ object Sizes {
     val emptyIcon = 32.dp
     /** Small icon in a tile's header. */
     val tileIcon = 20.dp
+    /** The round arrow between the two version tiles of the update screen (poll 2026-11-18). */
+    val arrowChip = 32.dp
     /** Height of the mini bars in a tile (expenses per day). */
     val miniBarsHeight = 32.dp
     /** Lowest visible bar: a day with little spending still shows; a day with none is a dot of this height. */

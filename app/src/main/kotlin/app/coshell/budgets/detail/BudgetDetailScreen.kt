@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -56,11 +57,11 @@ fun BudgetDetailScreen(state: BudgetDetailUiState, actions: BudgetDetailActions,
         if (state.isLoading) return@Scaffold
         val head = state.head
         if (head == null) {
-            NoLimit(Modifier.padding(padding), onSet = { actions.onEditLimit(categoryId) })
+            NoLimit(Modifier.padding(underBars(padding)), onSet = { actions.onEditLimit(categoryId) })
             return@Scaffold
         }
         val side = Modifier.padding(horizontal = Spacing.l)
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Spacing.xl))) {
             item(key = "head") { EnvelopeHead(head, side.padding(vertical = Spacing.s)) }
             state.note?.let { note -> item(key = "note") { NoteCard(note, side.padding(vertical = Spacing.s)) } }
             if (state.categories.isNotEmpty()) {

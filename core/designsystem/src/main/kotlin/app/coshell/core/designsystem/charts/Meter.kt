@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import app.coshell.core.designsystem.components.drawFillEdge
+import app.coshell.core.designsystem.components.fillEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -33,8 +35,9 @@ fun CoShellMeter(
     markColor: Color = MaterialTheme.colorScheme.onSurface,
     grow: Boolean = false,
 ) {
-    // Neutral in both themes: the light theme's progress track is the neon accent, an empty bar would look full.
     val track = MaterialTheme.colorScheme.surfaceContainerHighest
+    // Neon on a pale card melts into it: a thin deep edge round the fill (#442), none when the fill stands out.
+    val edge = fillEdge(color, track)
     val halo = MaterialTheme.colorScheme.surface
     val entrance = if (grow) rememberChartEntrance() else null
     val shown by animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "meter")
@@ -45,7 +48,9 @@ fun CoShellMeter(
         val length = size.width * shown * (entrance?.value ?: 1f)
         if (length > 0f) {
             // A sliver narrower than the bar is tall would draw as a dot; keep it at least round.
-            drawRoundRect(color, size = Size(length.coerceAtLeast(size.height), size.height), cornerRadius = radius)
+            val fill = Size(length.coerceAtLeast(size.height), size.height)
+            drawRoundRect(color, size = fill, cornerRadius = radius)
+            drawFillEdge(edge, Offset.Zero, fill, radius.x)
         }
         mark?.coerceIn(0f, 1f)?.let { at ->
             val stroke = MARK_WIDTH.toPx()

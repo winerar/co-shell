@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -51,7 +52,7 @@ fun MonthLimitsScreen(state: MonthReviewUiState, onBack: () -> Unit, onLimit: (c
         val limits = state.limits ?: return@Scaffold
         val shown = limits.all.filter { it.matches(filter) }
         val side = Modifier.padding(horizontal = Spacing.l)
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Spacing.xl))) {
             item(key = "filter") {
                 Row(
                     Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.l, vertical = Spacing.xs),

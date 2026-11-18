@@ -68,7 +68,7 @@ class NonTextContrastTest {
         shape("tab icon on the bar", s.onSurfaceVariant, s.surfaceContainerHigh)
         shape("badge on the bar", s.tertiary, s.surfaceContainerHigh)
         shape("day dot on surface", s.tertiary, s.surface)
-        shape("progress on surface", progressColorsFor(s, dark).indicator, s.surface)
+        shape("progress on surface", edged(progressColorsFor(s, dark).indicator, s.surface), s.surface)
 
         // Selected states and component boundaries.
         val sel = selectionColorsFor(s, dark)

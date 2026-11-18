@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -392,7 +393,7 @@ fun DataSettingsScreen(
 @Composable
 internal fun GroupScaffold(title: Int, onBack: () -> Unit, content: androidx.compose.foundation.lazy.LazyListScope.() -> Unit) {
     Scaffold(topBar = { ScreenTopBar(stringResource(title), onBack = onBack) }) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding), content = content)
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding), content = content)
     }
 }
 

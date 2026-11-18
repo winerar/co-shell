@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.foundation.border
 import app.coshell.core.designsystem.theme.selectionColors
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -150,7 +151,7 @@ private fun BottomBarContent(
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
-                .fillEdge(scheme.surfaceContainerHigh, PillShape, scheme.background)
+                .border(Sizes.hairline, scheme.outlineVariant, PillShape)
                 .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,

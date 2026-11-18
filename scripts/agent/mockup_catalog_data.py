@@ -158,6 +158,21 @@ def lines(v):
     return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'))
 
 
+def done_marks(v):
+    """«Готово»: a check with a thin edge, the lime arrow chip, the halo with sparks (update screen, poll 2026-11-18)."""
+    edge = '#476B00'  # the deep edge of the neon (fillEdge)
+    check = ('<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" stroke="%s" stroke-width="3"/>'
+             '<path d="M5 12l5 5 9-10" stroke="%s" stroke-width="2.4"/></svg>' % (edge, LIME))
+    disc = '<span style="width: 84px; height: 84px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (CHIP, check)
+    arrow = ('<span style="width: 32px; height: 32px; border-radius: 50%%; background: %s; box-shadow: 0 0 0 1px %s; display: flex; align-items: center; justify-content: center;">'
+             '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%s" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>' % (LIME, edge, ONLIME))
+    sparks = ''.join('<span style="position: absolute; left: %dpx; top: %dpx; width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>'
+                     % (60 + 52 * __import__('math').cos(i * 0.785) - 4, 60 + 52 * __import__('math').sin(i * 0.785) - 4, LIME if i % 2 == 0 else CYAN) for i in range(8))
+    burst = ('<div style="position: relative; width: 120px; height: 120px;"><span style="position: absolute; inset: 8px; border-radius: 50%%; border: 2px solid %s; opacity: .5;"></span>%s'
+             '<div style="position: absolute; inset: 18px; display: flex; align-items: center; justify-content: center;">%s</div></div>' % (CYAN, sparks, disc))
+    return col(flexrow(burst, arrow), cap('CoShellCheckMark — лайм с обводкой · CoShellArrowChip — стрелка между «Сейчас» и «Новая» · CoShellSuccessBurst — один раз ореол и искры, затем покой'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -169,5 +184,6 @@ DATA = [
     ('Теги — выбор', tag_chips, 'CoShellTagChip(name, color, selected, removeLabel) · CoShellTagMoreChip'),
     ('Теги — в строке', tag_pills, 'CoShellTagPill(name, color) · CoShellTagMore · CoShellTagDot'),
     ('Доходы и расходы', paired, 'CoShellPairedColumns(pairs, selected, onSelect) — доска Rp189IeA'),
+    ('Готово', done_marks, 'CoShellCheckMark(size, color, over) · CoShellArrowChip() · CoShellSuccessBurst(content) — «Обновлено», доска Update'),
     ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
 ]

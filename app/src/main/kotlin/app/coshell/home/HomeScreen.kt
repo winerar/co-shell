@@ -2,6 +2,8 @@ package app.coshell.home
 
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.LocalBottomBarInset
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -168,7 +170,7 @@ fun HomeScreen(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
         bottomBar = {
             if (editing) {
-                Box(Modifier.fillMaxWidth().padding(Spacing.l)) {
+                Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {
                     CoShellButton(onClick = { editing = false }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.keypad_done)) }
                 }
             }
@@ -177,8 +179,13 @@ fun HomeScreen(
     ) { padding ->
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = Spacing.l, top = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance),
+            // While editing, the «Готово» bar below ends the list; otherwise the list goes under both capsules.
+            modifier = Modifier.fillMaxSize().then(if (editing) Modifier.padding(bottom = padding.calculateBottomPadding()) else Modifier),
+            contentPadding = underBars(
+                if (editing) PaddingValues(top = padding.calculateTopPadding()) else padding,
+                PaddingValues(start = Spacing.l, top = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance),
+                bottomBar = !editing,
+            ),
             verticalArrangement = Arrangement.spacedBy(Spacing.l),
         ) {
             if (state.isLoading) return@LazyColumn

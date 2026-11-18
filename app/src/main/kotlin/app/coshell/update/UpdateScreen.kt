@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.top.ScreenTopBar
@@ -34,14 +35,15 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             ScreenTopBar(stringResource(R.string.update_title), onBack = actions.onBack)
         },
         bottomBar = {
-            UpdateMainAction(state, actions, Modifier.navigationBarsPadding().padding(horizontal = Spacing.l, vertical = Spacing.m))
+            UpdateMainAction(state, actions, Modifier.padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m))
         },
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(bottom = padding.calculateBottomPadding())
                 .verticalScroll(rememberScrollState())
+                .padding(top = padding.calculateTopPadding())
                 .padding(horizontal = Spacing.l, vertical = Spacing.s),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Spacing.l),

@@ -1,7 +1,7 @@
 {
   "model": "opusplan",
   "env": {
-    "BASH_MAX_OUTPUT_LENGTH": "12000",
+    "BASH_MAX_OUTPUT_LENGTH": "8000",
     "MAX_MCP_OUTPUT_TOKENS": "12000"
   },
   "permissions": {
@@ -22,7 +22,56 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git merge:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(scripts/agent/agent.sh:*)",
+      "Bash(git push:*)",
+      "Bash(git branch:*)",
+      "Bash(git rev-parse:*)"
+    ],
+    "deny": [
+      "Read(./build/**)",
+      "Read(./**/build/**)",
+      "Read(./docs/design/mockups/**)",
+      "Read(./**/*.png)",
+      "Read(./.gradle/**)",
+      "Read(./gradle/wrapper/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agent/hook-session-start.sh",
+            "timeout": 90
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agent/hook-edit-guard.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/agent/hook-stop.sh",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }

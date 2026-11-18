@@ -121,10 +121,19 @@ def wipe():
 # ---- update: available → downloading → ready → latest ---------------------------------------------------------------
 
 def update():
-    news = card('<div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: %s;">Что нового в версии 42</b><span style="color: %s;">10 ноября</span></div>'
-                '<ul style="margin: 8px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.45;">%s</ul>'
-                % (LIME, MUTED, ''.join('<li>%s</li>' % t for t in ['Новая шторка ввода: сначала счёт, своя клавиатура', 'Счета группами, поиск по счетам', 'Цвета банков и приложений для счетов'])),
-                pad='14px', extra='margin-top: 20px;')
+    lab = lambda txt, c, ink: '<span style="flex: none; height: 20px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; line-height: 20px;">%s</span>' % (c, ink, txt)
+    rows_ = [('new', 'Новая шторка ввода: сначала счёт, своя клавиатура'), ('new', 'Счета группами, поиск по счетам'), ('fix', 'Исправлен перенос курса на тёмной теме')]
+    items = ''.join('<div style="display: flex; gap: 8px; padding: 4px 0; font-size: 13px; line-height: 1.4;">%s<span>%s</span></div>'
+                    % (lab('Новое', '#2E3F12', INK) if k == 'new' else lab('Исправлено', '#2A2240', INK), t) for k, t in rows_)
+    news = card('<div style="display: flex; font-size: 13px;"><b style="flex-grow: 1; color: %s;">Что нового в версии 42</b><span style="color: %s;">10 ноября</span></div>%s' % (VIOLETINK, MUTED, items),
+                pad='14px', extra='margin-top: 12px;')
+    arrow = ('<span style="width: 32px; height: 32px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LIME, svg('M5 12h14M13 6l6 6-6 6', ONLIME, 20, 2)))
+    tiles = ('<div style="display: flex; align-items: center; gap: 4px; margin-top: 20px;">'
+             '<div style="flex: 1; border-radius: 24px; border: 1px solid %s; background: %s; padding: 14px;"><div style="font-size: 12px; color: %s;">Сейчас</div><div style="%s font-size: 22px; font-weight: 700; color: %s;">41</div><div style="font-size: 12px; color: %s;">сборка 399</div></div>%s'
+             '<div style="flex: 1; border-radius: 24px; border: 1px solid %s; background: %s; padding: 14px;"><div style="font-size: 12px; color: %s;">Новая</div><div style="%s font-size: 22px; font-weight: 700;">42</div><div style="font-size: 12px; color: %s;">сборка 400</div>'
+             '<div style="margin-top: 6px; display: inline-block; height: 20px; padding: 0 8px; border-radius: 999px; background: #2A2240; font-size: 11px; font-weight: 600; line-height: 20px;">+1 сборка</div></div></div>'
+             % (VIOLET, '#1E1830', MUTED, MONO, VIOLETINK, MUTED, arrow, LINE, CARD, MUTED, MONO, MUTED))
+    news = tiles + news
     meta = '<div style="display: flex; justify-content: space-between; margin: 12px 4px 0; font-size: 12px; color: %s;"><span>Установлена: 41 · 9 ноября</span><span>Проверка: только что</span></div>' % MUTED
     icon = '<span style="width: 84px; height: 84px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
     states = {

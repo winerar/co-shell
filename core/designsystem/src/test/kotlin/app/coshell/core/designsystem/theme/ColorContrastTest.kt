@@ -22,9 +22,12 @@ class ColorContrastTest {
 
     @Test
     fun progressIsVisibleOnItsTrack() = themes.forEach { (name, t) ->
-        // Graphite-neon progress (owner's choice 2026-11-09): the moving part stands out (≥ 3, like icons).
+        // Neon progress (owner's poll 2026-11-18): the moving part, or its thin deep edge (`fillEdge`) where the neon melts
+        // into the card, stands out from the track (≥ 3, like icons).
         val p = progressColorsFor(t.scheme, name.endsWith("dark"))
-        assertContrast("$name progress on track", p.indicator, p.track, 3.0)
+        val edge = deepen(p.indicator, p.track, 3.2f)
+        val best = maxOf(contrastRatio(p.indicator, p.track), contrastRatio(edge, p.track))
+        assertTrue("$name progress on track: $best < 3.0", best >= 3.0)
     }
 
     @Test

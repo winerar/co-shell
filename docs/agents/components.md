@@ -55,6 +55,7 @@
   (`CoShellTab`: иконка, подпись, выбрана, `badge` — неоновая точка «есть новое»; «+» в середине, `addConfirm` —
   галочка после сохранения, `addLocked` — приглушённый «+» с замком, ввод закрыт до обновления, #334) — §«Навигация». **Пилюля-уведомление** — `CoShellNoticePill` (иконка в круге, одна
   строка, «×»; всплывает пружиной над панелью; сейчас — «Версия N · Обновить», `update/notice/UpdatePill`).
+  **Готово** — `CoShellCheckMark(size, color, over)` (лайм с обводкой), `CoShellArrowChip()` (стрелка между двумя плитками), `CoShellSuccessBurst(content)` (один раз ореол и искры + `Confirm`; «Обновлено», #опрос 11-18).
   **Тег** — `CoShellTagPill(name, color)` (точка + имя в пилюле цвета тега, ≤ 132 dp), `CoShellTagMore(n)` — «+N»,
   `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.
   Тег-переключатель — `CoShellTagChip(name, color, selected, onClick, removeLabel)` (34 dp; вкл — заливка цвета тега, «✕» — в

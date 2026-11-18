@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import app.coshell.language.components.endonymRes
 import app.coshell.language.LanguageSettingsSheet
 import app.coshell.language.AppLanguage
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.setValue
@@ -95,7 +96,7 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
     Scaffold(
         topBar = { ScreenTopBar(stringResource(R.string.appearance_title), onBack = actions.onBack) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding)) {
             item { SectionTitle(stringResource(R.string.language_title)) }
             item { LanguageRowGroup(state.language, actions.onLanguageClick) }
             item { SectionTitle(stringResource(R.string.theme_title)) }

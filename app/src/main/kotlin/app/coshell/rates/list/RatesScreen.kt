@@ -28,6 +28,7 @@ import app.coshell.rates.list.components.RatesSources
 import app.coshell.rates.list.components.RefreshBlock
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.RowGroupPosition
 import app.coshell.core.designsystem.components.rowGroupSegment
@@ -47,7 +48,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         },
         floatingActionButton = { CoShellAddFab(stringResource(R.string.rates_manual_add), actions.onAddManual) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             // «Сколько это» right on top (#319, А): the rows below follow the typed amount.
             if (state.current.isNotEmpty()) {
                 item(key = "converter") {

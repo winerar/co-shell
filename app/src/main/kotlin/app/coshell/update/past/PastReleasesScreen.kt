@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellLoading
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -43,7 +44,7 @@ fun PastReleasesRoute(onBack: () -> Unit, viewModel: PastReleasesViewModel = hil
 @Composable
 fun PastReleasesScreen(state: PastReleasesState, onBack: () -> Unit, onRetry: () -> Unit) {
     Scaffold(topBar = { ScreenTopBar(stringResource(R.string.update_past_title), onBack = onBack) }) { padding ->
-        Box(Modifier.fillMaxSize().padding(padding)) {
+        Box(Modifier.fillMaxSize().padding(if (state is PastReleasesState.Loaded) PaddingValues() else underBars(padding))) {
             when (state) {
                 PastReleasesState.Loading -> CoShellLoading(Modifier.align(Alignment.Center), size = Sizes.loadingScreen)
                 PastReleasesState.Failed -> Message(
@@ -51,18 +52,18 @@ fun PastReleasesScreen(state: PastReleasesState, onBack: () -> Unit, onRetry: ()
                     action = { CoShellButton(onClick = onRetry) { Text(stringResource(R.string.update_past_retry)) } },
                 )
                 is PastReleasesState.Loaded ->
-                    if (state.releases.isEmpty()) Message(stringResource(R.string.update_past_empty)) else ReleaseList(state)
+                    if (state.releases.isEmpty()) Message(stringResource(R.string.update_past_empty)) else ReleaseList(state, padding)
             }
         }
     }
 }
 
 @Composable
-private fun ReleaseList(state: PastReleasesState.Loaded) {
+private fun ReleaseList(state: PastReleasesState.Loaded, padding: PaddingValues) {
     // Open cards by versionCode; the newest starts open (board Fb284A). A list: saveable as is.
     var open by rememberSaveable { mutableStateOf(listOf(state.releases.first().versionCode)) }
     LazyColumn(
-        contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl),
+        contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl)),
         verticalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
         item(key = "hint") {

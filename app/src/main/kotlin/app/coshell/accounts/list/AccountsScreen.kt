@@ -1,5 +1,6 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -78,9 +79,9 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
     ) { padding ->
         LazyColumn(
             // The groupings swipe like tabs (#173); from the first or last one the swipe goes to the next tab.
-            modifier = Modifier.fillMaxSize().padding(padding)
+            modifier = Modifier.fillMaxSize()
                 .segmentSwipe(swipe, grouping.selected, groupings.size, grouping.onSelect, enabled = grouping.visible),
-            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Sizes.fabClearance),
+            contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             if (state.isLoading) return@LazyColumn

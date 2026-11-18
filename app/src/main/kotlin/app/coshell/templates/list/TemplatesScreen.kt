@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Spacing
@@ -42,10 +43,10 @@ fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
         floatingActionButton = { CoShellAddFab(stringResource(R.string.template_new), actions.onNew) },
     ) { padding ->
         if (state.isEmpty) {
-            EmptyTemplates(Modifier.padding(padding))
+            EmptyTemplates(Modifier.padding(underBars(padding)))
             return@Scaffold
         }
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             item(key = "search") {
                 CoShellSearchField(
                     value = state.query,

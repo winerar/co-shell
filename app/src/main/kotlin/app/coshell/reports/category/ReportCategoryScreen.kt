@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -55,7 +56,7 @@ fun ReportCategoryScreen(
     ) { padding ->
         if (state.isLoading) return@Scaffold
         val side = Modifier.padding(horizontal = Spacing.l)
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Spacing.xl)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Spacing.xl))) {
             item(key = "head") { Head(state, side.padding(vertical = Spacing.s)) }
             state.trend?.let { trend -> item(key = "trend") { TrendCard(trend, onMonth, side.padding(vertical = Spacing.s)) } }
             item(key = "operationsTitle") {

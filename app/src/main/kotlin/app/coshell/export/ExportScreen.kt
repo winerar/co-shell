@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.LocalBottomBarInset
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
@@ -140,14 +143,15 @@ fun ExportScreen(state: ExportUiState, actions: ExportActions) {
     Scaffold(
         topBar = { ScreenTopBar(stringResource(R.string.export_title), onBack = actions.onBack) },
         bottomBar = {
-            Box(Modifier.fillMaxWidth().padding(Spacing.l)) {
+            Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {
                 CoShellButton(onClick = actions.onExport, enabled = state.count > 0, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(R.string.export_action))
                 }
             }
         },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+        // Its own button bar below: the list ends above it and goes under the top capsule only.
+        LazyColumn(Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()), contentPadding = PaddingValues(top = padding.calculateTopPadding())) {
             item {
                 Row(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                     ExportKind.entries.forEach { kind ->

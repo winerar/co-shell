@@ -23,6 +23,7 @@ import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.charts.CoShellBarRow
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellSearchField
@@ -53,8 +54,8 @@ fun ReportCategoriesScreen(state: ReportsUiState, onBack: () -> Unit, onCategory
         topBar = { ScreenTopBar(stringResource(R.string.reports_all_title), onBack = onBack, subtitle = state.period?.let { periodTitle(it) }) },
     ) { padding ->
         LazyColumn(
-            Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl),
+            Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             item(key = "search") {

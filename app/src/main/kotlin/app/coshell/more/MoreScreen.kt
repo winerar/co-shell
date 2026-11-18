@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellStatusChip
@@ -74,8 +75,8 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
     ) { padding ->
         val sections = moreSections(state, actions)
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
         ) {
             item(key = "version") {
                 VersionCard(

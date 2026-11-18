@@ -56,7 +56,7 @@ xml=$(ui)
 b=$(echo "$xml" | grep -oE 'text="(Done|Готово|Hecho)"[^>]*bounds="\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]"' | grep -oE '[0-9]+' | tail -4 | tr '\n' ' ')
 if [ -n "$b" ]; then set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 )); sleep 2; xml=$(ui); fi
 missing=()
-for tab in "Overview|Обзор|Home" "Transactions|Операции" "Accounts|Счета" "More|Ещё"; do
+for tab in "Overview|Обзор|Home" "Transactions|Операции" "Reports|Отчёты|Informes" "More|Ещё"; do
   echo "$xml" | grep -Eq "text=\"($tab)\"|content-desc=\"($tab)\"" || missing+=("$tab")
 done
 if [ ${#missing[@]} -gt 0 ]; then

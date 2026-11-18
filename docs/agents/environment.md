@@ -29,7 +29,7 @@
 - (11-11) Варианты, темы и генератор досок холста — `docs/design/README.md` §«Правила для агента».
 - (11-10) Конструктор с хвостовой лямбдой (`WalletImportUseCase(...) { "id" }`): новый параметр с дефолтом
   в конце перехватывает лямбду — в тестах передавать `ids = { … }` по имени.
-- (11-10) В облачной сессии сайты банков (ameriabank.am) закрыты сетью — цвета брендов не сверить, только по памяти.
+- (11-10, обновлено 11-18) В облачной сессии сайты банков закрыты сетью, но иконки сервисов отдают Google (`s2/favicons`) и DuckDuckGo — цвета брендов сверяет `agent.sh bankcolors` (`notes.md`).
 - (11-09) Первый запуск Robolectric качает `android-all-instrumented` (~160 МБ) в `~/.m2`; дальше `MainShellSmokeTest` ~8 с.
 - (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,
   `@Config(qualifiers = "w393dp-h1000dp-xxhdpi")`, `onRoot().captureToImage()` → PNG в scratchpad, `Read` PNG;

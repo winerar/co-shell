@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.designsystem.components.keypad.AmountKeys
 import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
@@ -54,20 +55,22 @@ internal fun receiptCurrencySuggestions(recent: List<Transaction>, accounts: Lis
 internal data class AmountParse(val money: Money?, val error: TransactionEditUiState.AmountError?)
 
 /**
- * Amounts are always positive: the direction comes from the transaction type. The keypad's `+` makes a sum
- * ("32000 + 1500"): every term is parsed on its own and the first error wins.
+ * Amounts are always positive: the direction comes from the transaction type. The keypad's `+` and `−` make a sum
+ * ("32000 + 1500 − 200"): every term is parsed on its own and the first error wins; a sum that is not above
+ * zero ("100 − 100") is [TransactionEditUiState.AmountError.NOT_POSITIVE].
  */
 internal fun parsePositiveAmount(text: String, currency: CurrencyCode): AmountParse {
-    val terms = text.split('+').map { it.trim() }.filter { it.isNotEmpty() }
-    if (terms.size <= 1) return parseOneAmount(terms.firstOrNull().orEmpty(), currency)
+    val terms = AmountKeys.terms(text)
+    if (terms.size <= 1) return parseOneAmount(terms.firstOrNull()?.text.orEmpty(), currency)
     var total = 0L
-    for (term in terms) {
-        val part = parseOneAmount(term, currency)
+    for ((index, term) in terms.withIndex()) {
+        val part = parseOneAmount(term.text, currency)
         val money = part.money ?: return part
-        total = runCatching { Math.addExact(total, money.amountMinor) }
-            .getOrElse { return AmountParse(null, TransactionEditUiState.AmountError.INVALID) }
+        total = runCatching {
+            if (term.subtract && index > 0) Math.subtractExact(total, money.amountMinor) else Math.addExact(total, money.amountMinor)
+        }.getOrElse { return AmountParse(null, TransactionEditUiState.AmountError.INVALID) }
     }
-    return AmountParse(Money(total, currency), null)
+    return if (total > 0) AmountParse(Money(total, currency), null) else AmountParse(null, TransactionEditUiState.AmountError.NOT_POSITIVE)
 }
 
 private fun parseOneAmount(text: String, currency: CurrencyCode): AmountParse =

@@ -34,7 +34,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 
 /**
  * Own amount keypad of the entry sheet (owner 2026-11-09: «удобно одним пальцем»): digits, `000`, decimal,
- * `+` for adding up a receipt, backspace and a tall «Готово» under the thumb (bottom right). Fixed height —
+ * `+` and `−` for adding up a receipt (and taking a discount off), backspace and «Готово» under the thumb (bottom right). Fixed height —
  * the sheet does not jump as with the system keyboard. Every key sinks and springs back (tactile system)
  * with a keyboard tick. [showPlus] = false — a single number (a rate), no adding up.
  */
@@ -75,6 +75,9 @@ fun CoShellKeypad(
                 Key(onClick = { press(KeypadKey.Plus) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
                     Text("+", style = AmountTitleStyle)
                 }
+                Key(onClick = { press(KeypadKey.Minus) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
+                    Text("−", style = AmountTitleStyle)
+                }
             } else {
                 Spacer()
             }
@@ -82,22 +85,33 @@ fun CoShellKeypad(
                 onClick = { if (doneEnabled) press(KeypadKey.Done) },
                 container = MaterialTheme.colorScheme.primary,
                 content = MaterialTheme.colorScheme.onPrimary,
-                weight = 2f,
+                // One row next to «+ −» (owner 2026-11-18, #291); tall when the column has no operators.
+                weight = if (showPlus) 1f else 2f,
                 tactile = Tactile.Primary,
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(painterResource(R.drawable.ic_check), contentDescription = null)
-                    // «Провести» on a narrow screen with a big font shrinks to fit, never breaks into «Прове / сти».
-                    Text(
-                        doneLabel,
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        autoSize = fitAmountAutoSize(min = 8.sp, max = MaterialTheme.typography.labelLarge.fontSize),
-                    )
-                }
+                DoneLabel(doneLabel, inRow = showPlus)
             }
         }
+    }
+}
+
+@Composable
+private fun DoneLabel(label: String, inRow: Boolean) {
+    val content: @Composable () -> Unit = {
+        Icon(painterResource(R.drawable.ic_check), contentDescription = null)
+        // «Провести» on a narrow screen with a big font shrinks to fit, never breaks into «Прове / сти».
+        Text(
+            label,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            autoSize = fitAmountAutoSize(min = 8.sp, max = MaterialTheme.typography.labelLarge.fontSize),
+        )
+    }
+    if (inRow) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.xs), verticalAlignment = Alignment.CenterVertically) { content() }
+    } else {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) { content() }
     }
 }
 

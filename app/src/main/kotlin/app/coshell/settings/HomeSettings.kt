@@ -231,6 +231,7 @@ private val HomeCard.titleRes: Int
         HomeCard.REVIEW -> R.string.settings_home_review
         HomeCard.UPCOMING -> R.string.settings_home_upcoming
         HomeCard.TILES -> R.string.settings_home_tiles
+        HomeCard.CONVERTER -> R.string.settings_home_converter
         HomeCard.HOT -> R.string.settings_home_hot
         HomeCard.RECENT -> R.string.settings_home_recent
     }
@@ -240,6 +241,7 @@ private val HomeCard.hintRes: Int
         HomeCard.REVIEW -> R.string.settings_home_review_hint
         HomeCard.UPCOMING -> R.string.settings_home_upcoming_hint
         HomeCard.TILES -> R.string.settings_home_tiles_hint
+        HomeCard.CONVERTER -> R.string.settings_home_converter_hint
         HomeCard.HOT -> R.string.settings_home_hot_hint
         HomeCard.RECENT -> R.string.settings_home_recent_hint
     }

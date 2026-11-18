@@ -28,7 +28,8 @@ import app.coshell.core.designsystem.tokens.Spacing
  * A sheet opened from any screen while it is in composition: [title] with an optional [subtitle] and ×,
  * the [content] (scrolls when tall) and the main action ([actionLabel]) pinned across the width. No
  * [actionLabel] — no button (a choice closes on a tap). [onClosed] fires once after a swipe down, a tap
- * outside, «назад» or ×; [content] and [onAction] get `close` — slide down, then [onClosed].
+ * outside, «назад» or ×; [content] and [onAction] get `close` — slide down, then [onClosed]. [headerAction] — one more icon
+ * button before the × (the converter's mode switch, board `Conv2*`).
  */
 @Composable
 fun CoShellModalSheet(
@@ -40,11 +41,12 @@ fun CoShellModalSheet(
     actionLabel: String? = null,
     actionEnabled: Boolean = true,
     onAction: (close: () -> Unit) -> Unit = { it() },
+    headerAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.(close: () -> Unit) -> Unit,
 ) {
     Dialog(onDismissRequest = onClosed, properties = CoShellSheetDialogProperties) {
         CoShellSheet(onClosed = onClosed) { close ->
-            CoShellModalSheetLayout(title, closeLabel, close, modifier, subtitle, actionLabel, actionEnabled, { onAction(close) }) { content(close) }
+            CoShellModalSheetLayout(title, closeLabel, close, modifier, subtitle, actionLabel, actionEnabled, { onAction(close) }, headerAction) { content(close) }
         }
     }
 }
@@ -60,6 +62,7 @@ fun CoShellModalSheetLayout(
     actionLabel: String? = null,
     actionEnabled: Boolean = true,
     onAction: () -> Unit = onClose,
+    headerAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier.imePadding()) {
@@ -75,6 +78,7 @@ fun CoShellModalSheetLayout(
                     )
                 }
             }
+            headerAction?.invoke()
             CoShellIconButton(onClick = onClose) {
                 Icon(painterResource(R.drawable.ic_close), contentDescription = closeLabel, tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }

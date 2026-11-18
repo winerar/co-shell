@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="converter_title">Converter</string>
+    <string name="converter_hint">How much that is in other currencies</string>
+    <string name="converter_tap">Tap to calculate</string>
+    <string name="converter_subtitle_pair">Currency pair · today\'s rate</string>
+    <string name="converter_subtitle_all">All currencies · today\'s rate</string>
+    <string name="converter_to_all">Show all currencies</string>
+    <string name="converter_to_pair">Show a pair</string>
+    <string name="converter_give">You give</string>
+    <string name="converter_get">You get</string>
+    <string name="converter_swap">Swap currencies</string>
+    <string name="converter_pick_give">Currency you give</string>
+    <string name="converter_pick_get">Currency you get</string>
+    <string name="converter_pick_source">Convert from</string>
+    <string name="converter_rows_hint">Tap a currency to count from it</string>
+    <string name="converter_no_rate">No rate. Add one: More → Exchange rates</string>
+    <string name="converter_row_no_rate">no rate</string>
+    <string name="settings_home_converter">Converter</string>
+    <string name="settings_home_converter_hint">a row that opens the converter</string>
+</resources>

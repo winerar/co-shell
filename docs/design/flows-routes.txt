@@ -36,6 +36,7 @@ PastReleasesDestination	-	список прошлых версий — подэ�
 FeedbackDestination	Feedback
 FeedbackDetailDestination	-	просмотр отправленного отзыва — хвост шага «Отзыв», шага нет
 RatesDestination	Rates
+ConverterDestination	Conv2PairType
 ReportCurrenciesDestination	ReportCurrencies
 CategoryEditDestination	CategoryEdit
 TransactionEditDestination	EntryEdit

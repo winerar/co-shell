@@ -2,8 +2,6 @@ package app.coshell.rates.list
 
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
-import app.coshell.core.model.MoneyFormat
-import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.rates.RefreshStatus
@@ -41,7 +39,7 @@ class RatesViewModelTest {
         override fun now() = Instant.parse("2026-11-10T01:00:00Z")
     }
     // Lazy: created inside the test, after MainDispatcherRule has set the main dispatcher.
-    private val vm by lazy { RatesViewModel(repo, refresher, settings, clock, TimeZone.of("America/Argentina/Buenos_Aires"), MoneyFormat.RU) }
+    private val vm by lazy { RatesViewModel(repo, refresher, settings, clock, TimeZone.of("America/Argentina/Buenos_Aires")) }
 
     private fun manual(date: LocalDate, rate: String) = ExchangeRate(date, usd, ars, Rate.parse(rate), RateOrigin.MANUAL)
 
@@ -141,29 +139,5 @@ class RatesViewModelTest {
         assertEquals(RefreshStatus.Running, vm.state.value.refresh)
         refresher.status.value = RefreshStatus.Updated
         assertEquals(RefreshStatus.Updated, vm.state.value.refresh)
-    }
-
-    @Test
-    fun `the converter shows the typed amount in every currency of the list`() {
-        val nb = MoneyFormat.NARROW_NBSP
-        assertEquals("100", vm.state.value.converter.amountText)
-        assertEquals(listOf(null, "146${nb}000"), vm.state.value.current.map { it.converted }) // AMD has no rate yet
-
-        vm.onConverterKey(KeypadKey.Backspace)
-        vm.onConverterKey(KeypadKey.Backspace)
-        assertEquals(listOf(null, "1${nb}460"), vm.state.value.current.map { it.converted })
-        assertEquals(listOf("USD", "AMD", "ARS"), vm.state.value.converter.options)
-    }
-
-    @Test
-    fun `the converter counts from another currency and shows the main one`() {
-        vm.onConverterFrom("ARS")
-        vm.onConverterKey(KeypadKey.Digit('0')) // 1000 ARS
-        val state = vm.state.value
-        assertEquals("ARS", state.converter.from)
-        assertEquals("≈ 0,68 USD", state.converter.inMain)
-        val row = state.current.single { it.currency == "ARS" }
-        assertTrue(row.isSource)
-        assertEquals("1${MoneyFormat.NARROW_NBSP}000", row.converted)
     }
 }

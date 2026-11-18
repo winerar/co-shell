@@ -3,17 +3,13 @@ package app.coshell.rates.list.components
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.theme.RateChipStyle
-import app.coshell.core.designsystem.theme.RateConvertedStyle
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellListRow
-import app.coshell.core.designsystem.theme.accentInk
-import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
@@ -21,8 +17,7 @@ import app.coshell.rates.list.CurrentRateItem
 import app.coshell.rates.list.formatRateDate
 
 /**
- * Currency chip, «1 USD = 1 049,69 ARS» and «на 9 ноября · вручную», the converter's amount on the right (#319);
- * tap sets the rate by hand (board `Rates`).
+ * Currency chip, «1 USD = 1 049,69 ARS» and «на 9 ноября · вручную»; tap sets the rate by hand (board `Rates`).
  */
 @Composable
 internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> Unit) {
@@ -40,26 +35,13 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
             }
         },
         supporting = {
-            if (item.isSource) {
-                Text(stringResource(R.string.rates_converter_source), color = secondaryInk())
-            } else if (item.rateText == null) {
+            if (item.rateText == null) {
                 Text(stringResource(R.string.rates_no_rate), color = LocalStatusPalette.current.warning)
             } else {
                 Text(details)
             }
         },
         leading = { CoShellStatusChip(item.currency, StatusTone.Work) },
-        // The converter's amount in this currency (#319).
-        trailing = item.converted?.let { value ->
-            {
-                Text(
-                    value,
-                    style = RateConvertedStyle,
-                    color = if (item.isSource) accentInk() else MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                )
-            }
-        },
         onClick = onClick,
     )
 }

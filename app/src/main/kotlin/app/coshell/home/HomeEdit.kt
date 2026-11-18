@@ -137,6 +137,7 @@ internal fun HomeCard.titleRes(): Int = when (this) {
     HomeCard.REVIEW -> R.string.settings_home_review
     HomeCard.UPCOMING -> R.string.settings_home_upcoming
     HomeCard.TILES -> R.string.settings_home_tiles
+    HomeCard.CONVERTER -> R.string.settings_home_converter
     HomeCard.HOT -> R.string.settings_home_hot
     HomeCard.RECENT -> R.string.settings_home_recent
 }

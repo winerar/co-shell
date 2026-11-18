@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="converter_title">Конвертер</string>
+    <string name="converter_hint">Сколько это в других валютах</string>
+    <string name="converter_tap">Нажмите, чтобы посчитать</string>
+    <string name="converter_subtitle_pair">Пара валют · курс на сегодня</string>
+    <string name="converter_subtitle_all">Все валюты · курс на сегодня</string>
+    <string name="converter_to_all">Показать все валюты</string>
+    <string name="converter_to_pair">Показать пару</string>
+    <string name="converter_give">Отдаю</string>
+    <string name="converter_get">Получаю</string>
+    <string name="converter_swap">Поменять валюты местами</string>
+    <string name="converter_pick_give">Отдаю в валюте</string>
+    <string name="converter_pick_get">Получаю в валюте</string>
+    <string name="converter_pick_source">Считать из</string>
+    <string name="converter_rate" translatable="false">1 %1$s = %2$s %3$s</string>
+    <string name="converter_currency" translatable="false">%1$s ▾</string>
+    <string name="converter_rows_hint">Нажмите на валюту — посчитаем из неё</string>
+    <string name="converter_no_rate">Нет курса. Добавьте его: Ещё → Курсы валют</string>
+    <string name="converter_row_no_rate">нет курса</string>
+    <string name="settings_home_converter">Конвертер</string>
+    <string name="settings_home_converter_hint">строка, открывающая конвертер</string>
+</resources>

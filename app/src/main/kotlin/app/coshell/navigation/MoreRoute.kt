@@ -37,6 +37,7 @@ internal fun MoreRoute(
             onBudgets = { navController.navigate(BudgetsDestination) },
             onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
             onRates = { navController.navigate(RatesDestination) },
+            onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
             onReportCurrencies = { navController.navigate(ReportCurrenciesDestination) },
             onFamily = { navController.navigate(FamilyDestination) },
             onBackup = { navController.navigate(BackupDestination) },

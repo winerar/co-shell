@@ -51,7 +51,10 @@ check_clean "Start"
 
 # 2. Bottom bar: every tab label is on screen (labels are values/strings.xml → en on the emulator, ru fallback).
 sleep 3
+# First launch shows the «App language» sheet over the tabs: confirm it (button «Done»/«Готово»/«Hecho») first.
 xml=$(ui)
+b=$(echo "$xml" | grep -oE 'text="(Done|Готово|Hecho)"[^>]*bounds="\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]"' | grep -oE '[0-9]+' | tail -4 | tr '\n' ' ')
+if [ -n "$b" ]; then set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 )); sleep 2; xml=$(ui); fi
 missing=()
 for tab in "Overview|Обзор|Home" "Transactions|Операции" "Accounts|Счета" "More|Ещё"; do
   echo "$xml" | grep -Eq "text=\"($tab)\"|content-desc=\"($tab)\"" || missing+=("$tab")

@@ -211,6 +211,9 @@ class FamilyService(
         if (_state.value !is FamilyState.Joined) _state.value = FamilyState.Offline(email)
     }
 
+    /** The signed-in member's uid while in a family (for «Трата партнёра»: whose changes are not mine). */
+    fun myUid(): String? = (_state.value as? FamilyState.Joined)?.me?.uid
+
     private fun currentMember(): Member? =
         auth.session.value?.let { Member(it.uid, it.name, it.email) }
 

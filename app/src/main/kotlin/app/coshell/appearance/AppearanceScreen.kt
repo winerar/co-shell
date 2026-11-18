@@ -24,6 +24,9 @@ import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSegmented
+import androidx.compose.foundation.layout.fillMaxWidth
+import app.coshell.settings.ListDensityViewModel
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.motion.LocalThemeReveal
 import app.coshell.core.designsystem.theme.CoShellTheme
@@ -45,19 +48,22 @@ import app.coshell.core.designsystem.R as DesignR
 fun AppearanceRoute(
     onBack: () -> Unit,
     themeSettings: ThemeSettingsViewModel = hiltViewModel(),
+    listDensity: ListDensityViewModel = hiltViewModel(),
 ) {
     val themeMode by themeSettings.mode.collectAsStateWithLifecycle()
     val palette by themeSettings.palette.collectAsStateWithLifecycle()
+    val compactLists by listDensity.compact.collectAsStateWithLifecycle()
     // Theme and palette open as a circle from the tapped control (design-refactor Step 4).
     val reveal = LocalThemeReveal.current
     val context = LocalContext.current
     var languageOpen by rememberSaveable { mutableStateOf(false) }
     val language = remember(languageOpen) { LanguageRow(AppLanguage.chosen(context), AppLanguage.current()) }
     AppearanceScreen(
-        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, language),
+        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, language, compactLists),
         actions = AppearanceActions(
             onBack = onBack,
             onLanguageClick = { languageOpen = true },
+            onCompactListsChange = listDensity::setCompact,
             onThemeModeChange = { mode -> if (mode != themeMode) reveal.change { themeSettings.setMode(mode) } },
             onPaletteChange = { p -> if (p != palette) reveal.change { themeSettings.setPalette(p) } },
         ),
@@ -72,11 +78,14 @@ data class AppearanceState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val palette: ThemePalette = ThemePalette.LIME,
     val language: LanguageRow = LanguageRow(),
+    /** «Плотность списков»: compact rows in «Операциях» and «Счетах». */
+    val compactLists: Boolean = false,
 )
 
 data class AppearanceActions(
     val onBack: () -> Unit = {},
     val onLanguageClick: () -> Unit = {},
+    val onCompactListsChange: (Boolean) -> Unit = {},
     val onThemeModeChange: (ThemeMode) -> Unit = {},
     val onPaletteChange: (ThemePalette) -> Unit = {},
 )
@@ -93,6 +102,16 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
             item { CoShellHint(stringResource(R.string.palette_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
             item { PaletteGrid(selected = state.palette, onSelect = actions.onPaletteChange, modifier = Modifier.padding(bottom = Spacing.l)) }
+            item { SectionTitle(stringResource(R.string.density_section)) }
+            item {
+                CoShellSegmented(
+                    labels = listOf(stringResource(R.string.density_comfortable), stringResource(R.string.density_compact)),
+                    selected = if (state.compactLists) 1 else 0,
+                    onSelect = { actions.onCompactListsChange(it == 1) },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
+                )
+            }
+            item { CoShellHint(stringResource(R.string.density_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
         }
     }
 }

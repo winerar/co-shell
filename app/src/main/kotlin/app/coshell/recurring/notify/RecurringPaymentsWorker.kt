@@ -11,6 +11,7 @@ import app.coshell.core.domain.recurring.activePayments
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.recurring.paymentsAhead
 import app.coshell.core.domain.recurring.paymentsToRemind
 import app.coshell.core.domain.recurring.remindTotal
 import app.coshell.core.domain.settings.ReminderSettings
@@ -63,6 +64,15 @@ class RecurringPaymentsWorker @AssistedInject constructor(
                 val due = paymentsToRemind(active, today, log.snoozedFor(today))
                 notices.remind(due, today, total(due, today))
                 log.markReminded(today, due.map { it.id })
+            }
+        }
+        if (inputData.getBoolean(KEY_REMIND, false) && reminders.enabled.first()) {
+            val daysBefore = reminders.daysBefore.first()
+            val today = clock.now().toLocalDateTime(zone).date
+            if (daysBefore > 0 && !log.aheadDone(today)) {
+                val active = activePayments(templates.observeTemplates().first(), accounts.observeAccounts(includeArchived = true).first().associateBy { it.id })
+                notices.ahead(paymentsAhead(active, today, daysBefore), daysBefore)
+                log.markAhead(today)
             }
         }
         return Result.success()

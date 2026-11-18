@@ -79,6 +79,27 @@ data object SettingsDestination
 data object AppearanceDestination
 
 @Serializable
+data object ScreensSettingsDestination
+
+@Serializable
+data object HomeSettingsDestination
+
+@Serializable
+data object HomeDetailsSettingsDestination
+
+@Serializable
+data object BalanceAccountsDestination
+
+@Serializable
+data object OpsSettingsDestination
+
+@Serializable
+data object ReportsSettingsDestination
+
+@Serializable
+data object AccountsSettingsDestination
+
+@Serializable
 data object MoneySettingsDestination
 
 @Serializable
@@ -101,6 +122,9 @@ data object WalletImportDestination
 
 @Serializable
 data object WipeDataDestination
+
+@Serializable
+data object ExportDestination
 
 @Serializable
 data object FamilyDestination

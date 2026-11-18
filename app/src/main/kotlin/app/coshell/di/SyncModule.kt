@@ -23,6 +23,7 @@ import app.coshell.family.data.SafetyBackupWriter
 import app.coshell.family.data.UrlConnectionEventStream
 import app.coshell.family.data.UrlConnectionHttpClient
 import app.coshell.family.sync.ForegroundSync
+import app.coshell.family.sync.PartnerSpendNotifier
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -101,6 +102,6 @@ object SyncModule {
     fun provideOtherMembers(family: FamilyService): OtherMembers = OtherMembers { family.otherMemberNames() }
 
     @Provides
-    fun provideForegroundSync(@ApplicationContext context: Context, family: FamilyService, dao: SyncDao, bell: FamilyBell) =
-        ForegroundSync(context, family, dao, bell)
+    fun provideForegroundSync(@ApplicationContext context: Context, family: FamilyService, dao: SyncDao, bell: FamilyBell, partner: PartnerSpendNotifier) =
+        ForegroundSync(context, family, dao, bell, partner)
 }

@@ -33,6 +33,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 // List rows of the app (design-system.md §«Компоненты»): medium density — a row with a 40 dp badge is
 // 64 dp tall; edge padding Spacing.l; tap = Tactile.Row (depth and light, no tilt); `onLongClick` — the selection mode of a list. Transparent, so it sits
 // on a screen, card or sheet alike; `containerColor` — to cover something under it (swipe-to-delete strip).
+// `compact` — «Компактные списки» (Set1Look): 44 dp at least, Spacing.xs above and below; only the data lists of «Операции» and «Счета» ask for it.
 // `dense` — menu density (154А, #155): 52 dp at least, Spacing.s above and below, the grey line in bodySmall — for menus of sections, not data lists.
 
 /** Slot row: [title] in bodyLarge, [supporting] in grey bodyMedium, [leading]/[trailing] in grey. */
@@ -48,6 +49,7 @@ fun CoShellListRow(
     containerColor: Color = Color.Transparent,
     onLongClick: (() -> Unit)? = null,
     dense: Boolean = false,
+    compact: Boolean = false,
 ) {
     val clickable = when {
         onClick != null && onLongClick != null ->
@@ -55,7 +57,7 @@ fun CoShellListRow(
         onClick != null -> Modifier.tactileClickable(enabled = enabled, onClick = onClick)
         else -> Modifier
     }
-    RowLayout(modifier.then(clickable), enabled, containerColor, title, supporting, leading, trailing, dense)
+    RowLayout(modifier.then(clickable), enabled, containerColor, title, supporting, leading, trailing, dense, compact)
 }
 
 /** Text row: one-line [title], optional [subtitle] (up to [subtitleMaxLines]). */
@@ -72,6 +74,7 @@ fun CoShellListRow(
     containerColor: Color = Color.Transparent,
     onLongClick: (() -> Unit)? = null,
     dense: Boolean = false,
+    compact: Boolean = false,
 ) = CoShellListRow(
     title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
     modifier = modifier,
@@ -83,6 +86,7 @@ fun CoShellListRow(
     containerColor = containerColor,
     onLongClick = onLongClick,
     dense = dense,
+    compact = compact,
 )
 
 /** Settings row with a switch; the whole row toggles (one target for TalkBack, the switch only shows). */
@@ -114,6 +118,7 @@ private fun RowLayout(
     leading: (@Composable () -> Unit)?,
     trailing: (@Composable () -> Unit)?,
     dense: Boolean = false,
+    compact: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -146,8 +151,8 @@ private fun RowLayout(
             .fillMaxWidth()
             .smoothResize() // a subtitle may appear or wrap to two lines (issue #64)
             .background(containerColor)
-            .heightIn(min = if (dense) Sizes.rowDenseMinHeight else Sizes.rowMinHeight)
-            .padding(horizontal = Spacing.l, vertical = if (dense) Spacing.s else Spacing.m)
+            .heightIn(min = if (compact) Sizes.rowCompactMinHeight else if (dense) Sizes.rowDenseMinHeight else Sizes.rowMinHeight)
+            .padding(horizontal = Spacing.l, vertical = if (compact) Spacing.xs else if (dense) Spacing.s else Spacing.m)
             .alpha(if (enabled) 1f else DisabledAlpha),
     ) { measurables, constraints ->
         val gapPx = gap.roundToPx()

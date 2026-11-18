@@ -17,6 +17,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
+import app.coshell.core.domain.settings.HomeTile
+import app.coshell.settings.LocalScreenOptions
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.splitAmount
 import app.coshell.core.designsystem.components.CoShellTile
@@ -44,14 +46,19 @@ internal fun HomeTiles(
 ) {
     Row(modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
         val tile = Modifier.weight(1f).fillMaxHeight()
-        SpendingTile(state.spending, onTransactions, tile)
-        if (state.attention.isRatesIssue) {
-            RatesTile(state.attention, onRates, tile)
-        } else if (budget != null) {
-            BudgetTile(budget, onBudgets, tile)
-        } else {
-            UncategorizedTile(state.attention.uncategorized, onUncategorized, tile)
+        val options = LocalScreenOptions.current
+        val first = options.tileFirst
+        // «Настройки → Экраны → Обзор → Плитки»: the two tiles of this phone; no budgets yet — «Без категории» stands in for «Бюджет»,
+        // and «Внимание» (no rate) takes the second place by itself while there is trouble with rates.
+        fun HomeTile.resolved() = if (this == HomeTile.BUDGET && budget == null) (if (first == HomeTile.UNCATEGORIZED) HomeTile.SPENDING else HomeTile.UNCATEGORIZED) else this
+        val second = options.tileSecond.resolved()
+        @Composable fun Tile(kind: HomeTile) = when (kind) {
+            HomeTile.SPENDING -> SpendingTile(state.spending, onTransactions, tile)
+            HomeTile.BUDGET -> BudgetTile(budget!!, onBudgets, tile)
+            HomeTile.UNCATEGORIZED -> UncategorizedTile(state.attention.uncategorized, onUncategorized, tile)
         }
+        Tile(first.resolved())
+        if (state.attention.isRatesIssue) RatesTile(state.attention, onRates, tile) else Tile(second)
     }
 }
 

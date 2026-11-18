@@ -17,9 +17,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
-import app.coshell.settings.DataSettingsScreen
+import app.coshell.export.ExportRoute
+import app.coshell.settings.AccountsSettingsRoute
+import app.coshell.settings.BalanceAccountsRoute
+import app.coshell.settings.HomeDetailsRoute
+import app.coshell.settings.HomeSettingsRoute
+import app.coshell.settings.DataSettingsRoute
+import app.coshell.settings.OpsSettingsRoute
+import app.coshell.settings.ReportsSettingsRoute
+import app.coshell.settings.ScreensSettingsScreen
 import app.coshell.settings.InputSettingsRoute
-import app.coshell.settings.MoneySettingsScreen
+import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsScreen
@@ -303,6 +311,7 @@ fun CoShellNavHost(
                 SettingsActions(
                     onBack = { navController.popBackStack() },
                     onLook = { navController.navigate(AppearanceDestination) },
+                    onScreens = { navController.navigate(ScreensSettingsDestination) },
                     onMoney = { navController.navigate(MoneySettingsDestination) },
                     onInput = { navController.navigate(InputSettingsDestination) },
                     onNotices = { navController.navigate(NoticeSettingsDestination) },
@@ -313,8 +322,31 @@ fun CoShellNavHost(
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
         }
+        screen<ScreensSettingsDestination> {
+            ScreensSettingsScreen(
+                onHome = { navController.navigate(HomeSettingsDestination) },
+                onOps = { navController.navigate(OpsSettingsDestination) },
+                onReports = { navController.navigate(ReportsSettingsDestination) },
+                onAccounts = { navController.navigate(AccountsSettingsDestination) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        screen<HomeSettingsDestination> {
+            HomeSettingsRoute(
+                onDetails = { navController.navigate(HomeDetailsSettingsDestination) },
+                onBalance = { navController.navigate(BalanceAccountsDestination) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        screen<BalanceAccountsDestination> {
+            BalanceAccountsRoute(onBack = { navController.popBackStack() })
+        }
+        screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
+        screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
+        screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
+        screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }
         screen<MoneySettingsDestination> {
-            MoneySettingsScreen(
+            MoneySettingsRoute(
                 onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onBack = { navController.popBackStack() },
             )
@@ -326,13 +358,15 @@ fun CoShellNavHost(
             NoticeSettingsRoute(onBack = { navController.popBackStack() })
         }
         screen<DataSettingsDestination> {
-            DataSettingsScreen(
+            DataSettingsRoute(
                 onBackup = { navController.navigate(BackupDestination) },
                 onImport = { navController.navigate(WalletImportDestination) },
+                onExport = { navController.navigate(ExportDestination) },
                 onWipe = { navController.navigate(WipeDataDestination) },
                 onBack = { navController.popBackStack() },
             )
         }
+        screen<ExportDestination> { ExportRoute(onBack = { navController.popBackStack() }) }
         screen<WipeDataDestination> {
             WipeDataRoute(
                 onBack = { navController.popBackStack() },

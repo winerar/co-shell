@@ -8,6 +8,9 @@ object Sizes {
     val rowMinHeight = 56.dp
     /** Dense menu row («Ещё», #155): a [badgeSmall] with Spacing.s above and below fits in 52. */
     val rowDenseMinHeight = 52.dp
+
+    /** Rows of the data lists when «Плотность списков» is compact. */
+    val rowCompactMinHeight = 44.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
     /** Badge in an editor's header, beside the name: the category as it will look. */

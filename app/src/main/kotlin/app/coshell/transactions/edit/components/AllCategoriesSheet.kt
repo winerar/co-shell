@@ -21,7 +21,11 @@ internal fun AllCategoriesSheet(groups: List<CategoryGroup>, selectedId: String?
         title = stringResource(R.string.transaction_categories_all_title, groups.leafCount),
         options = options,
         selected = selectedId,
-        onPick = onSelect,
+        // ChoiceSheet's onPick must close the sheet itself: onDismiss is not called after a pick (#439).
+        onPick = { id ->
+            onSelect(id)
+            onClosed()
+        },
         onDismiss = onClosed,
         searchPlaceholder = stringResource(R.string.transaction_categories_search),
         alwaysSearch = true,

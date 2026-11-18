@@ -17,6 +17,7 @@ import app.coshell.transactions.list.TransactionsUiState.Day
 import app.coshell.transactions.list.TransactionsUiState.Kind
 import app.coshell.transactions.list.TransactionsUiState.RelativeDay
 import app.coshell.transactions.list.TransactionsUiState.Row
+import app.coshell.transactions.list.TransactionsUiState.RowAccount
 import app.coshell.transactions.list.TransactionsUiState.RowTag
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -135,6 +136,7 @@ private fun Transaction.toRow(
             icon = category?.icon,
             color = category?.color,
             subtitle = accountName,
+            account = accountsById[accountId]?.let { RowAccount(it.name, it.color) },
             note = note,
             amount = moneyFormat.format(-amount),
             secondaryAmount = originalAmount?.let(moneyFormat::format),
@@ -146,6 +148,7 @@ private fun Transaction.toRow(
             icon = category?.icon,
             color = category?.color,
             subtitle = accountName,
+            account = accountsById[accountId]?.let { RowAccount(it.name, it.color) },
             note = note,
             amount = "+" + moneyFormat.format(amount),
             secondaryAmount = originalAmount?.let(moneyFormat::format),

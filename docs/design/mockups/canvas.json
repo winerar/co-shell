@@ -1186,8 +1186,44 @@
       "page": "ideas",
       "radius": 28
     },
-    "Conv1Home.dc.html": {
+    "Conv2PairEmpty.dc.html": {
       "x": 940,
+      "y": 24220,
+      "w": 390,
+      "h": 844,
+      "title": "Итог · «Пара» (по умолчанию): пусто",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Conv2PairType.dc.html": {
+      "x": 1410,
+      "y": 24220,
+      "w": 390,
+      "h": 844,
+      "title": "Итог · «Пара»: набрано 100 USD",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Conv2AllType.dc.html": {
+      "x": 1880,
+      "y": 24220,
+      "w": 390,
+      "h": 844,
+      "title": "Итог · «Все валюты» (кнопка в шапке)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Conv2AllMany.dc.html": {
+      "x": 2350,
+      "y": 24220,
+      "w": 390,
+      "h": 844,
+      "title": "Итог · «Все валюты»: 8 валют",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Conv1Home.dc.html": {
+      "x": 2820,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1196,7 +1232,7 @@
       "radius": 28
     },
     "Conv1More.dc.html": {
-      "x": 1410,
+      "x": 3290,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1205,7 +1241,7 @@
       "radius": 28
     },
     "Conv1Rates.dc.html": {
-      "x": 1880,
+      "x": 3760,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1214,7 +1250,7 @@
       "radius": 28
     },
     "Conv1AEmpty.dc.html": {
-      "x": 2350,
+      "x": 4230,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1223,7 +1259,7 @@
       "radius": 28
     },
     "Conv1AType.dc.html": {
-      "x": 2820,
+      "x": 4700,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1232,7 +1268,7 @@
       "radius": 28
     },
     "Conv1BEmpty.dc.html": {
-      "x": 3290,
+      "x": 5170,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1241,7 +1277,7 @@
       "radius": 28
     },
     "Conv1BType.dc.html": {
-      "x": 3760,
+      "x": 5640,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1250,7 +1286,7 @@
       "radius": 28
     },
     "Conv1CEmpty.dc.html": {
-      "x": 4230,
+      "x": 6110,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1259,7 +1295,7 @@
       "radius": 28
     },
     "Conv1CType.dc.html": {
-      "x": 4700,
+      "x": 6580,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1268,7 +1304,7 @@
       "radius": 28
     },
     "Conv1COther.dc.html": {
-      "x": 5170,
+      "x": 7050,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1277,7 +1313,7 @@
       "radius": 28
     },
     "Conv1CMany.dc.html": {
-      "x": 5640,
+      "x": 7520,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -1286,7 +1322,7 @@
       "radius": 28
     },
     "Conv1CNoRate.dc.html": {
-      "x": 6110,
+      "x": 7990,
       "y": 24220,
       "w": 390,
       "h": 844,
@@ -2521,6 +2557,10 @@
     "Ideas.dc.html",
     "Fb319A.dc.html",
     "Fb319B.dc.html",
+    "Conv2PairEmpty.dc.html",
+    "Conv2PairType.dc.html",
+    "Conv2AllType.dc.html",
+    "Conv2AllMany.dc.html",
     "Conv1Home.dc.html",
     "Conv1More.dc.html",
     "Conv1Rates.dc.html",
@@ -2600,6 +2640,10 @@
     "Fb318B.dc.html",
     "Fb319A.dc.html",
     "Fb319B.dc.html",
+    "Conv2PairEmpty.dc.html",
+    "Conv2PairType.dc.html",
+    "Conv2AllType.dc.html",
+    "Conv2AllMany.dc.html",
     "Conv1Home.dc.html",
     "Conv1More.dc.html",
     "Conv1Rates.dc.html",
@@ -2955,13 +2999,13 @@
       "text": "Задача #319 · конвертер на «Курсах»",
       "x": 0,
       "y": 23970,
-      "maxW": 6500,
+      "maxW": 8380,
       "w": 240
     },
     "fbS319": {
       "page": "ideas",
       "text": "Сумма — своей клавиатурой. Рекомендую А: конвертер прямо в карточке сверху экрана «Курсы».",
-      "x": 6580,
+      "x": 8460,
       "y": 24220,
       "w": 390
     },

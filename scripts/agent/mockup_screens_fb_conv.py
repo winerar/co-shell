@@ -184,7 +184,51 @@ def sheet_c_norate():
     return conv_sheet('<div style="display: flex; flex-direction: column; gap: 4px;">%s</div>' % rows, 70)
 
 
+# ---- owner's decision 2026-11-18: two modes in one sheet (poll answer «В» + note) ------------------------------------------------
+# «Пара» (Отдаю / Получаю) opens by default; a button in the header switches to «Все» and back; the last pair and the last mode are remembered.
+
+def mode_head(mode):
+    """Sheet header with the mode button: «Пара» shows the «Все» icon and vice versa; the label under the title says what is on."""
+    icon, label_txt, to = ('list', 'Пара валют', 'Показать все валюты') if mode == 'pair' else ('transfer', 'Все валюты', 'Показать пару')
+    return ('<div style="display: flex; align-items: flex-start; gap: 4px; padding: 8px 8px 0 20px;"><div style="flex-grow: 1; padding-top: 10px;">'
+            '<h2 style="margin: 0; font-size: 22px; font-weight: 700;">Конвертер</h2>'
+            '<div style="margin-top: 4px; font-size: 13px; color: %s;">%s · курс на сегодня</div></div>%s%s</div>'
+            % (MUTED, label_txt, icon_button(icon, to, INK), icon_button('close', 'Закрыть', MUTED)))
+
+
+def mode_sheet(mode, body, top=70):
+    inner = (mode_head(mode) + '<div style="padding: 8px 20px 0;">%s</div>' % body
+             + '<div style="position: absolute; left: 12px; right: 12px; bottom: 14px;">%s</div>' % keypad('Готово'))
+    return scrim(under_home()) + sheet(inner, top)
+
+
+def pair_body(a, b, empty=False):
+    """The pair: «Отдаю» is the active side (tap the other side to type there); the swap button flips the currencies."""
+    return ('<div style="margin-top: 6px;">%s%s%s</div>' % (side('Отдаю', a, 'USD', True, empty), swap(), side('Получаю', b, 'ARS', False, empty))
+            + note('1 USD = 1 015 ARS · курс на сегодня', 10))
+
+
+def sheet2_pair_empty():
+    return mode_sheet('pair', pair_body('', '', True))
+
+
+def sheet2_pair_typed():
+    return mode_sheet('pair', pair_body('100', '101 500'))
+
+
+def sheet2_all_typed():
+    return mode_sheet('all', all_list(5, 'USD', False, '100') + note('Нажмите на строку — считаем из этой валюты', 10))
+
+
+def sheet2_all_many():
+    return mode_sheet('all', all_list(8, 'ARS', False) + note('Ещё валюты — прокрутите список', 8), 40)
+
+
 BOARDS = [  # name, title, fn, issue number
+    ('Conv2PairEmpty', 'Итог · «Пара» (по умолчанию): пусто', sheet2_pair_empty, 319),
+    ('Conv2PairType', 'Итог · «Пара»: набрано 100 USD', sheet2_pair_typed, 319),
+    ('Conv2AllType', 'Итог · «Все валюты» (кнопка в шапке)', sheet2_all_typed, 319),
+    ('Conv2AllMany', 'Итог · «Все валюты»: 8 валют', sheet2_all_many, 319),
     ('Conv1Home', 'Вход 1 · «Обзор»: плитка «Конвертер»', home_entry, 319),
     ('Conv1More', 'Вход 2 · «Ещё → Деньги»: строка «Конвертер»', more_entry, 319),
     ('Conv1Rates', 'Вход 3 · «Курсы»: компактная карточка, без числа по умолчанию', rates_entry, 319),

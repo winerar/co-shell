@@ -41,6 +41,43 @@ class VersionNameTest(unittest.TestCase):
             out = subprocess.run([sys.executable, SCRIPT, repo], check=True, capture_output=True, text=True).stdout
             self.assertEqual(out.strip(), "0.2")
 
+    def test_new_major_starts_at_zero_and_counts_releases_after_it(self):
+        with tempfile.TemporaryDirectory() as repo:
+            env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t",
+                       GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
+
+            def git(*args):
+                subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True)
+
+            def version():
+                return subprocess.run([sys.executable, SCRIPT, repo], check=True, capture_output=True,
+                                      text=True).stdout.strip()
+
+            def release(n, major):
+                git("checkout", "-q", "-b", f"dev{n}")
+                with open(os.path.join(repo, "version.properties"), "w") as f:
+                    f.write(f"major={major}\n")
+                git("add", ".")
+                git("commit", "-q", "--allow-empty", "-m", f"work {n}")
+                git("checkout", "-q", "main")
+                git("merge", "-q", "--no-ff", f"dev{n}", "-m", f"release {n}")
+
+            with open(os.path.join(repo, "version.properties"), "w") as f:
+                f.write("major=0\nminorOffset=0\n")
+            git("init", "-q", "-b", "main")
+            git("add", ".")
+            git("commit", "-q", "-m", "base")
+            release(0, 0)
+            release(1, 0)
+            self.assertEqual(version(), "0.2")
+            release(2, 1)  # the owner raised major: this release is 1.0, no offset to compute
+            self.assertEqual(version(), "1.0")
+            release(3, 1)
+            release(4, 1)
+            self.assertEqual(version(), "1.2")
+            release(5, 2)
+            self.assertEqual(version(), "2.0")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -88,6 +88,16 @@
       "page": "screens",
       "radius": 28
     },
+    "HomeGreeting.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: поздравление на 1.0 (тапайте)",
+      "page": "screens",
+      "is_interactive": true,
+      "radius": 28
+    },
     "Operations.dc.html": {
       "x": 0,
       "y": 1240,
@@ -2281,6 +2291,7 @@
     "HomeAttention.dc.html",
     "HomeSync.dc.html",
     "UpdateWhatsNew.dc.html",
+    "HomeGreeting.dc.html",
     "Operations.dc.html",
     "OpsScrolled.dc.html",
     "OpsSelect.dc.html",
@@ -2548,13 +2559,13 @@
       "text": "Обзор",
       "x": 0,
       "y": -250,
-      "maxW": 2270,
+      "maxW": 2740,
       "w": 240
     },
     "s0": {
       "page": "screens",
       "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
-      "x": 2350,
+      "x": 2820,
       "y": 0,
       "w": 390
     },

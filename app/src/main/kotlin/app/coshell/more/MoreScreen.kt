@@ -52,6 +52,7 @@ data class MoreActions(
     /** «Регулярные платежи»: always reachable here, also when «Скоро» on «Обзор» is hidden (#403). */
     val onRecurring: () -> Unit = {},
     val onRates: () -> Unit = {},
+    val onConverter: () -> Unit = {},
     val onReportCurrencies: () -> Unit = {},
     val onFamily: () -> Unit = {},
     val onBackup: () -> Unit = {},

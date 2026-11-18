@@ -11,6 +11,9 @@ enum class HomeCard {
     /** The tiles: spending of the month and the budget. */
     TILES,
 
+    /** «Конвертер»: a row that opens the converter sheet (#319, board `Conv1Home`). */
+    CONVERTER,
+
     /** «Горит в бюджете»: limits under threat. */
     HOT,
 

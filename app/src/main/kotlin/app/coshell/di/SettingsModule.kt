@@ -1,6 +1,7 @@
 package app.coshell.di
 
 import app.coshell.core.domain.quickentry.TipSettings
+import app.coshell.core.domain.settings.ConverterSettings
 import app.coshell.core.domain.settings.ListDensitySettings
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.settings.PrefsScreenOptions
@@ -11,6 +12,7 @@ import app.coshell.core.domain.shake.ShakeSettings
 import app.coshell.core.domain.templates.TemplateUsage
 import app.coshell.recurring.notify.data.PrefsReminderSettings
 import app.coshell.reports.review.data.PrefsMonthReviewSettings
+import app.coshell.settings.PrefsConverterSettings
 import app.coshell.settings.PrefsListDensitySettings
 import app.coshell.shake.data.PrefsShakeSettings
 import app.coshell.templates.data.PrefsTemplateUsage
@@ -48,4 +50,7 @@ interface SettingsModule {
 
     @Binds
     fun bindListDensitySettings(impl: PrefsListDensitySettings): ListDensitySettings
+
+    @Binds
+    fun bindConverterSettings(impl: PrefsConverterSettings): ConverterSettings
 }

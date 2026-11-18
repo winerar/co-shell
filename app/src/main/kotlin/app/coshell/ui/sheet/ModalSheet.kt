@@ -18,6 +18,7 @@ fun ModalSheet(
     actionLabel: String? = null,
     actionEnabled: Boolean = true,
     onAction: (close: () -> Unit) -> Unit = { it() },
+    headerAction: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.(close: () -> Unit) -> Unit,
 ) = CoShellModalSheet(
     title = title,
@@ -27,5 +28,6 @@ fun ModalSheet(
     actionLabel = actionLabel,
     actionEnabled = actionEnabled,
     onAction = onAction,
+    headerAction = headerAction,
     content = content,
 )

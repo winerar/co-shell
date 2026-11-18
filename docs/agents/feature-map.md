@@ -10,7 +10,7 @@
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
 распознавание толчков — `core:domain/shake/ShakeDetector`.
 Мелкие удобства (#317, пока только расчёты — экраны ждут опроса): «экраном вниз» — `core:domain/shake/FaceDownDetector` (#324),
-встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах и конвертер — `rates/AmountInCurrencies` (#318, #319);
+встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах — `rates/AmountInCurrencies` (#318), конвертер — пакет `converter/` (#319, ниже);
 `core:domain/quickentry/`: `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `greeting/` — одноразовое поздравление версии 1.0 (уведомление `GreetingNotifier` + пилюля `GreetingPill` на «Обзоре», доска `HomeGreeting`): правило «кому и когда» — `core:domain/greeting/ReleaseGreeting` (участник, не владелец семьи; версия ≥ 1.0), флаги «показано» — `GreetingStore`; после релиза пакет можно удалить.
@@ -81,7 +81,8 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `ExchangeRateRepository` (`core:domain/rates/`), Room — `db/RateEntities.kt`, `db/RateDao.kt`,
 `repository/RoomExchangeRateRepository.kt`; DI — `di/DataModule`. Экран «Ещё → Курсы валют» — `rates/list/`
 (курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
-`components/ManualRateDialog.kt`; конвертер сверху #319 — `Converter.kt`, `components/ConverterCard.kt`, `ConverterKeypadSheet.kt`).
+`components/ManualRateDialog.kt`; вход в конвертер — строка `ConverterEntry` сверху).
+Конвертер (#319, доски `Conv2*`, «ок» 2026-11-18) — `app/.../converter/`: шторка `ConverterSheet.kt` (маршрут `ConverterDestination`, окно — `dialog<>` в `CoShellNavHost`), `components/ConverterPair.kt` («Отдаю / Получаю» на `CoShellAmountSlot`) и `ConverterAll.kt` («Все валюты»), `ConverterViewModel` + чистая логика `ConverterInput.kt`/`ConverterMath.kt`, вход — `ConverterEntry` (карточка «Обзора» = `HomeCard.CONVERTER`, строка «Ещё → Деньги», строка на «Курсах»). Режим и последняя пара — `ConverterSettings` (`core:domain/settings`, `settings/PrefsConverterSettings`, на этом телефоне); сумма не запоминается.
 Валюты отчётов (первая — основная): контракт и правила списка — `core:domain/settings/ReportCurrencies.kt`,
 хранение — общие настройки семьи `core:data/repository/RoomFamilySettings` (там же день начала месяца, `MonthStartSettings`;
 перенос старого списка с телефона — `app/.../currencies/data/LegacyReportCurrencies`), экран «Ещё → Валюты отчётов» — `currencies/list/`.

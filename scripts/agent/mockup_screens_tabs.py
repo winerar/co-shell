@@ -84,7 +84,7 @@ def more_body():
     ver = group([row('Co-Shell', 'Версия 0.37 · сборка 400', tile_icon('download', LIME, LIMEBG), chevron())])
     money = group([r('Счета', 'Карты, наличные, вклады', 'wallet', PINK, PINKBG), r('Категории', 'Подкатегории, иконки и цвета', 'folder', LIME, LIMEBG),
                    r('Бюджеты', 'Лимиты на месяц, план и факт', 'wallet', PINK, PINKBG), r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN, CYANBG),
-                   r('Курсы валют', 'Обновляются сами раз в день', 'rate', CYAN, CYANBG), r('Валюты итогов', 'Основная: USD', 'rate', VIOLET, VIOLETBG)])
+                   r('Курсы валют', 'Обновляются сами раз в день', 'rate', CYAN, CYANBG), r('Конвертер', 'Сколько это в других валютах', 'transfer', LIME, LIMEBG), r('Валюты итогов', 'Основная: USD', 'rate', VIOLET, VIOLETBG)])
     data = group([r('Семья', 'Общий бюджет с близкими', 'user', LIME, LIMEBG), r('Резервная копия', 'Сохранить или восстановить данные', 'download', YELLOW, YELLOWBG),
                   r('Импорт из Wallet', 'Перенести операции из выгрузки CSV', 'download', CYAN, CYANBG)])
     app = group([r('Внешний вид', 'Лайм · тёмная', 'spark', VIOLET, VIOLETBG), r('Обратная связь', 'Ошибка или идея', 'mail', PINK, PINKBG)])

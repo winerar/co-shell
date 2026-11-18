@@ -71,7 +71,8 @@ class ConverterViewModel @Inject constructor(
         val manual = all.filter { it.origin == RateOrigin.MANUAL }
         val currencies = used + manual.flatMap { listOf(it.from, it.to) }
         val options = listOf(base) + book.currentRates(currencies, base, today).map { it.currency }
-        val (from, to) = resolvePair(options, base, pick)
+        val rated = options.filter { book.find(base, it, today) != null }.toSet()
+        val (from, to) = resolvePair(options, base, pick, rated)
         val input = ConverterInput(from, to, typed.text, typed.active).let { if (pick.mode == ConverterMode.ALL) it.forAll() else it }
         val values = book.converted(keypadMoney(input.text, input.source), options, today, moneyFormat)
         val shown = AmountKeys.display(input.text)

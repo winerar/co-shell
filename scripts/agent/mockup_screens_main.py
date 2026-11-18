@@ -30,6 +30,14 @@ def tile(title, value, sub, color=INK, warn=False):
             % (CARD, border, WARN if warn else MUTED, title, MONO, color, value, MUTED, sub))
 
 
+def converter_card():
+    """«Конвертер» on «Обзор» (#319, board `Conv1Home`): one menu row in a card that opens the converter sheet."""
+    return ('<div style="margin-top: 10px; padding: 8px 14px; border-radius: 24px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 12px; min-height: 52px;">'
+            '%s<div style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Конвертер</div>'
+            '<div style="font-size: 12px; color: %s;">Сколько это в других валютах</div></div>%s</div>'
+            % (CARD, LINE, tile_icon('transfer', LIME, CHIP), MUTED, chevron()))
+
+
 def tiles(*t):
     return '<div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">%s</div>' % ''.join(t)
 
@@ -43,7 +51,7 @@ SEARCH_BTN = icon_button('search', 'Поиск')
 
 def home():
     return tab_screen('Обзор', balance_hero() + tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Без категории', '14', 'операций'))
-                      + recent_card(RECENT), 'home', SEARCH_BTN)
+                      + converter_card() + recent_card(RECENT), 'home', SEARCH_BTN)
 
 
 def home_empty():
@@ -55,7 +63,7 @@ def home_attention():
     extra = ('<div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s'
              'Без учёта: VES — нет курса</div>' % (WARN, svg('alert', WARN, 16)))
     body = (balance_hero(extra=extra) + tiles(tile('Траты за ноябрь', '1 240,50', 'USD · без VES'), tile('Внимание', '2', 'нет курса VES · курсы от 7 нояб.', WARN, True))
-            + recent_card(RECENT[:3]))
+            + converter_card() + recent_card(RECENT[:3]))
     return tab_screen('Обзор', body, 'home', SEARCH_BTN)
 
 

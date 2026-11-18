@@ -17,11 +17,11 @@ def code_badge(code):
 
 
 def rates():
-    # As in the app (#464): the converter on top, the status card with «Курсы обновлены», the add button is the round «+» (fab).
-    conv = hero_card('<div style="font-size: 15px;">Сколько это</div><div style="display: flex; align-items: baseline; gap: 8px; margin-top: 6px;">'
-                     '<span style="%s font-size: 28px; font-weight: 700; color: %s;">100</span><span style="%s font-size: 15px;">USD ▾</span>'
-                     '<span style="flex-grow: 1;"></span><span style="font-size: 12px; color: %s;">курс на сегодня</span></div>' % (MONO, LIME, MONO, HERO_HINT),
-                     pad='14px', radius=20)
+    # As in the app (#464, #319): the converter row on top (opens the converter sheet), the status card with «Курсы обновлены», the add button is the round «+» (fab).
+    conv = ('<div style="padding: 8px 14px; border-radius: 24px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 12px; min-height: 52px;">'
+            '%s<div style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Конвертер</div>'
+            '<div style="font-size: 12px; color: %s;">Нажмите, чтобы посчитать</div></div>%s</div>'
+            % (CARD, LINE, tile_icon('transfer', LIME, CHIP), MUTED, chevron()))
     head = hero_card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Курсы на сегодня</div>'
                      '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>'
                      '<div style="margin-top: 10px; padding: 12px 14px; border-radius: 999px; background: %s; font-size: 14px;">Курсы обновлены</div>'

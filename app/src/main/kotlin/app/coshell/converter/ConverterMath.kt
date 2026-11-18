@@ -33,10 +33,12 @@ internal fun RateBook.converted(amount: Money, currencies: List<CurrencyCode>, d
 
 /**
  * The pair to open with: the remembered one while both currencies are still in [options]; otherwise the main currency [base] →
- * the first other one. The pair holds two different currencies whenever [options] has two.
+ * the first other one that has a rate ([rated]; none has — the first other). The pair holds two different currencies whenever
+ * [options] has two.
  */
-internal fun resolvePair(options: List<CurrencyCode>, base: CurrencyCode, pick: ConverterPick): Pair<CurrencyCode, CurrencyCode> {
+internal fun resolvePair(options: List<CurrencyCode>, base: CurrencyCode, pick: ConverterPick, rated: Set<CurrencyCode>): Pair<CurrencyCode, CurrencyCode> {
     val from = pick.from?.takeIf { it in options } ?: base
-    val to = pick.to?.takeIf { it in options && it != from } ?: options.firstOrNull { it != from } ?: from
+    val others = options.filter { it != from }
+    val to = pick.to?.takeIf { it in others } ?: others.firstOrNull { it in rated } ?: others.firstOrNull() ?: from
     return from to to
 }

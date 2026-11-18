@@ -411,7 +411,10 @@ fun CoShellNavHost(
             FeedbackDetailRoute(entry.toRoute<FeedbackDetailDestination>().sentAtMillis, onBack = { navController.popBackStack() })
         }
         screen<RatesDestination> {
-            RatesRoute(onBack = { navController.popBackStack() })
+            RatesRoute(
+                onBack = { navController.popBackStack() },
+                onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
+            )
         }
         screen<ReportCurrenciesDestination> {
             ReportCurrenciesRoute(onBack = { navController.popBackStack() })

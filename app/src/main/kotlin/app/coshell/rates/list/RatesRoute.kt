@@ -4,13 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.coshell.core.designsystem.components.keypad.KeypadKey
 import kotlinx.datetime.LocalDate
 import app.coshell.gate.LocalInputLock
 
 /** Connects [RatesScreen] to [RatesViewModel]. */
 @Composable
-fun RatesRoute(onBack: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) {
+fun RatesRoute(onBack: () -> Unit, onConverter: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lock = LocalInputLock.current
     RatesScreen(
@@ -24,8 +23,7 @@ fun RatesRoute(onBack: () -> Unit, viewModel: RatesViewModel = hiltViewModel()) 
             onManualDelete = viewModel::askDelete,
             onConfirmDelete = lock.guard(viewModel::confirmDelete),
             onCancelDelete = viewModel::cancelDelete,
-            onConverterKey = viewModel::onConverterKey,
-            onConverterFrom = viewModel::onConverterFrom,
+            onConverter = onConverter,
         ),
         editorActions = ManualRateActions(
             onFromChange = viewModel::onFromChange,
@@ -49,9 +47,8 @@ data class RatesActions(
     val onManualDelete: (ManualRateItem) -> Unit = {},
     val onConfirmDelete: () -> Unit = {},
     val onCancelDelete: () -> Unit = {},
-    /** The converter (#319): a key of its keypad, another source currency. */
-    val onConverterKey: (KeypadKey) -> Unit = {},
-    val onConverterFrom: (String) -> Unit = {},
+    /** The converter sheet (#319) opens over this screen. */
+    val onConverter: () -> Unit = {},
 )
 
 /** Callbacks of the "manual rate" dialog. */

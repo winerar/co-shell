@@ -24,6 +24,8 @@
 | Категории | Categories | categories | ✓ | ✓ |
 | Редактор категории | CategoryEdit | category_edit | ✓ | ✓ |
 | Курсы | Rates | rates | ✓ | ✓ |
+| Конвертер: пара | Conv2PairType | converter_pair | ✓ | ✓ |
+| Конвертер: все валюты | Conv2AllType | converter_all | ✓ | ✓ |
 | Валюты отчётов | ReportCurrencies | report_currencies | ✓ | ✓ |
 | Семья | Family | family | ✓ | ✓ |
 | Настройки | Set1Root | settings | ✓ | ✓ |

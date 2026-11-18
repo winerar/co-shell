@@ -397,11 +397,6 @@
     <string name="report_currencies_main">Основная</string>
     <string name="report_currencies_add">Добавить валюту</string>
     <string name="report_currencies_menu_hint">Основная: %1$s</string>
-    <string name="rates_converter_title">Сколько это</string>
-    <string name="rates_converter_currency" translatable="false">%1$s ▾</string>
-    <string name="rates_converter_today">курс на сегодня</string>
-    <string name="rates_converter_pick">Считать из</string>
-    <string name="rates_converter_source">исходная</string>
     <string name="rates_current">Курсы на сегодня</string>
     <string name="rates_current_hint">нажмите, чтобы изменить</string>
     <string name="rates_accounts">Валюты ваших счетов</string>

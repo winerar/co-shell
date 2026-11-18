@@ -68,6 +68,9 @@
     <string name="search_close">Close search</string>
     <string name="choice_search">Search</string>
     <string name="picker_nothing">Nothing found</string>
+    <string name="picker_all">All ›</string>
+    <string name="entry_from">From</string>
+    <string name="entry_to">To</string>
     <string name="picker_from_expense">Paid from?</string>
     <string name="picker_to_income">Received to?</string>
     <string name="picker_from_transfer">Transfer from?</string>

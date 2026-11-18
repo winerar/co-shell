@@ -120,7 +120,17 @@ def fab_bar(v):
     return col(f, bar, cap('панель выбора — ' + ('плавающая капсула' if v == 'A' else 'прижата к низу, иконка над подписью')))
 
 
+def account_ribbon(v):
+    """CoShellAccountRibbon: one row of account badges (44), the chosen one in a theme-coloured ring, «Все ›» at the end."""
+    accs = [('GA', '#F26E22', '#1A0A00'), ('MP', '#00B1EA', '#001A24'), ('Tn', '#26A17B', '#001A12'), ('Сб', '#21A038', '#001A06'), ('Wi', '#9FE870', '#0A1A00')]
+    cells = ''.join('<span style="display: flex; border-radius: 14px; %s">%s</span>'
+                    % ('box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (CARD, INK) if i == 0 else '', badge(a[0], a[1], a[2], 44, 12)) for i, a in enumerate(accs))
+    more = '<span style="height: 44px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; font-size: 14px; background: %s; color: %s;">Все ›</span>' % (CHIP, INK2)
+    return col(flexrow(cells, more, gap=10, wrap=False), cap('последний использованный выбран; «Все ›» — сетка счетов; обводка выбранного — цвет темы, не чёрный/белый'))
+
+
 CHOICE = [
+    ('Лента счетов', account_ribbon, 'CoShellAccountRibbon(accounts, selectedId, onSelect, onAll)'),
     ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),

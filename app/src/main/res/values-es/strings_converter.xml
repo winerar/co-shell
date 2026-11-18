@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="converter_title">Conversor</string>
+    <string name="converter_hint">Cuánto es en otras monedas</string>
+    <string name="converter_tap">Toca para calcular</string>
+    <string name="converter_subtitle_pair">Par de monedas · tipo de hoy</string>
+    <string name="converter_subtitle_all">Todas las monedas · tipo de hoy</string>
+    <string name="converter_to_all">Mostrar todas las monedas</string>
+    <string name="converter_to_pair">Mostrar un par</string>
+    <string name="converter_give">Entrego</string>
+    <string name="converter_get">Recibo</string>
+    <string name="converter_swap">Intercambiar monedas</string>
+    <string name="converter_pick_give">Moneda que entregas</string>
+    <string name="converter_pick_get">Moneda que recibes</string>
+    <string name="converter_pick_source">Convertir desde</string>
+    <string name="converter_rows_hint">Toca una moneda para calcular desde ella</string>
+    <string name="converter_no_rate">Sin tipo de cambio. Añádelo: Más → Tipos de cambio</string>
+    <string name="converter_row_no_rate">sin tipo</string>
+    <string name="settings_home_converter">Conversor</string>
+    <string name="settings_home_converter_hint">una fila que abre el conversor</string>
+</resources>

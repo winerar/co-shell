@@ -54,6 +54,7 @@ import app.coshell.currencies.list.ReportCurrenciesRoute
 import app.coshell.family.FamilyRoute
 import app.coshell.feedback.FeedbackRoute
 import app.coshell.feedback.detail.FeedbackDetailRoute
+import app.coshell.converter.ConverterRoute
 import app.coshell.home.HomeActions
 import app.coshell.home.HomeRoute
 import app.coshell.importer.wallet.WalletImportRoute
@@ -148,6 +149,7 @@ fun CoShellNavHost(
                 HomeActions(
                     onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
+                    onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
                     onUncategorized = {
                         navController.navigateToTab(TopLevel.TRANSACTIONS)
                         navController.getBackStackEntry<TransactionsDestination>()
@@ -304,6 +306,9 @@ fun CoShellNavHost(
                 onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
             )
         }
+        dialog<ConverterDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close -> ConverterRoute(onClose = close) }
+        }
         dialog<AccountEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> AccountEditRoute(onDone = close) }
         }
@@ -406,7 +411,10 @@ fun CoShellNavHost(
             FeedbackDetailRoute(entry.toRoute<FeedbackDetailDestination>().sentAtMillis, onBack = { navController.popBackStack() })
         }
         screen<RatesDestination> {
-            RatesRoute(onBack = { navController.popBackStack() })
+            RatesRoute(
+                onBack = { navController.popBackStack() },
+                onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
+            )
         }
         screen<ReportCurrenciesDestination> {
             ReportCurrenciesRoute(onBack = { navController.popBackStack() })

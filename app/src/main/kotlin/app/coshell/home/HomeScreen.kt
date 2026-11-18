@@ -1,5 +1,6 @@
 package app.coshell.home
 
+import app.coshell.converter.ConverterEntry
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.LocalBottomBarInset
@@ -68,6 +69,7 @@ import kotlinx.datetime.YearMonth
 data class HomeActions(
     val onTransactions: () -> Unit = {},
     val onRates: () -> Unit = {},
+    val onConverter: () -> Unit = {},
     /** «Без категории» → «Операции» with the «Без категории · Этот месяц» filter. */
     val onUncategorized: () -> Unit = {},
     val onTransactionClick: (String) -> Unit = {},
@@ -163,7 +165,7 @@ fun HomeScreen(
             HomeCard.REVIEW -> review?.month != null
             HomeCard.UPCOMING -> upcoming.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
-            HomeCard.TILES, HomeCard.RECENT -> true
+            HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
     }
     Scaffold(
@@ -224,6 +226,7 @@ fun HomeScreen(
                             budget = budget?.summary,
                             onBudgets = actions.onBudgets,
                         )
+                        HomeCard.CONVERTER -> ConverterEntry(actions.onConverter, entrance)
                         HomeCard.HOT -> budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
                             HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = entrance)
                         }

@@ -147,6 +147,10 @@ data class FeedbackDetailDestination(val sentAtMillis: Long)
 @Serializable
 data object RatesDestination
 
+/** The converter sheet (#319): opened from «Обзор», «Ещё → Деньги» and «Курсы». */
+@Serializable
+data object ConverterDestination
+
 @Serializable
 data object ReportCurrenciesDestination
 

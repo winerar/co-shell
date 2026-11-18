@@ -380,10 +380,6 @@
     <string name="report_currencies_main">Main</string>
     <string name="report_currencies_add">Add currency</string>
     <string name="report_currencies_menu_hint">Main: %1$s</string>
-    <string name="rates_converter_title">How much is it</string>
-    <string name="rates_converter_today">today\'s rate</string>
-    <string name="rates_converter_pick">Convert from</string>
-    <string name="rates_converter_source">source</string>
     <string name="rates_current">Today\'s rates</string>
     <string name="rates_current_hint">tap to change</string>
     <string name="rates_accounts">Your account currencies</string>

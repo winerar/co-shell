@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap
-import app.coshell.core.designsystem.theme.progressColors
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -52,31 +49,20 @@ fun <S> ProgressHero(
 ) {
     val colors = MaterialTheme.colorScheme
     Box(modifier.size(Sizes.heroRing), contentAlignment = Alignment.Center) {
-        val progress = progressColors()
-        val track = progress.track
-        val arc = progress.indicator
         when (ring) {
-            HeroRing.Idle -> CircularProgressIndicator(
-                progress = { 0f }, modifier = Modifier.size(Sizes.heroRing),
-                strokeWidth = Sizes.heroStroke, color = arc, trackColor = track,
-            )
-            HeroRing.Busy -> CircularProgressIndicator(
-                modifier = Modifier.size(Sizes.heroRing), strokeWidth = Sizes.heroStroke,
-                color = arc, trackColor = track, strokeCap = StrokeCap.Round,
-            )
+            HeroRing.Idle -> CoShellRing(Sizes.heroRing, Sizes.heroStroke, progress = 0f)
+            HeroRing.Busy -> CoShellRing(Sizes.heroRing, Sizes.heroStroke, progress = null)
             is HeroRing.Progress -> {
                 val fraction by animateFloatAsState(ring.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "heroProgress")
-                CircularProgressIndicator(
-                    progress = { fraction }, modifier = Modifier.size(Sizes.heroRing),
-                    strokeWidth = Sizes.heroStroke, color = arc, trackColor = track, strokeCap = StrokeCap.Round,
-                )
+                CoShellRing(Sizes.heroRing, Sizes.heroStroke, progress = fraction)
             }
         }
         Box(
             Modifier
                 .matchParentSize()
                 .padding(Spacing.l)
-                .background(if (accent) colors.primaryContainer else colors.surfaceContainerHigh, CircleShape),
+                .background(if (accent) colors.primaryContainer else colors.surfaceContainerHigh, CircleShape)
+                .then(if (accent) Modifier.fillEdge(colors.primaryContainer, CircleShape, colors.background) else Modifier),
             contentAlignment = Alignment.Center,
         ) {
             AnimatedContent(

@@ -335,6 +335,15 @@
     <string name="update_version_new">Новая</string>
     <string name="update_version_yours">Ваша версия</string>
     <string name="update_version_build">сборка %1$d</string>
+    <string name="update_updated_title">Обновлено до %1$s</string>
+    <string name="update_note_new">Новое</string>
+    <string name="update_note_fixed">Исправлено</string>
+    <plurals name="update_builds_ahead">
+        <item quantity="one">+%1$d сборка</item>
+        <item quantity="few">+%1$d сборки</item>
+        <item quantity="many">+%1$d сборок</item>
+        <item quantity="other">+%1$d сборки</item>
+    </plurals>
     <string name="update_version_installed_on">установлена\n%1$s</string>
     <string name="transaction_refund_label">Расход → возврат</string>
     <string name="transaction_refund_hint">Возврат: деньги пришли на счёт, траты «%1$s» уменьшатся</string>

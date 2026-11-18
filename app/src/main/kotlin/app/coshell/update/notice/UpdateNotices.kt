@@ -10,7 +10,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellAlertDialog
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import app.coshell.core.designsystem.components.CoShellButton
+import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellCheckMark
+import app.coshell.core.designsystem.components.HeroRing
+import app.coshell.core.designsystem.components.ProgressHero
+import app.coshell.core.designsystem.motion.CoShellSuccessBurst
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.update.components.ReleaseNotesList
 import app.coshell.core.designsystem.components.CoShellNoticePill
 import app.coshell.core.domain.update.AppRelease
 import app.coshell.core.designsystem.R as DesignR
@@ -24,13 +43,7 @@ fun UpdateNoticeEffects(viewModel: UpdateNoticeViewModel) {
     }
     val whatsNew by viewModel.whatsNew.collectAsStateWithLifecycle()
     whatsNew?.let { release ->
-        CoShellAlertDialog(
-            title = stringResource(R.string.update_whats_new_title, release.versionName),
-            text = release.notes,
-            confirmLabel = stringResource(R.string.update_whats_new_ok),
-            onConfirm = viewModel::dismissWhatsNew,
-            onDismiss = viewModel::dismissWhatsNew,
-        )
+        UpdatedDialog(release, onDismiss = viewModel::dismissWhatsNew)
     }
 }
 
@@ -59,4 +72,27 @@ fun UpdatePill(
         onDismiss = { shown?.let(onDismiss) },
         modifier = modifier,
     )
+}
+
+/** «Обновлено до 0.37» after an install: the ring with a check and the burst, then the labelled points and «Понятно». */
+@Composable
+private fun UpdatedDialog(release: AppRelease, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        CoShellCard(Modifier.padding(horizontal = Spacing.l + Spacing.xs)) {
+            Column(
+                Modifier.fillMaxWidth().padding(Spacing.l),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Spacing.m),
+            ) {
+                CoShellSuccessBurst {
+                    ProgressHero(ring = HeroRing.Idle, state = Unit) { CoShellCheckMark(Sizes.heroIcon) }
+                }
+                Text(stringResource(R.string.update_updated_title, release.versionName), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+                if (release.notes.isNotBlank()) ReleaseNotesList(release.notes, Modifier.fillMaxWidth())
+                CoShellButton(onClick = onDismiss, tactile = Tactile.Primary, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.update_whats_new_ok))
+                }
+            }
+        }
+    }
 }

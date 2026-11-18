@@ -321,6 +321,13 @@
     <string name="update_version_new">New</string>
     <string name="update_version_yours">Your version</string>
     <string name="update_version_build">build %1$d</string>
+    <string name="update_updated_title">Updated to %1$s</string>
+    <string name="update_note_new">New</string>
+    <string name="update_note_fixed">Fixed</string>
+    <plurals name="update_builds_ahead">
+        <item quantity="one">+%1$d build</item>
+        <item quantity="other">+%1$d builds</item>
+    </plurals>
     <string name="update_version_installed_on">installed\n%1$s</string>
     <string name="transaction_refund_label">Expense → refund</string>
     <string name="transaction_refund_hint">Refund: money came back to the account, spending in “%1$s” goes down</string>

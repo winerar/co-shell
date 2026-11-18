@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.tokens
 
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.RepeatMode
@@ -74,7 +75,11 @@ object Motion {
     fun breath(): InfiniteRepeatableSpec<Float> =
         infiniteRepeatable(tween(BREATH_HALF_MS, easing = FastOutSlowInEasing), RepeatMode.Reverse)
 
+    /** The second looping motion: the arc of a ring that works on something of unknown length (checking, a spinner). */
+    fun spin(): InfiniteRepeatableSpec<Float> = infiniteRepeatable(tween(SPIN_MS, easing = LinearEasing))
+
     private const val BREATH_HALF_MS = 1100
+    private const val SPIN_MS = 1200
 
     // Press feedback (depth, tilt, light) lives in `motion/Tactile` and takes its springs from here.
 }

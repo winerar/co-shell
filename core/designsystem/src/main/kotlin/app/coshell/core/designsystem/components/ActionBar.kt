@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.foundation.border
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ fun CoShellActionBar(visible: Boolean, content: @Composable RowScope.() -> Unit)
                     .height(Sizes.bottomBarHeight)
                     .clip(PillShape)
                     .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .border(Sizes.hairline, MaterialTheme.colorScheme.outlineVariant, PillShape)
                     .padding(horizontal = Spacing.s),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.s),

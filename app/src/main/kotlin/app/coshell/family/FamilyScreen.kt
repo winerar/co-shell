@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.family.components.CheckingBlock
@@ -35,7 +36,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
         },
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             if (state.isBusy) CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))

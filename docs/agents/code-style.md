@@ -31,7 +31,9 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - Суммы — стилем `AmountTextStyle` (табличные цифры). Крупная сумма — в одну строку с `autoSize`:
   неразрывные пробелы в `Money` иначе рвут строку посреди кода валюты («AR / S»).
 - Edge-to-edge: внешний `Scaffold` (`CoShellNavHost`) поглощает только нижний отступ; строку
-  статуса обрабатывает `Scaffold` экрана (через `padding` или `TopAppBar`).
+  статуса обрабатывает `Scaffold` экрана (через `padding` или `TopAppBar`). Нижнюю капсулу внешний `Scaffold` не вычитает из
+  экрана: прокручиваемое тело — `contentPadding = underBars(padding, …)` (или `.verticalScroll(..).padding(underBars(padding))`),
+  никогда `.padding(padding)` на самом списке; своя кнопка внизу в `bottomBar` — с `padding(bottom = LocalBottomBarInset.current)`.
 
 ## Иконки
 - Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.

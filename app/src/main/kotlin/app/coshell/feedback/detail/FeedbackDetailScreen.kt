@@ -1,5 +1,6 @@
 package app.coshell.feedback.detail
 
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,7 @@ fun FeedbackDetailScreen(entry: SentFeedback?, currentBuild: Int, onBack: () -> 
     Scaffold(topBar = { ScreenTopBar(stringResource(R.string.feedback_detail_title), onBack = onBack) }) { padding ->
         if (entry == null) return@Scaffold
         Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(Spacing.l),
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)).padding(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             Message(entry)

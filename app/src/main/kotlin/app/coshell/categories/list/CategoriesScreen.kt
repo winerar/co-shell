@@ -14,6 +14,7 @@ import app.coshell.R
 import app.coshell.categories.labelRes
 import app.coshell.categories.list.components.archivedItems
 import app.coshell.categories.list.components.groupItems
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.rememberSegmentSwipe
@@ -43,7 +44,7 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
         val selected = types.indexOf(state.type)
         val onSelect = { index: Int -> actions.onSelectType(types[index]) }
         val swipe = rememberSegmentSwipe()
-        Column(Modifier.fillMaxSize().padding(padding).segmentSwipe(swipe, selected, types.size, onSelect)) {
+        Column(Modifier.fillMaxSize().padding(top = padding.calculateTopPadding()).segmentSwipe(swipe, selected, types.size, onSelect)) {
             CoShellSegmented(
                 labels = types.map { stringResource(it.labelRes) },
                 selected = selected,
@@ -52,7 +53,7 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
                 swipe = swipe,
             )
             if (state.isLoading) return@Column
-            LazyColumn(contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
+            LazyColumn(contentPadding = underBars(PaddingValues(), PaddingValues(bottom = Sizes.fabClearance))) {
                 groupItems(state, actions)
                 archivedItems(state, actions)
             }

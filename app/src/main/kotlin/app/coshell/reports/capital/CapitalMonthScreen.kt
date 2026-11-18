@@ -25,6 +25,7 @@ import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.accounts.list.components.AccountRow
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
@@ -63,8 +64,8 @@ fun CapitalMonthScreen(state: CapitalMonthUiState, actions: CapitalMonthActions)
     else stringResource(R.string.capital_month_title, formatMonth(month.firstDay))
     Scaffold(topBar = { ScreenTopBar(title, onBack = actions.onBack) }) { padding ->
         LazyColumn(
-            Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl),
+            Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (state.points.isEmpty()) return@LazyColumn

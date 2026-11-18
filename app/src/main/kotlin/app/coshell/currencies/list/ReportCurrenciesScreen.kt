@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.PaddingValues
 import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
@@ -29,7 +30,7 @@ fun ReportCurrenciesScreen(state: ReportCurrenciesUiState, actions: ReportCurren
         },
         floatingActionButton = { CoShellAddFab(stringResource(R.string.report_currencies_add), actions.onAdd) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(bottom = Sizes.fabClearance)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             item(key = "hint") {
                 Text(
                     text = stringResource(R.string.report_currencies_hint),

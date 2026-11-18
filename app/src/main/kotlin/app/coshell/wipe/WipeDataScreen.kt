@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
@@ -49,7 +50,7 @@ fun WipeDataScreen(
             )
         },
     ) { padding ->
-        val content = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(Spacing.l)
+        val content = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)).padding(Spacing.l)
         if (state.step == Step.DONE) {
             WipeDone(state.backupName, onImport, onBack, content)
         } else {

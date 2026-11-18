@@ -1,6 +1,7 @@
 package app.coshell.importer.wallet
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellMessage
@@ -51,12 +53,12 @@ fun WalletImportScreen(state: WalletImportUiState, actions: WalletImportActions,
                     stringResource(R.string.import_step_of, state.steps.indexOf(state.step) + 1, state.steps.size),
             )
         },
-        bottomBar = { BottomButton(state, actions) },
+        bottomBar = { Box(Modifier.padding(bottom = LocalBottomBarInset.current)) { BottomButton(state, actions) } },
     ) { padding ->
         val draft = state.draft
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = Spacing.xl),
+            modifier = Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()),
+            contentPadding = PaddingValues(top = padding.calculateTopPadding(), bottom = Spacing.xl),
         ) {
             if (state.isBusy) item(key = "busy") { CoShellLinearProgress(Modifier.fillMaxWidth().padding(horizontal = Spacing.l)) }
             state.error?.let { error ->

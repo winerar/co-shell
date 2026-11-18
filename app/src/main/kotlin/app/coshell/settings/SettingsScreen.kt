@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -39,7 +40,7 @@ data class SettingsActions(
 fun SettingsScreen(actions: SettingsActions) {
     val c = CategoryPalette.colors
     Scaffold(topBar = { ScreenTopBar(stringResource(R.string.settings_title), onBack = actions.onBack) }) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding)) {
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding)) {
             item { CoShellHint(stringResource(R.string.settings_intro), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
             item { SectionTitle(stringResource(R.string.settings_title)) }
             item {

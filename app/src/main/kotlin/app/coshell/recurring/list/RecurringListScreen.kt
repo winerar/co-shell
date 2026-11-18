@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
@@ -50,12 +51,12 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.isEmpty) {
-            EmptyList(Modifier.padding(padding))
+            EmptyList(Modifier.padding(underBars(padding)))
             return@Scaffold
         }
         LazyColumn(
-            Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = Sizes.fabClearance),
+            Modifier.fillMaxSize(),
+            contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (state.total >= SEARCH_FROM) {

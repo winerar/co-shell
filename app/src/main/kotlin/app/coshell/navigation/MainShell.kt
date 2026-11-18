@@ -26,6 +26,7 @@ import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import app.coshell.core.designsystem.components.CoShellActionBar
 import app.coshell.core.designsystem.components.CoShellSnackbarHost
+import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.TabDrag
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.LocalAddConfirm
@@ -87,12 +88,12 @@ private fun Shell(
         snackbarHost = { CoShellSnackbarHost(snackbar) },
         bottomBar = { Bar(bar, tabDrag, onTab = { navController.navigateToTab(it) }, onAdd = onAdd) },
     ) { padding ->
-        // Inner screens have their own Scaffold and handle the status bar themselves, so only the
-        // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
+        // Inner screens have their own Scaffold and handle the status bar themselves, so only the bottom inset is
+        // consumed here; consuming all of `padding` would hide the top one. The bottom bar is NOT padded out of the
+        // screen: lists go under the capsule (`underBars`), and read its height from LocalBottomBarInset.
         val bottomInset = PaddingValues(bottom = padding.calculateBottomPadding())
         Box(
             Modifier
-                .padding(bottomInset)
                 .consumeWindowInsets(bottomInset)
                 .onPlaced { origins.hostBounds = it.boundsInWindow() }
                 .tabSwipe(
@@ -102,17 +103,19 @@ private fun Shell(
                     onTab = { navController.navigateToTab(it) },
                 ),
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = HomeDestination,
-                enterTransition = { enter(origins) },
-                exitTransition = { exit(origins) },
-                popEnterTransition = { popEnter(origins) },
-                popExitTransition = { popExit(origins) },
-                builder = graph,
-            )
+            CompositionLocalProvider(LocalBottomBarInset provides padding.calculateBottomPadding()) {
+                NavHost(
+                    navController = navController,
+                    startDestination = HomeDestination,
+                    enterTransition = { enter(origins) },
+                    exitTransition = { exit(origins) },
+                    popEnterTransition = { popEnter(origins) },
+                    popExitTransition = { popExit(origins) },
+                    builder = graph,
+                )
+            }
             // Quiet notices (the update pill) float just above the bar, only while it is shown.
-            overBar(bar.visible)
+            Box(Modifier.matchParentSize().padding(bottom = padding.calculateBottomPadding())) { overBar(bar.visible) }
         }
     }
 }

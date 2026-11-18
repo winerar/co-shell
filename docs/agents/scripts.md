@@ -57,3 +57,14 @@
 
 Скрипты CI и для владельца — в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
 `material-symbol-to-vector.py`, `test-rules.sh`) и `scripts/ci/`.
+
+## Хуки Claude Code (`hook-*.sh`; подключаются в `.claude/settings.json`)
+| Скрипт | Событие | Что делает |
+|---|---|---|
+| `hook-session-start.sh` | SessionStart | `agent.sh start` автоматически, вывод — в контекст (правило 7 «Начало») |
+| `hook-edit-guard.sh` | PostToolUse `Edit\|Write` | правки `.kt`: без `android.*`/`java.*` и `Double`/`Float` в `core:model`/`domain`, без русских литералов в `app` — сразу, не через `check`; нарушение → exit 2 |
+| `hook-stop.sh` | Stop | если есть незакоммиченное/незапушенное — один раз блокирует остановку списком ✗ из `end --pre` |
+
+Правила проекта по путям — `.claude/rules/*.md` (`paths:` + `@docs/agents/…`): подгружаются в контекст только при работе с
+подходящими файлами (деньги/KMP → `core/**`, БД → `core/data`, дизайн → `core/designsystem` и `app`, тексты → `app`…).
+Источник истины — `docs/agents/`; новый файл правил добавь в подходящий `.claude/rules/*.md`.

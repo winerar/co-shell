@@ -95,6 +95,36 @@ def one(t, v):
     return sheet(t, seg(t) + amount_card(t, inner_strip=True) + cats(t) + details(t) + keypad(t, 54))  # C: the strip lives inside the «Сумма» card
 
 
+def on_pill(t, text, grow=1):
+    """A filled detail: the selection look (neon + ink border) with the value in place of the label."""
+    return ('<span style="flex:%d 1 auto;height:40px;padding:0 10px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;'
+            'text-overflow:ellipsis;background:%s;color:%s;box-shadow:inset 0 0 0 2px %s">%s</span>' % (grow, t['prim'], t['onp'], t['ink'], text))
+
+
+def filled(t, v):
+    """Everything entered: account + name line, «1 250 + 125» with total, tips on, category picked, details with values, enabled «Готово»."""
+    line = '<div style="margin:-2px 16px 8px;display:flex;justify-content:space-between;font-size:13px;color:%s"><span>Сбер счёт RUB</span><span style="%s">остаток 40 000 RUB</span></div>' % (t['muted'], MONO)
+    field = ('<div style="margin-top:6px;height:56px;border-radius:16px;border:2px solid %s;background:%s;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 14px">'
+             '<span style="%sfont-size:26px;color:%s">1 375</span><span style="padding:8px 14px;border-radius:999px;background:%s;font-size:14px">RUB</span></div>'
+             '<div style="%sfont-size:12px;color:%s;padding:4px 4px 0">1 250 + 125 · чаевые 10 %%</div>' % (t['ink'], t['bar'], MONO, '#E0406A' if not t['dark'] else '#FF8FA8', t['surf'], MONO, t['muted']))
+    amount = card(t, 'СУММА', field, '<span style="font-weight:700">✓ Чаевые 10 %</span> &nbsp;&nbsp; + Сумма покупки')
+    cells = ''
+    for i, (nm, ic) in enumerate(CATS):
+        on = nm == 'Продукты'
+        ring = 'box-shadow:0 0 0 2px %s,0 0 0 4px %s;border-radius:50%%;' % (t['surf'], t['ink']) if on else ''
+        cells += ('<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:25%%;opacity:%s"><span style="display:flex;%s">%s</span><span style="font-size:11px;font-weight:%s;white-space:nowrap">%s</span></div>'
+                  % (1 if on else .55, ring, B.dot_icon(ic, '#C27BFF' if t['dark'] else '#7A2BD6', 36), 700 if on else 400, nm))
+    cells += '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:25%%;opacity:.55"><span style="width:36px;height:36px;border-radius:50%%;border:1.5px dashed %s;display:flex;align-items:center;justify-content:center;font-size:13px">25</span><span style="font-size:11px">Все</span></div>' % t['muted']
+    cat = card(t, 'КАТЕГОРИЯ · ЧАСТЫЕ', '<div style="display:flex;flex-wrap:wrap;gap:4px 0;padding-top:4px">%s</div>' % cells, 'Продукты')
+    if v == 'F1':
+        det = '<div style="display:flex;gap:6px;margin:0 12px 8px">%s%s%s%s</div>' % (on_pill(t, '◷ 17 нояб.', 1), on_pill(t, '✎ Кофе с Настей', 2.8), on_pill(t, '# Отпуск +1', 1.4), on_pill(t, '↩ Возврат', 1.2))
+    else:
+        tile = lambda a, b: '<div style="flex:1;padding:6px 12px;border-radius:16px;background:%s;box-shadow:inset 0 0 0 2px %s"><div style="font-size:11px;color:%s">%s</div><div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">%s</div></div>' % (t['bar'], t['ink'], t['muted'], a, b)  # noqa: E731
+        det = '<div style="margin:0 12px 8px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;gap:6px">%s%s</div><div style="display:flex;gap:6px">%s%s</div></div>' % (
+            tile('Дата', '17 нояб., вчера'), tile('Заметка', 'Кофе с Настей'), tile('Теги', 'Отпуск, Дети'), tile('Возврат', '☑ вернули на счёт'))
+    return sheet(t, seg(t) + strip(t) + line + amount + cat + det + keypad(t, 46 if v == 'F2' else 50))
+
+
 def transfer(t, v):
     acc = lambda lab, i: ('<div style="display:flex;align-items:center;gap:10px;margin-top:4px;padding:6px 10px;border-radius:16px;background:%s">%s<span style="flex:1"><div style="font-size:11px;color:%s">%s</div>'
                           '<div style="font-size:15px">%s</div></span><span style="%sfont-size:13px;color:%s">%s %s</span></div>' % (t['bar'], P.badge(ACCS[i], 40, 'A'), t['muted'], lab, ACCS[i][0], MONO, t['muted'], R.BAL[i], R.CUR[i]))  # noqa: E731
@@ -107,7 +137,7 @@ def main():
     out = sys.argv[1]
     P.SVG_DIR[0] = os.path.join(out, 'svg')
     os.makedirs(os.path.join(out, 'html'), exist_ok=True)
-    for name, fn, v in [('One' + v, one, v) for v in 'ABC'] + [('Trf', transfer, 'X')]:
+    for name, fn, v in [('One' + v, one, v) for v in 'ABC'] + [('Trf', transfer, 'X'), ('Fil1', filled, 'F1'), ('Fil2', filled, 'F2')]:
         for suffix, dark in (('', True), ('@light', False)):
             t = U.theme(dark)
             open(os.path.join(out, 'html', name + suffix + '.html'), 'w', encoding='utf-8').write(N.page(fn(t, v), 390, 844, dict(page=t['page'])))

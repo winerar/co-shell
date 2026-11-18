@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Поздравление версии 1.0: уведомление и пилюля на «Обзоре» (greeting/). Одноразовое, можно удалить после релиза. -->
+<resources>
+    <string name="greeting_pill">Настя, поздравляем с рождением Эмилии!</string>
+    <string name="greeting_dismiss">Скрыть</string>
+    <string name="greeting_notification_title">Поздравляем!</string>
+    <string name="greeting_notification_text">Настя, поздравляем с рождением Эмилии! Желаем здоровья и спокойных ночей.</string>
+    <string name="greeting_channel">Поздравления</string>
+</resources>

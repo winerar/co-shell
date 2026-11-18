@@ -47,7 +47,7 @@ OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 PAGES = {
     'Main': ('Шторка ввода: шаг 1 счёт → шаг 2 сумма (тапайте)', True), 'Operations': ('Операции: удержание → выбор, свайп вкладок (тапайте)', True),
     'Accounts': ('Счета: 12 счетов, группы (тапайте)', True), 'More': ('Ещё', False), 'HomeSync': ('Обзор: ошибка синка (тапайте «Другая причина»)', True),
-    'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True),
+    'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True), 'HomeGreeting': ('Обзор: поздравление на 1.0 (тапайте)', True),
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),
     'AccountEdit': ('Счёт: редактор без прокрутки (#290)', False), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
     'Backup': ('Резервная копия', False), 'Wipe': ('Стереть все данные (тапайте)', True),
@@ -56,7 +56,7 @@ PAGES = {
 PAGE_MODULES = (tab_screens, ops_screens, form_screens, set_screens, catalog)
 
 LAYOUT = [  # (row title, [board names]) on the «Экраны» page
-    ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew']),
+    ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew', 'HomeGreeting']),
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
     ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryEdit', 'EntryError', 'EntryNoAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),

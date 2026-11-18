@@ -72,6 +72,8 @@ import app.coshell.update.UpdateRoute
 import app.coshell.update.past.PastReleasesRoute
 import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
+import app.coshell.greeting.GreetingPill
+import app.coshell.greeting.GreetingViewModel
 import app.coshell.update.notice.UpdatePill
 import app.coshell.wipe.WipeDataRoute
 import app.coshell.gate.InputLockViewModel
@@ -85,6 +87,7 @@ fun CoShellNavHost(
     navController: NavHostController = rememberNavController(),
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
+    greeting: GreetingViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
     inputLock: InputLockViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
@@ -98,6 +101,8 @@ fun CoShellNavHost(
     CrashNotice(crashes)
     val updatePill by updates.pill.collectAsStateWithLifecycle()
     val updateAvailable by updates.available.collectAsStateWithLifecycle()
+    val greetingVisible by greeting.pillVisible.collectAsStateWithLifecycle()
+    val onHome = backStackEntry?.destination.isOn(TopLevel.HOME)
     val locked by inputLock.locked.collectAsStateWithLifecycle()
     // «Обновить» on the gate banner and its note (#334): the download starts if the release is known.
     val openUpdate = {
@@ -128,6 +133,12 @@ fun CoShellNavHost(
                     navController.navigate(UpdateDestination) { launchSingleTop = true }
                 },
                 onDismiss = updates::dismissPill,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+            )
+            // The 1.0 greeting: only on «Обзор», and the update pill goes first.
+            GreetingPill(
+                visible = onBar && onHome && greetingVisible && updatePill == null,
+                onDismiss = greeting::dismiss,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
             )
         },

@@ -28,20 +28,16 @@ fun secondaryInk(): Color = MaterialTheme.colorScheme.secondary
 data class ProgressColors(val indicator: Color, val track: Color)
 
 /**
- * Graphite-neon progress (owner's choice 2026-11-09): light theme — graphite on a track of the primary neon
- * (neon on white is too pale), dark theme — the neon on a graphite track.
+ * Progress in the palette's own neon (owner's poll 2026-11-18, «лайм с обводкой»): the moving part is `primary` in both
+ * themes, the track is the quiet accent wash (`surfaceContainerHighest`). On white the neon melts into the page, so the
+ * light theme draws a thin deep edge round it ([app.coshell.core.designsystem.components.fillEdge]); the dark theme needs none.
  */
 @Composable
 @ReadOnlyComposable
 fun progressColors(): ProgressColors = progressColorsFor(MaterialTheme.colorScheme, LocalDarkTheme.current)
 
-/** Progress colours: graphite on the neon in the light theme, the neon on graphite in the dark one. */
-internal fun progressColorsFor(scheme: ColorScheme, dark: Boolean) =
-    if (dark) {
-        ProgressColors(scheme.primary, scheme.surfaceContainerHighest)
-    } else {
-        ProgressColors(scheme.inverseSurface, scheme.primary)
-    }
+internal fun progressColorsFor(scheme: ColorScheme, @Suppress("UNUSED_PARAMETER") dark: Boolean) =
+    ProgressColors(scheme.primary, scheme.surfaceContainerHighest)
 
 /** Colours of anything chosen: a segment, chip, tab, day, check mark. */
 @Immutable

@@ -1,6 +1,14 @@
 package app.coshell.update.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.res.pluralStringResource
+import app.coshell.core.designsystem.charts.CoShellChangePill
+import app.coshell.core.designsystem.components.CoShellArrowChip
+import app.coshell.core.designsystem.theme.secondaryInk
+import app.coshell.core.designsystem.tokens.Sizes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +29,6 @@ import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTitleStyle
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.update.AppRelease
 import app.coshell.ui.format.formatDayMonth
@@ -29,20 +36,28 @@ import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-/** «Сейчас 0.36 · сборка 399 → Новая 0.37 · сборка 400» (board Fb268A). */
+/**
+ * «Сейчас 0.36 · сборка 399 → Новая 0.37 · сборка 400»: two tiles with a lime arrow between them; «Сейчас» in the accent
+ * frame, «Новая» a calm card with «+N сборок» under it (poll 2026-11-18, boards Update, Fb268A).
+ */
 @Composable
 internal fun VersionCompareCard(installedName: String, installedCode: Int, release: AppRelease, modifier: Modifier = Modifier) {
-    CoShellCard(modifier.fillMaxWidth()) {
-        Row(Modifier.padding(Spacing.l), verticalAlignment = Alignment.CenterVertically) {
-            VersionColumn(stringResource(R.string.update_version_now), installedName, installedCode, Modifier.weight(1f))
-            Text("→", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            VersionColumn(
-                stringResource(R.string.update_version_new),
-                release.versionName,
-                release.versionCode,
-                Modifier.weight(1f).padding(start = Spacing.l),
-                accentInk(),
-            )
+    val colors = MaterialTheme.colorScheme
+    Row(
+        modifier.fillMaxWidth().height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
+    ) {
+        CoShellCard(Modifier.weight(1f).fillMaxHeight(), tint = colors.secondary) {
+            VersionColumn(stringResource(R.string.update_version_now), installedName, installedCode, Modifier.padding(Spacing.l), secondaryInk())
+        }
+        CoShellArrowChip()
+        CoShellCard(Modifier.weight(1f).fillMaxHeight()) {
+            Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                VersionColumn(stringResource(R.string.update_version_new), release.versionName, release.versionCode, Modifier)
+                val ahead = release.versionCode - installedCode
+                if (ahead > 0) CoShellChangePill(pluralStringResource(R.plurals.update_builds_ahead, ahead, ahead), colors.secondary)
+            }
         }
     }
 }

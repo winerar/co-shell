@@ -117,9 +117,26 @@ def backup_restore():
 
 
 def whats_new():
-    items = ''.join('<li style="margin-top: 8px;">%s</li>' % t for t in ['Операции: удержите строку — выбор нескольких', 'Вкладки листаются свайпом', 'Импорт из Wallet: кнопка «±» для долга'])
+    """«Обновлено до 1.43»: ring with a check, the halo and sparks once, labelled points (poll 2026-11-18)."""
+    import math
+    edge = '#476B00'
+    check = ('<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" stroke="%s" stroke-width="3"/>'
+             '<path d="M5 12l5 5 9-10" stroke="%s" stroke-width="2.4"/></svg>' % (edge, LIME))
+    sparks = ''.join('<span style="position: absolute; left: %dpx; top: %dpx; width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>'
+                     % (84 + 100 * math.cos(i * 0.785) - 4, 84 + 100 * math.sin(i * 0.785) - 4, LIME if i % 2 == 0 else VIOLET) for i in range(8))
+    ring = ('<div style="position: relative; width: 168px; height: 168px; margin: 8px auto 0;"><span style="position: absolute; inset: -12px; border-radius: 50%%; border: 2px solid %s; opacity: .45;"></span>%s'
+            '<span style="position: absolute; inset: 0; border-radius: 50%%; border: 8px solid #2A2240;"></span>'
+            '<span style="position: absolute; inset: 20px; border-radius: 50%%; background: #2A2240; display: flex; align-items: center; justify-content: center;">%s</span></div>' % (VIOLET, sparks, check))
+    lab = lambda txt, c: '<span style="flex: none; height: 20px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; line-height: 20px;">%s</span>' % (c, INK, txt)
+    items = ''.join('<div style="display: flex; gap: 8px; padding: 5px 0; font-size: 14px; line-height: 1.4;">%s<span>%s</span></div>' % (lab(*k), t) for k, t in [
+        (('Новое', '#2E3F12'), 'Операции: удержите строку — выбор нескольких'), (('Новое', '#2E3F12'), 'Вкладки листаются свайпом'),
+        (('Исправлено', '#2A2240'), 'Импорт из Wallet: кнопка «±» для долга')])
     under = inner_screen('Обзор', '')
-    return under + scrim() + dialog('Что нового в 1.43', '', [('Понятно', 'primary')], '<ul style="margin: 8px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.4; color: %s;">%s</ul>' % (INK2, items))
+    card_ = ('<div role="dialog" aria-label="Обновлено до 1.43" style="position: absolute; left: 24px; right: 24px; top: 50%%; transform: translateY(-50%%); padding: 20px; border-radius: 28px; background: %s; border: 1px solid %s;">'
+             '%s<h2 style="margin: 16px 0 12px; font-size: 22px; text-align: center;">Обновлено до 1.43</h2>%s'
+             '<div style="margin-top: 16px; height: 52px; border-radius: 999px; background: %s; color: %s; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center;">Понятно</div></div>'
+             % (CARD, LINE, ring, items, LIME, ONLIME))
+    return under + scrim() + card_
 
 
 def feedback_sent():

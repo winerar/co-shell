@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import app.coshell.core.designsystem.components.drawFillEdge
+import app.coshell.core.designsystem.components.fillEdge
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,6 +99,7 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
     // The quiet columns: on the dark card the container tone is lost, the outline tone still reads as a bar.
     val quiet = if (LocalDarkTheme.current) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.surfaceContainerHighest
     val fill = if (on) progressColors().indicator else quiet
+    val edge = if (on) fillEdge(fill, MaterialTheme.colorScheme.surfaceContainerHighest) else null
     val ghostColor = MaterialTheme.colorScheme.outline
     val ink = if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
     val shown = animateFloatAsState(column.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "column")
@@ -111,6 +114,7 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
                 }
                 val h = (size.height * shown.value * entrance()).coerceAtLeast(MIN_BAR.toPx())
                 drawRoundRect(fill, Offset(0f, size.height - h), Size(size.width, h), radius)
+                drawFillEdge(edge, Offset(0f, size.height - h), Size(size.width, h), radius.x)
             }
             // Rides on the bar's top; the offset is read at placement, so a growing bar does not recompose the text.
             Text(

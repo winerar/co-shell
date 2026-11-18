@@ -47,7 +47,7 @@ class TransactionEditTemplatesTest : TransactionEditTestBase() {
     fun `a template chip fills the sheet and opens it on the amount`() = runTest {
         seedTemplate()
         val vm = viewModel()
-        assertEquals(EntryStep.ACCOUNT, vm.state.value.step)
+        assertEquals(EntryStep.DETAILS, vm.state.value.step)
 
         vm.onTemplatePick("spanish")
 
@@ -112,7 +112,7 @@ class TransactionEditTemplatesTest : TransactionEditTestBase() {
 
         val state = vm.state.value
         assertNull(state.templateName)
-        assertEquals(EntryStep.ACCOUNT, state.step)
+        assertEquals(EntryStep.DETAILS, state.step)
         assertEquals("", state.amount)
         vm.onAccountSelect("card")
         vm.onAmountChange("10")

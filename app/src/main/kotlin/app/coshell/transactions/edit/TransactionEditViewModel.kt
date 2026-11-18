@@ -228,6 +228,7 @@ class TransactionEditViewModel @Inject constructor(
     fun onAccountSelect(id: String) = updateForm {
         it.copy(
             accountId = id,
+            toAccountId = it.toAccountId?.takeIf { to -> to != id },
             accountError = false,
             amountError = null,
             toAccountError = null,

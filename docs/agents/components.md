@@ -18,6 +18,7 @@
   `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
   В app (`ui/form`, `ui/sheet`): `IconStrip`/`ColorStrip` (одна строка + «Все 52»/«+29»), `IconColorSheet` (все иконки и цвета,
   `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
+- **Лента счетов** — `CoShellAccountRibbon(accounts: List<RibbonAccount>, selectedId, onSelect, onAll, allLabel)` (#505, доска `CompChoice`): значки 44 в ячейках 48, выбранный — кольцо `themeEdge()`, в конце «Все ›».
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка outline / неон + рамка цветом текста с галкой или чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
 - **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp outline, выбранное — неон + рамка цветом текста с точкой; один из списка (язык).

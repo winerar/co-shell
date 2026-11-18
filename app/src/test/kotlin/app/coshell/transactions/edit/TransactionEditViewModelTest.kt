@@ -121,22 +121,28 @@ class TransactionEditViewModelTest : TransactionEditTestBase() {
     }
 
     @Test
-    fun `new operation starts on the account and moves on after a tap`() = runTest {
+    fun `new operation starts on the one-step sheet and the full list returns to it`() = runTest {
         seed()
         val vm = viewModel()
-        assertEquals(TransactionEditUiState.EntryStep.ACCOUNT, vm.state.value.step)
-        vm.onAccountSelect("cash")
         assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
-        vm.onStepChange(TransactionEditUiState.EntryStep.ACCOUNT)
+        vm.onAccountSelect("cash") // a ribbon tap keeps the sheet
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
+        vm.onStepChange(TransactionEditUiState.EntryStep.ACCOUNT) // «Все ›»
         vm.onAccountSelect("card")
         assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
         assertEquals("card", vm.state.value.accountId)
     }
 
     @Test
-    fun `transfer asks the target account before the amount`() = runTest {
+    fun `transfer keeps the sheet on ribbon taps and drops a target equal to the source`() = runTest {
         seed()
         val vm = viewModel(type = "TRANSFER")
+        vm.onAccountSelect("cash")
+        vm.onToAccountSelect("card")
+        assertEquals(TransactionEditUiState.EntryStep.DETAILS, vm.state.value.step)
+        vm.onAccountSelect("card")
+        assertEquals(null, vm.state.value.toAccountId)
+        vm.onStepChange(TransactionEditUiState.EntryStep.ACCOUNT) // the full list of the source moves on to the target
         vm.onAccountSelect("cash")
         assertEquals(TransactionEditUiState.EntryStep.TO_ACCOUNT, vm.state.value.step)
         vm.onToAccountSelect("card")

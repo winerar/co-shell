@@ -76,6 +76,9 @@
     <string name="search_close">Закрыть поиск</string>
     <string name="choice_search">Найти</string>
     <string name="picker_nothing">Ничего не нашлось</string>
+    <string name="picker_all">Все ›</string>
+    <string name="entry_from">Откуда</string>
+    <string name="entry_to">Куда</string>
     <string name="picker_from_expense">Откуда списали?</string>
     <string name="picker_to_income">Куда пришло?</string>
     <string name="picker_from_transfer">Откуда перевод?</string>

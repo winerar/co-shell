@@ -71,6 +71,9 @@
     <string name="search_close">Cerrar búsqueda</string>
     <string name="choice_search">Buscar</string>
     <string name="picker_nothing">No se ha encontrado nada</string>
+    <string name="picker_all">Todas ›</string>
+    <string name="entry_from">Desde</string>
+    <string name="entry_to">Hacia</string>
     <string name="picker_from_expense">¿De dónde salió?</string>
     <string name="picker_to_income">¿Adónde llegó?</string>
     <string name="picker_from_transfer">¿Transferencia desde?</string>

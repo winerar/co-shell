@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Accent for text and thin lines: links, section headers, text buttons, focused fields, the selected tab.
@@ -53,3 +54,16 @@ fun selectionColors(): SelectionColors = selectionColorsFor(MaterialTheme.colorS
 
 internal fun selectionColorsFor(scheme: ColorScheme, dark: Boolean): SelectionColors =
     if (dark) SelectionColors(scheme.primary, scheme.onPrimary) else SelectionColors(scheme.primary, scheme.onPrimary)
+
+/**
+ * Outline of a chosen or filled thing (owner 2026-11-18, #505): always a shade of the theme's main colour — never black
+ * or white. Dark theme: a light shade of it; light theme: a deep one.
+ */
+@Composable
+@ReadOnlyComposable
+fun themeEdge(): Color =
+    if (LocalDarkTheme.current) lerp(MaterialTheme.colorScheme.primary, Color.White, EDGE_LIGHTEN)
+    else lerp(MaterialTheme.colorScheme.primary, Color.Black, EDGE_DEEPEN)
+
+private const val EDGE_LIGHTEN = 0.35f
+private const val EDGE_DEEPEN = 0.5f

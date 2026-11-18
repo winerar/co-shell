@@ -22,7 +22,7 @@ import app.coshell.core.designsystem.tokens.Sizes
  * No colour → neutral container. Used in the accounts list, the account picker and the colour picker.
  */
 @Composable
-fun AccountBadge(name: String, color: Long?, modifier: Modifier = Modifier, size: Dp = Sizes.badge) {
+fun AccountBadge(name: String, color: Long?, modifier: Modifier = Modifier, size: Dp = Sizes.badge, initials: Boolean = true) {
     val fill = color?.let { categoryColor(it) } ?: MaterialTheme.colorScheme.surfaceContainerHighest
     val ink = if (color == null) MaterialTheme.colorScheme.onSurfaceVariant else inkOn(fill)
     val shape = RoundedCornerShape(size * 0.3f)
@@ -32,7 +32,7 @@ fun AccountBadge(name: String, color: Long?, modifier: Modifier = Modifier, size
             .then(if (ring != null) Modifier.border(Sizes.hairline * 1.5f, ring, shape) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
+        if (initials) Text(
             BankColors.byColor(color)?.initials ?: accountInitials(name),
             color = ink,
             style = if (size < Sizes.badge) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,

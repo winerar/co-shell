@@ -68,6 +68,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
         }
         CoShellKeypad(
             onKey = actions.onKey,
+            doneEnabled = state.canPost,
             // A payment from «Скоро» is posted, not just saved (board `Rec143Post`).
             doneLabel = stringResource(if (state.payment != null) R.string.recurring_post else R.string.keypad_done),
             backspaceLabel = stringResource(R.string.keypad_backspace),
@@ -150,6 +151,14 @@ private fun amountColor(type: TransactionType, refund: Boolean = false) = when (
     TransactionType.INCOME -> LocalAmountPalette.current.income
     TransactionType.TRANSFER -> MaterialTheme.colorScheme.onSurface
 }
+
+/** «Готово» is quiet until the amount being typed is not empty (#505); other fields keep it on. */
+internal val TransactionEditUiState.canPost: Boolean
+    get() = when (keypadTarget) {
+        KeypadTarget.AMOUNT -> amount.isNotBlank()
+        KeypadTarget.TO_AMOUNT -> toAmount.isNotBlank()
+        KeypadTarget.RECEIPT -> true
+    }
 
 /** Fraction digits of the amount the keypad types into: no `,` key for AMD-like currencies. */
 private fun fractionOf(state: TransactionEditUiState): Int = when (state.keypadTarget) {

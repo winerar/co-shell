@@ -83,8 +83,9 @@ fun CoShellKeypad(
             }
             Key(
                 onClick = { if (doneEnabled) press(KeypadKey.Done) },
-                container = MaterialTheme.colorScheme.primary,
-                content = MaterialTheme.colorScheme.onPrimary,
+                // Quiet until there is something to post (board of #505): the same key at 38 %.
+                container = MaterialTheme.colorScheme.primary.copy(alpha = if (doneEnabled) 1f else DONE_OFF_ALPHA),
+                content = MaterialTheme.colorScheme.onPrimary.copy(alpha = if (doneEnabled) 1f else DONE_OFF_ALPHA),
                 // One row next to «+ −» (owner 2026-11-18, #291); tall when the column has no operators.
                 weight = if (showPlus) 1f else 2f,
                 tactile = Tactile.Primary,
@@ -94,6 +95,8 @@ fun CoShellKeypad(
         }
     }
 }
+
+private const val DONE_OFF_ALPHA = 0.38f
 
 @Composable
 private fun DoneLabel(label: String, inRow: Boolean) {

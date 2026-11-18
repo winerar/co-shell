@@ -88,6 +88,8 @@ object Sizes {
     val chipIcon = 18.dp
     /** Account badge in the entry-sheet ribbon (#505); its 48 dp cell is [button]. */
     val ribbonBadge = 44.dp
+    /** Mini account badge before the account name in an operation row (#505). */
+    val miniBadge = 16.dp
     /** Account badge inside a choice chip. */
     val chipBadge = 24.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */

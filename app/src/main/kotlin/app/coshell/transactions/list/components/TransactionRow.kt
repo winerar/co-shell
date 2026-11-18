@@ -34,6 +34,7 @@ import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.motion.holdToPeek
 import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.list.AmountPeek
@@ -88,13 +89,16 @@ internal fun TransactionRow(
         compact = LocalCompactLists.current,
         title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         supporting = {
-            if (row.tags.isEmpty() || !options.opsShowTags) {
-                Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            } else {
-                Column {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                    // Mini badge of the account before its name (#505, poll Б); a transfer names two accounts, so it has none.
+                    val account = row.account
+                    if (account != null && options.opsShowAccount) {
+                        AccountBadge(account.name, account.color, size = Sizes.miniBadge, initials = false)
+                    }
                     Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    RowTags(row)
                 }
+                if (row.tags.isNotEmpty() && options.opsShowTags) RowTags(row)
             }
         },
         leading = {

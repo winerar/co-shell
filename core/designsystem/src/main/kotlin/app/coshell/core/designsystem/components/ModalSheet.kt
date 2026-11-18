@@ -29,7 +29,7 @@ import app.coshell.core.designsystem.tokens.Spacing
  * the [content] (scrolls when tall) and the main action ([actionLabel]) pinned across the width. No
  * [actionLabel] — no button (a choice closes on a tap). [onClosed] fires once after a swipe down, a tap
  * outside, «назад» or ×; [content] and [onAction] get `close` — slide down, then [onClosed]. [headerAction] — one more icon
- * button before the × (the converter's mode switch, board `Conv2*`).
+ * button before the × (the converter's mode switch, board `Conv2*`). [pinned] — a block fixed under the scrolling [content].
  */
 @Composable
 fun CoShellModalSheet(
@@ -63,6 +63,7 @@ fun CoShellModalSheetLayout(
     actionEnabled: Boolean = true,
     onAction: () -> Unit = onClose,
     headerAction: (@Composable () -> Unit)? = null,
+    pinned: (@Composable ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier.imePadding()) {
@@ -91,6 +92,14 @@ fun CoShellModalSheetLayout(
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
             content = content,
         )
+        // Stays under the scrolling body (the converter's keypad): a long list above never pushes it off the screen.
+        pinned?.let {
+            Column(
+                Modifier.padding(horizontal = Spacing.l + Spacing.xs).padding(bottom = Spacing.s),
+                verticalArrangement = Arrangement.spacedBy(Spacing.m),
+                content = it,
+            )
+        }
         actionLabel?.let {
             CoShellButton(
                 onClick = onAction,

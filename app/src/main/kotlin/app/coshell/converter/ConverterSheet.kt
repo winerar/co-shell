@@ -1,13 +1,11 @@
 package app.coshell.converter
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -17,7 +15,6 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellModalSheetLayout
 import app.coshell.core.designsystem.components.keypad.CoShellKeypad
 import app.coshell.core.designsystem.components.keypad.KeypadKey
-import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ConverterMode
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
@@ -56,15 +53,17 @@ internal fun ConverterSheetBody(state: ConverterUiState, actions: ConverterActio
                 )
             }
         },
+        // The keypad is pinned: the list of currencies scrolls above it, the keys never leave the screen.
+        pinned = {
+            CoShellKeypad(
+                onKey = { key -> if (key == KeypadKey.Done) onClose() else actions.onKey(key) },
+                doneLabel = stringResource(R.string.keypad_done),
+                backspaceLabel = stringResource(R.string.keypad_backspace),
+                showDecimal = state.source.isNotEmpty() && Currencies.info(CurrencyCode(state.source)).fractionDigits > 0,
+            )
+        },
     ) {
         if (pair) ConverterPair(state, actions, onPick = { picking = it }) else ConverterAll(state, actions)
-        CoShellKeypad(
-            onKey = { key -> if (key == KeypadKey.Done) onClose() else actions.onKey(key) },
-            doneLabel = stringResource(R.string.keypad_done),
-            backspaceLabel = stringResource(R.string.keypad_backspace),
-            showDecimal = state.source.isNotEmpty() && Currencies.info(CurrencyCode(state.source)).fractionDigits > 0,
-            modifier = Modifier.padding(bottom = Spacing.s),
-        )
     }
     picking?.let { side ->
         ChoiceSheet(

@@ -61,8 +61,8 @@ def u_btn(text, kind='primary', icon=None):
 
 
 def u_icon_btn(icon):
-    return ('<span style="width: %dpx; height: %dpx; border-radius: 50%%; background: %s; display: inline-flex; align-items: center; justify-content: center;">%s</span>'
-            % (BTN_H, BTN_H, CHIP, svg(icon, INK, 22)))
+    return ('<span style="width: %dpx; height: %dpx; border-radius: 50%%; display: inline-flex; align-items: center; justify-content: center;">%s</span>'
+            % (BTN_H, BTN_H, svg(icon, INK, 22)))
 
 
 def u_bar(frac, color=LIME, mark=None, h=8):

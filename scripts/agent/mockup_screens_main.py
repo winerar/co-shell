@@ -107,7 +107,7 @@ def ops_list(selected=(), snack=False):
     lst = '<div style="margin: 14px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), ''.join(rows))
     if selected:
         top = select_head(len(selected))
-        bar = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
+        bar = ('<div style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
                '<span style="flex: 1; height: 48px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px; color: %s; font-size: 15px;">%sДублировать</span>'
                '<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · %d</span></div>'
                % (BAR, '#5C6757', svg('copy', '#5C6757', 20), PINKBG, PINK, svg('trash', PINK, 20), len(selected)))

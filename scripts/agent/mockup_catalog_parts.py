@@ -121,7 +121,7 @@ def peek_card(lines, foot):
 def action_bar(items):
     cells = ''.join('<span style="flex: 1; height: 48px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; '
                     'font-weight: 600; color: %s;">%s%s</span>' % (PINK if ic == 'trash' else INK, svg(ic, PINK if ic == 'trash' else INK, 20), t) for ic, t in items)
-    return '<div style="height: 64px; padding: 0 8px; border-radius: 999px; background: %s; display: flex; align-items: center;">%s</div>' % (KEY, cells)
+    return '<div style="height: 56px; padding: 0 8px; border-radius: 999px; background: %s; display: flex; align-items: center;">%s</div>' % (KEY, cells)
 
 
 def fab_round(icon='plus'):

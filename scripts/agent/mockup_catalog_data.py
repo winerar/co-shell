@@ -29,11 +29,11 @@ def changes(v):
 
 def bullet(v, frac, tone, mark=None):
     color = {'ok': LIME, 'ahead': WARN, 'over': PINK, 'idle': MUTED}[tone]
-    h, rad = (10, 5) if v == 'A' else (6, 1)
+    h, rad = (8, 4) if v == 'A' else (6, 1)
     m = ''
     if mark is not None:
         m = ('<span style="position: absolute; left: %d%%; top: -4px; bottom: -4px; width: %dpx; border-radius: 2px; background: %s; box-shadow: 0 0 0 2px %s;"></span>'
-             % (round(mark * 100), 3 if v == 'A' else 2, INK, CARD))
+             % (round(mark * 100), 2, INK, CARD))
     over = ''
     if frac > 1 and v == 'B':
         over = '<span style="position: absolute; right: 0; top: -4px; bottom: -4px; width: 2px; background: %s;"></span>' % INK
@@ -66,8 +66,8 @@ def bar_row(v, icon, color, lbl, value, share, frac, ghost=None, badge_html=''):
             'text-overflow: ellipsis;">%s</span>%s<span style="%s">%s</span><span style="color: %s; white-space: nowrap;">· %s</span></div>' % (lbl, badge_html, MONO, value, MUTED, share))
     if v == 'A':
         return ('<div style="display: flex; gap: 10px; align-items: center;">%s<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">%s'
-                '<div style="position: relative; height: 8px;"><div style="width: %d%%; height: 100%%; border-radius: 4px; background: %s;"></div>%s</div></div></div>'
-                % (holder(v, icon, color, 32, False), text, round(frac * 100), color, g))
+                '<div style="position: relative; height: 8px; border-radius: 4px; background: %s;"><div style="width: %d%%; height: 100%%; border-radius: 4px; background: %s;"></div>%s</div></div></div>'
+                % (holder(v, icon, color, 32, False), text, KEY2, round(frac * 100), color, g))
     return ('<div style="position: relative; display: flex; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 10px; overflow: hidden;">'
             '<div style="position: absolute; left: 0; top: 0; bottom: 0; width: %d%%; background: %s;"></div>%s<div style="flex-grow: 1; min-width: 0;">%s</div>%s</div>'
             % (round(frac * 100), mix(color, 22), holder(v, icon, color, 28, False), text, g))
@@ -76,7 +76,7 @@ def bar_row(v, icon, color, lbl, value, share, frac, ghost=None, badge_html=''):
 def bar_rows(v):
     return col(bar_row(v, 'cart', LIME, 'Продукты', '290', '38 %', 0.8, 0.65, change(v, '↑ 45 %', PINK)), bar_row(v, 'cafe', '#FF8A5C', 'Кафе', '120', '16 %', 0.35, 0.4),
                bar_row(v, 'taxi', '#FFD43B', 'Такси ночью из аэропорта', '8', '1 %', 0.03),
-               cap('полоса под подписью' if v == 'A' else 'строка сама — полоса: заливка на долю'))
+               cap('полоса — общий CoShellMeter, на подложке' if v == 'A' else 'строка сама — полоса: заливка на долю'))
 
 
 def columns(v):
@@ -161,7 +161,7 @@ def lines(v):
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
-    ('Шкала бюджета', bullets, 'CoShellBullet(fraction, tone = Ok | Ahead | Over | Idle, mark)'),
+    ('Шкала', bullets, 'CoShellMeter(fraction, color, mark, markColor, grow) — одна полоса 8 dp на подложке · CoShellBullet(fraction, tone = Ok | Ahead | Over | Idle, mark) — шкала бюджета'),
     ('Мини-столбики', minis, 'CoShellMiniBars(values, color, elapsed, highlight)'),
     ('Строка-столбик', bar_rows, 'CoShellBarRow(label, value, share, fraction, ghost, badge) · CoShellSegmentBar(total, kept) — «Уложились 4 из 6» · CoShellDayHeader(title, total)'),
     ('Столбцы по месяцам', columns, 'CoShellColumns(columns, selected, average)'),

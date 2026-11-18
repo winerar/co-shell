@@ -1,7 +1,6 @@
 package app.coshell.ui.top
 
 import androidx.compose.foundation.layout.Arrangement
-import app.coshell.core.designsystem.components.scrollHairline
 import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,6 @@ fun ScreenTopBar(
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     CoShellTopBar(
-        modifier = Modifier.scrollHairline(LocalScreenScroll.current?.scrolled == true),
         title = {
             Column {
                 Text(
@@ -62,7 +60,7 @@ fun ScreenTopBar(
         navigationIcon = {
             if (onBack != null) {
                 CoShellIconButton(onClick = onBack, enabled = backEnabled, modifier = Modifier.padding(start = Spacing.s)) {
-                    Icon(painterResource(DesignR.drawable.ic_arrow_back), stringResource(R.string.action_back))
+                    Icon(painterResource(DesignR.drawable.ic_chevron_left), stringResource(R.string.action_back))
                 }
             }
         },

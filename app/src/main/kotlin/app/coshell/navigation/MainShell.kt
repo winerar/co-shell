@@ -26,6 +26,7 @@ import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import app.coshell.core.designsystem.components.CoShellActionBar
 import app.coshell.core.designsystem.components.CoShellSnackbarHost
+import app.coshell.core.designsystem.components.TabDrag
 import app.coshell.core.designsystem.motion.ConfirmPulse
 import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.motion.PressOrigin
@@ -63,9 +64,11 @@ internal fun MainShell(
 
     // A tab screen may put its own buttons in place of the tabs (selection mode, 19В).
     val slot = remember { BottomBarSlot() }
+    // How far a tab swipe has gone: the bar's pill follows the finger (poll 2026-11-16 «В»).
+    val tabDrag = remember { TabDrag() }
 
     CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot, LocalInputLock provides inputLock) {
-        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked), origins, overBar)
+        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked), origins, tabDrag, overBar)
     }
 }
 
@@ -77,11 +80,12 @@ private fun Shell(
     graph: NavGraphBuilder.() -> Unit,
     bar: BarState,
     origins: ScreenOrigins,
+    tabDrag: TabDrag,
     overBar: @Composable BoxScope.(onTab: Boolean) -> Unit,
 ) {
     Scaffold(
         snackbarHost = { CoShellSnackbarHost(snackbar) },
-        bottomBar = { Bar(bar, onTab = { navController.navigateToTab(it) }, onAdd = onAdd) },
+        bottomBar = { Bar(bar, tabDrag, onTab = { navController.navigateToTab(it) }, onAdd = onAdd) },
     ) { padding ->
         // Inner screens have their own Scaffold and handle the status bar themselves, so only the
         // bottom inset is applied and consumed here; consuming all of `padding` would hide the top one.
@@ -92,6 +96,7 @@ private fun Shell(
                 .consumeWindowInsets(bottomInset)
                 .onPlaced { origins.hostBounds = it.boundsInWindow() }
                 .tabSwipe(
+                    tabDrag = tabDrag,
                     enabled = bar.visible && bar.slot.content == null,
                     current = TopLevel.entries.firstOrNull { bar.screen.isOn(it) },
                     onTab = { navController.navigateToTab(it) },
@@ -114,13 +119,13 @@ private fun Shell(
 
 /** The tabs, or a screen's own buttons from [BarState.slot] in the same capsule. */
 @Composable
-private fun Bar(bar: BarState, onTab: (TopLevel) -> Unit, onAdd: () -> Unit) {
+private fun Bar(bar: BarState, drag: TabDrag, onTab: (TopLevel) -> Unit, onAdd: () -> Unit) {
     val buttons = bar.slot.content
     // Keeps the buttons while their capsule rides away.
     var shown by remember { mutableStateOf(buttons) }
     if (buttons != null) shown = buttons
     Box {
-        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, addLocked = bar.addLocked)
+        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, addLocked = bar.addLocked, drag = drag)
         CoShellActionBar(visible = bar.visible && buttons != null) { shown?.invoke(this) }
     }
 }

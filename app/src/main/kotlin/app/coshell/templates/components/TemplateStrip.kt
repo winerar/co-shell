@@ -24,7 +24,7 @@ import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.dashedBorder
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
-import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Radii
 import app.coshell.core.designsystem.tokens.Sizes
@@ -56,7 +56,7 @@ fun TemplateStrip(
                 Text(
                     stringResource(R.string.templates_all, total),
                     style = MaterialTheme.typography.labelLarge,
-                    color = accentInk(),
+                    color = secondaryInk(),
                     modifier = Modifier
                         .tactileClickable(Tactile.Control, PillShape, onClick = onAll)
                         .padding(horizontal = Spacing.s, vertical = Spacing.xs),

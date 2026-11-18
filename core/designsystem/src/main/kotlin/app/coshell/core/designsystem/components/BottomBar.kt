@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -55,7 +56,7 @@ data class CoShellTab(
  * Bottom bar (design-system.md §«Навигация и жесты», mockups in docs/design/): a floating capsule with
  * icon-only tabs and the round «+» in the middle — the most frequent action is always under the thumb.
  * Active tab: a wide neon pill of the palette's primary that flows from tab to tab (`TabPill.kt`), the
- * icon pops. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ * icon pops; during a tab swipe [drag] makes it follow the finger. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
  *
  * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
  * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
@@ -69,9 +70,10 @@ fun CoShellBottomBar(
     visible: Boolean = true,
     addConfirm: ConfirmPulse? = null,
     addLocked: Boolean = false,
+    drag: TabDrag? = null,
 ) {
     AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
-        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked)
+        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked, drag)
     }
 }
 
@@ -91,7 +93,7 @@ private fun AddButton(label: String, onAdd: () -> Unit, addConfirm: ConfirmPulse
             tactile = Tactile.Primary,
             containerColor = scheme.surfaceContainerHighest,
             contentColor = scheme.onSurfaceVariant,
-        ) { Icon(painterResource(R.drawable.ic_lock), label) }
+            ) { Icon(painterResource(R.drawable.ic_lock), label) }
         return
     }
     val progress = confirmProgress(addConfirm)
@@ -123,6 +125,7 @@ private fun BottomBarContent(
     onAdd: () -> Unit,
     addConfirm: ConfirmPulse?,
     addLocked: Boolean,
+    drag: TabDrag?,
 ) {
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
@@ -131,7 +134,7 @@ private fun BottomBarContent(
     val pillColor = sel.fill
     val pillEdge = fillEdge(pillColor, scheme.surfaceContainerHigh)
     val pill = rememberTabPillState()
-    AnimateTabPill(pill, tabs.indexOfFirst { it.selected })
+    AnimateTabPill(pill, tabs.indexOfFirst { it.selected }, drag)
     // A floating capsule over the screen's background, clear of the system navigation bar.
     // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as its max height,
     // so the bar would take the screen and leave screens 0 px tall (releases #52/#56).
@@ -139,7 +142,7 @@ private fun BottomBarContent(
         Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Spacing.l),
+            .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = Spacing.l),
     ) {
         Row(
             Modifier
@@ -147,6 +150,7 @@ private fun BottomBarContent(
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
+                .fillEdge(scheme.surfaceContainerHigh, PillShape, scheme.background)
                 .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,

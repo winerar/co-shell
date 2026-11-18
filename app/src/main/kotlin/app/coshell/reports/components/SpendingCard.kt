@@ -22,7 +22,7 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.reports.ReportsUiState.Bar
@@ -95,7 +95,7 @@ internal fun SpendingCard(
         Text(
             stringResource(R.string.reports_all, spending.categories.size),
             style = MaterialTheme.typography.labelLarge,
-            color = accentInk(),
+            color = secondaryInk(),
             modifier = Modifier
                 .fillMaxWidth()
                 .tactileClickable(onClick = onAll)

@@ -59,10 +59,14 @@ object Sizes {
     val searchHeight = 48.dp
     /** Magnifier and «✕» inside the search pill. */
     val searchIcon = 20.dp
-    /** Floating bottom bar capsule (mockups: 64 high, 16 from the screen edges). */
-    val bottomBarHeight = 64.dp
+    /** Floating bottom bar capsule (poll 2026-11-16 #441 «Б»: 56 high, [panelInset] from the screen edges). */
+    val bottomBarHeight = 56.dp
     /** Active tab's pill inside the bar. */
-    val bottomBarPill = 44.dp
+    val bottomBarPill = 40.dp
+    /** Top bar capsule (same style as the bottom bar): 56 high, room for 48 dp buttons. */
+    val topBarHeight = 56.dp
+    /** Side margin of both floating capsules: narrow, the screen's background shows around them. */
+    val panelInset = 32.dp
     /** The «+» circle in the middle of the bar — a button, so [button] high like all of them. */
     val bottomBarAdd = 48.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */

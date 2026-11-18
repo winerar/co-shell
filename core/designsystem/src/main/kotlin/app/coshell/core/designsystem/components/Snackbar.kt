@@ -60,15 +60,14 @@ private fun CoShellSnackbar(data: SnackbarData) {
     val scheme = MaterialTheme.colorScheme
     val left = timeLeft(data)
     val timed = data.visuals.duration != SnackbarDuration.Indefinite
-    // Own frame instead of Material `Snackbar`: that one has a fixed shadow (owner 2026-11-16, #477: no shadows).
+    // Flat, like every surface (#477): Material's Snackbar has a fixed shadow, so the bar is drawn here.
     Surface(
         modifier = Modifier.padding(Spacing.m),
         shape = MaterialTheme.shapes.large,
         color = scheme.inverseSurface,
         contentColor = scheme.inverseOnSurface,
-        shadowElevation = 0.dp,
     ) {
-        Row(Modifier.padding(start = Spacing.m, end = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.padding(start = Spacing.m, end = Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f).padding(vertical = Spacing.m)) {
                 Text(data.visuals.message, style = MaterialTheme.typography.bodyMedium)
                 if (timed) Box(

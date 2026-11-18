@@ -1,13 +1,11 @@
 package app.coshell.ui.top
 
 import androidx.compose.animation.AnimatedContent
-import app.coshell.core.designsystem.components.scrollHairline
-import app.coshell.core.designsystem.theme.LargeTitleStyle
+import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +18,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.components.CoShellTopBar
@@ -43,9 +40,9 @@ fun Modifier.tabScroll(scroll: TabScroll): Modifier = topBarScroll(scroll)
  * (2026-11-15, owner: «без эффекта прозрачности»). One compact row with a bold title; the tall collapsing
  * header is gone for good (owner, 2026-11-10).
  *
- * At rest it melts into the screen. Once the list moves under it, the header stays solid (same colour as the
- * screen, no tint or glass), draws a hairline, the title shrinks and [subtitle] — «where am I», e.g. the day
- * at the top of «Операции» with its net — slides in below. On entering a tab the title rolls up from below.
+ * A narrow floating capsule like the bottom bar (poll 2026-11-16 #441 «Б»). Once the list moves under it, [subtitle] —
+ * «where am I», e.g. the day at the top of «Операции» with its net — slides in below the title. On entering a tab the title rolls up
+ * from below.
  * [search] puts a loupe among the actions; tapped, the field takes the title's place (#394 Б).
  * Only scale, translation and alpha animate (performance.md).
  */
@@ -60,10 +57,9 @@ fun TabTopBar(
     val scrolled = scroll.scrolled
     // A query left from before (rotation, back from an operation) keeps the field open.
     var searching by rememberSaveable { mutableStateOf(search?.query?.isNotEmpty() == true) }
-    val scale by animateFloatAsState(if (scrolled) SCROLLED_TITLE_SCALE else 1f, Motion.spatial(), label = "titleScale")
     val enter = remember { Animatable(1f) }
     LaunchedEffect(Unit) { enter.animateTo(0f, Motion.spatial()) }
-    Column(Modifier.scrollHairline(scrolled)) {
+    run {
         CoShellTopBar(
             title = {
                 AnimatedContent(
@@ -72,7 +68,7 @@ fun TabTopBar(
                     label = "headerSearch",
                 ) { open ->
                     if (open && search != null) HeaderSearchField(search, onClose = { searching = false })
-                    else TitleBlock(title, subtitle, scrolled, { scale }, { enter.value })
+                    else TitleBlock(title, subtitle, scrolled, { enter.value })
                 }
             },
             actions = {
@@ -89,18 +85,15 @@ fun TabTopBar(
     }
 }
 
-/** Title (shrinks once scrolled, rolls in on entry) and the «where am I» line under it. */
+/** Title (rolls in on entry) and the «where am I» line under it. */
 @Composable
-private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, scale: () -> Float, enter: () -> Float) {
+private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, enter: () -> Float) {
     Column {
         Text(
             title,
-            style = LargeTitleStyle,
+            style = ScreenTitleStyle,
             maxLines = 1,
             modifier = Modifier.graphicsLayer {
-                transformOrigin = TransformOrigin(0f, 0.5f)
-                scaleX = scale()
-                scaleY = scale()
                 translationY = enter() * size.height
                 alpha = 1f - enter()
             },
@@ -117,6 +110,4 @@ private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, scal
     }
 }
 
-/** The title at 74 % once scrolled: 28 sp → ≈ 21 sp, the size of an inner screen's title. */
-private const val SCROLLED_TITLE_SCALE = 0.74f
 /** Less than a pixel of scroll is still «at the top». */

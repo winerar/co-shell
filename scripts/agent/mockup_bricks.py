@@ -78,38 +78,39 @@ class Component extends DCLogic {
 ''' % (title, BG, INK, body, script)).replace('height: 844px', 'height: %dpx' % height).replace('"height":844', '"height":%d' % height)
 
 
+CAPSULE = ('<div style="margin: 8px 32px; height: 56px; box-sizing: border-box; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 4px; '
+           'padding: 0 4px 0 %dpx;%s">%s</div>')
+
+
+def capsule(inner, fill=None, lead=20):
+    """Top bar of every screen (poll 2026-11-16 #441 «Б», `CoShellTopBar`): a narrow floating capsule, 56 high, 32 from the edges,
+    on the screen's background; nothing behind it. A hairline edge shows only where the fill melts into the screen (light themes, `mockup_theme.py`)."""
+    return CAPSULE % (fill or BAR, lead, '', inner)
+
+
 def tab_head(title, actions='', sub=None):
-    """TabTopBar «Живая строка» (header poll А, 2026-11-15). At rest: 28 px title on the screen colour. Scrolled ([sub] given,
-    may be ''): solid screen colour — no glass (owner) — a hairline below, the title ×0.74 (≈21 px) and «where am I» under it."""
-    if sub is None:
-        return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
-                '<h1 style="margin: 0; font-size: 28px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
-    line2 = '<span style="font-size: 12px; color: %s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>' % (MUTED, sub) if sub else ''
-    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px; background: %s; border-bottom: 1px solid %s; box-sizing: border-box;">'
-            '<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><h1 style="margin: 0; font-size: 21px; font-weight: 700;">%s</h1>%s</div>%s</div>'
-            % (BG, LINE, title, line2, actions))
+    """TabTopBar (`CoShellTopBar` capsule): 22 px bold title; scrolled ([sub] given, may be ''): «where am I» under it, no hairline, no shrinking."""
+    line2 = ('<span style="font-size: 12px; color: %s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>' % (MUTED, sub)) if sub else ''
+    return capsule('<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column;"><h1 style="margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2;">%s</h1>%s</div>%s'
+                   % (title, line2, actions))
 
 
 def search_head(value, placeholder='Найти: заметка, тег, сумма'):
-    """Tab header with its search open (#394 Б): the field takes the title's place, «✕» clears and closes it."""
+    """Tab header with its search open (#394 Б): the field takes the title's place inside the capsule, «✕» clears and closes it."""
     text = ('<span style="font-size: 15px;">%s</span><span style="width: 2px; height: 20px; background: %s;"></span>' % (value, LIME)) if value \
         else '<span style="font-size: 15px; color: %s;">%s</span>' % (MUTED2, placeholder)
-    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
-            '<label style="flex-grow: 1; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px; border-radius: 999px; background: %s;">%s%s</label>%s</div>'
-            % (FIELD, svg('search', MUTED, 20), text, icon_button('close', 'Закрыть поиск')))
+    return capsule('<label style="flex-grow: 1; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px; border-radius: 999px; background: %s;">%s%s</label>%s'
+                   % (FIELD, svg('search', MUTED, 20), text, icon_button('close', 'Закрыть поиск')), lead=6)
 
 
 def inner_head(title, actions='', scrolled=False):
-    """ScreenTopBar: «Назад» + 22 px title; once the content moves under it — a hairline (#394 Б)."""
-    line = ' background: %s; border-bottom: 1px solid %s; box-sizing: border-box; position: relative; z-index: 2;' % (BG, LINE) if scrolled else ''
-    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;%s">' % line
-            + icon_button('back', 'Назад', INK) + '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
+    """ScreenTopBar: «Назад» (chevron, no track) + 22 px title in the same capsule; [scrolled] changes nothing — no hairline any more."""
+    return capsule(icon_button('back', 'Назад', INK) + '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s' % (title, actions), lead=4)
 
 
 def select_head(count):
-    """SelectionTopBar: raised solid fill, «✕ Выбрано N»; slides down over the tab header, the number rolls (header poll А)."""
-    return ('<div style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px; background: %s;">%s'
-            '<span style="font-size: 22px; font-weight: 700;">Выбрано %s</span></div>' % (CHIP, icon_button('close', 'Отменить выбор'), count))
+    """SelectionTopBar: the same capsule in the raised fill, «✕ Выбрано N»; slides down over the tab header, the number rolls (header poll А)."""
+    return capsule(icon_button('close', 'Отменить выбор') + '<span style="font-size: 22px; font-weight: 700;">Выбрано %s</span>' % count, fill=CHIP, lead=4)
 
 
 def tab_screen(title, body, active, actions='', bar=True, sub=None):
@@ -126,9 +127,9 @@ def mix(color, pct):
 
 
 def icon_button(icon, label, color=INK, border=False):
-    """CoShellIconButton: a 48 circle on the filled track (Style6); `border` is kept for old callers and ignored."""
+    """CoShellIconButton: a 48 target without a track — the icon straight on the screen (poll 2026-11-16 «назад»); `border` is ignored."""
     return ('<button type="button" aria-label="%s" style="width: 48px; height: 48px; flex: none; border-radius: 50%%; border: none; '
-            'background: %s; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, CHIP, svg(icon, color)))
+            'background: transparent; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, svg(icon, color)))
 
 
 def nav(active, dot_more=False):
@@ -136,14 +137,14 @@ def nav(active, dot_more=False):
         on = key == active
         inner = svg(icon, ONLIME if on else MUTED, 24, 1.7)
         if on:
-            inner = '<span style="width: 64px; height: 44px; border-radius: 999px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LIME, inner)
+            inner = '<span style="width: 64px; height: 40px; border-radius: 999px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LIME, inner)
         dot = ('<span style="position: absolute; top: 8px; right: 18px; width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>' % LIME
                if key == 'more' and dot_more else '')
-        return ('<a href="#" aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 64px;">%s%s</a>'
+        return ('<a href="#" aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 56px;">%s%s</a>'
                 % (label, inner, dot))
     plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; '
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
-    return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; '
+    return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
             % BAR + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('acc', 'wallet', 'Счета') + tab('more', 'more', 'Ещё') + '</nav>')
 

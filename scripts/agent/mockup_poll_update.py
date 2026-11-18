@@ -50,6 +50,13 @@ def topbar(t):
             '<span style="width:48px;display:flex;justify-content:center">%s</span><b style="font-size:22px">Обновление</b></div>' % (t['bar'], N.glyph(N.ARROW, t['ink'], 22)))
 
 
+def check_edge(t, size=56):
+    """Lime check mark with a thin deep-green edge in the light theme (plain lime in the dark one)."""
+    if t['dark']:
+        return check(t['prim'], size)
+    return B.svg('check', mix(t['prim'], '#000000', .5), size, 4.6).replace('</svg>', '') + '<path d="%s" stroke="%s" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' % (B.ICON['check'], t['prim'])
+
+
 def check(color, size=40):
     return B.svg('check', color, size, 2.4)
 
@@ -58,7 +65,11 @@ def ring(t, v, frac, mid, avail=False):
     """v: A — now (graphite arc, neon track in light); B — arc in the second colour on its wash; C — B + thin inner neon ring and a neon bead."""
     r, sw, c = 78, 8, 2 * math.pi * 78
     dark = t['dark']
-    arc = t['prim'] if dark else (t['ink'] if v == 'A' else t['acc'])
+    arc = t['prim'] if dark else (t['ink'] if v == 'A' else (t['acc'] if v in 'BCR' else t['prim']))
+    edge = ''
+    if not dark and v in 'PQ':  # neon arc on white: thin deep-green edge (fillEdge)
+        edge = ('<circle cx="84" cy="84" r="%d" fill="none" stroke="%s" stroke-width="%d" stroke-linecap="round" stroke-dasharray="%.1f %.1f" transform="rotate(-90 84 84)"/>'
+                % (r, mix(t['prim'], '#000000', .5), sw + 3, c * frac, c))
     track = t['wash'] if dark else (t['prim'] if v == 'A' else t['wash'])
     extra = ''
     if v == 'C':
@@ -68,10 +79,10 @@ def ring(t, v, frac, mid, avail=False):
             extra += ('<circle cx="%.1f" cy="%.1f" r="7" fill="%s" stroke="%s" stroke-width="2"/>' % (84 + r * math.cos(a), 84 + r * math.sin(a), t['prim'], t['acc']))
     disc = t['prim'] if avail else t['disc']
     return ('<div style="position:relative;width:168px;height:168px;margin:0 auto"><svg width="168" height="168">'
-            '<circle cx="84" cy="84" r="%d" fill="none" stroke="%s" stroke-width="%d"/>'
+            '<circle cx="84" cy="84" r="%d" fill="none" stroke="%s" stroke-width="%d"/>%s'
             '<circle cx="84" cy="84" r="%d" fill="none" stroke="%s" stroke-width="%d" stroke-linecap="round" stroke-dasharray="%.1f %.1f" transform="rotate(-90 84 84)"/>%s</svg>'
             '<div style="position:absolute;left:18px;top:18px;right:18px;bottom:18px;border-radius:50%%;background:%s;display:flex;flex-direction:column;align-items:center;justify-content:center">%s</div></div>'
-            % (r, track, sw, r, arc, sw, c * frac, c, extra, disc, mid))
+            % (r, track, sw, edge, r, arc, sw, c * frac, c, extra, disc, mid))
 
 
 def texts(t, title, sub):
@@ -91,7 +102,8 @@ def ring_down(t, v):
 
 def ring_ok(t, v):
     ic = t['ink'] if (v == 'A' and not t['dark']) else (t['prim'] if v == 'A' else t['acc'])
-    return phone(t, topbar(t) + '<div style="padding-top:36px">%s%s</div>' % (ring(t, v, 0, check(ic, 56)), texts(t, 'У вас последняя версия', 'Проверено только что')) + btn(t, 'Проверить снова', False), 460)
+    mark = check_edge(t) if v in 'PR' else (check(t['prim'] if t['dark'] else mix(t['prim'], '#000000', .62), 56) if v == 'Q' else check(ic, 56))
+    return phone(t, topbar(t) + '<div style="padding-top:36px">%s%s</div>' % (ring(t, v, 0, mark), texts(t, 'У вас последняя версия', 'Проверено только что')) + btn(t, 'Проверить снова', False), 460)
 
 
 def vcol(t, label, name, build, color, extra=''):
@@ -111,6 +123,18 @@ def versions(t, v):
                 '<div style="font-size:12px;opacity:.75">Новая</div><div style="%sfont-size:24px;font-weight:700">0.37</div><div style="font-size:12px;opacity:.75;margin-top:2px">сборка 400</div></div></div>'
                 % (card, t['surf'], vcol(t, 'Сейчас', '0.36', 'сборка 399', t['ink']).replace('flex:1', ''),
                    mix(t['prim'], t['onp'], .35), t['prim'], t['onp'], MONO))
+    if v in ('S', 'N'):  # tile styles swapped: «Сейчас» takes the accent frame, «Новая» the calm tile (N — neon)
+        arrow = N.glyph('M5 12h14M13 6l6 6-6 6', '#FFFFFF' if not t['dark'] else '#1A0830', 18, 2.4)
+        circ = ('<span style="width:36px;height:36px;border-radius:50%%;background:%s;display:flex;align-items:center;justify-content:center;flex:none;margin:0 -18px;z-index:1;border:3px solid %s">%s</span>' % (t['acc'], t['page'], arrow))
+        new_bg = t['prim'] if v == 'N' else t['surf']
+        new_ink = t['onp'] if v == 'N' else t['ink']
+        return ('<div style="margin:0 16px;display:flex;align-items:center">'
+                '<div style="flex:1;border-radius:24px;border:1px solid %s;background:%s;padding:16px 28px 16px 16px">%s</div>%s'
+                '<div style="flex:1;border-radius:24px;border:1px solid %s;background:%s;padding:16px 16px 16px 28px;color:%s">%s'
+                '<div style="margin-top:8px;display:inline-block;padding:2px 10px;border-radius:999px;background:%s;color:%s;font-size:12px;font-weight:600">+1 сборка · 8,1 МБ</div></div></div>'
+                % (t['acc'], mix(t['page'], t['acc'], .12), vcol(t, 'Сейчас', '0.36', 'сборка 399', t['acc']).replace('flex:1', ''), circ,
+                   t['line'], new_bg, new_ink, vcol(t, 'Новая', '0.37', 'сборка 400', new_ink).replace('flex:1', ''),
+                   t['acc'], '#FFFFFF' if not t['dark'] else '#1A0830'))
     chip = ('<span style="width:36px;height:36px;border-radius:50%%;background:%s;color:%s;display:flex;align-items:center;justify-content:center;flex:none;margin:0 -18px;z-index:1;border:3px solid %s">%s</span>'
             % (t['acc'], '#FFFFFF' if not t['dark'] else '#1A0830', t['page'], N.glyph('M5 12h14M13 6l6 6-6 6', '#FFFFFF' if not t['dark'] else '#1A0830', 18, 2.4)))
     return ('<div style="margin:0 16px;display:flex;align-items:center">'
@@ -164,13 +188,17 @@ def done(t, v):
 
 
 def bars(t, v):
+    edge_on = v == 'P' and not t['dark']
     arc = t['ink'] if (v == 'A' and not t['dark']) else (t['prim'] if v == 'A' else t['acc'])
     track = t['prim'] if (v == 'A' and not t['dark']) else t['wash']
+    if v == 'P':
+        arc, track = t['prim'], t['wash']
+    ed = ('box-shadow:0 0 0 1.5px %s;' % mix(t['prim'], '#000000', .5)) if edge_on else ''
 
     def line(name, val, frac):
         return ('<div style="padding:10px 0"><div style="display:flex;justify-content:space-between;font-size:14px"><span>%s</span><span style="%scolor:%s;font-size:13px">%s</span></div>'
-                '<div style="margin-top:8px;height:8px;border-radius:99px;background:%s"><div style="width:%d%%;height:8px;border-radius:99px;background:%s"></div></div></div>' % (name, MONO, t['muted'], val, track, frac, arc))
-    cols = ''.join('<span style="width:22px;height:%dpx;border-radius:6px;background:%s"></span>' % (h, arc if i == 4 else track) for i, h in enumerate([34, 52, 28, 60, 72, 40, 22]))
+                '<div style="margin-top:8px;height:8px;border-radius:99px;background:%s"><div style="width:%d%%;height:8px;border-radius:99px;background:%s;%s"></div></div></div>' % (name, MONO, t['muted'], val, track, frac, arc, ed))
+    cols = ''.join('<span style="width:22px;height:%dpx;border-radius:6px;background:%s;%s"></span>' % (h, arc if i == 4 else track, ed if i == 4 else '') for i, h in enumerate([34, 52, 28, 60, 72, 40, 22]))
     return phone(t, '<div style="margin:20px 16px;border-radius:24px;border:1px solid %s;background:%s;padding:8px 16px">%s%s</div>'
                  '<div style="margin:0 16px;display:flex;gap:10px;align-items:flex-end;height:80px;padding:0 16px">%s</div>'
                  % (t['line'], t['surf'], line('Продукты', '130 000 / 350 000', 37), line('Кафе', '45 000 / 80 000', 56), cols), 330)
@@ -184,6 +212,9 @@ def main():
         spec += [('RingDown' + v, ring_down, v, 460), ('RingOk' + v, ring_ok, v, 460), ('Ver' + v, ver_board, v, 360), ('Notes' + v, notes, v, 250)]
     for v in 'AB':
         spec += [('Done' + v, done, v, 400), ('Bars' + v, bars, v, 330)]
+    for v in 'PQR':
+        spec += [('RingDown' + v, ring_down, v, 460), ('RingOk' + v, ring_ok, v, 460)]
+    spec += [('VerS', ver_board, 'S', 360), ('VerN', ver_board, 'N', 360), ('BarsP', bars, 'P', 330)]
     for name, fn, v, h in spec:
         for suffix, dark in (('', True), ('@light', False)):
             t = theme(dark)

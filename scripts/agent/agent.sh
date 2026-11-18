@@ -38,6 +38,7 @@ usage() {
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
     stability             отчёты компилятора Compose (app, ~1,5 мин) → нет нестабильных классов состояний (#383)
+    bankcolors [--sheet f.png]  сверить цвета банков в BankColors.kt с иконками сервисов (сеть, Pillow; #505)
     shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem и экраны app) после
                           намеренной смены вида; PNG — */src/test/screenshots/ (показать владельцу)
 
@@ -97,6 +98,7 @@ case "$cmd" in
         rm -rf app/build/compose_reports
         "$here/gradle.sh" :app:compileDebugKotlin -PcomposeReports --rerun -q --console=plain || exit $?
         exec python3 "$here/compose-stability.py" ;;
+    bankcolors) shift; exec python3 "$here/bank-colors.py" "$@" ;;
     profile) exec "$here/profile-build.sh" "$@" ;;
     shots)
         # The record task alone; verify from gradle.properties is switched off for this run.

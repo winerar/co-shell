@@ -3,8 +3,9 @@ package app.coshell.core.designsystem.category
 /**
  * Brand colours of banks and payment apps the family uses, offered for accounts (owner 2026-11-09).
  * Stored in `Account.color` as is (they are outside [CategoryPalette], so they are drawn unchanged in
- * both themes). Shades are approximate — checked by eye against the logos; Ameria — green, to verify
- * on ameriabank.am (the host is not reachable from the agent's sandbox).
+ * both themes). 2026-11-18: checked against each service's own icon (Google/DuckDuckGo favicon, dominant
+ * saturated colour); kept as is where within noise, or where no icon showed the brand (Inecobank, VTB,
+ * Revolut, Tether — official mark colour).
  */
 object BankColors {
     /** One preset: [name] shown under the badge, [initials] on it, [aliases] — lowercase name parts to match. */
@@ -19,10 +20,10 @@ object BankColors {
             listOf(
                 Preset("Galicia", "GA", 0xFFF26E22),
                 Preset("Santander", "SA", 0xFFEC0000),
-                Preset("BBVA", "BB", 0xFF1973B8, listOf("frances", "francés")),
-                Preset("Nación", "BN", 0xFF005AA7, listOf("nacion", "bna")),
+                Preset("BBVA", "BB", 0xFF00278E, listOf("frances", "francés")),
+                Preset("Nación", "BN", 0xFF00738D, listOf("nacion", "bna")),
                 Preset("Mercado Pago", "MP", 0xFF00B1EA, listOf("mercadopago", "mp")),
-                Preset("Ualá", "UA", 0xFF3E4FE0, listOf("uala")),
+                Preset("Ualá", "UA", 0xFF062095, listOf("uala")),
                 Preset("Naranja X", "NX", 0xFFFE5000, listOf("naranja")),
                 Preset("Brubank", "BR", 0xFF6A2EE8),
                 Preset("Lemon", "LE", 0xFF00E36B),
@@ -31,12 +32,12 @@ object BankColors {
         Group(
             "Armenia",
             listOf(
-                Preset("Ameria", "AM", 0xFF00A859, listOf("америа", "ameriabank")),
+                Preset("Ameria", "AM", 0xFF68B92D, listOf("америа", "ameriabank")),
                 Preset("Inecobank", "IN", 0xFF0096D6, listOf("ineco", "инеко")),
-                Preset("Ardshinbank", "AR", 0xFF004B93, listOf("ardshin", "ардшин")),
-                Preset("ACBA", "AC", 0xFF00843D, listOf("акба")),
-                Preset("IDBank", "ID", 0xFFE4002B, listOf("idram")),
-                Preset("Evocabank", "EV", 0xFF6D2C91, listOf("evoca", "эвока")),
+                Preset("Ardshinbank", "AR", 0xFF0A61C7, listOf("ardshin", "ардшин")),
+                Preset("ACBA", "AC", 0xFF00A789, listOf("акба")),
+                Preset("IDBank", "ID", 0xFFF5821F, listOf("idram")),
+                Preset("Evocabank", "EV", 0xFF6200DA, listOf("evoca", "эвока")),
             ),
         ),
         Group(

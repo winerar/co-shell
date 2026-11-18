@@ -1,5 +1,8 @@
 package app.coshell.testing
 
+import app.coshell.core.domain.SaveCategoryUseCase
+import app.coshell.core.domain.quickentry.TipPrefs
+import app.coshell.core.domain.quickentry.TipSettings
 import app.coshell.core.domain.tags.SaveTagUseCase
 import app.coshell.core.domain.tags.TagRepository
 import app.coshell.transactions.edit.EntryTags
@@ -19,6 +22,7 @@ import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.transactions.edit.EntryTemplates
+import app.coshell.transactions.edit.tip.EntryTip
 import app.coshell.ui.StateWork
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.Dispatchers
@@ -117,3 +121,19 @@ fun fakeEntryTemplates(
 )
 
 fun fakeEntryTags(tags: TagRepository = FakeTagRepository()) = EntryTags(tags, SaveTagUseCase(tags, IdGenerator { "tag-new" }))
+
+/** [TipSettings] in memory. */
+class FakeTipSettings(var prefs: TipPrefs = TipPrefs()) : TipSettings {
+    override suspend fun load() = prefs
+    override suspend fun save(prefs: TipPrefs) { this.prefs = prefs }
+}
+
+/** [EntryTip] on fakes; its ids (the tip operation, a new category) are `tip-1`, `tip-2`… */
+fun fakeEntryTip(
+    categories: CategoryRepository,
+    transactions: TransactionRepository,
+    settings: TipSettings = FakeTipSettings(),
+): EntryTip {
+    var next = 0
+    return EntryTip(settings, SaveCategoryUseCase(categories, transactions), IdGenerator { "tip-${++next}" })
+}

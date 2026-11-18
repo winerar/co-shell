@@ -164,7 +164,11 @@ def wizard(step, body, primary='Далее', back=True):
 
 
 def import_start():
-    past = group([row('wallet-2026-11.csv · операций: 1 284', 'с 3 янв. 2024 по 9 нояб. 2026', svg('file'), '<span style="color: %s; font-size: 13px; font-weight: 600;">Отменить</span>' % PINK)])
+    def batch(title, sub):  # #471 А (poll 2026-11-17): the row in full, «Отменить импорт» under it on the right
+        undo = ('<div style="display: flex; justify-content: flex-end; padding: 0 16px 12px;"><span style="height: 48px; padding: 0 18px; border-radius: 999px; '
+                'border: 1px solid %s; color: %s; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center;">Отменить импорт</span></div>' % (mix(PINK, 40), PINK))
+        return '<div style="{{div}}">%s%s</div>' % (row(title, sub).replace('{{div}}', ''), undo)
+    past = group([batch('10 нояб. 2026 · операций: 1 284', 'с 3 янв. 2024 по 9 нояб. 2026'), batch('2 нояб. 2026 · операций: 37', 'с 25 окт. по 1 нояб. 2026')])
     return wizard(0, note('В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь. Перед записью приложение само сделает резервную копию, а импорт можно отменить целиком.')
                   + button('Выбрать файл CSV', 'primary', 'file', 16) + note('Повторный импорт того же или более нового файла добавит только новое', 8)
                   + label('Прошлые импорты') + past, None)

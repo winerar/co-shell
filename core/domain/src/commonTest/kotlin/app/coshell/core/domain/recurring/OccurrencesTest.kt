@@ -99,4 +99,23 @@ class OccurrencesTest {
             TransactionTemplate("x", "В наличные", TransactionType.TRANSFER, "galicia", ars, Money(100, ars), toAccountId = "cash", schedule = auto)
         }
     }
+
+    @Test
+    fun `the early reminder names the payments that fall exactly that many days ahead`() {
+        fun tpl(name: String, r: Recurrence, handled: String) = TransactionTemplate(
+            name, name, TransactionType.EXPENSE, "galicia", ars,
+            schedule = RecurringSchedule(r, d("2026-01-01"), handledThrough = d(handled)),
+        )
+        val today = d("2026-11-15")
+        val templates = listOf(
+            tpl("Netflix", Recurrence.Monthly(18), "2026-10-18"),
+            tpl("Аренда", Recurrence.Monthly(18), "2026-10-18"),
+            tpl("Свет", Recurrence.Monthly(15), "2026-10-15"),
+            tpl("Интернет", Recurrence.Monthly(16), "2026-10-16"),
+        )
+        assertEquals(listOf("Netflix", "Аренда").sortedBy { it.lowercase() }, paymentsAhead(templates, today, 3).map { it.name })
+        assertEquals(listOf("Интернет"), paymentsAhead(templates, today, 1).map { it.name })
+        assertEquals(emptyList(), paymentsAhead(templates, today, 0))
+        assertEquals(emptyList(), paymentsAhead(templates, today, 2))
+    }
 }

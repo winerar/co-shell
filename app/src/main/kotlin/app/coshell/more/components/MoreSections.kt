@@ -64,7 +64,7 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
         MoreSection(
             R.string.more_section_app,
             listOf(
-                MoreItem(DesignR.drawable.ic_contrast, R.string.appearance_title, c[18], state.appearance, actions.onAppearance),
+                MoreItem(DesignR.drawable.ic_contrast, R.string.settings_title, c[18], state.appearance, actions.onAppearance),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[1], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
             ),
         ),

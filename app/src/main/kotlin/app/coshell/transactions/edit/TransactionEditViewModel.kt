@@ -4,32 +4,36 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.domain.quickentry.TipPrefs
+import app.coshell.core.domain.quickentry.Tips
 import app.coshell.core.domain.recurring.autoPaymentId
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
-import app.coshell.core.model.CategoryType
+import app.coshell.core.model.Currencies
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
-import app.coshell.core.model.tagIds
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
-import app.coshell.core.designsystem.components.keypad.AmountKeys
 import app.coshell.core.designsystem.components.keypad.KeypadKey
-import app.coshell.core.model.Currencies
-import app.coshell.core.model.CurrencyCode
-import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
-import app.coshell.transactions.edit.TransactionEditUiState.ToAccountError
+import app.coshell.transactions.edit.tip.EntryTip
+import app.coshell.transactions.edit.tip.NEW_TIP_CATEGORY
+import app.coshell.transactions.edit.tip.TipContext
+import app.coshell.transactions.edit.tip.TipUi
+import app.coshell.transactions.edit.tip.refreshed
 import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -65,6 +69,8 @@ class TransactionEditViewModel @Inject constructor(
     private val deleteWithUndo: DeleteTransactionWithUndo,
     private val entryTemplates: EntryTemplates,
     private val entryTags: EntryTags,
+    private val entryTip: EntryTip,
+    private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -138,56 +144,15 @@ class TransactionEditViewModel @Inject constructor(
             tags = _state.value.tags,
         )
         val loaded = when {
-            transaction != null -> formOf(transaction, base)
+            transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
             // «Дублировать»: the same operation as a new one today, straight on the amount.
-            template != null -> formOf(template, base).copy(isNew = true, isCopy = true, date = base.today)
-            else -> newForm(base, accountList, recent)
+            template != null -> entryFormOf(template, base, allCategories, moneyFormat, timeZone).copy(isNew = true, isCopy = true, date = base.today)
+            else -> newEntryForm(base, initialType, accountList, recent, screenOptions.options.first().entryAccountId)
         }
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
         pendingTemplateId?.let { applyTemplate(it) }
         pendingTemplateId = null
     }
-
-    /** A new transaction starts on today and on the account used last. */
-    private fun newForm(
-        base: TransactionEditUiState,
-        accountList: List<Account>,
-        recent: List<Transaction>,
-    ): TransactionEditUiState {
-        val lastAccount = recent.firstOrNull()?.accountId
-        return base.copy(
-            isNew = true,
-            type = initialType,
-            accountId = lastAccount?.takeIf { it in accountsById } ?: accountList.firstOrNull()?.id,
-            date = base.today,
-            // Owner 2026-11-09: the account is chosen first, even when the last one is preselected.
-            step = TransactionEditUiState.EntryStep.ACCOUNT,
-        )
-    }
-
-    private fun formOf(transaction: Transaction, base: TransactionEditUiState): TransactionEditUiState {
-        // An income in an expense category is a refund (#208): edited as an expense with «↩ Возврат» on.
-        val refund = transaction.type == TransactionType.INCOME &&
-            allCategories.any { it.id == transaction.categoryId && it.type == CategoryType.EXPENSE }
-        return formFields(transaction, base).copy(type = if (refund) TransactionType.EXPENSE else transaction.type, refund = refund)
-    }
-
-    private fun formFields(transaction: Transaction, base: TransactionEditUiState) = base.copy(
-        isNew = false,
-        step = TransactionEditUiState.EntryStep.DETAILS,
-        type = transaction.type,
-        amount = moneyFormat.formatForEditing(transaction.amount),
-        toAmount = transaction.toAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
-        accountId = transaction.accountId,
-        toAccountId = transaction.toAccountId,
-        categoryId = transaction.categoryId,
-        date = transaction.date.toLocalDateTime(timeZone).date,
-        note = transaction.note,
-        receiptEnabled = transaction.originalAmount != null,
-        receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
-        receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
-        tagIds = transaction.tagIds,
-    )
 
     // endregion
 
@@ -283,15 +248,12 @@ class TransactionEditViewModel @Inject constructor(
 
     /** A keypad key types into [TransactionEditUiState.keypadTarget]; «Готово» saves. */
     fun onKey(key: KeypadKey) {
-        val current = _state.value
         if (key == KeypadKey.Done) return save()
-        when (current.keypadTarget) {
-            KeypadTarget.AMOUNT ->
-                onAmountChange(AmountKeys.apply(current.amount, key, current.account?.fractionDigits ?: 2))
-            KeypadTarget.TO_AMOUNT ->
-                onToAmountChange(AmountKeys.apply(current.toAmount, key, current.toAccount?.fractionDigits ?: 2))
-            KeypadTarget.RECEIPT ->
-                onReceiptAmountChange(AmountKeys.apply(current.receiptAmount, key, fractionDigitsOf(current.receiptCurrency)))
+        val (target, text) = _state.value.typed(key)
+        when (target) {
+            KeypadTarget.AMOUNT -> onAmountChange(text)
+            KeypadTarget.TO_AMOUNT -> onToAmountChange(text)
+            KeypadTarget.RECEIPT -> onReceiptAmountChange(text)
         }
     }
 
@@ -346,15 +308,80 @@ class TransactionEditViewModel @Inject constructor(
 
     // endregion
 
+    // region Tips (#322)
+
+    /** The purchase the open «Чаевые» sheet adds a tip to: validated and built, not saved yet. */
+    private var tipMain: Transaction? = null
+
+    private fun tipContext(main: Transaction) = TipContext(main, _state.value.date, accountsById, converter, moneyFormat)
+
+    /** «＋ Чаевые»: the purchase must be valid first; then the sheet opens with the remembered account and category. */
+    fun onTipOpen() {
+        val current = _state.value
+        if (!current.tipAvailable || current.isLoading || current.isDone) return
+        val main = buildMain(current) ?: return
+        tipMain = main
+        viewModelScope.launch { _state.update { it.copy(tip = entryTip.open(tipContext(main), allCategories)) } }
+    }
+
+    /** Any change of the sheet: its texts are recomputed from the purchase and the rates. */
+    fun onTipChange(change: (TipUi) -> TipUi) {
+        val main = tipMain ?: return
+        _state.update { form -> form.tip?.let { form.copy(tip = change(it).refreshed(tipContext(main))) } ?: form }
+    }
+
+    fun onTipClose() {
+        tipMain = null
+        _state.update { it.copy(tip = null) }
+    }
+
+    /** «Своя сумма» typed on the sheet's keypad; «Готово» saves both operations. */
+    fun onTipKey(key: KeypadKey, note: String) {
+        val main = tipMain ?: return
+        if (key == KeypadKey.Done) return onTipSave(note)
+        val digits = Currencies.info(Tips.base(main).currency).fractionDigits
+        onTipChange { it.copy(percent = null, own = AmountKeys.apply(it.own, key, digits)) }
+    }
+
+    /** A line of the category choice: a category id, [TipPrefs.SAME_AS_PURCHASE] or [NEW_TIP_CATEGORY] (created as [newName]). */
+    fun onTipCategory(choice: String, newName: String) {
+        viewModelScope.launch {
+            val id = if (choice == NEW_TIP_CATEGORY) entryTip.categoryNamed(newName, allCategories) ?: return@launch else choice
+            if (choice == NEW_TIP_CATEGORY) {
+                allCategories = categories.observeCategories(includeArchived = true).first().filter { !it.archived }
+                _state.update { it.withCategoryOptions(allCategories, recentCategoryIds) }
+            }
+            onTipChange { it.copy(categoryId = id, asking = false) }
+        }
+    }
+
+    /** «Сохранить две операции»: the purchase and the tip, [note] — «Чаевые» from resources. */
+    fun onTipSave(note: String) {
+        val main = tipMain ?: return
+        val ui = _state.value.tip?.takeIf { it.canSave } ?: return
+        if (_state.value.isDone) return
+        val operation = (entryTip.transaction(ui, tipContext(main), note) as? Tips.Result.Ok)?.transaction
+            ?: return onTipChange { it.copy(failed = true) }
+        launchSave(main, operation to ui)
+    }
+
+    // endregion
+
     // region Save and delete
 
     fun save() {
         val current = _state.value
         if (current.isLoading || current.isDone) return
+        val transaction = buildMain(current) ?: return
+        launchSave(transaction)
+    }
+
+    /** The valid form as an operation; `null` after the field errors are shown. */
+    private fun buildMain(current: TransactionEditUiState): Transaction? {
         val form = when (val result = validateForm(current, accountsById)) {
             is FormResult.Invalid -> {
                 _state.update { it.withErrors(result.errors) }
-                return
+                return null
             }
             is FormResult.Valid -> result.form
         }
@@ -362,17 +389,25 @@ class TransactionEditViewModel @Inject constructor(
         // A payment gets the id of its template and day, as «Проводить само» does: both phones posting it before
         // they sync write one record, and «В прошлый раз» finds it (#404).
         val paymentId = templateId?.let { id -> paymentDate?.let { autoPaymentId(id, it) } }
-        val transaction = buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
+        return buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
+    }
+
+    /** Saves [transaction] and, with [tip] (#322), the tip operation after it; remembers the tip's account and category. */
+    private fun launchSave(transaction: Transaction, tip: Pair<Transaction, TipUi>? = null) {
         viewModelScope.launch {
             when (val result = saveTransaction(transaction)) {
                 SaveTransactionUseCase.Result.Saved -> {
+                    tip?.let { (operation, ui) ->
+                        saveTransaction(operation)
+                        entryTip.remember(ui)
+                    }
                     templateId?.let { id ->
                         entryTemplates.used(id)
                         paymentDate?.let { entryTemplates.paid(id, it) }
                     }
                     _state.update { it.copy(isDone = true) }
                 }
-                is SaveTransactionUseCase.Result.Invalid -> _state.update { it.withError(result.reason) }
+                is SaveTransactionUseCase.Result.Invalid -> _state.update { it.copy(tip = null).withError(result.reason) }
             }
         }
     }
@@ -386,37 +421,6 @@ class TransactionEditViewModel @Inject constructor(
     }
 
     // endregion
-
-    private fun TransactionEditUiState.withErrors(errors: FormErrors) = copy(
-        accountError = errors.accountError,
-        amountError = errors.amountError,
-        toAccountError = errors.toAccountError,
-        toAmountError = errors.toAmountError,
-        categoryError = errors.categoryError,
-        receiptCurrencyError = errors.receiptCurrencyError,
-        receiptAmountError = errors.receiptAmountError,
-    )
-
-    /** Use case refusals that the form could not foresee (e.g. an account deleted on the other phone). */
-    private fun TransactionEditUiState.withError(reason: SaveTransactionUseCase.Reason) = when (reason) {
-        SaveTransactionUseCase.Reason.ACCOUNT_NOT_FOUND,
-        SaveTransactionUseCase.Reason.CURRENCY_MISMATCH,
-        -> copy(accountError = true)
-        SaveTransactionUseCase.Reason.TARGET_ACCOUNT_NOT_FOUND,
-        SaveTransactionUseCase.Reason.TARGET_CURRENCY_MISMATCH,
-        -> copy(toAccountError = ToAccountError.REQUIRED)
-        SaveTransactionUseCase.Reason.CATEGORY_NOT_FOUND,
-        SaveTransactionUseCase.Reason.CATEGORY_TYPE_MISMATCH,
-        -> copy(categoryError = true, categoryId = null)
-        SaveTransactionUseCase.Reason.ORIGINAL_CURRENCY_INVALID ->
-            copy(receiptCurrencyError = TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT)
-    }
-
-    private fun Account.toOption(balance: String) =
-        AccountOption(id, name, currency.value, type, color, balance, Currencies.info(currency).fractionDigits)
-
-    private fun fractionDigitsOf(code: String): Int =
-        CurrencyCode.parseOrNull(code)?.let { Currencies.info(it).fractionDigits } ?: 2
 
     private companion object {
         const val RECENT_ACCOUNTS = 4

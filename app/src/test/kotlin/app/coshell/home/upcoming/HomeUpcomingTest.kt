@@ -122,4 +122,14 @@ class HomeUpcomingTest {
 
         assertEquals(listOf("light"), list.map { it.item.id })
     }
+
+    @Test
+    fun `the horizon of the settings widens or narrows what is soon`() {
+        // Monthly on the 25th: ten days ahead — not in a week, in a fortnight, and not in three days.
+        val rent = template("rent", Recurrence.Monthly(25))
+        fun ids(days: Int) = buildUpcomingRows(listOf(rent), accounts, categories, MoneyFormat.RU, today, days).map { it.item.id }
+        assertEquals(emptyList<String>(), ids(7))
+        assertEquals(listOf("rent"), ids(14))
+        assertEquals(emptyList<String>(), ids(3))
+    }
 }

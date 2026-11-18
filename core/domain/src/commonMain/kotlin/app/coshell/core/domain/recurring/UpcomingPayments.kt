@@ -4,7 +4,9 @@ import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import app.coshell.core.model.TransactionTemplate
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 
 /** Where a payment stands on «Обзоре» («Скоро · 7 дней», owner picked А for #143). */
 enum class PaymentState { MISSED, TODAY, SOON }
@@ -55,6 +57,16 @@ fun paymentsToRemind(
     // «Завтра» on yesterday's reminder (#405): asked again today while the payment still waits.
     due.lastOrNull() == today || (template.id in snoozed && due.isNotEmpty())
 }.sortedBy { it.name.lowercase() }
+
+/**
+ * «Предупреждать за N дней»: the templates whose next unhandled payment falls exactly [daysBefore] days after [today] — the
+ * early reminder of that day. Payments already late or due today are the usual reminder's business, not this one's.
+ */
+fun paymentsAhead(templates: List<TransactionTemplate>, today: LocalDate, daysBefore: Int): List<TransactionTemplate> {
+    if (daysBefore <= 0) return emptyList()
+    val target = today.plus(DatePeriod(days = daysBefore))
+    return templates.filter { it.schedule?.nextUnhandled() == target }.sortedBy { it.name.lowercase() }
+}
 
 /**
  * Which of the [reminded] templates still wait on [today] (#406): a payment posted or skipped anywhere — in the app,

@@ -1,6 +1,10 @@
 package app.coshell.transactions.list
 
 import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.model.ExchangeRate
+import app.coshell.core.model.Rate
+import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -185,5 +189,23 @@ class TransactionDaysTest {
         assertEquals(2, many.moreTags)
         assertEquals(emptyList<TransactionsUiState.RowTag>(), rows.getValue("gone").tags)
         assertEquals(0, rows.getValue("gone").moreTags)
+    }
+
+    @Test
+    fun `the main currency line is added at the rate of the day, and only where it can be`() {
+        val book = RateBook.of(listOf(ExchangeRate(LocalDate(2026, 11, 8), usd, ars, Rate.parse("1000"), RateOrigin.DOWNLOADED)))
+        val items = listOf(
+            Transaction("pesos", TransactionType.EXPENSE, "card", Money(50_000_00, ars), at(8, 9)),
+            Transaction("dollars", TransactionType.EXPENSE, "cash", Money(10_00, usd), at(8, 10)),
+            Transaction("euros", TransactionType.EXPENSE, "cash", Money(10_00, CurrencyCode("EUR")), at(8, 11)),
+        )
+        val days = build(*items.toTypedArray())
+
+        val on = days.withAmountsInMain(true, usd, book, MoneyFormat.RU).single().rows.associateBy { it.id }
+        assertEquals("≈ -50,00${nbsp}USD", on.getValue("pesos").inMain)
+        assertNull(on.getValue("dollars").inMain) // already in the main currency
+        assertNull(on.getValue("euros").inMain) // no rate
+
+        assertEquals(days, days.withAmountsInMain(false, usd, book, MoneyFormat.RU))
     }
 }

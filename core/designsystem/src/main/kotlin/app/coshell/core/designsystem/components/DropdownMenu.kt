@@ -47,6 +47,7 @@ fun CoShellDropdownMenu(
         shape = RoundedCornerShape(MENU_RADIUS),
         shadowElevation = 0.dp, // no shadows (#477): the edge is a hairline
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        tonalElevation = 0.dp,
         content = content,
     )
 }

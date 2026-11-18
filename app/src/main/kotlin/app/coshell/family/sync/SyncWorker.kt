@@ -19,12 +19,14 @@ class SyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val family: FamilyService,
+    private val partner: PartnerSpendNotifier,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
         family.load()
         return try {
-            val result = family.sync()
+            val result = if (SyncNetwork.allowedNow(applicationContext)) family.sync() else null
+            partner.afterSync(result)
             Log.i(TAG, "Sync: $result")
             Result.success()
         } catch (e: ApiException) {

@@ -34,7 +34,14 @@ class ReminderLog @Inject constructor(@ApplicationContext context: Context) {
     fun snoozedFor(day: LocalDate): Set<String> =
         if (prefs.getString(SNOOZED_DAY, null) == day.toString()) prefs.getStringSet(SNOOZED_IDS, null).orEmpty() else emptySet()
 
+    /** The early reminder («Предупреждать за») for the payments of [day] already went out. */
+    fun aheadDone(day: LocalDate): Boolean = prefs.getString(AHEAD, null) == day.toString()
+
+    fun markAhead(day: LocalDate) = prefs.edit().putString(AHEAD, day.toString()).apply()
+
     private companion object {
+        const val AHEAD = "ahead_for"
+
         const val LAST = "last_reminded"
         const val REMINDED_IDS = "reminded_ids"
         const val SNOOZED_IDS = "snoozed_ids"

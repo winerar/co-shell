@@ -72,6 +72,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             modifier = Modifier.padding(horizontal = Spacing.m).padding(bottom = Spacing.m),
         )
     }
+    state.tip?.let { TipSheet(state, it, actions) }
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 

@@ -27,6 +27,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ScreenOptionsStore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -49,6 +55,7 @@ class HomeViewModel @Inject constructor(
     private val moneyFormat: MoneyFormat,
     clock: Clock,
     private val timeZone: TimeZone,
+    screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
@@ -64,21 +71,24 @@ class HomeViewModel @Inject constructor(
     }
 
     /** The newest operations, formatted by the same rules as the Transactions tab. */
-    private val recent: Flow<List<TransactionsUiState.Row>> = combine(
-        transactions.observeTransactions(TransactionFilter(limit = HomeUiState.RECENT_COUNT)),
-        accounts.observeAccounts(includeArchived = true),
-        categories.observeCategories(includeArchived = true),
-        otherMembers.names(),
-    ) { items, accountList, categoryList, authors ->
-        buildTransactionDays(
-            transactions = items,
-            accountsById = accountList.associateBy { it.id },
-            categoriesById = categoryList.associateBy { it.id },
-            moneyFormat = moneyFormat,
-            timeZone = timeZone,
-            today = today,
-            authors = authors,
-        ).flatMap { it.rows }.take(HomeUiState.RECENT_COUNT)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val recent: Flow<List<TransactionsUiState.Row>> = screenOptions.options.map { it.recentCount }.distinctUntilChanged().flatMapLatest { count ->
+        combine(
+            transactions.observeTransactions(TransactionFilter(limit = count)),
+            accounts.observeAccounts(includeArchived = true),
+            categories.observeCategories(includeArchived = true),
+            otherMembers.names(),
+        ) { items, accountList, categoryList, authors ->
+            buildTransactionDays(
+                transactions = items,
+                accountsById = accountList.associateBy { it.id },
+                categoriesById = categoryList.associateBy { it.id },
+                moneyFormat = moneyFormat,
+                timeZone = timeZone,
+                today = today,
+                authors = authors,
+            ).flatMap { it.rows }.take(count)
+        }
     }
 
     val state: StateFlow<HomeUiState> = combine(money, recent) { home, rows -> home.copy(recent = rows) }

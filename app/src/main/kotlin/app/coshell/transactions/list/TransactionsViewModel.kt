@@ -8,6 +8,8 @@ import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.settings.ScreenOptionsStore
+import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.search.filterTotal
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.tags.TagRepository
@@ -57,6 +59,7 @@ class TransactionsViewModel @Inject constructor(
     rates: ExchangeRateRepository,
     reportCurrencies: ReportCurrencySettings,
     tags: TagRepository,
+    screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     private val _selection = MutableStateFlow(Selection())
@@ -170,7 +173,9 @@ class TransactionsViewModel @Inject constructor(
         _peek.value = null
     }
 
-    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money) { src, f, limit, (book, currencies) ->
+    private val amountInMain = screenOptions.options.map { it.opsAmountInMain }.distinctUntilChanged()
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money, amountInMain) { src, f, limit, (book, currencies), inMain ->
         lastMoney = book to currencies
         val main = currencies.firstOrNull()
         val matching = src.page.items.filter { f.matches(it, src.search) }
@@ -192,7 +197,7 @@ class TransactionsViewModel @Inject constructor(
                 today = today,
                 authors = src.authors,
                 tagsById = src.tags.byId,
-            ),
+            ).withAmountsInMain(inMain, main, book, moneyFormat),
         )
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))
 }

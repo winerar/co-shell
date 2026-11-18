@@ -55,6 +55,8 @@ data class TransactionsUiState(
         val amount: String,
         /** Arriving amount of a transfer between currencies ("+120 000,00 ARS") or the receipt amount of a purchase paid in another currency. */
         val secondaryAmount: String? = null,
+        /** «≈ -1 220 USD»: the amount in the main report currency at the rate of its day («Настройки → Экраны → Операции»); null — off, same currency, no rate or [secondaryAmount] taken. */
+        val inMain: String? = null,
         /** Category icon key and colour; both null for transfers and missing categories. */
         val icon: String? = null,
         val color: Long? = null,

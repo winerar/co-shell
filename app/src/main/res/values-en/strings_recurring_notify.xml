@@ -5,9 +5,8 @@
     <string name="recurring_action_post_amount">Record %1$s</string>
     <string name="recurring_action_change_amount">Change amount</string>
     <string name="recurring_action_tomorrow">Tomorrow</string>
-    <string name="appearance_notifications_section">Notifications</string>
     <string name="reminders_title">Payment reminders</string>
-    <string name="reminders_hint">At 9:00 on the payment day</string>
+    <string name="reminders_hint">On the payment day</string>
     <!-- A payment in another currency (#415, poll 3 «Д»): the debited amount is always entered. -->
     <string name="recurring_action_enter_amount">Enter amount</string>
     <string name="recurring_notify_by_rate">≈ %1$s at the rate</string>
@@ -19,4 +18,6 @@
     <string name="template_foreign_amount_hint">Purchase amount. We ask what was charged when recording and suggest it at the rate</string>
     <string name="template_foreign_currency_error">Pick a currency other than the account’s: USD, EUR…</string>
     <string name="recurring_auto_no_foreign">a payment in another currency is recorded by you: the charged amount varies</string>
+    <string name="recurring_notify_ahead_tomorrow">Payment tomorrow</string>
+    <string name="recurring_notify_ahead">Payment in %1$d days</string>
 </resources>

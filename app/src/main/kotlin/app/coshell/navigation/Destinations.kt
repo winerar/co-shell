@@ -73,7 +73,43 @@ data class AccountEditDestination(val accountId: String? = null) {
 data object MoreDestination
 
 @Serializable
+data object SettingsDestination
+
+@Serializable
 data object AppearanceDestination
+
+@Serializable
+data object ScreensSettingsDestination
+
+@Serializable
+data object HomeSettingsDestination
+
+@Serializable
+data object HomeDetailsSettingsDestination
+
+@Serializable
+data object BalanceAccountsDestination
+
+@Serializable
+data object OpsSettingsDestination
+
+@Serializable
+data object ReportsSettingsDestination
+
+@Serializable
+data object AccountsSettingsDestination
+
+@Serializable
+data object MoneySettingsDestination
+
+@Serializable
+data object InputSettingsDestination
+
+@Serializable
+data object NoticeSettingsDestination
+
+@Serializable
+data object DataSettingsDestination
 
 @Serializable
 data object CategoriesDestination
@@ -86,6 +122,9 @@ data object WalletImportDestination
 
 @Serializable
 data object WipeDataDestination
+
+@Serializable
+data object ExportDestination
 
 @Serializable
 data object FamilyDestination

@@ -11,11 +11,11 @@
 распознавание толчков — `core:domain/shake/ShakeDetector`.
 Мелкие удобства (#317, пока только расчёты — экраны ждут опроса): «экраном вниз» — `core:domain/shake/FaceDownDetector` (#324),
 встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах и конвертер — `rates/AmountInCurrencies` (#318, #319);
-`core:domain/quickentry/`: `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` — чаевые с другого счёта (#322),
+`core:domain/quickentry/`: `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
-`appearance/` — «Внешний вид» (язык, тема, палитра, встряхивание; бывшие «Настройки», #155); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
+`settings/` — «Ещё → Настройки»: корень из групп (`SettingsScreen`), «Экраны» (`ScreensSettings.kt`, `HomeSettings.kt` — карточки «Обзора»), «Деньги и даты», «Ввод операции» (встряхнуть, вибрация), «Уведомления» (напоминания и время), «Данные и копия» (`SettingsGroups.kt`); экспорт CSV — `export/`; уведомление о трате партнёра — `family/sync/PartnerSpendNotifier`; параметры экранов — `ScreenOptions` (`core:domain/settings`, `PrefsScreenOptions`, `LocalScreenOptions`), плотность — `LocalCompactLists`; доски `Set1*`, план — `docs/design/settings-customization.md`); `appearance/` — «Настройки → Внешний вид» (язык, тема, палитра); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
 (`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Метка «новое» (#335): ключи мест — `newmark/NewFeatures` (новое место → ключ + `MoreItem.newKey`), правило 7 дней / до открытия —
 `core:domain/newmark/NewMarks`, хранение на телефоне — `newmark/PrefsNewMarkStore`, `di/NewMarkModule` (обновление или чистая установка).
@@ -32,6 +32,7 @@
 по полкам `categoryShelves`), `DetailsBlock` (плитки 2×2; шторки даты и заметки — `DetailSheets.kt`); образец — `EntrySheetSamples.kt`.
 Возврат (#208): чип в `transactions/edit/components/DetailsStep` (`refund` в форме → `INCOME`), `Row.refund` в списке, `isRefund` + траты «Обзора» — `core:domain/rates/MonthSpending.kt`.
 Отчёты: расчёт (#187) — `core:domain/reports/`: `ReportDay` (сумма дня) + `ReportRepository`, `ReportLedger` (курс дня, возвраты),
+Расчёты без экранов (экраны — отдельные задачи): `CategoryMonthTable`/`categoryMonthTable` + `YearSummary` (#239, таблица «категории × месяцы», итог года), `PaidWith`/`paidWith` (#242, «Чем платили»; данные — `ReportRepository.observeAccountDays` ← `ReportDao.observeAccountDays`).
 `ReportPeriod` (месяц/квартал/год/свои дни, `previous`, `shift`, `columnMonths`), `spendingBreakdown` + `spendingByFolder` (черта прошлого),
 `categorySpending` («Все категории»), `monthlySeries`, `periodComparison`; «Итог месяца» (#235) — `monthReview`
 (остаток, норма сбережений, `reviewStart`), `usualChanges` (3 главных изменения к среднему за 3 мес., порог 5 % обычных трат), `limitsTally`;
@@ -101,3 +102,5 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 `core:data/db/ImportDao` + `repository/RoomImportRepository`. Экран-мастер — `app/.../importer/wallet/`
 (черновик выбора — `WalletImportDraft`, шаги — `components/*Step.kt`), копия перед импортом — `importer/PreImportBackup`.
 Несовместимая версия у второго участника (#334): `core:data/sync/VersionGate.kt` (`peer_schema` пишет `SyncEngine` при pull), замок ввода — `app/.../gate/` (`InputLock` + `LocalInputLock.guard`, окно — `InputLockNote.kt`), плашка — `home/components/VersionGateBanner`, «+» с замком — `CoShellBottomBar(addLocked)`; провод — `CoShellNavHost` → `MainShell`.
+Экспорт CSV (#204, экран — после «ок»): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
+Ручной порядок (#338, экран — после «ок»): `core:domain/Reorder` — новые `sortOrder` при перетаскивании (меняется одна строка, шаг 1024).

@@ -62,7 +62,7 @@ object ReportsSamples {
 
     val months = Months(
         columns = listOf(1_180, 1_320, 1_090, 1_410, 1_350, 760).mapIndexed { i, v ->
-            MonthColumn(YearMonth(2026, 6 + i), "%,d".format(v).replace(',', ' '), v / 1_410f)
+            MonthColumn(YearMonth(2026, 6 + i), "%,d".format(java.util.Locale.ROOT, v).replace(',', ' '), v / 1_410f)
         },
         selected = 5,
     )
@@ -70,7 +70,7 @@ object ReportsSamples {
     /** Board `Rp189IeA`: income next to spending, June … November (November so far). */
     val income = Income(
         columns = listOf(1_650 to 1_180, 1_600 to 1_320, 1_700 to 1_090, 1_300 to 1_410, 1_620 to 1_350, 1_580 to 760).mapIndexed { i, (e, s) ->
-            IncomeColumn(YearMonth(2026, 6 + i), "%,d".format(e).replace(',', ' '), "%,d".format(s).replace(',', ' '), e / 1_700f, s / 1_700f)
+            IncomeColumn(YearMonth(2026, 6 + i), "%,d".format(java.util.Locale.ROOT, e).replace(',', ' '), "%,d".format(java.util.Locale.ROOT, s).replace(',', ' '), e / 1_700f, s / 1_700f)
         },
         selected = 5,
         earned = "1 580",
@@ -98,7 +98,7 @@ object ReportsSamples {
         months = 12,
         points = listOf(6_100, 6_150, 6_230, 6_090, 6_200, 6_280, 6_750, 6_990, 7_580, 7_440, 7_700, 8_503).mapIndexed { i, v ->
             val month = YearMonth(2025, 12).let { if (i == 0) it else YearMonth(2026, i) }
-            CapitalPoint(month, "%,d".format(v).replace(',', ' '), v * 100L)
+            CapitalPoint(month, "%,d".format(java.util.Locale.ROOT, v).replace(',', ' '), v * 100L)
         },
         why = listOf(
             WhyRow(YearMonth(2026, 11), running = true, saved = "+820", savedNegative = false, rates = "-17", total = "+803", totalNegative = false),

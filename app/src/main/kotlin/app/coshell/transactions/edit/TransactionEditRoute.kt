@@ -14,6 +14,7 @@ import app.coshell.core.designsystem.motion.LocalAddConfirm
 import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.strip.TemplateStripViewModel
+import app.coshell.transactions.edit.tip.TipUi
 import kotlinx.datetime.LocalDate
 import app.coshell.gate.LocalInputLock
 
@@ -78,6 +79,12 @@ fun TransactionEditRoute(
             onSaveAsTemplate = lock.guard2(viewModel::saveAsTemplate),
             onTagToggle = viewModel::onTagToggle,
             onTagCreate = lock.guard2(viewModel::onTagCreate),
+            onTipOpen = viewModel::onTipOpen,
+            onTipChange = viewModel::onTipChange,
+            onTipClose = viewModel::onTipClose,
+            onTipKey = { key, note -> if (key == KeypadKey.Done && lock.locked) lock.onBlocked() else viewModel.onTipKey(key, note) },
+            onTipCategory = viewModel::onTipCategory,
+            onTipSave = lock.guard1(viewModel::onTipSave),
             onKey = { key ->
                 if (key == KeypadKey.Done && lock.locked) {
                     lock.onBlocked()
@@ -123,4 +130,11 @@ data class TransactionEditActions(
     /** A tag pill or a row of the «Теги» sheet (#293). */
     val onTagToggle: (String) -> Unit = {},
     val onTagCreate: (name: String, color: Long?) -> Unit = { _, _ -> },
+    /** «＋ Чаевые» (#322): the sheet opens once the purchase is valid. */
+    val onTipOpen: () -> Unit = {},
+    val onTipChange: ((TipUi) -> TipUi) -> Unit = {},
+    val onTipClose: () -> Unit = {},
+    val onTipKey: (KeypadKey, note: String) -> Unit = { _, _ -> },
+    val onTipCategory: (choice: String, newName: String) -> Unit = { _, _ -> },
+    val onTipSave: (note: String) -> Unit = {},
 )

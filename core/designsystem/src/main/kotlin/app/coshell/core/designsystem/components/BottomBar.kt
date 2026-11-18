@@ -150,7 +150,6 @@ private fun BottomBarContent(
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
-                .fillEdge(scheme.surfaceContainerHigh, PillShape, scheme.background)
                 .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
             verticalAlignment = Alignment.CenterVertically,

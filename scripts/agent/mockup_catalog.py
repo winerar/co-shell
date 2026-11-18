@@ -94,7 +94,7 @@ def components():
                                            grid([icon_cell('cart', True), icon_cell('cafe'), icon_cell('taxi'), icon_cell('house')], 4),
                                            line(ring(0.45, '<span style="%s font-size: 20px; font-weight: 700;">45 %%</span>' % MONO, LIME, 110, 8), ring(0.72, '<b>2</b>', YELLOW, 110, 8)),
                                            progress(0.62, 0), empty('wallet', 'Пустое состояние', 'Добавить').replace('padding: 96px 28px 0;', 'padding: 8px 28px 0;')),
-                'badge → AccountBadge · dot_icon → CategoryBadge · tile_icon → IconBadge · swatch → CoShellPaletteSwatch (тема = мини-экран, 1.0) · цвет-кружок из 24 (с ободком у бледных) → ColorFill · icon_cell · ring · progress → CoShellLinearProgress · empty · hero — пустые экраны'),
+                'badge → AccountBadge · dot_icon → CategoryBadge · tile_icon → IconBadge · swatch → CoShellPaletteSwatch (тема = мини-экран, 1.0) · цвет-кружок из 24 (с ободком у бледных) → ColorFill · icon_cell · ring · progress → CoShellLinearProgress · empty → CoShellEmptyState (пустые экраны: значок, фраза, «+ Добавить…») · hero — шапка пустого «Обзора»'),
         section('Токены', tokens(), 'PaletteSpecs · Spacing · Radii — подписи показывают цвет текущей темы', 2),
     ]
     body = ('<div style="padding: 40px;"><h1 style="margin: 0; font-size: 34px;">Компоненты · {{coPal}}, {{coMode}}</h1>'

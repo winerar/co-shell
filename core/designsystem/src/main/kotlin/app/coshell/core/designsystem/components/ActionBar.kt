@@ -31,7 +31,7 @@ fun CoShellActionBar(visible: Boolean, content: @Composable RowScope.() -> Unit)
             Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(start = Spacing.l, end = Spacing.l, top = Spacing.s, bottom = Spacing.l),
+                .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = Spacing.l),
         ) {
             Row(
                 Modifier
@@ -39,6 +39,7 @@ fun CoShellActionBar(visible: Boolean, content: @Composable RowScope.() -> Unit)
                     .height(Sizes.bottomBarHeight)
                     .clip(PillShape)
                     .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .fillEdge(MaterialTheme.colorScheme.surfaceContainerHigh, PillShape, MaterialTheme.colorScheme.background)
                     .padding(horizontal = Spacing.s),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.s),

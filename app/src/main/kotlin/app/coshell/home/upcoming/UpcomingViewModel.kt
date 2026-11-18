@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ScreenOptionsStore
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 
@@ -33,6 +36,7 @@ class UpcomingViewModel @Inject constructor(
     clock: Clock,
     private val timeZone: TimeZone,
     private val missed: MissedPaymentsUseCase,
+    screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
@@ -41,8 +45,9 @@ class UpcomingViewModel @Inject constructor(
         templates.observeTemplates(),
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
-    ) { list, accountList, categoryList ->
-        buildUpcomingRows(list, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, moneyFormat, today)
+        screenOptions.options.map { it.soonDays }.distinctUntilChanged(),
+    ) { list, accountList, categoryList, days ->
+        buildUpcomingRows(list, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, moneyFormat, today, days)
     }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())

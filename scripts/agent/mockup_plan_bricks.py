@@ -24,20 +24,19 @@ def nav_tabs(active, tabs=(('home', 'home', 'Обзор'), ('ops', 'list', 'Оп
     def tab(key, icon, lbl):
         inner = svg(icon, ONLIME if key == active else MUTED, 24, 1.7)
         if key == active:
-            inner = ('<span style="width: 64px; height: 44px; border-radius: 999px; background: %s; display: flex; align-items: center; '
+            inner = ('<span style="width: 64px; height: 40px; border-radius: 999px; background: %s; display: flex; align-items: center; '
                      'justify-content: center;">%s</span>' % (LIME, inner))
-        return '<a href="#" aria-label="%s" style="display: flex; justify-content: center; align-items: center; height: 64px;">%s</a>' % (lbl, inner)
+        return '<a href="#" aria-label="%s" style="display: flex; justify-content: center; align-items: center; height: 56px;">%s</a>' % (lbl, inner)
     plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; '
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     cells = [tab(*t) for t in tabs]
-    return ('<nav aria-label="Навигация" style="position: absolute; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 999px; '
+    return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
             '%s%s%s</nav>' % (BAR, ''.join(cells[:2]), plus, ''.join(cells[2:])))
 
 
 def tab_page(title, body, active, tabs=None, actions=''):
-    top = ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px 0 16px;">'
-           '<h1 style="margin: 0; font-size: 28px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (title, actions))
+    top = tab_head(title, actions)
     bar = nav_tabs(active, tabs) if tabs else nav_tabs(active)
     return top + '<div style="padding: 0 16px;">%s</div>' % body + bar
 

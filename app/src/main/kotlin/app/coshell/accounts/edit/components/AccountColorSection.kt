@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.ui.form.rememberColorLabel
 import app.coshell.core.designsystem.category.BankColors
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellSectionLink
@@ -26,7 +27,7 @@ internal fun AccountColorSection(name: String, color: Long?, onSelect: (Long?) -
         stringResource(R.string.category_color),
         trailing = suggestion?.let { bank -> { CoShellSectionLink(stringResource(R.string.account_bank_like, bank.name), { onSelect(bank.color) }) } },
     ) {
-        CoShellColorStrip(color, onSelect, onAll = onOpenAll, noneLabel = stringResource(R.string.color_none), allowNone = true)
+        CoShellColorStrip(color, onSelect, onAll = onOpenAll, noneLabel = stringResource(R.string.color_none), colorLabel = rememberColorLabel(), allowNone = true)
     }
 }
 

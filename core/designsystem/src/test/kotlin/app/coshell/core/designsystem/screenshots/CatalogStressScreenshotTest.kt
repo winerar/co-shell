@@ -1,5 +1,8 @@
 package app.coshell.core.designsystem.screenshots
 
+import app.coshell.core.designsystem.tokens.Sizes
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -84,7 +87,7 @@ private fun StressSample() {
         }
         CoShellSegmented(labels = listOf("Расходы и доходы", "Переводы между счетами", WORD), selected = 1, onSelect = {})
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            CoShellFilterChip(selected = true, onClick = {}, label = { Text(LONG) })
+            CoShellFilterChip(selected = true, onClick = {}, label = { Text(LONG, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.widthIn(max = Sizes.tileMinHeight)) })
             CoShellFilterChip(selected = false, onClick = {}, label = { Text(WORD) })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {

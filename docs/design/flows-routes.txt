@@ -1,0 +1,47 @@
+# Маршрут навигации → доска, на которую он попадает в воркфлоу (`Flows`, #466). Проверяет FlowsRuleTest.
+# Формат: Имя<TAB>доска (файл без .dc.html; она обязана быть шагом в gen-flows-board.py) или «-» и причина после второй табуляции.
+# Новый экран в Destinations.kt → строка здесь и шаг в Flows; убрали экран → убери строку.
+HomeDestination	Home
+TransactionsDestination	Operations
+AccountsDestination	Accounts
+ReportsDestination	RepA
+ReportCategoriesDestination	RepAll
+ReportCategoryDestination	RepDrill
+CapitalMonthDestination	Rp189NwDrill
+MonthReviewDestination	Mon236Screen
+MonthReviewLimitsDestination	Mon236Limits
+AccountEditDestination	AccountEdit
+MoreDestination	More
+SettingsDestination	Set1Root
+AppearanceDestination	Set1Look
+ScreensSettingsDestination	Set1Screens
+HomeSettingsDestination	Set1Home
+HomeDetailsSettingsDestination	Set1HomeMore
+BalanceAccountsDestination	Set1Balance
+OpsSettingsDestination	Set1Ops
+ReportsSettingsDestination	Set1Reports
+AccountsSettingsDestination	Set1Accounts
+MoneySettingsDestination	Set1Money
+InputSettingsDestination	Set1Entry
+NoticeSettingsDestination	Set1Notices
+DataSettingsDestination	Set1Data
+CategoriesDestination	Categories
+BackupDestination	Backup
+WalletImportDestination	ImportStart
+WipeDataDestination	Wipe
+ExportDestination	Fb204Export
+FamilyDestination	Family
+UpdateDestination	Update
+PastReleasesDestination	-	список прошлых версий — подэкран «Обновления», отдельного шага нет
+FeedbackDestination	Feedback
+FeedbackDetailDestination	-	просмотр отправленного отзыва — хвост шага «Отзыв», шага нет
+RatesDestination	Rates
+ReportCurrenciesDestination	ReportCurrencies
+CategoryEditDestination	CategoryEdit
+TransactionEditDestination	EntryEdit
+RecurringListDestination	Rec143List
+TemplatesDestination	TplAll
+TemplateEditDestination	Rec143RepeatA
+BudgetsDestination	BudA
+BudgetDetailDestination	BudDetail
+BudgetEditDestination	BudEdit

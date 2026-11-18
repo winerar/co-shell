@@ -4,6 +4,7 @@ Boards: list, long list (18 limits, folders fold), envelope detail, limit editor
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
+from mockup_parts import fab  # noqa: E402
 from mockup_screens_main import balance_hero, tile, tiles
 
 ROW = ('bud', 'Бюджеты',
@@ -32,13 +33,14 @@ def summary(compact=False):
 
 
 def gear():
-    return icon_button('gear', 'Настройки бюджета', MUTED) + icon_button('plus', 'Новый лимит')
+    return icon_button('gear', 'Настройки бюджета', MUTED)  # the «+» is the round button at the bottom right (fab), #464
 
 
 def budgets_a():
     rows = [env_row(n, s, l, c, st, cap, sub, chevron() if n == 'Дом' else '', i > 0) for i, (n, s, l, c, st, cap, sub) in enumerate(ENV[:5])]
     body = month_switch() + summary() + label('Конверты · 6', top=16) + card(''.join(rows))
-    return tab_page('Бюджеты', body, 'budget', actions=gear())
+    # As in the app (#464): «Бюджеты» opens from «Ещё»/«Обзор» — back arrow, «⚙», round «+» at the bottom right, no bottom bar.
+    return inner_screen('Бюджеты', body, gear()) + fab('Добавить лимит')
 
 
 def budget_edit():
@@ -105,7 +107,7 @@ def budgets_many():
     line = ('<div style="display: flex; align-items: baseline; gap: 8px;"><span style="%s font-size: 22px; font-weight: 700;">540 USD</span>'
             '<span style="font-size: 13px; color: %s;">осталось из 1 180 · 19 дней</span></div>' % (MONO, MUTED)) + bullet(640 / 1180, 'fast', h=8, mt=8)
     body = month_switch() + line + flt + '<div style="margin-top: 12px;">%s</div>' % card(''.join(r))
-    return tab_page('Бюджеты', body, 'budget', actions=gear())
+    return inner_screen('Бюджеты', body, gear()) + fab('Добавить лимит')
 
 
 BOARDS = [  # name, title, fn, row key

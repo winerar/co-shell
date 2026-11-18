@@ -35,6 +35,13 @@ class ProjectRulesTest {
     }
 
     @Test
+    fun `no shadows in ui modules`() {
+        val found = UI_MODULES.flatMap { scanDir(it, SHADOW) }
+        assertEquals("No shadows (owner 2026-11-16, #477): fill and hairline instead:\n" + found.joinToString("\n"), emptyList<String>(), found)
+        assertEquals(listOf(1, 2, 3), scanText("Modifier.shadow(4.dp)\nSurface(shadowElevation = 12.dp)\nfab(elevation = FloatingActionButtonDefaults.elevation())\nSurface(shadowElevation = 0.dp)", SHADOW))
+    }
+
+    @Test
     fun `allowed files still exist`() {
         FLOAT_ALLOWED.keys.forEach { assertTrue("stale entry in FLOAT_ALLOWED: $it", File(root, it).isFile) }
     }
@@ -115,6 +122,8 @@ class ProjectRulesTest {
 
         val PLATFORM_API = Regex("""(^|[^\w.])(android|androidx|java|javax)\.[a-z]""")
         val ANY_FLOAT = Regex("""\b(Double|Float)\b|\.to(Double|Float)(OrNull)?\(|roundToLong|\d\.\d+f?\b""")
+        /** Drop shadows: `.shadow(`, a non-zero `shadowElevation`, the FAB / bottom-bar default elevations. */
+        val SHADOW = Regex("""\.shadow\(|shadowElevation\s*=\s*[1-9]|FloatingActionButtonDefaults\.(bottomAppBarFab)?[eE]levation\(\)""")
         val FLOAT_MONEY_RISK = Regex("""\bDouble\b|\.toDouble(OrNull)?\(|\.toFloatOrNull\(|roundToLong""")
 
         /** `"%.2f"`-style format in the raw line (string contents are blanked in [codeOnly]). */

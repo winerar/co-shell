@@ -110,8 +110,7 @@ def ring(frac, inner, color=LIME, size=168, width=10):
 
 def top_bar(title, lead='back', actions=''):
     """Inner screen header with any leading icon (back, close)."""
-    return ('<div style="display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 8px;">%s'
-            '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s</div>' % (icon_button(lead, 'Назад' if lead == 'back' else 'Закрыть'), title, actions))
+    return capsule(icon_button(lead, 'Назад' if lead == 'back' else 'Закрыть') + '<h1 style="margin: 0; font-size: 22px; font-weight: 700; flex-grow: 1;">%s</h1>%s' % (title, actions), lead=4)
 
 
 def dashed(text, mt=12):

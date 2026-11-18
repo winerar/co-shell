@@ -5,6 +5,9 @@ import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ReportsStart
+import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -82,7 +85,7 @@ class ReportsViewModelTest {
         items.value = mapOf("cash" to Account("cash", "Доллары", usd, initialBalanceMinor = 1_000_00))
     }
 
-    private fun viewModel() = ReportsViewModel(
+    private fun viewModel(options: ScreenOptions = ScreenOptions()) = ReportsViewModel(
         reports,
         categories,
         accounts,
@@ -93,6 +96,7 @@ class ReportsViewModelTest {
         MoneyFormat.RU,
         clock,
         TimeZone.UTC,
+        InMemoryScreenOptions(options),
     ).apply { work = EmptyCoroutineContext }
 
     @Test
@@ -113,6 +117,26 @@ class ReportsViewModelTest {
         val comparison = spending.comparison as Comparison.SoFar
         assertEquals(11, comparison.days)
         assertEquals("500", comparison.previous)
+    }
+
+    @Test
+    fun `opens on the year the settings ask for, and a pick of the user wins over them`() = runTest {
+        val vm = viewModel(ScreenOptions(reportsStart = ReportsStart.YEAR, reportsCompare = false))
+        vm.state.launchIn(backgroundScope)
+        val state = vm.state.first { it.spending != null }
+
+        assertEquals(ReportPeriod.year(2026), state.period)
+        assertEquals(false, state.compare)
+
+        vm.onMonth(YearMonth(2026, 10))
+        assertEquals(ReportPeriod.month(YearMonth(2026, 10)), vm.state.first { it.period?.kind == ReportPeriodKind.MONTH }.period)
+    }
+
+    @Test
+    fun `opens on the quarter the settings ask for`() = runTest {
+        val vm = viewModel(ScreenOptions(reportsStart = ReportsStart.QUARTER))
+        vm.state.launchIn(backgroundScope)
+        assertEquals(ReportPeriod.quarter(YearMonth(2026, 11)), vm.state.first { it.spending != null }.period)
     }
 
     @Test

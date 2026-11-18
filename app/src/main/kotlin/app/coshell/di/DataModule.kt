@@ -16,7 +16,9 @@ import app.coshell.core.data.repository.RoomExchangeRateRepository
 import app.coshell.core.data.repository.RoomFamilySettings
 import app.coshell.core.data.repository.RoomImportRepository
 import app.coshell.core.data.repository.RoomReportRepository
+import app.coshell.core.data.repository.RoomPartnerChanges
 import app.coshell.core.data.repository.RoomTransactionRepository
+import app.coshell.core.domain.partner.PartnerChanges
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.ArchiveCategoryUseCase
@@ -73,6 +75,9 @@ object DataModule {
     fun provideDatabase(@ApplicationContext context: Context): CoShellDatabase = createCoShellDatabase(context)
 
     /** Local edits are stamped with the signed-in member (sync, «who added it»). */
+    @Provides @Singleton
+    fun providePartnerChanges(db: CoShellDatabase): PartnerChanges = RoomPartnerChanges(db.transactionDao())
+
     @Provides @Singleton
     fun provideStamper(auth: AuthManager, clock: Clock): WriteStamper = WriteStamper(clock) { auth.uid }
 

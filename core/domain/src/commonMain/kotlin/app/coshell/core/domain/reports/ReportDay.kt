@@ -26,6 +26,9 @@ interface ReportRepository {
     /** Live day sums of the whole history, future-dated operations too — budget rollover walks back through every month (#262). */
     fun observeAllDays(): Flow<List<ReportDay>>
 
+    /** Live day sums of [from] ..< [toExclusive] by account, for «Чем платили» (#242) — a separate query, so [observeDays] stays small. */
+    fun observeAccountDays(from: LocalDate, toExclusive: LocalDate): Flow<List<ReportAccountDay>>
+
     /** Live balance changes of every account by day, the whole history — «Капитал» (#189). */
     fun observeBalanceDays(): Flow<List<BalanceDay>>
 }

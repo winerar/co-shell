@@ -1,9 +1,6 @@
 package app.coshell.core.designsystem.charts
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,9 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.semantics.semantics
@@ -31,8 +25,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.RateTextStyle
-import app.coshell.core.designsystem.tokens.Motion
-import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -144,29 +136,10 @@ private fun ValueAndShare(value: String, share: String?) {
     )
 }
 
-/** The bar itself: no track (the length speaks), the ghost sticks out above and below like the bullet's mark. */
+/** The bar itself: the shared [CoShellMeter] on its track; the ghost is its mark, in the outline colour. */
 @Composable
 private fun ChartBar(fraction: Float, color: Color, ghost: Float?, modifier: Modifier) {
-    val ghostColor = MaterialTheme.colorScheme.outline
-    val entrance = rememberChartEntrance()
-    val shown = animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "bar")
-    val overhang = GHOST_OVERHANG
-    Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(Sizes.bullet)) {
-        val radius = CornerRadius(size.height / 2)
-        val length = size.width * shown.value * entrance.value
-        if (length > 0f) {
-            // A sliver narrower than the bar is tall would draw as a dot; keep it at least round.
-            drawRoundRect(color, size = Size(length.coerceAtLeast(size.height), size.height), cornerRadius = radius)
-        }
-        ghost?.coerceIn(0f, 1f)?.let { at ->
-            val stroke = GHOST_WIDTH.toPx()
-            val x = (size.width * at).coerceIn(stroke / 2, size.width - stroke / 2)
-            val out = overhang.toPx()
-            drawLine(ghostColor, Offset(x, -out), Offset(x, size.height + out), strokeWidth = stroke)
-        }
-    }
+    CoShellMeter(fraction, color, modifier, mark = ghost, markColor = MaterialTheme.colorScheme.outline, grow = true)
 }
 
 private val LABEL_MIN_WIDTH = 96.dp
-private val GHOST_OVERHANG = 3.dp
-private val GHOST_WIDTH = 2.dp

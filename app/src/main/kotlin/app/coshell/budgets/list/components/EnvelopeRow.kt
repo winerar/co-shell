@@ -1,7 +1,6 @@
 package app.coshell.budgets.list.components
 
 import androidx.compose.foundation.layout.Arrangement
-import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,9 +27,11 @@ import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.components.CoShellExpandIcon
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.motion.tactileClickable
+import app.coshell.core.designsystem.theme.RateSmallStyle
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.format.breakableBeforeCurrency
 
 /**
  * One envelope (`BudA` row): badge, name (and «папка · 3 категории»), «310 000 / 400 000 ARS», the bullet with
@@ -127,7 +128,10 @@ private fun subtitle(envelope: Envelope): String? {
 }
 
 @Composable
-internal fun captionText(caption: Caption): String = when (caption) {
+internal fun captionText(caption: Caption): String = rawCaption(caption).breakableBeforeCurrency()
+
+@Composable
+private fun rawCaption(caption: Caption): String = when (caption) {
     is Caption.Left -> caption.perDay?.let { stringResource(R.string.budgets_caption_left_per_day, caption.left, it) }
         ?: stringResource(R.string.budgets_caption_left, caption.left)
     is Caption.Ahead -> if (caption.days > 0) {

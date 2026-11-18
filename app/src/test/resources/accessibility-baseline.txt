@@ -1,0 +1,2 @@
+# Found by ScreensAccessibilityTest (#380) and not fixed yet. A line may only leave this file, never join it.
+# Format: screen | rule | label | size (dp). Empty since #462.

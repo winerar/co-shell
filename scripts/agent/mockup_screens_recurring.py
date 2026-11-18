@@ -13,6 +13,7 @@ from mockup_catalog_parts import two_lines, form_section, section_link, day_grid
 from mockup_catalog_parts import tile as line_tile
 from mockup_catalog_new import status
 from mockup_catalog_choice import seg
+from mockup_parts import fab  # noqa: E402
 from mockup_screens_main import balance_hero, tiles, tile, recent_card, RECENT, ACC, acc_chip, keypad
 from mockup_screens_reports import REP_TABS
 from mockup_screens_fb_290 import block, frame, head, small_link, detail, grid4
@@ -156,7 +157,7 @@ def list_screen():
     body = (search('Найти платёж · 24') + hero + flt
             + label('Ноябрь · по дате', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[:9])))
             + label('Декабрь', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[9:20]))))
-    return inner_screen('Регулярные платежи', body, icon_button('plus', 'Новый платёж'))
+    return inner_screen('Регулярные платежи', body) + fab('Новый платёж')  # the one add button is the round «+» (#464)
 
 
 def cat_pick(name, on=False):

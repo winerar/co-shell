@@ -18,7 +18,10 @@ import app.coshell.transactions.edit.TransactionEditScreen
 import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.transactions.edit.categoryChoiceOptions
 import app.coshell.ui.form.ChoiceRows
+import app.coshell.transactions.edit.components.TipSheetBody
 import app.coshell.transactions.edit.entrySheetSample
+import app.coshell.transactions.edit.tip.TipUi
+import app.coshell.transactions.edit.tipSheetSample
 import app.coshell.transactions.edit.paymentSheetSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
@@ -56,6 +59,23 @@ class EntrySheetScreenshotTest {
 
     @Test
     fun `all categories light`() = shot("entry_all_categories_light") { allCategories() }
+
+    @Test
+    fun `tip dark`() = shot("entry_tip_dark", dark = true) { tip() }
+
+    @Test
+    fun `tip light`() = shot("entry_tip_light") { tip() }
+
+    @Test
+    fun `tip own amount dark`() = shot("entry_tip_own_dark", dark = true) { tip(tipSheetSample.copy(percent = null, own = "500", tipText = "500 ARS")) }
+
+    @Test
+    fun `tip own amount light`() = shot("entry_tip_own_light") { tip(tipSheetSample.copy(percent = null, own = "500", tipText = "500 ARS")) }
+
+    @Composable
+    private fun tip(tip: TipUi = tipSheetSample) = Column(Modifier.padding(horizontal = Spacing.l).padding(top = SHEET_TOP)) {
+        TipSheetBody(entrySheetSample, tip, TransactionEditActions())
+    }
 
     @Composable
     private fun sheet(state: TransactionEditUiState = entrySheetSample) =

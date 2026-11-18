@@ -1,5 +1,8 @@
 package app.coshell.transactions.list.components
 
+import app.coshell.core.designsystem.tokens.Sizes
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.Box
 import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.material3.Icon
@@ -29,7 +32,7 @@ internal fun FilterMenuChip(label: String, selected: Boolean, options: List<Pair
         CoShellFilterChip(
             selected = selected,
             onClick = { open = true },
-            label = { Text(label) },
+            label = { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.widthIn(max = Sizes.tileMinHeight)) },
             trailingIcon = {
                 if (selected) {
                     Icon(

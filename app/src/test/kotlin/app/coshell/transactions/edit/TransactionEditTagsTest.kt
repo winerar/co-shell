@@ -21,6 +21,7 @@ import app.coshell.testing.FakeTagRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import app.coshell.testing.fakeEntryTags
+import app.coshell.testing.fakeEntryTip
 import app.coshell.testing.fakeEntryTemplates
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.undo.UndoCenter
@@ -72,6 +73,7 @@ class TransactionEditTagsTest {
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
         entryTemplates = fakeEntryTemplates(accounts, categories),
         entryTags = fakeEntryTags(tags),
+        entryTip = fakeEntryTip(categories, transactions),
     )
 
     @Test

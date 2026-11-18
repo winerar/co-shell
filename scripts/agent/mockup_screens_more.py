@@ -107,8 +107,8 @@ def backup_actions():
 
 
 def backup_auto(msg=''):
-    auto = group([row('Автоматически раз в неделю', 'Папка: Google Диск / Co-Shell', '', switch(True)), row('Последняя копия: вчера, 03:10', 'хранятся последние 8', svg('check', OK))])
-    return inner_screen('Резервная копия', msg + label('Вручную', top=12) + backup_actions() + label('Автокопия') + auto)
+    from mockup_screens_settings import backup_screen  # the same screen as the `Backup` board, switched on (#464)
+    return backup_screen(True, msg)
 
 
 def backup_restore():
@@ -158,13 +158,17 @@ def wizard(step, body, primary='Далее', back=True):
     foot = ''
     if primary:
         foot = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 24px; display: flex; gap: 8px;">%s<span style="flex: 1;">%s</span></div>'
-                % ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (CHIP, svg('back', INK)) if back else '',
+                % (icon_button('back', 'Назад') if back else '',
                    button(primary, mt=0)))
     return inner_screen('Импорт из Wallet', head + body) + foot
 
 
 def import_start():
-    past = group([row('wallet-2026-11.csv · операций: 1 284', 'с 3 янв. 2024 по 9 нояб. 2026', svg('file'), '<span style="color: %s; font-size: 13px; font-weight: 600;">Отменить</span>' % PINK)])
+    def batch(title, sub):  # #471 А (poll 2026-11-17): the row in full, «Отменить импорт» under it on the right
+        undo = ('<div style="display: flex; justify-content: flex-end; padding: 0 16px 12px;"><span style="height: 48px; padding: 0 18px; border-radius: 999px; '
+                'border: 1px solid %s; color: %s; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center;">Отменить импорт</span></div>' % (mix(PINK, 40), PINK))
+        return '<div style="{{div}}">%s%s</div>' % (row(title, sub).replace('{{div}}', ''), undo)
+    past = group([batch('10 нояб. 2026 · операций: 1 284', 'с 3 янв. 2024 по 9 нояб. 2026'), batch('2 нояб. 2026 · операций: 37', 'с 25 окт. по 1 нояб. 2026')])
     return wizard(0, note('В Wallet: Настройки → Экспорт → CSV. Сохраните файл на телефон и выберите его здесь. Перед записью приложение само сделает резервную копию, а импорт можно отменить целиком.')
                   + button('Выбрать файл CSV', 'primary', 'file', 16) + note('Повторный импорт того же или более нового файла добавит только новое', 8)
                   + label('Прошлые импорты') + past, None)
@@ -227,7 +231,7 @@ BOARDS = [
     ('FamilyInvited', '13 · Семья: приглашение', family_invited), ('FamilyJoinMode', '13 · Семья: свои операции на телефоне', family_join_mode),
     ('FamilyInviteSent', '13 · Семья: приглашение отправлено', family_invite_sent), ('FamilyInviteDialog', '13 · Семья: пригласить, ошибка адреса', family_invite_dialog),
     ('FamilyOffline', '13 · Семья: нет связи', family_offline), ('FamilyNotConfigured', '13 · Семья: не настроено', family_not_configured),
-    ('BackupAuto', '14 · Копия: автокопия, сохранено', lambda: backup_auto(message('Копия сохранена.', 'ok'))),
+    ('BackupAuto', '14 · Копия: автокопия включена', backup_auto),
     ('BackupError', '14 · Копия: ошибка файла', lambda: backup_auto(message('Это не файл резервной копии Co-Shell.', 'error'))),
     ('BackupRestore', '14 · Копия: восстановить?', backup_restore),
     ('UpdateWhatsNew', '16 · «Что нового» после установки', whats_new),

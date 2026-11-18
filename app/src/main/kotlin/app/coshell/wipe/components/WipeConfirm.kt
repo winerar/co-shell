@@ -91,7 +91,7 @@ private fun Counts(counts: DataCounts, modifier: Modifier = Modifier) {
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
                 row.forEach { (n, label) ->
                     Column(Modifier.weight(1f)) {
-                        Text("%,d".format(n).replace(',', ' '), style = AmountTitleStyle)
+                        Text("%,d".format(java.util.Locale.ROOT, n).replace(',', '\u00A0'), style = AmountTitleStyle)
                         Text(stringResource(label), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }

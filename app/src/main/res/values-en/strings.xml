@@ -40,6 +40,7 @@
     <string name="home_recent_all">All</string>
     <string name="home_recent_empty">No transactions yet. Tap “+” to add your first one.</string>
     <string name="home_no_accounts">No accounts yet. Start with where your money is: a card, cash, savings.</string>
+    <string name="home_total_no_accounts">No accounts yet</string>
 
     <string name="transactions_empty">No transactions yet. Tap “+” to add your first one.</string>
     <string name="transactions_no_category">No category</string>
@@ -250,7 +251,6 @@
     <string name="transaction_copy_today">Copy · today</string>
     <string name="action_undo">Undo</string>
     <string name="appearance_title">Appearance</string>
-    <string name="appearance_input_section">Input</string>
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">new</string>
     <string name="more_section_money">Money</string>

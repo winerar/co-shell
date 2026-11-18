@@ -59,6 +59,13 @@ done
 [ $pre -eq 0 ] && find app core -name '*.kt' -path '*/src/*' -not -path '*/build/*' -exec wc -l {} + | grep -v ' total$' |
     awk '$1 > 220 {print "! " $2 " is " $1 " lines (aim ~200)"}'
 
+# #382: the «screen → board → reference» table is generated from files on disk — it may not go stale.
+out=$(python3 scripts/agent/screens_table.py --check 2>&1) || bad "$out"
+
+# #474: the live canvas is the source of the look; boards changed here must be published there (environment.md).
+[ $pre -eq 0 ] && [ -n "$(git diff --name-only origin/dev...HEAD -- 'docs/design/mockups/*.dc.html' 2>/dev/null)" ] &&
+    warn "boards changed in docs/design/mockups — published to the live canvas? (environment.md «Публикация на холст»)"
+
 [ $fail -eq 0 ] && [ $pre -eq 1 ] && echo "OK: doc rules"
 [ $fail -eq 0 ] && [ $pre -eq 0 ] && echo "OK: session-end checks passed (now: mark the draft PR into dev ready — automerge — and report to the owner)"
 exit $fail

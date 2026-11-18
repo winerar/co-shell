@@ -16,7 +16,7 @@ object MonthReviewSamples {
 
     private fun limit(id: String, name: String, icon: String, color: Long, spent: Long, limit: Long, currency: String = "ARS"): Envelope {
         val over = spent > limit
-        fun n(value: Long) = "%,d".format(value).replace(',', NBSP)
+        fun n(value: Long) = "%,d".format(java.util.Locale.ROOT, value).replace(',', NBSP)
         val caption = when {
             over -> Caption.Over("${n(spent - limit)}$NBSP$currency")
             spent == 0L -> Caption.Idle

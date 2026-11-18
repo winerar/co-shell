@@ -8,6 +8,9 @@ object Sizes {
     val rowMinHeight = 56.dp
     /** Dense menu row («Ещё», #155): a [badgeSmall] with Spacing.s above and below fits in 52. */
     val rowDenseMinHeight = 52.dp
+
+    /** Rows of the data lists when «Плотность списков» is compact. */
+    val rowCompactMinHeight = 44.dp
     /** Category badge, colour swatch — the 40 dp circle of a 64 dp list row. */
     val badge = 40.dp
     /** Badge in an editor's header, beside the name: the category as it will look. */
@@ -35,6 +38,9 @@ object Sizes {
     val heroStroke = 6.dp
     /** Bento tile on «Обзор» (2 in a row): tall enough for a label, a large amount and a line under it. */
     val tileMinHeight = 128.dp
+    /** The icon tile of an empty screen and the glyph in it ([CoShellEmptyState]). */
+    val emptyTile = 72.dp
+    val emptyIcon = 32.dp
     /** Small icon in a tile's header. */
     val tileIcon = 20.dp
     /** Height of the mini bars in a tile (expenses per day). */
@@ -53,10 +59,14 @@ object Sizes {
     val searchHeight = 48.dp
     /** Magnifier and «✕» inside the search pill. */
     val searchIcon = 20.dp
-    /** Floating bottom bar capsule (mockups: 64 high, 16 from the screen edges). */
-    val bottomBarHeight = 64.dp
+    /** Floating bottom bar capsule (poll 2026-11-16 #441 «Б»: 56 high, [panelInset] from the screen edges). */
+    val bottomBarHeight = 56.dp
     /** Active tab's pill inside the bar. */
-    val bottomBarPill = 44.dp
+    val bottomBarPill = 40.dp
+    /** Top bar capsule (same style as the bottom bar): 56 high, room for 48 dp buttons. */
+    val topBarHeight = 56.dp
+    /** Side margin of both floating capsules: narrow, the screen's background shows around them. */
+    val panelInset = 32.dp
     /** The «+» circle in the middle of the bar — a button, so [button] high like all of them. */
     val bottomBarAdd = 48.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */

@@ -10,6 +10,9 @@ import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.reports.ReportLedger
 import app.coshell.core.domain.reports.ReportPeriod
+import app.coshell.core.domain.settings.InMemoryScreenOptions
+import app.coshell.core.domain.settings.ReportsStart
+import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.reports.ReportRepository
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.domain.settings.ReportCurrencySettings
@@ -50,6 +53,7 @@ class ReportsViewModel @Inject constructor(
     moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
+    screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
@@ -61,10 +65,17 @@ class ReportsViewModel @Inject constructor(
     /** Where reports are counted; tests run it in place. Read once, on first [state]. */
     internal var work: CoroutineContext = Dispatchers.Default
 
-    private val settings = combine(monthStart.monthStartDay, reportCurrencies.currencies, choice) { startDay, currencies, chosen ->
-        val period = chosen.period ?: ReportPeriod.of(budgetPeriodOf(today, startDay))
+    private val settings = combine(monthStart.monthStartDay, reportCurrencies.currencies, choice, screenOptions.options) { startDay, currencies, chosen, options ->
+        // Nothing picked yet: the period «Настройки → Экраны → Отчёты» says (the current month, quarter or year).
+        val period = chosen.period ?: budgetPeriodOf(today, startDay).let { now ->
+            when (options.reportsStart) {
+                ReportsStart.MONTH -> ReportPeriod.of(now)
+                ReportsStart.QUARTER -> ReportPeriod.quarter(now.month, startDay)
+                ReportsStart.YEAR -> ReportPeriod.year(now.month.year, startDay)
+            }
+        }
         val currency = chosen.currency?.takeIf { it in currencies } ?: currencies.first()
-        Settings(period, startDay, currency, currencies, chosen.compare)
+        Settings(period, startDay, currency, currencies, chosen.compare ?: options.reportsCompare)
     }.distinctUntilChanged()
 
     /** Accounts and their balance changes by day — «Капитал» (#189); the same for every period. */
@@ -129,7 +140,7 @@ class ReportsViewModel @Inject constructor(
         choice.value = choice.value.copy(currency = CurrencyCode(currency))
     }
 
-    private data class Choice(val period: ReportPeriod? = null, val currency: CurrencyCode? = null, val compare: Boolean = true)
+    private data class Choice(val period: ReportPeriod? = null, val currency: CurrencyCode? = null, val compare: Boolean? = null)
 
     private data class Settings(
         val period: ReportPeriod,

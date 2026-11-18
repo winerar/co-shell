@@ -141,25 +141,25 @@ def seg_small(options, sel):
 
 def icon_row(sel='school'):
     cells = ''.join('<span style="height: 38px; border-radius: 12px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
-                    % (WARN if i == sel else BAR, svg(i, '#0B0F0A' if i == sel else INK2, 20)) for i in [x for x in ICONS48[4:12] if x != sel][:5] + [sel])
+                    % (WARN if i == sel else BAR, svg(i, '#0B0F0A' if i == sel else INK2, 20)) for i in [x for x in ICONS48[4:12] if x != sel][:5] + [sel])  # the app shows the first icons and the chosen one
     more = ('<span style="height: 38px; border-radius: 12px; border: 1px dashed %s; color: %s; font-size: 12px; font-weight: 600; display: flex; '
-            'align-items: center; justify-content: center;">Все 48</span>' % (LINE2, LIME))
+            'align-items: center; justify-content: center;">Все 52</span>' % (LINE2, LIME))
     return '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px;">%s%s</div>' % (cells, more)
 
 
 def color_row(sel='#E07A4F', n=9):
     dots = ''.join('<span style="width: 28px; height: 28px; border-radius: 50%%; background: %s; %s"></span>'
                    % (c, 'box-shadow: 0 0 0 2px %s, 0 0 0 4px %s;' % (SHEET, INK) if c == sel else '') for c in COLORS20[:n])
-    return ('<div style="display: flex; align-items: center; justify-content: space-between;">%s<span style="font-size: 12px; font-weight: 600; color: %s;">+11</span></div>'
+    return ('<div style="display: flex; align-items: center; justify-content: space-between;">%s<span style="font-size: 12px; font-weight: 600; color: %s;">+18</span></div>'
             % (dots, LIME))
 
 
 def cat_form_a():
     body = (name_line('Пекарня', 'school', '#E07A4F')
-            + block('Что это', seg_small(['Категория', 'Папка'], 'Категория') + '<div style="height: 6px;"></div>' + seg_small(['Расход', 'Доход'], 'Расход'))
-            + block('Папка', detail('folder', 'Внутри папки', 'Еда · 6 категорий'))
-            + block('Иконка', icon_row(), right=small_link('Недавние'))
-            + block('Цвет', color_row(), right=small_link('Похожий на соседей — нет')))
+            + block('Что это', seg_small(['Категория', 'С подкатегориями'], 'Категория') + '<div style="height: 6px;"></div>' + seg_small(['Расходы', 'Доходы'], 'Расходы'))
+            + block('Родительская категория', detail('folder', 'Входит в', 'Машина'))
+            + block('Иконка', icon_row())
+            + block('Цвет', color_row()))
     return page('Категория', body)
 
 
@@ -194,7 +194,5 @@ def icons_sheet():
 BOARDS = [  # name, title, fn, issue number
     ('Fb290A', 'Шторка А (выбрано): всё на одном экране блоками — сумма, категория (8 частых), детали, клавиатура', entry_a, 290),
     ('Fb290ACats', 'Шторка А: «Все 24» — шторка категорий по группам, без прокрутки', all_cats_sheet, 290),
-    ('Fb290FA', 'Редакторы А (выбрано): карточки-секции, иконки и цвета одной строкой + «Все»', cat_form_a, 290),
-    ('Fb290FAAcc', 'Редакторы А: «Счёт»', acc_form_a, 290),
     ('Fb290Icons', 'Общее: «Все 48» — иконки и цвета одной шторкой, без прокрутки', icons_sheet, 290),
 ]

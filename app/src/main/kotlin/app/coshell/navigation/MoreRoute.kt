@@ -41,7 +41,7 @@ internal fun MoreRoute(
             onFamily = { navController.navigate(FamilyDestination) },
             onBackup = { navController.navigate(BackupDestination) },
             onImport = { navController.navigate(WalletImportDestination) },
-            onAppearance = { navController.navigate(AppearanceDestination) },
+            onAppearance = { navController.navigate(SettingsDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onStartUpdate = onStartUpdate,

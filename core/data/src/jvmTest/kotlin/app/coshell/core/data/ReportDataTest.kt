@@ -5,6 +5,7 @@ import app.coshell.core.data.db.createInMemoryCoShellDatabase
 import app.coshell.core.data.repository.RoomReportRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
+import app.coshell.core.domain.reports.ReportAccountDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
@@ -63,6 +64,38 @@ class ReportDataTest {
                 ReportDay(nov3, "cafe", TransactionType.EXPENSE, Money(7, usd)),
                 ReportDay(nov3, "cafe", TransactionType.INCOME, Money(30, ars)),
                 ReportDay(LocalDate(2026, 11, 4), "cafe", TransactionType.EXPENSE, Money(1, ars)),
+            ),
+            days.toSet(),
+        )
+    }
+
+    @Test
+    fun `account days are summed by account, category and type, transfers and deleted are not`() = runTest {
+        suspend fun on(account: String, day: Int, amount: Money, type: TransactionType = TransactionType.EXPENSE, category: String? = "cafe") =
+            transactions.saveTransaction(
+                Transaction(
+                    id = "t${next++}", type = type, accountId = account, amount = amount,
+                    date = LocalDateTime(2026, 11, day, 12, 0).toInstant(tz), categoryId = category,
+                    toAccountId = "other".takeIf { type == TransactionType.TRANSFER },
+                    toAmount = amount.takeIf { type == TransactionType.TRANSFER },
+                ),
+            )
+        on("card", 3, Money(100, ars))
+        on("card", 3, Money(50, ars))
+        on("wallet", 3, Money(7, usd))
+        on("card", 3, Money(30, ars), TransactionType.INCOME)
+        on("card", 3, Money(999, ars), TransactionType.TRANSFER)
+        on("card", 3, Money(999, ars), category = null)
+        on("card", 9, Money(5, ars))
+
+        val days = reports.observeAccountDays(LocalDate(2026, 11, 1), LocalDate(2026, 11, 5)).first()
+
+        val nov3 = LocalDate(2026, 11, 3)
+        assertEquals(
+            setOf(
+                ReportAccountDay(nov3, "card", "cafe", TransactionType.EXPENSE, Money(150, ars)),
+                ReportAccountDay(nov3, "wallet", "cafe", TransactionType.EXPENSE, Money(7, usd)),
+                ReportAccountDay(nov3, "card", "cafe", TransactionType.INCOME, Money(30, ars)),
             ),
             days.toSet(),
         )

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Propina como operación aparte desde otra cuenta (#322) -->
+    <string name="entry_tip_add">+ Propina</string>
+    <string name="tip_title">Propina</string>
+    <string name="tip_note">Propina</string>
+    <string name="tip_base">De %1$s</string>
+    <string name="tip_percent">%1$d %%</string>
+    <string name="tip_own">Otro importe</string>
+    <string name="tip_amount_empty">Ingrese un importe</string>
+    <string name="tip_converted">≈ %1$s al cambio del día</string>
+    <string name="tip_no_rate">No hay cambio para la cuenta de la propina: elija una cuenta en la moneda del recibo</string>
+    <string name="tip_account">Cuenta de la propina</string>
+    <string name="tip_category">Categoría de la propina</string>
+    <string name="tip_category_choose">Elegir</string>
+    <string name="tip_category_title">¿Dónde anotar las propinas?</string>
+    <string name="tip_category_hint">Lo preguntamos una vez. Para cambiarlo, use la fila «Categoría de la propina».</string>
+    <string name="tip_category_same">Como la compra</string>
+    <string name="tip_category_same_hint">La categoría de cada compra</string>
+    <string name="tip_category_new_hint">Categoría nueva</string>
+    <string name="tip_save">Guardar las dos operaciones</string>
+    <string name="tip_failed">La propina no se guardó: agréguela como operación aparte</string>
+</resources>

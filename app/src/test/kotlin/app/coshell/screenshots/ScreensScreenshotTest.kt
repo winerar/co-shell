@@ -4,7 +4,34 @@ import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
 import app.coshell.newmark.NewFeatures
+import androidx.compose.runtime.CompositionLocalProvider
+import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.appearance.AppearanceActions
+import app.coshell.core.model.Account
+import app.coshell.core.model.CurrencyCode
+import app.coshell.export.AccountPick
+import app.coshell.export.ExportActions
+import app.coshell.export.ExportScreen
+import app.coshell.export.ExportUiState
+import kotlinx.datetime.LocalDate
+import app.coshell.settings.AccountChoice
+import app.coshell.settings.AccountsSettingsScreen
+import app.coshell.settings.BalanceAccountsScreen
+import app.coshell.core.domain.settings.WeekStart
+import app.coshell.settings.HomeDetailsScreen
+import app.coshell.settings.HomeSettingsScreen
+import app.coshell.core.domain.settings.HomeCard
+import app.coshell.core.domain.settings.HomeLayout
+import app.coshell.settings.DataSettingsScreen
+import app.coshell.settings.OpsSettingsScreen
+import app.coshell.settings.ReportsSettingsScreen
+import app.coshell.settings.ScreensSettingsScreen
+import app.coshell.core.domain.settings.ScreenOptions
+import app.coshell.settings.InputSettingsScreen
+import app.coshell.settings.MoneySettingsScreen
+import app.coshell.settings.NoticeSettingsScreen
+import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsScreen
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
 import app.coshell.language.LanguageChoice
@@ -74,7 +101,6 @@ import app.coshell.transactions.list.TransactionsUiState
 import app.coshell.transactions.list.transactionsPreviewSample
 import app.coshell.ui.top.ScreenScrollHost
 import com.github.takahirom.roborazzi.captureRoboImage
-import kotlinx.datetime.LocalDate
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -161,6 +187,26 @@ class ScreensScreenshotTest {
     fun `transactions scrolled dark`() = shot("transactions_scrolled_dark", dark = true, before = {
         compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
     }) { TransactionsScreen(transactionsLongSample) }
+
+    // The other theme of references that had one (#382: every screen in both themes).
+    @Test
+    fun `home attention light`() = shot("home_attention_light") {
+        HomeScreen(homePreviewSample.copy(attention = HomeUiState.Attention(missingRates = listOf("VES"), uncategorized = 2)))
+    }
+
+    @Test
+    fun `transactions scrolled light`() = shot("transactions_scrolled_light", before = {
+        compose.onNode(hasScrollToIndexAction()).performTouchInput { swipeUp(startY = bottom * 0.8f, endY = top) }
+    }) { TransactionsScreen(transactionsLongSample) }
+
+    @Test
+    fun `more dark`() = shot("more_dark", dark = true) { MoreScreen(MoreActions(), moreSample) }
+
+    @Test
+    fun `appearance light`() = shot("appearance_light") { AppearanceScreen(AppearanceState(ThemeMode.LIGHT), AppearanceActions()) }
+
+    @Test
+    fun `backup light`() = shot("backup_light") { BackupScreen(BackupUiState(), BackupActions()) }
 
     /** Board `Fb141A` (#141): set filters are lit chips with ✕, the total (4А) under them. */
     @Test
@@ -320,6 +366,103 @@ class ScreensScreenshotTest {
             family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),
             lastSync = "сегодня 12:03",
         )
+    }
+
+    @Test
+    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsActions()) }
+
+    @Test
+    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsActions()) }
+
+    @Test
+    fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }
+
+    @Test
+    fun `settings money dark`() = shot("settings_money_dark", dark = true) { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }
+
+    @Test
+    fun `settings input light`() = shot("settings_input_light") { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
+
+    @Test
+    fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
+
+    @Test
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}) }
+
+    @Test
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}) }
+
+    @Test
+    fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
+
+    @Test
+    fun `settings data dark`() = shot("settings_data_dark", dark = true) { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
+
+    /** «Плотность списков» — compact: the same accounts, about a quarter more rows per screen. */
+    @Test
+    fun `accounts compact light`() = shot("accounts_compact_light") {
+        CompositionLocalProvider(LocalCompactLists provides true) { AccountsScreen(accountsPreviewSample, AccountsActions(onBack = {})) }
+    }
+
+    @Test
+    fun `appearance compact dark`() = shot("appearance_compact_dark", dark = true) {
+        AppearanceScreen(AppearanceState(ThemeMode.DARK, compactLists = true), AppearanceActions())
+    }
+
+    @Test
+    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}, {}) }
+
+    @Test
+    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}, {}) }
+
+    @Test
+    fun `settings ops light`() = shot("settings_ops_light") { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
+
+    @Test
+    fun `settings ops dark`() = shot("settings_ops_dark", dark = true) { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
+
+    @Test
+    fun `settings reports light`() = shot("settings_reports_light") { ReportsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings reports dark`() = shot("settings_reports_dark", dark = true) { ReportsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings accounts light`() = shot("settings_accounts_light") { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings accounts dark`() = shot("settings_accounts_dark", dark = true) { AccountsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings home light`() = shot("settings_home_light") { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}, 2, {}) }
+
+    @Test
+    fun `settings home dark`() = shot("settings_home_dark", dark = true) { HomeSettingsScreen(ScreenOptions(home = HomeLayout().withShown(HomeCard.HOT, false)), {}, {}, {}, 2, {}) }
+
+    @Test
+    fun `settings home details light`() = shot("settings_home_details_light") { HomeDetailsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings home details dark`() = shot("settings_home_details_dark", dark = true) { HomeDetailsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings balance light`() = shot("settings_balance_light") {
+        BalanceAccountsScreen(listOf(Account("a", "Galicia", CurrencyCode("ARS")), Account("b", "Копилка", CurrencyCode("USD"), excludedFromTotal = true)), { _, _ -> }, {})
+    }
+
+    @Test
+    fun `settings balance dark`() = shot("settings_balance_dark", dark = true) {
+        BalanceAccountsScreen(listOf(Account("a", "Galicia", CurrencyCode("ARS")), Account("b", "Копилка", CurrencyCode("USD"), excludedFromTotal = true)), { _, _ -> }, {})
+    }
+
+    @Test
+    fun `export light`() = shot("export_light") {
+        ExportScreen(ExportUiState(first = LocalDate(2026, 11, 1), last = LocalDate(2026, 11, 30), count = 1284, accounts = listOf(AccountPick("a", "Galicia", "ARS", true))), ExportActions())
+    }
+
+    @Test
+    fun `export dark`() = shot("export_dark", dark = true) {
+        ExportScreen(ExportUiState(first = LocalDate(2026, 11, 1), last = LocalDate(2026, 11, 30), count = 1284, accounts = listOf(AccountPick("a", "Galicia", "ARS", true))), ExportActions())
     }
 }
 

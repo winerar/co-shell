@@ -1,11 +1,28 @@
 package app.coshell.home
 
+import app.coshell.home.components.EmptyTotalCard
+import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.remember
+import app.coshell.core.domain.settings.HomeLayout
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.domain.settings.HomeCard
+import app.coshell.settings.LocalScreenOptions
+import app.coshell.settings.ScreenOptionsViewModel
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -76,6 +93,7 @@ fun HomeRoute(
     syncViewModel: SyncBannerViewModel = hiltViewModel(),
     budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
     upcomingViewModel: UpcomingViewModel = hiltViewModel(),
+    screenOptions: ScreenOptionsViewModel = hiltViewModel(),
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
 ) {
@@ -106,6 +124,7 @@ fun HomeRoute(
         onSkipAll = lock.guard1(upcomingViewModel::skipAll),
         gate = gate,
         onUpdate = onUpdate,
+        onLayoutChange = { layout -> screenOptions.change { it.copy(home = layout) } },
     )
 }
 
@@ -129,13 +148,35 @@ fun HomeScreen(
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
+    onLayoutChange: (HomeLayout) -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
+    val listState = rememberLazyListState()
+    // Hold a card — editing right here: ⠿ drags it, ✕ hides it, «Готово» ends (board Set1HomeEdit).
+    var editing by rememberSaveable { mutableStateOf(false) }
+    val layout = LocalScreenOptions.current.home
+    // The cards this phone shows, without those that have nothing to say now (no gap is left for them).
+    val cards = LocalScreenOptions.current.home.visible.filter { card ->
+        when (card) {
+            HomeCard.REVIEW -> review?.month != null
+            HomeCard.UPCOMING -> upcoming.isNotEmpty()
+            HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
+            HomeCard.TILES, HomeCard.RECENT -> true
+        }
+    }
     Scaffold(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
+        bottomBar = {
+            if (editing) {
+                Box(Modifier.fillMaxWidth().padding(Spacing.l)) {
+                    CoShellButton(onClick = { editing = false }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.keypad_done)) }
+                }
+            }
+        },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(start = Spacing.l, top = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance),
             verticalArrangement = Arrangement.spacedBy(Spacing.l),
@@ -144,44 +185,61 @@ fun HomeScreen(
             gate?.let { banner -> item(key = "gate") { VersionGateBanner(banner, onUpdate, listItemMotion()) } }
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             if (state.accounts.isEmpty()) {
+                if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 item {
-                    Text(
+                    CoShellEmptyState(
+                        iconRes = DesignR.drawable.ic_account_balance_wallet,
                         text = stringResource(R.string.home_no_accounts),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        actionLabel = stringResource(R.string.accounts_add),
+                        onAction = actions.onAddAccount,
                     )
                 }
-                item { CoShellButton(onClick = actions.onAddAccount) { Text(stringResource(R.string.accounts_add)) } }
                 return@LazyColumn
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
-            review?.month?.let { month ->
-                item(key = "review") {
-                    MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, Modifier.staggeredEntrance(1))
+            // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
+            itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
+                val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))
+                val body: @Composable () -> Unit = {
+                    when (card) {
+                        HomeCard.REVIEW -> review?.month?.let { month ->
+                            MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
+                        }
+                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty()) {
+                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll)
+                        }
+                        HomeCard.TILES -> HomeTiles(
+                            state,
+                            onTransactions = actions.onTransactions,
+                            onRates = actions.onRates,
+                            onUncategorized = actions.onUncategorized,
+                            modifier = entrance,
+                            budget = budget?.summary,
+                            onBudgets = actions.onBudgets,
+                        )
+                        HomeCard.HOT -> budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
+                            HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = entrance)
+                        }
+                        HomeCard.RECENT -> RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, entrance)
+                    }
                 }
-            }
-            if (upcoming.isNotEmpty()) {
-                item(key = "upcoming") { UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, Modifier.staggeredEntrance(1), onPostAll, onSkipAll) }
-            }
-            item {
-                HomeTiles(
-                    state,
-                    onTransactions = actions.onTransactions,
-                    onRates = actions.onRates,
-                    onUncategorized = actions.onUncategorized,
-                    modifier = Modifier.staggeredEntrance(1),
-                    budget = budget?.summary,
-                    onBudgets = actions.onBudgets,
-                )
-            }
-            budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
-                item(key = "hot") {
-                    HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = Modifier.staggeredEntrance(2))
+                if (editing) {
+                    val drag = rememberCardDrag(card, layout, listState, onLayoutChange)
+                    Column(drag.shift, verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                        CardEditHeader(card, onHide = { onLayoutChange(layout.withShown(card, false)) }, dragModifier = drag.modifier)
+                        Box {
+                            body()
+                            // The card shows what it is, but is not pressed while the layout is edited.
+                            Box(Modifier.matchParentSize().pointerInput(Unit) { detectTapGestures { } })
+                        }
+                    }
+                } else {
+                    Box(Modifier.longPressToEdit(enabled = true) { editing = true }) { body() }
                 }
-            }
-            item {
-                RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, Modifier.staggeredEntrance(3))
             }
         }
     }
 }
+
+/** The cascade of the first showing stops growing after this many cards. */
+private const val MAX_ENTRANCE = 3

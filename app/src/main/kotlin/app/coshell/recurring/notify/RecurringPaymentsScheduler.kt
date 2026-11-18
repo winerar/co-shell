@@ -1,6 +1,8 @@
 package app.coshell.recurring.notify
 
 import android.content.Context
+import app.coshell.recurring.notify.data.PrefsReminderSettings
+import kotlinx.datetime.LocalTime
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -21,14 +23,15 @@ object RecurringPaymentsScheduler {
     private const val DAILY = "recurring-daily"
     private const val ON_START = "recurring-start"
 
-    fun schedule(context: Context, clock: Clock = Clock.System, zone: TimeZone = TimeZone.currentSystemDefault()) {
+    /** [replace]: the hour changed — the daily job starts again from the new time (otherwise the first schedule keeps its phase). */
+    fun schedule(context: Context, clock: Clock = Clock.System, zone: TimeZone = TimeZone.currentSystemDefault(), replace: Boolean = false) {
         val work = WorkManager.getInstance(context)
         val daily = PeriodicWorkRequestBuilder<RecurringPaymentsWorker>(1, TimeUnit.DAYS)
-            .setInitialDelay(ReminderTime.untilNext(clock.now(), zone).inWholeMinutes, TimeUnit.MINUTES)
+            .setInitialDelay(ReminderTime.untilNext(clock.now(), zone, LocalTime(PrefsReminderSettings.readHour(context), 0)).inWholeMinutes, TimeUnit.MINUTES)
             .setInputData(workDataOf(RecurringPaymentsWorker.KEY_REMIND to true))
             .build()
-        // KEEP: the first schedule fixes the 9:00 phase; later app starts leave it alone.
-        work.enqueueUniquePeriodicWork(DAILY, ExistingPeriodicWorkPolicy.KEEP, daily)
+        // KEEP: the first schedule fixes the phase; later app starts leave it alone. A new hour starts it over.
+        work.enqueueUniquePeriodicWork(DAILY, if (replace) ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE else ExistingPeriodicWorkPolicy.KEEP, daily)
         work.enqueueUniqueWork(ON_START, ExistingWorkPolicy.REPLACE, OneTimeWorkRequestBuilder<RecurringPaymentsWorker>().build())
     }
 }

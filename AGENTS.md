@@ -11,7 +11,7 @@
 6. Маленькие файлы по одной теме (~200 строк), экран — пакет из блоков: `project-structure.md`.
 7. **Начало:** `agent.sh start`, затем `owner.md` и `notes.md`. **Конец:** чек-лист `workflow.md` + `agent.sh finish`.
    Новое — в `notes.md`; рутина — команда в `agent.sh`; практика — правило (`workflow.md` §«Самоулучшение»).
-8. **Визуальное — сначала макет, код — после «ок»** (`workflow.md`). **Только утверждённые компоненты**: нет нужного — макет → «ок» → доска → код (`components.md`).
+8. **Доска — источник истины по виду.** Интерфейс меняется только после правки доски и «ок»; доски экранов, воркфлоу (`Flows`) и компонентов всегда равны коду (`workflow.md` §«Доска — источник истины»). Только утверждённые компоненты (`components.md`).
 9. **Никакого текста в коде:** любой текст для людей — ресурс сразу на всех языках `AppLanguage.SUPPORTED` (`glossary.md`).
 
 ## Карта документации
@@ -26,7 +26,7 @@
 | [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |
-| [docs/agents/design-system.md](docs/agents/design-system.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
+| [docs/agents/design-system.md](docs/agents/design-system.md), [design-navigation.md](docs/agents/design-navigation.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
 | [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь |
 | [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
 | [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |

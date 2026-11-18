@@ -2,6 +2,8 @@ package app.coshell.accounts.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import app.coshell.core.designsystem.motion.tactileCircleClickable
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -46,6 +48,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
         titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
     ) {
         if (state.isLoading) return@EditSheetLayout
+        val colorLabel = stringResource(R.string.category_color)
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
             AccountPreviewCard(state)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
@@ -53,7 +56,9 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     state.name,
                     state.color,
                     size = Sizes.badgeLarge,
-                    modifier = Modifier.tactileCircleClickable { colorsOpen = true },
+                    modifier = Modifier
+                        .semantics { contentDescription = colorLabel }
+                        .tactileCircleClickable { colorsOpen = true },
                 )
                 CoShellTextField(
                     value = state.name,

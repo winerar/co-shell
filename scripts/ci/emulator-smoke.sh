@@ -51,10 +51,20 @@ check_clean "Start"
 
 # 2. Bottom bar: every tab label is on screen (labels are values/strings.xml → en on the emulator, ru fallback).
 sleep 3
-# First launch shows the «App language» sheet over the tabs: confirm it (button «Done»/«Готово»/«Hecho») first.
+# Tap the centre of the first node whose text matches $1 (regex); returns 1 if there is none.
+tap_text() {
+  local b; b=$(echo "$xml" | grep -oE "text=\"($1)\"[^>]*bounds=\"\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]\"" | head -1 | grep -oE '[0-9]+' | tail -4 | tr '\n' ' ')
+  [ -n "$b" ] || return 1
+  set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 ))
+}
+# Over the tabs there can be the first-launch «App language» sheet (confirm it) or a system «isn't responding» dialog
+# of a slow emulator (press «Wait»); up to 4 tries.
+for _ in 1 2 3 4; do
+  xml=$(ui)
+  tap_text "Done|Готово|Hecho" || tap_text "Wait|Подождать|Esperar" || break
+  sleep 3
+done
 xml=$(ui)
-b=$(echo "$xml" | grep -oE 'text="(Done|Готово|Hecho)"[^>]*bounds="\[[0-9]+,[0-9]+\]\[[0-9]+,[0-9]+\]"' | grep -oE '[0-9]+' | tail -4 | tr '\n' ' ')
-if [ -n "$b" ]; then set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 )); sleep 2; xml=$(ui); fi
 missing=()
 for tab in "Overview|Обзор|Home" "Transactions|Операции" "Reports|Отчёты|Informes" "More|Ещё"; do
   echo "$xml" | grep -Eq "text=\"($tab)\"|content-desc=\"($tab)\"" || missing+=("$tab")

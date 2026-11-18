@@ -3,6 +3,8 @@ package app.coshell.rates.list
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -48,7 +50,16 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
         },
         floatingActionButton = { CoShellAddFab(stringResource(R.string.rates_manual_add), actions.onAddManual) },
     ) { padding ->
-        LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
+        // The converter appears after the rates load, *above* the already shown refresh block; a lazy list keeps its
+        // position by key, so it would stay scrolled one item down and hide the converter under the top capsule.
+        val listState = rememberLazyListState()
+        val hasConverter = state.current.isNotEmpty()
+        LaunchedEffect(hasConverter) {
+            if (hasConverter && listState.firstVisibleItemIndex == 1 && listState.firstVisibleItemScrollOffset == 0) {
+                listState.scrollToItem(0)
+            }
+        }
+        LazyColumn(Modifier.fillMaxSize(), state = listState, contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             // «Сколько это» right on top (#319, А): the rows below follow the typed amount.
             if (state.current.isNotEmpty()) {
                 item(key = "converter") {

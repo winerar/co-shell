@@ -129,7 +129,7 @@ def pill(text, kind='lime'):
 def fab(text='', icon='plus'):
     """The one add button of a list screen (#408, owner 2026-11-16): a round 56 «+» without text, bottom right. `text` is the accessible name only."""
     return ('<div role="button" aria-label="%s" style="position: absolute; right: 16px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%%; background: %s; '
-            'display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.35);">%s</div>' % (text, LIME, svg(icon, ONLIME, 26, 2.2)))
+            'display: flex; align-items: center; justify-content: center;">%s</div>' % (text, LIME, svg(icon, ONLIME, 26, 2.2)))
 
 
 def textarea(placeholder, count, value=''):

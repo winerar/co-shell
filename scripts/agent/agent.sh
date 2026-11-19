@@ -116,7 +116,8 @@ case "$cmd" in
         git status --short core/designsystem/src/test/screenshots app/src/test/screenshots
         [ $status -eq 0 ] && echo "OK: эталоны записаны — проверь PNG и покажи изменения владельцу" || echo "FAILED (exit $status)"
         exit $status ;;
-    mockups) python3 "$here/gen-mockups.py" "$@" && exec node "$here/check-mockups.js" docs/design/mockups/*.dc.html ;;
+    mockups) python3 "$here/gen-mockups.py" "$@" && node "$here/check-mockups.js" docs/design/mockups/*.dc.html \
+        && exec python3 -m unittest -q "$here/test_mockup_rules.py" ;;
     render)
         out="$(scratch)/shots"; mkdir -p "$out"
         files=(); for b in "$@"; do files+=("docs/design/mockups/${b%.dc.html}.dc.html"); done

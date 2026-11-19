@@ -15,7 +15,8 @@
    без него CI хотфикса падает). Подсказки/доски — только если правка меняет вид (обычно нет).
 4. `agent.sh ship -m "Hotfix: <что чиним>" -m "Fixes #N"` — сообщение **начинается с `Hotfix:`**: по нему `auto-pr.yml` не
    открывает черновик в `dev`, а `agent.sh sync`/`update` отказываются вливать `dev`.
-5. PR в **`main`** — GitHub MCP `create_pull_request` (base `main`, не черновик, `Fixes #N`). Дальше всё само:
+5. PR в **`main`** — GitHub MCP `create_pull_request` (base `main`, **черновиком**, `Fixes #N`), сразу `update_pull_request`
+   `draft: false` — CI запускается на `ready_for_review` (на `opened` не запускается, `ci.md` §«Воркфлоу»). Дальше всё само:
    - `ci.yml`: `build` (`check assembleDebug`, ~5,5 мин) и `emulator` (R8 на эмуляторе, ~15 мин) параллельно;
    - задача `hotfix` (оба зелёные) → `scripts/ci/automerge.sh` вливает PR в `main` merge-коммитом (версия — следующий минор,
      `version_name.py`), закрывает `Fixes #N`, запускает CI на `main` — он публикует сборку, телефоны видят «Обновить»;

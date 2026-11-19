@@ -21,3 +21,6 @@
 - (11-19, #536) **Эмулятор CI: «Pixel Launcher isn't responding» поверх приложения** — смоук «tabs not on screen» без сбоя у нас; «Wait» не помогает
   (лаунчер зависает снова). Скрипт ставит `settings put global hide_error_dialogs 1` и закрывает чужое окно «Close app». Разбор: артефакт
   `emulator-logs` (`ui-fail.png`/`.xml`) — MCP `actions_get download_workflow_run_artifact` даёт временную ссылку, `curl` её скачивает.
+- (11-19) **Красный CI без задач** (`failure`, 0 jobs, часто «длится» до мержа PR) — не сбой: прогон `pull_request: opened` по PR бота ждал одобрения (`action_required`).
+  `opened` убран из `ci.yml`; такие прогоны не перезапускать и не разбирать. Тесты `app` (807) — ~61 с суммарно (больше всех `ScreensAccessibilityTest` 12 с);
+  остальное в 5,5 мин — компиляция и lint: память/форки Robolectric не трогать.

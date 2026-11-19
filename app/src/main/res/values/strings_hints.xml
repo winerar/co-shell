@@ -38,4 +38,8 @@
     <string name="hints_reset_done">Подсказки включены</string>
     <string name="steps_done_title">Всё готово</string>
     <string name="steps_done_text">Вы уже ведёте бюджет — а это самое трудное.</string>
+    <string name="hint_first_week">Неделя записей. Порядок в деньгах начинается с этого.</string>
+    <string name="hint_welcome_back">С возвращением. Можно записать траты за эти дни: дата выбирается в операции.</string>
+    <string name="hint_backup">Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.</string>
+    <string name="hint_theme">Приложение можно сделать своим: Ещё → Внешний вид.</string>
 </resources>

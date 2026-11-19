@@ -19,6 +19,8 @@ private class FakeHintStore(var on: Boolean = true) : HintStore {
     override suspend fun setLastShownDay(day: Long) { this.day = day }
     override suspend fun stepsHidden() = false
     override suspend fun setStepsHidden(value: Boolean) = Unit
+    override suspend fun firstSeenDay(today: Long) = today
+    override suspend fun firstEntryDay(candidate: Long?) = candidate
     override suspend fun reset() { seen.clear(); day = null; on = true }
 }
 

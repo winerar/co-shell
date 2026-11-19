@@ -15,6 +15,12 @@ interface HintStore {
     suspend fun stepsHidden(): Boolean
     suspend fun setStepsHidden(value: Boolean)
 
+    /** Epoch day of the first launch with hints; remembered by the first call, [today] is stored then. */
+    suspend fun firstSeenDay(today: Long): Long
+
+    /** Epoch day the first entry was noticed; stores [candidate] only if nothing is stored yet and it is not null. */
+    suspend fun firstEntryDay(candidate: Long?): Long?
+
     /** «Показать подсказки заново»: forgets «shown», unhides the steps, turns hints on. */
     suspend fun reset()
 }

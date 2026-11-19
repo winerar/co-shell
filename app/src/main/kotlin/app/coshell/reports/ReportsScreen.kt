@@ -17,6 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.LocalHintHost
+import app.coshell.hints.WordHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
@@ -60,12 +63,14 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
         topBar = { TabTopBar(stringResource(R.string.reports_title), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
+        val hintsOn = LocalHintHost.current != null
         LazyColumn(
             Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (period == null) return@LazyColumn
+            if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports) }
             item(key = "period") {
                 PeriodSwitch(
                     title = periodTitle(period),

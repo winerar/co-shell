@@ -20,8 +20,9 @@ interface HintStore {
 }
 
 /**
- * Picks the one hint to show now (`hints.md` §«Когда показывать»): hints on, at most one per visit and one per day,
- * the first by priority among those whose condition holds, each only once.
+ * Picks the one hint to show now (`hints.md` §«Когда показывать»): hints on, at most one word or gesture per visit and
+ * one per day, the first by priority among those whose condition holds, each only once. Warm moments ([HintKind.MOMENT])
+ * are shown by their event and sit outside the visit/day limit (owner poll 2026-11-19).
  */
 object HintPlanner {
     fun next(
@@ -32,7 +33,8 @@ object HintPlanner {
         today: Long,
         shownThisVisit: Boolean,
     ): HintId? {
-        if (!enabled || shownThisVisit || lastShownDay == today) return null
-        return HintId.entries.firstOrNull { it in candidates && it.key !in shown }
+        if (!enabled) return null
+        val limited = shownThisVisit || lastShownDay == today
+        return HintId.entries.firstOrNull { it in candidates && it.key !in shown && (!limited || it.kind == HintKind.MOMENT) }
     }
 }

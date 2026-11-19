@@ -35,7 +35,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 
 /**
  * A small, quiet notice that floats over the bottom bar (design-system.md §«Компоненты»): a neon dot
- * icon, one short line and a «×». Used for "a new version is available"; it never blocks the screen.
+ * icon, a short text (up to two lines) and a «×»; with [actionLabel] a text button before the «×» (the pill itself
+ * then does not click: [onClick] is the action). Used for "a new version is available" and warm hints (#513).
  * Rises from below with the spatial spring and pops in slightly, like the tab pill.
  */
 @Composable
@@ -47,12 +48,13 @@ fun CoShellNoticePill(
     dismissLabel: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    actionLabel: String? = null,
 ) {
     AnimatedVisibility(visible = visible, modifier = modifier, enter = PillIn, exit = PillOut) {
         val scheme = MaterialTheme.colorScheme
         Row(
             Modifier
-                .tactileClickable(Tactile.Control, PillShape, role = Role.Button, onClick = onClick)
+                .then(if (actionLabel == null) Modifier.tactileClickable(Tactile.Control, PillShape, role = Role.Button, onClick = onClick) else Modifier)
                 .clip(PillShape)
                 .background(scheme.surfaceContainerHigh)
                 .border(Sizes.hairline, scheme.primary.copy(alpha = 0.5f), PillShape)
@@ -71,9 +73,11 @@ fun CoShellNoticePill(
                 text,
                 style = MaterialTheme.typography.labelLarge,
                 color = scheme.onSurface,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
             )
+            if (actionLabel != null) CoShellTextButton(onClick = onClick) { Text(actionLabel, style = MaterialTheme.typography.labelLarge) }
             CoShellIconButton(onClick = onDismiss) {
                 Icon(
                     painterResource(app.coshell.core.designsystem.R.drawable.ic_close),
@@ -86,7 +90,7 @@ fun CoShellNoticePill(
     }
 }
 
-private val PillIn = slideInVertically(Motion.Placement) { it } + fadeIn(Motion.effects()) +
+internal val PillIn = slideInVertically(Motion.Placement) { it } + fadeIn(Motion.effects()) +
     scaleIn(Motion.bouncy(), initialScale = 0.8f)
-private val PillOut = slideOutVertically(Motion.Placement) { it } + fadeOut(Motion.effectsFast()) +
+internal val PillOut = slideOutVertically(Motion.Placement) { it } + fadeOut(Motion.effectsFast()) +
     scaleOut(Motion.effectsFast(), targetScale = 0.9f)

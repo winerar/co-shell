@@ -29,9 +29,9 @@ def steps_row(done, nxt):
     return '<div style="margin-top: 10px;">%s</div>' % card(inner + '<div style="padding: 0 16px 14px;">%s</div>' % progress(done / 4, 0))
 
 
-def home(done, nxt, extra=''):
+def home(done, nxt, extra='', steps=None):
     body = balance_hero('0,00', 'USD', 'Счетов пока нет') if done == 0 else balance_hero()
-    body += steps_row(done, nxt)
+    body += steps if steps is not None else steps_row(done, nxt)
     if done == 0:
         body += empty('wallet', 'Операций пока нет. Нажмите «+», чтобы записать первую.').replace('padding: 96px', 'padding: 40px')
     else:
@@ -82,13 +82,38 @@ def gesture():
     return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bubble)
 
 
+def pill_box(text, ic, action=None, two=False):
+    """Warm pill above the bar (CoShellNoticePill): icon in a circle, 1-2 lines, optional «Открыть» (opens the screen the text names), «×»."""
+    act = ('<span style="color: %s; font-size: 14px; font-weight: 700; padding: 0 10px;">%s</span>' % (LIME, action)) if action else ''
+    return ('<div style="position: absolute; left: 24px; right: 24px; bottom: 96px; min-height: 52px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; '
+            'align-items: center; gap: 10px; padding: 6px;"><span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; '
+            'justify-content: center;">%s</span><span style="flex-grow: 1; font-size: 14px; line-height: 1.35;">%s</span>%s%s</div>'
+            % (KEY, LINE2, LIME, svg(ic, ONLIME, 22, 2.4), text, act, icon_button('close', 'Закрыть', MUTED)))
+
+
 def moment():
-    """Warm one-time pill above the bar (CoShellNoticePill): one line, «×»; vibration Confirm like a save."""
-    pill = ('<div style="position: absolute; left: 24px; right: 24px; bottom: 96px; height: 52px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; '
-            'align-items: center; gap: 10px; padding: 0 6px 0 6px;"><span style="width: 40px; height: 40px; border-radius: 50%%; background: %s; display: flex; align-items: center; '
-            'justify-content: center;">%s</span><span style="flex-grow: 1; font-size: 14px;">Первая запись есть. Так и начинается бюджет.</span>%s</div>'
-            % (KEY, LINE2, LIME, svg('check', ONLIME, 22, 2.4), icon_button('close', 'Закрыть', MUTED)))
-    return board('Обзор: первая запись', home(2, 'первый лимит', pill))
+    """Warm one-time moment, one line; shown by the event itself (outside the daily limit), vibration Confirm like a save."""
+    return board('Обзор: первая запись', home(2, 'первый лимит', pill_box('Первая запись есть. Так и начинается бюджет.', 'check')))
+
+
+def moment_long():
+    """Long moment (backup, month_end, theme): up to two lines + «Открыть» to the named screen (owner poll 2026-11-19, A)."""
+    return board('Обзор: резервная копия', home(2, 'первый лимит', pill_box(
+        'Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.', 'check', 'Открыть')))
+
+
+def finale():
+    """Finale: the «Первые шаги» row turns once into «Всё готово» (CoShellSuccessBurst, Confirm), then disappears (poll A)."""
+    inner = ('<div style="padding: 16px; text-align: center;"><div style="font-size: 17px; font-weight: 700;">Всё готово</div>'
+             '<div style="font-size: 13px; color: %s; margin-top: 4px;">Вы уже ведёте бюджет — а это самое трудное.</div></div>' % MUTED)
+    return board('Обзор: финал', home(4, '', steps='<div style="margin-top: 10px;">%s</div>' % card(inner)))
+
+
+def hints_reset():
+    """After «Показать подсказки заново»: a one-line pill «Подсказки включены» above the bar."""
+    return board('Ещё: сброс подсказок', tab_screen('Ещё', label('Приложение', top=6) + group([
+        row('Показать подсказки заново', 'Вернёт «Первые шаги» и советы', tile_icon('refresh', LIME, LIMEBG), chevron(), min_h=52)]), 'more')
+        + pill_box('Подсказки включены', 'check'))
 
 
 def app_settings():
@@ -106,5 +131,8 @@ BOARDS = [  # name, title, fn, issue number
     ('Hint513Word', '#513 · П1: подсказка-слово на «Счетах»', accounts_hint, 513),
     ('Hint513Gesture', '#513 · П2: подсказка-жест в «Операциях»', gesture, 513),
     ('Hint513Moment', '#513 · тёплая плашка: первая запись', moment, 513),
+    ('Hint513MomentLong', '#513 · тёплая плашка: две строки + «Открыть»', moment_long, 513),
+    ('Hint513Finale', '#513 · финал «Первых шагов»: «Всё готово»', finale, 513),
+    ('Hint513Reset', '#513 · «Подсказки включены» после сброса', hints_reset, 513),
     ('Hint513Settings', '#513 · «Ещё → Приложение»: подсказки', app_settings, 513),
 ]

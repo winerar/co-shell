@@ -1,5 +1,7 @@
 package app.coshell.budgets.list
 
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,6 +69,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
             item(key = "month") {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }
+            item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l)) }
             if (state.isEmpty) {
                 item(key = "empty") { EmptyBudgets() }
                 return@LazyColumn

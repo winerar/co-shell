@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
 import app.coshell.core.data.family.FamilyState
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellLinearProgress
@@ -39,6 +41,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
+            WordHint(HintId.FAMILY, R.string.hint_family, Modifier.padding(horizontal = Spacing.l))
             if (state.isBusy) CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))
             when (val family = state.family) {
                 FamilyState.NotConfigured -> NotConfiguredBlock()

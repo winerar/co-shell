@@ -25,6 +25,7 @@ fun TransactionEditRoute(
     onAddAccount: () -> Unit,
     onDuplicate: (String) -> Unit = {},
     onAllTemplates: () -> Unit = {},
+    onScanReceipt: () -> Unit = {},
     onNewTemplate: () -> Unit = {},
     templateStrip: TemplateStripViewModel = hiltViewModel(),
     viewModel: TransactionEditViewModel = hiltViewModel(),
@@ -75,6 +76,7 @@ fun TransactionEditRoute(
             onTemplateClear = viewModel::onTemplateClear,
             onPaymentSkip = lock.guard(viewModel::onPaymentSkip),
             onAllTemplates = onAllTemplates,
+            onScanReceipt = onScanReceipt,
             onNewTemplate = onNewTemplate,
             onSaveAsTemplate = lock.guard2(viewModel::saveAsTemplate),
             onTagToggle = viewModel::onTagToggle,
@@ -127,6 +129,7 @@ data class TransactionEditActions(
     /** «Пропустить этот раз» of a payment from «Скоро» (#404). */
     val onPaymentSkip: () -> Unit = {},
     val onAllTemplates: () -> Unit = {},
+    val onScanReceipt: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },
     /** A tag pill or a row of the «Теги» sheet (#293). */

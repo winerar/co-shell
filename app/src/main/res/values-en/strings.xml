@@ -242,7 +242,7 @@
     <string name="categories_menu_hint">Subcategories, icons and colors</string>
     <string name="backup_menu_hint">Save or restore your data</string>
     <string name="feedback_menu_hint">A problem or an idea</string>
-    <string name="shake_to_add_title">Shake for a new transaction</string>
+    <string name="shake_to_add_title">Shake to scan a QR</string>
     <string name="shake_to_add_hint">While the app is open</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="transactions_deleted_many">Transactions deleted: %d</string>

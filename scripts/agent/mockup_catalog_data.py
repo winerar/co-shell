@@ -186,6 +186,14 @@ def flip_card(v):
                cap('лицо · кадр переворота ≈ 55° · оборот; нажатие по карточке или «↻» — rotationX вокруг горизонтальной оси, объём — cameraDistance, пружина с перелётом; на 90° лицо гаснет, оборот проявляется'))
 
 
+def scan_frame(v):
+    """«Рамка сканера» (#526, poll 2026-11-19, board QrScan): four rounded corners of the viewfinder in the neon of the theme."""
+    frame = ('<div style="width: 140px; height: 140px; background: #0c0f0d; border-radius: 12px; display: flex; align-items: center; justify-content: center;">'
+             '<svg viewBox="0 0 120 120" width="112" height="112" fill="none" stroke="%s" stroke-width="4" stroke-linecap="round">'
+             '<path d="M3 30V12a9 9 0 0 1 9-9h18M90 3h18a9 9 0 0 1 9 9v18M117 90v18a9 9 0 0 1-9 9H90M30 117H12a9 9 0 0 1-9-9V90"/></svg></div>' % LIME)
+    return col(frame, cap('камера под рамкой; только углы, цвет — неон темы; рядом — «Ввести вручную» и фонарик'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -199,5 +207,6 @@ DATA = [
     ('Доходы и расходы', paired, 'CoShellPairedColumns(pairs, selected, onSelect) — доска Rp189IeA'),
     ('Готово', done_marks, 'CoShellCheckMark(size, color, over) · CoShellArrowChip() · CoShellSuccessBurst(content) — «Обновлено», доска Update'),
     ('Переворот карточки', flip_card, 'CoShellFlipCard(front, back, flipped, onFlip, flipLabel) — карточка-герой с оборотом (#519), доски Flip519*'),
+    ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
     ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
 ]

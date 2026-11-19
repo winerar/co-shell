@@ -246,7 +246,7 @@
     <string name="categories_menu_hint">Subcategorías, iconos y colores</string>
     <string name="backup_menu_hint">Guardar o restaurar tus datos</string>
     <string name="feedback_menu_hint">Un error o una idea</string>
-    <string name="shake_to_add_title">Agitar — nuevo movimiento</string>
+    <string name="shake_to_add_title">Agitar — escáner QR</string>
     <string name="shake_to_add_hint">Con la app abierta</string>
     <string name="transaction_deleted">Movimiento eliminado</string>
     <string name="transactions_deleted_many">Movimientos eliminados: %d</string>

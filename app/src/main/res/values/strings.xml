@@ -253,7 +253,7 @@
     <string name="categories_menu_hint">Подкатегории, иконки и цвета</string>
     <string name="backup_menu_hint">Сохранить или восстановить данные</string>
     <string name="feedback_menu_hint">Ошибка или идея</string>
-    <string name="shake_to_add_title">Встряхнуть — новая операция</string>
+    <string name="shake_to_add_title">Встряхнуть — сканер QR</string>
     <string name="shake_to_add_hint">Когда приложение открыто</string>
     <string name="transaction_deleted">Операция удалена</string>
     <string name="transactions_deleted_many">Удалено операций: %d</string>

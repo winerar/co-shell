@@ -18,3 +18,6 @@
 - (11-15) **Имена тестов в обратных кавычках — только ASCII в app:** «—» или кириллица в имени → класс лямбды
   `Test$имя$1.class`, компилятор падает `InvalidPathException: Malformed input` (локаль контейнера). Пиши «means», «shows».
 - (11-15) **lint `MissingPermission` не видит проверку в своей функции** (`canNotify()`): `checkSelfPermission` — прямо перед `notify`.
+- (11-19, #536) **Эмулятор CI: «Pixel Launcher isn't responding» поверх приложения** — смоук «tabs not on screen» без сбоя у нас; «Wait» не помогает
+  (лаунчер зависает снова). Скрипт ставит `settings put global hide_error_dialogs 1` и закрывает чужое окно «Close app». Разбор: артефакт
+  `emulator-logs` (`ui-fail.png`/`.xml`) — MCP `actions_get download_workflow_run_artifact` даёт временную ссылку, `curl` её скачивает.

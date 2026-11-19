@@ -85,7 +85,7 @@ def sheets(v):
 def peek(v):
     rows_ = ''.join('<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 14px;"><span style="%s color: %s;">%s</span><span style="color: %s;">%s</span></div>'
                     % (MONO, INK if a else MUTED, a or 'нет курса', MUTED, c) for a, c in [('≈ 31,53', 'USD'), ('≈ 12 180', 'AMD'), (None, 'VES')])
-    return ('<div style="width: 190px; padding: 12px 14px; border-radius: %s; background: %s; box-shadow: inset 0 0 0 1px %s, 0 12px 32px rgba(0,0,0,0.45); display: flex; '
+    return ('<div style="width: 190px; padding: 12px 14px; border-radius: %s; background: %s; box-shadow: inset 0 0 0 1px %s; display: flex; '
             'flex-direction: column; gap: 6px;">%s<span style="font-size: 11px; color: %s;">по курсу на 12 ноября</span></div>' % ('20px' if v == 'A' else '10px', KEY, LINE2, rows_, MUTED))
 
 

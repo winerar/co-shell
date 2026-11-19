@@ -50,7 +50,7 @@ def menu_v2(items):
         trail = svg('check', LIME, 18, 2.2) if st == 'on' else ''
         out.append('<div style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 14px;%s">%s<span style="flex-grow: 1; font-size: 15px; color: %s;">%s</span>%s</div>'
                    % (op, svg(icon, PINK if st == 'danger' else MUTED, 20), color, text, trail))
-    return ('<div style="width: 232px; padding: 6px 0; border-radius: 24px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">%s</div>'
+    return ('<div style="width: 232px; padding: 6px 0; border-radius: 24px; background: %s; border: 1px solid %s;">%s</div>'
             % (KEY, LINE2, ''.join(out)))
 
 

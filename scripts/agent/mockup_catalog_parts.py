@@ -114,7 +114,7 @@ def modal_sheet(title, body, sub='', action=None, action_on=True):
 def peek_card(lines, foot):
     rows = ''.join('<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 14px;"><span style="%s color: %s;">%s</span><span style="color: %s;">%s</span></div>'
                    % (MONO, INK if v else MUTED, v or 'нет курса', MUTED, c) for v, c in lines)
-    return ('<div style="width: 200px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s; box-shadow: 0 12px 32px rgba(0,0,0,0.45); '
+    return ('<div style="width: 200px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s; '
             'display: flex; flex-direction: column; gap: 6px;">%s<span style="font-size: 11px; color: %s;">%s</span></div>' % (KEY, LINE2, rows, MUTED, foot))
 
 
@@ -126,7 +126,7 @@ def action_bar(items):
 
 def fab_round(icon='plus'):
     return ('<span style="width: 48px; height: 48px; border-radius: 18px; background: %s; display: flex; align-items: center; justify-content: center; '
-            'box-shadow: 0 6px 18px rgba(0,0,0,0.35);">%s</span>' % (LIME, svg(icon, ONLIME, 26, 2.2)))
+            '">%s</span>' % (LIME, svg(icon, ONLIME, 26, 2.2)))
 
 
 # ---- Данные ----

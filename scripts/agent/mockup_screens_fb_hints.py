@@ -77,7 +77,7 @@ def accounts_hint():
 def gesture():
     """П2: a bubble over the list; non-modal, «Понятно» closes it."""
     bubble = ('<div style="position: absolute; left: 24px; right: 24px; top: 400px; padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s; '
-              'box-shadow: 0 12px 32px rgba(0,0,0,0.45);"><div style="font-size: 14px; line-height: 1.4;">Удерживайте операцию, чтобы выбрать несколько.</div>'
+              '"><div style="font-size: 14px; line-height: 1.4;">Удерживайте операцию, чтобы выбрать несколько.</div>'
               '<div style="margin-top: 10px; text-align: right;"><span style="color: %s; font-size: 14px; font-weight: 700;">Понятно</span></div></div>' % (KEY, LINE2, LIME))
     rows = ''.join(tx(*r) for r in RECENT)
     return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bubble)

@@ -19,8 +19,8 @@ def cat_icon(name, size=40):
     return dot_icon(ic, col, size)
 
 
-def nav_tabs(active, tabs=(('home', 'home', 'Обзор'), ('ops', 'list', 'Операции'), ('budget', 'budget', 'Бюджеты'), ('more', 'more', 'Ещё'))):
-    """Bottom bar with owner-chosen tabs (154А): 4 tabs around the «+»."""
+def nav_tabs(active, tabs=(('home', 'home', 'Обзор'), ('ops', 'list', 'Операции'), ('rep', 'chart', 'Отчёты'), ('more', 'more', 'Ещё'))):
+    """Bottom bar as in the app (#140): 4 tabs around the «+»; the same tabs as `mockup_bricks.nav`."""
     def tab(key, icon, lbl):
         inner = svg(icon, ONLIME if key == active else MUTED, 24, 1.7)
         if key == active:

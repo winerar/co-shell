@@ -20,6 +20,7 @@
 (`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Метка «новое» (#335): ключи мест — `newmark/NewFeatures` (новое место → ключ + `MoreItem.newKey`), правило 7 дней / до открытия —
 `core:domain/newmark/NewMarks`, хранение на телефоне — `newmark/PrefsNewMarkStore`, `di/NewMarkModule` (обновление или чистая установка).
+Переворот карточек-героев (#519): компонент `core:designsystem/components/FlipCard.kt`; оборот «Обзора» — `home/components/TotalBack.kt` (`HomeUiState.monthResult`, `monthResult()` в `HomeState.kt`), оборот «Бюджетов» — `budgets/list/components/SummaryBack.kt` (`Summary.perDay`, `BudgetsUiState.closestToLimit()`); раскрытие «по валютам» с лица «Обзора» переехало на оборот.
 Бюджеты (#167): модель `core:model/Budget.kt`, логика — `core:domain/budgets/` (`BudgetPlan` — лимит месяца,
 `SaveBudgetUseCase`, `RemoveBudgetUseCase`); Room — `BudgetDao`, `RoomBudgetRepository`. Расчёт (#182): `BudgetPeriod` (месяц по дню
 начала), `BudgetLedger` (потрачено, среднее за 3 мес.), `BudgetProgress` (темп, состояние, прогноз), `BudgetCalculator` (перенос, итог месяца). Экраны (#103) — `app/.../budgets/`: `BudgetSource` (общий снимок: суммы по дням из SQL, #262),

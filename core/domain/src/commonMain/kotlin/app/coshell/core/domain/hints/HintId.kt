@@ -24,6 +24,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     SWIPE_TABS("swipe_tabs", HintKind.GESTURE),
     TEMPLATE("template", HintKind.GESTURE),
     EDIT_TAP("edit_tap", HintKind.GESTURE),
+    FLIP_CARD("flip_card", HintKind.GESTURE),
     FIRST_ENTRY("first_entry", HintKind.MOMENT),
     FIRST_LIMIT("first_limit", HintKind.MOMENT),
     FIRST_WEEK("first_week", HintKind.MOMENT),

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flip_card_label">Flip</string>
+    <string name="home_back_title">Summary for %1$s</string>
+    <string name="home_back_income">Income</string>
+    <string name="home_back_spending">Expenses</string>
+    <string name="home_back_result">Difference</string>
+    <string name="home_back_per_day">On average ≈ %1$s a day</string>
+    <string name="home_back_currencies">By account currency</string>
+    <string name="budgets_back_per_day_title">You can spend per day</string>
+    <string name="budgets_back_per_day_hint">Until the end of the month. A guide, not a rule.</string>
+    <string name="budgets_back_closest">Closest to the limit</string>
+</resources>

@@ -72,7 +72,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
                 return@LazyColumn
             }
             state.summary?.let { summary ->
-                item(key = "summary") { BudgetSummaryCard(summary, Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
+                item(key = "summary") { BudgetSummaryCard(summary, state.closestToLimit(), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
             }
             if (state.showFilter) {
                 item(key = "filter") {

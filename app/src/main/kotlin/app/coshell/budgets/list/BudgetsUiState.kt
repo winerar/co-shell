@@ -28,6 +28,10 @@ data class BudgetsUiState(
     /** Chips appear only on a long list (`BudMany`): with a handful of limits everything is on screen anyway. */
     val showFilter: Boolean get() = total >= FILTER_FROM
 
+    /** The limits the month is closest to (#519 back of the card): spent share, biggest first; untouched ones and folders' inner limits are left out. */
+    fun closestToLimit(count: Int = CLOSEST_COUNT): List<Envelope> =
+        envelopes.filter { it.tone != BulletTone.IDLE }.sortedByDescending { it.fraction }.take(count)
+
     val visible: List<Envelope> get() = envelopes.mapNotNull { it.filtered(filter) }
 
     /** The month in one currency (the main report currency). */
@@ -43,6 +47,8 @@ data class BudgetsUiState(
         /** Days after today; `null` — not the current month. */
         val daysLeft: Int?,
         val forecast: Forecast?,
+        /** What is left per remaining day («≈ 28 USD»), the back of the card (#519); `null` — not the current month, last day or overspent. */
+        val perDay: String? = null,
         /** Currencies left out for lack of a rate. */
         val missing: List<String> = emptyList(),
     )
@@ -110,6 +116,8 @@ data class BudgetsUiState(
 
     companion object {
         const val FILTER_FROM = 8
+        /** Limits on the back of the budget card (#519). */
+        const val CLOSEST_COUNT = 3
     }
 }
 

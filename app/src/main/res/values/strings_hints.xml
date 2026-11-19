@@ -20,4 +20,5 @@
     <string name="hints_off">Выключены</string>
     <string name="hints_reset_title">Показать подсказки заново</string>
     <string name="hints_reset_hint">Вернёт «Первые шаги» и советы</string>
+    <string name="hint_flip_card">Нажмите на карточку, чтобы перевернуть: на обороте самое полезное за месяц.</string>
 </resources>

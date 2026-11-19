@@ -18,8 +18,6 @@
     <string name="home_total_rate_date">At the rate of %1$s</string>
     <string name="amount_peek_no_rate">no rate</string>
     <string name="home_total_missing">Not counted: %1$s — no rate</string>
-    <string name="home_total_show_breakdown">Show by currency</string>
-    <string name="home_total_hide_breakdown">Hide breakdown</string>
     <string name="home_spending_title">%1$s spending</string>
     <string name="home_spending_rate_hint">At the rate on the day of each expense</string>
     <string name="home_spending_tile">Spending</string>

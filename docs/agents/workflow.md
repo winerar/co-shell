@@ -11,7 +11,7 @@
   проблемы, номер PR, заголовок, описание (`Fixes #N`) и шаги: MCP `update_pull_request` (`draft: false` — запускает CI) →
   `subscribe_pr_activity` → закончить ход. Зелёный CI → PR вливается сам (`automerge.yml`; метка `hold` — стоп); красный — комментарий
   `<!-- ci-summary -->`, починить, `agent.sh ship`; конфликт с `dev` — `agent.sh update`. Снимать черновик — **один раз, когда всё готово**:
-  каждый push после этого — новый прогон CI. Нет PR — MCP `create_pull_request` (base `dev`) с тем же текстом.
+  каждый push после этого — новый прогон CI. Нет PR — MCP `create_pull_request` (base `dev`, **черновиком**: на `opened` CI не идёт), затем `draft: false`.
 - **Экономия минут (владелец 2026-11-19):** коммит `ship`/`finish` после полного `check` получает `Agent-Check: full` — CI в PR пропускает
   Gradle (`ci.md` §«Что где проверяется»). Не обходить: `--no-check`/`--quick` без свежего полного `check` трейлера не дают.
 - **Исключение — хотфикс** (сбой, порча или потеря данных; владелец 2026-11-19): ветка от `origin/main`, PR в `main`, после CI и эмулятора

@@ -32,7 +32,7 @@ title=$(git log --no-merges --reverse --format=%s origin/dev..HEAD | grep -vE "$
 fixes=$(git log --format=%B origin/dev..HEAD | grep -oiE '^(fixes|closes|resolves) #[0-9]+' | sed -E 's/^[a-zA-Z]+/Fixes/' | sort -u)
 refs=$(git log --format=%s origin/dev..HEAD | grep -oE '#[0-9]+' | sort -u | tr '\n' ' ')
 echo
-echo "== PR: ${num:+#$num}${num:-не найден (auto-pr.yml не открыл) → MCP create_pull_request, base dev}"
+echo "== PR: ${num:+#$num}${num:-не найден → MCP create_pull_request (base dev, draft: true), затем шаг 1 (CI не запускается на opened)}"
 echo "title: ${title:-<одной строкой: что изменилось>}"
 echo "body:"
 echo "## Что"

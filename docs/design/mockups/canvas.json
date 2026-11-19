@@ -1276,8 +1276,35 @@
       "page": "ideas",
       "radius": 28
     },
-    "Hint513Settings.dc.html": {
+    "Hint513MomentLong.dc.html": {
       "x": 2820,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · тёплая плашка: две строки + «Открыть»",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Finale.dc.html": {
+      "x": 3290,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · финал «Первых шагов»: «Всё готово»",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Reset.dc.html": {
+      "x": 3760,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · «Подсказки включены» после сброса",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Settings.dc.html": {
+      "x": 4230,
       "y": 3140,
       "w": 390,
       "h": 844,
@@ -2558,6 +2585,9 @@
     "Hint513Word.dc.html",
     "Hint513Gesture.dc.html",
     "Hint513Moment.dc.html",
+    "Hint513MomentLong.dc.html",
+    "Hint513Finale.dc.html",
+    "Hint513Reset.dc.html",
     "Hint513Settings.dc.html",
     "Conv2PairEmpty.dc.html",
     "Conv2PairType.dc.html",
@@ -2991,13 +3021,13 @@
       "text": "Обучение новичка: «Первые шаги» и мягкие подсказки · 2026-11-18",
       "x": 0,
       "y": 2890,
-      "maxW": 3210,
+      "maxW": 4620,
       "w": 240
     },
     "fbS513": {
       "page": "ideas",
       "text": "Вид А2 (строка на «Обзоре» → шторка), П1 слова, П2 жесты, тёплые моменты, «Подсказки» в «Ещё → Приложение». Тексты и условия — docs/agents/hints.md. Без вины и красного, любой шаг можно пропустить.",
-      "x": 3290,
+      "x": 4700,
       "y": 3140,
       "w": 390
     },

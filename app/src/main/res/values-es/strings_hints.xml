@@ -18,4 +18,5 @@
     <string name="hints_off">Desactivados</string>
     <string name="hints_reset_title">Mostrar los consejos de nuevo</string>
     <string name="hints_reset_hint">Recupera «Primeros pasos» y los consejos</string>
+    <string name="hint_flip_card">Toca la tarjeta para girarla: detrás está lo más útil del mes.</string>
 </resources>

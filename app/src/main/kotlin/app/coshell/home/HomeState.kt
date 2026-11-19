@@ -8,6 +8,7 @@ import app.coshell.core.domain.rates.incomeTotals
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
+import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
@@ -62,6 +63,7 @@ internal fun buildHomeState(
             totals = income.map { moneyFormat.format(it.sum) },
             missing = income.firstOrNull()?.missing.orEmpty().map { it.value },
         ),
+        monthResult = monthResult(income.firstOrNull()?.sum, spending.firstOrNull()?.sum, today, moneyFormat),
         attention = HomeUiState.Attention(
             missingRates = (missing + spendingMissing).distinct(),
             staleRatesSince = rateDate?.takeIf { it < today.minus(DatePeriod(days = HomeUiState.STALE_RATE_DAYS)) },
@@ -73,5 +75,17 @@ internal fun buildHomeState(
                 account.type, account.color,
             )
         },
+    )
+}
+
+/** Back of the hero card (#519): the month in the main currency; `null` when either side has no sum or the currencies differ. */
+internal fun monthResult(income: Money?, spending: Money?, today: LocalDate, format: MoneyFormat): HomeUiState.MonthResult? {
+    if (income == null || spending == null || income.currency != spending.currency) return null
+    val result = income - spending
+    val sign = if (result.isPositive) "+" else ""
+    return HomeUiState.MonthResult(
+        result = sign + format.format(result),
+        positive = !result.isNegative,
+        perDay = format.format(spending.scale(1, today.day.toLong())),
     )
 }

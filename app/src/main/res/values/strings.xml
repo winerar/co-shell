@@ -19,8 +19,6 @@
     <string name="home_total_rate_date">По курсу на %1$s</string>
     <string name="amount_peek_no_rate">нет курса</string>
     <string name="home_total_missing">Без учёта: %1$s — нет курса</string>
-    <string name="home_total_show_breakdown">Показать по валютам</string>
-    <string name="home_total_hide_breakdown">Скрыть разбивку</string>
     <string name="home_spending_title">Траты за %1$s</string>
     <string name="home_spending_rate_hint">По курсу на день каждой траты</string>
     <string name="home_spending_tile">Траты</string>

@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -22,7 +26,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.charts.bulletColor
-import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellFlipCard
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
@@ -33,10 +37,21 @@ import app.coshell.ui.format.breakableBeforeCurrency
  * a bullet with today's mark and the forecast for the end of the month.
  */
 @Composable
-internal fun BudgetSummaryCard(summary: BudgetsUiState.Summary, modifier: Modifier = Modifier) {
-    CoShellCard(modifier.fillMaxWidth(), accent = true) {
-        Column(Modifier.padding(Spacing.l)) { SummaryContent(summary) }
-    }
+internal fun BudgetSummaryCard(
+    summary: BudgetsUiState.Summary,
+    closest: List<BudgetsUiState.Envelope>,
+    modifier: Modifier = Modifier,
+) {
+    var flipped by rememberSaveable { mutableStateOf(false) }
+    // A tap turns the card over (#519): the back says where to look — the daily allowance and the limits closest to the end.
+    CoShellFlipCard(
+        flipped = flipped,
+        onFlip = { flipped = !flipped },
+        flipLabel = stringResource(R.string.flip_card_label),
+        modifier = modifier.fillMaxWidth(),
+        front = { SummaryContent(summary) },
+        back = { SummaryBack(summary, closest) },
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)

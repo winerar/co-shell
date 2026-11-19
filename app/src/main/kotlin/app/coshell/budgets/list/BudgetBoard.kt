@@ -61,6 +61,8 @@ internal fun buildSummary(summary: BudgetMonthSummary, today: LocalDate, format:
         pace = pace,
         tone = tone,
         daysLeft = if (current) period.daysLeft(today) else null,
+        perDay = period.daysLeft(today).takeIf { current && it > 0 && !summary.left.isNegative && !summary.left.isZero }
+            ?.let { format.format(summary.left.scale(1, it.toLong())) },
         forecast = summary.forecast?.let { forecast ->
             BudgetsUiState.Forecast(format.format(forecast), (forecast - summary.planned).takeIf { it.isPositive }?.let(format::format))
         },

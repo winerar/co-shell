@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="steps_title">First steps</string>
+    <string name="steps_row_start">Let\'s start with an account</string>
+    <string name="steps_row_progress">Done: %1$d of %2$d · Next: %3$s</string>
+    <string name="steps_sheet_sub">Done: %1$d of %2$d. You can skip any step.</string>
+    <string name="steps_hide">Hide steps</string>
+    <string name="steps_account">Add an account</string>
+    <string name="steps_account_hint">Where your money is: a card, cash or savings. Start with one.</string>
+    <string name="steps_entry">Record your first expense</string>
+    <string name="steps_entry_hint">Any one, even a coffee. Tap “+”.</string>
+    <string name="steps_limit">Set your first limit</string>
+    <string name="steps_limit_hint">How much you are happy to spend on groceries a month. You can change it.</string>
+    <string name="steps_family">Invite someone close</string>
+    <string name="steps_family_hint">It is easier together. Or later.</string>
+    <string name="hints_title">Hints</string>
+    <string name="hints_on">Shown</string>
+    <string name="hints_off">Off</string>
+    <string name="hints_reset_title">Show hints again</string>
+    <string name="hints_reset_hint">Brings back “First steps” and tips</string>
+</resources>

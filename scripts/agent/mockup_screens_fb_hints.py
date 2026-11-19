@@ -25,7 +25,7 @@ STEPS = [('Добавьте счёт', 'Где лежат ваши деньги:
 def steps_row(done, nxt):
     """А2: one calm row under the balance; progress is a 8 px meter (CoShellMeter), no red, no streaks."""
     sub = 'Начнём со счёта' if done == 0 else 'Сделано: %d из 4 · Дальше: %s' % (done, nxt)
-    inner = row('<b>Первые шаги</b>', sub, tile_icon('spark', LIME, LIMEBG), chevron(), min_h=64)
+    inner = row('<b>Первые шаги</b>', sub, tile_icon('bulb', LIME, LIMEBG), chevron(), min_h=64)
     return '<div style="margin-top: 10px;">%s</div>' % card(inner + '<div style="padding: 0 16px 14px;">%s</div>' % progress(done / 4, 0))
 
 
@@ -50,8 +50,8 @@ def home_two():
 def mark(done):
     if done:
         return ('<span style="width: 28px; height: 28px; flex: none; border-radius: 50%%; background: %s; border: 2px solid %s; display: flex; align-items: center; '
-                'justify-content: center;">%s</span>' % (LIME, INK, svg('check', ONLIME, 18, 2.6)))
-    return '<span style="width: 28px; height: 28px; flex: none; border-radius: 50%%; border: 2px solid %s; box-sizing: border-box;"></span>' % OUTLINE
+                'justify-content: center;">%s</span>' % (LIME, INK, svg('check', ONLIME, 16, 2.6)))
+    return '<span style="width: 22px; height: 22px; flex: none; border-radius: 7px; border: 2px solid %s; box-sizing: border-box;"></span>' % OUTLINE
 
 
 def steps_sheet(done=2):
@@ -93,7 +93,7 @@ def moment():
 
 def app_settings():
     app = group([row('Внешний вид', 'Лайм · тёмная', tile_icon('spark', VIOLET, VIOLETBG), chevron(), min_h=52),
-                 row('Подсказки', 'Показываются', tile_icon('info', CYAN, CYANBG), switch(True), min_h=52),
+                 row('Подсказки', 'Показываются', tile_icon('bulb', CYAN, CYANBG), switch(True), min_h=52),
                  row('Показать подсказки заново', 'Вернёт «Первые шаги» и советы', tile_icon('refresh', LIME, LIMEBG), chevron(), min_h=52),
                  row('Обратная связь', 'Ошибка или идея', tile_icon('mail', PINK, PINKBG), chevron(), min_h=52)])
     return board('Ещё', tab_screen('Ещё', label('Приложение', top=6) + app + note('Сброс очищает «показано» и снимает «скрыто» у шагов.', 8), 'more'))

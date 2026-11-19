@@ -37,6 +37,12 @@ class AutomergeTest(unittest.TestCase):
         self.env = dict(os.environ, PATH=bin_dir + os.pathsep + os.environ["PATH"], GH_LOG=self.log,
                         GH_REPO="o/r", RUNS_JSON="[]")
         self.env.pop("CI_GREEN_SHA", None)
+        self.env.pop("HOTFIX_GREEN_SHA", None)
+        # backmerge.sh would run git in this repo: a fake logs the call instead.
+        fake_backmerge = os.path.join(self.tmp.name, "backmerge.sh")
+        with open(fake_backmerge, "w") as f:
+            f.write('echo "backmerge $*" >> "$GH_LOG"\n')
+        self.env["BACKMERGE"] = fake_backmerge
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -74,6 +80,34 @@ class AutomergeTest(unittest.TestCase):
         self.pr["isDraft"] = True
         _, calls = self.run_script(CI_GREEN_SHA="sha1")
         self.assertNotIn("pr merge", calls)
+
+    def test_hotfix_into_main_waits_for_the_hotfix_job(self):
+        self.pr["baseRefName"] = "main"
+        stdout, calls = self.run_script(CI_GREEN_SHA="sha1", RUNS_JSON='[{"status":"completed","conclusion":"success"}]')
+        self.assertIn("emulator", stdout)
+        self.assertNotIn("pr merge", calls)
+
+    def test_hotfix_merges_publishes_and_brings_main_into_dev(self):
+        self.pr["baseRefName"] = "main"
+        _, calls = self.run_script(HOTFIX_GREEN_SHA="sha1")
+        self.assertIn("pr merge 7", calls)
+        self.assertIn("workflow run ci.yml --ref main", calls)
+        self.assertIn("backmerge 7", calls)
+
+    def test_hotfix_flag_for_another_commit_does_not_count(self):
+        self.pr["baseRefName"] = "main"
+        _, calls = self.run_script(HOTFIX_GREEN_SHA="old")
+        self.assertNotIn("pr merge", calls)
+
+    def test_release_pr_from_dev_is_not_merged(self):
+        self.pr.update(baseRefName="main", headRefName="dev")
+        _, calls = self.run_script(HOTFIX_GREEN_SHA="sha1")
+        self.assertNotIn("pr merge", calls)
+
+    def test_merge_into_dev_does_not_backmerge(self):
+        _, calls = self.run_script(CI_GREEN_SHA="sha1")
+        self.assertIn("workflow run ci.yml --ref dev", calls)
+        self.assertNotIn("backmerge", calls)
 
 
 if __name__ == "__main__":

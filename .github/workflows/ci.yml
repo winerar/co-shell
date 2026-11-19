@@ -96,6 +96,15 @@ jobs:
           python3 -m unittest discover -s scripts/agent -p 'test_*.py'
 
       # Before the automerge step below: a PR with broken rules is not merged.
+      # Hotfix = a PR into main from anything but dev (docs/agents/hotfix.md). The app shows the top whats-new
+      # section, so a hotfix brings its own («## <date> · исправление», «• Исправлено: …»).
+      - name: Hotfix has its own whats-new section
+        if: github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev'
+        run: |
+          new=$(grep -m1 '^## ' docs/whats-new.md || true)
+          old=$(git show origin/main:docs/whats-new.md | grep -m1 '^## ' || true)
+          [ "$new" != "$old" ] || { echo "::error::Hotfix: add a new top section to docs/whats-new.md (docs/agents/hotfix.md)"; exit 1; }
+
       - name: Firebase rules tests (emulator)
         if: steps.changes.outputs.rules == 'true'
         run: scripts/test-rules.sh
@@ -268,3 +277,27 @@ jobs:
             **/build/reports/
             **/build/test-results/
             **/build/outputs/roborazzi/
+
+  # Hotfix (docs/agents/hotfix.md): the R8 release build on an emulator, side by side with `build`.
+  emulator:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev' && !github.event.pull_request.draft
+    uses: ./.github/workflows/emulator.yml
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}
+
+  # Both green → the hotfix merges into main, CI on main publishes the build, main is merged back into dev.
+  hotfix:
+    needs: [build, emulator]
+    if: success() && github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # backmerge.sh merges main into dev
+      - name: Merge the hotfix into main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HOTFIX_GREEN_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash scripts/ci/automerge.sh "${{ github.event.pull_request.number }}"

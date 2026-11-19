@@ -21,6 +21,7 @@
     <string name="hints_reset_title">Показать подсказки заново</string>
     <string name="hints_reset_hint">Вернёт «Первые шаги» и советы</string>
     <string name="hint_close">Закрыть подсказку</string>
+    <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
     <string name="hint_accounts">Счёт — место, где лежат деньги. Баланс считается сам.</string>
     <string name="hint_categories">Категория — на что ушли деньги. Готовые подойдут, свои добавите потом.</string>
     <string name="hint_budgets">Лимит — сколько можно потратить на категорию за месяц. Это ориентир, а не запрет.</string>

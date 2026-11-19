@@ -110,4 +110,4 @@ Compose и Material 3 (цвета, слои, жесты, анимации, ст�
 - (11-15) Ответ опроса бывает только с `note`, без `choice` (радио не нажато) — выбор не сделан: повторить вопрос в следующем опросе, не угадывать.
 - (11-16, #408) `CoShellAddFab(label, onClick, modifier)`: `onClick` стоит перед `modifier` — хвостовая лямбда `CoShellAddFab(label) { … }` не компилируется, передавать `onClick = { … }`. «Добавить» на экране-списке — только им (`AddButtonRuleTest`).
 - (11-16) Публикация холста: «You haven't viewed the latest version» после чтения файлов по `paths` лечится `Artifact read` с `page: true` (страница типа) — потом publish проходит; целиком 150 файлов могут не пройти, тогда `file_path` одной доски + `files` остальных. Прогон `agent.sh shots` ~10 мин: запускать фоном, `Monitor` на `done` в логе.
-
+- (11-19, #531) CameraX `ImageAnalysis.Analyzer` работает на своём потоке (`pool-N-thread-1`): навигация/Compose-колбэки оттуда падают «setCurrentState must be called on the main thread». Результат анализа — через `receipt/scan/MainThreadText` (главный `Executor`, после `close` ничего не доставляет).

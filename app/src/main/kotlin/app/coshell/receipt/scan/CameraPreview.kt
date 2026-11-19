@@ -32,7 +32,9 @@ internal fun CameraPreview(onText: (String) -> Unit, onCamera: (Camera?) -> Unit
     }
     DisposableEffect(lifecycleOwner) {
         val executor = Executors.newSingleThreadExecutor()
-        val analyzer = QrAnalyzer { currentOnText(it) }
+        // Frames are read on [executor]; the text goes on to the screen (and navigation) on the main thread.
+        val handoff = MainThreadText(ContextCompat.getMainExecutor(context)) { currentOnText(it) }
+        val analyzer = QrAnalyzer(handoff)
         val future = ProcessCameraProvider.getInstance(context)
         var provider: ProcessCameraProvider? = null
         future.addListener(
@@ -51,6 +53,7 @@ internal fun CameraPreview(onText: (String) -> Unit, onCamera: (Camera?) -> Unit
             ContextCompat.getMainExecutor(context),
         )
         onDispose {
+            handoff.close()
             provider?.unbindAll()
             currentOnCamera(null)
             executor.shutdown()

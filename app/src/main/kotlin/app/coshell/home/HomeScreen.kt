@@ -2,9 +2,12 @@ package app.coshell.home
 
 import app.coshell.converter.ConverterEntry
 import app.coshell.core.domain.hints.FirstStepsState
+import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.FirstStepsRow
 import app.coshell.hints.FirstStepsSheet
 import app.coshell.hints.HintsViewModel
+import app.coshell.hints.LocalHintHost
+import app.coshell.hints.WordHint
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.LocalBottomBarInset
@@ -191,6 +194,7 @@ fun HomeScreen(
         },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
+        val hintsOn = LocalHintHost.current != null
         LazyColumn(
             state = listState,
             // While editing, the «Готово» bar below ends the list; otherwise the list goes under both capsules.
@@ -220,6 +224,7 @@ fun HomeScreen(
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
             firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
+            if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
                 val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))

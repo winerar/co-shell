@@ -89,7 +89,8 @@
 `HintBannerHost` (в `overBar` `CoShellNavHost`, уступает плашке обновления и приветствию; плашка уходит сама через 8 с, карточка — по «Понятно»), `CoachHint(тексты, enabled)` на экране;
 `HintPlanner`: моменты вне лимита «заход/день» (`HintCenterTest`, `HintPlannerTest`). Жесты: `flip_card` («Обзор» с операциями), `edit_tap` (от 1 операции) и `hold_select` (от 3) в «Операциях».
 Моменты `first_entry`/`first_limit` — по **смене** данных за сессию (`StepsMoments.between`, при старте не срабатывают); финал `StepsFinale` (`CoShellSuccessBurst`, 7 с или нажатие, один раз — ключ `steps_finale`); «Подсказки включены» после сброса.
-**Осталось:** слова на шторке ввода, валютные и «Теги» (отдельного экрана нет — только шторки, решить где); жесты `swipe_tabs`, `template`, `flip_card` на «Бюджетах»; моменты `first_week`, `welcome_back`, `month_end` (+ точка на «Отчётах»), `limit_80`, `backup`, `theme` (с «Открыть»; нужны дата первого запуска и счётчики операций в `HintStore`).
+**Сделано (ч. 5):** `flip_card` на «Бюджетах» (есть лимит).
+**Осталось:** слова на шторке ввода, валютные и «Теги» (отдельного экрана нет — только шторки, решить где); жесты `swipe_tabs`, `template`; моменты `first_week`, `welcome_back`, `month_end` (+ точка на «Отчётах»), `limit_80`, `backup`, `theme` (с «Открыть»; нужны дата первого запуска и счётчики операций в `HintStore`).
 - `core:domain/hints/`: `HintId`, `HintTrigger`, `HintPlanner` (чистая логика «что показать», тесты), `HintsSettings` (интерфейс);
   шаги — `FirstSteps` (`FirstStepsState` из данных). Хранение — `app/.../hints/` (настройки устройства).
 - UI: `app/.../hints/` — блоки на утверждённых компонентах (`CoShellHint`, `CoShellCoachCard`, `CoShellNoticePill`, шторка). Строки —

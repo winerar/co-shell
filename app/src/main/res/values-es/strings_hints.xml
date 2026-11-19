@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="steps_title">Primeros pasos</string>
+    <string name="steps_row_start">Empecemos por una cuenta</string>
+    <string name="steps_row_progress">Hecho: %1$d de %2$d · Siguiente: %3$s</string>
+    <string name="steps_sheet_sub">Hecho: %1$d de %2$d. Puedes saltarte cualquier paso.</string>
+    <string name="steps_hide">Ocultar pasos</string>
+    <string name="steps_account">Añade una cuenta</string>
+    <string name="steps_account_hint">Dónde está tu dinero: tarjeta, efectivo o ahorros. Empieza con una.</string>
+    <string name="steps_entry">Anota tu primer gasto</string>
+    <string name="steps_entry_hint">Cualquiera, aunque sea un café. Pulsa «+».</string>
+    <string name="steps_limit">Fija tu primer límite</string>
+    <string name="steps_limit_hint">Cuánto quieres gastar al mes en comida. Puedes cambiarlo.</string>
+    <string name="steps_family">Invita a alguien cercano</string>
+    <string name="steps_family_hint">Es más fácil en pareja. O más tarde.</string>
+    <string name="hints_title">Consejos</string>
+    <string name="hints_on">Se muestran</string>
+    <string name="hints_off">Desactivados</string>
+    <string name="hints_reset_title">Mostrar los consejos de nuevo</string>
+    <string name="hints_reset_hint">Recupera «Primeros pasos» y los consejos</string>
+</resources>

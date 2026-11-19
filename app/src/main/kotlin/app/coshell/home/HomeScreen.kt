@@ -1,6 +1,10 @@
 package app.coshell.home
 
 import app.coshell.converter.ConverterEntry
+import app.coshell.core.domain.hints.FirstStepsState
+import app.coshell.hints.FirstStepsRow
+import app.coshell.hints.FirstStepsSheet
+import app.coshell.hints.HintsViewModel
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.LocalBottomBarInset
@@ -98,10 +102,13 @@ fun HomeRoute(
     budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
     upcomingViewModel: UpcomingViewModel = hiltViewModel(),
     screenOptions: ScreenOptionsViewModel = hiltViewModel(),
+    hintsViewModel: HintsViewModel = hiltViewModel(),
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
 ) {
     val lock = LocalInputLock.current
+    val steps by hintsViewModel.steps.collectAsStateWithLifecycle()
+    var stepsOpen by rememberSaveable { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
@@ -129,7 +136,10 @@ fun HomeRoute(
         gate = gate,
         onUpdate = onUpdate,
         onLayoutChange = { layout -> screenOptions.change { it.copy(home = layout) } },
+        firstSteps = steps,
+        onFirstSteps = { stepsOpen = true },
     )
+    if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }
 
 /**
@@ -153,6 +163,8 @@ fun HomeScreen(
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
     onLayoutChange: (HomeLayout) -> Unit = {},
+    firstSteps: FirstStepsState? = null,
+    onFirstSteps: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -195,6 +207,7 @@ fun HomeScreen(
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
+                firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
                 item {
                     CoShellEmptyState(
                         iconRes = DesignR.drawable.ic_account_balance_wallet,
@@ -206,6 +219,7 @@ fun HomeScreen(
                 return@LazyColumn
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
+            firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
                 val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))

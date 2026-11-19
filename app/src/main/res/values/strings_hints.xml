@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- «Первые шаги» (#513, docs/agents/hints.md) -->
+    <string name="steps_title">Первые шаги</string>
+    <string name="steps_row_start">Начнём со счёта</string>
+    <string name="steps_row_progress">Сделано: %1$d из %2$d · Дальше: %3$s</string>
+    <string name="steps_sheet_sub">Сделано: %1$d из %2$d. Любой шаг можно пропустить.</string>
+    <string name="steps_hide">Скрыть шаги</string>
+    <string name="steps_account">Добавьте счёт</string>
+    <string name="steps_account_hint">Где лежат ваши деньги: карта, наличные или копилка. Начните с одного.</string>
+    <string name="steps_entry">Запишите первую трату</string>
+    <string name="steps_entry_hint">Любую, хоть кофе. Нажмите «+».</string>
+    <string name="steps_limit">Задайте первый лимит</string>
+    <string name="steps_limit_hint">Сколько готовы тратить на продукты за месяц. Цифру можно менять.</string>
+    <string name="steps_family">Позовите близкого человека</string>
+    <string name="steps_family_hint">Вдвоём проще. Можно и позже.</string>
+    <!-- «Ещё → Приложение» -->
+    <string name="hints_title">Подсказки</string>
+    <string name="hints_on">Показываются</string>
+    <string name="hints_off">Выключены</string>
+    <string name="hints_reset_title">Показать подсказки заново</string>
+    <string name="hints_reset_hint">Вернёт «Первые шаги» и советы</string>
+</resources>

@@ -9,6 +9,7 @@ import app.coshell.BuildConfig
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
 import app.coshell.currencies.list.ReportCurrenciesViewModel
+import app.coshell.hints.HintsViewModel
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
@@ -25,7 +26,9 @@ internal fun MoreRoute(
     reportCurrencies: ReportCurrenciesViewModel = hiltViewModel(),
     themeSettings: ThemeSettingsViewModel = hiltViewModel(),
     newMarks: NewMarksViewModel = hiltViewModel(),
+    hints: HintsViewModel = hiltViewModel(),
 ) {
+    val hintsOn by hints.enabled.collectAsStateWithLifecycle()
     val marks by newMarks.current.collectAsStateWithLifecycle()
     val currencies by reportCurrencies.state.collectAsStateWithLifecycle()
     val mode by themeSettings.mode.collectAsStateWithLifecycle()
@@ -44,6 +47,8 @@ internal fun MoreRoute(
             onImport = { navController.navigate(WalletImportDestination) },
             onAppearance = { navController.navigate(SettingsDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
+            onHintsToggle = hints::setEnabled,
+            onHintsReset = hints::reset,
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onStartUpdate = onStartUpdate,
             onOpenedNew = newMarks::opened,
@@ -55,6 +60,7 @@ internal fun MoreRoute(
             mainCurrency = currencies.currencies.firstOrNull(),
             appearance = appearanceSummary(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME),
             newMarks = marks,
+            hintsEnabled = hintsOn,
         ),
     )
 }

@@ -25,6 +25,7 @@ import app.coshell.language.AppLanguage
 import app.coshell.language.LanguagePromptHost
 import app.coshell.navigation.CoShellNavHost
 import app.coshell.recurring.notify.NotificationPermissionAsk
+import app.coshell.receipt.ReceiptLinks
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.theme.ThemeSettingsViewModel
@@ -55,6 +56,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var updateJournal: UpdateJournal
     @Inject lateinit var notificationAsk: NotificationPermissionAsk
     @Inject lateinit var paymentLinks: PaymentLinks
+    @Inject lateinit var receiptLinks: ReceiptLinks
     @Inject lateinit var paymentNotices: PaymentNotices
     @Inject lateinit var hintCenter: HintCenter
 
@@ -81,6 +83,7 @@ class MainActivity : ComponentActivity() {
             if (notificationAsk.awaitDue()) withStarted { askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS) }
         }
         openPayment(intent)
+        receiptLinks.offer(intent)
         setContent {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
             // already matches the phone's mode), so a chosen theme never flashes the other one.
@@ -105,7 +108,7 @@ class MainActivity : ComponentActivity() {
                     // «Ввод операции → Вибрация»: off — every tap of the app stays silent.
                     val haptics = remember(systemHaptics, options.haptics) { if (options.haptics) systemHaptics else NoHaptics }
                     CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
-                        CoShellNavHost(paymentLinks = paymentLinks)
+                        CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
                     }
                     // The one-time language question over «Обзор» (#352).
                     LanguagePromptHost()
@@ -118,6 +121,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         openPayment(intent)
+        receiptLinks.offer(intent)
     }
 
     /** «Изменить сумму» / «Провести» on the reminder (#405): the sheet opens, the reminder is answered. */

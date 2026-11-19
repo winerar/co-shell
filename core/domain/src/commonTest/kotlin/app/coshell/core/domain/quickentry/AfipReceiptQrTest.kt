@@ -28,6 +28,7 @@ class AfipReceiptQrTest {
         assertEquals(Money.ofMajor(37_914, currency = ars), qr.money)
         assertEquals(LocalDate(2026, 11, 19), qr.date)
         assertEquals("30685849751:442:6:117817", qr.key)
+        assertEquals("30-68584975-1", qr.sellerTaxIdText)
     }
 
     @Test

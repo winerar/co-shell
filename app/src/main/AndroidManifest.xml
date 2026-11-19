@@ -22,10 +22,21 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="uiMode"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- The QR of an Argentine receipt, opened by a scanner or the camera (#526): read in the app, offline. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="www.afip.gob.ar" />
+                <data android:host="afip.gob.ar" />
+                <data android:pathPrefix="/fe/qr" />
             </intent-filter>
         </activity>
         <receiver

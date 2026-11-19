@@ -21,6 +21,9 @@ data class ReceiptQr(
 ) {
     /** One receipt, one key: used to warn «already recorded» on a second scan. */
     val key: String get() = "$sellerTaxId:$pointOfSale:$voucherType:$voucherNumber"
+
+    /** The seller's CUIT the way it is written on paper: `30-68584975-1`. */
+    val sellerTaxIdText: String get() = "${sellerTaxId.take(2)}-${sellerTaxId.substring(2, 10)}-${sellerTaxId.last()}"
 }
 
 /**

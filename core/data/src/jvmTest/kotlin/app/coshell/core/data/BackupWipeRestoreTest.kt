@@ -109,7 +109,10 @@ class BackupWipeRestoreTest {
             ),
         )
         transactions.saveTransaction(
-            Transaction("t-rent", TransactionType.EXPENSE, "galicia", Money(650_000_00, ars), Instant.parse("2026-11-05T09:00:00Z")),
+            Transaction(
+                "t-rent", TransactionType.EXPENSE, "galicia", Money(650_000_00, ars), Instant.parse("2026-11-05T09:00:00Z"),
+                receiptKey = "30685849751:442:6:117817",
+            ),
         )
         transactions.saveTransaction(
             Transaction(

@@ -143,6 +143,8 @@ class RoomTransactionRepository(
     override suspend fun countForAccount(accountId: String): Int = transactions.countForAccount(accountId)
 
     override suspend fun countForCategory(categoryId: String): Int = transactions.countForCategory(categoryId)
+
+    override suspend fun findByReceiptKey(key: String): Transaction? = transactions.byReceiptKey(key)?.toModel()
 }
 
 class RoomBudgetRepository(

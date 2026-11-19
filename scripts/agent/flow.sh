@@ -9,7 +9,7 @@
 #       doc rules (session-end.sh --pre) → STATUS date and test count (stamp-status.sh) → full check
 #       → commit → push → session-end.sh
 # check/quick are skipped when the same files (or the same plus docs only) already passed (check-cache.sh);
-# --recheck forces the run.
+# --recheck forces the run. A commit whose files passed a full check gets «Agent-Check: full» (PR CI skips Gradle).
 # Commit messages: English imperative (workflow.md «Git»); pass attribution trailers as extra -m.
 set -uo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -51,8 +51,14 @@ commit_all() {
     if [ -z "$(git status --porcelain)" ]; then step "nothing to commit"; return; fi
     [ ${#msgs[@]} -gt 0 ] || die "commit needs -m \"message\""
     step "commit: $(git status --porcelain | wc -l) files"
-    git add -A && git commit -q "${msgs[@]}" || die "commit"
+    git add -A || die "git add"
+    # «Agent-Check: full» = a full check passed on exactly these files (or on them minus docs): PR CI then skips
+    # Gradle (scripts/ci/agent-checked.sh, docs/agents/ci.md). check-cache.sh hashes the same `git add -A` tree.
+    local trailer=()
+    "$here/check-cache.sh" fresh full >/dev/null && trailer=(--trailer "Agent-Check: full")
+    git commit -q "${msgs[@]}" "${trailer[@]}" || die "commit"
     git log -1 --format='   %h %s'
+    [ ${#trailer[@]} -gt 0 ] && echo "   Agent-Check: full — PR CI skips Gradle" || echo "   no full check on these files — PR CI builds them (~6 min of Actions)"
 }
 
 cmd="${1:-}"; [ $# -gt 0 ] && shift
@@ -75,6 +81,7 @@ case "$cmd" in
         "$here/stamp-status.sh" >/dev/null # the check may have changed the test count
         commit_all
         step "push"; "$here/push.sh" || die "push"
-        step "session-end checklist"; "$here/session-end.sh" || die "session-end (fix ✗, then: agent.sh finish)" ;;
+        step "session-end checklist"; "$here/session-end.sh" || die "session-end (fix ✗, then: agent.sh finish)"
+        step "next: agent.sh pr — title, body and the MCP steps to hand the PR over (CI, automerge)" ;;
     *) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
 esac

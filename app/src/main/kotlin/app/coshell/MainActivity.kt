@@ -42,6 +42,8 @@ import app.coshell.update.install.InstallEvents
 import app.coshell.update.install.showInstallConfirmations
 import app.coshell.update.log.UpdateJournal
 import dagger.hilt.android.AndroidEntryPoint
+import app.coshell.hints.HintCenter
+import app.coshell.hints.LocalHintHost
 import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var notificationAsk: NotificationPermissionAsk
     @Inject lateinit var paymentLinks: PaymentLinks
     @Inject lateinit var paymentNotices: PaymentNotices
+    @Inject lateinit var hintCenter: HintCenter
 
     private val askNotifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
@@ -101,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     val systemHaptics = LocalHapticFeedback.current
                     // «Ввод операции → Вибрация»: off — every tap of the app stays silent.
                     val haptics = remember(systemHaptics, options.haptics) { if (options.haptics) systemHaptics else NoHaptics }
-                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics) {
+                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
                         CoShellNavHost(paymentLinks = paymentLinks)
                     }
                     // The one-time language question over «Обзор» (#352).

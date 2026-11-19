@@ -30,6 +30,9 @@ interface HintHost {
     /** Gestures and moments: picks the first of [texts] by priority that may show now and puts it on the banner. */
     suspend fun offer(texts: Map<HintId, Int>, args: Map<HintId, List<String>> = emptyMap()): Boolean
 
+    /** Words shown by a sheet itself: the first of [ids] by priority that may show now, counted as shown; null when none. */
+    suspend fun claimFirst(ids: Set<HintId>): HintId?
+
     /** A plain notice without any limits (the reset answer). */
     fun say(@StringRes text: Int)
 
@@ -93,7 +96,8 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
         _reportsDot.value = false
     }
 
-    private suspend fun claimFirst(candidates: Set<HintId>): HintId? = lock.withLock {
+    override suspend fun claimFirst(ids: Set<HintId>): HintId? = lock.withLock {
+        val candidates = ids
         val day = today()
         val pick = HintPlanner.next(candidates, store.enabled(), store.shown(), store.lastShownDay(), day, shownThisVisit)
             ?: return null

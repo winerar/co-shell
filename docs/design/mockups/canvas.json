@@ -1041,7 +1041,7 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 3804,
+      "h": 3936,
       "title": "Воркфлоу",
       "page": "flows"
     },
@@ -1303,8 +1303,35 @@
       "page": "ideas",
       "radius": 28
     },
-    "Hint513Settings.dc.html": {
+    "Hint513EntryCoach.dc.html": {
       "x": 4230,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · шторка ввода: карточка «Понятно» над шторкой",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Tags.dc.html": {
+      "x": 4700,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · «Теги»: подсказка под заголовком",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Currency.dc.html": {
+      "x": 5170,
+      "y": 3140,
+      "w": 390,
+      "h": 844,
+      "title": "#513 · «Валюта покупки»: подсказка под заголовком",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Hint513Settings.dc.html": {
+      "x": 5640,
       "y": 3140,
       "w": 390,
       "h": 844,
@@ -2588,6 +2615,9 @@
     "Hint513MomentLong.dc.html",
     "Hint513Finale.dc.html",
     "Hint513Reset.dc.html",
+    "Hint513EntryCoach.dc.html",
+    "Hint513Tags.dc.html",
+    "Hint513Currency.dc.html",
     "Hint513Settings.dc.html",
     "Conv2PairEmpty.dc.html",
     "Conv2PairType.dc.html",
@@ -3021,13 +3051,13 @@
       "text": "Обучение новичка: «Первые шаги» и мягкие подсказки · 2026-11-18",
       "x": 0,
       "y": 2890,
-      "maxW": 4620,
+      "maxW": 6030,
       "w": 240
     },
     "fbS513": {
       "page": "ideas",
       "text": "Вид А2 (строка на «Обзоре» → шторка), П1 слова, П2 жесты, тёплые моменты, «Подсказки» в «Ещё → Приложение». Тексты и условия — docs/agents/hints.md. Без вины и красного, любой шаг можно пропустить.",
-      "x": 4700,
+      "x": 6110,
       "y": 3140,
       "w": 390
     },

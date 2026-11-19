@@ -1,5 +1,11 @@
 package app.coshell.navigation
 
+import app.coshell.hints.SheetCoach
+import app.coshell.core.domain.hints.HintId
+import app.coshell.R
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -211,21 +217,34 @@ fun CoShellNavHost(
                 onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
             )
         }
-        dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
-            CoShellSheet(onClosed = { navController.popBackStack() }) { close ->
-                TransactionEditRoute(
-                    onDone = close,
-                    onAddAccount = { navController.navigate(AccountEditDestination()) },
-                    // The copy replaces the open sheet: back from it returns to the list.
-                    onDuplicate = { id ->
-                        navController.navigate(TransactionEditDestination(copyFrom = id)) {
-                            popUpTo<TransactionEditDestination> { inclusive = true }
-                        }
-                    },
-                    // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
-                    onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
-                    onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
-                )
+        dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) { entry ->
+            Box(Modifier.fillMaxSize()) {
+                CoShellSheet(onClosed = { navController.popBackStack() }) { close ->
+                    TransactionEditRoute(
+                        onDone = close,
+                        onAddAccount = { navController.navigate(AccountEditDestination()) },
+                        // The copy replaces the open sheet: back from it returns to the list.
+                        onDuplicate = { id ->
+                            navController.navigate(TransactionEditDestination(copyFrom = id)) {
+                                popUpTo<TransactionEditDestination> { inclusive = true }
+                            }
+                        },
+                        // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
+                        onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
+                        onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+                    )
+                }
+                // New entries only: the words about the sheet sit in the dimmed strip above it (#513, `SheetCoach`).
+                if (entry.toRoute<TransactionEditDestination>().transactionId == null) {
+                    SheetCoach(
+                        mapOf(
+                            HintId.ENTRY_MINIMAL to R.string.hint_entry_minimal,
+                            HintId.KEYPAD_MATH to R.string.hint_keypad_math,
+                            HintId.ENTRY_REFUND to R.string.hint_entry_refund,
+                        ),
+                        Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = Spacing.l),
+                    )
+                }
             }
         }
         screen<TemplatesDestination> {

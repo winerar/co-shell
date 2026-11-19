@@ -2,7 +2,8 @@ name: "Эмулятор: R8-сборка на Android"
 
 # The release build (R8, shrunk resources) on a real Android emulator: cold start, tabs, night mode, font scale 2.0,
 # monkey, memory, reinstall over itself (scripts/ci/emulator-smoke.sh). Costs ~15 min of Actions, so it does not run on
-# PRs: release.yml calls it once a week before the release; by hand — Actions → this workflow → Run workflow.
+# ordinary PRs: release.yml calls it once a week before the release, ci.yml — on a hotfix PR into main
+# (docs/agents/hotfix.md); by hand — Actions → this workflow → Run workflow.
 on:
   workflow_call:
     inputs:

@@ -22,6 +22,7 @@ usage() {
     tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage, backlog)
     issue <N> [строк]     одна задача: заголовок, метки, описание (дешевле MCP)
     sync                  влить origin/dev в текущую ветку, показать конфликты
+    hotfix                срочный фикс сбоя: ветка от origin/main, PR в main (docs/agents/hotfix.md)
     push                  push текущей ветки с повтором при сетевых ошибках (2–16 с)
     stamp                 STATUS: «Обновлено» = сегодня, «всего N» тестов из последнего прогона
     changes               что в ветке относительно dev: коммиты и файлы (кратко)
@@ -65,6 +66,7 @@ case "$cmd" in
     tasks) exec "$here/tasks.sh" "$@" ;;
     issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;
+    hotfix) exec "$here/hotfix.sh" "$@" ;;
     push) exec "$here/push.sh" "$@" ;;
     stamp) exec "$here/stamp-status.sh" "$@" ;;
     changes)

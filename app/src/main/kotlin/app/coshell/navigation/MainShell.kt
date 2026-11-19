@@ -24,6 +24,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
+import app.coshell.core.designsystem.components.CoShellNavButtonsBackdrop
 import app.coshell.core.designsystem.components.CoShellActionBar
 import app.coshell.core.designsystem.components.CoShellSnackbarHost
 import app.coshell.core.designsystem.components.LocalBottomBarInset
@@ -114,6 +115,8 @@ private fun Shell(
                     builder = graph,
                 )
             }
+            // Navigation buttons (not gestures): lists stop showing under them — a band of the page colour.
+            CoShellNavButtonsBackdrop()
             // Quiet notices (the update pill) float just above the bar, only while it is shown.
             Box(Modifier.matchParentSize().padding(bottom = padding.calculateBottomPadding())) { overBar(bar.visible) }
         }

@@ -62,14 +62,20 @@ def tokens():
 
 
 def components():
-    tabs = ['home', 'ops', 'acc', 'more']
-    bars = frame(per('tab', tabs, lambda t: nav(t)), 100) + frame(nav('home', True), 100)
+    tabs = ['home', 'ops', 'rep', 'more']
+    # Phones with navigation buttons (CoShellNavButtonsBackdrop): the button band in the page colour, the capsule 8 dp above it.
+    keys = ''.join('<span style="color: %s; font-size: 18px;">%s</span>' % (MUTED, k) for k in ('◁', '○', '□'))
+    band = ('<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 48px; background: %s; display: flex; align-items: center; '
+            'justify-content: space-around; padding: 0 64px;">%s</div>' % (BG, keys))
+    bars = (frame(per('tab', tabs, lambda t: nav(t)), 100) + frame(nav('home', True), 100)
+            + frame(nav('home').replace('bottom: 18px;', 'bottom: 56px;', 1) + band, 140))
     bars = bars.replace('<a href="#" aria-label="Обзор"', '<a href="#" onClick="{{go_tab_home}}" aria-label="Обзор"').replace(
         '<a href="#" aria-label="Операции"', '<a href="#" onClick="{{go_tab_ops}}" aria-label="Операции"').replace(
-        '<a href="#" aria-label="Счета"', '<a href="#" onClick="{{go_tab_acc}}" aria-label="Счета"').replace('<a href="#" aria-label="Ещё"', '<a href="#" onClick="{{go_tab_more}}" aria-label="Ещё"')
+        '<a href="#" aria-label="Отчёты"', '<a href="#" onClick="{{go_tab_rep}}" aria-label="Отчёты"').replace('<a href="#" aria-label="Ещё"', '<a href="#" onClick="{{go_tab_more}}" aria-label="Ещё"')
     cards = [
         section('Нижняя панель', grid([bars], 1).replace('repeat(1, minmax(0, 1fr))', 'repeat(2, minmax(0, 1fr))'),
-                'nav(active, dot_more) → CoShellBottomBar · CoShellTab — капсула 64 dp, пилюля 44 dp, «+» 52 dp (нажимайте вкладки) · '
+                'nav(active, dot_more) → CoShellBottomBar · CoShellTab — капсула 56 dp, пилюля 40 dp, «+» 48 dp (нажимайте вкладки) · '
+                'кнопки навигации внизу → CoShellNavButtonsBackdrop (полоса цвета фона, капсула на 8 dp выше, без серой системной подложки) · '
                 'tab_screen(title, body, active) / inner_screen(title, body) / top_bar(title, lead) → TabTopBar · ScreenTopBar', 3),
         section('Шапки', stack(frame(tab_head('Операции', icon_button('search', 'Поиск')), 64), frame(tab_head('Операции', icon_button('search', 'Поиск'), '10 ноября, вт · −24 000,00 ARS'), 64),
                                frame(search_head('кафе'), 64), frame(select_head(3), 64), frame(inner_head('Курсы валют'), 64), frame(inner_head('Курсы валют', scrolled=True), 64)),

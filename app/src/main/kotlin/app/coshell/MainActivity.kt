@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import app.coshell.core.designsystem.components.clearNavigationScrim
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.DisposableEffect
@@ -101,6 +102,8 @@ class MainActivity : ComponentActivity() {
                 DisposableEffect(darkTheme) {
                     val style = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { darkTheme }
                     enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
+                    // Navigation buttons: no grey system scrim — the band gets the screen's background (CoShellNavButtonsBackdrop).
+                    window.clearNavigationScrim(darkTheme)
                     onDispose {}
                 }
                 CoShellTheme(darkTheme = darkTheme, palette = design) {

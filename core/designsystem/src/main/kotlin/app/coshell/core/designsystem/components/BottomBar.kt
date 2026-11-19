@@ -139,11 +139,13 @@ private fun BottomBarContent(
     // A floating capsule over the screen's background, clear of the system navigation bar.
     // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as its max height,
     // so the bar would take the screen and leave screens 0 px tall (releases #52/#56).
+    // With navigation buttons the capsule sits closer to their band (SystemNavigation.kt).
+    val gap = capsuleBottomGap(hasNavigationButtons())
     Box(
         Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = Spacing.l),
+            .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = gap),
     ) {
         Row(
             Modifier

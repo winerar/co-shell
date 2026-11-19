@@ -55,6 +55,7 @@ import app.coshell.core.designsystem.motion.PressOrigin
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.colorTintAlpha
 import app.coshell.core.designsystem.motion.transformOriginIn
+import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -77,11 +78,14 @@ val CoShellSheetDialogProperties = DialogProperties(usePlatformDefaultWidth = fa
 fun CoShellSheet(onClosed: () -> Unit, content: @Composable (close: () -> Unit) -> Unit) {
     // The dialog window is only a stage: full screen, no dim and no window animation — the sheet does all of it.
     val view = LocalView.current
-    LaunchedEffect(view) {
+    val dark = LocalDarkTheme.current
+    LaunchedEffect(view, dark) {
         (view.parent as? DialogWindowProvider)?.window?.apply {
             setDimAmount(0f)
             setWindowAnimations(0)
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            // Navigation buttons over the sheet: no grey scrim, icons in the theme's contrast (SystemNavigation.kt).
+            clearNavigationScrim(dark)
         }
     }
 

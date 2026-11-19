@@ -19,6 +19,7 @@
     <string name="hints_reset_title">Show hints again</string>
     <string name="hints_reset_hint">Brings back “First steps” and tips</string>
     <string name="hint_flip_card">Tap the card to flip it: the back has the most useful things of the month.</string>
+    <string name="hint_swipe_tabs">Swipe sideways to switch tabs.</string>
     <string name="hint_close">Dismiss tip</string>
     <string name="hint_overview_empty">No transactions yet. Tap “+” to add the first one.</string>
     <string name="hint_accounts">An account is where your money sits. The balance adds up by itself.</string>

@@ -19,6 +19,7 @@
     <string name="hints_reset_title">Mostrar los consejos de nuevo</string>
     <string name="hints_reset_hint">Recupera «Primeros pasos» y los consejos</string>
     <string name="hint_flip_card">Toca la tarjeta para girarla: detrás está lo más útil del mes.</string>
+    <string name="hint_swipe_tabs">Desliza hacia un lado para cambiar de pestaña.</string>
     <string name="hint_close">Cerrar consejo</string>
     <string name="hint_overview_empty">Aún no hay movimientos. Pulsa «+» para añadir el primero.</string>
     <string name="hint_accounts">Una cuenta es donde está tu dinero. El saldo se calcula solo.</string>

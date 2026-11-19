@@ -40,4 +40,5 @@
     <string name="hint_welcome_back">Qué bueno verte de nuevo. Puedes anotar los gastos de estos días: la fecha se elige en el movimiento.</string>
     <string name="hint_backup">Ya tienes muchos registros. Guarda una copia de seguridad para no perder nada: Más → Copia de seguridad.</string>
     <string name="hint_theme">Puedes hacer la app a tu gusto: Más → Apariencia.</string>
+    <string name="hint_template">¿Este gasto se repite? Guarda una plantilla y se anotará con un toque.</string>
 </resources>

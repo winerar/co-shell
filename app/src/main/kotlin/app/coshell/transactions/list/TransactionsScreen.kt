@@ -63,6 +63,7 @@ fun TransactionsScreen(
     val tips = buildMap {
         if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
         if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
+        if (state.repeatedSpending && !state.filter.isActive) put(HintId.TEMPLATE, R.string.hint_template)
     }
     CoachHint(tips, enabled = !state.isLoading && !selection.active && tips.isNotEmpty())
     val scroll = rememberTabScrollBehavior()

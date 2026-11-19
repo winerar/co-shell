@@ -49,5 +49,6 @@
     <string name="hint_entry_minimal">Нужны только сумма и счёт. Остальное можно пропустить.</string>
     <string name="hint_keypad_math">Можно складывать и вычитать: 300 + 150.</string>
     <string name="hint_entry_refund">Вернули деньги? Отметьте «Это возврат».</string>
+    <string name="hint_currency_account">Деньги в другой валюте? Итоги посчитаются в валютах итогов, курс подставится сам.</string>
     <string name="hint_currency_receipt">Укажите сумму покупки, и курс посчитается сам.</string>
 </resources>

@@ -55,10 +55,30 @@ class AccountEditViewModelTest {
         vm.save()
 
         assertTrue(vm.state.value.isDone)
+        assertFalse(vm.state.value.foreignCurrencyAdded)
         assertEquals(
             Account("new", "Наличные", usd, AccountType.CASH, initialBalanceMinor = 125_050),
             accounts.getAccount("new"),
         )
+    }
+
+    @Test
+    fun `new account outside the totals currencies asks for the currency pill`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Pesos")
+        vm.onCurrencyChange("ars")
+        vm.save()
+        assertTrue(vm.state.value.foreignCurrencyAdded)
+    }
+
+    @Test
+    fun `editing an account never asks for the currency pill`() = runTest {
+        accounts.saveAccount(Account("p", "Pesos", ars))
+        val vm = viewModel("p")
+        vm.onNameChange("Pesos 2")
+        vm.save()
+        assertTrue(vm.state.value.isDone)
+        assertFalse(vm.state.value.foreignCurrencyAdded)
     }
 
     @Test

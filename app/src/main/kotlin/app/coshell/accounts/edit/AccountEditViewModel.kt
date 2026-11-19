@@ -9,6 +9,7 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.domain.family.OtherMembers
+import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.CurrencyCode
@@ -18,11 +19,13 @@ import app.coshell.core.model.MoneyParser
 import app.coshell.navigation.AccountEditDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -35,6 +38,7 @@ class AccountEditViewModel @Inject constructor(
     private val ids: IdGenerator,
     private val moneyFormat: MoneyFormat,
     private val otherMembers: OtherMembers = OtherMembers { flowOf(emptyMap()) },
+    private val reportCurrencies: ReportCurrencySettings = DefaultReportCurrencies,
 ) : ViewModel() {
 
     private val accountId: String? = savedStateHandle[AccountEditDestination.ARG_ACCOUNT_ID]
@@ -102,7 +106,11 @@ class AccountEditViewModel @Inject constructor(
         val account = buildAccount(current) ?: return
         viewModelScope.launch {
             when (val result = saveAccount(account)) {
-                SaveAccountUseCase.Result.Saved -> _state.update { it.copy(isDone = true) }
+                SaveAccountUseCase.Result.Saved -> {
+                    // A new account outside the totals currencies: the «currency_account» warm pill (#513).
+                    val foreign = existing == null && account.currency !in reportCurrencies.currencies.first()
+                    _state.update { it.copy(isDone = true, foreignCurrencyAdded = foreign) }
+                }
                 is SaveAccountUseCase.Result.Invalid -> when (result.reason) {
                     SaveAccountUseCase.Reason.CURRENCY_LOCKED ->
                         _state.update { it.copy(currencyError = CurrencyError.LOCKED, currencyLocked = true) }
@@ -183,4 +191,10 @@ class AccountEditViewModel @Inject constructor(
         /** The family lives in Argentina, earns in AMD and keeps RUB accounts (see docs/agents/owner.md). */
         val DEFAULT_CURRENCIES = listOf("ARS", "USD", "AMD", "RUB", "EUR", "USDT")
     }
+}
+
+/** Tests and previews: the default totals currencies, read-only. */
+private object DefaultReportCurrencies : ReportCurrencySettings {
+    override val currencies: Flow<List<CurrencyCode>> = flowOf(ReportCurrencySettings.DEFAULT)
+    override suspend fun setCurrencies(currencies: List<CurrencyCode>) = Unit
 }

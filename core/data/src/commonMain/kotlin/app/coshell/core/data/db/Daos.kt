@@ -53,6 +53,10 @@ interface CategoryDao {
 
 @Dao
 interface TransactionDao {
+    /** The live record of a scanned receipt (#526); deleted ones do not count, so a deleted receipt can be scanned again. */
+    @Query("SELECT * FROM transactions WHERE deleted = 0 AND receipt_key = :key ORDER BY date DESC LIMIT 1")
+    suspend fun byReceiptKey(key: String): TransactionEntity?
+
     @Query(
         """SELECT * FROM transactions WHERE deleted = 0
            AND (:anyAccount OR account_id IN (:accountIds) OR to_account_id IN (:accountIds))

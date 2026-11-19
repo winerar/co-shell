@@ -33,6 +33,7 @@ import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsScreen
+import app.coshell.receipt.ReceiptLinks
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -94,6 +95,7 @@ fun CoShellNavHost(
     crashes: CrashNoticeViewModel = hiltViewModel(),
     inputLock: InputLockViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
+    receiptLinks: ReceiptLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -461,6 +463,16 @@ fun CoShellNavHost(
                 launchSingleTop = true
             }
             paymentLinks.consumed()
+        }
+    }
+
+    // A receipt QR opened from a scanner or the camera (#526): the entry sheet with its amount and date.
+    if (receiptLinks != null) {
+        val link by receiptLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val text = link ?: return@LaunchedEffect
+            navController.navigate(TransactionEditDestination(receiptQr = text)) { launchSingleTop = true }
+            receiptLinks.consumed()
         }
     }
 }

@@ -11,7 +11,10 @@
 распознавание толчков — `core:domain/shake/ShakeDetector`.
 Мелкие удобства (#317, пока только расчёты — экраны ждут опроса): «экраном вниз» — `core:domain/shake/FaceDownDetector` (#324),
 встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах — `rates/AmountInCurrencies` (#318), конвертер — пакет `converter/` (#319, ниже);
-`core:domain/quickentry/`: `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
+QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается приложением (`intent-filter` в манифесте, `receipt/ReceiptLinks` → `CoShellNavHost` → `TransactionEditDestination(receiptQr)`);
+шторка заполняется в `TransactionEditViewModel.applyReceipt` (`transactions/edit/ReceiptEntry.kt`: `withReceipt`, `ScanUi`), строка «Из QR чека» и окно «Этот чек уже записан» — `components/ScanBits.kt`,
+ключ чека — `Transaction.receiptKey`. Камера, «Поделиться» и встряхивание — следом (#526).
+`core:domain/quickentry/`: `AfipReceiptQr` — QR аргентинского чека → сумма, дата, ключ чека, `ReceiptPrefills` — куда они ложатся в шторке (#526; экраны — этап 1–2, опрос `docs/design/poll-qr-526.json`, макеты — `scripts/agent/mockup_poll_qr526.py`), `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `greeting/` — одноразовое поздравление версии 1.0 (уведомление `GreetingNotifier` + пилюля `GreetingPill` на «Обзоре», доска `HomeGreeting`): правило «кому и когда» — `core:domain/greeting/ReleaseGreeting` (участник, не владелец семьи; версия ≥ 1.0), флаги «показано» — `GreetingStore`; после релиза пакет можно удалить.
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,

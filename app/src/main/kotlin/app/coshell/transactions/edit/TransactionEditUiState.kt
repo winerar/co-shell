@@ -67,6 +67,8 @@ data class TransactionEditUiState(
     val templateName: String? = null,
     /** «Провести» from «Скоро» (#143, #404): the payment this operation posts — the «⟳ Свет · 15 нояб.» pill. */
     val payment: PaymentUi? = null,
+    /** The sheet was filled from a receipt QR (#526, board «QrFilled»). */
+    val scan: ScanUi? = null,
     /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */

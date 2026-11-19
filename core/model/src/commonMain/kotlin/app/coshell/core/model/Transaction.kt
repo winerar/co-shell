@@ -37,6 +37,8 @@ data class Transaction(
     val importExternalId: String? = null,
     /** One import run (one file loaded at once): «отменить импорт» removes the whole batch. */
     val importBatchId: String? = null,
+    /** Key of the scanned receipt this record came from (`seller:point:type:number`, #526); `null` for hand-typed ones. */
+    val receiptKey: String? = null,
 ) {
     init {
         require(amount.isPositive) { "Transaction amount must be positive, got $amount" }
@@ -56,6 +58,7 @@ data class Transaction(
             "importSource and importExternalId go together"
         }
         require(importBatchId == null || importSource != null) { "Only imported records belong to a batch" }
+        require(receiptKey == null || receiptKey.isNotBlank()) { "Receipt key must not be blank" }
     }
 
     /** How this transaction changes the balance of [account], in that account's currency. */

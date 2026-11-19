@@ -60,6 +60,7 @@ data class CategoryEntity(
         Index("date"),
         Index(value = ["import_source", "import_external_id"], unique = true),
         Index("import_batch_id"),
+        Index("receipt_key"),
         // Sync reads `WHERE pending_sync = 1` on every poll and the banner count after every write (#259).
         Index("pending_sync"),
     ],
@@ -85,6 +86,8 @@ data class TransactionEntity(
     @ColumnInfo(name = "import_source") val importSource: String?,
     @ColumnInfo(name = "import_external_id") val importExternalId: String?,
     @ColumnInfo(name = "import_batch_id") val importBatchId: String? = null,
+    /** Scanned receipt (#526, v15): `seller:point:type:number`; not unique — a deliberate second record of one receipt is allowed. */
+    @ColumnInfo(name = "receipt_key") val receiptKey: String? = null,
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,

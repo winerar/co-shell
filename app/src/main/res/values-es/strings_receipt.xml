@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Receipt QR in the entry sheet (#526) -->
+    <string name="scan_source">De un QR de ticket · vendedor %1$s</string>
+    <string name="scan_dup_title">Este ticket ya está registrado</string>
+    <string name="scan_dup_text">Ya hay uno igual en Movimientos: %1$s.</string>
+    <string name="scan_dup_confirm">Registrar de todos modos</string>
+</resources>

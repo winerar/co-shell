@@ -63,6 +63,23 @@ class RepositoriesTest {
     }
 
     @Test
+    fun `a scanned receipt is found while live and forgotten once deleted`() = runTest {
+        accounts.saveAccount(Account("ars", "Песо", ars))
+        val key = "30685849751:442:6:117817"
+        transactions.saveTransaction(Transaction("r1", TransactionType.EXPENSE, "ars", Money(37_914_00, ars), day(19), receiptKey = key))
+        transactions.saveTransaction(Transaction("r2", TransactionType.EXPENSE, "ars", Money(100_00, ars), day(19)))
+
+        assertEquals("r1", transactions.findByReceiptKey(key)?.id)
+        assertNull(transactions.findByReceiptKey("30685849751:442:6:1"))
+
+        transactions.deleteTransaction("r1")
+        assertNull(transactions.findByReceiptKey(key))
+        // The same receipt may be recorded again, and then it is the live one.
+        transactions.saveTransaction(Transaction("r3", TransactionType.EXPENSE, "ars", Money(37_914_00, ars), day(20), receiptKey = key))
+        assertEquals("r3", transactions.findByReceiptKey(key)?.id)
+    }
+
+    @Test
     fun `balances update when a transaction is deleted`() = runTest {
         accounts.saveAccount(Account("usd", "Bybit", usd))
         accounts.observeAccountsWithBalance().test {

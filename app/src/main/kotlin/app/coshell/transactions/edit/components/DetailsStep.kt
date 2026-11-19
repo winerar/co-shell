@@ -63,6 +63,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs),
         ) {
             AmountBlock(state, actions, amountColor(state.type, state.refund))
+            state.scan?.let { ScanSourceLine(it) }
             CoShellExpandable(!state.isTransfer) { CategoryBlock(state, actions) }
             DetailsBlock(state, actions, onSaveAsTemplate = { saveAsOpen = true })
         }
@@ -77,6 +78,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
         )
     }
     state.tip?.let { TipSheet(state, it, actions) }
+    state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 

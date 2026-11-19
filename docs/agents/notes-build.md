@@ -24,3 +24,5 @@
 - (11-19) **Красный CI без задач** (`failure`, 0 jobs, часто «длится» до мержа PR) — не сбой: прогон `pull_request: opened` по PR бота ждал одобрения (`action_required`).
   `opened` убран из `ci.yml`; такие прогоны не перезапускать и не разбирать. Тесты `app` (807) — ~61 с суммарно (больше всех `ScreensAccessibilityTest` 12 с);
   остальное в 5,5 мин — компиляция и lint: память/форки Robolectric не трогать.
+- (11-19) Экономия минут: CI в PR доверяет полному `check` агента (`Agent-Check: full`, `agent-checked.sh`), сеть — ночная проверка `dev` + релиз ждёт её.
+  Отметка «коммит проверен» — ключ кэша Actions `nightly-dev-<sha>` (`gh cache list`): расписание идёт на `main`, `headSha` прогона — не `dev`.

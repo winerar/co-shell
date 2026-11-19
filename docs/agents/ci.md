@@ -22,9 +22,11 @@
 ## Что где проверяется
 | Где | Что | Время (11.2026) |
 |---|---|---|
-| PR в `dev`, ветка | тесты скриптов + `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней) | ~5,5 мин |
+| PR в `dev`, голова с `Agent-Check: full`, `dev` по коду не ушёл | только тесты скриптов: полный `check` прошёл у агента на этих файлах (`scripts/ci/agent-checked.sh`) | ~1 мин |
+| PR в `dev`, иначе | тесты скриптов + `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней) | ~5,5 мин |
 | PR, только `docs/` и `*.md` | только тесты скриптов (шаг «Detect code changes») | <1 мин |
-| `dev` после мержа | Gradle **пропускается**, если дерево merge-коммита = дереву головы PR и там CI зелёный (`scripts/ci/tree-already-checked.sh`), кэш обновляет фоновый `warm-cache.yml`; иначе как PR | <1 мин |
+| `dev` после мержа | Gradle **пропускается**, если дерево merge-коммита = дереву головы PR и там CI зелёный (`scripts/ci/tree-already-checked.sh`); иначе как PR | <1 мин |
+| `dev` ночью (`warm-cache.yml`, 02:23 UTC) | полный `check assembleDebug` на коммите `dev`, если он изменился; пишет кэш Gradle и ключ `nightly-dev-<sha>`; красный → задача «Ночная проверка dev упала» | ~6 мин |
 | PR в `main` не из `dev` (хотфикс) | `check assembleDebug` + эмулятор параллельно, раздел `whats-new.md`; задача `hotfix` вливает | ~15 мин |
 | `main` (релиз) | без lint и тестов (дерево проверено на `dev`); `assembleDebug assembleRelease` **одним** вызовом Gradle | |
 
@@ -54,8 +56,8 @@
   Владельцу в консоль ходить не нужно; ручной путь — `docs/setup/sync.md` §4.
 
 ## Кэши и секреты
-- `warm-cache.yml` — `check assembleDebug` на `dev` с записью кэша, когда CI на `dev` пропустил Gradle; кнопка релиза
-  его не ждёт. Dispatch работает, только когда файл уже есть в `main` (до релиза — предупреждение в логе).
+- `warm-cache.yml` — «Ночная проверка dev» (сеть безопасности для `Agent-Check`, 2026-11-19): раз в сутки, пропуск, если коммит `dev` уже проверен
+  (`scripts/ci/nightly-green.sh` ищет ключ кэша). Релиз (`release.yml`) ждёт её зелёной на коммите `dev`, нет — запускает и ждёт ~6 мин.
 - `android-all` для Robolectric кэшируется отдельно (`~/.m2/repository/org/robolectric`, `actions/cache`).
 - Необязательный секрет `GRADLE_ENCRYPTION_KEY` (`openssl rand -base64 16`) включает сохранение configuration cache.
 

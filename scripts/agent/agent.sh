@@ -15,6 +15,8 @@ usage() {
     update                влить origin/dev → тесты затронутых модулей → push
     finish [-m "Msg"] [--no-check]
                           проверка → дата и число тестов в STATUS → коммит → push → чек-лист end
+    pr                    PR ветки: проблемы (dev ушёл вперёд, нет Agent-Check), номер, заголовок, описание,
+                          точные шаги MCP до мержа (после finish)
 
   Сессия
     start [--all]         начало: свежие чужие ветки (--all — все), перенос на dev, STATUS, задачи без бэклога
@@ -63,6 +65,7 @@ case "$cmd" in
     start) exec "$here/session-start.sh" "$@" ;;
     end) exec "$here/session-end.sh" "$@" ;;
     ship | update | finish) exec "$here/flow.sh" "$cmd" "$@" ;;
+    pr) exec "$here/pr.sh" "$@" ;;
     tasks) exec "$here/tasks.sh" "$@" ;;
     issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;

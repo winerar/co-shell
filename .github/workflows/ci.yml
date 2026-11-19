@@ -20,7 +20,7 @@ concurrency:
 
 permissions:
   contents: write # publish releases
-  actions: write # dev: look up the CI run of the merged PR head, dispatch warm-cache.yml
+  actions: write # dev: look up the CI run of the merged PR head; automerge dispatches CI on main
   pull-requests: write # failure summary comment on the PR; automerge of agent PRs
   issues: write # automerge closes the issues from `Fixes #N`
 
@@ -47,6 +47,8 @@ jobs:
         with:
           fetch-depth: 0 # to diff against the base branch (docs-only check below)
 
+      # PRs into dev whose head says «Agent-Check: full» (agent.sh ship/finish: the full check passed locally on these
+      # files) and whose base adds no code skip Gradle too (scripts/ci/agent-checked.sh): the nightly check on dev is the net.
       # Changes only in docs/, *.md and the agent's own scripts (scripts/agent/: not part of the build, not tested
       # here) skip Gradle on PRs and dev; main always builds (it releases).
       # dev: a merge whose tree equals the PR head that already had a green CI run is not rebuilt —
@@ -60,9 +62,9 @@ jobs:
         run: |
           code=true
           if [ "$GITHUB_REF" = refs/heads/dev ] && scripts/ci/tree-already-checked.sh; then
-            code=false
-            # PRs start from the Gradle cache that dev writes: refresh it without holding this run.
-            gh workflow run warm-cache.yml --ref dev || echo "::warning::could not dispatch warm-cache.yml"
+            code=false # the nightly check (warm-cache.yml) re-runs Gradle on dev and refreshes the cache
+          elif [ "$GITHUB_EVENT_NAME" = pull_request ] && [ "$GITHUB_BASE_REF" = dev ] && scripts/ci/agent-checked.sh; then
+            code=false # the agent's own full check covered exactly this code (Agent-Check: full) — saves ~6 min of Actions
           elif [ "$GITHUB_REF" != refs/heads/main ] && [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] \
              && git rev-parse -q --verify "$BASE^{commit}" >/dev/null; then
             changed=$(git diff --name-only "$BASE"...HEAD)

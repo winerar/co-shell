@@ -5,6 +5,8 @@ import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -129,10 +131,17 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
 /** A new operation picks its kind here; the ☰ at the end opens all templates (the template row left the first step, #505). */
 @Composable
 private fun TypeBar(state: TransactionEditUiState, actions: TransactionEditActions) {
-    Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-        TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f))
-        CoShellIconButton(onClick = actions.onAllTemplates) {
-            Icon(painterResource(DesignR.drawable.ic_format_list_bulleted), contentDescription = stringResource(R.string.templates_title))
+    Column(Modifier.fillMaxWidth()) {
+        if (state.scan == null) WordHint(HintId.SCAN_RECEIPT, R.string.hint_scan_receipt, Modifier.padding(horizontal = Spacing.l))
+        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f))
+            // The camera for a receipt QR (#526, board «QrBtnA»): amount and day of the receipt fill the sheet.
+            CoShellIconButton(onClick = actions.onScanReceipt) {
+                Icon(painterResource(DesignR.drawable.ic_qr_code_scanner), contentDescription = stringResource(R.string.scan_title))
+            }
+            CoShellIconButton(onClick = actions.onAllTemplates) {
+                Icon(painterResource(DesignR.drawable.ic_format_list_bulleted), contentDescription = stringResource(R.string.templates_title))
+            }
         }
     }
 }

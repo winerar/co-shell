@@ -178,6 +178,10 @@ data class CategoryEditDestination(
  * Transaction editor. `transactionId == null` creates a new transaction of [type]
  * (a [app.coshell.core.model.TransactionType] name).
  */
+/** Scanner of a receipt QR (#526): the camera; a receipt QR opens the entry sheet filled from it, «Ввести вручную» an empty one. */
+@Serializable
+data object ReceiptScanDestination
+
 @Serializable
 data class TransactionEditDestination(
     val transactionId: String? = null,

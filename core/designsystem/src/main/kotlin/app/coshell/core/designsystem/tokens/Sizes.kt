@@ -85,6 +85,12 @@ object Sizes {
      * 2026-11-15: «все кнопки одной высоты, стандартный размер 48, в том числе круги»).
      */
     val button = 48.dp
+
+    /** Viewfinder of the receipt QR scanner (#526): square side, corner stroke, corner radius, length of the straight arm. */
+    val scanFrame = 280.dp
+    val scanFrameStroke = 5.dp
+    val scanFrameCorner = 20.dp
+    val scanFrameArm = 36.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     val chipIcon = 18.dp

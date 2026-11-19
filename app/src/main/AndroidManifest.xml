@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Short buzz when a shake opens the new-transaction screen. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- The scanner of a receipt QR (#526): the camera is asked on the first open; video is neither saved nor sent. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- Regular payments: «Сегодня платёж» at 9:00 and «Проведено» with «Отменить» (#143). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 

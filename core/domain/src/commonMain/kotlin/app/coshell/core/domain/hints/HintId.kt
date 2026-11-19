@@ -11,6 +11,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     OVERVIEW_EMPTY("overview_empty", HintKind.WORD),
     ACCOUNTS("accounts", HintKind.WORD),
     ENTRY_MINIMAL("entry_minimal", HintKind.WORD),
+    SCAN_RECEIPT("scan_receipt", HintKind.WORD),
     KEYPAD_MATH("keypad_math", HintKind.WORD),
     ENTRY_REFUND("entry_refund", HintKind.WORD),
     CATEGORIES("categories", HintKind.WORD),

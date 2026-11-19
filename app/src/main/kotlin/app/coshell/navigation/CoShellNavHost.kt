@@ -34,6 +34,7 @@ import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsScreen
 import app.coshell.receipt.ReceiptLinks
+import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -116,11 +117,11 @@ fun CoShellNavHost(
     }
     val lock = rememberInputLock(locked, openUpdate)
 
-    // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
+    // Shake → the receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet), only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
         enabled = shakeEnabled && onTab,
-        onShake = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onShake = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
     )
 
     MainShell(
@@ -210,9 +211,23 @@ fun CoShellNavHost(
                     },
                     // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
                     onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
+                    onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
                     onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
                 )
             }
+        }
+        screen<ReceiptScanDestination> {
+            ReceiptScanRoute(
+                onReceipt = { text ->
+                    navController.navigate(TransactionEditDestination(receiptQr = text)) {
+                        popUpTo<ReceiptScanDestination> { inclusive = true }
+                    }
+                },
+                onManual = {
+                    navController.navigate(TransactionEditDestination()) { popUpTo<ReceiptScanDestination> { inclusive = true } }
+                },
+                onClose = { navController.popBackStack() },
+            )
         }
         screen<TemplatesDestination> {
             TemplatesRoute(

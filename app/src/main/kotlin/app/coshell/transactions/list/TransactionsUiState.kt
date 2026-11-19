@@ -60,6 +60,8 @@ data class TransactionsUiState(
         /** Category icon key and colour; both null for transfers and missing categories. */
         val icon: String? = null,
         val color: Long? = null,
+        /** Account of an expense or income for the mini badge before [subtitle] (#505); null for transfers and unknown accounts. */
+        val account: RowAccount? = null,
         /** Who added it — only for the other family member's operations. */
         val author: String? = null,
         /** An income in an expense category (#208): «↩ возврат» before the account, the amount in the income colour. */
@@ -70,6 +72,9 @@ data class TransactionsUiState(
         /** The operation's own amount, for «hold the amount» (#318); null in previews. */
         val money: Money? = null,
     )
+
+    /** Name and colour of the account behind the mini badge of a row. */
+    data class RowAccount(val name: String, val color: Long?)
 
     /** A tag pill: [color] — a stored palette value (chosen, or picked from the tag id). */
     data class RowTag(val name: String, val color: Long)

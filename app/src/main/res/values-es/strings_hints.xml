@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="steps_title">Primeros pasos</string>
+    <string name="steps_row_start">Empecemos por una cuenta</string>
+    <string name="steps_row_progress">Hecho: %1$d de %2$d · Siguiente: %3$s</string>
+    <string name="steps_sheet_sub">Hecho: %1$d de %2$d. Puedes saltarte cualquier paso.</string>
+    <string name="steps_hide">Ocultar pasos</string>
+    <string name="steps_account">Añade una cuenta</string>
+    <string name="steps_account_hint">Dónde está tu dinero: tarjeta, efectivo o ahorros. Empieza con una.</string>
+    <string name="steps_entry">Anota tu primer gasto</string>
+    <string name="steps_entry_hint">Cualquiera, aunque sea un café. Pulsa «+».</string>
+    <string name="steps_limit">Fija tu primer límite</string>
+    <string name="steps_limit_hint">Cuánto quieres gastar al mes en comida. Puedes cambiarlo.</string>
+    <string name="steps_family">Invita a alguien cercano</string>
+    <string name="steps_family_hint">Es más fácil en pareja. O más tarde.</string>
+    <string name="hints_title">Consejos</string>
+    <string name="hints_on">Se muestran</string>
+    <string name="hints_off">Desactivados</string>
+    <string name="hints_reset_title">Mostrar los consejos de nuevo</string>
+    <string name="hints_reset_hint">Recupera «Primeros pasos» y los consejos</string>
+    <string name="hint_flip_card">Toca la tarjeta para girarla: detrás está lo más útil del mes.</string>
+    <string name="hint_close">Cerrar consejo</string>
+    <string name="hint_overview_empty">Aún no hay movimientos. Pulsa «+» para añadir el primero.</string>
+    <string name="hint_accounts">Una cuenta es donde está tu dinero. El saldo se calcula solo.</string>
+    <string name="hint_scan_receipt">¿Hay un QR en el ticket? Toca el icono de la cámara: el importe y la fecha se completan solos.</string>
+    <string name="hint_categories">Una categoría es en qué se fue el dinero. Las que vienen te servirán; añade las tuyas después.</string>
+    <string name="hint_budgets">Un límite es cuánto puedes gastar en una categoría al mes. Es una guía, no una prohibición.</string>
+    <string name="hint_reports">Aquí ves en qué se va el dinero. Cuantos más movimientos, más clara la imagen.</string>
+    <string name="hint_tags">Una etiqueta es una marca de color en un movimiento, como «vacaciones» o «regalos».</string>
+    <string name="hint_family">Juntos es más fácil: los movimientos de ambos teléfonos se reúnen en un solo lugar.</string>
+    <string name="hint_ok">Entendido</string>
+    <string name="hint_hold_select">Mantén pulsado un movimiento para elegir varios.</string>
+    <string name="hint_edit_tap">¿Te equivocaste? Toca el movimiento para corregirlo.</string>
+    <string name="hint_first_entry">Ya está el primer registro. Así empieza un presupuesto.</string>
+    <string name="hint_first_limit">Límite fijado. Ahora ves cuánto queda.</string>
+    <string name="hints_reset_done">Consejos activados</string>
+    <string name="steps_done_title">Todo listo</string>
+    <string name="steps_done_text">Ya llevas un presupuesto, y eso es lo más difícil.</string>
+</resources>

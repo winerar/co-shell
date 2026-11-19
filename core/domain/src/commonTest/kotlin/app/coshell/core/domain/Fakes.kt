@@ -59,6 +59,7 @@ class FakeTransactionRepository : TransactionRepository {
         items.value.values.count { it.accountId == accountId || it.toAccountId == accountId }
     override suspend fun countForCategory(categoryId: String) =
         items.value.values.count { it.categoryId == categoryId }
+    override suspend fun findByReceiptKey(key: String) = items.value.values.firstOrNull { it.receiptKey == key }
 }
 
 class FakeTemplateRepository : TemplateRepository {

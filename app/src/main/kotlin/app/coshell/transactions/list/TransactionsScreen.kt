@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.CoachHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.motion.listItemMotion
@@ -56,6 +58,13 @@ fun TransactionsScreen(
     peek: AmountPeek? = null,
 ) {
     val noRate = stringResource(R.string.amount_peek_no_rate)
+    // Gesture tips: editing by a tap after the first entry, selecting by a hold once there are three.
+    val rowCount = state.days.sumOf { it.rows.size }
+    val tips = buildMap {
+        if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
+        if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
+    }
+    CoachHint(tips, enabled = !state.isLoading && !selection.active && tips.isNotEmpty())
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
     LoadMoreEffect(listState, enabled = state.hasMore, onLoadMore = actions.onLoadMore)

@@ -45,6 +45,8 @@ object Sizes {
     val tileIcon = 20.dp
     /** The round arrow between the two version tiles of the update screen (poll 2026-11-18). */
     val arrowChip = 32.dp
+    /** Camera distance of a turning card ([app.coshell.core.designsystem.components.CoShellFlipCard], #519), times density: real depth without a fish-eye. */
+    val flipDepth = 12.dp
     /** Height of the mini bars in a tile (expenses per day). */
     val miniBarsHeight = 32.dp
     /** Lowest visible bar: a day with little spending still shows; a day with none is a dot of this height. */
@@ -83,9 +85,19 @@ object Sizes {
      * 2026-11-15: «все кнопки одной высоты, стандартный размер 48, в том числе круги»).
      */
     val button = 48.dp
+
+    /** Viewfinder of the receipt QR scanner (#526): square side, corner stroke, corner radius, length of the straight arm. */
+    val scanFrame = 280.dp
+    val scanFrameStroke = 5.dp
+    val scanFrameCorner = 20.dp
+    val scanFrameArm = 36.dp
     /** Icon next to a button's label. */
     val buttonIcon = 20.dp
     val chipIcon = 18.dp
+    /** Account badge in the entry-sheet ribbon (#505); its 48 dp cell is [button]. */
+    val ribbonBadge = 44.dp
+    /** Mini account badge before the account name in an operation row (#505). */
+    val miniBadge = 16.dp
     /** Account badge inside a choice chip. */
     val chipBadge = 24.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */

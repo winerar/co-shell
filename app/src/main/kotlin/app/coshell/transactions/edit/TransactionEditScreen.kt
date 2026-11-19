@@ -25,7 +25,6 @@ import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.TransactionType
-import app.coshell.templates.components.TemplateStrip
 import app.coshell.templates.strip.TemplateStripUiState
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.components.AccountPicker
@@ -65,27 +64,14 @@ fun TransactionEditScreen(
         label = "entryStep",
     ) { step ->
         when (step) {
-            EntryStep.ACCOUNT -> Column {
-                TypeSelector(state.type, actions.onTypeChange, Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.m))
-                // Templates go over the accounts (owner picked А, #166); only a new operation has them.
-                if (state.isNew && !state.isCopy) {
-                    TemplateStrip(
-                        items = templates.items,
-                        total = templates.total,
-                        onPick = actions.onTemplatePick,
-                        onAll = actions.onAllTemplates,
-                        onNew = actions.onNewTemplate,
-                        modifier = Modifier.padding(bottom = Spacing.m),
-                    )
-                }
-                AccountPicker(
-                    title = stringResource(fromTitle(state.type)),
-                    accounts = state.accounts,
-                    recentIds = state.recentAccountIds,
-                    selectedId = state.accountId,
-                    onSelect = actions.onAccountSelect,
-                )
-            }
+            // The full list behind «Все ›» of the ribbon; a pick returns to the sheet (#505).
+            EntryStep.ACCOUNT -> AccountPicker(
+                title = stringResource(fromTitle(state.type)),
+                accounts = state.accounts,
+                recentIds = state.recentAccountIds,
+                selectedId = state.accountId,
+                onSelect = actions.onAccountSelect,
+            )
             EntryStep.TO_ACCOUNT -> AccountPicker(
                 title = stringResource(R.string.picker_to_transfer),
                 accounts = state.accounts,

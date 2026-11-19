@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Receipt QR in the entry sheet (#526) -->
+    <string name="scan_source">Из QR чека · продавец %1$s</string>
+    <string name="scan_dup_title">Этот чек уже записан</string>
+    <string name="scan_dup_text">В операциях есть такой же: %1$s.</string>
+    <string name="scan_dup_confirm">Всё равно записать</string>
+    <!-- Scanner screen (#526) -->
+    <string name="scan_title">Сканировать QR</string>
+    <string name="scan_hint">Наведите камеру на QR-код на чеке.</string>
+    <string name="scan_manual">Ввести вручную</string>
+    <string name="scan_torch">Фонарик</string>
+    <string name="scan_bad">Это не QR чека. Попробуйте другой.</string>
+    <string name="scan_cam_title">Камера нужна, чтобы прочитать QR</string>
+    <string name="scan_cam_text">Видео не сохраняется и никуда не уходит.</string>
+    <string name="scan_cam_allow">Разрешить</string>
+</resources>

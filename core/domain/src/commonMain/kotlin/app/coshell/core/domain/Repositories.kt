@@ -75,6 +75,9 @@ interface TransactionRepository {
     /** Number of live transactions that reference the account (as source or target). */
     suspend fun countForAccount(accountId: String): Int
     suspend fun countForCategory(categoryId: String): Int
+
+    /** The live operation made from the scanned receipt with this key (#526), or `null`. */
+    suspend fun findByReceiptKey(key: String): Transaction?
 }
 
 /** Full local backup as JSON (manual now, weekly automatic in stage 4). */

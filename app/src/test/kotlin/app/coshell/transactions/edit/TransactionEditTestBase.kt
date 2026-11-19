@@ -75,6 +75,7 @@ abstract class TransactionEditTestBase {
         type: String = "EXPENSE",
         copyFrom: String? = null,
         templateId: String? = null,
+        receiptQr: String? = null,
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -82,6 +83,7 @@ abstract class TransactionEditTestBase {
                 TransactionEditDestination.ARG_TYPE to type,
                 TransactionEditDestination.ARG_COPY_FROM to copyFrom,
                 TransactionEditDestination.ARG_TEMPLATE_ID to templateId,
+                TransactionEditDestination.ARG_RECEIPT_QR to receiptQr,
             ),
         ),
         accounts = accounts,

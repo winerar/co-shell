@@ -18,8 +18,6 @@
     <string name="home_total_rate_date">Al cambio del %1$s</string>
     <string name="amount_peek_no_rate">sin tipo de cambio</string>
     <string name="home_total_missing">Sin contar: %1$s — no hay tipo de cambio</string>
-    <string name="home_total_show_breakdown">Ver por moneda</string>
-    <string name="home_total_hide_breakdown">Ocultar desglose</string>
     <string name="home_spending_title">Gastos de %1$s</string>
     <string name="home_spending_rate_hint">Al cambio del día de cada gasto</string>
     <string name="home_spending_tile">Gastos</string>
@@ -71,6 +69,9 @@
     <string name="search_close">Cerrar búsqueda</string>
     <string name="choice_search">Buscar</string>
     <string name="picker_nothing">No se ha encontrado nada</string>
+    <string name="picker_all">Todas ›</string>
+    <string name="entry_from">Desde</string>
+    <string name="entry_to">Hacia</string>
     <string name="picker_from_expense">¿De dónde salió?</string>
     <string name="picker_to_income">¿Adónde llegó?</string>
     <string name="picker_from_transfer">¿Transferencia desde?</string>
@@ -245,7 +246,7 @@
     <string name="categories_menu_hint">Subcategorías, iconos y colores</string>
     <string name="backup_menu_hint">Guardar o restaurar tus datos</string>
     <string name="feedback_menu_hint">Un error o una idea</string>
-    <string name="shake_to_add_title">Agitar — nuevo movimiento</string>
+    <string name="shake_to_add_title">Agitar — escáner QR</string>
     <string name="shake_to_add_hint">Con la app abierta</string>
     <string name="transaction_deleted">Movimiento eliminado</string>
     <string name="transactions_deleted_many">Movimientos eliminados: %d</string>

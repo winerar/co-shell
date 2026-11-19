@@ -22,6 +22,8 @@ data class HomeUiState(
     val spending: MonthSpending? = null,
     /** This month's incomes, same rules as [spending]. */
     val income: MonthTotals? = null,
+    /** The back of the hero card (#519): income − expenses of the month and the daily average; `null` — nothing to show. */
+    val monthResult: MonthResult? = null,
     val attention: Attention = Attention(),
     val accounts: List<AccountRow> = emptyList(),
     /** The newest operations (up to [RECENT_COUNT]), already formatted like on the Transactions tab. */
@@ -43,6 +45,13 @@ data class HomeUiState(
         val daily: List<Long> = emptyList(),
         val today: Int = 0,
     )
+
+    /**
+     * @property result income − expenses in the main currency, signed («+860,00 USD»).
+     * @property positive the month is in the plus (or even).
+     * @property perDay average expense per day so far.
+     */
+    data class MonthResult(val result: String, val positive: Boolean, val perDay: String)
 
     /** Sums of one kind of operations this month in each report currency, main first. */
     data class MonthTotals(val totals: List<String>, val missing: List<String> = emptyList())

@@ -15,6 +15,20 @@ def frame(html, h, extra=''):
     return '<div style="position: relative; height: %dpx; overflow: hidden; border-radius: 16px; background: %s; %s">%s</div>' % (h, BG, extra, html)
 
 
+def coach_card(text, action='Понятно'):
+    """CoShellCoachCard (#513, owner poll 2026-11-19): gesture hint over the bottom bar — text + one text button."""
+    return ('<div style="padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="font-size: 14px; line-height: 1.4;">%s</div>'
+            '<div style="margin-top: 10px; text-align: right;"><span style="color: %s; font-size: 14px; font-weight: 700;">%s</span></div></div>' % (KEY, LINE2, text, LIME, action))
+
+
+def notice_long(text, action='Открыть'):
+    """CoShellNoticePill, long form (#513): up to two lines, optional action to the named screen, «×»."""
+    return ('<div style="min-height: 52px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 10px; padding: 6px;">'
+            '<span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
+            '<span style="flex-grow: 1; font-size: 14px; line-height: 1.35;">%s</span><span style="color: %s; font-size: 14px; font-weight: 700; padding: 0 10px;">%s</span>%s</div>'
+            % (KEY, LINE2, LIME, svg('check', ONLIME, 22, 2.4), text, LIME, action, icon_button('close', 'Закрыть', MUTED)))
+
+
 def section(title, demo, code, span=1):
     return ('<div style="grid-column: span %d; padding: 18px; border-radius: 20px; background: %s; border: 1px solid %s; display: flex; flex-direction: column; gap: 12px;">'
             '<div style="font-size: 17px; font-weight: 700;">%s</div>%s<div style="margin-top: auto; %s font-size: 11px; line-height: 1.6; color: %s;">%s</div></div>'
@@ -83,8 +97,10 @@ def components():
                                         big_total('Всего в общем балансе', '9 640', 'USD')),
                 'balance_hero · tile → CoShellTile · nav_tile → CoShellTile · big_total → RollingAmountText'),
         section('Уведомления', stack(message('Копия сохранена.', 'ok'), message('Не удалось загрузить курсы.', 'error'), message('Курсы ещё не загружались.', 'warn'),
-                                     message('Сначала сохраним копию.', 'info', 'Перед стиранием'), frame(snackbar('Операция удалена', bottom=12) + toast('Сохранено', 76), 136)),
-                'message(text, kind, title) → CoShellMessage · SyncBanner · snackbar → CoShellSnackbarHost · toast / pill → CoShellNoticePill · UpdatePill'),
+                                     message('Сначала сохраним копию.', 'info', 'Перед стиранием'), frame(snackbar('Операция удалена', bottom=12) + toast('Сохранено', 76), 136),
+                                     notice_long('Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.'),
+                                     coach_card('Удерживайте операцию, чтобы выбрать несколько.')),
+                'message(text, kind, title) → CoShellMessage · SyncBanner · snackbar → CoShellSnackbarHost · toast / pill → CoShellNoticePill (до двух строк, `actionLabel` — «Открыть») · UpdatePill · coach_card → CoShellCoachCard (подсказка-жест, «Понятно»)'),
         section('Диалоги и шторки', stack(frame(scrim() + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]), 250),
                                           frame(scrim() + sheet('<div style="padding: 14px 16px;">%s</div>' % segmented(['Расход', 'Доход', 'Перевод'], 'Расход', 'lime'), 60), 160)),
                 'dialog(title, text, actions, body) → CoShellDialog · CoShellAlertDialog · sheet(inner, top) + scrim → CoShellSheet'),

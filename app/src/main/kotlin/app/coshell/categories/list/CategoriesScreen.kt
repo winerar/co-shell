@@ -1,5 +1,7 @@
 package app.coshell.categories.list
 
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +56,7 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
             )
             if (state.isLoading) return@Column
             LazyColumn(contentPadding = underBars(PaddingValues(), PaddingValues(bottom = Sizes.fabClearance))) {
+                item(key = "word-hint") { WordHint(HintId.CATEGORIES, R.string.hint_categories, Modifier.padding(horizontal = Spacing.l)) }
                 groupItems(state, actions)
                 archivedItems(state, actions)
             }

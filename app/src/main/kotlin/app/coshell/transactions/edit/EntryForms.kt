@@ -38,7 +38,7 @@ internal fun newEntryForm(
         type = type,
         accountId = preferredAccountId?.takeIf { it in known } ?: lastAccount?.takeIf { it in known } ?: accounts.firstOrNull()?.id,
         date = base.today,
-        step = EntryStep.ACCOUNT,
+        step = EntryStep.DETAILS,
     )
 }
 

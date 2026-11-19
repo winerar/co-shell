@@ -40,6 +40,18 @@ class TransactionDaysTest {
         buildTransactionDays(items.toList(), accounts, categories, MoneyFormat.RU, zone, today)
 
     @Test
+    fun `an expense carries its account for the mini badge and a transfer does not`() {
+        val colored = mapOf("card" to Account("card", "Карта", ars, color = 0xFF26A17B), "cash" to Account("cash", "Наличные", usd))
+        val items = listOf(
+            Transaction("e", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 9)),
+            Transaction("t", TransactionType.TRANSFER, "card", Money(100, ars), at(8, 10), toAccountId = "cash", toAmount = Money(1, usd)),
+        )
+        val rows = buildTransactionDays(items, colored, categories, MoneyFormat.RU, zone, today).single().rows.associateBy { it.id }
+        assertEquals(TransactionsUiState.RowAccount("Карта", 0xFF26A17B), rows.getValue("e").account)
+        assertNull(rows.getValue("t").account)
+    }
+
+    @Test
     fun `shows the author only for other members' operations`() {
         val items = listOf(
             Transaction("mine", TransactionType.EXPENSE, "card", Money(100, ars), at(8, 9), authorMemberId = "me"),

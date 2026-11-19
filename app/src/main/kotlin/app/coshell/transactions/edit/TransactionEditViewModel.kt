@@ -12,6 +12,8 @@ import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.domain.quickentry.AfipReceiptQr
+import app.coshell.core.domain.quickentry.ReceiptQr
 import app.coshell.core.domain.quickentry.TipPrefs
 import app.coshell.core.domain.quickentry.Tips
 import app.coshell.core.domain.recurring.autoPaymentId
@@ -89,6 +91,12 @@ class TransactionEditViewModel @Inject constructor(
     private var paymentDate: LocalDate? = savedStateHandle.get<String>(TransactionEditDestination.ARG_PAYMENT_DATE)
         ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
 
+    /** Text with a receipt QR link from the route (#526); applied once to a new form, like the template. */
+    private var pendingReceipt: String? = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_QR]
+    /** The receipt the form was filled from; the amount follows the chosen account until the person types their own. */
+    private var scannedQr: ReceiptQr? = null
+    private var scanAmountTouched = false
+
     private var existing: Transaction? = null
     /** Labels of the edited or copied operation: references the form does not change keep their form. */
     private var sourceLabels: List<String> = emptyList()
@@ -152,7 +160,37 @@ class TransactionEditViewModel @Inject constructor(
         _state.value = loaded.withCategoryOptions(allCategories, recentCategoryIds)
         pendingTemplateId?.let { applyTemplate(it) }
         pendingTemplateId = null
+        if (transaction == null && template == null) pendingReceipt?.let { applyReceipt(it) }
+        pendingReceipt = null
     }
+
+    // endregion
+
+    // region Receipt QR (#526)
+
+    private suspend fun applyReceipt(text: String) {
+        val qr = AfipReceiptQr.find(text) ?: return
+        scannedQr = qr
+        scanAmountTouched = false
+        val duplicate = transactions.findByReceiptKey(qr.key)?.let { found ->
+            ScanDuplicate(
+                date = found.date.toLocalDateTime(timeZone).date,
+                amount = moneyFormat.format(found.amount),
+                category = allCategories.firstOrNull { it.id == found.categoryId }?.name,
+            )
+        }
+        _state.update { form ->
+            form.copy(scan = ScanUi(qr.sellerTaxIdText, qr.key, duplicate)).withReceipt(qr, moneyFormat)
+                .withDebitSuggestion(converter, moneyFormat)
+                .withCategoryOptions(allCategories, recentCategoryIds)
+        }
+    }
+
+    /** «Всё равно записать»: the same receipt once more, on purpose. */
+    fun onScanDuplicateAccept() = _state.update { form -> form.copy(scan = form.scan?.copy(duplicate = null)) }
+
+    /** «Отмена» in the «Этот чек уже записан» window: nothing to add, the sheet closes. */
+    fun onScanDuplicateCancel() = _state.update { it.copy(isDone = true) }
 
     // endregion
 
@@ -219,21 +257,26 @@ class TransactionEditViewModel @Inject constructor(
     fun onRefundToggle(enabled: Boolean) = _state.update { it.copy(refund = enabled && it.type == TransactionType.EXPENSE) }
 
     fun onAmountChange(value: String) = _state.update {
+        scanAmountTouched = true
         it.copy(amount = value, amountError = null, amountSuggested = false, suggestedRateDate = null)
     }
 
     fun onToAmountChange(value: String) = _state.update { it.copy(toAmount = value, toAmountError = null) }
 
     /** On the account step a tap also moves on: to the target account of a transfer, else to the amount. */
-    fun onAccountSelect(id: String) = updateForm {
-        it.copy(
-            accountId = id,
+    fun onAccountSelect(id: String) = updateForm { form ->
+        // A scanned amount in pesos is the purchase on a card in another currency: the layout follows the account
+        // until the person types their own amount or leaves the expense.
+        val qr = scannedQr?.takeIf { !scanAmountTouched && form.type == TransactionType.EXPENSE }
+        val chosen = form.copy(accountId = id).let { if (qr != null) it.withReceipt(qr, moneyFormat) else it }
+        chosen.copy(
+            toAccountId = chosen.toAccountId?.takeIf { to -> to != id },
             accountError = false,
             amountError = null,
             toAccountError = null,
             receiptCurrencyError = null,
-            step = it.step.afterAccount(it.isTransfer),
-            keypadTarget = KeypadTarget.AMOUNT,
+            step = chosen.step.afterAccount(chosen.isTransfer),
+            keypadTarget = if (qr != null) chosen.keypadTarget else KeypadTarget.AMOUNT,
         )
     }
 
@@ -300,7 +343,9 @@ class TransactionEditViewModel @Inject constructor(
         it.copy(receiptCurrency = value.trim().uppercase(), receiptCurrencyError = null, receiptAmountError = null)
     }
 
-    fun onReceiptAmountChange(value: String) = updateForm { it.copy(receiptAmount = value, receiptAmountError = null) }
+    fun onReceiptAmountChange(value: String) = updateForm {
+        scanAmountTouched = true
+        it.copy(receiptAmount = value, receiptAmountError = null) }
 
     /** Changes that affect the receipt conversion also refresh the suggested debited amount. */
     private fun updateForm(change: (TransactionEditUiState) -> TransactionEditUiState) =
@@ -389,7 +434,10 @@ class TransactionEditViewModel @Inject constructor(
         // A payment gets the id of its template and day, as «Проводить само» does: both phones posting it before
         // they sync write one record, and «В прошлый раз» finds it (#404).
         val paymentId = templateId?.let { id -> paymentDate?.let { autoPaymentId(id, it) } }
-        return buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
+        val built = buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
+        // A new expense made from a scanned receipt remembers which one, to warn when it is scanned again (#526).
+        val scanKey = current.scan?.key
+        return if (existing == null && scanKey != null && built.type == TransactionType.EXPENSE) built.copy(receiptKey = scanKey) else built
     }
 
     /** Saves [transaction] and, with [tip] (#322), the tip operation after it; remembers the tip's account and category. */

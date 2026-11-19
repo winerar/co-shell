@@ -15,6 +15,7 @@ import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.CoShellSwitch
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.motion.staggeredEntrance
@@ -43,6 +44,8 @@ data class MoreState(
     val appearance: String? = null,
     /** Keys of the rows that wear the «новое» pill (#335, `NewFeatures`). */
     val newMarks: Set<String> = emptySet(),
+    /** «Подсказки» (#513). */
+    val hintsEnabled: Boolean = true,
 )
 
 data class MoreActions(
@@ -59,6 +62,9 @@ data class MoreActions(
     val onImport: () -> Unit = {},
     val onAppearance: () -> Unit = {},
     val onFeedback: () -> Unit = {},
+    val onHintsToggle: (Boolean) -> Unit = {},
+    /** «Показать подсказки заново». */
+    val onHintsReset: () -> Unit = {},
     /** Tap on the version card: the update screen. */
     val onOpenUpdate: () -> Unit = {},
     /** «Обновить» on the card: the download starts right away and the update screen opens. */
@@ -104,6 +110,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                                     if (isNew) actions.onOpenedNew(item.newKey!!)
                                     item.onClick()
                                 },
+                                trailing = item.toggle?.let { on -> { CoShellSwitch(checked = on, onCheckedChange = null) } },
                                 mark = if (isNew) {
                                     { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
                                 } else {

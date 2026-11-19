@@ -23,6 +23,7 @@ import app.coshell.transactions.edit.entrySheetSample
 import app.coshell.transactions.edit.tip.TipUi
 import app.coshell.transactions.edit.tipSheetSample
 import app.coshell.transactions.edit.paymentSheetSample
+import app.coshell.transactions.edit.scanSheetSample
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -53,6 +54,12 @@ class EntrySheetScreenshotTest {
 
     @Test
     fun `payment sheet light`() = shot("recurring_post_light") { sheet(paymentSheetSample) }
+
+    @Test
+    fun `scanned receipt dark`() = shot("entry_scan_dark", dark = true) { sheet(scanSheetSample) }
+
+    @Test
+    fun `scanned receipt light`() = shot("entry_scan_light") { sheet(scanSheetSample) }
 
     @Test
     fun `all categories dark`() = shot("entry_all_categories_dark", dark = true) { allCategories() }

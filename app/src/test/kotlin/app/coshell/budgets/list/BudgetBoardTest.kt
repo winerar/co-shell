@@ -131,6 +131,22 @@ class BudgetBoardTest {
     }
 
     @Test
+    fun `back of the card lists the limits closest to the end, biggest share first, without untouched ones`() {
+        val list = envelopes()
+        val state = BudgetsUiState(envelopes = list, counts = envelopeCounts(list))
+        assertEquals(listOf("cafe", "home", "groceries"), state.closestToLimit().map { it.categoryId })
+        assertEquals(listOf("cafe"), state.closestToLimit(count = 1).map { it.categoryId })
+    }
+
+    @Test
+    fun `per day is what is left over the days after today, nothing outside the current month`() {
+        val summary = buildSummary(calculator.summary(month, today, ars), today, format)
+        assertEquals(format.format(ars(445_000).scale(1, 19)), summary.perDay)
+        val later = LocalDate(2026, 12, 5)
+        assertNull(buildSummary(calculator.summary(month, later, ars), later, format).perDay)
+    }
+
+    @Test
     fun `summary in the main currency counts a folder once and warns about the forecast`() {
         val summary = buildSummary(calculator.summary(month, today, ars), today, format)
         // 400 000 + 80 000 + 350 000 + 50 USD × 1000; «Коммуналка» is a part of «Дом».

@@ -15,6 +15,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import app.coshell.hints.HintBannerHost
+import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.export.ExportRoute
@@ -31,6 +33,8 @@ import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsScreen
+import app.coshell.receipt.ReceiptLinks
+import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
@@ -92,6 +96,7 @@ fun CoShellNavHost(
     crashes: CrashNoticeViewModel = hiltViewModel(),
     inputLock: InputLockViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
+    receiptLinks: ReceiptLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -112,11 +117,11 @@ fun CoShellNavHost(
     }
     val lock = rememberInputLock(locked, openUpdate)
 
-    // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
+    // Shake → the receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet), only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
         enabled = shakeEnabled && onTab,
-        onShake = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onShake = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
     )
 
     MainShell(
@@ -136,6 +141,14 @@ fun CoShellNavHost(
                 onDismiss = updates::dismissPill,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
             )
+            // Hint banner (#513): gesture card or warm pill; the update pill and the greeting go first.
+            LocalHintHost.current?.let { host ->
+                HintBannerHost(
+                    host = host,
+                    visible = onBar && updatePill == null && !(onHome && greetingVisible),
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+                )
+            }
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.
             GreetingPill(
                 visible = onBar && onHome && greetingVisible && updatePill == null,
@@ -198,9 +211,23 @@ fun CoShellNavHost(
                     },
                     // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
                     onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
+                    onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
                     onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
                 )
             }
+        }
+        screen<ReceiptScanDestination> {
+            ReceiptScanRoute(
+                onReceipt = { text ->
+                    navController.navigate(TransactionEditDestination(receiptQr = text)) {
+                        popUpTo<ReceiptScanDestination> { inclusive = true }
+                    }
+                },
+                onManual = {
+                    navController.navigate(TransactionEditDestination()) { popUpTo<ReceiptScanDestination> { inclusive = true } }
+                },
+                onClose = { navController.popBackStack() },
+            )
         }
         screen<TemplatesDestination> {
             TemplatesRoute(
@@ -451,6 +478,16 @@ fun CoShellNavHost(
                 launchSingleTop = true
             }
             paymentLinks.consumed()
+        }
+    }
+
+    // A receipt QR opened from a scanner or the camera (#526): the entry sheet with its amount and date.
+    if (receiptLinks != null) {
+        val link by receiptLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val text = link ?: return@LaunchedEffect
+            navController.navigate(TransactionEditDestination(receiptQr = text)) { launchSingleTop = true }
+            receiptLinks.consumed()
         }
     }
 }

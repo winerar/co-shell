@@ -5,6 +5,9 @@ import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
@@ -54,17 +57,21 @@ import app.coshell.ui.format.formatDayMonth
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+        if (state.showsTypeSwitch) TypeBar(state, actions)
         Header(state, actions)
+        AccountRibbonBlock(state, actions)
         Column(
             Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.m),
             verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs),
         ) {
             AmountBlock(state, actions, amountColor(state.type, state.refund))
+            state.scan?.let { ScanSourceLine(it) }
             CoShellExpandable(!state.isTransfer) { CategoryBlock(state, actions) }
             DetailsBlock(state, actions, onSaveAsTemplate = { saveAsOpen = true })
         }
         CoShellKeypad(
             onKey = actions.onKey,
+            doneEnabled = state.canPost,
             // A payment from «Скоро» is posted, not just saved (board `Rec143Post`).
             doneLabel = stringResource(if (state.payment != null) R.string.recurring_post else R.string.keypad_done),
             backspaceLabel = stringResource(R.string.keypad_backspace),
@@ -73,6 +80,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
         )
     }
     state.tip?.let { TipSheet(state, it, actions) }
+    state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 
@@ -90,20 +98,11 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
         itemVerticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
-        state.account?.let { AccountChip(it) { actions.onStepChange(EntryStep.ACCOUNT) } }
-        if (state.isTransfer) {
-            Icon(
-                painterResource(DesignR.drawable.ic_chevron_right),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            state.toAccount?.let { AccountChip(it) { actions.onStepChange(EntryStep.TO_ACCOUNT) } }
-        }
         Spacer(Modifier.weight(1f))
         // Which kind of operation this is, in its colour (board `Main`, step 2): the type switch stays on step 1.
-        if (state.isNew && !state.isCopy && !state.isTransfer && state.templateName == null && state.savedTemplateName == null) {
+        if (state.refund) {
             Text(
-                if (state.refund) stringResource(R.string.transaction_refund_label) else stringResource(state.type.labelRes),
+                stringResource(R.string.transaction_refund_label),
                 style = MaterialTheme.typography.labelLarge,
                 color = amountColor(state.type, state.refund),
                 maxLines = 1,
@@ -129,6 +128,27 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
     }
 }
 
+/** A new operation picks its kind here; the ☰ at the end opens all templates (the template row left the first step, #505). */
+@Composable
+private fun TypeBar(state: TransactionEditUiState, actions: TransactionEditActions) {
+    Column(Modifier.fillMaxWidth()) {
+        if (state.scan == null) WordHint(HintId.SCAN_RECEIPT, R.string.hint_scan_receipt, Modifier.padding(horizontal = Spacing.l))
+        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f))
+            // The camera for a receipt QR (#526, board «QrBtnA»): amount and day of the receipt fill the sheet.
+            CoShellIconButton(onClick = actions.onScanReceipt) {
+                Icon(painterResource(DesignR.drawable.ic_qr_code_scanner), contentDescription = stringResource(R.string.scan_title))
+            }
+            CoShellIconButton(onClick = actions.onAllTemplates) {
+                Icon(painterResource(DesignR.drawable.ic_format_list_bulleted), contentDescription = stringResource(R.string.templates_title))
+            }
+        }
+    }
+}
+
+private val TransactionEditUiState.showsTypeSwitch: Boolean
+    get() = isNew && !isCopy && payment == null && templateName == null && savedTemplateName == null
+
 /** «Копия · сегодня»: the label of a copy (poll #367 А) — violet in the dot, like every mode. */
 @Composable
 private fun CopyLabel() {
@@ -142,6 +162,14 @@ private fun amountColor(type: TransactionType, refund: Boolean = false) = when (
     TransactionType.INCOME -> LocalAmountPalette.current.income
     TransactionType.TRANSFER -> MaterialTheme.colorScheme.onSurface
 }
+
+/** «Готово» is quiet until the amount being typed is not empty (#505); other fields keep it on. */
+internal val TransactionEditUiState.canPost: Boolean
+    get() = when (keypadTarget) {
+        KeypadTarget.AMOUNT -> amount.isNotBlank()
+        KeypadTarget.TO_AMOUNT -> toAmount.isNotBlank()
+        KeypadTarget.RECEIPT -> true
+    }
 
 /** Fraction digits of the amount the keypad types into: no `,` key for AMD-like currencies. */
 private fun fractionOf(state: TransactionEditUiState): Int = when (state.keypadTarget) {

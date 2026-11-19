@@ -173,6 +173,27 @@ def done_marks(v):
     return col(flexrow(burst, arrow), cap('CoShellCheckMark — лайм с обводкой · CoShellArrowChip — стрелка между «Сейчас» и «Новая» · CoShellSuccessBurst — один раз ореол и искры, затем покой'))
 
 
+def flip_card(v):
+    """«Переворот» (#519, poll 2026-11-19): tap turns the hero card around the horizontal axis; face · mid-turn (~55°) · back; «↻» for TalkBack."""
+    from mockup_bricks import hero_card, HERO_HINT
+    btn = '<span style="position: absolute; top: 4px; right: 4px; width: 48px; height: 48px; border-radius: 50%%; display: flex; align-items: center; justify-content: center;">%s</span>' % svg('refresh', HERO_HINT, 22)
+    def face(inner, tilt=0):
+        t = 'transform: rotateX(%ddeg);' % tilt if tilt else ''
+        return '<div style="width: 170px; perspective: 1600px;"><div style="position: relative; %s">%s%s</div></div>' % (t, hero_card(inner, pad='14px', radius=24), btn)
+    front = '<div style="font-size: 12px;">Общий баланс</div><div style="margin-top: 4px; font-size: 22px; font-weight: 700; color: %s;">12 480 USD</div>' % LIME
+    back = '<div style="font-size: 12px;">Ноябрь · итоги</div><div style="margin-top: 4px; font-size: 14px; color: %s;">+860 USD</div>' % LIME
+    return col(flexrow(face(front), face(front, -55), face(back)),
+               cap('лицо · кадр переворота ≈ 55° · оборот; нажатие по карточке или «↻» — rotationX вокруг горизонтальной оси, объём — cameraDistance, пружина с перелётом; на 90° лицо гаснет, оборот проявляется'))
+
+
+def scan_frame(v):
+    """«Рамка сканера» (#526, poll 2026-11-19, board QrScan): four rounded corners of the viewfinder in the neon of the theme."""
+    frame = ('<div style="width: 140px; height: 140px; background: #0c0f0d; border-radius: 12px; display: flex; align-items: center; justify-content: center;">'
+             '<svg viewBox="0 0 120 120" width="112" height="112" fill="none" stroke="%s" stroke-width="4" stroke-linecap="round">'
+             '<path d="M3 30V12a9 9 0 0 1 9-9h18M90 3h18a9 9 0 0 1 9 9v18M117 90v18a9 9 0 0 1-9 9H90M30 117H12a9 9 0 0 1-9-9V90"/></svg></div>' % LIME)
+    return col(frame, cap('камера под рамкой; только углы, цвет — неон темы; рядом — «Ввести вручную» и фонарик'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -185,5 +206,7 @@ DATA = [
     ('Теги — в строке', tag_pills, 'CoShellTagPill(name, color) · CoShellTagMore · CoShellTagDot'),
     ('Доходы и расходы', paired, 'CoShellPairedColumns(pairs, selected, onSelect) — доска Rp189IeA'),
     ('Готово', done_marks, 'CoShellCheckMark(size, color, over) · CoShellArrowChip() · CoShellSuccessBurst(content) — «Обновлено», доска Update'),
+    ('Переворот карточки', flip_card, 'CoShellFlipCard(front, back, flipped, onFlip, flipLabel) — карточка-герой с оборотом (#519), доски Flip519*'),
+    ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
     ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
 ]

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Receipt QR in the entry sheet (#526) -->
+    <string name="scan_source">From a receipt QR · seller %1$s</string>
+    <string name="scan_dup_title">This receipt is already recorded</string>
+    <string name="scan_dup_text">There is already one like it in Transactions: %1$s.</string>
+    <string name="scan_dup_confirm">Record anyway</string>
+    <!-- Scanner screen (#526) -->
+    <string name="scan_title">Scan QR</string>
+    <string name="scan_hint">Point the camera at the QR code on the receipt.</string>
+    <string name="scan_manual">Enter manually</string>
+    <string name="scan_torch">Flashlight</string>
+    <string name="scan_bad">This is not a receipt QR. Try another one.</string>
+    <string name="scan_cam_title">The camera is needed to read the QR</string>
+    <string name="scan_cam_text">Video is not saved and goes nowhere.</string>
+    <string name="scan_cam_allow">Allow</string>
+</resources>

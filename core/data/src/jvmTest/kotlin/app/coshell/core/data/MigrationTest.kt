@@ -257,6 +257,24 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `14 to 15 adds an empty receipt key to transactions`() {
+        helper.createDatabase(14).use { v14 ->
+            v14.execSQL(
+                """INSERT INTO transactions (id, type, account_id, amount_minor, currency, to_account_id, to_amount_minor, to_currency,
+                   category_id, date, note, payee, labels, original_amount_minor, original_currency, author_member_id,
+                   import_source, import_external_id, import_batch_id, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('t1', 'EXPENSE', 'galicia', 3791400, 'ARS', NULL, NULL, NULL, NULL, 1, '', NULL, '[]', NULL, NULL, NULL,
+                   NULL, NULL, NULL, 1, NULL, 0, 0)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(15, emptyList()).use { v15 ->
+            assertEquals("3791400", v15.single("SELECT amount_minor FROM transactions"))
+            assertEquals("1", v15.single("SELECT receipt_key IS NULL FROM transactions"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

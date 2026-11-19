@@ -18,8 +18,6 @@
     <string name="home_total_rate_date">At the rate of %1$s</string>
     <string name="amount_peek_no_rate">no rate</string>
     <string name="home_total_missing">Not counted: %1$s — no rate</string>
-    <string name="home_total_show_breakdown">Show by currency</string>
-    <string name="home_total_hide_breakdown">Hide breakdown</string>
     <string name="home_spending_title">%1$s spending</string>
     <string name="home_spending_rate_hint">At the rate on the day of each expense</string>
     <string name="home_spending_tile">Spending</string>
@@ -68,6 +66,9 @@
     <string name="search_close">Close search</string>
     <string name="choice_search">Search</string>
     <string name="picker_nothing">Nothing found</string>
+    <string name="picker_all">All ›</string>
+    <string name="entry_from">From</string>
+    <string name="entry_to">To</string>
     <string name="picker_from_expense">Paid from?</string>
     <string name="picker_to_income">Received to?</string>
     <string name="picker_from_transfer">Transfer from?</string>
@@ -241,7 +242,7 @@
     <string name="categories_menu_hint">Subcategories, icons and colors</string>
     <string name="backup_menu_hint">Save or restore your data</string>
     <string name="feedback_menu_hint">A problem or an idea</string>
-    <string name="shake_to_add_title">Shake for a new transaction</string>
+    <string name="shake_to_add_title">Shake to scan a QR</string>
     <string name="shake_to_add_hint">While the app is open</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="transactions_deleted_many">Transactions deleted: %d</string>

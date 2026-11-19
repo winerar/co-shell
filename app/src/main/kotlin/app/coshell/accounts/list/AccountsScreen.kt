@@ -1,5 +1,7 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
@@ -96,7 +98,12 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
                 }
                 return@LazyColumn
             }
-            item(key = "header") { Header(state, actions, grouping) }
+            item(key = "header") {
+                Column {
+                    WordHint(HintId.ACCOUNTS, R.string.hint_accounts)
+                    Header(state, actions, grouping)
+                }
+            }
             items(state.groups, key = { it.key }) { group ->
                 AccountGroup(group, { actions.onToggleGroup(group.key) }, actions.onAccountClick, listItemMotion())
             }

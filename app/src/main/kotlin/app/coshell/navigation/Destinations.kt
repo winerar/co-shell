@@ -178,6 +178,10 @@ data class CategoryEditDestination(
  * Transaction editor. `transactionId == null` creates a new transaction of [type]
  * (a [app.coshell.core.model.TransactionType] name).
  */
+/** Scanner of a receipt QR (#526): the camera; a receipt QR opens the entry sheet filled from it, «Ввести вручную» an empty one. */
+@Serializable
+data object ReceiptScanDestination
+
 @Serializable
 data class TransactionEditDestination(
     val transactionId: String? = null,
@@ -191,6 +195,8 @@ data class TransactionEditDestination(
      * once saved, every payment of the template up to it counts as handled.
      */
     val paymentDate: String? = null,
+    /** Text with the QR link of a receipt (#526): the sheet opens with its amount and date, a new expense. */
+    val receiptQr: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
@@ -199,6 +205,7 @@ data class TransactionEditDestination(
         const val ARG_COPY_FROM = "copyFrom"
         const val ARG_TEMPLATE_ID = "templateId"
         const val ARG_PAYMENT_DATE = "paymentDate"
+        const val ARG_RECEIPT_QR = "receiptQr"
     }
 }
 

@@ -25,6 +25,7 @@ fun TransactionEditRoute(
     onAddAccount: () -> Unit,
     onDuplicate: (String) -> Unit = {},
     onAllTemplates: () -> Unit = {},
+    onScanReceipt: () -> Unit = {},
     onNewTemplate: () -> Unit = {},
     templateStrip: TemplateStripViewModel = hiltViewModel(),
     viewModel: TransactionEditViewModel = hiltViewModel(),
@@ -75,6 +76,7 @@ fun TransactionEditRoute(
             onTemplateClear = viewModel::onTemplateClear,
             onPaymentSkip = lock.guard(viewModel::onPaymentSkip),
             onAllTemplates = onAllTemplates,
+            onScanReceipt = onScanReceipt,
             onNewTemplate = onNewTemplate,
             onSaveAsTemplate = lock.guard2(viewModel::saveAsTemplate),
             onTagToggle = viewModel::onTagToggle,
@@ -85,6 +87,8 @@ fun TransactionEditRoute(
             onTipKey = { key, note -> if (key == KeypadKey.Done && lock.locked) lock.onBlocked() else viewModel.onTipKey(key, note) },
             onTipCategory = viewModel::onTipCategory,
             onTipSave = lock.guard1(viewModel::onTipSave),
+            onScanDuplicateAccept = viewModel::onScanDuplicateAccept,
+            onScanDuplicateCancel = viewModel::onScanDuplicateCancel,
             onKey = { key ->
                 if (key == KeypadKey.Done && lock.locked) {
                     lock.onBlocked()
@@ -125,6 +129,7 @@ data class TransactionEditActions(
     /** «Пропустить этот раз» of a payment from «Скоро» (#404). */
     val onPaymentSkip: () -> Unit = {},
     val onAllTemplates: () -> Unit = {},
+    val onScanReceipt: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },
     /** A tag pill or a row of the «Теги» sheet (#293). */
@@ -137,4 +142,7 @@ data class TransactionEditActions(
     val onTipKey: (KeypadKey, note: String) -> Unit = { _, _ -> },
     val onTipCategory: (choice: String, newName: String) -> Unit = { _, _ -> },
     val onTipSave: (note: String) -> Unit = {},
+    /** The «Этот чек уже записан» window of a scanned receipt (#526). */
+    val onScanDuplicateAccept: () -> Unit = {},
+    val onScanDuplicateCancel: () -> Unit = {},
 )

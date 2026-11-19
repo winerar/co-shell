@@ -87,6 +87,21 @@ internal val paymentSheetSample: TransactionEditUiState = entrySheetSample.copy(
     payment = PaymentUi("Свет", LocalDate(2026, 11, 15), last = "41 300", average = "44 000"),
 )
 
+/** A receipt QR scanned on a peso account (#526, board «QrFilled»): the amount and the day of the receipt, the quiet «Из QR чека» line. */
+internal val scanSheetSample: TransactionEditUiState = entrySheetSample.copy(
+    amount = "37 914",
+    accountId = "ars",
+    categoryId = null,
+    date = LocalDate(2026, 11, 19),
+    today = LocalDate(2026, 11, 19),
+    note = "",
+    receiptEnabled = false,
+    receiptAmount = "",
+    keypadTarget = TransactionEditUiState.KeypadTarget.AMOUNT,
+    tagIds = emptyList(),
+    scan = ScanUi("30-68584975-1", "30685849751:442:6:117817"),
+)
+
 /** «Чаевые» of the sample purchase (#322, board `Fb322Tips`): 10 % of the 13 300 ARS receipt from the cash account. */
 internal val tipSheetSample = app.coshell.transactions.edit.tip.TipUi(
     percent = 10,

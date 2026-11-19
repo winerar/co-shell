@@ -36,6 +36,9 @@ object Motion {
     const val EFFECTS_DEFAULT = 1600f
     const val EFFECTS_SLOW = 800f
 
+    const val FLIP_DAMPING = 0.72f
+    const val FLIP_STIFFNESS = 260f
+
     const val BOUNCY_DAMPING = 0.55f
     const val BOUNCY_STIFFNESS = 420f
 
@@ -59,6 +62,9 @@ object Motion {
 
     /** Release of a press and a selected element clicking into place: the overshoot makes it feel alive. */
     fun <T> bouncy(): SpringSpec<T> = spring(BOUNCY_DAMPING, BOUNCY_STIFFNESS)
+
+    /** Turning a card over (#519): a big, calm 180° turn that lands with a small overshoot, like a real card. */
+    fun flip(): SpringSpec<Float> = spring(FLIP_DAMPING, FLIP_STIFFNESS)
 
     /** Size changes (issue #64): a block that grows or shrinks. */
     val Resize: FiniteAnimationSpec<IntSize> = spatial(IntSize.VisibilityThreshold)

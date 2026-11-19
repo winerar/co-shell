@@ -13,6 +13,7 @@
    Новое — в `notes.md`; рутина — команда в `agent.sh`; практика — правило (`workflow.md` §«Самоулучшение»).
 8. **Доска — источник истины по виду.** Интерфейс меняется только после правки доски и «ок»; доски экранов, воркфлоу (`Flows`) и компонентов всегда равны коду (`workflow.md` §«Доска — источник истины»). Только утверждённые компоненты (`components.md`).
 9. **Никакого текста в коде:** любой текст для людей — ресурс сразу на всех языках `AppLanguage.SUPPORTED` (`glossary.md`).
+10. **Подсказки живут вместе с интерфейсом:** поменял экран, шаг, жест или подпись — в том же изменении обнови «Первые шаги» и подсказки, все языки (`hints.md`).
 
 ## Карта документации
 | Файл | О чём |
@@ -27,9 +28,8 @@
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [design-navigation.md](docs/agents/design-navigation.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
-| [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь |
-| [docs/agents/performance.md](docs/agents/performance.md) | лёгкость, память, плавность 120 Гц: правила и цели |
-| [docs/agents/kmp-readiness.md](docs/agents/kmp-readiness.md) | как не закрыть дорогу к iOS |
+| [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md), [hints.md](docs/agents/hints.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь; **обучение новичка**: шаги, подсказки, когда показывать |
+| [docs/agents/performance.md](docs/agents/performance.md), [kmp-readiness.md](docs/agents/kmp-readiness.md) | лёгкость, память, плавность 120 Гц; как не закрыть дорогу к iOS |
 | [docs/agents/workflow.md](docs/agents/workflow.md) | git, коммиты, язык, документация, визуальные изменения, отзывы |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/ROADMAP.md](docs/ROADMAP.md) | архитектура и журнал решений; план и очередь |
 | [docs/design/](docs/design/README.md), [docs/research/](docs/research/), [docs/setup/](docs/setup/) | **макеты экранов, воркфлоу, компонентов**; исследования; инструкции владельцу |

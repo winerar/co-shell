@@ -26,6 +26,8 @@ internal data class MoreItem(
     val subtitle: String?,
     val onClick: () -> Unit,
     val newKey: String? = null,
+    /** Non-null: the row ends with a switch in this state instead of a chevron (hints, #513). */
+    val toggle: Boolean? = null,
 )
 
 /**
@@ -66,6 +68,15 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
             R.string.more_section_app,
             listOf(
                 MoreItem(DesignR.drawable.ic_contrast, R.string.settings_title, c[18], state.appearance, actions.onAppearance),
+                MoreItem(
+                    DesignR.drawable.ic_lightbulb,
+                    R.string.hints_title,
+                    c[13],
+                    stringResource(if (state.hintsEnabled) R.string.hints_on else R.string.hints_off),
+                    { actions.onHintsToggle(!state.hintsEnabled) },
+                    toggle = state.hintsEnabled,
+                ),
+                MoreItem(DesignR.drawable.ic_refresh, R.string.hints_reset_title, c[16], stringResource(R.string.hints_reset_hint), actions.onHintsReset),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[1], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
             ),
         ),

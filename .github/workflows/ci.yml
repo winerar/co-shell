@@ -5,7 +5,11 @@ on:
     branches: [main, dev] # dev: checks only; releases are published from main
   pull_request:
     # ready_for_review: an agent's draft PR is built once, when the agent marks it ready (#253).
-    types: [opened, synchronize, reopened, ready_for_review]
+    # No `opened`: PRs opened by the bot (auto-pr.yml drafts, the release PR dev → main, backmerge) got a run that waits
+    # for approval (action_required) and turns into a red «failure» with no jobs once the PR is merged — 6 of 6 red CI
+    # runs on 2026-11-19 were these. Every PR is built on ready_for_review (a hotfix PR is opened as a draft and then
+    # marked ready, docs/agents/hotfix.md) and on each push.
+    types: [synchronize, reopened, ready_for_review]
   workflow_dispatch: # Actions → «Сборка и тесты (CI)» → Run workflow (e.g. first deploy after adding secrets)
 
 # One group per branch: the dispatch from auto-pr.yml (refs/heads/<branch>) and the pull_request run

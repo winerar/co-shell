@@ -51,6 +51,34 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      # The AVD with a booted snapshot is cached: a cold boot plus the system image download took ~3 min of every run,
+      # and a cold-booting emulator is slowest exactly when the smoke test starts (Pixel Launcher ANR, #536).
+      # Change any emulator option below → bump the key (v1 → v2), or the old snapshot is reused.
+      - name: AVD cache
+        uses: actions/cache@v5
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-34-google_apis-x86_64-pixel_6-v1
+
+      - name: Create the AVD and its snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          cores: 4
+          ram-size: 4096M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          # Let the first-boot work (package optimisation, launcher setup) finish before the snapshot is taken.
+          script: adb shell 'while [ "$(getprop sys.boot_completed)" != 1 ]; do sleep 2; done'; sleep 60; echo "AVD snapshot ready"
+
       - name: Smoke test on the emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -58,8 +86,12 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_6
+          cores: 4
+          ram-size: 4096M
+          force-avd-creation: false
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          # From the cached snapshot; nothing is saved back, so every run starts from the same clean state.
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: scripts/ci/emulator-smoke.sh app/build/outputs/apk/release/app-release.apk
 
       - name: Upload logs

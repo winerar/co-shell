@@ -27,4 +27,12 @@
     <string name="hint_reports">Here you see where the money goes. The more entries, the clearer the picture.</string>
     <string name="hint_tags">A tag is a coloured label on a transaction, like “holiday” or “gifts”.</string>
     <string name="hint_family">Easier together: entries from both phones come together in one place.</string>
+    <string name="hint_ok">Got it</string>
+    <string name="hint_hold_select">Press and hold a transaction to select several.</string>
+    <string name="hint_edit_tap">Made a mistake? Tap the transaction to fix it.</string>
+    <string name="hint_first_entry">The first entry is in. This is how a budget begins.</string>
+    <string name="hint_first_limit">Limit set. Now you can see how much is left.</string>
+    <string name="hints_reset_done">Tips are on</string>
+    <string name="steps_done_title">All set</string>
+    <string name="steps_done_text">You are already keeping a budget — and that is the hardest part.</string>
 </resources>

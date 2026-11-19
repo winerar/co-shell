@@ -15,6 +15,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import app.coshell.hints.HintBannerHost
+import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.export.ExportRoute
@@ -136,6 +138,14 @@ fun CoShellNavHost(
                 onDismiss = updates::dismissPill,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
             )
+            // Hint banner (#513): gesture card or warm pill; the update pill and the greeting go first.
+            LocalHintHost.current?.let { host ->
+                HintBannerHost(
+                    host = host,
+                    visible = onBar && updatePill == null && !(onHome && greetingVisible),
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+                )
+            }
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.
             GreetingPill(
                 visible = onBar && onHome && greetingVisible && updatePill == null,

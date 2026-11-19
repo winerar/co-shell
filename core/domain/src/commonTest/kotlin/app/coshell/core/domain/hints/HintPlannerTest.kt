@@ -6,7 +6,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class HintPlannerTest {
-    private val all = setOf(HintId.FIRST_ENTRY, HintId.ACCOUNTS, HintId.HOLD_SELECT)
+    private val all = setOf(HintId.ACCOUNTS, HintId.HOLD_SELECT)
 
     private fun next(
         candidates: Set<HintId> = all,
@@ -28,6 +28,12 @@ class HintPlannerTest {
     }
 
     @Test fun `one per visit`() = assertNull(next(visit = true))
+
+    @Test fun `moments ignore the day and visit limits`() {
+        assertEquals(HintId.FIRST_ENTRY, next(candidates = all + HintId.FIRST_ENTRY, last = 100, visit = true))
+        assertNull(next(candidates = setOf(HintId.ACCOUNTS), last = 100, visit = true))
+        assertNull(next(candidates = setOf(HintId.FIRST_ENTRY), last = 100, enabled = false))
+    }
 
     @Test fun `nothing when no condition holds`() = assertNull(next(candidates = emptySet()))
 

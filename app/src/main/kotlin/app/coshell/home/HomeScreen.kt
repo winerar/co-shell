@@ -6,7 +6,9 @@ import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.FirstStepsRow
 import app.coshell.hints.FirstStepsSheet
 import app.coshell.hints.HintsViewModel
+import app.coshell.hints.CoachHint
 import app.coshell.hints.LocalHintHost
+import app.coshell.hints.StepsFinale
 import app.coshell.hints.WordHint
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
@@ -111,6 +113,7 @@ fun HomeRoute(
 ) {
     val lock = LocalInputLock.current
     val steps by hintsViewModel.steps.collectAsStateWithLifecycle()
+    val finale by hintsViewModel.finale.collectAsStateWithLifecycle()
     var stepsOpen by rememberSaveable { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
@@ -141,6 +144,8 @@ fun HomeRoute(
         onLayoutChange = { layout -> screenOptions.change { it.copy(home = layout) } },
         firstSteps = steps,
         onFirstSteps = { stepsOpen = true },
+        finale = finale,
+        onFinale = hintsViewModel::dismissFinale,
     )
     if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }
@@ -168,6 +173,8 @@ fun HomeScreen(
     onLayoutChange: (HomeLayout) -> Unit = {},
     firstSteps: FirstStepsState? = null,
     onFirstSteps: () -> Unit = {},
+    finale: Boolean = false,
+    onFinale: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -195,6 +202,7 @@ fun HomeScreen(
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
+        CoachHint(mapOf(HintId.FLIP_CARD to R.string.hint_flip_card), enabled = state.recent.isNotEmpty())
         LazyColumn(
             state = listState,
             // While editing, the «Готово» bar below ends the list; otherwise the list goes under both capsules.
@@ -224,6 +232,7 @@ fun HomeScreen(
             }
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
             firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
+            if (finale) item(key = "steps-finale") { StepsFinale(onFinale, listItemMotion()) }
             if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->

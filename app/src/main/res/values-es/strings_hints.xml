@@ -27,4 +27,12 @@
     <string name="hint_reports">Aquí ves en qué se va el dinero. Cuantos más movimientos, más clara la imagen.</string>
     <string name="hint_tags">Una etiqueta es una marca de color en un movimiento, como «vacaciones» o «regalos».</string>
     <string name="hint_family">Juntos es más fácil: los movimientos de ambos teléfonos se reúnen en un solo lugar.</string>
+    <string name="hint_ok">Entendido</string>
+    <string name="hint_hold_select">Mantén pulsado un movimiento para elegir varios.</string>
+    <string name="hint_edit_tap">¿Te equivocaste? Toca el movimiento para corregirlo.</string>
+    <string name="hint_first_entry">Ya está el primer registro. Así empieza un presupuesto.</string>
+    <string name="hint_first_limit">Límite fijado. Ahora ves cuánto queda.</string>
+    <string name="hints_reset_done">Consejos activados</string>
+    <string name="steps_done_title">Todo listo</string>
+    <string name="steps_done_text">Ya llevas un presupuesto, y eso es lo más difícil.</string>
 </resources>

@@ -26,9 +26,6 @@ import kotlinx.coroutines.delay
 /** Null in previews and tests: no hint is ever shown there. */
 val LocalHintHost = compositionLocalOf<HintHost?> { null }
 
-/** Not in the first seconds after a screen opens (`hints.md` §«Когда показывать»). */
-private const val SHOW_DELAY_MS = 1_500L
-
 /**
  * A word hint (П1): a line under the header with «✕». Asks [LocalHintHost] once per screen visit; once claimed it
  * stays until «✕». [id] must be a `HintKind.WORD` hint with its text in `strings_hints.xml`.

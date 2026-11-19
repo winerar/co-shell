@@ -31,3 +31,19 @@ data class FirstStepsState(val done: Set<FirstStep>, val hidden: Boolean) {
         }
     }
 }
+
+/** What a change of the data means for a newcomer (`hints.md` §«Тёплые моменты» and the finale of «Первые шаги»). */
+enum class StepsMoment { FIRST_ENTRY, FIRST_LIMIT, FINALE }
+
+object StepsMoments {
+    /**
+     * The warm moment when data went from [before] to [now], or null. Only a change counts, never the state at start:
+     * people who already keep a budget get nothing. Finishing the steps beats the single-step moments.
+     */
+    fun between(before: FirstStepsData, now: FirstStepsData): StepsMoment? = when {
+        !FirstStepsState.of(before, false).complete && FirstStepsState.of(now, false).complete -> StepsMoment.FINALE
+        !before.hasEntry && now.hasEntry -> StepsMoment.FIRST_ENTRY
+        !before.hasLimit && now.hasLimit -> StepsMoment.FIRST_LIMIT
+        else -> null
+    }
+}

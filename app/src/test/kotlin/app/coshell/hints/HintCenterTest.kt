@@ -54,4 +54,18 @@ class HintCenterTest {
         store.reset()
         assertTrue(HintCenter(store) { today }.claim(HintId.BUDGETS))
     }
+
+    @Test
+    fun `a warm moment comes after the daily hint and does not use up the day`() = runTest {
+        val store = FakeHintStore()
+        assertTrue(HintCenter(store) { today }.claim(HintId.ACCOUNTS))
+        val center = HintCenter(store) { today }
+        assertTrue(center.claim(HintId.FIRST_ENTRY))
+        assertFalse(center.claim(HintId.FIRST_ENTRY))
+        // A moment alone leaves the day free for a word hint.
+        val other = FakeHintStore()
+        val c2 = HintCenter(other) { today }
+        assertTrue(c2.claim(HintId.FIRST_LIMIT))
+        assertTrue(c2.claim(HintId.CATEGORIES))
+    }
 }

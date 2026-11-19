@@ -8,7 +8,6 @@
     <!-- Scanner screen (#526) -->
     <string name="scan_title">Сканировать QR</string>
     <string name="scan_hint">Наведите камеру на QR-код на чеке.</string>
-    <string name="scan_hint_offline">Он читается без интернета.</string>
     <string name="scan_manual">Ввести вручную</string>
     <string name="scan_torch">Фонарик</string>
     <string name="scan_bad">Это не QR чека. Попробуйте другой.</string>

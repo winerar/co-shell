@@ -141,12 +141,12 @@ dependencies {
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.work.runtime)
-    // Receipt QR scanner (#526): own camera, ML Kit with the model bundled in the app (no Google services needed).
+    // Receipt QR scanner (#526): own camera + ZXing (pure Java, ~0.5 MB; ML Kit pushed the release APK to 15.8 MB, over the 15 MB budget).
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
-    implementation(libs.mlkit.barcode.scanning)
+    implementation(libs.zxing.core)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services)
     implementation(libs.googleid)

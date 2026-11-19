@@ -17,6 +17,7 @@
 | Шторка ввода | Main | entry_sheet | ✓ | ✓ |
 | Шторка: возврат | Fb208C | entry_refund | ✓ | ✓ |
 | Шторка: теги | Fb129A | entry_tags | ✓ | ✓ |
+| Шторка: QR чека | Qr526Filled | entry_scan | ✓ | ✓ |
 | Шторка: «Провести» | Rec143Post | recurring_post | ✓ | ✓ |
 | Счета | Accounts | accounts | ✓ | ✓ |
 | Счета: пусто | AccountsEmpty | accounts_empty | ✓ | ✓ |

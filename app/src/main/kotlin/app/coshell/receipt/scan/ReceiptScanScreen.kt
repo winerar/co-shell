@@ -76,15 +76,12 @@ internal fun ReceiptScanScreen(
                     onDismiss = onBadDismiss,
                 )
                 CoShellCard(Modifier.fillMaxWidth()) {
-                    Column(Modifier.fillMaxWidth().padding(Spacing.m), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(stringResource(R.string.scan_hint), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-                        Text(
-                            stringResource(R.string.scan_hint_offline),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+                    Text(
+                        stringResource(R.string.scan_hint),
+                        Modifier.fillMaxWidth().padding(Spacing.m),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                    )
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
                     if (camera?.cameraInfo?.hasFlashUnit() == true) {

@@ -8,7 +8,6 @@
     <!-- Scanner screen (#526) -->
     <string name="scan_title">Scan QR</string>
     <string name="scan_hint">Point the camera at the QR code on the receipt.</string>
-    <string name="scan_hint_offline">It is read without internet.</string>
     <string name="scan_manual">Enter manually</string>
     <string name="scan_torch">Flashlight</string>
     <string name="scan_bad">This is not a receipt QR. Try another one.</string>

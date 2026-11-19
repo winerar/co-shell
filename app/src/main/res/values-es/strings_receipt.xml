@@ -8,7 +8,6 @@
     <!-- Scanner screen (#526) -->
     <string name="scan_title">Escanear QR</string>
     <string name="scan_hint">Apunta la cámara al código QR del ticket.</string>
-    <string name="scan_hint_offline">Se lee sin internet.</string>
     <string name="scan_manual">Ingresar a mano</string>
     <string name="scan_torch">Linterna</string>
     <string name="scan_bad">Este no es el QR de un ticket. Prueba con otro.</string>

@@ -34,6 +34,9 @@ check_clean() { # $1 = step name
 
 adb wait-for-device
 adb shell input keyevent 82 >/dev/null 2>&1 || true
+# A slow emulator's own apps (Pixel Launcher) hang and cover the app with «… isn't responding» (#536): hide those
+# system dialogs. Our own ANR still fails the run — crashes() reads it from the event log.
+adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1 || true
 adb install -r -g "$APK" || { bad "install failed"; exit 1; }
 adb logcat -c
 
@@ -57,11 +60,20 @@ tap_text() {
   [ -n "$b" ] || return 1
   set -- $b; adb shell input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 ))
 }
-# Over the tabs there can be the first-launch «App language» sheet (confirm it) or a system «isn't responding» dialog
-# of a slow emulator (press «Wait»); up to 4 tries.
-for _ in 1 2 3 4; do
+# Over the tabs there can be a system «isn't responding» dialog of a slow emulator and the first-launch «App language»
+# sheet. A dialog of another app (Pixel Launcher, #536) is closed — «Wait» let it hang again 4 times in a row; ours is
+# waited for (a real ANR of ours fails check_clean anyway). The sheet is confirmed. Up to 8 tries.
+for _ in 1 2 3 4 5 6 7 8; do
   xml=$(ui)
-  tap_text "Done|Готово|Hecho" || tap_text "Wait|Подождать|Esperar" || break
+  if echo "$xml" | grep -qE "isn't responding|не отвечает|no responde"; then
+    if echo "$xml" | grep -qE "text=\"co-shell[^\"]*(isn't responding|не отвечает|no responde)"; then
+      tap_text "Wait|Подождать|Esperar" || adb shell input keyevent 4
+    else
+      tap_text "Close app|Закрыть приложение|Cerrar app|Cerrar aplicación" || adb shell input keyevent 4
+    fi
+  else
+    tap_text "Done|Готово|Hecho" || break
+  fi
   sleep 3
 done
 xml=$(ui)

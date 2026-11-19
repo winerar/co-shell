@@ -43,4 +43,7 @@
     <string name="hint_backup">Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.</string>
     <string name="hint_theme">Приложение можно сделать своим: Ещё → Внешний вид.</string>
     <string name="hint_template">Трата повторяется? Сохраните шаблон, и она внесётся в одно нажатие.</string>
+    <string name="hint_open">Открыть</string>
+    <string name="hint_limit_80">%1$s: ещё можно %2$s. Заглядывайте в «Бюджеты», когда захотите.</string>
+    <string name="hint_month_end">Месяц закончился. Посмотрите итоги: Отчёты.</string>
 </resources>

@@ -15,7 +15,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import kotlinx.coroutines.flow.MutableStateFlow
 import app.coshell.hints.HintBannerHost
+import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
@@ -114,6 +116,12 @@ fun CoShellNavHost(
     }
     val lock = rememberInputLock(locked, openUpdate)
 
+    // «Месяц закончился» leaves a dot on «Отчёты» until that tab is opened (#513).
+    val hintHost = LocalHintHost.current
+    val reportsDot by (hintHost?.reportsDot ?: remember { MutableStateFlow(false) }).collectAsStateWithLifecycle()
+    val onReports = backStackEntry?.destination.isOn(TopLevel.REPORTS)
+    LaunchedEffect(onReports) { if (onReports) hintHost?.reportsOpened() }
+
     // Shake → new transaction, only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
@@ -126,6 +134,7 @@ fun CoShellNavHost(
         snackbar = snackbar,
         onAdd = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
         moreBadge = updateAvailable != null,
+        reportsBadge = reportsDot && !onReports,
         inputLock = lock,
         overBar = { onBar ->
             UpdatePill(
@@ -144,6 +153,13 @@ fun CoShellNavHost(
                     host = host,
                     visible = onBar && updatePill == null && !(onHome && greetingVisible),
                     modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+                    onOpen = { target ->
+                        when (target) {
+                            HintTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
+                            HintTarget.APPEARANCE -> navController.navigate(AppearanceDestination) { launchSingleTop = true }
+                            HintTarget.REPORTS -> navController.navigateToTab(TopLevel.REPORTS)
+                        }
+                    },
                 )
             }
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.

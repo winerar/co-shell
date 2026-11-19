@@ -50,6 +50,7 @@ internal fun MainBottomBar(
     onAdd: () -> Unit,
     visible: Boolean = true,
     moreBadge: Boolean = false,
+    reportsBadge: Boolean = false,
     addLocked: Boolean = false,
     drag: TabDrag? = null,
 ) {
@@ -58,7 +59,7 @@ internal fun MainBottomBar(
     var buttonChanges by rememberSaveable { mutableIntStateOf(0) }
     CoachHint(mapOf(HintId.SWIPE_TABS to R.string.hint_swipe_tabs), enabled = buttonChanges >= SWIPE_HINT_AFTER)
     CoShellBottomBar(
-        tabs = tabs.map { CoShellTab(it.icon, stringResource(it.label), selected = current.isOn(it), badge = moreBadge && it == TopLevel.MORE) },
+        tabs = tabs.map { CoShellTab(it.icon, stringResource(it.label), selected = current.isOn(it), badge = (moreBadge && it == TopLevel.MORE) || (reportsBadge && it == TopLevel.REPORTS)) },
         onTab = {
             if (!current.isOn(tabs[it])) buttonChanges++
             onTab(tabs[it])

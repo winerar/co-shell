@@ -93,7 +93,8 @@
 **Сделано (ч. 6):** `swipe_tabs` (после 2-й смены вкладки кнопкой, счётчик в `MainBottomBar`).
 **Сделано (ч. 5):** `TimeMoments` (чистая логика, `TimeMomentsTest`) + `HintsViewModel` раз за запуск (через 6 с) предлагает `first_week`, `welcome_back`, `backup`, `theme`; `HintStore.firstSeenDay/firstEntryDay` (на устройстве, сброс подсказок их не трогает). Без кнопки «Открыть» — путь в тексте.
 **Сделано (ч. 6):** жест `template` — `RepeatedSpending.hasRun` (три последние траты: одна категория и один счёт), карточка в «Операциях» (`TransactionsUiState.repeatedSpending`, без фильтра).
-**Осталось:** слова на шторке ввода, валютные и «Теги» (отдельного экрана нет — только шторки, решить где); моменты `month_end` (+ точка на «Отчётах») и `limit_80`; «Открыть» у длинных плашек (`HintBanner` с действием).
+**Сделано (ч. 7):** «Открыть» у плашек `backup`/`theme`/`month_end` (`HintTarget`, `HintBannerHost(onOpen)`); `month_end` — первые 3 дня календарного месяца, один раз за всё время, точка на «Отчётах» до первого захода (`HintHost.reportsDot`); `limit_80` — ближайший к концу лимит из 80–99 % (`LimitWatch`), текст с названием категории и остатком (`HintBanner.args`).
+**Осталось (ждёт решения владельца — доски нет):** слова на шторке ввода (`entry_minimal`, `keypad_math`, `entry_refund`), валютные (`currency_account`, `currency_receipt`) и «Теги»: шторка «без прокрутки», места под строку нет.
 - `core:domain/hints/`: `HintId`, `HintTrigger`, `HintPlanner` (чистая логика «что показать», тесты), `HintsSettings` (интерфейс);
   шаги — `FirstSteps` (`FirstStepsState` из данных). Хранение — `app/.../hints/` (настройки устройства).
 - UI: `app/.../hints/` — блоки на утверждённых компонентах (`CoShellHint`, `CoShellCoachCard`, `CoShellNoticePill`, шторка). Строки —

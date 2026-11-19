@@ -10,7 +10,8 @@ class TimeMomentsTest {
         firstEntry: Long? = null,
         lastEntry: Long? = null,
         count: Int = 0,
-    ) = MomentFacts(today, seen, firstEntry, lastEntry, count)
+        dom: Int = 15,
+    ) = MomentFacts(today, seen, firstEntry, lastEntry, count, dom)
 
     @Test fun `nothing on the first day`() = assertEquals(emptySet(), TimeMoments.due(facts()))
 
@@ -35,5 +36,12 @@ class TimeMomentsTest {
         assertEquals(emptySet(), TimeMoments.due(facts(count = 29)))
         assertEquals(setOf(HintId.BACKUP, HintId.THEME), TimeMoments.due(facts(seen = 86, count = 1, firstEntry = 100, lastEntry = 100)))
         assertEquals(setOf(HintId.THEME), TimeMoments.due(facts(seen = 86, count = 0)))
+    }
+
+    @Test fun `month end in the first days of a month for people with entries`() {
+        assertEquals(setOf(HintId.MONTH_END), TimeMoments.due(facts(seen = 99, count = 4, dom = 2, firstEntry = 99, lastEntry = 100)))
+        assertEquals(emptySet(), TimeMoments.due(facts(seen = 99, count = 4, dom = 4, firstEntry = 99, lastEntry = 100)))
+        assertEquals(emptySet(), TimeMoments.due(facts(seen = 100, count = 4, dom = 2, firstEntry = 100, lastEntry = 100)))
+        assertEquals(emptySet(), TimeMoments.due(facts(seen = 99, count = 0, dom = 2)))
     }
 }

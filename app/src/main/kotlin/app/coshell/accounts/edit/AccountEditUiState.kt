@@ -30,6 +30,8 @@ data class AccountEditUiState(
     val deleteBlocked: Boolean = false,
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
+    /** Closing after creating an account outside the totals currencies: the «currency_account» pill (#513). */
+    val foreignCurrencyAdded: Boolean = false,
 ) {
     enum class CurrencyError { INVALID, LOCKED }
     enum class BalanceError { INVALID, TOO_MANY_FRACTION_DIGITS }

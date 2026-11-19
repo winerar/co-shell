@@ -31,7 +31,24 @@ class PrefsHintStore @Inject constructor(@ApplicationContext context: Context) :
 
     override suspend fun setStepsHidden(value: Boolean) = io { prefs.edit { putBoolean(STEPS_HIDDEN, value) } }
 
-    override suspend fun reset() = io { prefs.edit { clear() } }
+    override suspend fun firstSeenDay(today: Long): Long = io {
+        prefs.getLong(FIRST_SEEN, NONE).takeIf { it != NONE } ?: today.also { prefs.edit { putLong(FIRST_SEEN, it) } }
+    }
+
+    override suspend fun firstEntryDay(candidate: Long?): Long? = io {
+        prefs.getLong(FIRST_ENTRY, NONE).takeIf { it != NONE }
+            ?: candidate?.also { prefs.edit { putLong(FIRST_ENTRY, it) } }
+    }
+
+    // Keeps the dates: «show hints again» forgets what was shown, not when the phone started.
+    override suspend fun reset() = io {
+        prefs.edit {
+            remove(SHOWN)
+            remove(LAST_DAY)
+            remove(STEPS_HIDDEN)
+            putBoolean(ENABLED, true)
+        }
+    }
 
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
 
@@ -39,6 +56,8 @@ class PrefsHintStore @Inject constructor(@ApplicationContext context: Context) :
         const val ENABLED = "enabled"
         const val SHOWN = "shown"
         const val LAST_DAY = "last_day"
+        const val FIRST_SEEN = "first_seen"
+        const val FIRST_ENTRY = "first_entry"
         const val STEPS_HIDDEN = "steps_hidden"
         const val NONE = Long.MIN_VALUE
     }

@@ -16,6 +16,8 @@ data class TransactionsUiState(
     val total: Total? = null,
     /** For the ready-made periods of the «Период» sheet. */
     val today: LocalDate? = null,
+    /** The three latest expenses share a category and an account: the `template` gesture hint may show (#513). */
+    val repeatedSpending: Boolean = false,
 ) {
     /**
      * «23 операции · −184 300,00 ARS», [detail] under it: «≈ 182,40 USD» or the nets of each currency, one per line.

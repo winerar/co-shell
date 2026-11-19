@@ -37,6 +37,7 @@ import app.coshell.transactions.list.components.dayLabel
 import app.coshell.ui.bar.ReplaceBottomBar
 import app.coshell.ui.list.LoadMoreEffect
 import app.coshell.ui.top.TabOrSelectionTopBar
+import app.coshell.hints.WordHint
 import app.coshell.ui.top.TabSearch
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
@@ -63,6 +64,7 @@ fun TransactionsScreen(
     val tips = buildMap {
         if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
         if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
+        if (state.repeatedSpending && !state.filter.isActive) put(HintId.TEMPLATE, R.string.hint_template)
     }
     CoachHint(tips, enabled = !state.isLoading && !selection.active && tips.isNotEmpty())
     val scroll = rememberTabScrollBehavior()
@@ -107,7 +109,15 @@ fun TransactionsScreen(
             contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance)),
         ) {
             if (state.days.isNotEmpty() || state.filter.isActive) {
-                item(key = "filters") { FilterBar(state, actions.onFilter, Modifier.padding(bottom = Spacing.s)) }
+                item(key = "filters") {
+                    // The tags word (#513) sits in the filters item, so [dayAt] keeps counting one item for the top.
+                    Column {
+                        FilterBar(state, actions.onFilter, Modifier.padding(bottom = Spacing.s))
+                        if (rowCount >= TAGS_HINT_ROWS && !state.filter.isActive) {
+                            WordHint(HintId.TAGS, R.string.hint_tags, Modifier.padding(horizontal = Spacing.l))
+                        }
+                    }
+                }
             }
             if (state.days.isEmpty()) {
                 item(key = "empty") { EmptyState(filtered = state.filter.isActive, onReset = { actions.onFilter { ListFilter() } }) }
@@ -134,6 +144,9 @@ fun TransactionsScreen(
         }
     }
 }
+
+/** «Теги» word hint appears in «Операции» from this many rows (`hints.md`). */
+internal const val TAGS_HINT_ROWS = 10
 
 /**
  * The day whose title or rows are at the top of the list at item [index]: the list is the filter bar (when

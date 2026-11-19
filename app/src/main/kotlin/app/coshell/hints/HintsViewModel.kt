@@ -14,8 +14,19 @@ import app.coshell.core.domain.hints.HintId
 import app.coshell.core.domain.hints.StepsMoment
 import app.coshell.core.domain.hints.StepsMoments
 import app.coshell.R
+import app.coshell.budgets.BudgetSource
+import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.hints.LimitWatch
+import app.coshell.core.model.MoneyFormat
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import app.coshell.core.domain.hints.HintStore
+import app.coshell.core.domain.hints.MomentFacts
+import app.coshell.core.domain.hints.TimeMoments
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,7 +45,10 @@ import kotlinx.coroutines.launch
 class HintsViewModel @Inject constructor(
     private val store: HintStore,
     accounts: AccountRepository,
-    transactions: TransactionRepository,
+    private val transactions: TransactionRepository,
+    private val budgetSource: BudgetSource,
+    private val moneyFormat: MoneyFormat,
+    private val timeZone: TimeZone,
     budgets: BudgetRepository,
     family: FamilyService,
     private val center: HintCenter,
@@ -90,6 +104,38 @@ class HintsViewModel @Inject constructor(
         }
     }
 
+    init {
+        // Time-based moments are checked once per launch, a little after the start (never in the first seconds).
+        viewModelScope.launch {
+            delay(MOMENTS_DELAY_MS)
+            val today = System.currentTimeMillis() / MILLIS_PER_DAY
+            val recent = transactions.observeTransactions(TransactionFilter(limit = TimeMoments.BACKUP_ENTRIES)).first()
+            val last = recent.maxOfOrNull { it.date.toEpochMilliseconds() / MILLIS_PER_DAY }
+            val facts = MomentFacts(
+                today = today,
+                firstSeenDay = store.firstSeenDay(today),
+                firstEntryDay = store.firstEntryDay(if (recent.isEmpty()) null else today),
+                lastEntryDay = last,
+                entryCount = recent.size,
+                dayOfMonth = Clock.System.todayIn(timeZone).day,
+            )
+            val texts = TIME_MOMENT_TEXTS.filterKeys { it in TimeMoments.due(facts) }
+            if (texts.isNotEmpty()) center.offer(texts)
+            offerLimit80()
+        }
+        viewModelScope.launch { center.restoreDot() }
+    }
+
+    /** `limit_80`: the nearest limit that is 80–99 % spent this month, named with what is left (`LimitWatch`). */
+    private suspend fun offerLimit80() {
+        val snapshot = budgetSource.observe().first()
+        val month = budgetPeriodOf(Clock.System.todayIn(timeZone), snapshot.startDay).month
+        val near = LimitWatch.nearest(snapshot.calculator().month(month, Clock.System.todayIn(timeZone))) ?: return
+        val name = snapshot.categories.firstOrNull { it.id == near.budget.categoryId }?.name ?: return
+        val left = moneyFormat.copy(trimZeroFraction = true).format(near.left)
+        center.offer(mapOf(HintId.LIMIT_80 to R.string.hint_limit_80), mapOf(HintId.LIMIT_80 to listOf(name, left)))
+    }
+
     fun dismissFinale() {
         _finale.value = false
     }
@@ -117,6 +163,16 @@ class HintsViewModel @Inject constructor(
     }
 
     private companion object {
+        const val MILLIS_PER_DAY = 86_400_000L
+        const val MOMENTS_DELAY_MS = 6_000L
+        val TIME_MOMENT_TEXTS = mapOf(
+            HintId.MONTH_END to R.string.hint_month_end,
+            HintId.FIRST_WEEK to R.string.hint_first_week,
+            HintId.WELCOME_BACK to R.string.hint_welcome_back,
+            HintId.BACKUP to R.string.hint_backup,
+            HintId.THEME to R.string.hint_theme,
+        )
+
         /** «Already shown» key of the finale; it is not a [HintId], `reset()` clears it with the rest. */
         const val FINALE_KEY = "steps_finale"
     }

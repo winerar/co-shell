@@ -19,6 +19,7 @@
     <string name="hints_reset_title">Mostrar los consejos de nuevo</string>
     <string name="hints_reset_hint">Recupera «Primeros pasos» y los consejos</string>
     <string name="hint_flip_card">Toca la tarjeta para girarla: detrás está lo más útil del mes.</string>
+    <string name="hint_swipe_tabs">Desliza hacia un lado para cambiar de pestaña.</string>
     <string name="hint_close">Cerrar consejo</string>
     <string name="hint_overview_empty">Aún no hay movimientos. Pulsa «+» para añadir el primero.</string>
     <string name="hint_accounts">Una cuenta es donde está tu dinero. El saldo se calcula solo.</string>
@@ -36,4 +37,17 @@
     <string name="hints_reset_done">Consejos activados</string>
     <string name="steps_done_title">Todo listo</string>
     <string name="steps_done_text">Ya llevas un presupuesto, y eso es lo más difícil.</string>
+    <string name="hint_first_week">Una semana de registros. El orden en tu dinero empieza así.</string>
+    <string name="hint_welcome_back">Qué bueno verte de nuevo. Puedes anotar los gastos de estos días: la fecha se elige en el movimiento.</string>
+    <string name="hint_backup">Ya tienes muchos registros. Guarda una copia de seguridad para no perder nada: Más → Copia de seguridad.</string>
+    <string name="hint_theme">Puedes hacer la app a tu gusto: Más → Apariencia.</string>
+    <string name="hint_template">¿Este gasto se repite? Guarda una plantilla y se anotará con un toque.</string>
+    <string name="hint_open">Abrir</string>
+    <string name="hint_limit_80">%1$s: aún puedes gastar %2$s. Entra en «Presupuestos» cuando quieras.</string>
+    <string name="hint_month_end">El mes terminó. Mira los totales: Informes.</string>
+    <string name="hint_entry_minimal">Solo hacen falta el importe y la cuenta. Lo demás se puede omitir.</string>
+    <string name="hint_keypad_math">Puedes sumar y restar: 300 + 150.</string>
+    <string name="hint_entry_refund">¿Te devolvieron dinero? Marca «Es una devolución».</string>
+    <string name="hint_currency_account">¿Dinero en otra moneda? Los totales se cuentan en las monedas de los totales y el tipo de cambio se pone solo.</string>
+    <string name="hint_currency_receipt">Indica el importe de la compra y el tipo de cambio se calcula solo.</string>
 </resources>

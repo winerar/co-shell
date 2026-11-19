@@ -19,7 +19,6 @@ enum class HintId(val key: String, val kind: HintKind) {
     REPORTS("reports", HintKind.WORD),
     TAGS("tags", HintKind.WORD),
     FAMILY("family", HintKind.WORD),
-    CURRENCY_ACCOUNT("currency_account", HintKind.WORD),
     CURRENCY_RECEIPT("currency_receipt", HintKind.WORD),
     HOLD_SELECT("hold_select", HintKind.GESTURE),
     SWIPE_TABS("swipe_tabs", HintKind.GESTURE),
@@ -34,6 +33,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     LIMIT_80("limit_80", HintKind.MOMENT),
     BACKUP("backup", HintKind.MOMENT),
     THEME("theme", HintKind.MOMENT),
+    CURRENCY_ACCOUNT("currency_account", HintKind.MOMENT),
     ;
 
     companion object {

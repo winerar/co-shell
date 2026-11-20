@@ -2,14 +2,14 @@
 
 А — today's list (board Set1Root, unchanged); Б — 2×3 tiles (`MoreTile`); В — one card per group with its main settings
 inline and «Все ›» to the group screen. Stress boards: Spanish, ≈ 320 dp with font ×1,3 (CSS zoom over the body).
-Remove the losing boards from BOARDS after the answer.
+Picked 2026-11-20: В. Boards А/Б removed from the canvas (functions stay for the poll page history).
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 
 FEEDBACK = [
     (1120, 'Настройки: список, плитки или карточки-группы · 2026-11-20',
-     'А — как сейчас (Set1Root). Б — плитки 2×3. В — карточка на группу: 1–2 главные настройки прямо внутри, «Все ›» — экран группы. '
+     'Выбрано В (опрос 2026-11-20): карточка на группу: 1–2 главные настройки прямо внутри, «Все ›» — экран группы. '
      'Стресс: испанский, ≈ 320 dp, шрифт ×1,3.'),
 ]
 
@@ -128,11 +128,7 @@ def stress(t, body):
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('SetCardsA', 'А · список (как сейчас)', lambda: inner_screen(RU['title'], list_body(RU)), 1120),
-    ('SetCardsB', 'Б · плитки 2×3', lambda: inner_screen(RU['title'], tiles_body(RU)), 1120),
     ('SetCardsC', 'В · карточки-группы: верх', lambda: inner_screen(RU['title'], cards_top(RU)), 1120),
     ('SetCardsC2', 'В · карточки-группы: прокрутка', lambda: inner_screen(RU['title'], cards_rest(RU)), 1120),
-    ('SetCardsAEs', 'А · es, 320 dp, ×1,3', lambda: inner_screen(ES['title'], stress(ES, list_body(ES))), 1120),
-    ('SetCardsBEs', 'Б · es, 320 dp, ×1,3', lambda: inner_screen(ES['title'], stress(ES, tiles_body(ES))), 1120),
     ('SetCardsCEs', 'В · es, 320 dp, ×1,3', lambda: inner_screen(ES['title'], stress(ES, cards_top(ES))), 1120),
 ]

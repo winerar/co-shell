@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.core.domain.categoryguess.CategoryGuess
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.AccountRepository
@@ -103,6 +104,9 @@ class TransactionEditViewModel @Inject constructor(
     private var accountsById: Map<String, Account> = emptyMap()
     private var allCategories: List<Category> = emptyList()
     private var recentCategoryIds: List<String> = emptyList()
+    /** The newest operations of the family (#584 guesses the category from them); a manual choice stops the guessing. */
+    private var history: List<Transaction> = emptyList()
+    private var categoryTouched = false
     /** Known rates for the "debited" suggestion; `null` until loaded. */
     private var converter: CurrencyConverter? = null
 
@@ -151,6 +155,7 @@ class TransactionEditViewModel @Inject constructor(
         // The newest operations are enough for the last account, the category order and receipt currencies (#149).
         val recent = transactions.observeTransactions(TransactionFilter(limit = RECENT_OPERATIONS)).first()
         recentCategoryIds = recent.mapNotNull { it.categoryId }.distinct()
+        history = recent
         val base = TransactionEditUiState(
             accounts = accountList.map { it.toOption(balances[it.id].orEmpty(), it.id in negative) },
             recentAccountIds = recent.map { it.accountId }.distinct().filter { it in accountsById }.take(RECENT_ACCOUNTS),
@@ -190,6 +195,7 @@ class TransactionEditViewModel @Inject constructor(
         _state.update { form ->
             form.copy(scan = ScanUi(qr.merchant, qr.key, duplicate)).withReceipt(qr, moneyFormat)
                 .withDebitSuggestion(converter, moneyFormat)
+                .withGuessedCategory()
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
     }
@@ -261,7 +267,18 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, refund = false, categoryError = false, toAccountError = null).withCategoryOptions(allCategories, recentCategoryIds)
+        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false)
+            .withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
+    }
+
+    /**
+     * #584: a new operation without a manual category gets the one its seller or note had before; the guess follows
+     * the form (note, type) until the person picks a category themselves.
+     */
+    private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
+        if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
+        val guess = CategoryGuess.guess(history, type, allCategories, scan?.seller, scan?.key, note)
+        return copy(categoryId = guess, categoryGuessed = guess != null)
     }
 
     /** «↩ Возврат» chip of an expense (#208): the same category, the sign flips. */
@@ -313,7 +330,8 @@ class TransactionEditViewModel @Inject constructor(
 
     /** Selecting a folder selects the folder itself and opens its subcategories. */
     fun onCategorySelect(id: String) = _state.update {
-        it.copy(categoryId = id, categoryError = false).withCategoryOptions(allCategories, recentCategoryIds)
+        categoryTouched = true
+        it.copy(categoryId = id, categoryError = false, categoryGuessed = false).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }
@@ -322,7 +340,9 @@ class TransactionEditViewModel @Inject constructor(
     fun onDatePicked(millisUtc: Long) =
         onDateSelect(Instant.fromEpochMilliseconds(millisUtc).toLocalDateTime(TimeZone.UTC).date)
 
-    fun onNoteChange(value: String) = _state.update { it.copy(note = value) }
+    fun onNoteChange(value: String) = _state.update {
+        it.copy(note = value).withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
+    }
 
     /** A pill in the row or a row of the «Теги» sheet: on ↔ off. */
     fun onTagToggle(id: String) = _state.update {

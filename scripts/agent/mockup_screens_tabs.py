@@ -28,7 +28,8 @@ def entry_main():
 # ---- accounts ----------------------------------------------------------------------------------------------------
 
 def accounts():
-    acts = icon_button('search', 'Поиск', INK, True)  # «Счета» opens from «Ещё»/«Обзор»: back arrow, no bottom bar; the add button is the round «+» (fab)
+    # ⇅ — «Порядок» (#338). «Счета» opens from «Ещё»/«Обзор»: back arrow, no bottom bar; the add button is the round «+» (fab)
+    acts = icon_button('swap', 'Изменить порядок') + icon_button('search', 'Поиск', INK, True)
 
     def by_type(_):
         out = ''

@@ -91,7 +91,7 @@ class EntrySheetScreenshotTest {
     @Composable
     private fun allCategories() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
         ChoiceRows(
-            options = categoryChoiceOptions(entrySheetSample.categories, "Без группы"),
+            options = categoryChoiceOptions(entrySheetSample.categories, "Без группы", "С подкатегориями"),
             selected = entrySheetSample.categoryId,
             query = "",
             onQueryChange = {},

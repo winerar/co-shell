@@ -13,7 +13,7 @@ FEEDBACK = [
      'Опрос 2026-11-16: список «Категория» (группы или сворачивание), «Все категории» (сетка или тот же список), остальные шторки (счёт, валюта) — одна рамка.'),
 ]
 
-# (group, [(category, icon, colour)]) — a group of one is just a category, no header and no «X / X» double.
+# (parent category, [(subcategory, icon, colour)]) — a subcategory may share its parent's name («Дети» → «Дети»).
 CATS_G = [
     ('Еда', [('Продукты', 'cart', '#8BC34A'), ('Кафе', 'cafe', '#FF9800'), ('Рестораны и бары', 'cafe', '#FF7A59')]),
     ('Транспорт', [('Такси', 'taxi', '#FFEB3B'), ('Общественный транспорт', 'bus', '#00D1FF'), ('Бензин и парковка', 'bolt', '#FFB547')]),
@@ -55,14 +55,14 @@ def group_label(g, n, color=MUTED):
 
 
 def cat_list_a():
+    """Owner 2026-11-20: «Дети» → «Дети» is a category and its subcategory, not a double — every category with subcategories
+    is a group: itself first («С подкатегориями»), then its subcategories, even one of the same name (code — categoryLines)."""
+    sub = '<div style="font-size: 12px; color: %s;">С подкатегориями</div>' % MUTED
     body = '<div style="margin-top: 4px;">'
-    singles = [i[0] for g, i in CATS_G if len(i) == 1]
     for g, items in CATS_G:
-        if len(items) == 1:
-            continue
-        body += group_label(g, len(items)) + ''.join(cat_row(n, ic, c, n == ON) for n, ic, c in items)
-    body += group_label('Без группы', len(singles)) + ''.join(cat_row(n, ic, c) for g, i in CATS_G if len(i) == 1 for n, ic, c in i)
-    return frame('Категория', body, sub='Расход · 25 категорий')
+        parent = items[0] if len(items) == 1 else (g, items[0][1], items[0][2])
+        body += group_label(g, len(items) + 1) + cat_row(g + sub, parent[1], parent[2]) + ''.join(cat_row(n, ic, c, n == ON) for n, ic, c in items)
+    return frame('Категория', body, sub='Расход · 35 категорий')
 
 
 def cat_list_b():
@@ -143,13 +143,13 @@ def anatomy():
         item('Шапка', 'Заголовок слева, ✕ справа, подпись-счётчик под заголовком; отступ слева 20 dp — один на всех шторках.'),
         item('Поиск', 'Сразу под шапкой, тот же отступ; от 9 строк; пустой результат — «Ничего не нашли».'),
         item('Строка', 'Минимум 52 dp, значок слева, галочка у выбранного; длинное название — две строки, потом «…».'),
-        item('Без дублей', 'Группа из одной категории — просто категория, без «Дети / Дети».'),
+        item('Категория и подкатегории', 'Категория с подкатегориями — группа: сама категория первой («С подкатегориями»), под ней подкатегории, даже с тем же именем («Дети» → «Дети»).'),
         item('Одна рамка', 'Категория, счёт, валюта, получатель, тег, период: один компонент `ChoiceSheet`, тексты — ресурсами.'),
     ]))
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Fb439CatA', 'А: «Категория» — группы с заголовками, иконки, без дублей', cat_list_a, 439),
+    ('Fb439CatA', 'А: «Категория» — категория и её подкатегории группой, иконки', cat_list_a, 439),
     ('Fb439CatB', 'Б: «Категория» — группы сворачиваются, открыта группа выбранной', cat_list_b, 439),
     ('Fb439GridA', 'А: «Все категории» — сетка в 3 колонки, подпись в две строки', grid_a, 439),
     ('Fb439AccA', 'А: «Счёт» — одна рамка', acc_a, 439),

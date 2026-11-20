@@ -172,6 +172,7 @@ class TemplateEditViewModel @Inject constructor(
                 category.type,
                 name = category.name,
                 parent = parent?.name,
+                parentId = parent?.id,
                 icon = category.icon,
                 color = category.color,
             )

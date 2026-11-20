@@ -21,6 +21,9 @@ interface AccountRepository {
     suspend fun getAccount(id: String): Account?
     suspend fun saveAccount(account: Account)
     suspend fun deleteAccount(id: String)
+
+    /** Several accounts in one write (the new order after a drag, #338). */
+    suspend fun saveAccounts(accounts: List<Account>) = accounts.forEach { saveAccount(it) }
 }
 
 interface CategoryRepository {

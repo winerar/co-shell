@@ -103,6 +103,18 @@ def reveal(v):
     return col(demo, cap('новая тема наплывает сверху шторкой'))
 
 
+def reorder(v):
+    """#338 (опрос 2026-11-17, «Ок» на Fb338Acc/Fb338Cat): ручка ⠿, поднятая строка — рамка цвета темы без тени, цель — пунктир."""
+    handle = '<span style="color: %s; font-size: 18px;">⠿</span>' % MUTED
+    plain = row('Galicia', 'Карта', holder(v, 'card', CYAN, 36), handle, min_h=56)
+    lifted = ('<div style="border-radius: 24px; border: 2px solid %s; background: %s;">%s</div>'
+              % (LIME, KEY, row('USDT · Binance', 'Крипто', holder(v, 'card', WARN, 36), handle, min_h=56)))
+    drop = ('<div style="border-radius: 24px; border: 2px dashed %s;">%s</div>'
+            % (LIME, row('Еда', 'Отпустите — станет подкатегорией', holder(v, 'cart', LIME, 36), '', min_h=56)))
+    return col(card(plain.replace('{{div}}', ''), radius=24), lifted.replace('{{div}}', ''), drop.replace('{{div}}', ''),
+               cap('удерживайте строку и перетащите; на середину строки — внутрь'))
+
+
 ROWS = [
     ('Строка меню', menu_rows, 'CoShellMenuRow(icon, color, title, subtitle, trailing) · MenuIcon'),
     ('Карточка формы', forms, 'CoShellFormSection(title, trailing) · CoShellSectionLink'),
@@ -111,4 +123,5 @@ ROWS = [
     ('Шторка', sheets, 'CoShellModalSheet(title, actionLabel, actionEnabled) · CoShellModalSheetLayout'),
     ('Шторка ввода и пузырь', entry, 'CoShellSheetLayout · CoShellPeekBubble(lines, footnote) · PeekCard — содержимое пузыря'),
     ('Смена темы', reveal, 'ThemeRevealHost — обёртка приложения'),
+    ('Порядок перетаскиванием', reorder, 'CoShellReorderColumn(state, keys, onDrop, canNest) · CoShellReorderRow(state, key) · rememberReorderState'),
 ]

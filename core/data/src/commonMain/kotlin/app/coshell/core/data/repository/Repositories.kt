@@ -3,6 +3,7 @@ package app.coshell.core.data.repository
 import app.coshell.core.data.db.AccountDao
 import app.coshell.core.data.db.BudgetDao
 import app.coshell.core.data.db.CategoryDao
+import app.coshell.core.data.db.SettingDao
 import app.coshell.core.data.db.TransactionDao
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.budgets.BudgetRepository
@@ -10,19 +11,22 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.AuthorFilter
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.settings.ManualOrderSettings
 import app.coshell.core.domain.partner.PartnerChange
 import app.coshell.core.domain.partner.PartnerChanges
-import app.coshell.core.model.ACCOUNT_ORDER
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Budget
-import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Money
 import app.coshell.core.model.Transaction
+import app.coshell.core.model.accountOrder
+import app.coshell.core.model.categoryOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlin.time.Clock
 
@@ -40,10 +44,15 @@ class RoomAccountRepository(
     private val accounts: AccountDao,
     private val transactions: TransactionDao,
     private val stamper: WriteStamper,
+    /** Family settings: whether the accounts are in a manual order (#338); `null` — always alphabetically. */
+    private val settings: SettingDao? = null,
 ) : AccountRepository {
 
+    private val manual: Flow<Boolean> =
+        settings?.observe(RoomFamilySettings.ACCOUNTS_ORDER)?.map(ManualOrderSettings::parse)?.distinctUntilChanged() ?: flowOf(false)
+
     override fun observeAccounts(includeArchived: Boolean): Flow<List<Account>> =
-        accounts.observe(includeArchived).map { list -> list.map { it.toModel() }.sortedWith(ACCOUNT_ORDER) }
+        combine(accounts.observe(includeArchived), manual) { list, manual -> list.map { it.toModel() }.sortedWith(accountOrder(manual)) }
 
     override fun observeAccountsWithBalance(includeArchived: Boolean): Flow<List<AccountWithBalance>> =
         combine(observeAccounts(includeArchived), transactions.observeBalanceDeltas()) { list, deltas ->
@@ -68,16 +77,28 @@ class RoomAccountRepository(
         val stamp = stamper.stamp()
         accounts.markDeleted(id, stamp.now, stamp.by)
     }
+
+    /** One transaction for the whole list (#338): the other phone gets the new order in one sync. */
+    override suspend fun saveAccounts(accounts: List<Account>) {
+        if (accounts.isEmpty()) return
+        val stamp = stamper.stamp()
+        this.accounts.upsert(accounts.map { it.toEntity(stamp) })
+    }
 }
 
 class RoomCategoryRepository(
     private val categories: CategoryDao,
     private val stamper: WriteStamper,
+    /** Family settings: whether the categories are in a manual order (#338); `null` — always alphabetically. */
+    private val settings: SettingDao? = null,
 ) : CategoryRepository {
 
+    private val manual: Flow<Boolean> =
+        settings?.observe(RoomFamilySettings.CATEGORIES_ORDER)?.map(ManualOrderSettings::parse)?.distinctUntilChanged() ?: flowOf(false)
+
     override fun observeCategories(type: CategoryType?, includeArchived: Boolean): Flow<List<Category>> =
-        categories.observe(type?.name, includeArchived).map { list ->
-            list.map { it.toModel() }.sortedWith(compareBy<Category> { it.type }.then(CATEGORY_ORDER))
+        combine(categories.observe(type?.name, includeArchived), manual) { list, manual ->
+            list.map { it.toModel() }.sortedWith(compareBy<Category> { it.type }.then(categoryOrder(manual)))
         }
 
     override suspend fun getCategory(id: String): Category? = categories.get(id)?.toModel()

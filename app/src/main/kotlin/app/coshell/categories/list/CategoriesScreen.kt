@@ -1,5 +1,8 @@
 package app.coshell.categories.list
 
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.Icon
+import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.WordHint
 import androidx.compose.foundation.layout.Column
@@ -34,7 +37,13 @@ fun CategoriesScreen(state: CategoriesUiState, actions: CategoriesActions) {
     val type = state.type.name
     Scaffold(
         topBar = {
-            ScreenTopBar(stringResource(R.string.categories_title), onBack = actions.onBack)
+            ScreenTopBar(stringResource(R.string.categories_title), onBack = actions.onBack) {
+                if (state.groups.size > 1) {
+                    CoShellIconButton(onClick = actions.onOrder) {
+                        Icon(painterResource(DesignR.drawable.ic_swap_vert), stringResource(R.string.order_change))
+                    }
+                }
+            }
         },
         floatingActionButton = {
             // One «+» for categories and groups: the kind is chosen in the editor (owner 2026-11-09, round — #408).

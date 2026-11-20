@@ -14,7 +14,7 @@
     <string name="steps_limit_hint">Сколько готовы тратить на продукты за месяц. Цифру можно менять.</string>
     <string name="steps_family">Позовите близкого человека</string>
     <string name="steps_family_hint">Вдвоём проще. Можно и позже.</string>
-    <!-- «Ещё → Приложение» -->
+    <!-- «Ещё → Настройки → Помощь» -->
     <string name="hints_title">Подсказки</string>
     <string name="hints_on">Показываются</string>
     <string name="hints_off">Выключены</string>
@@ -42,7 +42,7 @@
     <string name="hint_first_week">Неделя записей. Порядок в деньгах начинается с этого.</string>
     <string name="hint_welcome_back">С возвращением. Можно записать траты за эти дни: дата выбирается в операции.</string>
     <string name="hint_backup">Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.</string>
-    <string name="hint_theme">Приложение можно сделать своим: Ещё → Внешний вид.</string>
+    <string name="hint_theme">Приложение можно сделать своим: Ещё → Настройки → Внешний вид.</string>
     <string name="hint_template">Трата повторяется? Сохраните шаблон, и она внесётся в одно нажатие.</string>
     <string name="hint_open">Открыть</string>
     <string name="hint_limit_80">%1$s: ещё можно %2$s. Заглядывайте в «Бюджеты», когда захотите.</string>

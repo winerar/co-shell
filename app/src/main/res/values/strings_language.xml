@@ -3,7 +3,7 @@
 <resources>
     <string name="language_title">Язык</string>
     <string name="language_sheet_title">Язык приложения</string>
-    <string name="language_first_text">Выбрали язык телефона. Сменить можно в любой момент: «Ещё → Внешний вид».</string>
+    <string name="language_first_text">Выбрали язык телефона. Сменить можно в любой момент: «Ещё → Настройки → Внешний вид».</string>
     <string name="language_settings_text">Экран обновится сразу. Даты и названия месяцев — тоже на выбранном языке.</string>
     <string name="language_update_title">Приложение говорит на трёх языках</string>
     <string name="language_update_text">Русский, English и Español. Оставим русский или переключимся на язык телефона?</string>

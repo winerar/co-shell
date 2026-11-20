@@ -99,14 +99,28 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
         }
     }
 
-/** A group: its icon and name in caps, «Все ›» to the group screen [onAll], then its main settings in one card. */
+/** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */
 @Composable
-private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int, onAll: () -> Unit, rows: RowGroupScope.() -> Unit) {
+internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
+    GroupCard(DesignR.drawable.ic_lightbulb, 13, R.string.settings_help_title, onAll = null) {
+        row {
+            CoShellSwitchRow(
+                title = stringResource(R.string.hints_title),
+                subtitle = stringResource(if (state.hints) R.string.hints_on else R.string.hints_off),
+                checked = state.hints, onCheckedChange = actions.onHints,
+            )
+        }
+        row { ValueRow(stringResource(R.string.hints_reset_title), stringResource(R.string.hints_reset_hint), actions.onHintsReset) }
+    }
+
+/** A group: its icon and name in caps, «Все ›» to the group screen [onAll] (none — no such screen), then its main settings in one card. */
+@Composable
+private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int, onAll: (() -> Unit)?, rows: RowGroupScope.() -> Unit) {
     Column(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.m, bottom = Spacing.s)) {
         Row(Modifier.padding(horizontal = Spacing.xs, vertical = Spacing.s), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             MenuIcon(icon, categoryColor(CategoryPalette.colors[color]))
             CoShellSectionLabel(stringResource(title).uppercase(), Modifier.weight(1f))
-            CoShellSectionLink(stringResource(R.string.settings_group_all), onClick = onAll)
+            if (onAll != null) CoShellSectionLink(stringResource(R.string.settings_group_all), onClick = onAll)
         }
         CoShellRowGroup(rows = rows)
     }

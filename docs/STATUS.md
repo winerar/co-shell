@@ -59,7 +59,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1704 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1716 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-9738b249-u9ivmz`: окно «Обновлено до N» — длинный «Что нового» прокручивается, «Понятно» больше не сжимается в полоску; то же в `CoShellConfirmCard` (все вопросы); пункт после «Исправлено:» — с заглавной; стресс-тесты `UpdatedCardStressScreenshotTest`, `ConfirmCardOverflowTest`.
+2026-11-20, `ccr-cf77c97e-21y95q`: «Ещё» — опрос (https://claude.ai/artifact/KCBTiPvbFazg5bbi7qRran, Б + имя «Ещё»): четыре группы, 11 строк; «Подсказки» → «Настройки → Помощь», «Экспорт» рядом с «Импортом», версия строкой внизу. Доски `More`, `MoreB*`, `Set1RootMore`.

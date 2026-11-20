@@ -259,6 +259,9 @@
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">nuevo</string>
     <string name="more_section_money">Dinero</string>
+    <string name="more_section_rates">Monedas</string>
+    <string name="more_export_hint">Movimientos de un periodo en CSV</string>
+    <string name="more_version_quiet">Versión %1$s · compilación %2$d · al día</string>
     <string name="more_section_family_data">Familia y datos</string>
     <string name="more_section_app">Aplicación</string>
     <string name="more_version_available">Ya está la versión %1$s</string>

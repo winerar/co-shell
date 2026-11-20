@@ -25,7 +25,7 @@ def bubble(lines, top, left=120, arrow=36):
     rows = ''.join('<div style="display: flex; justify-content: space-between; gap: 18px; %s font-size: 15px;"><span>%s</span><span style="color: %s;">%s</span></div>'
                    % (MONO, a, MUTED, c) for a, c in lines)
     return ('<div style="position: absolute; left: %dpx; right: 16px; top: %dpx; padding: 12px 14px; border-radius: 24px; background: %s; '
-            'box-shadow: 0 12px 32px rgba(0,0,0,0.5); border: 1px solid %s; display: flex; flex-direction: column; gap: 4px;">%s'
+            ' border: 1px solid %s; display: flex; flex-direction: column; gap: 4px;">%s'
             '<div style="font-size: 11px; color: %s; margin-top: 4px;">по курсу 12 нояб. · ARS официальный</div>'
             '<span style="position: absolute; bottom: -7px; right: %dpx; width: 12px; height: 12px; background: %s; transform: rotate(45deg); '
             'border-right: 1px solid %s; border-bottom: 1px solid %s;"></span></div>' % (left, top, CHIP, LINE2, rows, MUTED, arrow, CHIP, LINE2, LINE2))

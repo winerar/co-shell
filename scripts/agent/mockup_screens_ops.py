@@ -8,6 +8,7 @@ from mockup_parts import *  # noqa: F401,F403
 from mockup_logic import tap, when
 import mockup_screens_main as m
 import mockup_screens_tabs as tabs
+import mockup_screens_reports as reports
 
 ROWS = [  # id, day, title, sub, amount, cur, kind, icon, dot colour, second line
     ('a', 0, 'Продукты', 'Galicia · Coto', '−32 000', 'ARS', 'e', 'cart', LIME, ''),
@@ -20,14 +21,19 @@ KIND = {'e': PINK, 'i': CYAN, 't': INK}
 
 
 def rows_js():
-    return json.dumps([{'id': i, 'day': d, 'title': t, 'sub': s, 'amount': a, 'cur': c, 'amountColor': KIND[k], 'icon': ICON[ic], 'dot': col, 'second': sec}
-                       for i, d, t, s, a, c, k, ic, col, sec in ROWS], ensure_ascii=False).replace('"amountColor":', 'amountColor:')  # unquoted: theme reads it as ink
+    def acc(s, k):  # mini badge of the account (#505): none for a transfer
+        name = s.split(' · ')[0]
+        if k == 't' or name not in ROW_ACCOUNTS:
+            return 'display: none;'
+        return 'width: 16px; height: 16px; border-radius: 5px; flex: none; background: %s;' % (ROW_ACCOUNTS[name] or '#222A1E')
+    return json.dumps([{'id': i, 'day': d, 'title': t, 'sub': s, 'amount': a, 'cur': c, 'amountColor': KIND[k], 'icon': ICON[ic], 'dot': col, 'second': sec,
+                        'accStyle': acc(s, k)} for i, d, t, s, a, c, k, ic, col, sec in ROWS], ensure_ascii=False).replace('"amountColor":', 'amountColor:')  # unquoted: theme reads it as ink
 
 
 def ops_panel():
     row_ = ('<div onPointerDown="{{r.down}}" style="background: {{r.bg}};">%s%s</div>'
-            % (when('r.plain', m.tx('{{r.title}}', '{{r.sub}}', '{{r.amount}}', '{{r.cur}}', '{{r.amountColor}}', '{{r.icon}}', '{{r.dot}}', '{{r.second}}')),
-               when('r.selected', m.tx('{{r.title}}', '{{r.sub}}', '{{r.amount}}', '{{r.cur}}', '{{r.amountColor}}', 'check', LIME, '{{r.second}}'))))
+            % (when('r.plain', m.tx('{{r.title}}', '{{r.sub}}', '{{r.amount}}', '{{r.cur}}', '{{r.amountColor}}', '{{r.icon}}', '{{r.dot}}', '{{r.second}}', acc_style='{{r.accStyle}}')),
+               when('r.selected', m.tx('{{r.title}}', '{{r.sub}}', '{{r.amount}}', '{{r.cur}}', '{{r.amountColor}}', 'check', LIME, '{{r.second}}', acc_style='{{r.accStyle}}'))))
     days = ('<sc-for list="{{days}}" as="d" hint-placeholder-count="2">%s<sc-for list="{{d.rows}}" as="r" hint-placeholder-count="3">%s</sc-for></sc-for>'
             % (m.day('{{d.title}}', '{{d.total}}', '{{d.cur}}', '{{d.color}}'), row_))
     head = when('notSelecting', tab_head('Операции', m.loupe()))
@@ -35,10 +41,8 @@ def ops_panel():
     return head + sel + '<div style="padding: 0 16px;">%s<div style="margin: 14px -16px 0;">%s</div></div>' % (m.ops_head([chip('Расходы ✕', True), chip('Категория ▾'), chip('Ноябрь ▾'), chip('Счёт ▾')]), days)
 
 
-def accounts_panel():
-    body = (big_total('Всего в общем балансе · 12 счетов', '9 640', 'USD') + '<div style="margin-top: 14px;">%s</div>' % segmented(['По типу', 'По валюте', 'Чьи'], 'По типу')
-            + ''.join(group_head(t, len(in_group(g)), total) + group([acc_row(a) for a in in_group(g)]) for g, t, total in GROUPS[:2]))
-    return tab_screen('Счета', body, 'acc', bar=False)
+def reports_panel():
+    return tab_screen('Отчёты', reports.reports_body(), 'rep', bar=False)
 
 
 def panel(html):
@@ -54,7 +58,7 @@ def bar():
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; '
             'display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
             '<span style="{{pillStyle}}"></span>%s%s%s%s%s</nav>'
-            % (BAR, tab('home', 'home', 'Обзор'), tab('ops', 'list', 'Операции'), plus, tab('acc', 'wallet', 'Счета'), tab('more', 'more', 'Ещё')))
+            % (BAR, tab('home', 'home', 'Обзор'), tab('ops', 'list', 'Операции'), plus, tab('rep', 'chart', 'Отчёты'), tab('more', 'more', 'Ещё')))
 
 
 def select_bar():
@@ -97,7 +101,7 @@ JS = r'''
       days, selecting, notSelecting: !selecting, selCount: String(s.sel.length),
       trackStyle: 'display: flex; width: ' + (step * 4) + 'px; height: 844px; transform: translateX(' + (-s.idx * step + lean) + 'px); transition: ' + (s.dragging ? 'none' : 'transform ' + ease) + '; touch-action: pan-y;',
       pillStyle: 'position: absolute; top: 8px; height: 40px; left: calc(6px + ' + col + ' * ' + slot + ' + 2px); width: calc(' + col + ' - 4px); border-radius: 999px; background: #B8FF2E; transition: ' + (s.dragging ? 'none' : 'left ' + ease) + ';',
-      tabs: { home: tab(0), ops: tab(1), acc: tab(2), more: tab(3) },
+      tabs: { home: tab(0), ops: tab(1), rep: tab(2), more: tab(3) },
       down: (e) => {
         Object.assign(this.g, { x: e.clientX, y: e.clientY, drag: false, fired: false, active: true });
         clearTimeout(this.g.lp);
@@ -156,7 +160,7 @@ METHODS = r'''  constructor(props) { super(props); this.state = { idx: 1, dx: 0,
 def operations():
     track = '<div style="{{trackStyle}}">%s</div>' % ''.join(panel(p) for p in [
         tab_screen('Обзор', m.balance_hero() + m.tiles(m.tile('Траты за ноябрь', '1 240,50', 'USD'), m.tile('Без категории', '14', 'операций')) + m.recent_card(m.RECENT[:3]), 'home', m.SEARCH_BTN, False),
-        ops_panel(), accounts_panel(), tab_screen('Ещё', tabs.more_body(), 'more', bar=False)])
+        ops_panel(), reports_panel(), tab_screen('Ещё', tabs.more_body(), 'more', bar=False)])
     snack = when('snack.show', tap(snackbar('{{snack.text}}'), 'undo'))
     body = ('<div onPointerDown="{{down}}" onPointerMove="{{move}}" onPointerUp="{{up}}" onPointerCancel="{{up}}" onPointerLeave="{{up}}" '
             'style="position: absolute; inset: 0; overflow: hidden;">%s%s%s%s%s</div>'

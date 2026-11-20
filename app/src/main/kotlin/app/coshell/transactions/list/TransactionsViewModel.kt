@@ -1,5 +1,6 @@
 package app.coshell.transactions.list
 
+import app.coshell.core.domain.hints.RepeatedSpending
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
@@ -188,6 +189,7 @@ class TransactionsViewModel @Inject constructor(
             choices = buildFilterChoices(src.accountList, src.categoryList, src.authors, f, src.tags.list, src.tags.usage),
             total = if (f.isActive) book.filterTotal(matching, main, timeZone).toUi(moneyFormat) else null,
             today = today,
+            repeatedSpending = RepeatedSpending.hasRun(src.page.items),
             days = buildTransactionDays(
                 transactions = shown,
                 accountsById = src.accountsById,

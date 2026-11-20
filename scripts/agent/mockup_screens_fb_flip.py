@@ -122,7 +122,7 @@ TOP = [('Кафе', '95 000', '80 000', 'over', 'перерасход 15 000'), 
 
 def bud_front():
     from mockup_screens_budgets import summary
-    return summary()
+    return summary(clear_cue=True)
 
 
 def mini_env(name, spent, limit, state, cap):

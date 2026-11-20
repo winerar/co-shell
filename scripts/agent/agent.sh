@@ -15,6 +15,8 @@ usage() {
     update                влить origin/dev → тесты затронутых модулей → push
     finish [-m "Msg"] [--no-check]
                           проверка → дата и число тестов в STATUS → коммит → push → чек-лист end
+    pr                    PR ветки: проблемы (dev ушёл вперёд, нет Agent-Check), номер, заголовок, описание,
+                          точные шаги MCP до мержа (после finish)
 
   Сессия
     start [--all]         начало: свежие чужие ветки (--all — все), перенос на dev, STATUS, задачи без бэклога
@@ -22,6 +24,7 @@ usage() {
     tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage, backlog)
     issue <N> [строк]     одна задача: заголовок, метки, описание (дешевле MCP)
     sync                  влить origin/dev в текущую ветку, показать конфликты
+    hotfix                срочный фикс сбоя: ветка от origin/main, PR в main (docs/agents/hotfix.md)
     push                  push текущей ветки с повтором при сетевых ошибках (2–16 с)
     stamp                 STATUS: «Обновлено» = сегодня, «всего N» тестов из последнего прогона
     changes               что в ветке относительно dev: коммиты и файлы (кратко)
@@ -62,9 +65,11 @@ case "$cmd" in
     start) exec "$here/session-start.sh" "$@" ;;
     end) exec "$here/session-end.sh" "$@" ;;
     ship | update | finish) exec "$here/flow.sh" "$cmd" "$@" ;;
+    pr) exec "$here/pr.sh" "$@" ;;
     tasks) exec "$here/tasks.sh" "$@" ;;
     issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;
+    hotfix) exec "$here/hotfix.sh" "$@" ;;
     push) exec "$here/push.sh" "$@" ;;
     stamp) exec "$here/stamp-status.sh" "$@" ;;
     changes)
@@ -114,7 +119,8 @@ case "$cmd" in
         git status --short core/designsystem/src/test/screenshots app/src/test/screenshots
         [ $status -eq 0 ] && echo "OK: эталоны записаны — проверь PNG и покажи изменения владельцу" || echo "FAILED (exit $status)"
         exit $status ;;
-    mockups) python3 "$here/gen-mockups.py" "$@" && exec node "$here/check-mockups.js" docs/design/mockups/*.dc.html ;;
+    mockups) python3 "$here/gen-mockups.py" "$@" && node "$here/check-mockups.js" docs/design/mockups/*.dc.html \
+        && exec python3 -m unittest -q "$here/test_mockup_rules.py" ;;
     render)
         out="$(scratch)/shots"; mkdir -p "$out"
         files=(); for b in "$@"; do files+=("docs/design/mockups/${b%.dc.html}.dc.html"); done

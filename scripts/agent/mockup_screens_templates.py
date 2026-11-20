@@ -52,7 +52,7 @@ def tpl_entry():
 
 
 def tpl_save():
-    from mockup_screens_main import entry_edit
+    from mockup_screens_entry import edit as entry_edit
     body = (field('Название', 'Продукты Coto') + '<div style="margin-top: 8px;">%s</div>'
             % group([row('Запомнить сумму', '32 000 ARS — или спрашивать каждый раз', '', switch(False), min_h=56)]))
     return entry_edit() + '<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.55);"></div>' + dialog(

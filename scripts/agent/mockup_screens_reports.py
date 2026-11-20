@@ -50,12 +50,16 @@ def total_line(value, sub, color=INK):
             '<span style="font-size: 14px; color: %s;">USD</span></span><span style="font-size: 12px; color: %s;">%s</span></div>' % (MONO, color, value, MUTED, OK, sub))
 
 
-def reports_a():
+def reports_body():
+    """The «Отчёты» tab without its header and bar (also a panel of the «Операции» track)."""
     struct = chart_card('На что ушли деньги', 'черта — октябрь', total_line('760', 'за 11 дней · в октябре к 11-му было 820')
                         + ''.join(hbar(*s) for s in STRUCT) + '<div style="font-size: 12px; color: %s; padding: 4px 0 2px 40px;">Другое · Транспорт и ещё 3 · 70 · 9%%</div>' % MUTED)
     months = chart_card('По месяцам', 'расходы', columns(MONTHS, 90), 'margin-top: 10px;')
-    body = month_switch('Ноябрь 2026', 'USD') + struct + months
-    return tab_page('Отчёты', body, 'rep', REP_TABS)
+    return month_switch('Ноябрь 2026', 'USD') + struct + months
+
+
+def reports_a():
+    return tab_page('Отчёты', reports_body(), 'rep', REP_TABS)
 
 
 def drill():

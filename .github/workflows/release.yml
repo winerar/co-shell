@@ -127,6 +127,11 @@ jobs:
           done
           echo "::error::CI on dev ${sha:0:7} is not green: $(gh run view "$id" --json url -q .url)"; exit 1
 
+      # PR CI may skip Gradle for code the agent checked itself (Agent-Check: full), so the full check of this exact
+      # dev commit is the nightly one (warm-cache.yml); none yet → run it now and wait (~6 min).
+      - name: Nightly check on dev is green
+        run: scripts/ci/nightly-green.sh "$(git rev-parse origin/dev)" --run
+
       - name: Release notes
         env:
           # The weekly run never waits for the owner to write a new section.

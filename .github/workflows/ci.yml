@@ -5,7 +5,11 @@ on:
     branches: [main, dev] # dev: checks only; releases are published from main
   pull_request:
     # ready_for_review: an agent's draft PR is built once, when the agent marks it ready (#253).
-    types: [opened, synchronize, reopened, ready_for_review]
+    # No `opened`: PRs opened by the bot (auto-pr.yml drafts, the release PR dev → main, backmerge) got a run that waits
+    # for approval (action_required) and turns into a red «failure» with no jobs once the PR is merged — 6 of 6 red CI
+    # runs on 2026-11-19 were these. Every PR is built on ready_for_review (a hotfix PR is opened as a draft and then
+    # marked ready, docs/agents/hotfix.md) and on each push.
+    types: [synchronize, reopened, ready_for_review]
   workflow_dispatch: # Actions → «Сборка и тесты (CI)» → Run workflow (e.g. first deploy after adding secrets)
 
 # One group per branch: the dispatch from auto-pr.yml (refs/heads/<branch>) and the pull_request run
@@ -16,7 +20,7 @@ concurrency:
 
 permissions:
   contents: write # publish releases
-  actions: write # dev: look up the CI run of the merged PR head, dispatch warm-cache.yml
+  actions: write # dev: look up the CI run of the merged PR head; automerge dispatches CI on main
   pull-requests: write # failure summary comment on the PR; automerge of agent PRs
   issues: write # automerge closes the issues from `Fixes #N`
 
@@ -43,6 +47,8 @@ jobs:
         with:
           fetch-depth: 0 # to diff against the base branch (docs-only check below)
 
+      # PRs into dev whose head says «Agent-Check: full» (agent.sh ship/finish: the full check passed locally on these
+      # files) and whose base adds no code skip Gradle too (scripts/ci/agent-checked.sh): the nightly check on dev is the net.
       # Changes only in docs/, *.md and the agent's own scripts (scripts/agent/: not part of the build, not tested
       # here) skip Gradle on PRs and dev; main always builds (it releases).
       # dev: a merge whose tree equals the PR head that already had a green CI run is not rebuilt —
@@ -56,9 +62,9 @@ jobs:
         run: |
           code=true
           if [ "$GITHUB_REF" = refs/heads/dev ] && scripts/ci/tree-already-checked.sh; then
-            code=false
-            # PRs start from the Gradle cache that dev writes: refresh it without holding this run.
-            gh workflow run warm-cache.yml --ref dev || echo "::warning::could not dispatch warm-cache.yml"
+            code=false # the nightly check (warm-cache.yml) re-runs Gradle on dev and refreshes the cache
+          elif [ "$GITHUB_EVENT_NAME" = pull_request ] && [ "$GITHUB_BASE_REF" = dev ] && scripts/ci/agent-checked.sh; then
+            code=false # the agent's own full check covered exactly this code (Agent-Check: full) — saves ~6 min of Actions
           elif [ "$GITHUB_REF" != refs/heads/main ] && [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] \
              && git rev-parse -q --verify "$BASE^{commit}" >/dev/null; then
             changed=$(git diff --name-only "$BASE"...HEAD)
@@ -96,6 +102,15 @@ jobs:
           python3 -m unittest discover -s scripts/agent -p 'test_*.py'
 
       # Before the automerge step below: a PR with broken rules is not merged.
+      # Hotfix = a PR into main from anything but dev (docs/agents/hotfix.md). The app shows the top whats-new
+      # section, so a hotfix brings its own («## <date> · исправление», «• Исправлено: …»).
+      - name: Hotfix has its own whats-new section
+        if: github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev'
+        run: |
+          new=$(grep -m1 '^## ' docs/whats-new.md || true)
+          old=$(git show origin/main:docs/whats-new.md | grep -m1 '^## ' || true)
+          [ "$new" != "$old" ] || { echo "::error::Hotfix: add a new top section to docs/whats-new.md (docs/agents/hotfix.md)"; exit 1; }
+
       - name: Firebase rules tests (emulator)
         if: steps.changes.outputs.rules == 'true'
         run: scripts/test-rules.sh
@@ -268,3 +283,27 @@ jobs:
             **/build/reports/
             **/build/test-results/
             **/build/outputs/roborazzi/
+
+  # Hotfix (docs/agents/hotfix.md): the R8 release build on an emulator, side by side with `build`.
+  emulator:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev' && !github.event.pull_request.draft
+    uses: ./.github/workflows/emulator.yml
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}
+
+  # Both green → the hotfix merges into main, CI on main publishes the build, main is merged back into dev.
+  hotfix:
+    needs: [build, emulator]
+    if: success() && github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # backmerge.sh merges main into dev
+      - name: Merge the hotfix into main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HOTFIX_GREEN_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash scripts/ci/automerge.sh "${{ github.event.pull_request.number }}"

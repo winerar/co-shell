@@ -1,5 +1,7 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.hints.WordHint
+import app.coshell.core.domain.hints.HintId
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CodeKeyboard
 import app.coshell.core.designsystem.components.CoShellTextField
@@ -50,6 +52,7 @@ internal fun ReceiptCurrencySheet(state: TransactionEditUiState, actions: Transa
 @Composable
 internal fun ReceiptCurrencyContent(state: TransactionEditUiState, onChange: (code: String, pick: Boolean) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        WordHint(HintId.CURRENCY_RECEIPT, R.string.hint_currency_receipt)
         val choices = state.receiptCurrencyChoices
         if (choices.isNotEmpty()) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {

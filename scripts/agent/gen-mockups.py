@@ -45,7 +45,7 @@ OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
 # Main boards of each row: full pages with their own logic (title, interactive) — mockup_screens_{tabs,ops,forms,settings}.py.
 PAGES = {
-    'Main': ('Шторка ввода: шаг 1 счёт → шаг 2 сумма (тапайте)', True), 'Operations': ('Операции: удержание → выбор, свайп вкладок (тапайте)', True),
+    'Main': ('Шторка ввода: один шаг — тип, лента счетов, сумма, категория (тапайте)', True), 'Operations': ('Операции: удержание → выбор, свайп вкладок (тапайте)', True),
     'Accounts': ('Счета: 12 счетов, группы (тапайте)', True), 'More': ('Ещё', False), 'HomeSync': ('Обзор: ошибка синка (тапайте «Другая причина»)', True),
     'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True), 'HomeGreeting': ('Обзор: поздравление на 1.0 (тапайте)', True),
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),

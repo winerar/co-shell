@@ -62,31 +62,29 @@ class CatalogScreenshotTest {
     @Test
     fun `tokens dark`() = shot("tokens_dark", dark = true) { TokensCatalog() }
 
+    /** The app's tabs (#140): Обзор · Операции · [+] · Отчёты · Ещё. */
+    private val barTabs = listOf(
+        CoShellTab(R.drawable.ic_home, "Обзор", selected = true),
+        CoShellTab(R.drawable.ic_receipt_long, "Операции", selected = false),
+        CoShellTab(R.drawable.ic_bar_chart, "Отчёты", selected = false),
+        CoShellTab(R.drawable.ic_more_horiz, "Ещё", selected = false),
+    )
+
     @Test
-    fun `bottom bar dark`() = shot("bottom_bar_dark", dark = true) {
-        CoShellBottomBar(
-            tabs = listOf(
-                CoShellTab(R.drawable.ic_home, "Обзор", selected = true),
-                CoShellTab(R.drawable.ic_receipt_long, "Операции", selected = false),
-                CoShellTab(R.drawable.ic_account_balance_wallet, "Счета", selected = false),
-                CoShellTab(R.drawable.ic_more_horiz, "Ещё", selected = false),
-            ),
-            onTab = {},
-            addLabel = "Новая операция",
-            onAdd = {},
-        )
-    }
+    fun `bottom bar dark`() = shot("bottom_bar_dark", dark = true) { BottomBarSample() }
+
+    /** The light theme has its own selection look (neon with an edge); no dash under the tab (#511). */
+    @Test
+    fun `bottom bar light`() = shot("bottom_bar_light") { BottomBarSample() }
+
+    @Composable
+    private fun BottomBarSample() = CoShellBottomBar(tabs = barTabs, onTab = {}, addLabel = "Новая операция", onAdd = {})
 
     /** #334, board `Fb334A`: entry closed until the update — the «+» is muted, with a lock. */
     @Test
     fun `bottom bar locked dark`() = shot("bottom_bar_locked_dark", dark = true) {
         CoShellBottomBar(
-            tabs = listOf(
-                CoShellTab(R.drawable.ic_home, "Обзор", selected = true),
-                CoShellTab(R.drawable.ic_receipt_long, "Операции", selected = false),
-                CoShellTab(R.drawable.ic_account_balance_wallet, "Счета", selected = false),
-                CoShellTab(R.drawable.ic_more_horiz, "Ещё", selected = false),
-            ),
+            tabs = barTabs,
             onTab = {},
             addLabel = "Добавить — после обновления",
             onAdd = {},

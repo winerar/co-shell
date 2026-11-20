@@ -15,7 +15,7 @@ import app.coshell.transactions.list.TransactionsUiState.Total
 internal fun FilterTotal.toUi(moneyFormat: MoneyFormat): Total {
     fun signed(m: Money) = if (m.isPositive) "+" + moneyFormat.format(m) else moneyFormat.format(m)
     val missing = converted?.missing.orEmpty().takeIf { it.isNotEmpty() }?.joinToString { it.value }
-    val approx = converted?.takeIf { !it.sum.isZero }?.let { "≈ " + signed(it.sum) }
+    val approx = converted?.takeIf { !it.sum.isZero }?.let { "≈" + MoneyFormat.NBSP + signed(it.sum) } // «≈» never wraps away from the amount (#431)
     return when (nets.size) {
         0 -> Total(count)
         1 -> {

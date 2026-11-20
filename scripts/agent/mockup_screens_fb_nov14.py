@@ -84,7 +84,7 @@ def drag_row(a, lifted=False):
     lead = '<span style="display: flex; align-items: center; gap: 8px;">%s%s</span>' % (svg(HANDLE, MUTED2, 20, 2.6), badge(a[1], a[2], a[3], 34, 10))
     r = row(a[0], a[4], lead, money(a[5], a[6]), min_h=52)
     if lifted:
-        r = ('<div style="position: relative; z-index: 2; margin: 0 -6px; border-radius: 14px; background: %s; box-shadow: 0 12px 28px rgba(0,0,0,0.55); '
+        r = ('<div style="position: relative; z-index: 2; margin: 0 -6px; border-radius: 14px; background: %s; '
              'border: 1px solid %s; transform: rotate(-1deg);">%s</div>' % (BAR, LIME, r.replace('{{div}}', '')))
     return r
 

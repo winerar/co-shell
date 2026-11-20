@@ -23,7 +23,7 @@
 | [docs/agents/owner.md](docs/agents/owner.md) | контекст продукта и предпочтения владельца |
 | [docs/agents/notes.md](docs/agents/notes.md) (+ [notes-sync.md](docs/agents/notes-sync.md), [notes-screenshots.md](docs/agents/notes-screenshots.md), [notes-build.md](docs/agents/notes-build.md), [notes-compose.md](docs/agents/notes-compose.md)), [scripts.md](docs/agents/scripts.md), [environment.md](docs/agents/environment.md) | **заметки агента**: факты, грабли, замеры; **команды и флоу `agent.sh`**; облачное окружение |
 | [docs/agents/project-structure.md](docs/agents/project-structure.md), [feature-map.md](docs/agents/feature-map.md) | модули, куда класть новое; где лежит каждая фича |
-| [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md), [release-checklist.md](docs/agents/release-checklist.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется; **чек-лист перед 1.0** |
+| [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md), [hotfix.md](docs/agents/hotfix.md), [release-checklist.md](docs/agents/release-checklist.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется; **хотфикс сбоя**; **чек-лист перед 1.0** |
 | [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
 | [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
 | [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |

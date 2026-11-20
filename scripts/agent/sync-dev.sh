@@ -6,7 +6,11 @@ set -uo pipefail
 cd "$(dirname "$0")/../.."
 
 [ -n "$(git status --porcelain --untracked-files=no)" ] && { echo "✗ commit or stash changes first"; exit 1; }
-git fetch -q origin dev
+git fetch -q origin dev main
+# A hotfix branch goes into main: merging dev would ship all of dev to the phones (docs/agents/hotfix.md).
+if git log --no-merges --format=%s origin/main..HEAD | grep -q '^Hotfix:'; then
+    echo "✗ hotfix branch: do not merge dev; conflicts with main — git merge origin/main"; exit 1
+fi
 behind=$(git rev-list --count HEAD..origin/dev)
 [ "$behind" -eq 0 ] && { echo "OK: already up to date with origin/dev"; exit 0; }
 

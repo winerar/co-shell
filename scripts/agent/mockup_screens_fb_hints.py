@@ -8,6 +8,7 @@ from mockup_parts import *  # noqa: F401,F403
 from mockup_screens_main import RECENT, balance_hero, tile, tiles, converter_card, recent_card
 from mockup_screens_tabs import more_body
 from mockup_catalog_rows import hint as hint_card
+from mockup_screens_fb_quick import entry_from, simple_amount, plain_details
 from mockup_catalog_parts import peek_card  # noqa: F401  (same bubble family as the hold-to-peek one)
 
 FEEDBACK = [
@@ -76,7 +77,7 @@ def accounts_hint():
 def gesture():
     """П2: a bubble over the list; non-modal, «Понятно» closes it."""
     bubble = ('<div style="position: absolute; left: 24px; right: 24px; top: 400px; padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s; '
-              'box-shadow: 0 12px 32px rgba(0,0,0,0.45);"><div style="font-size: 14px; line-height: 1.4;">Удерживайте операцию, чтобы выбрать несколько.</div>'
+              '"><div style="font-size: 14px; line-height: 1.4;">Удерживайте операцию, чтобы выбрать несколько.</div>'
               '<div style="margin-top: 10px; text-align: right;"><span style="color: %s; font-size: 14px; font-weight: 700;">Понятно</span></div></div>' % (KEY, LINE2, LIME))
     rows = ''.join(tx(*r) for r in RECENT)
     return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bubble)
@@ -124,6 +125,43 @@ def app_settings():
     return board('Ещё', tab_screen('Ещё', label('Приложение', top=6) + app + note('Сброс очищает «показано» и снимает «скрыто» у шагов.', 8), 'more'))
 
 
+def coach_strip(text):
+    """П2 over the entry sheet (owner poll 2026-11-19, Б): `CoShellCoachCard` as it is (text, «Понятно» under it), under the status bar over the sheet's
+    top edge, non-modal — the form stays under it. In the app the sheet starts ≈ 102 dp from the top, so the card sits in the dimmed strip."""
+    return ('<div style="position: absolute; left: 16px; right: 16px; top: 30px; padding: 12px 8px 4px 16px; border-radius: 24px; background: %s; border: 1px solid %s; z-index: 5;">'
+            '<div style="font-size: 14px; line-height: 1.4; padding-right: 12px;">%s</div><div style="text-align: right; color: %s; font-size: 14px; font-weight: 700; padding: 8px 12px;">Понятно</div></div>'
+            % (KEY, LINE2, text, LIME))
+
+
+def entry_hint():
+    """Shown on the first entries: «Нужны только сумма и счёт», later «Можно складывать…» and «Это возврат»; one a day, «Понятно» closes for good."""
+    return board('Шторка ввода: подсказка', entry_from(simple_amount('0', color=MUTED2), cat='', det=plain_details())
+                 + coach_strip('Нужны только сумма и счёт. Остальное можно пропустить.'))
+
+
+def hint_row(text):
+    return ('<div style="display: flex; align-items: flex-start; gap: 4px; margin-bottom: 10px;"><div style="flex-grow: 1;">%s</div>%s</div>'
+            % (hint_card('A', text), icon_button('close', 'Закрыть подсказку', MUTED)))
+
+
+def tags_hint():
+    """Word hint П1 under the title of the «Теги» sheet (owner poll 2026-11-19, А); once, at the first opening."""
+    head = ('<div style="padding: 8px 20px 0; display: flex; align-items: center;"><div style="flex-grow: 1;"><h2 style="margin: 0; font-size: 20px;">Теги</h2>'
+            '<div style="font-size: 13px; color: %s; margin-top: 2px;">Выберите метки для операции</div></div>%s</div>' % (MUTED, icon_button('close', 'Закрыть', INK)))
+    rows = group([row('<b>%s</b>' % n, '%s операций' % c, tile_icon('spark', LIME, LIMEBG), '', min_h=56) for n, c in (('Отпуск', 12), ('Подарки', 7), ('Дети', 5), ('Работа', 3))])
+    body = '<div style="padding: 12px 16px 0;">%s%s</div>' % (hint_row('Тег — цветная метка операции, например «отпуск» или «подарки».'), rows)
+    return board('Теги: подсказка', scrim(home(4, '')) + sheet(head + body, top=300))
+
+
+def currency_hint():
+    """Word hint П1 under the title of «Валюта покупки» (owner poll 2026-11-19, А); once, when a payment in another currency is entered."""
+    head = ('<div style="padding: 8px 20px 0; display: flex; align-items: center;"><div style="flex-grow: 1;"><h2 style="margin: 0; font-size: 20px;">Валюта покупки</h2>'
+            '<div style="font-size: 13px; color: %s; margin-top: 2px;">Если списали в другой валюте</div></div>%s</div>' % (MUTED, icon_button('close', 'Закрыть', INK)))
+    rows = group([row('<b>%s</b>' % n, d, tile_icon('rate', LIME, LIMEBG), '', min_h=56) for n, d in (('ARS', 'песо'), ('USD', 'доллар'), ('EUR', 'евро'), ('RUB', 'рубль'))])
+    body = '<div style="padding: 12px 16px 0;">%s%s</div>' % (hint_row('Укажите сумму покупки, и курс посчитается сам.'), rows)
+    return board('Валюта покупки: подсказка', scrim(home(4, '')) + sheet(head + body, top=300))
+
+
 BOARDS = [  # name, title, fn, issue number
     ('Hint513Home0', '#513 · «Обзор», новичок: строка «Первые шаги»', home_new, 513),
     ('Hint513Home2', '#513 · «Обзор», два шага из четырёх', home_two, 513),
@@ -134,5 +172,8 @@ BOARDS = [  # name, title, fn, issue number
     ('Hint513MomentLong', '#513 · тёплая плашка: две строки + «Открыть»', moment_long, 513),
     ('Hint513Finale', '#513 · финал «Первых шагов»: «Всё готово»', finale, 513),
     ('Hint513Reset', '#513 · «Подсказки включены» после сброса', hints_reset, 513),
+    ('Hint513EntryCoach', '#513 · шторка ввода: карточка «Понятно» над шторкой', entry_hint, 513),
+    ('Hint513Tags', '#513 · «Теги»: подсказка под заголовком', tags_hint, 513),
+    ('Hint513Currency', '#513 · «Валюта покупки»: подсказка под заголовком', currency_hint, 513),
     ('Hint513Settings', '#513 · «Ещё → Приложение»: подсказки', app_settings, 513),
 ]

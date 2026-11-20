@@ -67,5 +67,5 @@ out=$(python3 scripts/agent/screens_table.py --check 2>&1) || bad "$out"
     warn "boards changed in docs/design/mockups — published to the live canvas? (environment.md «Публикация на холст»)"
 
 [ $fail -eq 0 ] && [ $pre -eq 1 ] && echo "OK: doc rules"
-[ $fail -eq 0 ] && [ $pre -eq 0 ] && echo "OK: session-end checks passed (now: mark the draft PR into dev ready — automerge — and report to the owner)"
+[ $fail -eq 0 ] && [ $pre -eq 0 ] && echo "OK: session-end checks passed (next: agent.sh pr — hand the PR over, then report to the owner)"
 exit $fail

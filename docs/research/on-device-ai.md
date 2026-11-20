@@ -55,3 +55,11 @@
 - Gemma 3 на телефоне (529 МБ, 4 ГБ ОЗУ): https://developers.googleblog.com/gemma-3-on-mobile-and-web-with-google-ai-edge
 - ML Kit OCR, размеры: https://developers.google.com/ml-kit/vision/text-recognition/android, https://developers.google.com/ml-kit/tips/installation-paths
 - `SpeechRecognizer` на устройстве: https://developer.android.com/reference/android/speech/SpeechRecognizer
+
+## Решение владельца (опрос 2026-11-20) → задачи
+- Подход **Б с правкой**: скачиваемая модель — **отдельный пакет по желанию** (вне магазина — загрузка из `co-shell-releases`,
+  в Google Play — AI pack on-demand до 1,5 ГБ); где встроен Gemini Nano — без загрузки. Задача #587.
+- Умная категория подставляется сама — #584 (первой). Голосовой ввод — #585 (после #584).
+- Незнакомые чеки — форматы руками по образцам + «Отправить образец»; ИИ — через пакет (#587).
+- Фото бумажных чеков — не нужно. Новая идея владельца: **быстрые заметки трат** → «Обработать» → операции — #586.
+- Итоги месяца и вопросы к данным — шаблоны без ИИ (#554). История — #583.

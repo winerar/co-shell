@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-6c7a9fc8-r1zy95`: карточки — только `CardTone` (основной, дополнительный, герой; `Warning`/`Danger` — исключение по `CardToneRuleTest`); обводка карточки счёта на тёмном фоне (`AccountCardContrastTest`, Revolut — текст 4,45, ждёт решения). Опрос «Цвет внимания»: https://claude.ai/artifact/SuGhKARCuM9YDw7DoYhFvq — после ответа заменить `StatusColors` на цвет темы (`scripts/agent/alert_colors.py`).
+2026-11-20, `ccr-6c7a9fc8-r1zy95`: карточки — только `CardTone` (#547, влит); цвет внимания — свой у каждой темы (опрос «Цвет внимания», Б: `PaletteSpec.warningDark/Light`); Revolut оставлен как есть (текст 4,45 — исключение в `AccountCardContrastTest`, решение владельца).

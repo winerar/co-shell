@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Attention colours per theme (owner 2026-11-20): warning and danger cards must suit each of the 9 themes and catch the eye.
 
-Today warning is one amber for every theme (StatusColors) — it melts into Banana's yellow, Kvas's amber, Cornflower's wheat;
-danger is the palette's own expense colour. This script proposes a warning hue per theme: the one farthest (ΔE2000) from the
+Warning was one amber for every theme (StatusColors) — it melted into Banana's yellow, Kvas's amber, Cornflower's wheat;
+danger is the palette's own expense colour. Owner's poll 2026-11-20 chose Б → PaletteSpec.warningDark/Light. This script proposes a warning hue per theme: the one farthest (ΔE2000) from the
 theme's primary, accent, tertiary, income and expense (А: only warm hues, Б: any), lightness solved for text ≥ 4.5:1 on cards.
 
 Usage: python3 scripts/agent/alert_colors.py [--html out.html]   → table; --html — a preview page for the poll (PNG via render).
@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from colorlab import contrast, de00, mix, oklch  # noqa: E402
 from themes_1_0 import THEMES, theme  # noqa: E402
 
-AMBER = {'dark': 'FFD43B', 'light': '7A5400'}  # StatusColors today
+AMBER = {'dark': 'FFD43B', 'light': '7A5400'}  # StatusColors before 2026-11-20
 NEED = 4.8  # text on the washed card, a little above 4.5 for the Oklab/sRGB gap
 CLASH = 20  # ΔE2000 under this = "looks like one of the theme's colours"
 

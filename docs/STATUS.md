@@ -59,7 +59,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1798 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1802 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-464cd826-oijxxl`: #568 «в отчётах неудобно листать вперёд» — опрос (столбики А, шапка Б, свайп — не очевиден, не делаем): столбики месяца до текущего, при прокрутке период и ‹ › в шапке. Доски `RepPast`, `RepScrolled`.
+2026-11-20, `ccr-9bee461f-d9kpcm`: «Все ›» шторки ввода (выбор счёта) теперь как «Счета» — группы по типу, строки с балансом в карточке (общие `AccountLine`/`AccountGroupTitle`), доска `EntryAllAccounts`, эталоны `account_picker_*`. Правило владельца: одни данные — один вид везде (`owner.md`, `project-structure.md`).

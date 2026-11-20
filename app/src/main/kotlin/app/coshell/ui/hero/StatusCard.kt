@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -33,7 +34,7 @@ fun StatusCard(
     below: (@Composable () -> Unit)? = null,
 ) {
     // A hero: the palette's gradient like «Общий баланс» (owner 2026-11-12, #277); [tint] colours the icon only.
-    CoShellCard(modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s), accent = true) {
+    CoShellCard(modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 IconBadge(icon, tint)

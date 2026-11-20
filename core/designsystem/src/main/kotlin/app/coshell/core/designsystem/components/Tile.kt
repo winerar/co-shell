@@ -28,7 +28,7 @@ import app.coshell.core.designsystem.tokens.Spacing
  * in [iconColor] and a grey [title] on top, [content] (a large number, mini bars) under it, [footer] pinned
  * to the bottom. At least [Sizes.tileMinHeight] tall; give tiles of one row `Modifier.fillMaxHeight()` inside
  * a `Row(Modifier.height(IntrinsicSize.Min))` so they match. [onClick] — the whole tile is a tap target.
- * [tint] — a status colour (e.g. warning): the border, a faint fill and the title take it.
+ * [tone] — the card's [CardTone]; a washed one (warning) colours the title too.
  */
 @Composable
 fun CoShellTile(
@@ -37,11 +37,11 @@ fun CoShellTile(
     @DrawableRes icon: Int? = null,
     iconColor: Color = accentInk(),
     onClick: (() -> Unit)? = null,
-    tint: Color? = null,
+    tone: CardTone = CardTone.Primary,
     footer: (@Composable ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    CoShellCard(modifier = modifier.heightIn(min = Sizes.tileMinHeight), tint = tint, onClick = onClick) {
+    CoShellCard(modifier = modifier.heightIn(min = Sizes.tileMinHeight), tone = tone, onClick = onClick) {
         Column(
             Modifier.padding(Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.xs),
@@ -51,7 +51,7 @@ fun CoShellTile(
                 Text(
                     title,
                     style = MaterialTheme.typography.labelLarge,
-                    color = tint ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = cardToneColor(tone) ?: MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

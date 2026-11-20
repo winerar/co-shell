@@ -16,6 +16,7 @@ import app.coshell.budgets.detail.BudgetDetailUiState.Head
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -31,7 +32,7 @@ import app.coshell.ui.format.sentenceAmounts
 internal fun EnvelopeHead(head: Head, modifier: Modifier = Modifier) {
     val envelope = head.envelope
     val alarm = envelope.tone == BulletTone.WARNING || envelope.tone == BulletTone.DANGER
-    CoShellCard(modifier.fillMaxWidth(), accent = true) {
+    CoShellCard(modifier.fillMaxWidth(), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
                 AmountText(

@@ -1,5 +1,6 @@
 package app.coshell.family.components
 
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellDot
 import app.coshell.core.designsystem.components.CoShellAvatarStack
 import app.coshell.core.designsystem.theme.RateSmallStyle
@@ -40,7 +41,7 @@ internal enum class SyncFreshness { SYNCED, PENDING, NEVER }
 @Composable
 internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFreshness) {
     // A hero: the palette's gradient, as every hero card (owner 2026-11-12, #277).
-    CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), accent = true) {
+    CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 StackedAvatars(members)

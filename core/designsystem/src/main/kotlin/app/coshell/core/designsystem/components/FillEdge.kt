@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import app.coshell.core.designsystem.theme.contrastRatio
 import app.coshell.core.designsystem.theme.deepen
+import app.coshell.core.designsystem.theme.mixToContrast
 import app.coshell.core.designsystem.tokens.Sizes
 
 /**
@@ -28,6 +29,15 @@ fun fillEdge(fill: Color, over: Color = MaterialTheme.colorScheme.surface): Bord
 /** The colour of [fillEdge] (for Material parts that take a border colour, a switch track); `null` — no edge needed. */
 fun fillEdgeColor(fill: Color, over: Color): Color? =
     if (contrastRatio(fill, over) >= EDGE_AT) null else deepen(fill, over, EDGE_CONTRAST)
+
+/**
+ * [fillEdgeColor] for a fill of the user's own colour (an account card, owner 2026-11-20): a dark fill on a dark page (a
+ * black bank colour in the dark theme) cannot be deepened enough, so its edge is lightened instead. `AccountCardContrastTest`.
+ */
+internal fun accountEdgeColor(fill: Color, over: Color): Color? {
+    val deep = fillEdgeColor(fill, over) ?: return null
+    return if (contrastRatio(deep, over) >= EDGE_AT) deep else mixToContrast(fill, Color.White, over, EDGE_CONTRAST)
+}
 
 /** [fillEdge] as a modifier for a custom-drawn fill (keys, tracks); put it after the shape's clip/background. */
 @Composable

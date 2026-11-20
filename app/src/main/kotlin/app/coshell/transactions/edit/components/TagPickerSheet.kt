@@ -1,5 +1,7 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.hints.WordHint
+import app.coshell.core.domain.hints.HintId
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -85,6 +87,7 @@ internal fun ColumnScope.TagPickerContent(state: TransactionEditUiState, onToggl
     var query by rememberSaveable { mutableStateOf("") }
     val options = state.tags.options
     val byId = remember(options) { options.associateBy { it.id } }
+    WordHint(HintId.TAGS, R.string.hint_tags)
     CoShellSearchField(
         value = query,
         onValueChange = { query = it },

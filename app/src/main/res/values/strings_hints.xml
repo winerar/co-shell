@@ -21,6 +21,7 @@
     <string name="hints_reset_title">Показать подсказки заново</string>
     <string name="hints_reset_hint">Вернёт «Первые шаги» и советы</string>
     <string name="hint_flip_card">Нажмите на карточку, чтобы перевернуть: на обороте самое полезное за месяц.</string>
+    <string name="hint_swipe_tabs">Листайте вбок, чтобы сменить вкладку.</string>
     <string name="hint_close">Закрыть подсказку</string>
     <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
     <string name="hint_accounts">Счёт — место, где лежат деньги. Баланс считается сам.</string>
@@ -38,4 +39,17 @@
     <string name="hints_reset_done">Подсказки включены</string>
     <string name="steps_done_title">Всё готово</string>
     <string name="steps_done_text">Вы уже ведёте бюджет — а это самое трудное.</string>
+    <string name="hint_first_week">Неделя записей. Порядок в деньгах начинается с этого.</string>
+    <string name="hint_welcome_back">С возвращением. Можно записать траты за эти дни: дата выбирается в операции.</string>
+    <string name="hint_backup">Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.</string>
+    <string name="hint_theme">Приложение можно сделать своим: Ещё → Внешний вид.</string>
+    <string name="hint_template">Трата повторяется? Сохраните шаблон, и она внесётся в одно нажатие.</string>
+    <string name="hint_open">Открыть</string>
+    <string name="hint_limit_80">%1$s: ещё можно %2$s. Заглядывайте в «Бюджеты», когда захотите.</string>
+    <string name="hint_month_end">Месяц закончился. Посмотрите итоги: Отчёты.</string>
+    <string name="hint_entry_minimal">Нужны только сумма и счёт. Остальное можно пропустить.</string>
+    <string name="hint_keypad_math">Можно складывать и вычитать: 300 + 150.</string>
+    <string name="hint_entry_refund">Вернули деньги? Отметьте «Это возврат».</string>
+    <string name="hint_currency_account">Деньги в другой валюте? Итоги посчитаются в валютах итогов, курс подставится сам.</string>
+    <string name="hint_currency_receipt">Укажите сумму покупки, и курс посчитается сам.</string>
 </resources>

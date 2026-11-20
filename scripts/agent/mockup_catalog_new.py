@@ -42,7 +42,7 @@ def menu(v):
                     % ('border-top: 1px solid %s;' % LINE2 if st == 'danger' else '', ' opacity: 0.38;' if st == 'off' else '', svg('check', INK, 18, 2.4) if on else '',
                        c, 'font-weight: 700;' if on else '', text, svg(icon, PINK if st == 'danger' else MUTED, 18)))
         rows.append(item)
-    return flexrow('<div style="width: 236px; padding: 6px 0; border-radius: %s; background: %s; box-shadow: inset 0 0 0 1px %s, 0 12px 32px rgba(0,0,0,0.4);">%s</div>'
+    return flexrow('<div style="width: 236px; padding: 6px 0; border-radius: %s; background: %s; box-shadow: inset 0 0 0 1px %s;">%s</div>'
                    % ('22px' if v == 'A' else '12px', KEY, LINE2, ''.join(rows)),
                    cap('выбранный — ' + ('тон + жирный + ✓ справа' if v == 'A' else '✓ слева + жирный') + '<br>опасный — красный' + ('' if v == 'A' else ', отделён линией') + '<br>недоступный — 38 %'),
                    align='flex-start')

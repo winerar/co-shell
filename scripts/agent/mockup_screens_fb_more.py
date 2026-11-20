@@ -5,7 +5,7 @@ Imported by mockup_screens_feedback.py (FEEDBACK + BOARDS). Long lists on purpos
 20 versions.
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
-from mockup_parts import ACCOUNTS, acc_row, big_total, footer, grid, group_head, top_bar
+from mockup_parts import ACCOUNTS, acc_row, big_total, fab, footer, grid, group_head, top_bar
 from mockup_screens_main import ACC, CATS, acc_chip, big_amount, chips_row, entry, keypad
 
 FEEDBACK = [
@@ -69,7 +69,7 @@ def accounts_types():
     body = (big_total('Всего в общем балансе · 14 счетов', '9 640', 'USD') + '<div style="margin-top: 4px; font-size: 13px; color: %s;">долги отдельно: −760 USD</div>' % PINK
             + group_head('Карты и наличные', 6, '4 693') + group([acc_row(a) for a in own[:3]]) + group_head('Сбережения', 2, '5 520') + savings
             + group_head('Долги', 3, '−760') + debts)
-    return tab_screen('Счета', body, 'acc')
+    return inner_screen('Счета', body) + fab('Добавить счёт')
 
 
 # ---- #208 · refund ---------------------------------------------------------------------------------------------------

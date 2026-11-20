@@ -24,6 +24,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
+import app.coshell.core.designsystem.components.CoShellNavButtonsBackdrop
 import app.coshell.core.designsystem.components.CoShellActionBar
 import app.coshell.core.designsystem.components.CoShellSnackbarHost
 import app.coshell.core.designsystem.components.LocalBottomBarInset
@@ -46,6 +47,7 @@ internal fun MainShell(
     snackbar: SnackbarHostState,
     onAdd: () -> Unit,
     moreBadge: Boolean = false,
+    reportsBadge: Boolean = false,
     inputLock: InputLock = InputLock(),
     overBar: @Composable BoxScope.(onTab: Boolean) -> Unit = {},
     graph: NavGraphBuilder.() -> Unit,
@@ -69,7 +71,7 @@ internal fun MainShell(
     val tabDrag = remember { TabDrag() }
 
     CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot, LocalInputLock provides inputLock) {
-        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked), origins, tabDrag, overBar)
+        Shell(navController, snackbar, onAdd, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked, reportsBadge), origins, tabDrag, overBar)
     }
 }
 
@@ -114,6 +116,8 @@ private fun Shell(
                     builder = graph,
                 )
             }
+            // Navigation buttons (not gestures): lists stop showing under them — a band of the page colour.
+            CoShellNavButtonsBackdrop()
             // Quiet notices (the update pill) float just above the bar, only while it is shown.
             Box(Modifier.matchParentSize().padding(bottom = padding.calculateBottomPadding())) { overBar(bar.visible) }
         }
@@ -128,7 +132,7 @@ private fun Bar(bar: BarState, drag: TabDrag, onTab: (TopLevel) -> Unit, onAdd: 
     var shown by remember { mutableStateOf(buttons) }
     if (buttons != null) shown = buttons
     Box {
-        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, addLocked = bar.addLocked, drag = drag)
+        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, reportsBadge = bar.reportsBadge, addLocked = bar.addLocked, drag = drag)
         CoShellActionBar(visible = bar.visible && buttons != null) { shown?.invoke(this) }
     }
 }
@@ -140,6 +144,7 @@ private data class BarState(
     val moreBadge: Boolean,
     val slot: BottomBarSlot,
     val addLocked: Boolean = false,
+    val reportsBadge: Boolean = false,
 )
 
 /** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */

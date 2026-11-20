@@ -62,14 +62,20 @@ def tokens():
 
 
 def components():
-    tabs = ['home', 'ops', 'acc', 'more']
-    bars = frame(per('tab', tabs, lambda t: nav(t)), 100) + frame(nav('home', True), 100)
+    tabs = ['home', 'ops', 'rep', 'more']
+    # Phones with navigation buttons (CoShellNavButtonsBackdrop): the button band in the page colour, the capsule 8 dp above it.
+    keys = ''.join('<span style="color: %s; font-size: 18px;">%s</span>' % (MUTED, k) for k in ('◁', '○', '□'))
+    band = ('<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 48px; background: %s; display: flex; align-items: center; '
+            'justify-content: space-around; padding: 0 64px;">%s</div>' % (BG, keys))
+    bars = (frame(per('tab', tabs, lambda t: nav(t)), 100) + frame(nav('home', True), 100)
+            + frame(nav('home').replace('bottom: 18px;', 'bottom: 56px;', 1) + band, 140))
     bars = bars.replace('<a href="#" aria-label="Обзор"', '<a href="#" onClick="{{go_tab_home}}" aria-label="Обзор"').replace(
         '<a href="#" aria-label="Операции"', '<a href="#" onClick="{{go_tab_ops}}" aria-label="Операции"').replace(
-        '<a href="#" aria-label="Счета"', '<a href="#" onClick="{{go_tab_acc}}" aria-label="Счета"').replace('<a href="#" aria-label="Ещё"', '<a href="#" onClick="{{go_tab_more}}" aria-label="Ещё"')
+        '<a href="#" aria-label="Отчёты"', '<a href="#" onClick="{{go_tab_rep}}" aria-label="Отчёты"').replace('<a href="#" aria-label="Ещё"', '<a href="#" onClick="{{go_tab_more}}" aria-label="Ещё"')
     cards = [
         section('Нижняя панель', grid([bars], 1).replace('repeat(1, minmax(0, 1fr))', 'repeat(2, minmax(0, 1fr))'),
-                'nav(active, dot_more) → CoShellBottomBar · CoShellTab — капсула 64 dp, пилюля 44 dp, «+» 52 dp (нажимайте вкладки) · '
+                'nav(active, dot_more) → CoShellBottomBar · CoShellTab — капсула 56 dp, пилюля 40 dp, «+» 48 dp (нажимайте вкладки) · '
+                'кнопки навигации внизу → CoShellNavButtonsBackdrop (полоса цвета фона, капсула на 8 dp выше, без серой системной подложки) · '
                 'tab_screen(title, body, active) / inner_screen(title, body) / top_bar(title, lead) → TabTopBar · ScreenTopBar', 3),
         section('Шапки', stack(frame(tab_head('Операции', icon_button('search', 'Поиск')), 64), frame(tab_head('Операции', icon_button('search', 'Поиск'), '10 ноября, вт · −24 000,00 ARS'), 64),
                                frame(search_head('кафе'), 64), frame(select_head(3), 64), frame(inner_head('Курсы валют'), 64), frame(inner_head('Курсы валют', scrolled=True), 64)),
@@ -106,11 +112,11 @@ def components():
                 'dialog(title, text, actions, body) → CoShellDialog · CoShellAlertDialog · sheet(inner, top) + scrim → CoShellSheet'),
         section('Клавиатура и сумма', stack(m.big_amount('4 500', 'ARS'), m.keypad(), m.cat_grid('Продукты')),
                 'keypad → CoShellKeypad · big_amount · cat_grid · acc_chip — части шторки (transactions/edit/)'),
-        section('Значки и прогресс', stack(line(badge('GA', '#F26E22', '#1A0A00'), dot_icon('cart', LIME), tile_icon('rate', CYAN, CYANBG), swatch(VIOLET, True), swatch('#FF8A5C', new=True)),
+        section('Значки и прогресс', stack(line(badge('GA', '#F26E22', '#1A0A00'), mini_badge('#F26E22'), dot_icon('cart', LIME), tile_icon('rate', CYAN, CYANBG), swatch(VIOLET, True), swatch('#FF8A5C', new=True)),
                                            grid([icon_cell('cart', True), icon_cell('cafe'), icon_cell('taxi'), icon_cell('house')], 4),
                                            line(ring(0.45, '<span style="%s font-size: 20px; font-weight: 700;">45 %%</span>' % MONO, LIME, 110, 8), ring(0.72, '<b>2</b>', YELLOW, 110, 8)),
                                            progress(0.62, 0), empty('wallet', 'Пустое состояние', 'Добавить').replace('padding: 96px 28px 0;', 'padding: 8px 28px 0;')),
-                'badge → AccountBadge · dot_icon → CategoryBadge · tile_icon → IconBadge · swatch → CoShellPaletteSwatch (тема = мини-экран, 1.0) · цвет-кружок из 24 (с ободком у бледных) → ColorFill · icon_cell · ring · progress → CoShellLinearProgress · empty → CoShellEmptyState (пустые экраны: значок, фраза, «+ Добавить…») · hero — шапка пустого «Обзора»'),
+                'badge → AccountBadge · mini_badge → AccountBadge(size = miniBadge, initials = false) — 16 dp без букв в подписи строки операции (#505) · dot_icon → CategoryBadge · tile_icon → IconBadge · swatch → CoShellPaletteSwatch (тема = мини-экран, 1.0) · цвет-кружок из 24 (с ободком у бледных) → ColorFill · icon_cell · ring · progress → CoShellLinearProgress · empty → CoShellEmptyState (пустые экраны: значок, фраза, «+ Добавить…») · hero — шапка пустого «Обзора»'),
         section('Токены', tokens(), 'PaletteSpecs · Spacing · Radii — подписи показывают цвет текущей темы', 2),
     ]
     body = ('<div style="padding: 40px;"><h1 style="margin: 0; font-size: 34px;">Компоненты · {{coPal}}, {{coMode}}</h1>'

@@ -27,13 +27,13 @@ private const val PILL_MS = 8_000L
  * (update pill, greeting) or off the tabs.
  */
 @Composable
-fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifier) {
+fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifier, onOpen: (HintTarget) -> Unit = {}) {
     val banner by host.banner.collectAsStateWithLifecycle()
     // Keeps the text while the banner slides away after it turned null.
     var last by remember { mutableStateOf(banner) }
     if (banner != null) last = banner
     val shown = last ?: return
-    val text = stringResource(shown.text)
+    val text = stringResource(shown.text, *shown.args.toTypedArray())
     val gesture = shown.id?.kind == HintKind.GESTURE
     if (!gesture) LaunchedEffect(banner) {
         if (banner == null) return@LaunchedEffect
@@ -53,7 +53,8 @@ fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifi
             visible = visible && banner != null,
             icon = DesignR.drawable.ic_check,
             text = text,
-            onClick = host::dismiss,
+            onClick = { shown.id?.target()?.let { host.dismiss(); onOpen(it) } ?: host.dismiss() },
+            actionLabel = shown.id?.target()?.let { stringResource(R.string.hint_open) },
             dismissLabel = stringResource(R.string.hint_close),
             onDismiss = host::dismiss,
             modifier = modifier,

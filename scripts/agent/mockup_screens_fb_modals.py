@@ -123,7 +123,7 @@ def card_dialog(under, icon, title, body, actions, top=None, color=LIME, bg=LIME
     ic = ('<span style="width: 48px; height: 48px; border-radius: 16px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
           % (bg, svg(icon, color, 24))) if icon else ''
     return scrim(under) + ('<div role="dialog" style="position: absolute; left: 20px; right: 20px; %s padding: 22px 20px 20px; border-radius: 28px; background: %s; '
-                           'box-shadow: 0 16px 48px rgba(0,0,0,0.5);">%s<h2 style="margin: %dpx 0 0; font-size: 22px;">%s</h2>%s<div style="margin-top: 20px;">%s</div></div>'
+                           '">%s<h2 style="margin: %dpx 0 0; font-size: 22px;">%s</h2>%s<div style="margin-top: 20px;">%s</div></div>'
                            % (pos, SHEET, ic, 14 if icon else 0, title, body, actions))
 
 

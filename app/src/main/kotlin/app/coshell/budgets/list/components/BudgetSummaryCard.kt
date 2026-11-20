@@ -27,6 +27,7 @@ import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.components.CoShellFlipCard
+import app.coshell.core.designsystem.components.FlipCueClearance
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
@@ -58,7 +59,8 @@ internal fun BudgetSummaryCard(
 @Composable
 private fun SummaryContent(summary: BudgetsUiState.Summary) {
     // A flow: the title keeps its words whole, «ещё 19 дней» drops under it when the line is too narrow.
-    FlowRow(Modifier.fillMaxWidth(), itemVerticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+    // The end padding keeps «ещё 19 дней» clear of the flip «↻» in the corner.
+    FlowRow(Modifier.fillMaxWidth().padding(end = FlipCueClearance), itemVerticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
         Text(
             stringResource(if (summary.over) R.string.budgets_over else R.string.budgets_left),
             style = MaterialTheme.typography.labelLarge,

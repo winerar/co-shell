@@ -22,8 +22,9 @@ ENV = [  # name, spent, limit, cur, state, caption, sub
 ]
 
 
-def summary(compact=False):
-    big = ('<div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-size: 13px; color: %s;">Осталось</span><span style="flex-grow: 1;"></span>'
+def summary(compact=False, clear_cue=False):
+    """`clear_cue` — the first line keeps clear of the flip «↻» in the top right corner (#519)."""
+    big = ('<div style="display: flex; align-items: baseline; gap: 8px;%s">' % (' padding-right: 24px;' if clear_cue else '') + '<span style="font-size: 13px; color: %s;">Осталось</span><span style="flex-grow: 1;"></span>'
            '<span style="font-size: 12px; color: %s;">потрачено 640 из 1 180 USD</span></div>'
            '<div style="margin-top: 4px; %s font-size: %dpx; font-weight: 700; color: %s;">540 <span style="font-size: 16px;">USD</span></div>'
            % (HERO_HINT, HERO_HINT, MONO, 26 if compact else 34, LIME))

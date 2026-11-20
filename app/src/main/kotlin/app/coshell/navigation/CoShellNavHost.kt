@@ -1,5 +1,11 @@
 package app.coshell.navigation
 
+import app.coshell.hints.SheetCoach
+import app.coshell.core.domain.hints.HintId
+import app.coshell.R
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -15,7 +21,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import kotlinx.coroutines.flow.MutableStateFlow
 import app.coshell.hints.HintBannerHost
+import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
@@ -117,6 +125,12 @@ fun CoShellNavHost(
     }
     val lock = rememberInputLock(locked, openUpdate)
 
+    // «Месяц закончился» leaves a dot on «Отчёты» until that tab is opened (#513).
+    val hintHost = LocalHintHost.current
+    val reportsDot by (hintHost?.reportsDot ?: remember { MutableStateFlow(false) }).collectAsStateWithLifecycle()
+    val onReports = backStackEntry?.destination.isOn(TopLevel.REPORTS)
+    LaunchedEffect(onReports) { if (onReports) hintHost?.reportsOpened() }
+
     // Shake → the receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet), only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
@@ -129,6 +143,7 @@ fun CoShellNavHost(
         snackbar = snackbar,
         onAdd = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
         moreBadge = updateAvailable != null,
+        reportsBadge = reportsDot && !onReports,
         inputLock = lock,
         overBar = { onBar ->
             UpdatePill(
@@ -147,6 +162,13 @@ fun CoShellNavHost(
                     host = host,
                     visible = onBar && updatePill == null && !(onHome && greetingVisible),
                     modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
+                    onOpen = { target ->
+                        when (target) {
+                            HintTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
+                            HintTarget.APPEARANCE -> navController.navigate(AppearanceDestination) { launchSingleTop = true }
+                            HintTarget.REPORTS -> navController.navigateToTab(TopLevel.REPORTS)
+                        }
+                    },
                 )
             }
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.
@@ -198,22 +220,35 @@ fun CoShellNavHost(
                 onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
             )
         }
-        dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
-            CoShellSheet(onClosed = { navController.popBackStack() }) { close ->
-                TransactionEditRoute(
-                    onDone = close,
-                    onAddAccount = { navController.navigate(AccountEditDestination()) },
-                    // The copy replaces the open sheet: back from it returns to the list.
-                    onDuplicate = { id ->
-                        navController.navigate(TransactionEditDestination(copyFrom = id)) {
-                            popUpTo<TransactionEditDestination> { inclusive = true }
-                        }
-                    },
-                    // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
-                    onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
-                    onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
-                    onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
-                )
+        dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) { entry ->
+            Box(Modifier.fillMaxSize()) {
+                CoShellSheet(onClosed = { navController.popBackStack() }) { close ->
+                    TransactionEditRoute(
+                        onDone = close,
+                        onAddAccount = { navController.navigate(AccountEditDestination()) },
+                        // The copy replaces the open sheet: back from it returns to the list.
+                        onDuplicate = { id ->
+                            navController.navigate(TransactionEditDestination(copyFrom = id)) {
+                                popUpTo<TransactionEditDestination> { inclusive = true }
+                            }
+                        },
+                        // Full screens: navigating to them closes the sheet (a dialog destination) by itself.
+                        onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
+                        onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
+                        onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+                    )
+                }
+                // New entries only: the words about the sheet sit in the dimmed strip above it (#513, `SheetCoach`).
+                if (entry.toRoute<TransactionEditDestination>().transactionId == null) {
+                    SheetCoach(
+                        mapOf(
+                            HintId.ENTRY_MINIMAL to R.string.hint_entry_minimal,
+                            HintId.KEYPAD_MATH to R.string.hint_keypad_math,
+                            HintId.ENTRY_REFUND to R.string.hint_entry_refund,
+                        ),
+                        Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = Spacing.l),
+                    )
+                }
             }
         }
         screen<ReceiptScanDestination> {

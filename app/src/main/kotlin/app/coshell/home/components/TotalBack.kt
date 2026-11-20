@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
+import app.coshell.core.designsystem.components.FlipCueClearance
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.HomeUiState
 import app.coshell.ui.format.breakableBeforeCurrency
@@ -34,7 +35,12 @@ internal fun ColumnScope.TotalBack(state: HomeUiState) {
     val hero = LocalHeroPalette.current
     val month = state.spending?.month
     if (month != null) {
-        Text(stringResource(R.string.home_back_title, formatMonth(month)), style = MaterialTheme.typography.labelLarge)
+        // The top line keeps clear of the flip «↻» in the corner.
+        Text(
+            stringResource(R.string.home_back_title, formatMonth(month)),
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(end = FlipCueClearance),
+        )
         val result = state.monthResult
         FlowRow(
             Modifier.padding(top = Spacing.s),
@@ -56,7 +62,12 @@ internal fun ColumnScope.TotalBack(state: HomeUiState) {
     }
     if (state.byCurrency.isNotEmpty()) {
         if (month != null) CoShellDivider(Modifier.padding(vertical = Spacing.m))
-        Text(stringResource(R.string.home_back_currencies), style = MaterialTheme.typography.bodySmall, color = hero.hint)
+        Text(
+            stringResource(R.string.home_back_currencies),
+            style = MaterialTheme.typography.bodySmall,
+            color = hero.hint,
+            modifier = if (month == null) Modifier.padding(end = FlipCueClearance) else Modifier,
+        )
         state.byCurrency.forEach { AmountLine(it, AmountTextStyle, hero.content) }
     }
 }

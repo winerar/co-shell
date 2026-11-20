@@ -1,5 +1,6 @@
 """Generated boards: tabs (Обзор, Операции, Счета), entry sheet states, categories, account editor states."""
 from mockup_bricks import *  # noqa: F401,F403
+from mockup_parts import fab
 
 ACC = [  # name, ini, colour, ink, type, balance, cur
     ('Galicia', 'GA', '#F26E22', '#1A0A00', 'Карта', '1 250 000', 'ARS'),
@@ -125,25 +126,27 @@ def ops_list(selected=(), snack=False):
 
 
 def accounts_empty():
-    return tab_screen('Счета', empty('wallet', 'Счетов пока нет. Нажмите «+», чтобы добавить первый.', 'Добавить счёт'), 'acc')
+    # «Счета» is an inner screen («Ещё → Счета», #140): back arrow, no bottom bar, the round «+».
+    return inner_screen('Счета', empty('wallet', 'Счетов пока нет. Нажмите «+», чтобы добавить первый.', 'Добавить счёт')) + fab('Добавить счёт')
 
 
 def accounts_search():
     rows = [row('<b>Ga</b>licia', 'Карта', badge('GA', '#F26E22', '#1A0A00'), amount('1 250 000', 'ARS'))]
     body = (search('', 'ga') + label('Найдено: 1') + group(rows) + note('Архивные счета тоже ищутся — помечены «в архиве».'))
-    return tab_screen('Счета', body, 'acc')
+    return inner_screen('Счета', body) + fab('Добавить счёт')
 
 
 # ---- entry sheet ----------------------------------------------------------------------------------------------
 
-def keypad(save='Готово'):
+def keypad(save='Готово', done=True):
+    """CoShellKeypad; `done=False` — «Готово» dimmed while there is no amount (`doneEnabled`, #505)."""
     k = lambda t, bg=KEY, col=INK, sz=22: ('<span style="border-radius: 16px; background: %s; color: %s; font-size: %dpx; %s display: flex; align-items: center; justify-content: center;">%s</span>'
                                            % (bg, col, sz, MONO, t))
     # K2 (owner 2026-11-18, #291): right column ⌫ · + · − · «Готово» (one row, wide); every key ≥ 48 dp
     keys = (k('7') + k('8') + k('9') + k('⌫', KEY2, INK, 20) + k('4') + k('5') + k('6') + k('+', KEY2, LIME, 24) + k('1') + k('2') + k('3')
             + k('−', KEY2, LIME, 24) + k(',') + k('0') + k('000', KEY, INK, 18)
-            + '<span style="border-radius: 18px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px;">%s%s</span>'
-            % (LIME, ONLIME, svg('check', ONLIME, 22, 2.2), save))
+            + '<span style="border-radius: 18px; background: %s; color: %s; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; opacity: %s;">%s%s</span>'
+            % (LIME, ONLIME, '1' if done else '0.38', svg('check', ONLIME, 22, 2.2), save))
     return '<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 54px; gap: 6px;">%s</div>' % keys
 
 
@@ -181,45 +184,6 @@ def entry(inner):
     return scrim() + sheet('<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 0 12px 14px; display: flex; flex-direction: column; gap: 12px;">%s</div>' % inner)
 
 
-def entry_transfer():
-    a, b = ACC[2], ACC[0]
-    two = ('<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">'
-           '<div style="padding: 10px 12px; border-radius: 16px; background: %s; border: 2px solid %s;"><div style="font-size: 12px; color: %s;">Списано</div>%s</div>'
-           '<div style="padding: 10px 12px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="font-size: 12px; color: %s;">Зачислено</div>%s</div></div>'
-           % (BAR, LIME, MUTED, amount('500', 'USD', INK, 22), BAR, LINE2, MUTED, amount('512 000', 'ARS', INK, 22)))
-    hint = '<div style="font-size: 12px; color: %s; padding: 0 4px;">Курс обмена: 1 USD = 1 024 ARS — считается из двух сумм</div>' % MUTED
-    head = ('<div style="display: flex; align-items: center; gap: 6px; padding: 0 4px;">%s<span style="color: %s;">→</span>%s</div>'
-            % (acc_chip(('Ameria USD',) + a[1:], 'откуда'), MUTED, acc_chip(b, 'куда')))
-    return entry(segmented(['Расход', 'Доход', 'Перевод'], 'Перевод', 'lime') + head + two + hint + chips_row(chip('Сегодня ▾'), chip('＋ Заметка')) + keypad())
-
-
-def entry_receipt():
-    rc = ('<div style="padding: 10px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="display: flex; justify-content: space-between; font-size: 12px; color: %s;">'
-          '<span>Чек в другой валюте</span><span>✕</span></div><div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px;">%s'
-          '<span style="font-size: 12px; color: %s;">Курс покупки: 1 USDT = 1 015 ARS</span></div></div>' % (BAR, LINE2, MUTED, amount('13 300', 'ARS', INK, 20), MUTED))
-    head = '<div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">%s<span style="flex-grow: 1;"></span><span style="font-size: 13px; font-weight: 600; color: %s;">Расход</span></div>' % (acc_chip(ACC[3]), PINK)
-    return entry(head + big_amount('13,10', 'USDT') + '<div style="text-align: center; font-size: 12px; color: %s; margin-top: -8px;">Списано со счёта</div>' % MUTED
-                 + rc + cat_grid('Кафе') + chips_row(chip('Сегодня ▾'), chip('＋ Заметка')) + keypad())
-
-
-def entry_edit():
-    head = ('<div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">%s<span style="flex-grow: 1;"></span>%s%s</div>'
-            % (acc_chip(ACC[0]), icon_button('copy', 'Дублировать', INK, True), icon_button('trash', 'Удалить', PINK, True)))
-    meta = '<div style="text-align: center; font-size: 12px; color: %s; margin-top: -8px;">Записала Аня · 10 нояб., 14:20</div>' % MUTED
-    return entry(head + big_amount('32 000', 'ARS') + meta + cat_grid('Продукты') + chips_row(chip('10 нояб. ▾'), chip('Coto, на неделю', False, 'note')) + keypad('Сохранить'))
-
-
-def entry_error():
-    head = '<div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">%s<span style="flex-grow: 1;"></span><span style="font-size: 13px; font-weight: 600; color: %s;">Расход</span></div>' % (acc_chip(ACC[0]), PINK)
-    return entry(head + big_amount('4 500', 'ARS') + cat_grid(None, True) + chips_row(chip('Вчера ▾', True), chip('＋ Заметка'), chip('Чек в др. валюте')) + keypad())
-
-
-def entry_no_accounts():
-    inner = ('<div style="padding: 24px 20px;">' + segmented(['Расход', 'Доход', 'Перевод'], 'Расход', 'lime')
-             + empty('wallet', 'Чтобы записать операцию, сначала добавьте счёт.', 'Добавить счёт') + '</div>')
-    return scrim() + sheet(inner, 380)
-
-
 # ---- categories / accounts editors ----------------------------------------------------------------------------
 
 def form_footer(primary='Сохранить'):
@@ -254,6 +218,11 @@ def account_delete():
             + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]))
 
 
+def _entry():
+    import mockup_screens_entry  # one-step entry sheet (#505); imported late: it builds on this module
+    return mockup_screens_entry
+
+
 BOARDS = [
     # name, title, html-function
     ('Home', '1 · Обзор', home), ('HomeEmpty', '1 · Обзор: первый запуск', home_empty), ('HomeAttention', '1 · Обзор: нет курса', home_attention),
@@ -261,9 +230,9 @@ BOARDS = [
     ('OpsScrolled', '2 · Операции: прокручено, шапка «где я»', ops_scrolled),
     ('OpsSelect', '2 · Операции: выбор нескольких', lambda: ops_list((0, 1, 3))), ('OpsUndo', '2 · Операции: удалено, «Отменить»', lambda: ops_list(snack=True)),
     ('AccountsEmpty', '3 · Счета: пусто', accounts_empty), ('AccountsSearch', '3 · Счета: поиск', accounts_search),
-    ('EntryTransfer', '5 · Шторка: перевод между валютами', entry_transfer), ('EntryReceipt', '5 · Шторка: чек в другой валюте', entry_receipt),
-    ('EntryEdit', '5 · Шторка: правка операции', entry_edit), ('EntryError', '5 · Шторка: не выбрана категория', entry_error),
-    ('EntryNoAccounts', '5 · Шторка: нет счетов', entry_no_accounts),
+    ('EntryTransfer', '5 · Шторка: перевод между валютами', lambda: _entry().transfer()), ('EntryReceipt', '5 · Шторка: чек в другой валюте', lambda: _entry().receipt()),
+    ('EntryEdit', '5 · Шторка: правка операции', lambda: _entry().edit()), ('EntryError', '5 · Шторка: не выбрана категория', lambda: _entry().error()),
+    ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
     ('CategoryBlocked', '7 · Категория: удалить нельзя', category_blocked),
     ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountDelete', '9 · Счёт: удалить?', account_delete),
     ('AccountBlocked', '9 · Счёт: удалить нельзя', account_blocked),

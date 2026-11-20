@@ -1,15 +1,12 @@
 package app.coshell.core.designsystem.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,11 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.selectionPop
 import app.coshell.core.designsystem.motion.tactile
-import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -29,7 +24,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 /**
  * Bottom bar tab as in the mockups: an icon without a label, the whole cell is the target. [pillModifier]
  * marks the slot the active-tab pill fills (`TabPill.kt`); the tab sinks under the finger, its icon pops
- * when it opens. [label] is read by TalkBack.
+ * when it opens. [label] is read by TalkBack. No dash under the selected tab (owner 2026-11-18, #511).
  */
 @Composable
 internal fun RowScope.CoShellBarTab(
@@ -59,17 +54,6 @@ internal fun RowScope.CoShellBarTab(
         ) {
             Box(Modifier.selectionPop(selected)) { icon() }
         }
-        // More of the theme's colour in the light theme (owner 2026-11-16, «А + Б»): a neon dash under the ink pill.
-        if (selected && !LocalDarkTheme.current) {
-            Box(
-                Modifier.align(Alignment.BottomCenter).padding(bottom = TabDashInset)
-                    .size(width = TabDashWidth, height = TabDashHeight)
-                    .background(MaterialTheme.colorScheme.primary, PillShape),
-            )
-        }
     }
 }
 
-private val TabDashWidth = 16.dp
-private val TabDashHeight = 3.dp
-private val TabDashInset = 3.dp

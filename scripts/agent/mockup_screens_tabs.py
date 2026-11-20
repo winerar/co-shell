@@ -1,46 +1,28 @@
-"""Main boards of the tabs (interactive): entry sheet «Main», «Счета», «Ещё», sync banner, update pill."""
+"""Main boards of the tabs (interactive): entry sheet «Main» (one step, #505), «Счета», «Ещё», sync banner, update pill."""
 from mockup_parts import *  # noqa: F401,F403
 from mockup_logic import go, flip, per, proto, toggled, when
 import mockup_screens_main as m
+import mockup_screens_fb_290 as p
+import mockup_screens_entry as e
 
-# ---- entry sheet: step 1 account → step 2 amount -----------------------------------------------------------------
+# ---- entry sheet: one step (#505, = `DetailsStep.kt`) ---------------------------------------------------------------
+# Type + camera + templates → ribbon of account badges («Откуда»/«Куда» for a transfer) → «Сумма» → «Категория · частые»
+# (not for a transfer) → «Детали» → keypad with «Готово». Tap a type; tap the keypad: «0» → «4 500» → saved (toast, empty again).
 
-TYPES = [('exp', 'Расход', 'Откуда списали?'), ('inc', 'Доход', 'Куда пришло?'), ('tr', 'Перевод', 'Откуда перевод?')]
-RECENT_ACC = ['Galicia', 'Binance', 'Песо', 'Mercado Pago']
-
-
-def type_seg(cur):
-    return segmented([x[1] for x in TYPES], next(x[1] for x in TYPES if x[0] == cur), 'lime', ['go_t_' + x[0] for x in TYPES])
-
-
-def step1(t):
-    q = next(x[2] for x in TYPES if x[0] == t)
-    head = ('<div style="display: flex; align-items: baseline; margin-top: 18px;"><h2 style="margin: 0; font-size: 19px; flex-grow: 1;">%s</h2>'
-            '<span style="font-size: 12px; color: %s;">12 счетов</span></div>' % (q, MUTED))
-    recent = label('Недавние', True, 14) + grid([go('st', 'sum', acc_recent(acc(n), n == 'Galicia')) for n in RECENT_ACC], 4, 4)
-    groups = ''.join(label(title, True, 14) + grid([go('st', 'sum', acc_tile(a, a[0] == 'Galicia')) for a in in_group(g)])
-                     for g, title, _ in GROUPS[:3])
-    find = ('<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 16px 14px; background: %s;">%s</div>' % (SHEET, search('Найти счёт')))
-    return ('<div style="padding: 8px 16px 0; height: 100%%; box-sizing: border-box; overflow: hidden;">%s%s%s%s</div>%s'
-            % (type_seg(t), head, recent, groups, find))
-
-
-def step2(typed):
-    a = acc('Galicia')
-    head = ('<div style="display: flex; align-items: center; gap: 8px; padding: 0 4px;">%s<span style="flex-grow: 1;"></span>'
-            '<span style="font-size: 13px; font-weight: 600; color: %s;">Расход</span></div>' % (go('st', 'acc', m.acc_chip(a)), PINK))
-    amt = m.big_amount('4 500' if typed else '0', 'ARS', PINK if typed else MUTED2)
-    keys = go('st', 'saved', m.keypad()) if typed else go('st', 'typed', m.keypad())
-    return ('<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 0 12px 14px; display: flex; flex-direction: column; gap: 12px;">%s</div>'
-            % (head + amt + m.cat_grid('Продукты' if typed else None) + m.chips_row(chip('Сегодня ▾'), chip('＋ Заметка'), chip('Чек в др. валюте')) + keys))
+def entry_body(t, typed):
+    color = dict((k, c) for k, _, c in e.TYPES)[t]
+    accs = e.ribbon(0, 'Откуда') + e.ribbon(2, 'Куда') if t == 'tr' else e.ribbon(0)
+    amount = e.amount_card('4 500' if typed else '0', 'ARS', color if typed else MUTED2, links='' if t == 'tr' else '+ Сумма покупки')
+    cats = '' if t == 'tr' else e.categories('Продукты' if typed else None)
+    keys = go('st', 'saved', m.keypad()) if typed else go('st', 'typed', m.keypad(done=False))
+    return e.type_bar(t, taps=True) + accs + amount + cats + e.details(refund=t == 'exp') + '<div style="flex-grow: 1;"></div>' + keys
 
 
 def entry_main():
-    under = '<div style="padding: 14px 16px; font-size: 28px; font-weight: 700;">Обзор</div>'
-    pick = per('t', [t[0] for t in TYPES], step1)
-    inner = (when('is_st_acc', pick) + when('is_st_saved', pick + toast('Сохранено: −4 500 ARS · Продукты', 90))
-             + when('is_st_sum', step2(False)) + when('is_st_typed', step2(True)))
-    return proto('Шторка ввода', m.scrim(under) + m.sheet(inner), st='acc', t='exp')
+    empty = per('t', [x[0] for x in e.TYPES], lambda t: entry_body(t, False))
+    inner = (when('is_st_sum', empty) + when('is_st_saved', empty + toast('Сохранено: −4 500 ARS · Продукты', 90))
+             + when('is_st_typed', per('t', [x[0] for x in e.TYPES], lambda t: entry_body(t, True))))
+    return proto('Шторка ввода', p.frame(inner), st='sum', t='exp')
 
 
 # ---- accounts ----------------------------------------------------------------------------------------------------
@@ -129,7 +111,7 @@ def home_sync():
 def update_pill():
     pill_ = ('<div style="position: absolute; left: 50%%; transform: translateX(-50%%); bottom: 96px; height: 44px; padding: 0 8px 0 6px; border-radius: 999px; '
              'background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; white-space: nowrap; '
-             'box-shadow: 0 8px 24px rgba(0,0,0,0.35);">%s%s%s</div>'
+             '">%s%s%s</div>'
              % (CHIP, LIMEPILL, go('p', 'screen', dot_icon('download', LIME, 32) + '<span>Версия 43 · Обновить</span>'), '', go('p', 'gone', svg('close', MUTED, 18))))
     home = tab_screen('Обзор', m.balance_hero() + m.tiles(m.tile('Траты за ноябрь', '1 240,50', 'USD'), m.tile('Без категории', '14', 'операций'))
                       + m.recent_card(m.RECENT[:3]), 'home', m.SEARCH_BTN, False)
@@ -149,7 +131,7 @@ GREETING = 'Настя, поздравляем с рождением Эмили�
 def greeting():
     pill_ = ('<div style="position: absolute; left: 50%%; transform: translateX(-50%%); bottom: 96px; max-width: 358px; min-height: 44px; padding: 6px 8px 6px 6px; '
              'border-radius: 24px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; '
-             'box-shadow: 0 8px 24px rgba(0,0,0,0.35);">%s%s</div>'
+             '">%s%s</div>'
              % (CHIP, LIMEPILL, dot_icon('gift', LIME, 32) + '<span>%s</span>' % GREETING, go('g', 'gone', svg('close', MUTED, 18))))
     shade = ('<div style="position: absolute; left: 12px; right: 12px; top: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">'
              '<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: %s;">%s<span>co-shell · сейчас</span></div>'

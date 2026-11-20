@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Motion
@@ -102,6 +103,12 @@ private fun Face(visible: Boolean, mirrored: Boolean, content: @Composable Colum
         content = content,
     )
 }
+
+/**
+ * How far the first line of a face keeps from the right edge so the «↻» in the corner never covers text (the face already
+ * has `Spacing.l` padding; the cue sits `Spacing.m` from the card edge). Right-aligned text on the top line pads its end by this.
+ */
+val FlipCueClearance: Dp = Sizes.tileIcon + Spacing.m - Spacing.l + Spacing.s
 
 private const val HALF_TURN = 180f
 private const val QUARTER_TURN = 90f

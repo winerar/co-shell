@@ -27,12 +27,13 @@ import app.coshell.core.designsystem.tokens.Spacing
  */
 @Composable
 fun CoShellActionBar(visible: Boolean, content: @Composable RowScope.() -> Unit) {
+    val gap = capsuleBottomGap(hasNavigationButtons())
     AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
         Box(
             Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = Spacing.l),
+                .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = gap),
         ) {
             Row(
                 Modifier

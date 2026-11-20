@@ -5,15 +5,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.R
+import app.coshell.core.domain.hints.HintId
 import app.coshell.core.model.AccountType
 import app.coshell.gate.LocalInputLock
+import app.coshell.hints.LocalHintHost
 
 /** Connects [AccountEditScreen] to its ViewModel. */
 @Composable
 fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lock = LocalInputLock.current
-    LaunchedEffect(state.isDone) { if (state.isDone) onDone() }
+    val hints = LocalHintHost.current
+    LaunchedEffect(state.isDone) {
+        if (!state.isDone) return@LaunchedEffect
+        // Offered before leaving: the effect would be cancelled once the sheet is gone.
+        if (state.foreignCurrencyAdded) hints?.offer(mapOf(HintId.CURRENCY_ACCOUNT to R.string.hint_currency_account))
+        onDone()
+    }
     AccountEditScreen(
         state = state,
         actions = AccountEditActions(

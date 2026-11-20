@@ -133,6 +133,7 @@ def icon_button(icon, label, color=INK, border=False):
 
 
 def nav(active, dot_more=False):
+    """`MainBottomBar`: Обзор · Операции · [+] · Отчёты · Ещё (#140); no dash under the selected tab (#511). `test_mockup_nav.py` keeps it equal to the code."""
     def tab(key, icon, label):
         on = key == active
         inner = svg(icon, ONLIME if on else MUTED, 24, 1.7)
@@ -146,7 +147,7 @@ def nav(active, dot_more=False):
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
-            % BAR + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('acc', 'wallet', 'Счета') + tab('more', 'more', 'Ещё') + '</nav>')
+            % BAR + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('rep', 'chart', 'Отчёты') + tab('more', 'more', 'Ещё') + '</nav>')
 
 
 def label(text, accent=False, top=18):
@@ -213,13 +214,32 @@ def amount(text, cur='', color=INK, size=15):
     return '<span style="%s font-size: %dpx; color: %s; white-space: nowrap;">%s%s</span>' % (MONO, size, color, text, c)
 
 
-def tx(title, sub, amt, cur, kind, icon, color, second=''):
+# Account colours for the mini badge of an operation row (#505): brand colours stay as they are in both themes.
+ROW_ACCOUNTS = {'Galicia': '#F26E22', 'Mercado Pago': '#00B1EA', 'Ameria': '#B01E2F', 'USDT-карта': '#26A17B', 'Binance': '#F0B90B',
+                'Т-Банк': '#FFDD2D', 'Santander': '#EC0000', 'Наличные': None, 'Песо': None}
+
+
+def mini_badge(color, style=''):
+    """AccountBadge(size = miniBadge, initials = false): a 16 dp square of the account colour; no colour — the chip fill.
+    `style` — a {{hole}} with the whole style (interactive boards: `display: none` for a transfer)."""
+    if style:
+        return '<span style="%s"></span>' % style
+    return '<span style="width: 16px; height: 16px; border-radius: 5px; flex: none; background: %s;"></span>' % (color or CHIP)
+
+
+def tx(title, sub, amt, cur, kind, icon, color, second='', acc=False, acc_style=''):
+    """Operation row. The mini badge goes before the subtitle when it starts with a known account (not for a transfer);
+    `acc` — an explicit colour for it, `acc_style` — a {{hole}} with its style."""
     col = {'e': PINK, 'i': CYAN, 't': INK}.get(kind, kind)  # or a colour / {{hole}}
     tail = ('<span style="display: flex; flex-direction: column; align-items: flex-end;">%s%s</span>'
             % (amount(amt, cur, col), '<span style="%s font-size: 12px; color: %s;">%s</span>' % (MONO, MUTED, second) if second else ''))
+    name = sub.split(' · ')[0]
+    badge_ = mini_badge(None, acc_style) if acc_style else mini_badge(acc) if acc else (mini_badge(ROW_ACCOUNTS[name]) if kind != 't' and name in ROW_ACCOUNTS else '')
+    sub_html = ('<span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: %s; min-width: 0;">%s<span>%s</span></span>'
+                % (MUTED, badge_, sub))
     return ('<div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 16px;">%s'
             '<span style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;"><span style="font-size: 16px;">%s</span>'
-            '<span style="font-size: 13px; color: %s;">%s</span></span>%s</div>' % (dot_icon(icon, color), title, MUTED, sub, tail))
+            '%s</span>%s</div>' % (dot_icon(icon, color), title, sub_html, tail))
 
 
 def day(title, total, cur, color=PINK):
@@ -331,7 +351,7 @@ def dialog(title, text, actions, body=''):
                  % (st, lbl))
     t = '<p style="margin: 12px 0 0; font-size: 14px; line-height: 1.45; color: %s;">%s</p>' % (INK2, text) if text else ''
     return ('<div role="dialog" aria-label="%s" style="position: absolute; left: 24px; right: 24px; top: 50%%; transform: translateY(-50%%); padding: 24px; '
-            'border-radius: 28px; background: %s; box-shadow: 0 16px 48px rgba(0,0,0,0.45);"><h2 style="margin: 0; font-size: 20px;">%s</h2>%s%s'
+            'border-radius: 28px; background: %s;"><h2 style="margin: 0; font-size: 20px;">%s</h2>%s%s'
             '<div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">%s</div></div>' % (title, CHIP, title, t, body, btns))
 
 

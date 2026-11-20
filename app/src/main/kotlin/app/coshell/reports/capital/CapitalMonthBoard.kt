@@ -101,7 +101,7 @@ private fun groups(
 
 private fun row(a: AccountWorth, input: CapitalInput, money: MoneyFormat, withChange: Boolean): AccountsUiState.Row {
     val account = a.account
-    val approx = a.converted?.takeIf { account.currency != input.currency }?.let { "≈ " + money.format(it) }
+    val approx = a.converted?.takeIf { account.currency != input.currency }?.let { "≈" + MoneyFormat.NBSP + money.format(it) } // «≈» never wraps away from the amount (#431)
     // «По изменению»: the move replaces «≈» under the balance; an account that did not move keeps «≈».
     val change = a.change?.takeIf { withChange && it.amountMinor != 0L }?.let { if (it.isPositive) "+" + money.format(it) else money.format(it) }
     return AccountsUiState.Row(

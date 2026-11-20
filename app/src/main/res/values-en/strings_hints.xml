@@ -19,6 +19,7 @@
     <string name="hints_reset_title">Show hints again</string>
     <string name="hints_reset_hint">Brings back “First steps” and tips</string>
     <string name="hint_flip_card">Tap the card to flip it: the back has the most useful things of the month.</string>
+    <string name="hint_swipe_tabs">Swipe sideways to switch tabs.</string>
     <string name="hint_close">Dismiss tip</string>
     <string name="hint_overview_empty">No transactions yet. Tap “+” to add the first one.</string>
     <string name="hint_accounts">An account is where your money sits. The balance adds up by itself.</string>
@@ -36,4 +37,17 @@
     <string name="hints_reset_done">Tips are on</string>
     <string name="steps_done_title">All set</string>
     <string name="steps_done_text">You are already keeping a budget — and that is the hardest part.</string>
+    <string name="hint_first_week">A week of entries. Order in your money starts with this.</string>
+    <string name="hint_welcome_back">Welcome back. You can add what you spent in these days: pick the date in the transaction.</string>
+    <string name="hint_backup">You have plenty of entries now. Save a backup so nothing is lost: More → Backup.</string>
+    <string name="hint_theme">You can make the app your own: More → Appearance.</string>
+    <string name="hint_template">Spending repeats? Save a template and it goes in with one tap.</string>
+    <string name="hint_open">Open</string>
+    <string name="hint_limit_80">%1$s: you can still spend %2$s. Look into “Budgets” whenever you like.</string>
+    <string name="hint_month_end">The month is over. See the totals: Reports.</string>
+    <string name="hint_entry_minimal">Only the amount and the account are needed. You can skip the rest.</string>
+    <string name="hint_keypad_math">You can add and subtract: 300 + 150.</string>
+    <string name="hint_entry_refund">Got money back? Tick “This is a refund”.</string>
+    <string name="hint_currency_account">Money in another currency? Totals are counted in your totals currencies, the rate is filled in for you.</string>
+    <string name="hint_currency_receipt">Enter the purchase amount and the rate is worked out for you.</string>
 </resources>

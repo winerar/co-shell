@@ -1,5 +1,9 @@
 package app.coshell.feedback
 
+import app.coshell.feedback.files.FeedbackFile
+import app.coshell.feedback.files.FeedbackFiles
+import app.coshell.receipt.inbox.SharedFile
+
 import app.coshell.core.domain.feedback.DeviceInfo
 import app.coshell.core.domain.feedback.DeviceInfoProvider
 import app.coshell.core.domain.feedback.FeedbackReport
@@ -87,6 +91,40 @@ class FeedbackViewModelTest {
         vm.onTextChange("Ошибка!")
         assertNull(vm.state.value.result)
     }
+
+    @Test
+    fun `receipt sample sets the kind and attaches the shared file once`() {
+        val shared = SharedFile(java.io.File("/cache/shared/1-chek.pdf"), "chek.pdf", "application/pdf")
+        var waiting: SharedFile? = shared
+        val vm = FeedbackViewModel(SendFeedbackUseCase(sender, device, clock), samples = { waiting.also { waiting = null } })
+        vm.prefillReceiptSample()
+        vm.prefillReceiptSample()
+        assertEquals(FeedbackKind.RECEIPT_FORMAT, vm.state.value.kind)
+        assertEquals(listOf("chek.pdf"), vm.state.value.files.map { it.name })
+    }
+
+    @Test
+    fun `picked files are sent with the message and cleared after`() {
+        val files = FakeFiles()
+        val vm = FeedbackViewModel(SendFeedbackUseCase(sender, device, clock), files = files)
+        vm.onPick(listOf("a.pdf", "bad.pdf"))
+        assertEquals(listOf("a.pdf"), vm.state.value.files.map { it.name })
+        assertTrue(vm.state.value.fileError)
+        vm.onTextChange("Teleshka")
+        vm.send("Формат чека")
+        assertEquals(listOf("a.pdf"), sender.sent.single().attachments.map { it.name })
+        assertTrue(vm.state.value.files.isEmpty())
+    }
+
+    @Test
+    fun `no more than three files and a file can be removed`() {
+        val vm = FeedbackViewModel(SendFeedbackUseCase(sender, device, clock), files = FakeFiles())
+        vm.onPick(listOf("1", "2", "3", "4"))
+        assertEquals(3, vm.state.value.files.size)
+        assertFalse(vm.state.value.canAttach)
+        vm.onRemoveFile("/cache/2")
+        assertEquals(listOf("1", "3"), vm.state.value.files.map { it.name })
+    }
 }
 
 class FeedbackStatusRefreshTest {
@@ -147,6 +185,13 @@ class FeedbackStatusRefreshTest {
         val vm = FeedbackViewModel(sendFeedback, history, clock, NoFeedbackStatus, InstalledBuild(260))
         assertEquals(listOf(3L, 2L, 1L), vm.state.value.history.map { it.sentAtMillis })
     }
+}
+
+private class FakeFiles : FeedbackFiles {
+    val bytes = mutableMapOf<String, ByteArray>()
+    override suspend fun fromUri(uri: String): FeedbackFile? =
+        if (uri.startsWith("bad")) null else FeedbackFile("/cache/$uri", uri, "application/pdf", 10).also { bytes[it.path] = byteArrayOf(1, 2) }
+    override suspend fun bytes(file: FeedbackFile) = bytes[file.path]
 }
 
 private class FakeSender : FeedbackSender {

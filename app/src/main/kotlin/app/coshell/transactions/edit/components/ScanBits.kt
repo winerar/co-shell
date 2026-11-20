@@ -59,3 +59,21 @@ internal fun ScanDuplicateDialog(duplicate: ScanDuplicate, onRecordAnyway: () ->
         dismissLabel = stringResource(R.string.action_cancel),
     )
 }
+
+/**
+ * «Не удалось прочитать чек» (#561, board «RcUnreadA»): a shared receipt of an unknown format. «Ввести вручную» — the main
+ * action, the blank sheet stays; «Отправить образец» — feedback «Формат чека» with the file already attached.
+ */
+@Composable
+internal fun ReceiptUnreadDialog(onManual: () -> Unit, onSendSample: () -> Unit) {
+    CoShellAlertDialog(
+        title = stringResource(R.string.receipt_unread_title),
+        text = stringResource(R.string.receipt_unread_text),
+        confirmLabel = stringResource(R.string.scan_manual),
+        onConfirm = onManual,
+        onDismiss = onManual,
+        dismissLabel = stringResource(R.string.receipt_unread_send),
+        onDismissClick = onSendSample,
+        icon = DesignR.drawable.ic_receipt_long,
+    )
+}

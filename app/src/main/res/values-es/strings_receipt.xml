@@ -15,4 +15,7 @@
     <string name="scan_cam_title">Se necesita la cámara para leer el QR</string>
     <string name="scan_cam_text">El video no se guarda ni se envía a ningún sitio.</string>
     <string name="scan_cam_allow">Permitir</string>
+    <string name="receipt_unread_title">No se pudo leer el ticket</string>
+    <string name="receipt_unread_text">La app aún no conoce este formato. Envía una muestra y le enseñaremos. Puedes anotar el movimiento a mano.</string>
+    <string name="receipt_unread_send">Enviar una muestra</string>
 </resources>

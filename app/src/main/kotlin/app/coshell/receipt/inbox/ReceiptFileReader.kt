@@ -79,11 +79,29 @@ class ReceiptFileReader @Inject constructor(@ApplicationContext private val cont
         return QrInImage.read(bitmap).also { bitmap.recycle() }
     }
 
+    /** Shared text nothing could read, kept as a `.txt` file — a sample for «Формат чека» feedback. */
+    suspend fun keepText(text: String): SharedFile? = withContext(Dispatchers.IO) {
+        try {
+            val target = File(sharedDir(), "${System.currentTimeMillis()}-$TEXT_NAME")
+            target.writeText(text.take(ReceiptFormats.MAX_TEXT))
+            prune()
+            SharedFile(target, TEXT_NAME, TEXT_MIME)
+        } catch (_: IOException) {
+            null
+        }
+    }
+
+    private fun sharedDir() = File(context.cacheDir, SHARED_DIR).apply { mkdirs() }
+
+    private fun prune() {
+        sharedDir().listFiles()?.sortedByDescending { it.name }?.drop(KEEP)?.forEach { it.delete() }
+    }
+
     /** Copies the shared file into the cache (the sender's permission ends with the share), keeping the newest [KEEP]. */
     private fun keep(uri: Uri, mime: String?): SharedFile? {
         val resolver = context.contentResolver
         val type = mime ?: resolver.getType(uri) ?: return null
-        val dir = File(context.cacheDir, SHARED_DIR).apply { mkdirs() }
+        val dir = sharedDir()
         val name = SharedFile.displayName(resolver, uri) ?: "receipt"
         val target = File(dir, "${System.currentTimeMillis()}-${SharedFile.safeName(name)}")
         val copied = try {
@@ -99,12 +117,14 @@ class ReceiptFileReader @Inject constructor(@ApplicationContext private val cont
             target.delete()
             return null
         }
-        dir.listFiles()?.sortedByDescending { it.name }?.drop(KEEP)?.forEach { it.delete() }
+        prune()
         return SharedFile(target, name, type)
     }
 
     private companion object {
         const val SHARED_DIR = "shared"
+        const val TEXT_NAME = "shared-text.txt"
+        const val TEXT_MIME = "text/plain"
         const val KEEP = 5
         const val MAX_BYTES = 10L * 1024 * 1024
         const val PDF_QR_PAGES = 2

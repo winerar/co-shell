@@ -106,7 +106,13 @@ class TransactionEditViewModel @Inject constructor(
     /** Known rates for the "debited" suggestion; `null` until loaded. */
     private var converter: CurrencyConverter? = null
 
-    private val _state = MutableStateFlow(TransactionEditUiState(isLoading = true, isNew = transactionId == null))
+    private val _state = MutableStateFlow(
+        TransactionEditUiState(
+            isLoading = true,
+            isNew = transactionId == null,
+            receiptUnread = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_UNREAD] ?: false,
+        ),
+    )
     val state: StateFlow<TransactionEditUiState> = _state.asStateFlow()
 
     init {
@@ -150,6 +156,7 @@ class TransactionEditViewModel @Inject constructor(
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
             tags = _state.value.tags,
+            receiptUnread = _state.value.receiptUnread,
         )
         val loaded = when {
             transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
@@ -185,6 +192,9 @@ class TransactionEditViewModel @Inject constructor(
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
     }
+
+    /** «Ввести вручную» or «Отправить образец» in «Не удалось прочитать чек» (#561): the window closes. */
+    fun onReceiptUnreadDismiss() = _state.update { it.copy(receiptUnread = false) }
 
     /** «Всё равно записать»: the same receipt once more, on purpose. */
     fun onScanDuplicateAccept() = _state.update { form -> form.copy(scan = form.scan?.copy(duplicate = null)) }

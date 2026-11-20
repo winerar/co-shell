@@ -3,6 +3,7 @@ package app.coshell.transactions.edit
 import app.coshell.core.domain.quickentry.ReceiptPrefills
 import app.coshell.core.domain.receipts.AfipQrFormat
 import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptNote
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.TransactionType
@@ -21,7 +22,8 @@ data class ScanDuplicate(val date: LocalDate, val amount: String, val category: 
 
 /**
  * A new expense from the receipt: the amount — or, on an account in another currency, the purchase amount (the debited
- * sum then follows by the rate, as for any receipt) — and the day of the receipt. Category, note and tags stay as they are.
+ * sum then follows by the rate, as for any receipt) — and the day of the receipt. Line items go to an empty note
+ * ([ReceiptNote]); category and tags stay as they are.
  */
 internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: MoneyFormat): TransactionEditUiState {
     val prefill = ReceiptPrefills.of(receipt, account?.currency?.let(::CurrencyCode))
@@ -40,6 +42,7 @@ internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: M
         receiptCurrencyError = null,
         keypadTarget = if (prefill.purchase != null) KeypadTarget.RECEIPT else KeypadTarget.AMOUNT,
         date = prefill.date,
+        note = note.ifBlank { ReceiptNote.of(receipt, moneyFormat::format).orEmpty() },
         scan = ScanUi(
             seller = receipt.merchant,
             key = prefill.dedupeKey,

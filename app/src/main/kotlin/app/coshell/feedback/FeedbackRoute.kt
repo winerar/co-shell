@@ -1,5 +1,7 @@
 package app.coshell.feedback
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,10 +14,16 @@ fun FeedbackRoute(
     onBack: () -> Unit,
     onOpen: (Long) -> Unit,
     prefill: String? = null,
+    receiptSample: Boolean = false,
     viewModel: FeedbackViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(prefill) { prefill?.let(viewModel::prefill) }
+    LaunchedEffect(receiptSample) { if (receiptSample) viewModel.prefillReceiptSample() }
+    // The system file picker (#561): PDF, pictures and text — the receipt formats the app can learn.
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        viewModel.onPick(uris.map { it.toString() })
+    }
     FeedbackScreen(
         state = state,
         actions = FeedbackActions(
@@ -26,6 +34,8 @@ fun FeedbackRoute(
             onWriteMore = viewModel::onWriteMore,
             onOpen = onOpen,
             onRemove = viewModel::remove,
+            onAttach = { picker.launch(FILE_TYPES) },
+            onRemoveFile = viewModel::onRemoveFile,
         ),
     )
 }
@@ -41,4 +51,8 @@ data class FeedbackActions(
     /** A sent message by its time: opens its card. */
     val onOpen: (Long) -> Unit = {},
     val onRemove: (Long) -> Unit = {},
+    val onAttach: () -> Unit = {},
+    val onRemoveFile: (String) -> Unit = {},
 )
+
+private val FILE_TYPES = arrayOf("application/pdf", "image/*", "text/plain")

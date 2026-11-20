@@ -2,6 +2,7 @@ package app.coshell.accounts.edit.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,13 +25,15 @@ import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * «Деньги» (#290, board `Fb290FAAcc`): «Валюта» and «Начальный баланс» as two tiles, each opening its own small sheet.
+ * «Деньги» (#290, board `AccountEdit`): «Валюта» and «Начальный баланс» as two tiles, each opening its own small sheet;
+ * a saved account also gets «Баланс сейчас» — the real balance, recorded as an adjustment on save.
  * A locked currency says so on the tile; an error is said under the tiles, so a bad value is seen without opening.
  */
 @Composable
 internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions) {
     var currencyOpen by rememberSaveable { mutableStateOf(false) }
     var balanceOpen by rememberSaveable { mutableStateOf(false) }
+    var adjustOpen by rememberSaveable { mutableStateOf(false) }
     CoShellFormSection(stringResource(R.string.account_section_money)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
             CoShellDetailTile(
@@ -55,11 +58,26 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 amount = true,
             )
         }
+        if (state.canAdjust) {
+            CoShellDetailTile(
+                icon = painterResource(DesignR.drawable.ic_refresh),
+                label = stringResource(R.string.account_balance_now),
+                value = state.adjustment?.let { stringResource(R.string.account_balance_adjust_pending, state.actualBalance, it) } ?: state.currentBalance,
+                onClick = { adjustOpen = true },
+                modifier = Modifier.fillMaxWidth(),
+                amount = true,
+            )
+        }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
     }
     if (currencyOpen) {
         FormSheet(stringResource(R.string.account_currency), onClosed = { currencyOpen = false }) {
             CurrencyFields(state, actions.onCurrencyChange)
+        }
+    }
+    if (adjustOpen) {
+        FormSheet(stringResource(R.string.account_balance_adjust_title), onClosed = { adjustOpen = false }) {
+            ActualBalanceField(state, actions.onActualBalanceChange)
         }
     }
     if (balanceOpen) {
@@ -75,5 +93,7 @@ private fun moneyError(state: AccountEditUiState): String? = when {
     state.currencyError == CurrencyError.LOCKED -> stringResource(R.string.account_currency_locked)
     state.balanceError == BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)
     state.balanceError == BalanceError.TOO_MANY_FRACTION_DIGITS -> stringResource(R.string.account_initial_balance_fraction_error)
+    state.actualBalanceError == BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)
+    state.actualBalanceError == BalanceError.TOO_MANY_FRACTION_DIGITS -> stringResource(R.string.account_initial_balance_fraction_error)
     else -> null
 }

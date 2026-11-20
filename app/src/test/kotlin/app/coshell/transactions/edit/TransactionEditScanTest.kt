@@ -127,4 +127,26 @@ class TransactionEditScanTest : TransactionEditTestBase() {
         assertNull(state.scan)
         assertTrue(state.amount.isBlank())
     }
+
+    @Test
+    fun `a shared PDF receipt fills the amount and writes its items into the note`() = runTest {
+        seed()
+        val text = "Teleshka\tЧЕК\n#4807\nДата\t14.11.2026 09:42\nПельмени Сибирские, 1кг\tx1\t$25.000\nИтого\t$25.000"
+        val state = viewModel(receiptQr = text).state.value
+
+        assertEquals(MoneyFormat.RU.formatForEditing(Money(25_000_00, ars)), state.amount)
+        assertEquals(LocalDate(2026, 11, 14), state.date)
+        assertEquals(ScanUi("Teleshka", "teleshka:4807", document = true), state.scan)
+        assertEquals("Teleshka\nПельмени Сибирские, 1кг — ${MoneyFormat.RU.format(Money(25_000_00, ars))}", state.note)
+    }
+
+    @Test
+    fun `an unread share opens the blank sheet with the window until it is answered`() = runTest {
+        seed()
+        val vm = viewModel(receiptUnread = true)
+        assertTrue(vm.state.value.receiptUnread)
+        assertEquals("", vm.state.value.amount)
+        vm.onReceiptUnreadDismiss()
+        assertFalse(vm.state.value.receiptUnread)
+    }
 }

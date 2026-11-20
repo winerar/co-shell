@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write # attached files go to the branch feedback-files (scripts/feedback_files.py)
   issues: write
 
 jobs:

@@ -14,7 +14,8 @@
 встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах — `rates/AmountInCurrencies` (#318), конвертер — пакет `converter/` (#319, ниже);
 QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается приложением (`intent-filter` в манифесте, `receipt/ReceiptLinks` → `CoShellNavHost` → `TransactionEditDestination(receiptQr)`);
 шторка заполняется в `TransactionEditViewModel.applyReceipt` (`transactions/edit/ReceiptEntry.kt`: `withReceipt`, `ScanUi`), строка «Из QR чека» и окно «Этот чек уже записан» — `components/ScanBits.kt`,
-ключ чека — `Transaction.receiptKey`. Камера: `receipt/scan/` (`ReceiptScanRoute` — разрешение при первом открытии, `ReceiptScanScreen`, `CameraPreview` на CameraX, `QrAnalyzer` на ZXing (ML Kit давал APK 15,8 МБ); рамка — `CoShellScanFrame`); значок камеры в `TypeBar` шторки и встряхивание открывают `ReceiptScanDestination`, чек → шторка с суммой, «Ввести вручную» → пустая шторка. «Поделиться» — следом (#526).
+ключ чека — `Transaction.receiptKey`. Камера: `receipt/scan/` (`ReceiptScanRoute` — разрешение при первом открытии, `ReceiptScanScreen`, `CameraPreview` на CameraX, `QrAnalyzer` на ZXing (ML Kit давал APK 15,8 МБ); рамка — `CoShellScanFrame`); значок камеры в `TypeBar` шторки и встряхивание открывают `ReceiptScanDestination`, чек → шторка с суммой, «Ввести вручную» → пустая шторка.
+Чеки из «Поделиться» и файлов (PDF Teleshka, фото QR): `receipt/inbox/` (`Incoming`, `ReceiptFileReader`, `QrInImage`), `receipt/document/` (`PdfText` — свой разбор PDF), форматы — `core:domain/receipts/` (`ReceiptFormats`, `AfipQrFormat`, `TeleshkaFormat`); правила — `receipts.md`. Вложения отзывов: `core:domain/feedback/FeedbackAttachment`, `feedback/data/FeedbackDocument.feedbackFileDocument`, робот — `scripts/feedback_files.py`.
 `core:domain/quickentry/`: `AfipReceiptQr` — QR аргентинского чека → сумма, дата, ключ чека, `ReceiptPrefills` — куда они ложатся в шторке (#526; экраны — этап 1–2, опрос `docs/design/poll-qr-526.json`, макеты — `scripts/agent/mockup_poll_qr526.py`), `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
 `privacy/` — конфиденциальность (#145): `PrivacyCenter` (заблокировано ли, скрыты ли суммы; `MainActivity` сообщает уход/возврат), `PrivacyHost`
@@ -54,6 +55,7 @@ QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается пр
 `home/components/MonthReviewCard` (считает `HomeBudgetViewModel` → `buildHomeReview`, только когда пора); Room — `ReportDao`, `RoomReportRepository`.
 Вкладка (#140, доски `RepA`/`RepAll`/`RepPeriod`) — `reports/`: `ReportsViewModel` (дни за `loadRange`), `ReportsBoard` (чистая сборка),
 `components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки;
+#568 (`RepPast`, `RepScrolled`): столбики месяца/квартала — до текущего месяца (`ReportPeriod.columnMonths(today)`, выбранный — `selectedColumn`); строка периода ушла под шапку → «‹ Отчёты / период · валюта ›» в `TabTopBar` (`navigation`, `onTitleClick`); свайпа нет.
 `category/` — «Из чего сложилось» (#188, `RepDrill`): тап по полосе/строке → `ReportCategoryDestination` (период, валюта, сравнение в маршруте),
 своя ViewModel (дни + операции категории за период), доля и подкатегории — `core:domain/reports/categoryDrill`.
 Тренд на экранах (#238, `Tr238DrillA`/`Tr238MarkA`): пилюля «↑ 45%» — `CoShellChangePill` (ds `charts/`, слот `badge` у `CoShellBarRow`),
@@ -118,3 +120,6 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 Ручной порядок (#338, доски `Fb338Acc`/`Fb338Cat`): `core:domain/Reorder` (номера, шаг 1024) + `order/ManualOrder` (первое перетаскивание
 нумерует весь список как на экране, вложение и вынос категории) + `ReorderUseCase`; режим «Порядок» — ⇅ в шапке «Счетов» и «Категорий»
 (`accounts/list/components/AccountsOrder`, `categories/list/components/CategoriesOrder` + `CategoryOrderRows`), каркас — `ui/order/OrderScreen`.
+Корректировка баланса из шторки счёта (2026-11-20, опрос: «А · плитка в «Деньги»», запись при «Сохранить»): `core:domain/AdjustBalanceUseCase` (разница
+реальный − текущий → доход/расход в «Корректировка баланса», дата — сейчас; та же разница = 0 — ничего), плитка «Баланс сейчас» и шторка
+`accounts/edit/components/ActualBalanceField` (`MoneySection`), состояние — `AccountEditUiState.actualBalance/adjustment`; доска `AccountEdit`.

@@ -38,6 +38,7 @@ import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.feedback.SendFeedbackUseCase
+import app.coshell.feedback.components.FeedbackFilesBlock
 import app.coshell.feedback.components.FeedbackResultCard
 import app.coshell.feedback.components.SendButton
 import app.coshell.feedback.components.SentList
@@ -108,6 +109,7 @@ private fun Form(state: FeedbackUiState, actions: FeedbackActions) {
             progress = { (length.toFloat() / SendFeedbackUseCase.MAX_LENGTH).coerceIn(0f, 1f) },
             modifier = Modifier.fillMaxWidth(),
         )
+        FeedbackFilesBlock(state.kind, state.files, state.canAttach, state.fileError, actions.onAttach, actions.onRemoveFile)
         Text(
             stringResource(R.string.feedback_intro),
             style = MaterialTheme.typography.bodySmall,

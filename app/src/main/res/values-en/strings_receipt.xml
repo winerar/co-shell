@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">From a receipt QR · seller %1$s</string>
+    <string name="scan_source_document">From a receipt · %1$s</string>
     <string name="scan_dup_title">This receipt is already recorded</string>
     <string name="scan_dup_text">There is already one like it in Transactions: %1$s.</string>
     <string name="scan_dup_confirm">Record anyway</string>
@@ -14,4 +15,7 @@
     <string name="scan_cam_title">The camera is needed to read the QR</string>
     <string name="scan_cam_text">Video is not saved and goes nowhere.</string>
     <string name="scan_cam_allow">Allow</string>
+    <string name="receipt_unread_title">Couldn\'t read the receipt</string>
+    <string name="receipt_unread_text">The app doesn\'t know this format yet. Send a sample and we\'ll teach it. You can enter the operation by hand.</string>
+    <string name="receipt_unread_send">Send a sample</string>
 </resources>

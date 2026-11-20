@@ -49,6 +49,13 @@ class EntrySheetScreenshotTest {
     @Test
     fun `entry sheet light`() = shot("entry_sheet_light") { sheet() }
 
+    /** A saved operation: the type switch next to «Дублировать» and «Удалить» (#509, board `EntryEdit`). */
+    @Test
+    fun `edit sheet dark`() = shot("entry_edit_dark", dark = true) { sheet(entrySheetSample.copy(isNew = false)) }
+
+    @Test
+    fun `edit sheet light`() = shot("entry_edit_light") { sheet(entrySheetSample.copy(isNew = false)) }
+
     @Test
     fun `payment sheet dark`() = shot("recurring_post_dark", dark = true) { sheet(paymentSheetSample) }
 
@@ -91,7 +98,7 @@ class EntrySheetScreenshotTest {
     @Composable
     private fun allCategories() = Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l)) {
         ChoiceRows(
-            options = categoryChoiceOptions(entrySheetSample.categories, "Без группы", "С подкатегориями"),
+            options = categoryChoiceOptions(entrySheetSample.categories, "С подкатегориями"),
             selected = entrySheetSample.categoryId,
             query = "",
             onQueryChange = {},

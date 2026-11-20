@@ -8,6 +8,8 @@ enum class FeedbackKind(@StringRes val label: Int, @StringRes val prompt: Int) {
     BUG(R.string.feedback_kind_bug, R.string.feedback_prompt_bug),
     IDEA(R.string.feedback_kind_idea, R.string.feedback_prompt_idea),
     DESIGN(R.string.feedback_kind_design, R.string.feedback_prompt_design),
+    /** A receipt the app can't read yet (#561): the file is what matters. */
+    RECEIPT_FORMAT(R.string.feedback_kind_receipt, R.string.feedback_prompt_receipt),
     OTHER(R.string.feedback_kind_other, R.string.feedback_prompt_other),
 }
 

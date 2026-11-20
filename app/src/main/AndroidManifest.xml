@@ -41,6 +41,14 @@
                 <data android:host="afip.gob.ar" />
                 <data android:pathPrefix="/fe/qr" />
             </intent-filter>
+            <!-- «Поделиться» a receipt: a PDF (Telegram shop bots), a photo of a QR, a link or text; read in the app, offline. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
         </activity>
         <receiver
             android:name=".update.install.InstallResultReceiver"

@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">Из QR чека · продавец %1$s</string>
+    <string name="scan_source_document">Из чека · %1$s</string>
     <string name="scan_dup_title">Этот чек уже записан</string>
     <string name="scan_dup_text">В операциях есть такой же: %1$s.</string>
     <string name="scan_dup_confirm">Всё равно записать</string>
@@ -14,4 +15,7 @@
     <string name="scan_cam_title">Камера нужна, чтобы прочитать QR</string>
     <string name="scan_cam_text">Видео не сохраняется и никуда не уходит.</string>
     <string name="scan_cam_allow">Разрешить</string>
+    <string name="receipt_unread_title">Не удалось прочитать чек</string>
+    <string name="receipt_unread_text">Такой формат приложение пока не знает. Отправьте образец — научим. Запись можно внести вручную.</string>
+    <string name="receipt_unread_send">Отправить образец</string>
 </resources>

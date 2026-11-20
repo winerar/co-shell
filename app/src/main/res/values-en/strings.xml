@@ -117,6 +117,11 @@
     <string name="account_currency_locked">Currency can\'t change: the account has transactions</string>
     <string name="account_type">Type</string>
     <string name="account_initial_balance">Starting balance</string>
+    <string name="account_balance_now">Balance now</string>
+    <string name="account_balance_adjust_title">Correct balance</string>
+    <string name="account_balance_actual">Actual balance</string>
+    <string name="account_balance_now_hint">Now: %1$s. Enter how much there really is.</string>
+    <string name="account_balance_adjust_hint">Adjustment on save: %1$s</string>
     <string name="account_initial_balance_hint">The amount before the first transaction. For a debt, use a minus sign.</string>
     <string name="account_included_in_total">Include in total balance</string>
     <string name="account_included_in_total_hint">Turn off for debts or someone else\'s money — the account won\'t count in the total balance</string>
@@ -316,6 +321,22 @@
     <string name="feedback_result_sent">Thank you! Message sent.</string>
     <string name="feedback_error_empty">Please write at least a few words.</string>
     <string name="feedback_error_too_long">A bit shorter, please: up to %1$d characters.</string>
+    <string name="feedback_error_too_many_files">Up to %1$d files. Remove the extra ones.</string>
+    <string name="feedback_error_files_too_large">The files are too big: up to %1$d MB in total.</string>
+    <string name="feedback_kind_receipt">Receipt format</string>
+    <string name="feedback_prompt_receipt">What receipt is it: a shop, a bot or a bank?</string>
+    <string name="feedback_files">Files</string>
+    <string name="feedback_attach">+ Attach</string>
+    <string name="feedback_files_hint">Up to 3 files, 3 MB in total: a PDF, a photo of the QR code, a screenshot or text. Only the developers see them.</string>
+    <string name="feedback_file_error">The file couldn\'t be read or is over 10 MB. Choose another one.</string>
+    <string name="feedback_receipt_empty_title">Attach the receipt</string>
+    <string name="feedback_receipt_empty_text">A PDF, a photo of the QR code or text with the link — we\'ll teach the app to read it</string>
+    <string name="feedback_receipt_choose">Choose</string>
+    <string name="feedback_file_pdf">PDF</string>
+    <string name="feedback_file_image">Image</string>
+    <string name="feedback_file_text">Text</string>
+    <string name="feedback_file_line">%1$s · %2$d KB</string>
+    <string name="feedback_file_remove">Remove file</string>
     <string name="feedback_error_not_configured">Sending isn\'t set up in this build.</string>
     <string name="feedback_error_failed">Not sent. Check your internet — your text is saved.</string>
     <string name="update_title">Update</string>
@@ -419,6 +440,7 @@
     <string name="account_shared">Shared account</string>
     <string name="account_shared_hint">Turn off for a personal account — everyone still sees it, marked “personal”</string>
     <string name="account_personal_mine">personal</string>
+    <string name="account_selected">Selected</string>
     <string name="account_personal_of">personal · %1$s</string>
 
     <string name="auto_backup_title">Automatically once a week</string>
@@ -602,5 +624,4 @@
     <string name="transaction_categories_all_title">All categories · %1$d</string>
     <string name="transaction_categories_search">Find a category</string>
     <string name="transaction_categories_nothing">Nothing found</string>
-    <string name="transaction_categories_no_folder">No group</string>
 </resources>

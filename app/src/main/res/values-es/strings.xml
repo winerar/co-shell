@@ -120,6 +120,11 @@
     <string name="account_currency_locked">La moneda no se puede cambiar: la cuenta tiene movimientos</string>
     <string name="account_type">Tipo</string>
     <string name="account_initial_balance">Saldo inicial</string>
+    <string name="account_balance_now">Saldo actual</string>
+    <string name="account_balance_adjust_title">Corregir saldo</string>
+    <string name="account_balance_actual">Saldo real</string>
+    <string name="account_balance_now_hint">Ahora: %1$s. Escribe cuánto hay de verdad.</string>
+    <string name="account_balance_adjust_hint">Ajuste al guardar: %1$s</string>
     <string name="account_initial_balance_hint">El importe antes del primer movimiento. Para una deuda, con signo menos.</string>
     <string name="account_included_in_total">Incluir en el saldo total</string>
     <string name="account_included_in_total_hint">Desactívalo para deudas o dinero ajeno — la cuenta no contará en el saldo total</string>
@@ -320,6 +325,22 @@
     <string name="feedback_result_sent">¡Gracias! Mensaje enviado.</string>
     <string name="feedback_error_empty">Escribe al menos un par de palabras.</string>
     <string name="feedback_error_too_long">Un poco más corto, por favor: hasta %1$d caracteres.</string>
+    <string name="feedback_error_too_many_files">Hasta %1$d archivos. Quita los que sobran.</string>
+    <string name="feedback_error_files_too_large">Los archivos pesan demasiado: hasta %1$d MB en total.</string>
+    <string name="feedback_kind_receipt">Formato de ticket</string>
+    <string name="feedback_prompt_receipt">¿De dónde es el ticket: tienda, bot o banco?</string>
+    <string name="feedback_files">Archivos</string>
+    <string name="feedback_attach">+ Adjuntar</string>
+    <string name="feedback_files_hint">Hasta 3 archivos, 3 MB en total: PDF, foto del código QR, captura o texto. Solo los ven los desarrolladores.</string>
+    <string name="feedback_file_error">No se pudo leer el archivo o pesa más de 10 MB. Elige otro.</string>
+    <string name="feedback_receipt_empty_title">Adjunta el ticket</string>
+    <string name="feedback_receipt_empty_text">Un PDF, una foto del código QR o texto con el enlace: le enseñaremos a la app a leerlo</string>
+    <string name="feedback_receipt_choose">Elegir</string>
+    <string name="feedback_file_pdf">PDF</string>
+    <string name="feedback_file_image">Imagen</string>
+    <string name="feedback_file_text">Texto</string>
+    <string name="feedback_file_line">%1$s · %2$d KB</string>
+    <string name="feedback_file_remove">Quitar archivo</string>
     <string name="feedback_error_not_configured">En esta compilación el envío no está configurado.</string>
     <string name="feedback_error_failed">No se envió. Revisa internet — el texto está guardado.</string>
     <string name="update_title">Actualización</string>
@@ -424,6 +445,7 @@
     <string name="account_shared">Cuenta compartida</string>
     <string name="account_shared_hint">Desactívalo para una cuenta personal — todos la verán, marcada como «personal»</string>
     <string name="account_personal_mine">personal</string>
+    <string name="account_selected">Seleccionada</string>
     <string name="account_personal_of">personal · %1$s</string>
 
     <string name="auto_backup_title">Automática una vez por semana</string>
@@ -610,5 +632,4 @@
     <string name="transaction_categories_all_title">Todas las categorías · %1$d</string>
     <string name="transaction_categories_search">Buscar categoría</string>
     <string name="transaction_categories_nothing">No se ha encontrado nada</string>
-    <string name="transaction_categories_no_folder">Sin grupo</string>
 </resources>

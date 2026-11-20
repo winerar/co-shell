@@ -59,6 +59,14 @@ class PushTest(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         self.assertEqual({"dev", "ccr-new"}, self.remote_branches())
 
+    def test_a_branch_made_from_dev_is_pushed_under_its_own_name(self):
+        self.git("fetch", "-q", "origin")
+        self.git("checkout", "-q", "-B", "ccr-start", "origin/dev")  # what `start` does: it tracks origin/dev
+        self.commit("b")
+        result = self.push()
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertEqual({"dev", "ccr-start"}, self.remote_branches())
+
     def test_refuses_dev(self):
         self.commit("b")
         result = self.push()

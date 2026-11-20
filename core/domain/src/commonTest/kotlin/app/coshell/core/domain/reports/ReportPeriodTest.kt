@@ -56,6 +56,19 @@ class ReportPeriodTest {
     }
 
     @Test
+    fun `columns with today - run up to the current month while the period fits, an old period first`() {
+        val today = LocalDate(2026, 11, 20)
+        val months = { p: ReportPeriod -> p.columnMonths(today = today).map { it.month } }
+        assertEquals((6..11).map { YearMonth(2026, it) }, months(ReportPeriod.month(YearMonth(2026, 11))))
+        assertEquals((6..11).map { YearMonth(2026, it) }, months(ReportPeriod.month(YearMonth(2026, 6))))
+        assertEquals((3..8).map { YearMonth(2026, it) }, months(ReportPeriod.month(YearMonth(2026, 3))))
+        assertEquals((7..12).map { YearMonth(2026, it) }, months(ReportPeriod.month(YearMonth(2026, 12))))
+        assertEquals((6..11).map { YearMonth(2026, it) }, months(ReportPeriod.quarter(YearMonth(2026, 7))))
+        assertEquals((1..6).map { YearMonth(2026, it) }, months(ReportPeriod.quarter(YearMonth(2026, 1))))
+        assertEquals((1..12).map { YearMonth(2025, it) }, months(ReportPeriod.year(2025)))
+    }
+
+    @Test
     fun `columns - six months to a month or quarter, twelve for a year, the touched months of a custom one`() {
         assertEquals(
             (6..11).map { YearMonth(2026, it) },

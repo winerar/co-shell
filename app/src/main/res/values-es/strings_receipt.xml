@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">De un QR de ticket · vendedor %1$s</string>
+    <string name="scan_source_document">De un ticket · %1$s</string>
     <string name="scan_dup_title">Este ticket ya está registrado</string>
     <string name="scan_dup_text">Ya hay uno igual en Movimientos: %1$s.</string>
     <string name="scan_dup_confirm">Registrar de todos modos</string>
@@ -14,4 +15,7 @@
     <string name="scan_cam_title">Se necesita la cámara para leer el QR</string>
     <string name="scan_cam_text">El video no se guarda ni se envía a ningún sitio.</string>
     <string name="scan_cam_allow">Permitir</string>
+    <string name="receipt_unread_title">No se pudo leer el ticket</string>
+    <string name="receipt_unread_text">La app aún no conoce este formato. Envía una muestra y le enseñaremos. Puedes anotar el movimiento a mano.</string>
+    <string name="receipt_unread_send">Enviar una muestra</string>
 </resources>

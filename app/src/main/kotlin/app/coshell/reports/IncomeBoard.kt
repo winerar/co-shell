@@ -11,20 +11,21 @@ import app.coshell.reports.ReportsUiState.Income
 import app.coshell.reports.ReportsUiState.IncomeColumn
 
 /**
- * Pure: «Доходы и расходы» (#189) over the months of «По месяцам», the period's last month selected; `null` when nothing
+ * Pure: «Доходы и расходы» (#189) over the months of «По месяцам», the period's last month selected (not always the last column, #568); `null` when nothing
  * came in or went out in all of them.
  */
 internal fun buildIncome(input: ReportInput, format: MoneyFormat): Income? {
-    val series = monthlySeries(input.ledger, input.period.columnMonths(input.startDay))
+    val series = monthlySeries(input.ledger, input.columns)
     val picture = incomeExpenses(series, input.today)
     if (picture.isEmpty) return null
     val scale = ChartScale.of(series.flatMap { listOf(it.earned.amountMinor, it.spent.amountMinor) })
-    val shown = series.last()
+    val selected = input.selectedColumn(series.map { it.period })
+    val shown = series[selected]
     return Income(
         columns = series.map {
             IncomeColumn(it.period.month, format.number(it.earned), format.number(it.spent), scale.of(it.earned.amountMinor), scale.of(it.spent.amountMinor))
         },
-        selected = series.lastIndex,
+        selected = selected,
         earned = format.number(shown.earned),
         spent = format.number(shown.spent),
         saved = format.signed(shown.saved),

@@ -11,7 +11,7 @@
 6. Маленькие файлы по одной теме (~200 строк), экран — пакет из блоков: `project-structure.md`.
 7. **Начало:** `agent.sh start`, затем `owner.md` и `notes.md`. **Конец:** чек-лист `workflow.md` + `agent.sh finish`.
    Новое — в `notes.md`; рутина — команда в `agent.sh`; практика — правило (`workflow.md` §«Самоулучшение»).
-8. **Доска — источник истины по виду.** Интерфейс меняется только после правки доски и «ок»; доски экранов, воркфлоу (`Flows`) и компонентов всегда равны коду (`workflow.md` §«Доска — источник истины»). Только утверждённые компоненты (`components.md`).
+8. **Доска — источник истины по виду.** Интерфейс меняется только после правки доски и «ок»; доски экранов, воркфлоу (`Flows`) и компонентов всегда равны коду (`workflow.md` §«Доска — источник истины»). Только утверждённые компоненты (`components.md`); одни и те же данные везде выглядят одинаково — один общий блок (`project-structure.md` §«Переиспользование»).
 9. **Никакого текста в коде:** любой текст для людей — ресурс сразу на всех языках `AppLanguage.SUPPORTED` (`glossary.md`).
 10. **Подсказки живут вместе с интерфейсом:** поменял экран, шаг, жест или подпись — в том же изменении обнови «Первые шаги» и подсказки, все языки (`hints.md`).
 
@@ -25,7 +25,7 @@
 | [docs/agents/project-structure.md](docs/agents/project-structure.md), [feature-map.md](docs/agents/feature-map.md) | модули, куда класть новое; где лежит каждая фича |
 | [docs/agents/build-and-test.md](docs/agents/build-and-test.md), [ci.md](docs/agents/ci.md), [hotfix.md](docs/agents/hotfix.md), [release-checklist.md](docs/agents/release-checklist.md) | сборка, тесты, SDK; CI: мерж, релиз, что где проверяется; **хотфикс сбоя**; **чек-лист перед 1.0** |
 | [docs/agents/code-style.md](docs/agents/code-style.md), [glossary.md](docs/agents/glossary.md) | стиль Kotlin/Compose, слои, UDF; **словарь интерфейса** — как называть сущности |
-| [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md) | правила работы с деньгами и валютами |
+| [docs/agents/money-and-currency.md](docs/agents/money-and-currency.md), [receipts.md](docs/agents/receipts.md) | правила работы с деньгами и валютами; **чеки**: форматы, «Поделиться», новый формат |
 | [docs/agents/database.md](docs/agents/database.md) (+ [database-tables.md](docs/agents/database-tables.md)) | Room: схема, мягкое удаление, миграции, резервная копия |
 | [docs/agents/design-system.md](docs/agents/design-system.md), [design-navigation.md](docs/agents/design-navigation.md), [components.md](docs/agents/components.md) (+ [components-approved.md](docs/agents/components-approved.md), [components-topbars.md](docs/agents/components-topbars.md)), [fonts.md](docs/agents/fonts.md) | дизайн-система: токены, цвета, навигация; компоненты; шрифты |
 | [docs/agents/motion.md](docs/agents/motion.md), [texts.md](docs/agents/texts.md), [hints.md](docs/agents/hints.md) | движение: тактильная система, анимации, вибрация; тексты UI: ресурсы, краткость, словарь; **обучение новичка**: шаги, подсказки, когда показывать |

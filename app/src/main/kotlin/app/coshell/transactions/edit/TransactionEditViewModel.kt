@@ -12,14 +12,14 @@ import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.designsystem.components.keypad.AmountKeys
-import app.coshell.core.domain.quickentry.AfipReceiptQr
-import app.coshell.core.domain.quickentry.ReceiptQr
 import app.coshell.core.domain.quickentry.TipPrefs
 import app.coshell.core.domain.quickentry.Tips
 import app.coshell.core.domain.recurring.autoPaymentId
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.Currencies
@@ -94,7 +94,7 @@ class TransactionEditViewModel @Inject constructor(
     /** Text with a receipt QR link from the route (#526); applied once to a new form, like the template. */
     private var pendingReceipt: String? = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_QR]
     /** The receipt the form was filled from; the amount follows the chosen account until the person types their own. */
-    private var scannedQr: ReceiptQr? = null
+    private var scannedQr: Receipt? = null
     private var scanAmountTouched = false
 
     private var existing: Transaction? = null
@@ -106,7 +106,13 @@ class TransactionEditViewModel @Inject constructor(
     /** Known rates for the "debited" suggestion; `null` until loaded. */
     private var converter: CurrencyConverter? = null
 
-    private val _state = MutableStateFlow(TransactionEditUiState(isLoading = true, isNew = transactionId == null))
+    private val _state = MutableStateFlow(
+        TransactionEditUiState(
+            isLoading = true,
+            isNew = transactionId == null,
+            receiptUnread = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_UNREAD] ?: false,
+        ),
+    )
     val state: StateFlow<TransactionEditUiState> = _state.asStateFlow()
 
     init {
@@ -136,6 +142,7 @@ class TransactionEditViewModel @Inject constructor(
             .filter { !it.account.archived || it.account.id in used }
         val accountList = withBalances.map { it.account }
         val balances = withBalances.associate { it.account.id to moneyFormat.format(it.balance) }
+        val negative = withBalances.filter { it.balance.isNegative }.map { it.account.id }.toSet()
         accountsById = accountList.associateBy { it.id }
         allCategories = categories.observeCategories(includeArchived = true).first()
             .filter { !it.archived || it.id == transaction?.categoryId }
@@ -145,11 +152,12 @@ class TransactionEditViewModel @Inject constructor(
         val recent = transactions.observeTransactions(TransactionFilter(limit = RECENT_OPERATIONS)).first()
         recentCategoryIds = recent.mapNotNull { it.categoryId }.distinct()
         val base = TransactionEditUiState(
-            accounts = accountList.map { it.toOption(balances[it.id].orEmpty()) },
+            accounts = accountList.map { it.toOption(balances[it.id].orEmpty(), it.id in negative) },
             recentAccountIds = recent.map { it.accountId }.distinct().filter { it in accountsById }.take(RECENT_ACCOUNTS),
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
             tags = _state.value.tags,
+            receiptUnread = _state.value.receiptUnread,
         )
         val loaded = when {
             transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
@@ -169,7 +177,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Receipt QR (#526)
 
     private suspend fun applyReceipt(text: String) {
-        val qr = AfipReceiptQr.find(text) ?: return
+        val qr = ReceiptFormats.read(text) ?: return
         scannedQr = qr
         scanAmountTouched = false
         val duplicate = transactions.findByReceiptKey(qr.key)?.let { found ->
@@ -180,11 +188,14 @@ class TransactionEditViewModel @Inject constructor(
             )
         }
         _state.update { form ->
-            form.copy(scan = ScanUi(qr.sellerTaxIdText, qr.key, duplicate)).withReceipt(qr, moneyFormat)
+            form.copy(scan = ScanUi(qr.merchant, qr.key, duplicate)).withReceipt(qr, moneyFormat)
                 .withDebitSuggestion(converter, moneyFormat)
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
     }
+
+    /** «Ввести вручную» or «Отправить образец» in «Не удалось прочитать чек» (#561): the window closes. */
+    fun onReceiptUnreadDismiss() = _state.update { it.copy(receiptUnread = false) }
 
     /** «Всё равно записать»: the same receipt once more, on purpose. */
     fun onScanDuplicateAccept() = _state.update { form -> form.copy(scan = form.scan?.copy(duplicate = null)) }

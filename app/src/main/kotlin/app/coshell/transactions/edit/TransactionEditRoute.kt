@@ -27,6 +27,7 @@ fun TransactionEditRoute(
     onAllTemplates: () -> Unit = {},
     onScanReceipt: () -> Unit = {},
     onNewTemplate: () -> Unit = {},
+    onSendReceiptSample: () -> Unit = {},
     templateStrip: TemplateStripViewModel = hiltViewModel(),
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
@@ -89,6 +90,11 @@ fun TransactionEditRoute(
             onTipSave = lock.guard1(viewModel::onTipSave),
             onScanDuplicateAccept = viewModel::onScanDuplicateAccept,
             onScanDuplicateCancel = viewModel::onScanDuplicateCancel,
+            onReceiptUnreadManual = viewModel::onReceiptUnreadDismiss,
+            onReceiptUnreadSend = {
+                viewModel.onReceiptUnreadDismiss()
+                onSendReceiptSample()
+            },
             onKey = { key ->
                 if (key == KeypadKey.Done && lock.locked) {
                     lock.onBlocked()
@@ -145,4 +151,7 @@ data class TransactionEditActions(
     /** The «Этот чек уже записан» window of a scanned receipt (#526). */
     val onScanDuplicateAccept: () -> Unit = {},
     val onScanDuplicateCancel: () -> Unit = {},
+    /** «Не удалось прочитать чек» of a shared receipt (#561): enter by hand, or send the file as a sample. */
+    val onReceiptUnreadManual: () -> Unit = {},
+    val onReceiptUnreadSend: () -> Unit = {},
 )

@@ -137,6 +137,11 @@ class ProjectRulesTest {
             "core/designsystem/src/main/kotlin/app/coshell/core/designsystem/charts/ChartScale.kt" to "chart heights: share of the scale",
             "core/designsystem/src/main/kotlin/app/coshell/core/designsystem/charts/Line.kt" to "line chart points: share of the range",
             "app/src/main/kotlin/app/coshell/update/components/UpdateHeroStep.kt" to "update size in megabytes",
+            "app/src/main/kotlin/app/coshell/receipt/document/PdfValues.kt" to "PDF page geometry in points; amounts are read from the text",
+            "app/src/main/kotlin/app/coshell/receipt/document/PdfLexer.kt" to "PDF page geometry in points; amounts are read from the text",
+            "app/src/main/kotlin/app/coshell/receipt/document/PdfContent.kt" to "PDF page geometry in points; amounts are read from the text",
+            "app/src/main/kotlin/app/coshell/receipt/document/PdfText.kt" to "PDF page geometry in points; amounts are read from the text",
+            "app/src/main/kotlin/app/coshell/receipt/document/PdfFont.kt" to "PDF page geometry in points; amounts are read from the text",
         )
     }
 }

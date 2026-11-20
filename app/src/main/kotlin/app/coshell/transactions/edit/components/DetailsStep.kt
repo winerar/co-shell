@@ -81,12 +81,13 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     }
     state.tip?.let { TipSheet(state, it, actions) }
     state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
+    if (state.receiptUnread) ReceiptUnreadDialog(actions.onReceiptUnreadManual, actions.onReceiptUnreadSend)
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 
 /**
  * The chosen account (→ the target of a transfer) as chips; a tap returns to that picker. On the right:
- * «Расход»/«Доход» for a new one, «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
+ * «Расход»/«Доход» for a new one, the type switch, «Дублировать» and «Удалить» for a saved operation, «Копия · сегодня» for a copy (mockup 19В).
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -98,8 +99,9 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
         itemVerticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
-        Spacer(Modifier.weight(1f))
-        // Which kind of operation this is, in its colour (board `Main`, step 2): the type switch stays on step 1.
+        // A saved operation changes its type here, next to «Дублировать» and «Удалить» (#509, poll «А», board `EntryEdit`):
+        // the amount, account, date and note stay; the category stays only when it fits the new type.
+        if (state.showsEditTypeSwitch) TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f)) else Spacer(Modifier.weight(1f))
         if (state.refund) {
             Text(
                 stringResource(R.string.transaction_refund_label),
@@ -145,6 +147,9 @@ private fun TypeBar(state: TransactionEditUiState, actions: TransactionEditActio
         }
     }
 }
+
+private val TransactionEditUiState.showsEditTypeSwitch: Boolean
+    get() = !isNew && payment == null
 
 private val TransactionEditUiState.showsTypeSwitch: Boolean
     get() = isNew && !isCopy && payment == null && templateName == null && savedTemplateName == null

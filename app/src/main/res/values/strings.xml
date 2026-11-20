@@ -125,6 +125,12 @@
     <string name="account_currency_locked">Валюту не изменить: по счёту есть операции</string>
     <string name="account_type">Тип</string>
     <string name="account_initial_balance">Начальный баланс</string>
+    <string name="account_balance_now">Баланс сейчас</string>
+    <string name="account_balance_adjust_title">Исправить баланс</string>
+    <string name="account_balance_actual">Реальный баланс</string>
+    <string name="account_balance_now_hint">Сейчас: %1$s. Введите, сколько на самом деле.</string>
+    <string name="account_balance_adjust_hint">Корректировка при сохранении: %1$s</string>
+    <string name="account_balance_adjust_pending" translatable="false">%1$s · %2$s</string>
     <string name="account_initial_balance_hint">Сумма до первой операции. Долг — со знаком минус.</string>
     <string name="account_included_in_total">Учитывать в общем балансе</string>
     <string name="account_included_in_total_hint">Выключите для долгов и чужих денег — счёт не войдёт в общий баланс</string>
@@ -330,6 +336,22 @@
     <string name="feedback_result_sent">Спасибо! Сообщение отправлено.</string>
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>
     <string name="feedback_error_too_long">Чуть короче, пожалуйста: до %1$d символов.</string>
+    <string name="feedback_error_too_many_files">Файлов — не больше %1$d. Уберите лишние.</string>
+    <string name="feedback_error_files_too_large">Файлы слишком большие: всего до %1$d МБ.</string>
+    <string name="feedback_kind_receipt">Формат чека</string>
+    <string name="feedback_prompt_receipt">Какой это чек: магазин, бот или банк?</string>
+    <string name="feedback_files">Файлы</string>
+    <string name="feedback_attach">+ Прикрепить</string>
+    <string name="feedback_files_hint">До 3 файлов, всего 3 МБ: PDF, фото QR-кода, скриншот или текст. Файлы увидят только разработчики.</string>
+    <string name="feedback_file_error">Файл не прочитался или больше 10 МБ. Выберите другой.</string>
+    <string name="feedback_receipt_empty_title">Приложите чек</string>
+    <string name="feedback_receipt_empty_text">PDF, фото QR-кода или текст со ссылкой — научим приложение его читать</string>
+    <string name="feedback_receipt_choose">Выбрать</string>
+    <string name="feedback_file_pdf">PDF</string>
+    <string name="feedback_file_image">Картинка</string>
+    <string name="feedback_file_text">Текст</string>
+    <string name="feedback_file_line">%1$s · %2$d КБ</string>
+    <string name="feedback_file_remove">Убрать файл</string>
     <string name="feedback_error_not_configured">В этой сборке отправка не настроена.</string>
     <string name="feedback_error_failed">Не отправилось. Проверьте интернет — текст сохранён.</string>
     <string name="update_title">Обновление</string>
@@ -438,6 +460,7 @@
     <string name="account_shared">Общий счёт</string>
     <string name="account_shared_hint">Выключите для личного счёта — его увидят все, но с пометкой «личный»</string>
     <string name="account_personal_mine">личный</string>
+    <string name="account_selected">Выбран</string>
     <string name="account_personal_of">личный · %1$s</string>
 
     <string name="auto_backup_title">Автоматически раз в неделю</string>
@@ -637,5 +660,4 @@
     <string name="transaction_categories_all_title">Все категории · %1$d</string>
     <string name="transaction_categories_search">Найти категорию</string>
     <string name="transaction_categories_nothing">Ничего не нашлось</string>
-    <string name="transaction_categories_no_folder">Без группы</string>
 </resources>

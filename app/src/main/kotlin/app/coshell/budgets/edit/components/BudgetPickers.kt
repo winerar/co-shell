@@ -26,7 +26,6 @@ internal fun BudgetPickers(picker: BudgetPicker?, state: BudgetEditUiState, acti
             } else {
                 categoryLines(
                     state.choices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color, it.parentId) },
-                    stringResource(R.string.transaction_categories_no_folder),
                     stringResource(R.string.category_kind_folder),
                 )
             },

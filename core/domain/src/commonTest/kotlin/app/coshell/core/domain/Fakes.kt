@@ -11,6 +11,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import app.coshell.core.model.Account
 import app.coshell.core.model.Budget
+import app.coshell.core.model.Money
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -28,8 +29,10 @@ class FakeAccountRepository : AccountRepository {
     val items = MutableStateFlow<Map<String, Account>>(emptyMap())
     override fun observeAccounts(includeArchived: Boolean): Flow<List<Account>> =
         items.map { it.values.filter { a -> includeArchived || !a.archived } }
+    /** Balances by account id; an account without one shows its initial balance. */
+    val balances = MutableStateFlow<Map<String, Money>>(emptyMap())
     override fun observeAccountsWithBalance(includeArchived: Boolean): Flow<List<AccountWithBalance>> =
-        error("not used")
+        observeAccounts(includeArchived).map { list -> list.map { AccountWithBalance(it, balances.value[it.id] ?: it.initialBalance) } }
     override suspend fun getAccount(id: String) = items.value[id]
     override suspend fun saveAccount(account: Account) { items.value += account.id to account }
     override suspend fun deleteAccount(id: String) { items.value -= id }

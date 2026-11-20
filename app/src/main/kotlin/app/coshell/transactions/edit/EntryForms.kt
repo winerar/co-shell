@@ -103,8 +103,8 @@ internal fun TransactionEditUiState.withError(reason: SaveTransactionUseCase.Rea
         copy(receiptCurrencyError = TransactionEditUiState.ReceiptCurrencyError.SAME_AS_ACCOUNT)
 }
 
-internal fun Account.toOption(balance: String) =
-    AccountOption(id, name, currency.value, type, color, balance, Currencies.info(currency).fractionDigits)
+internal fun Account.toOption(balance: String, isNegative: Boolean = false) =
+    AccountOption(id, name, currency.value, type, color, balance, Currencies.info(currency).fractionDigits, isNegative)
 
 private fun fractionDigitsOf(code: String): Int =
     CurrencyCode.parseOrNull(code)?.let { Currencies.info(it).fractionDigits } ?: 2

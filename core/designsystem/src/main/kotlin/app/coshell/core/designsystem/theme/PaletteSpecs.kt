@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 // The colours of each CoShellPalette (1.0 themes, owner's choice 2026-11-16, #354/#385). Generated from
 // scripts/agent/themes_1_0.py — change both together; that script audits every pair in both themes. Schemes: ColorSchemes.kt.
+// warning* — the theme's attention colour (owner's poll 2026-11-20, Б: the hue farthest from the theme's own colours), scripts/agent/alert_colors.py.
 
 // Лайм — неон, кислотный лайм + фиолетовый
 internal val LimeSpec = PaletteSpec(
@@ -17,6 +18,8 @@ internal val LimeSpec = PaletteSpec(
     incomeLight = Color(0xFF016D86),
     expenseDark = Color(0xFFFF4D6D),
     expenseLight = Color(0xFFC60B3D),
+    warningDark = Color(0xFF07B47C),
+    warningLight = Color(0xFF05724D),
     backgroundDark = Color(0xFF050805),
     backgroundLight = Color(0xFFF7FFEA),
 )
@@ -33,6 +36,8 @@ internal val GarnetSpec = PaletteSpec(
     incomeLight = Color(0xFF036797),
     expenseDark = Color(0xFFFF9466),
     expenseLight = Color(0xFFAB3903),
+    warningDark = Color(0xFFBC73F1),
+    warningLight = Color(0xFF8136B1),
     backgroundDark = Color(0xFF12060A),
     backgroundLight = Color(0xFFFFF4F6),
 )
@@ -49,6 +54,8 @@ internal val BananaSpec = PaletteSpec(
     incomeLight = Color(0xFF027235),
     expenseDark = Color(0xFFFF5C7A),
     expenseLight = Color(0xFFC60B3D),
+    warningDark = Color(0xFF04ADC2),
+    warningLight = Color(0xFF076E7C),
     backgroundDark = Color(0xFF0A0903),
     backgroundLight = Color(0xFFFFFBE5),
 )
@@ -65,6 +72,8 @@ internal val MateSpec = PaletteSpec(
     incomeLight = Color(0xFF016D67),
     expenseDark = Color(0xFFFF7088),
     expenseLight = Color(0xFFBE1140),
+    warningDark = Color(0xFF8B99FE),
+    warningLight = Color(0xFF4F53D1),
     backgroundDark = Color(0xFF0B0D08),
     backgroundLight = Color(0xFFF6F8EC),
 )
@@ -81,6 +90,8 @@ internal val EspressoSpec = PaletteSpec(
     incomeLight = Color(0xFF006F47),
     expenseDark = Color(0xFFFF5C8A),
     expenseLight = Color(0xFFC0084C),
+    warningDark = Color(0xFFC576F2),
+    warningLight = Color(0xFF8837B1),
     backgroundDark = Color(0xFF110B08),
     backgroundLight = Color(0xFFFBF6F0),
 )
@@ -97,6 +108,8 @@ internal val KvasSpec = PaletteSpec(
     incomeLight = Color(0xFF3B6E03),
     expenseDark = Color(0xFFFF5C7A),
     expenseLight = Color(0xFFC4063B),
+    warningDark = Color(0xFFAD84FF),
+    warningLight = Color(0xFF7644C5),
     backgroundDark = Color(0xFF0D0904),
     backgroundLight = Color(0xFFFFF8EB),
 )
@@ -113,6 +126,8 @@ internal val SakuraSpec = PaletteSpec(
     incomeLight = Color(0xFF00658A),
     expenseDark = Color(0xFFFF6B5C),
     expenseLight = Color(0xFFC0181A),
+    warningDark = Color(0xFFCD9509),
+    warningLight = Color(0xFF815C04),
     backgroundDark = Color(0xFF120A0E),
     backgroundLight = Color(0xFFFFF5F8),
 )
@@ -129,6 +144,8 @@ internal val CornflowerSpec = PaletteSpec(
     incomeLight = Color(0xFF01712F),
     expenseDark = Color(0xFFFF5C8A),
     expenseLight = Color(0xFFC0084C),
+    warningDark = Color(0xFF02A3B3),
+    warningLight = Color(0xFF026771),
     backgroundDark = Color(0xFF060912),
     backgroundLight = Color(0xFFF4F7FF),
 )
@@ -145,6 +162,8 @@ internal val LotusSpec = PaletteSpec(
     incomeLight = Color(0xFF05697F),
     expenseDark = Color(0xFFFF5C6E),
     expenseLight = Color(0xFFC3013A),
+    warningDark = Color(0xFFE08303),
+    warningLight = Color(0xFF915303),
     backgroundDark = Color(0xFF0E0814),
     backgroundLight = Color(0xFFFBF5FF),
 )

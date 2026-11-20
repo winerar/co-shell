@@ -98,12 +98,6 @@ internal fun lightNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
     )
 }
 
-/** States that Material has no slot for: budget warning (80 %), "no rate". Same in every palette. */
-object StatusColors {
-    val WarningLight = Color(0xFF7A5400)
-    val WarningDark = Color(0xFFFFD43B)
-}
-
 // Fixed errors-container tones; the error itself is the palette's expense colour.
 internal val CoralShadow = Color(0xFF6B0F25)
 internal val CoralPale = Color(0xFFFFD9DF)

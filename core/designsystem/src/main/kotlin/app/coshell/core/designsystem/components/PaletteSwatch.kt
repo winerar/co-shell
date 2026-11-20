@@ -108,7 +108,7 @@ private fun MiniScreen(colors: ThemeColors, shape: androidx.compose.ui.graphics.
         MiniLine(s.secondary, s.outlineVariant)
         MiniLine(colors.amounts.income, s.outlineVariant)
         Spacer(Modifier.weight(1f))
-        Box(Modifier.align(Alignment.End).size(width = BUTTON_W, height = BUTTON_H).background(s.primary, MaterialTheme.shapes.small))
+        Box(Modifier.align(Alignment.End).size(width = BUTTON_W, height = BUTTON_H).background(s.primary, MaterialTheme.shapes.small).fillEdge(s.primary, MaterialTheme.shapes.small, s.background))
     }
 }
 

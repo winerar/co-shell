@@ -64,7 +64,7 @@ fun CoShellNoticePill(
             horizontalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
             Box(
-                Modifier.size(Sizes.badgeSmall).clip(PillShape).background(scheme.primary),
+                Modifier.size(Sizes.badgeSmall).clip(PillShape).background(scheme.primary).fillEdge(scheme.primary, PillShape, scheme.surfaceContainerHigh),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(painterResource(icon), contentDescription = null, tint = scheme.onPrimary, modifier = Modifier.size(Sizes.tileIcon))

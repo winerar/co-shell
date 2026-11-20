@@ -1,5 +1,7 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +40,10 @@ fun CoShellMiniBars(
         shown[0] = true
         grow.animateTo(1f, Motion.spatialSlow())
     }
+    // Data bars that melt into the tile get a hairline of their deep shade; the faint «ahead» stubs stay faint.
+    val surface = MaterialTheme.colorScheme.surface
+    val fullEdge = fillEdge(color.compositeOver(surface), surface)
+    val pastEdge = fillEdge(color.copy(alpha = color.alpha * PAST_ALPHA).compositeOver(surface), surface)
     Canvas(modifier.fillMaxWidth().height(Sizes.miniBarsHeight)) {
         if (fractions.isEmpty()) return@Canvas
         val slot = size.width / fractions.size
@@ -60,6 +66,8 @@ fun CoShellMiniBars(
                 size = Size(barWidth, height),
                 cornerRadius = radius,
             )
+            val edge = when (alpha) { 1f -> fullEdge; PAST_ALPHA -> pastEdge; else -> null }
+            drawFillEdge(edge, Offset(index * slot + (slot - barWidth) / 2, size.height - height), Size(barWidth, height), radius.x)
         }
     }
 }

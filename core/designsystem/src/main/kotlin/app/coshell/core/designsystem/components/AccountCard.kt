@@ -46,6 +46,7 @@ fun CoShellAccountCard(
             .fillMaxWidth()
             .alpha(alpha)
             .background(fill, MaterialTheme.shapes.large)
+            .fillEdge(fill, MaterialTheme.shapes.large, MaterialTheme.colorScheme.background)
             .padding(horizontal = Spacing.l, vertical = Spacing.m),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {

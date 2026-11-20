@@ -21,7 +21,7 @@ import app.coshell.core.designsystem.tokens.Sizes
  */
 @Composable
 fun CoShellAvatar(name: String, color: Color, modifier: Modifier = Modifier, size: Dp = Sizes.badgeSmall) {
-    Box(modifier.size(size).background(color, CircleShape), contentAlignment = Alignment.Center) {
+    Box(modifier.size(size).background(color, CircleShape).fillEdge(color, CircleShape), contentAlignment = Alignment.Center) {
         Text(name.take(1).uppercase(), color = inkOn(color), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
     }
 }

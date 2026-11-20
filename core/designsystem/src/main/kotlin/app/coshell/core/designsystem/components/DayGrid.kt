@@ -61,7 +61,8 @@ fun CoShellDayGrid(selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = 
                                         .align(Alignment.BottomCenter)
                                         .padding(bottom = Spacing.xs)
                                         .size(Sizes.dayMark)
-                                        .background(colors.tertiary, CircleShape),
+                                        .background(colors.tertiary, CircleShape)
+                                        .fillEdge(colors.tertiary, CircleShape),
                                 )
                             }
                         }

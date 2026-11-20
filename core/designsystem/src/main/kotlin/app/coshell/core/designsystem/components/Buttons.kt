@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.category.readableInk
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
@@ -84,7 +85,7 @@ fun coShellButtonColors(): ButtonColors {
 /** Colours of [CoShellButton] in a status colour (a warning card's «Обновить», #334): [container] fill, [content] ink. */
 @Composable
 fun coShellButtonColors(container: Color, content: Color): ButtonColors =
-    ButtonDefaults.buttonColors(containerColor = container, contentColor = content)
+    ButtonDefaults.buttonColors(containerColor = container, contentColor = readableInk(container, content))
 
 @Composable
 private fun tonalButtonColors(): ButtonColors {

@@ -8,11 +8,11 @@ data class NoteEntry(val kind: NoteKind, val text: String)
 
 /**
  * Points of [notes] (see [noteItems]) with their kinds. A point that starts with «Исправлено:» (or «Исправлен:», «Fixed:»,
- * «Corregido:») is [NoteKind.Fixed], the prefix is cut; every other point is [NoteKind.New] — old notes need no changes.
+ * «Corregido:») is [NoteKind.Fixed], the prefix is cut and the rest starts with a capital (it sits next to the label); every other point is [NoteKind.New] — old notes need no changes.
  */
 fun noteEntries(notes: String): List<NoteEntry> = noteItems(notes).map { item ->
     val prefix = FIXED_PREFIXES.firstOrNull { item.startsWith(it, ignoreCase = true) }
-    if (prefix == null) NoteEntry(NoteKind.New, item) else NoteEntry(NoteKind.Fixed, item.substring(prefix.length).trim().ifEmpty { item })
+    if (prefix == null) NoteEntry(NoteKind.New, item) else NoteEntry(NoteKind.Fixed, item.substring(prefix.length).trim().ifEmpty { item }.replaceFirstChar { it.uppercase() })
 }
 
 private val FIXED_PREFIXES = listOf("Исправлено:", "Исправлен:", "Fixed:", "Corregido:")

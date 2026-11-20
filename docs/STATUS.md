@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-6c7a9fc8-r1zy95`: карточки — только `CardTone` (#547, влит); цвет внимания — свой у каждой темы (опрос «Цвет внимания», Б: `PaletteSpec.warningDark/Light`); Revolut оставлен как есть (текст 4,45 — исключение в `AccountCardContrastTest`, решение владельца).
+2026-11-20, `ccr-9738b249-u9ivmz`: окно «Обновлено до N» — длинный «Что нового» прокручивается, «Понятно» больше не сжимается в полоску; то же в `CoShellConfirmCard` (все вопросы); пункт после «Исправлено:» — с заглавной; стресс-тесты `UpdatedCardStressScreenshotTest`, `ConfirmCardOverflowTest`.

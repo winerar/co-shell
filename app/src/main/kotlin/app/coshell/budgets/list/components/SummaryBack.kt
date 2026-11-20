@@ -22,7 +22,9 @@ import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
+import app.coshell.core.designsystem.components.FlipCueClearance
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.model.MoneyFormat
 
 /**
  * The back of the month card (#519, poll 2026-11-19, variant А «Куда смотреть»): what can be spent per day until the month ends
@@ -32,13 +34,25 @@ import app.coshell.core.designsystem.tokens.Spacing
 internal fun ColumnScope.SummaryBack(summary: BudgetsUiState.Summary, closest: List<BudgetsUiState.Envelope>) {
     val hero = LocalHeroPalette.current
     summary.perDay?.let { perDay ->
-        Text(stringResource(R.string.budgets_back_per_day_title), style = MaterialTheme.typography.labelLarge, color = hero.hint)
-        AmountText("≈ " + perDay, AmountTitleStyle, color = hero.amount, minFontSize = 16.sp)
+        // The top line keeps clear of the flip «↻» in the corner.
+        Text(
+            stringResource(R.string.budgets_back_per_day_title),
+            style = MaterialTheme.typography.labelLarge,
+            color = hero.hint,
+            modifier = Modifier.padding(end = FlipCueClearance),
+        )
+        // «≈» never wraps away from the amount (#431).
+        AmountText("≈" + MoneyFormat.NBSP + perDay, AmountTitleStyle, color = hero.amount, minFontSize = 16.sp)
         Text(stringResource(R.string.budgets_back_per_day_hint), style = MaterialTheme.typography.bodySmall, color = hero.hint)
     }
     if (closest.isEmpty()) return
     if (summary.perDay != null) CoShellDivider(Modifier.padding(vertical = Spacing.m))
-    Text(stringResource(R.string.budgets_back_closest), style = MaterialTheme.typography.bodySmall, color = hero.hint)
+    Text(
+        stringResource(R.string.budgets_back_closest),
+        style = MaterialTheme.typography.bodySmall,
+        color = hero.hint,
+        modifier = if (summary.perDay == null) Modifier.padding(end = FlipCueClearance) else Modifier,
+    )
     Column(Modifier.padding(top = Spacing.xs), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         closest.forEach { Closest(it) }
     }

@@ -71,7 +71,7 @@ class FilterChoicesTest {
 
         val one = FilterTotal(3, listOf(m(-84_300, ars)), CurrencyConverter.Total(m(-82, usd), emptySet())).toUi(f)
         assertEquals(f.format(m(-84_300, ars)), one.amount)
-        assertEquals("≈ " + f.format(m(-82, usd)), one.detail)
+        assertEquals("≈" + MoneyFormat.NBSP + f.format(m(-82, usd)), one.detail)
         assertEquals(Kind.EXPENSE, one.tone)
 
         val sameAsMain = FilterTotal(1, listOf(m(5, usd)), CurrencyConverter.Total(m(5, usd), emptySet())).toUi(f)
@@ -80,7 +80,7 @@ class FilterChoicesTest {
         assertEquals(Kind.INCOME, sameAsMain.tone)
 
         val several = FilterTotal(5, listOf(m(-1000, ars), m(-500, amd)), CurrencyConverter.Total(m(-1, usd), setOf(amd))).toUi(f)
-        assertEquals("≈ " + f.format(m(-1, usd)), several.amount)
+        assertEquals("≈" + MoneyFormat.NBSP + f.format(m(-1, usd)), several.amount)
         assertEquals(f.format(m(-1000, ars)) + "\n" + f.format(m(-500, amd)), several.detail)
         assertEquals("AMD", several.noRate)
 

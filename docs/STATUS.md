@@ -59,7 +59,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1703 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1704 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-962a3fe2-rfwk2r`: влиты #533 (вкл. #528, #525), #539, #514 одним PR; «↻» на героях не налезает на верхнюю строку (`FlipCueClearance`, доска `Flip519Bud*`); «≈» склеен с суммой (фильтр «Операций», «Капитал», оборот «Бюджетов»); релиз. #509 (смена типа сохранённой операции) и итог выражения на клавиатуре (#508) — ждут доски и «ок».
+2026-11-20, `ccr-29af521d-lgutau`: вопрос владельца «карточки вместо списка в Настройках» — доски `SetCardsA/B/C/C2` + стресс es (ряд 1120 на «Предложениях», `mockup_screens_fb_setcards.py`), опрос https://claude.ai/artifact/7j1q38nm8MXfT2NxwZ69dL (`poll-settings-cards.json`): владелец выбрал **В** — карточки-группы (`settings-customization.md`). Код не менялся — следующий шаг.

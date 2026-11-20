@@ -55,6 +55,7 @@ QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается пр
 `home/components/MonthReviewCard` (считает `HomeBudgetViewModel` → `buildHomeReview`, только когда пора); Room — `ReportDao`, `RoomReportRepository`.
 Вкладка (#140, доски `RepA`/`RepAll`/`RepPeriod`) — `reports/`: `ReportsViewModel` (дни за `loadRange`), `ReportsBoard` (чистая сборка),
 `components/` (`PeriodSwitch`, `SpendingCard`, `MonthsCard`, `ReportPeriodSheet`), `all/` — «Все категории» на ViewModel вкладки;
+#568 (`RepPast`, `RepScrolled`): столбики месяца/квартала — до текущего месяца (`ReportPeriod.columnMonths(today)`, выбранный — `selectedColumn`); строка периода ушла под шапку → «‹ Отчёты / период · валюта ›» в `TabTopBar` (`navigation`, `onTitleClick`); свайпа нет.
 `category/` — «Из чего сложилось» (#188, `RepDrill`): тап по полосе/строке → `ReportCategoryDestination` (период, валюта, сравнение в маршруте),
 своя ViewModel (дни + операции категории за период), доля и подкатегории — `core:domain/reports/categoryDrill`.
 Тренд на экранах (#238, `Tr238DrillA`/`Tr238MarkA`): пилюля «↑ 45%» — `CoShellChangePill` (ds `charts/`, слот `badge` у `CoShellBarRow`),

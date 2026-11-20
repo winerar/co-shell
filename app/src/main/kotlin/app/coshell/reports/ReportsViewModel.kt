@@ -83,7 +83,7 @@ class ReportsViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
-        val (from, to) = s.period.loadRange(s.startDay)
+        val (from, to) = s.period.loadRange(s.startDay, today)
         combine(
             reports.observeDays(from, to),
             categories.observeCategories(includeArchived = true),

@@ -3,6 +3,7 @@ package app.coshell.core.domain.reports
 import app.coshell.core.domain.budgets.BudgetPeriod
 import app.coshell.core.domain.budgets.DEFAULT_MONTH_START_DAY
 import app.coshell.core.domain.budgets.budgetPeriod
+import app.coshell.core.domain.budgets.budgetPeriodOf
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -71,16 +72,30 @@ data class ReportPeriod(
     }
 
     /**
-     * The months of «По месяцам»: six months up to a month (or a quarter — two quarters side by side), the twelve
+     * The months of «По месяцам»: six months for a month (or a quarter — two quarters side by side), the twelve
      * months of a year, the months a custom period touches (at most the last twelve). Oldest first.
+     * With [today] (#568, poll «А») the six months run up to the current month while the period fits in them, so the
+     * months after a past one stay on screen and can be tapped; an older period comes first, its next months after it.
      */
-    fun columnMonths(startDay: Int = DEFAULT_MONTH_START_DAY): List<BudgetPeriod> {
+    fun columnMonths(startDay: Int = DEFAULT_MONTH_START_DAY, today: LocalDate? = null): List<BudgetPeriod> {
         val count = when (kind) {
             ReportPeriodKind.MONTH, ReportPeriodKind.QUARTER -> RECENT_MONTHS
             ReportPeriodKind.YEAR -> MONTHS_IN_YEAR
             ReportPeriodKind.CUSTOM -> monthsBetween(firstMonth, lastMonth).coerceIn(1, MONTHS_IN_YEAR)
         }
-        return reportMonths(lastMonth, count, startDay)
+        val recent = kind == ReportPeriodKind.MONTH || kind == ReportPeriodKind.QUARTER
+        val last = if (recent && today != null) windowEnd(budgetPeriodOf(today, startDay).month, count) else lastMonth
+        return reportMonths(last, count, startDay)
+    }
+
+    /** The last column: [current], but never before [lastMonth] and never so late that [firstMonth] drops out. */
+    private fun windowEnd(current: YearMonth, count: Int): YearMonth {
+        val latest = firstMonth.shiftMonths(count - 1)
+        return when {
+            current < lastMonth -> lastMonth
+            current > latest -> latest
+            else -> current
+        }
     }
 
     companion object {

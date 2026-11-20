@@ -60,17 +60,10 @@ def accounts():
 # ---- «Ещё» -------------------------------------------------------------------------------------------------------
 
 def more_body():
-    """«Ещё» as in the app (#464, choice Б): the version card, then three groups of rows — Деньги, Семья и данные, Приложение."""
-    def r(title, sub, icon, c, bg):
-        return row(title, sub, tile_icon(icon, c, bg), chevron())
-    ver = group([row('Co-Shell', 'Версия 0.37 · сборка 400', tile_icon('download', LIME, LIMEBG), chevron())])
-    money = group([r('Счета', 'Карты, наличные, вклады', 'wallet', PINK, PINKBG), r('Категории', 'Подкатегории, иконки и цвета', 'folder', LIME, LIMEBG),
-                   r('Бюджеты', 'Лимиты на месяц, план и факт', 'wallet', PINK, PINKBG), r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN, CYANBG),
-                   r('Курсы валют', 'Обновляются сами раз в день', 'rate', CYAN, CYANBG), r('Конвертер', 'Сколько это в других валютах', 'transfer', LIME, LIMEBG), r('Валюты итогов', 'Основная: USD', 'rate', VIOLET, VIOLETBG)])
-    data = group([r('Семья', 'Общий бюджет с близкими', 'user', LIME, LIMEBG), r('Резервная копия', 'Сохранить или восстановить данные', 'download', YELLOW, YELLOWBG),
-                  r('Импорт из Wallet', 'Перенести операции из выгрузки CSV', 'download', CYAN, CYANBG)])
-    app = group([r('Внешний вид', 'Лайм · тёмная', 'spark', VIOLET, VIOLETBG), r('Обратная связь', 'Ошибка или идея', 'mail', PINK, PINKBG)])
-    return ver + label('Деньги', top=14) + money + label('Семья и данные', top=14) + data + label('Приложение', top=14) + app
+    """«Ещё» as in the app (poll 2026-11-20, Б): four groups — Деньги, Валюты, Семья и данные, Приложение; the version — a quiet
+    line at the bottom (a card on top only while an update is out, board MoreBUpdate). Same rows — `mockup_screens_fb_menu.py`."""
+    import mockup_screens_fb_menu as menu
+    return menu.new_top() + menu.new_rest()
 
 
 def more():

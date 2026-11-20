@@ -15,13 +15,13 @@ import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
-import app.coshell.core.designsystem.components.CoShellSwitch
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.more.components.QuietVersion
 import app.coshell.more.components.VersionCard
 import app.coshell.more.components.moreSections
 import app.coshell.newmark.NewFeatures
@@ -30,8 +30,9 @@ import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
-// Menu tab (board 154А, #155): the version card on top, then the rarely used sections as rows in three groups
-// (Деньги · Семья и данные · Приложение). The former «Настройки» screen is gone: its items live in the groups.
+// Menu tab (poll 2026-11-20, Б; boards MoreB, MoreBEnd, MoreBUpdate): rarely used sections as rows in four groups
+// (Деньги · Валюты · Семья и данные · Приложение); the version card goes on top only when an update is out, otherwise a quiet
+// line at the bottom. The former «Настройки» screen is gone: its items live in the groups.
 
 /** What the rows say about their sections; defaults make previews short. */
 data class MoreState(
@@ -39,15 +40,8 @@ data class MoreState(
     val build: Int = 0,
     /** Version name of a newer release («0.38»), or null when up to date (unknown counts as up to date). */
     val availableVersion: String? = null,
-    val mainCurrency: String? = null,
-    /** «Вольт · тёмная» under «Внешний вид». */
-    val appearance: String? = null,
-    /** «PIN включён» / «PIN, отпечаток, скрытие сумм» under «Конфиденциальность». */
-    val privacy: String? = null,
     /** Keys of the rows that wear the «новое» pill (#335, `NewFeatures`). */
     val newMarks: Set<String> = emptySet(),
-    /** «Подсказки» (#513). */
-    val hintsEnabled: Boolean = true,
 )
 
 data class MoreActions(
@@ -58,17 +52,14 @@ data class MoreActions(
     val onRecurring: () -> Unit = {},
     val onRates: () -> Unit = {},
     val onConverter: () -> Unit = {},
-    val onReportCurrencies: () -> Unit = {},
     val onFamily: () -> Unit = {},
     val onBackup: () -> Unit = {},
     val onImport: () -> Unit = {},
-    val onAppearance: () -> Unit = {},
+    val onExport: () -> Unit = {},
+    val onSettings: () -> Unit = {},
     /** «Конфиденциальность» (#145). */
     val onPrivacy: () -> Unit = {},
     val onFeedback: () -> Unit = {},
-    val onHintsToggle: (Boolean) -> Unit = {},
-    /** «Показать подсказки заново». */
-    val onHintsReset: () -> Unit = {},
     /** Tap on the version card: the update screen. */
     val onOpenUpdate: () -> Unit = {},
     /** «Обновить» on the card: the download starts right away and the update screen opens. */
@@ -84,20 +75,22 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
-        val sections = moreSections(state, actions)
+        val sections = moreSections(actions)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
         ) {
-            item(key = "version") {
-                VersionCard(
-                    versionName = state.versionName,
-                    build = state.build,
-                    availableVersion = state.availableVersion,
-                    onOpen = actions.onOpenUpdate,
-                    onUpdate = actions.onStartUpdate,
-                    modifier = Modifier.padding(horizontal = Spacing.l).staggeredEntrance(0),
-                )
+            if (state.availableVersion != null) {
+                item(key = "version") {
+                    VersionCard(
+                        versionName = state.versionName,
+                        build = state.build,
+                        availableVersion = state.availableVersion,
+                        onOpen = actions.onOpenUpdate,
+                        onUpdate = actions.onStartUpdate,
+                        modifier = Modifier.padding(horizontal = Spacing.l).staggeredEntrance(0),
+                    )
+                }
             }
             itemsIndexed(sections, key = { _, section -> section.title }) { index, section ->
                 SectionTitle(stringResource(section.title))
@@ -114,7 +107,6 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                                     if (isNew) actions.onOpenedNew(item.newKey!!)
                                     item.onClick()
                                 },
-                                trailing = item.toggle?.let { on -> { CoShellSwitch(checked = on, onCheckedChange = null) } },
                                 mark = if (isNew) {
                                     { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
                                 } else {
@@ -125,6 +117,9 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                     }
                 }
             }
+            if (state.availableVersion == null) {
+                item(key = "version") { QuietVersion(state.versionName, state.build, actions.onOpenUpdate) }
+            }
         }
     }
 }
@@ -132,11 +127,11 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenPreview() {
-    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · системная", newMarks = setOf(NewFeatures.RECURRING))) }
+    CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400, newMarks = setOf(NewFeatures.RECURRING))) }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun MoreScreenUpdatePreview() {
-    CoShellTheme(darkTheme = true) { MoreScreen(MoreActions(), MoreState("0.37", 400, availableVersion = "0.38", mainCurrency = "ARS")) }
+    CoShellTheme(darkTheme = true) { MoreScreen(MoreActions(), MoreState("0.37", 400, availableVersion = "0.38")) }
 }

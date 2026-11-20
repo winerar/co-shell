@@ -361,7 +361,7 @@ class ScreensScreenshotTest {
 
     private companion object {
         const val SETTLE_MS = 3_000L
-        val moreSample = MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · тёмная")
+        val moreSample = MoreState("0.37", 400)
         private val me = Member("u1", "Михаил", "m@example.com")
         val familySample = FamilyUiState(
             family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),

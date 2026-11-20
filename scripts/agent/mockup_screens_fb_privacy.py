@@ -179,14 +179,9 @@ def settings_off():
 
 
 def more_row():
-    """Where it lives: «Ещё» → group «Приложение» → «Конфиденциальность» (between «Внешний вид» and «Обратная связь»), scrolled down."""
-    def r(title, sub, icon, c, bg):
-        return row(title, sub, tile_icon(icon, c, bg), chevron())
-    data = group([r('Семья', 'Общий бюджет с близкими', 'user', LIME, LIMEBG), r('Резервная копия', 'Сохранить или восстановить данные', 'download', YELLOW, YELLOWBG),
-                  r('Импорт из Wallet', 'Перенести операции из выгрузки CSV', 'download', CYAN, CYANBG)])
-    app = group([r('Внешний вид', 'Лайм · тёмная', 'spark', VIOLET, VIOLETBG), r('Конфиденциальность', 'PIN, отпечаток, скрытие сумм', SHIELD, CYAN, CYANBG),
-                 r('Обратная связь', 'Ошибка или идея', 'mail', PINK, PINKBG)])
-    return tab_screen('Ещё', label('Семья и данные', top=14) + data + label('Приложение', top=14) + app, 'more', sub='Приложение')
+    """Where it lives: «Ещё» → «Приложение» → «Конфиденциальность» (the «Ещё» of poll 2026-11-20 «Б», scrolled down)."""
+    import mockup_screens_fb_menu as menu
+    return tab_screen('Ещё', menu.new_rest(), 'more', sub='Приложение')
 
 
 def recents():

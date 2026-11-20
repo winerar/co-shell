@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import app.coshell.hints.HintsViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,6 +43,9 @@ data class SettingsActions(
     val onHaptics: (Boolean) -> Unit = {},
     val onReminders: (Boolean) -> Unit = {},
     val onWifiOnly: (Boolean) -> Unit = {},
+    /** «Подсказки» on/off and «Показать подсказки заново» (moved here from «Ещё», poll 2026-11-20, Б). */
+    val onHints: (Boolean) -> Unit = {},
+    val onHintsReset: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */
@@ -55,6 +59,7 @@ data class SettingsState(
     val currencies: String = "",
     val weekStart: WeekStart = WeekStart.SYSTEM,
     val wifiOnly: Boolean = false,
+    val hints: Boolean = true,
 )
 
 @Composable
@@ -65,7 +70,9 @@ fun SettingsRoute(
     reminders: ReminderSettingsViewModel = hiltViewModel(),
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
+    hints: HintsViewModel = hiltViewModel(),
 ) {
+    val hintsOn by hints.enabled.collectAsStateWithLifecycle()
     val mode by theme.mode.collectAsStateWithLifecycle()
     val palette by theme.palette.collectAsStateWithLifecycle()
     val shakeOn by shake.enabled.collectAsStateWithLifecycle()
@@ -79,7 +86,7 @@ fun SettingsRoute(
     SettingsScreen(
         SettingsState(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
-            options.weekStart, options.syncWifiOnly,
+            options.weekStart, options.syncWifiOnly, hintsOn,
         ),
         actions.copy(
             onThemeMode = { m -> if (m != mode) reveal.change { theme.setMode(m) } },
@@ -87,6 +94,8 @@ fun SettingsRoute(
             onHaptics = { v -> screens.change { it.copy(haptics = v) } },
             onReminders = reminders::setEnabled,
             onWifiOnly = { v -> screens.change(after = { SyncScheduler.schedulePeriodic(context) }) { it.copy(syncWifiOnly = v) } },
+            onHints = hints::setEnabled,
+            onHintsReset = hints::reset,
         ),
     )
 }
@@ -106,6 +115,7 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
             item(key = "money") { MoneyCard(state, actions) }
             item(key = "screens") { ScreensCard(actions) }
             item(key = "data") { DataCard(state, actions) }
+            item(key = "help") { HelpCard(state, actions) }
         }
     }
 }

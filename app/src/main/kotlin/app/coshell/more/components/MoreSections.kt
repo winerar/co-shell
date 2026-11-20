@@ -26,16 +26,14 @@ internal data class MoreItem(
     val subtitle: String?,
     val onClick: () -> Unit,
     val newKey: String? = null,
-    /** Non-null: the row ends with a switch in this state instead of a chevron (hints, #513). */
-    val toggle: Boolean? = null,
 )
 
 /**
- * The three groups of board 154А: money (what is counted and how), family and data (who shares it, where it is
- * kept), the app itself. Colours come from the category palette, one per row, as on the old bento tiles.
+ * The four groups of «Ещё» (poll 2026-11-20, Б; boards MoreB, MoreBEnd): money, currencies, family and data (who shares
+ * it, where it is kept, files in and out), the app itself. Colours come from the category palette, one per row, as on the old bento tiles.
  */
 @Composable
-internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSection> {
+internal fun moreSections(actions: MoreActions): List<MoreSection> {
     val c = CategoryPalette.colors
     return listOf(
         MoreSection(
@@ -45,15 +43,13 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[8], stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[20], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
                 MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[14], stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
+            ),
+        ),
+        MoreSection(
+            R.string.more_section_rates,
+            listOf(
                 MoreItem(DesignR.drawable.ic_currency_exchange, R.string.rates_title, c[13], stringResource(R.string.rates_menu_hint), actions.onRates),
                 MoreItem(DesignR.drawable.ic_sync_alt, R.string.converter_title, c[4], stringResource(R.string.converter_hint), actions.onConverter),
-                MoreItem(
-                    DesignR.drawable.ic_payments,
-                    R.string.report_currencies_title,
-                    c[17],
-                    state.mainCurrency?.let { stringResource(R.string.report_currencies_menu_hint, it) },
-                    actions.onReportCurrencies,
-                ),
             ),
         ),
         MoreSection(
@@ -62,22 +58,14 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
                 MoreItem(DesignR.drawable.ic_group, R.string.family_title, c[10], stringResource(R.string.family_menu_hint), actions.onFamily),
                 MoreItem(DesignR.drawable.ic_settings_backup_restore, R.string.backup_title, c[5], stringResource(R.string.backup_menu_hint), actions.onBackup),
                 MoreItem(DesignR.drawable.ic_download, R.string.import_title, c[ImportColors.MENU], stringResource(R.string.import_menu_hint), actions.onImport),
+                MoreItem(DesignR.drawable.ic_upload, R.string.export_title, c[18], stringResource(R.string.more_export_hint), actions.onExport),
             ),
         ),
         MoreSection(
             R.string.more_section_app,
             listOf(
-                MoreItem(DesignR.drawable.ic_contrast, R.string.settings_title, c[18], state.appearance, actions.onAppearance),
-                MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, c[12], state.privacy ?: stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
-                MoreItem(
-                    DesignR.drawable.ic_lightbulb,
-                    R.string.hints_title,
-                    c[13],
-                    stringResource(if (state.hintsEnabled) R.string.hints_on else R.string.hints_off),
-                    { actions.onHintsToggle(!state.hintsEnabled) },
-                    toggle = state.hintsEnabled,
-                ),
-                MoreItem(DesignR.drawable.ic_refresh, R.string.hints_reset_title, c[16], stringResource(R.string.hints_reset_hint), actions.onHintsReset),
+                MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, c[16], stringResource(R.string.settings_menu_hint), actions.onSettings),
+                MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, c[12], stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[1], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
             ),
         ),

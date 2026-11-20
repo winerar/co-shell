@@ -159,4 +159,6 @@
     <string name="settings_palette">Палитра</string>
     <string name="settings_screens_row">Обзор, операции, отчёты, счета</string>
     <string name="settings_screens_row_hint">что показывать и в каком порядке</string>
+    <string name="settings_menu_hint">Тема, ввод, уведомления, экраны</string>
+    <string name="settings_help_title">Помощь</string>
 </resources>

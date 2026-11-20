@@ -3,23 +3,29 @@
 Выделено из `project-structure.md` (правила структуры — там). По абзацу на фичу: модель, логика, Room, экраны.
 Добавил фичу или переложил файлы — обнови абзац.
 
-Порядок списков (#338): по умолчанию алфавит — `core:model/NameOrder.kt` (`ACCOUNT_ORDER`, `nameOrder`) и `CATEGORY_ORDER`
-(`CategoryTree.kt`); счета и категории сортирует `RoomAccountRepository`/`RoomCategoryRepository`, группы — `AccountGroupsBuilder`.
+Порядок списков (#338): по умолчанию алфавит (`ACCOUNT_ORDER`, `CATEGORY_ORDER`); после первого перетаскивания — `sortOrder`
+(`MANUAL_*_ORDER`, `accountOrder`/`categoryOrder(manual)`). Флаг — настройка семьи `accounts_order`/`categories_order` = `manual`
+(`ManualOrderSettings`, `RoomFamilySettings`); сортируют `RoomAccountRepository`/`RoomCategoryRepository`, `buildCategoryTree` порядок списка не меняет.
 
 `shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
 распознавание толчков — `core:domain/shake/ShakeDetector`.
-Мелкие удобства (#317, пока только расчёты — экраны ждут опроса): «экраном вниз» — `core:domain/shake/FaceDownDetector` (#324),
+Мелкие удобства (#317, пока только расчёты — экраны ждут опроса): «экраном вниз» — `core:domain/shake/FaceDownDetector` (#324, подключён в `privacy/`),
 встряхнуть после сохранения — `shake/ShakeIntent` (#325); сумма в других валютах — `rates/AmountInCurrencies` (#318), конвертер — пакет `converter/` (#319, ниже);
 QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается приложением (`intent-filter` в манифесте, `receipt/ReceiptLinks` → `CoShellNavHost` → `TransactionEditDestination(receiptQr)`);
 шторка заполняется в `TransactionEditViewModel.applyReceipt` (`transactions/edit/ReceiptEntry.kt`: `withReceipt`, `ScanUi`), строка «Из QR чека» и окно «Этот чек уже записан» — `components/ScanBits.kt`,
 ключ чека — `Transaction.receiptKey`. Камера: `receipt/scan/` (`ReceiptScanRoute` — разрешение при первом открытии, `ReceiptScanScreen`, `CameraPreview` на CameraX, `QrAnalyzer` на ZXing (ML Kit давал APK 15,8 МБ); рамка — `CoShellScanFrame`); значок камеры в `TypeBar` шторки и встряхивание открывают `ReceiptScanDestination`, чек → шторка с суммой, «Ввести вручную» → пустая шторка. «Поделиться» — следом (#526).
 `core:domain/quickentry/`: `AfipReceiptQr` — QR аргентинского чека → сумма, дата, ключ чека, `ReceiptPrefills` — куда они ложатся в шторке (#526; экраны — этап 1–2, опрос `docs/design/poll-qr-526.json`, макеты — `scripts/agent/mockup_poll_qr526.py`), `AmountInText` — сумма из текста «Поделиться»/буфера (#320, #321), `Tips` + `TipSettings` — чаевые с другого счёта (#322; экран — `transactions/edit/tip/` + `components/TipSheet.kt`: «＋ Чаевые» в блоке суммы, две операции, счёт и категория запоминаются в `PrefsTipSettings`),
 `EntryDraft` — черновик шторки (#323); уведомления о тратах партнёра — `family/PartnerSpendAlerts` (#326).
+`privacy/` — конфиденциальность (#145): `PrivacyCenter` (заблокировано ли, скрыты ли суммы; `MainActivity` сообщает уход/возврат), `PrivacyHost`
+(обёртка всего приложения: ждёт настройки, `LocalAmountsHidden`, флаги окна, «экраном вниз», экран блокировки поверх), `EyeButton` (шапка «Обзора»),
+`HiddenPill`; `pin/` — `PinFlow` (шаги любого экрана PIN), `PinLayout`, `PinSetupRoute`; `lock/` — `LockScreen`, `Biometrics` (`androidx.biometric`);
+`settings/` — «Ещё → Конфиденциальность»; `data/` — `PrefsPrivacySettings` (файл `privacy`, не синк и не копия), `Pbkdf2PinHasher`.
+Чистая логика — `core:domain/privacy/` (`AppLock`, `PinAttempts`, `PinEntry`, `PrivacyOptions`); маскировка сумм — `core:designsystem/amount/HiddenAmounts.kt`.
 `greeting/` — одноразовое поздравление версии 1.0 (уведомление `GreetingNotifier` + пилюля `GreetingPill` на «Обзоре», доска `HomeGreeting`): правило «кому и когда» — `core:domain/greeting/ReleaseGreeting` (участник, не владелец семьи; версия ≥ 1.0), флаги «показано» — `GreetingStore`; после релиза пакет можно удалить.
-`theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`, `AppearanceSummary`,
+`theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
-`settings/` — «Ещё → Настройки»: корень из групп (`SettingsScreen`), «Экраны» (`ScreensSettings.kt`, `HomeSettings.kt` — карточки «Обзора»), «Деньги и даты», «Ввод операции» (встряхнуть, вибрация), «Уведомления» (напоминания и время), «Данные и копия» (`SettingsGroups.kt`); экспорт CSV — `export/`; уведомление о трате партнёра — `family/sync/PartnerSpendNotifier`; параметры экранов — `ScreenOptions` (`core:domain/settings`, `PrefsScreenOptions`, `LocalScreenOptions`), плотность — `LocalCompactLists`; доски `Set1*`, план — `docs/design/settings-customization.md`); `appearance/` — «Настройки → Внешний вид» (язык, тема, палитра); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё»: карточка версии
+`settings/` — «Ещё → Настройки»: карточки групп с главными настройками внутри и «Все ›» (`SettingsScreen`, `SettingsCards.kt`, опрос 2026-11-20 В), «Экраны» (`ScreensSettings.kt`, `HomeSettings.kt` — карточки «Обзора»), «Деньги и даты», «Ввод операции» (встряхнуть, вибрация), «Уведомления» (напоминания и время), «Данные и копия» (`SettingsGroups.kt`), «Помощь» — подсказки (`HelpCard`); экспорт CSV — `export/`; уведомление о трате партнёра — `family/sync/PartnerSpendNotifier`; параметры экранов — `ScreenOptions` (`core:domain/settings`, `PrefsScreenOptions`, `LocalScreenOptions`), плотность — `LocalCompactLists`; доски `Set1*`, план — `docs/design/settings-customization.md`); `appearance/` — «Настройки → Внешний вид» (язык, тема, палитра); `language/` — язык приложения (`AppLanguage`, шторка `LanguageSheet`, #352); `more/` — «Ещё» (четыре группы, опрос 2026-11-20 Б; `QuietVersion` внизу): карточка версии (только при обновлении)
 (`components/VersionCard`) и группы строк (`components/MoreSections`), данные строк — `navigation/MoreRoute`.
 Метка «новое» (#335): ключи мест — `newmark/NewFeatures` (новое место → ключ + `MoreItem.newKey`), правило 7 дней / до открытия —
 `core:domain/newmark/NewMarks`, хранение на телефоне — `newmark/PrefsNewMarkStore`, `di/NewMarkModule` (обновление или чистая установка).
@@ -109,4 +115,6 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 (черновик выбора — `WalletImportDraft`, шаги — `components/*Step.kt`), копия перед импортом — `importer/PreImportBackup`.
 Несовместимая версия у второго участника (#334): `core:data/sync/VersionGate.kt` (`peer_schema` пишет `SyncEngine` при pull), замок ввода — `app/.../gate/` (`InputLock` + `LocalInputLock.guard`, окно — `InputLockNote.kt`), плашка — `home/components/VersionGateBanner`, «+» с замком — `CoShellBottomBar(addLocked)`; провод — `CoShellNavHost` → `MainShell`.
 Экспорт CSV (#204, экран — после «ок»): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
-Ручной порядок (#338, экран — после «ок»): `core:domain/Reorder` — новые `sortOrder` при перетаскивании (меняется одна строка, шаг 1024).
+Ручной порядок (#338, доски `Fb338Acc`/`Fb338Cat`): `core:domain/Reorder` (номера, шаг 1024) + `order/ManualOrder` (первое перетаскивание
+нумерует весь список как на экране, вложение и вынос категории) + `ReorderUseCase`; режим «Порядок» — ⇅ в шапке «Счетов» и «Категорий»
+(`accounts/list/components/AccountsOrder`, `categories/list/components/CategoriesOrder` + `CategoryOrderRows`), каркас — `ui/order/OrderScreen`.

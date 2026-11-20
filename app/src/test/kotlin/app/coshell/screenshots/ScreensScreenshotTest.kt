@@ -31,6 +31,7 @@ import app.coshell.settings.InputSettingsScreen
 import app.coshell.settings.MoneySettingsScreen
 import app.coshell.settings.NoticeSettingsScreen
 import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsPreviewState
 import app.coshell.settings.SettingsScreen
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
@@ -360,7 +361,7 @@ class ScreensScreenshotTest {
 
     private companion object {
         const val SETTLE_MS = 3_000L
-        val moreSample = MoreState("0.37", 400, mainCurrency = "USD", appearance = "Лайм · тёмная")
+        val moreSample = MoreState("0.37", 400)
         private val me = Member("u1", "Михаил", "m@example.com")
         val familySample = FamilyUiState(
             family = FamilyState.Joined(Family("f1", ownerUid = me.uid, listOf(me, Member("u2", "Анна", "a@example.com"))), me),
@@ -369,10 +370,10 @@ class ScreensScreenshotTest {
     }
 
     @Test
-    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsActions()) }
+    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test
-    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsActions()) }
+    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test
     fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }

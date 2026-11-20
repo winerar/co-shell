@@ -2,7 +2,7 @@
 <resources>
     <string name="language_title">Language</string>
     <string name="language_sheet_title">App language</string>
-    <string name="language_first_text">We picked your phone\'s language. You can change it anytime in “More → Appearance”.</string>
+    <string name="language_first_text">We picked your phone\'s language. You can change it anytime in “More → Settings → Appearance”.</string>
     <string name="language_settings_text">The screen updates right away. Dates and month names switch too.</string>
     <string name="language_update_title">The app now speaks three languages</string>
     <string name="language_update_text">Русский, English and Español. Keep Russian or switch to your phone\'s language?</string>

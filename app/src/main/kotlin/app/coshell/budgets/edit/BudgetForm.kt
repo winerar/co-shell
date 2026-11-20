@@ -22,7 +22,7 @@ internal fun budgetChoices(categories: List<Category>): Pair<List<Choice>, List<
     val parents = live.mapNotNull { it.parentId }.toSet()
     val folders = live.filter { it.id in parents }.map { Choice(it.id, it.name, it.icon, it.color) }
     val plain = live.filter { it.id !in parents }.map { category ->
-        Choice(category.id, category.name, category.icon, category.color, parent = category.parentId?.let { byId[it]?.name })
+        Choice(category.id, category.name, category.icon, category.color, parent = category.parentId?.let { byId[it]?.name }, parentId = category.parentId?.takeIf { it in byId })
     }
     return folders.sortedBy { it.name.lowercase() } to plain.sortedBy { it.label.lowercase() }
 }

@@ -1,5 +1,6 @@
 package app.coshell.currencies.list.components
 
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +40,7 @@ internal fun ReportCurrencyRow(
 ) {
     CoShellCard(
         Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.xs),
-        tint = if (isMain) MaterialTheme.colorScheme.primary else null,
+        tone = if (isMain) CardTone.Secondary else CardTone.Primary,
         onClick = if (isMain) null else onMakeMain,
     ) {
         Row(

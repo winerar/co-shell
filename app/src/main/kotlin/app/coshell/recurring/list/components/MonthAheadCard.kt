@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
@@ -27,7 +28,7 @@ import app.coshell.ui.format.formatMonthOf
 @Composable
 internal fun MonthAheadCard(ahead: MonthAheadUi, modifier: Modifier = Modifier) {
     val month = formatMonthOf(ahead.month)
-    CoShellCard(modifier.fillMaxWidth(), accent = true) {
+    CoShellCard(modifier.fillMaxWidth(), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
             Text(
                 if (ahead.count == 0) {

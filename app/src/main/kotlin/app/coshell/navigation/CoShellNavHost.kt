@@ -27,6 +27,9 @@ import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.privacy.HiddenPill
+import app.coshell.privacy.pin.PinSetupRoute
+import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.export.ExportRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
@@ -40,7 +43,7 @@ import app.coshell.settings.InputSettingsRoute
 import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
-import app.coshell.settings.SettingsScreen
+import app.coshell.settings.SettingsRoute
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
@@ -171,6 +174,8 @@ fun CoShellNavHost(
                     },
                 )
             }
+            // Sums hidden by laying the phone down (#145): says how to show them; goes first of the quiet pills.
+            HiddenPill(visible = onBar && updatePill == null, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m))
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.
             GreetingPill(
                 visible = onBar && onHome && greetingVisible && updatePill == null,
@@ -385,7 +390,7 @@ fun CoShellNavHost(
             )
         }
         screen<SettingsDestination> {
-            SettingsScreen(
+            SettingsRoute(
                 SettingsActions(
                     onBack = { navController.popBackStack() },
                     onLook = { navController.navigate(AppearanceDestination) },
@@ -394,11 +399,22 @@ fun CoShellNavHost(
                     onInput = { navController.navigate(InputSettingsDestination) },
                     onNotices = { navController.navigate(NoticeSettingsDestination) },
                     onData = { navController.navigate(DataSettingsDestination) },
+                    onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
+                    onBackup = { navController.navigate(BackupDestination) },
                 ),
             )
         }
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
+        }
+        screen<PrivacyDestination> {
+            PrivacyRoute(
+                onBack = { navController.popBackStack() },
+                onPinSetup = { mode -> navController.navigate(PinSetupDestination(mode.name)) { launchSingleTop = true } },
+            )
+        }
+        screen<PinSetupDestination> {
+            PinSetupRoute(onDone = { navController.popBackStack() })
         }
         screen<ScreensSettingsDestination> {
             ScreensSettingsScreen(

@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,6 +21,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 fun CoShellTimelineDot(reached: Boolean, lineReached: Boolean?, modifier: Modifier = Modifier) {
     val on = MaterialTheme.colorScheme.primary
     val off = MaterialTheme.colorScheme.outlineVariant
+    val edge = fillEdge(on)
     Box(modifier.width(Sizes.timelineDot), contentAlignment = Alignment.TopCenter) {
         Canvas(Modifier.width(Sizes.timelineDot).fillMaxHeight()) {
             val r = size.width / 2
@@ -28,6 +30,7 @@ fun CoShellTimelineDot(reached: Boolean, lineReached: Boolean?, modifier: Modifi
                 drawLine(if (lineReached) on else off, Offset(r, cy), Offset(r, size.height), strokeWidth = Sizes.selectionRing.toPx())
             }
             drawCircle(if (reached) on else off, radius = r, center = Offset(r, cy))
+            if (reached) edge?.let { drawCircle(it.brush, radius = r - it.width.toPx() / 2, center = Offset(r, cy), style = Stroke(it.width.toPx())) }
         }
     }
 }

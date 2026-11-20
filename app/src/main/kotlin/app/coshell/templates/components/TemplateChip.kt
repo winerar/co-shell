@@ -1,5 +1,6 @@
 package app.coshell.templates.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.theme.LabelStrongStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,7 @@ fun TemplateChip(item: TemplateItem, onClick: () -> Unit, modifier: Modifier = M
             Column(Modifier.widthIn(max = Sizes.tileMinHeight)) {
                 Text(item.name, style = LabelStrongStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
-                    item.amount.ifEmpty { stringResource(R.string.template_amount_on_entry) },
+                    shownAmount(item.amount).ifEmpty { stringResource(R.string.template_amount_on_entry) },
                     style = RateTextStyle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

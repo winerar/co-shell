@@ -37,8 +37,9 @@ internal fun TemplatePickers(picker: TemplatePicker?, state: TemplateEditUiState
             title = stringResource(R.string.template_category),
             options = listOf(ChoiceOption<String?>(null, stringResource(R.string.template_category_none))) +
                 categoryLines(
-                    state.categoryChoices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color) },
+                    state.categoryChoices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color, it.parentId) },
                     stringResource(R.string.transaction_categories_no_folder),
+                    stringResource(R.string.category_kind_folder),
                 ).map { ChoiceOption<String?>(it.value, it.label, it.subtitle, it.group, it.icon, it.color, it.hasBadge) },
             selected = state.categoryId,
             onPick = { actions.onCategorySelect(it); onClose() },

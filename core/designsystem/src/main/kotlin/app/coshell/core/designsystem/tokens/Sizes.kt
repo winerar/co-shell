@@ -53,6 +53,9 @@ object Sizes {
     val miniBarMin = 2.dp
     /** Key of the amount keypad in the entry sheet: big enough to hit with a thumb without looking. */
     val keypadKey = 56.dp
+    /** A dot of the PIN (CoShellPinDots, #145) and the width of its empty ring. */
+    val pinDot = 16.dp
+    val pinDotStroke = 2.dp
     /** Account tile in the account picker grid (badge, name, balance). */
     val accountTile = 96.dp
     /** Thin outline of a card or a floating pill. */

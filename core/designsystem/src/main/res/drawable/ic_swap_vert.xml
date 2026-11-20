@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Outlined, weight 300: swap_vert (Apache 2.0) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="false"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M338.39-461.15v-312.54L212-646.92l-32-32L361.08-860l181.07 181.08-32 32-126.38-126.77v312.54h-45.38ZM598.54-100 417.46-281.08l32-32 126.39 126.77v-312.54h45.38v312.54L748-313.08l31.61 32L598.54-100Z" />
+    </group>
+</vector>

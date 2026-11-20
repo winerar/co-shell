@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.category.readableInk
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,7 +67,11 @@ fun CoShellMenuItem(
     enabled: Boolean = true,
 ) {
     val scheme = MaterialTheme.colorScheme
-    val ink = if (destructive) scheme.error else scheme.onSurface
+    val ink = when {
+        checked -> readableInk(scheme.primaryContainer, if (destructive) scheme.error else scheme.onPrimaryContainer)
+        destructive -> scheme.error
+        else -> scheme.onSurface
+    }
     Row(
         modifier
             .padding(horizontal = Spacing.xs)
@@ -75,6 +80,7 @@ fun CoShellMenuItem(
             .alpha(if (enabled) 1f else DISABLED)
             .tactileClickable(Tactile.Row, CircleShape, enabled = enabled, role = Role.Button, onClick = onClick)
             .background(if (checked) scheme.primaryContainer else Color.Transparent, CircleShape)
+            .then(if (checked) Modifier.fillEdge(scheme.primaryContainer, CircleShape, scheme.surfaceContainer) else Modifier)
             .padding(horizontal = Spacing.m),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),

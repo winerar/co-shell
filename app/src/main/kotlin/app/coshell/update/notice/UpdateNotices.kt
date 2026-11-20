@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -78,9 +81,20 @@ fun UpdatePill(
 @Composable
 private fun UpdatedDialog(release: AppRelease, onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        CoShellCard(Modifier.padding(horizontal = Spacing.l + Spacing.xs)) {
+        UpdatedCard(release, onDismiss, Modifier.padding(horizontal = Spacing.l + Spacing.xs, vertical = Spacing.l))
+    }
+}
+
+/**
+ * The card of [UpdatedDialog]. A long «Что нового» scrolls between the title and «Понятно»: the button stays
+ * whole at the bottom (it was squashed to a thin strip when the points did not fit the screen).
+ */
+@Composable
+internal fun UpdatedCard(release: AppRelease, onDismiss: () -> Unit, modifier: Modifier = Modifier) {
+    CoShellCard(modifier) {
+        Column(Modifier.fillMaxWidth().padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
             Column(
-                Modifier.fillMaxWidth().padding(Spacing.l),
+                Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Spacing.m),
             ) {
@@ -89,9 +103,9 @@ private fun UpdatedDialog(release: AppRelease, onDismiss: () -> Unit) {
                 }
                 Text(stringResource(R.string.update_updated_title, release.versionName), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
                 if (release.notes.isNotBlank()) ReleaseNotesList(release.notes, Modifier.fillMaxWidth())
-                CoShellButton(onClick = onDismiss, tactile = Tactile.Primary, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.update_whats_new_ok))
-                }
+            }
+            CoShellButton(onClick = onDismiss, tactile = Tactile.Primary, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.button)) {
+                Text(stringResource(R.string.update_whats_new_ok))
             }
         }
     }

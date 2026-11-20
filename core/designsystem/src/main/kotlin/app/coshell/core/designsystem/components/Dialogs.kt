@@ -2,6 +2,8 @@ package app.coshell.core.designsystem.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -62,7 +64,7 @@ fun CoShellAlertDialog(
             onDismissClick = onDismissClick,
             destructive = destructive,
             icon = icon,
-            modifier = Modifier.padding(horizontal = Spacing.l + Spacing.xs),
+            modifier = Modifier.padding(horizontal = Spacing.l + Spacing.xs, vertical = Spacing.l),
         )
     }
 }
@@ -88,24 +90,27 @@ fun CoShellConfirmCard(
         modifier = modifier.fillMaxWidth(),
     ) {
         Column(Modifier.padding(start = Spacing.l + Spacing.xs, end = Spacing.l + Spacing.xs, top = Spacing.xl, bottom = Spacing.l + Spacing.xs)) {
-            icon?.let {
-                val (bg, ink) = if (destructive) colors.errorContainer to colors.onErrorContainer else colors.secondaryContainer to colors.onSecondaryContainer
-                Box(Modifier.size(Sizes.pillHeight).background(bg, MaterialTheme.shapes.large), contentAlignment = Alignment.Center) {
-                    Icon(painterResource(it), contentDescription = null, tint = ink)
+            // A long question (big font, narrow screen) scrolls above the buttons; they never get squashed.
+            Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState())) {
+                icon?.let {
+                    val (bg, ink) = if (destructive) colors.errorContainer to colors.onErrorContainer else colors.secondaryContainer to colors.onSecondaryContainer
+                    Box(Modifier.size(Sizes.pillHeight).background(bg, MaterialTheme.shapes.large).fillEdge(bg, MaterialTheme.shapes.large, colors.surfaceContainerHigh), contentAlignment = Alignment.Center) {
+                        Icon(painterResource(it), contentDescription = null, tint = ink)
+                    }
                 }
-            }
-            Text(
-                title,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = if (icon != null) Spacing.m + Spacing.xxs else 0.dp),
-            )
-            if (text.isNotEmpty()) {
                 Text(
-                    text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.onSurfaceVariant,
-                    modifier = Modifier.padding(top = Spacing.s),
+                    title,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(top = if (icon != null) Spacing.m + Spacing.xxs else 0.dp),
                 )
+                if (text.isNotEmpty()) {
+                    Text(
+                        text,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurfaceVariant,
+                        modifier = Modifier.padding(top = Spacing.s),
+                    )
+                }
             }
             // Side by side while each button is wide enough for its words; on a narrow screen or with a big font —
             // one under the other (the main action first), so no label breaks into letters.

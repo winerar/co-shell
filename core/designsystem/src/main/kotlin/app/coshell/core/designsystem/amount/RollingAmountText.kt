@@ -36,6 +36,7 @@ import app.coshell.core.designsystem.tokens.Motion
  */
 @Composable
 fun RollingAmountText(text: String, style: TextStyle, modifier: Modifier = Modifier, color: Color = MaterialTheme.colorScheme.onSurface) {
+    val text = shownAmount(text)
     val (number, code) = splitAmount(text)
     val previous = remember { arrayOf(text) }
     val direction = remember(text) { amountDirection(previous[0], text) }

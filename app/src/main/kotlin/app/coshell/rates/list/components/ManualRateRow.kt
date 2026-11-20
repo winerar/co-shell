@@ -1,5 +1,6 @@
 package app.coshell.rates.list.components
 
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.layout.Arrangement
@@ -33,10 +34,9 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 internal fun ManualRateRow(item: ManualRateItem, onClick: () -> Unit, onDelete: () -> Unit) {
     val rate = item.rate
-    val violet = MaterialTheme.colorScheme.secondary
     CoShellCard(
         Modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.xs),
-        tint = violet,
+        tone = CardTone.Secondary,
         onClick = onClick,
     ) {
         Row(

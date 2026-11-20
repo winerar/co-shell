@@ -119,7 +119,7 @@ private fun DoneLabel(label: String, inRow: Boolean) {
 }
 
 @Composable
-private fun androidx.compose.foundation.layout.RowScope.KeyColumn(content: @Composable ColumnScope.() -> Unit) =
+internal fun androidx.compose.foundation.layout.RowScope.KeyColumn(content: @Composable ColumnScope.() -> Unit) =
     Column(Modifier.weight(1f).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(Spacing.s), content = content)
 
 @Composable
@@ -131,10 +131,10 @@ private fun ColumnScope.TextKey(text: String, onClick: () -> Unit) = Key(onClick
 }
 
 @Composable
-private fun ColumnScope.Spacer() = Box(Modifier.weight(1f))
+internal fun ColumnScope.Spacer() = Box(Modifier.weight(1f))
 
 @Composable
-private fun ColumnScope.Key(
+internal fun ColumnScope.Key(
     onClick: () -> Unit,
     container: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     content: Color = MaterialTheme.colorScheme.onSurface,

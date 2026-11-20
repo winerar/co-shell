@@ -1,5 +1,6 @@
 package app.coshell.home.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Row
@@ -68,11 +69,12 @@ internal fun MonthReviewCard(state: MonthReviewUiState, onOpen: () -> Unit, onHi
         if (state.changes.isNotEmpty()) {
             val colors = state.changes.map { changeColor(it.more) }
             val names = state.changes.map { categoryName(it.name) }
+            val differences = state.changes.map { shownAmount(it.difference) }
             Text(
                 buildAnnotatedString {
-                    state.changes.forEachIndexed { index, change ->
+                    state.changes.forEachIndexed { index, _ ->
                         if (index > 0) append(" · ")
-                        withStyle(SpanStyle(color = colors[index])) { append("${names[index]} ${change.difference}") }
+                        withStyle(SpanStyle(color = colors[index])) { append("${names[index]} ${differences[index]}") }
                     }
                 },
                 style = RateSmallStyle,

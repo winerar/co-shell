@@ -135,16 +135,17 @@ private fun tipCategoryName(state: TransactionEditUiState, tip: TipUi): String? 
 @Composable
 private fun TipCategorySheet(state: TransactionEditUiState, tip: TipUi, actions: TransactionEditActions) {
     val noGroup = stringResource(R.string.transaction_categories_no_folder)
+    val parentSubtitle = stringResource(R.string.category_kind_folder)
     val name = stringResource(R.string.tip_note)
     val sameLabel = stringResource(R.string.tip_category_same)
     val sameHint = stringResource(R.string.tip_category_same_hint)
     val newHint = stringResource(R.string.tip_category_new_hint)
-    val options = remember(state.categories, noGroup, name, sameLabel, sameHint, newHint) {
+    val options = remember(state.categories, noGroup, parentSubtitle, name, sameLabel, sameHint, newHint) {
         val exists = state.categories.any { g -> (listOf(g.item) + g.children).any { it.name.trim().equals(name, ignoreCase = true) } }
         listOfNotNull(
             ChoiceOption(TipPrefs.SAME_AS_PURCHASE, sameLabel, sameHint, group = null, hasBadge = false),
             ChoiceOption(NEW_TIP_CATEGORY, name, newHint, group = null, hasBadge = false).takeUnless { exists },
-        ) + categoryChoiceOptions(state.categories, noGroup)
+        ) + categoryChoiceOptions(state.categories, noGroup, parentSubtitle)
     }
     ChoiceSheet(
         title = stringResource(R.string.tip_category_title),

@@ -24,7 +24,11 @@ internal fun BudgetPickers(picker: BudgetPicker?, state: BudgetEditUiState, acti
             options = if (state.kind == BudgetKind.FOLDER) {
                 state.choices.map { ChoiceOption(it.id, it.name, icon = it.icon, color = it.color, hasBadge = true) }
             } else {
-                categoryLines(state.choices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color) }, stringResource(R.string.transaction_categories_no_folder))
+                categoryLines(
+                    state.choices.map { CategoryLine(it.id, it.name, it.parent, it.icon, it.color, it.parentId) },
+                    stringResource(R.string.transaction_categories_no_folder),
+                    stringResource(R.string.category_kind_folder),
+                )
             },
             selected = state.categoryId,
             onPick = { actions.onCategorySelect(it); onClose() },

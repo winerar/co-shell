@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.amount.RollingAmountText
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.theme.AmountHeroStyle
@@ -19,7 +20,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 /** «Обзор» before the first account (board `HomeEmpty`): the same hero card with a zero total and «Счетов пока нет». */
 @Composable
 internal fun EmptyTotalCard(total: String) {
-    CoShellCard(modifier = Modifier.fillMaxWidth(), accent = true) {
+    CoShellCard(modifier = Modifier.fillMaxWidth(), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l)) {
             Text(stringResource(R.string.home_total_balance), style = MaterialTheme.typography.labelLarge)
             RollingAmountText(total, AmountHeroStyle, color = LocalHeroPalette.current.amount)

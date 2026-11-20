@@ -64,13 +64,13 @@ def lifted(inner):
 
 
 def sort_accounts():
+    """One list, as the order is one for every grouping and every account picker (#338; code — AccountsOrder)."""
     names = ['Galicia', 'Mercado Pago', 'Santander']
     rows_ = [row(a[0], a[4], badge(a[1], a[2], a[3], 40, 12), handle()) for a in map(acc, names)]
     moving = row('USDT · Binance', 'Крипто', badge('BN', '#F0B90B', '#1A1400', 40, 12), handle())
-    body = (note('Удерживайте строку и перетащите. Порядок общий для семьи.', 4)
-            + label('Карты', True) + group(rows_[:1]) + lifted(moving) + group(rows_[1:])
-            + label('Наличные', True) + group([row('Наличные USD', 'Наличные', badge('$', '#9AA594', '#0B0F0A', 40, 12), handle()),
-                                              row('Наличные ARS', 'Наличные', badge('$', '#9AA594', '#0B0F0A', 40, 12), handle())]))
+    cash = [row('Наличные USD', 'Наличные', badge('$', '#9AA594', '#0B0F0A', 40, 12), handle()),
+            row('Наличные ARS', 'Наличные', badge('$', '#9AA594', '#0B0F0A', 40, 12), handle())]
+    body = note('Удерживайте строку и перетащите. Порядок общий для семьи.', 4) + group(rows_[:1]) + lifted(moving) + group(rows_[1:] + cash)
     return inner_screen('Порядок счетов', body, icon_button('check', 'Готово', LIME))
 
 
@@ -82,7 +82,7 @@ def sort_categories():
             % (LIME, mix(LIME, 8), row('<b>Еда</b>', 'Отпустите — «Пекарня» станет подкатегорией', dot_icon('cart', '#8BC34A', 36), ''),
                cat('Продукты', 'cart', '#8BC34A', True) + cat('Кафе', 'cafe', '#FF9800', True)))
     moving = lifted(row('Пекарня', 'без папки', dot_icon('school', '#E07A4F', 36), handle()))
-    body = (note('Перетащите на папку — категория войдёт в неё; из папки наверх — станет отдельной.', 4)
+    body = (note('Удерживайте строку и перетащите. На середину другой категории — станет подкатегорией, из группы наверх — отдельной.', 4)
             + drop + moving
             + group([cat('Транспорт', 'taxi', '#FFEB3B'), cat('Такси', 'taxi', '#FFEB3B', True), cat('Бензин и парковка', 'bolt', '#FFB547', True)])
             + '<div style="margin-top: 10px;">%s</div>' % group([cat('Здоровье', 'pill', '#E91E63'), cat('Аптека', 'pill', '#E91E63', True)]))

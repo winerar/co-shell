@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.material3.SwitchDefaults
 import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
@@ -91,6 +93,7 @@ fun CoShellSwitch(
             onCheckedChange = onCheckedChange,
             modifier = modifier.tactile(source, Tactile.Control, PillShape, enabled).selectionPop(checked),
             enabled = enabled,
+            colors = SwitchDefaults.colors(checkedBorderColor = fillEdgeColor(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.surface) ?: Color.Transparent),
             interactionSource = source,
         )
     }
@@ -129,7 +132,7 @@ fun CoShellRadioMark(selected: Boolean, modifier: Modifier = Modifier) {
     val sel = selectionColors()
     Box(
         modifier.size(22.dp).selectionPop(selected)
-            .then(if (selected) Modifier.background(sel.fill, CircleShape) else Modifier.border(Sizes.selectionRing, colors.outline, CircleShape)),
+            .then(if (selected) Modifier.background(sel.fill, CircleShape).fillEdge(sel.fill, CircleShape) else Modifier.border(Sizes.selectionRing, colors.outline, CircleShape)),
         contentAlignment = Alignment.Center,
     ) {
         if (selected) Box(Modifier.size(8.dp).background(sel.content, CircleShape))

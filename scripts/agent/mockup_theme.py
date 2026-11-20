@@ -24,7 +24,7 @@ NEON = {  # role letter -> Volt dark colour (what boards are drawn with)
     'i': (0x00, 0xF0, 0xFF),  # income (cyan)
     'e': (0xFF, 0x2E, 0x63),  # expense
     'y': (0xFF, 0xE6, 0x00),  # tertiary (acid yellow)
-    'w': (0xFF, 0xB5, 0x47),  # warning (status, same in all palettes)
+    'w': (0xFF, 0xB5, 0x47),  # warning — boards draw amber; the runtime paints the theme's own (CO_WARN, poll 2026-11-20 Б)
     'g': (0x5C, 0xFF, 0xB0),  # ok / synced (status)
 }
 ON_PRIMARY = (0x0E, 0x1F, 0x00)
@@ -161,6 +161,8 @@ var CO_HERO = {
   'Лагуна': ['#12473E','#122E2E','#392721','#7CF2DD','#A8F0FF','#FFD2B8'],
   'Сакура': ['#4F283C','#23272F','#2D3935','#FFB3D6','#FFD0E4','#C9F7E4']
 };
+// Attention colour per palette (PaletteSpec.warningDark/Light, poll 2026-11-20 Б); Вольт = Лайм. Legacy palettes keep amber.
+var CO_WARN = { 'Вольт': ['#07B47C', '#05724D'], 'Сакура': ['#CD9509', '#815C04'] };
 var CO_NOW = { dark: true, pal: 'Вольт' };
 function __coTheme(props) {
   var s = {};
@@ -183,9 +185,9 @@ function __co(k) {
   var m = /^k_([0-9A-F]{6})_(.*)$/.exec(k);
   if (!m) return k;
   var orig = '#' + m[1], role = m[2];
-  if (CO_NOW.dark && CO_NOW.pal === 'Вольт') return orig;
+  if (CO_NOW.dark && CO_NOW.pal === 'Вольт' && role.charAt(0) !== 'w') return orig;
   var S = CO_SPECS[CO_NOW.pal], d = CO_NOW.dark, bg = d ? S[10] : S[11];
-  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
+  var neon = { P: [S[0], S[0]], a: [S[2], S[3]], y: [S[4], S[5]], i: [S[6], S[7]], e: [S[8], S[9]], w: CO_WARN[CO_NOW.pal] || ['#FFB547', '#8A5F00'], g: ['#5CFFB0', '#0B7F3D'] };
   if (role === 'O') return S[1];
   if (/^H[0-2]$/.test(role)) return CO_HERO[CO_NOW.pal][(d ? 0 : 3) + parseInt(role.charAt(1), 10)];
   if (role === 'Oa' || role === 'Oi') return orig;

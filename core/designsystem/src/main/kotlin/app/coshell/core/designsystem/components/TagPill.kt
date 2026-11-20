@@ -38,7 +38,7 @@ fun CoShellTagPill(name: String, color: Long, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Box(Modifier.size(6.dp).background(ink, CircleShape))
+        Box(Modifier.size(6.dp).background(ink, CircleShape).fillEdge(ink, CircleShape))
         Text(
             name,
             color = MaterialTheme.colorScheme.onSurface,
@@ -55,7 +55,8 @@ fun CoShellTagPill(name: String, color: Long, modifier: Modifier = Modifier) {
 /** The tag's colour as a dot — leading mark of a tag row in lists and pickers. */
 @Composable
 fun CoShellTagDot(color: Long, modifier: Modifier = Modifier) {
-    Box(modifier.size(TagDotSize).background(categoryColor(color), CircleShape))
+    val fill = categoryColor(color)
+    Box(modifier.size(TagDotSize).background(fill, CircleShape).fillEdge(fill, CircleShape))
 }
 
 /** «+2» after the shown pills: how many more tags the operation has. */

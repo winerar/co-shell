@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -40,7 +41,7 @@ fun CoShellDayHeader(
     ) {
         CoShellSectionLabel(title, Modifier.alignByBaseline(), tone = SectionTone.Accent)
         Text(
-            total.orEmpty(),
+            shownAmount(total.orEmpty()),
             style = RateTextStyle,
             color = totalColor,
             textAlign = TextAlign.End,

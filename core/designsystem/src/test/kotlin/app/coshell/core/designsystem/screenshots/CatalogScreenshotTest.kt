@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ChartsCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
+import app.coshell.core.designsystem.catalog.PinSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
 import app.coshell.core.designsystem.catalog.ModalsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
@@ -116,6 +117,12 @@ class CatalogScreenshotTest {
 
     @Test
     fun `check marks light`() = shot("check_marks_light") { CheckMarkSample() }
+
+    @Test
+    fun `pin pad dark`() = shot("pin_pad_dark", dark = true) { PinSample() }
+
+    @Test
+    fun `pin pad light`() = shot("pin_pad_light") { PinSample() }
 
     @Test
     fun `menu rows dark`() = shot("menu_rows_dark", dark = true) { MenuRowsSample() }

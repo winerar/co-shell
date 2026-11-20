@@ -1,5 +1,6 @@
 package app.coshell.accounts.list.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -57,7 +58,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
                 )
                 row.converted?.let {
                     Text(
-                        it,
+                        shownAmount(it),
                         style = RateTextStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

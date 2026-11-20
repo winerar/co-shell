@@ -1,5 +1,8 @@
 package app.coshell.core.designsystem.charts
 
+import androidx.compose.ui.graphics.compositeOver
+import app.coshell.core.designsystem.components.drawFillEdge
+import app.coshell.core.designsystem.components.fillEdge
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -96,14 +99,13 @@ fun CoShellPairedColumns(
 @Composable
 private fun PairBar(fraction: Float, color: Color, on: Boolean, height: Dp, modifier: Modifier, entrance: () -> Float) {
     val shown = animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "pair")
+    val over = if (on) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surface
+    val fill = color.copy(alpha = if (on) 1f else QUIET_ALPHA)
+    val edge = fillEdge(fill.compositeOver(over), over)
     Canvas(modifier.height(height)) {
         val h = (size.height * shown.value * entrance()).coerceAtLeast(MIN_BAR.toPx())
-        drawRoundRect(
-            color.copy(alpha = if (on) 1f else QUIET_ALPHA),
-            Offset(0f, size.height - h),
-            Size(size.width, h),
-            CornerRadius(TOP_RADIUS.toPx()),
-        )
+        drawRoundRect(fill, Offset(0f, size.height - h), Size(size.width, h), CornerRadius(TOP_RADIUS.toPx()))
+        drawFillEdge(edge, Offset(0f, size.height - h), Size(size.width, h), TOP_RADIUS.toPx())
     }
 }
 

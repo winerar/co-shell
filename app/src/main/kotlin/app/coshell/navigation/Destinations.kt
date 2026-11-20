@@ -78,6 +78,14 @@ data object SettingsDestination
 @Serializable
 data object AppearanceDestination
 
+/** «Ещё → Конфиденциальность» (#145). */
+@Serializable
+data object PrivacyDestination
+
+/** PIN screen of the settings: `mode` — [app.coshell.privacy.pin.PinSetupMode] name. */
+@Serializable
+data class PinSetupDestination(val mode: String)
+
 @Serializable
 data object ScreensSettingsDestination
 

@@ -51,6 +51,8 @@ data class AccountsActions(
     val onToggleGroup: (String) -> Unit = {},
     val onQuery: (String) -> Unit = {},
     val onToggleSearch: () -> Unit = {},
+    /** «Изменить порядок» (#338). */
+    val onOrder: () -> Unit = {},
 )
 
 /**
@@ -72,6 +74,11 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
     Scaffold(
         topBar = {
             ScreenTopBar(stringResource(R.string.accounts_title), onBack = actions.onBack) {
+                if (state.active.size > 1) {
+                    CoShellIconButton(onClick = actions.onOrder) {
+                        Icon(painterResource(DesignR.drawable.ic_swap_vert), stringResource(R.string.order_change))
+                    }
+                }
                 CoShellIconButton(onClick = actions.onToggleSearch) {
                     Icon(painterResource(DesignR.drawable.ic_search), stringResource(R.string.accounts_search))
                 }

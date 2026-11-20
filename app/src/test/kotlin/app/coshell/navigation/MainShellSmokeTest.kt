@@ -100,7 +100,7 @@ class MainShellSmokeTest {
                     }
                     composable<ReportsDestination> { ReportsScreen(ReportsSamples.state, ReportsActions()) }
                     composable<MoreDestination> {
-                        MoreScreen(MoreActions(onAppearance = { nav.navigate(SettingsDestination) }))
+                        MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
                     }
                     composable<SettingsDestination> { Text(INNER, Modifier.clickable { nav.popBackStack() }) }
                 }
@@ -189,7 +189,7 @@ class MainShellSmokeTest {
         compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
     }
 
-    /** «Ещё» → «Внешний вид»: the row is near the bottom, so the list scrolls to it first (it is lazy). */
+    /** «Ещё» → «Настройки»: the row is near the bottom, so the list scrolls to it first (it is lazy). */
     private fun openAppearance() {
         tab(R.string.nav_more)
         val settings = string(R.string.settings_title)

@@ -1,5 +1,6 @@
 package app.coshell.transactions.list.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +42,7 @@ internal fun FilterTotalCard(total: Total, modifier: Modifier = Modifier) {
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
                 total.amount?.let {
                     Text(
-                        it,
+                        shownAmount(it),
                         style = AmountTextStyle,
                         color = when (total.tone) {
                             Kind.EXPENSE -> LocalAmountPalette.current.expense
@@ -54,7 +55,7 @@ internal fun FilterTotalCard(total: Total, modifier: Modifier = Modifier) {
                 val detail = listOfNotNull(total.detail, total.noRate?.let { stringResource(R.string.filter_total_no_rate, it) })
                 if (detail.isNotEmpty()) {
                     Text(
-                        detail.joinToString("\n"),
+                        shownAmount(detail.joinToString("\n")),
                         style = RateTextStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.End,

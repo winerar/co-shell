@@ -1,5 +1,10 @@
 package app.coshell.core.designsystem.charts
 
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Path
+import app.coshell.core.designsystem.tokens.Sizes
+import app.coshell.core.designsystem.components.fillEdgeColor
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -45,6 +50,10 @@ fun CoShellDonut(
 ) {
     val arcs = remember(slices) { donutArcs(slices.map { it.value }) }
     val track = MaterialTheme.colorScheme.surfaceContainerHighest
+    // A pale slice on a pale card gets a hairline of its own deep shade (owner 2026-11-20), as every fill does.
+    val surface = MaterialTheme.colorScheme.surface
+    val edges = remember(slices, surface) { slices.map { fillEdgeColor(it.color, surface) } }
+    val hairline = Sizes.hairline
     val entrance = rememberChartEntrance()
     Box(modifier.size(size).semantics { contentDescription = description }, contentAlignment = Alignment.Center) {
         Canvas(Modifier.fillMaxSize()) {
@@ -62,11 +71,30 @@ fun CoShellDonut(
                 val visible = (reached - arc.start).coerceIn(0f, arc.sweep)
                 if (visible > 0f) {
                     drawArc(slices[index].color, arc.start + TOP, visible, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(stroke))
+                    edges[index]?.let { drawSliceEdge(it, arc.start + TOP, visible, stroke, hairline.toPx()) }
                 }
             }
         }
         content()
     }
+}
+
+/** Outline of one ring slice ([start], [sweep] in degrees, ring [stroke] wide), drawn inside it with a [width] line. */
+private fun DrawScope.drawSliceEdge(color: Color, start: Float, sweep: Float, stroke: Float, width: Float) {
+    val mid = size.minDimension / 2 - stroke / 2
+    val outer = mid + stroke / 2 - width / 2
+    val inner = mid - stroke / 2 + width / 2
+    if (sweep >= FULL) {
+        drawCircle(color, outer, center, style = Stroke(width))
+        drawCircle(color, inner, center, style = Stroke(width))
+        return
+    }
+    val path = Path().apply {
+        arcTo(Rect(center, outer), start, sweep, forceMoveTo = true)
+        arcTo(Rect(center, inner), start + sweep, -sweep, forceMoveTo = false)
+        close()
+    }
+    drawPath(path, color, style = Stroke(width))
 }
 
 /**

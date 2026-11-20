@@ -1,6 +1,7 @@
 package app.coshell.reports.review.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.theme.AmountReviewStyle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -29,7 +30,7 @@ import app.coshell.ui.format.formatMonth
 @Composable
 internal fun ReviewHero(state: MonthReviewUiState, modifier: Modifier = Modifier) {
     val month = state.month ?: return
-    CoShellCard(modifier.fillMaxWidth(), accent = true) {
+    CoShellCard(modifier.fillMaxWidth(), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l)) {
             Text(stringResource(R.string.review_left, formatMonth(month.firstDay)), style = MaterialTheme.typography.bodyMedium)
             FlowRow(

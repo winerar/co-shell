@@ -66,6 +66,7 @@ import app.coshell.home.sync.SyncBannerState
 import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.reports.review.MonthReviewUiState
 import app.coshell.ui.top.TabTopBar
+import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.upcoming.UpcomingCard
@@ -191,7 +192,7 @@ fun HomeScreen(
         }
     }
     Scaffold(
-        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) },
+        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) { EyeButton() } },
         bottomBar = {
             if (editing) {
                 Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {

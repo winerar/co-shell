@@ -8,7 +8,7 @@ import org.junit.Test
 class CategoryOptionsTest {
     private fun item(id: String) = CategoryItem(id, id.replaceFirstChar { it.uppercase() })
 
-    // «Еда» (продукты, кафе), «Дом» (аренда, свет), and 8 folderless: c1..c8 — 12 leaves.
+    // «Еда» (продукты, кафе), «Дом» (аренда, свет), and 8 plain: c1..c8 — 14 to pick, the two parents included.
     private val groups = listOf(
         CategoryGroup(item("еда"), listOf(item("продукты"), item("кафе"))),
         CategoryGroup(item("дом"), listOf(item("аренда"), item("свет"))),
@@ -17,7 +17,7 @@ class CategoryOptionsTest {
     private fun ids(list: List<CategoryItem>) = list.map { it.id }
 
     @Test
-    fun `frequent puts recent first, then leaves in tree order, folders only when used`() {
+    fun `frequent puts recent first, then leaves in tree order, parents last`() {
         val frequent = frequentCategories(groups, recent = listOf("c5", "кафе"), selectedId = null)
         assertEquals(listOf("c5", "кафе", "продукты", "аренда", "свет", "c1", "c2"), ids(frequent))
         assertEquals("еда", frequentCategories(groups, recent = listOf("еда"), selectedId = null).first().id)
@@ -33,34 +33,29 @@ class CategoryOptionsTest {
 
     @Test
     fun `everything fitting in eight places is shown without all`() {
-        val few = groups.take(2) + groups.drop(2).take(4) // 8 leaves
+        val few = groups.take(1) + groups.drop(2).take(5) // «Еда» + 2 subcategories + 5 plain = 8
         assertEquals(8, frequentCategories(few, emptyList(), null).size)
         assertEquals(8, few.leafCount)
-        assertEquals(12, groups.leafCount)
+        assertEquals(14, groups.leafCount)
     }
 
     @Test
-    fun `choice lines put folders with several children first and the rest under no group`() {
-        val lines = categoryChoiceOptions(groups, "Остальные")
+    fun `choice lines put parents with their subcategories first and the rest under no group`() {
+        val lines = categoryChoiceOptions(groups, "Остальные", "С подкатегориями")
         assertEquals(groups.leafCount, lines.size)
         assertEquals(listOf("Еда", "Дом", "Остальные"), lines.map { it.group }.distinct())
+        assertEquals(listOf("еда", "продукты", "кафе"), lines.take(3).map { it.value })
+        assertEquals(listOf("С подкатегориями", null, null), lines.take(3).map { it.subtitle })
         assertEquals(true, lines.all { it.hasBadge })
     }
 
     @Test
-    fun `a folder of one is just its category without a double`() {
+    fun `a subcategory of the same name stays under its parent`() {
         val same = CategoryGroup(CategoryItem("kids", "Дети"), listOf(CategoryItem("kids2", "Дети")))
-        val other = CategoryGroup(CategoryItem("home", "Дом"), listOf(CategoryItem("repair", "Ремонт")))
-        val lines = categoryChoiceOptions(listOf(same, other), "Остальные")
-        assertEquals(listOf("Дети", "Ремонт"), lines.map { it.label })
-        assertEquals(listOf("kids2", "repair"), lines.map { it.value })
-        assertEquals(listOf(null, "Дом"), lines.map { it.subtitle })
-        assertEquals(listOf("Остальные"), lines.map { it.group }.distinct())
-    }
-
-    @Test
-    fun `a folder with no children is a plain category and a folder with children is not a line`() {
-        val lines = categoryChoiceOptions(groups, "Остальные")
-        assertEquals(false, lines.any { it.value == "еда" || it.value == "дом" })
+        val other = CategoryGroup(CategoryItem("taxi", "Такси"), emptyList())
+        val lines = categoryChoiceOptions(listOf(same, other), "Остальные", "С подкатегориями")
+        assertEquals(listOf("kids", "kids2", "taxi"), lines.map { it.value })
+        assertEquals(listOf("Дети", "Дети", "Остальные"), lines.map { it.group })
+        assertEquals(listOf("С подкатегориями", null, null), lines.map { it.subtitle })
     }
 }

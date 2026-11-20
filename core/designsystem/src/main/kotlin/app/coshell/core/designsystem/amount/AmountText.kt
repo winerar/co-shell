@@ -29,6 +29,7 @@ fun AmountText(
     minFontSize: TextUnit = TextUnit.Unspecified,
 ) {
     val codeColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val text = shownAmount(text)
     val annotated = remember(text, codeColor) { amountWithCode(text, SpanStyle(color = codeColor, fontSize = CODE_SIZE)) }
     Text(
         text = annotated,

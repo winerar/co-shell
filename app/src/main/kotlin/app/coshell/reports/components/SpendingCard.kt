@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -60,7 +61,7 @@ internal fun SpendingCard(
         }
         // A flow: a currency code never breaks into letters — when it does not fit beside the total, it goes under it.
         FlowRow(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            Text(spending.total, style = AmountTitleStyle, modifier = Modifier.alignByBaseline())
+            Text(shownAmount(spending.total), style = AmountTitleStyle, modifier = Modifier.alignByBaseline())
             Text(
                 currency,
                 style = MaterialTheme.typography.labelLarge,

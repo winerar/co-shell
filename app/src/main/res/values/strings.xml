@@ -263,10 +263,13 @@
     <string name="transaction_copy_today">Копия · сегодня</string>
     <string name="action_undo">Отменить</string>
     <string name="appearance_title">Внешний вид</string>
-    <string name="appearance_menu_hint" translatable="false">%1$s · %2$s</string>
+    <string name="settings_join" translatable="false">%1$s · %2$s</string>
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">новое</string>
     <string name="more_section_money">Деньги</string>
+    <string name="more_section_rates">Валюты</string>
+    <string name="more_export_hint">Операции за период в CSV</string>
+    <string name="more_version_quiet">Версия %1$s · сборка %2$d · актуальная</string>
     <string name="more_section_family_data">Семья и данные</string>
     <string name="more_section_app">Приложение</string>
     <string name="more_version_title" translatable="false">Co-Shell</string>

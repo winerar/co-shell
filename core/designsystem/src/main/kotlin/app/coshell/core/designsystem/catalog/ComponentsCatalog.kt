@@ -1,5 +1,7 @@
 package app.coshell.core.designsystem.catalog
 
+import app.coshell.core.designsystem.components.keypad.CoShellPinDots
+import app.coshell.core.designsystem.components.keypad.CoShellPinPad
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -110,6 +112,16 @@ fun CheckMarkSample() {
         CoShellCheckMark(ToggleableState.Indeterminate)
         CoShellFilterChip(selected = true, onClick = {}, label = { Text("Еда · 3") })
         CoShellFilterChip(selected = false, onClick = {}, label = { Text("Счёт") })
+    }
+}
+
+/** #145: the PIN dots (typed, error) and the PIN pad with the fingerprint key. */
+@Composable
+fun PinSample() {
+    Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.l), horizontalAlignment = Alignment.CenterHorizontally) {
+        CoShellPinDots(filled = 2, description = "Введено 2 из 4")
+        CoShellPinDots(filled = 4, description = "PIN не подошёл", error = true)
+        CoShellPinPad(onKey = {}, backspaceLabel = "Стереть", biometricLabel = "Отпечаток")
     }
 }
 

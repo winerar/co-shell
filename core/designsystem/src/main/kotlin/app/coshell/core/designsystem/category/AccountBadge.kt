@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import app.coshell.core.designsystem.theme.contrastRatio
 import app.coshell.core.designsystem.tokens.Sizes
 
 /**
@@ -43,10 +44,17 @@ fun AccountBadge(name: String, color: Long?, modifier: Modifier = Modifier, size
 }
 
 /**
- * Ink of a badge on [fill]: always the dark ink for the 24 palette colours (1.0, #105 — they all read ≥ 4.6:1 with it);
- * a colour from outside the palette (import) gets white when that reads better.
+ * Ink on a coloured [fill] (owner 2026-11-20): dark or white — whichever has more contrast with the fill. The 24 palette
+ * colours all read ≥ 4.6:1 with the dark ink (#105), so they keep it; a bank or imported colour may get white.
  */
-fun inkOn(fill: Color): Color = if (fill.luminance() > INK_THRESHOLD || fill in paletteFills) DarkInk else Color.White
+fun inkOn(fill: Color): Color = if (contrastRatio(DarkInk, fill) >= contrastRatio(Color.White, fill)) DarkInk else Color.White
+
+/**
+ * [preferred] text/icon colour on [fill] when it reads (≥ 4.5:1); otherwise flipped to the dark ink or white ([inkOn]).
+ * For components that take an ink from the caller (a status-coloured button).
+ */
+fun readableInk(fill: Color, preferred: Color): Color =
+    if (contrastRatio(preferred, fill.compositeOver(Color.White)) >= READABLE_INK) preferred else inkOn(fill)
 
 /** "Galicia" → "GA", "Mercado Pago" → "MP", "" → "·". */
 fun accountInitials(name: String): String {
@@ -58,6 +66,5 @@ fun accountInitials(name: String): String {
     }
 }
 
-private const val INK_THRESHOLD = 0.4f
-private val paletteFills: Set<Color> by lazy { CategoryPalette.colors.map { Color(it) }.toSet() }
+private const val READABLE_INK = 4.5f
 private val DarkInk = Color(0xFF0B0B0B) // INK of scripts/agent/themes_1_0.py

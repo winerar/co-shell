@@ -1,5 +1,6 @@
 package app.coshell.testing
 
+import app.coshell.core.model.CATEGORY_ORDER
 import app.coshell.core.domain.SaveCategoryUseCase
 import app.coshell.core.domain.quickentry.TipPrefs
 import app.coshell.core.domain.quickentry.TipSettings
@@ -65,8 +66,9 @@ class FakeCategoryRepository : CategoryRepository {
     val items = MutableStateFlow<Map<String, Category>>(emptyMap())
     override fun observeCategories(type: CategoryType?, includeArchived: Boolean): Flow<List<Category>> =
         items.map { all ->
+            // As the Room repository: by type, then alphabetically (#338; no manual order in the fake).
             all.values.filter { (type == null || it.type == type) && (includeArchived || !it.archived) }
-                .sortedBy { it.sortOrder }
+                .sortedWith(compareBy<Category> { it.type }.then(CATEGORY_ORDER))
         }
     override suspend fun getCategory(id: String) = items.value[id]
     override suspend fun saveCategory(category: Category) { items.value += category.id to category }

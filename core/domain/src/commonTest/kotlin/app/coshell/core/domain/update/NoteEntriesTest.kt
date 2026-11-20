@@ -10,7 +10,7 @@ class NoteEntriesTest {
         assertEquals(
             listOf(
                 NoteEntry(NoteKind.New, "Новая шторка ввода."),
-                NoteEntry(NoteKind.Fixed, "курс на тёмной теме."),
+                NoteEntry(NoteKind.Fixed, "Курс на тёмной теме."),
                 NoteEntry(NoteKind.New, "Счета группами"),
             ),
             noteEntries(notes),
@@ -28,5 +28,11 @@ class NoteEntriesTest {
         assertEquals(NoteEntry(NoteKind.Fixed, "Исправлено:"), noteEntries("• Исправлено:").single())
         assertEquals(emptyList(), noteEntries(""))
         assertEquals(NoteKind.New, noteEntries("Без маркера").single().kind)
+    }
+
+    @Test
+    fun fixedTextStartsWithACapitalNextToTheLabel() {
+        assertEquals("В светлой теме нет чёрточки.", noteEntries("• Исправлено: в светлой теме нет чёрточки.").single().text)
+        assertEquals("The rate", noteEntries("• Fixed: the rate").single().text)
     }
 }

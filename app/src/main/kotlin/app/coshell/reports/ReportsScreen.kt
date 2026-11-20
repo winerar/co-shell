@@ -1,5 +1,19 @@
 package app.coshell.reports
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
+import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.R as DesignR
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,19 +73,33 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
             onDismiss = { sheetOpen = false },
         )
     }
+    val list = rememberLazyListState()
+    // The period row went under the header: its title and arrows move into the capsule (#568, poll «Б»).
+    val periodGone by remember { derivedStateOf { list.periodGone() } }
     Scaffold(
-        topBar = { TabTopBar(stringResource(R.string.reports_title), scroll) },
+        topBar = {
+            val inBar = periodGone && period != null
+            TabTopBar(
+                stringResource(R.string.reports_title),
+                scroll,
+                subtitle = if (inBar && period != null) stringResource(R.string.reports_bar_period, periodTitle(period), state.currency) else null,
+                navigation = { BarArrow(inBar, next = false) { actions.onShift(-1) } },
+                onTitleClick = if (inBar) ({ sheetOpen = true }) else null,
+                actions = { BarArrow(inBar, next = true) { actions.onShift(1) } },
+            )
+        },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
         LazyColumn(
             Modifier.fillMaxSize(),
+            state = list,
             contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (period == null) return@LazyColumn
             if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports) }
-            item(key = "period") {
+            item(key = PERIOD_KEY) {
                 PeriodSwitch(
                     title = periodTitle(period),
                     currency = state.currency,
@@ -108,6 +136,31 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
         }
     }
 }
+
+/** Whether the «period» row is above the list's top edge (under the header capsule). */
+private fun LazyListState.periodGone(): Boolean {
+    val row = layoutInfo.visibleItemsInfo.firstOrNull { it.key == PERIOD_KEY }
+    return if (row == null) firstVisibleItemIndex > 0 else row.offset + row.size <= 0
+}
+
+/** ‹ or › in the header; fades in and out with the period line. */
+@Composable
+private fun BarArrow(shown: Boolean, next: Boolean, onClick: () -> Unit) {
+    AnimatedContent(shown, transitionSpec = { fadeIn(Motion.effects()).togetherWith(fadeOut(Motion.effectsFast())) }, label = "barArrow") { on ->
+        if (on) {
+            CoShellIconButton(onClick = onClick) {
+                Icon(
+                    painterResource(DesignR.drawable.ic_chevron_right),
+                    stringResource(if (next) R.string.reports_next else R.string.reports_previous),
+                    if (next) Modifier else Modifier.rotate(HALF_TURN),
+                )
+            }
+        }
+    }
+}
+
+private const val PERIOD_KEY = "period"
+private const val HALF_TURN = 180f
 
 @Composable
 private fun Empty(sheetTitle: String) {

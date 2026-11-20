@@ -35,6 +35,7 @@
     <string name="reports_months_caption">расходы</string>
     <string name="reports_months_description" translatable="false">%1$s: %2$s</string>
     <string name="reports_range" translatable="false">%1$s – %2$s</string>
+    <string name="reports_bar_period" translatable="false">%1$s · %2$s</string>
     <!-- Шторка «Период и валюта» (доска RepPeriod) -->
     <string name="reports_period_title">Период и валюта</string>
     <string name="reports_kind_month">Месяц</string>

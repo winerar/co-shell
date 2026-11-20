@@ -25,6 +25,9 @@ import app.coshell.core.designsystem.components.TopBarScroll
 import app.coshell.core.designsystem.components.rememberTopBarScroll
 import app.coshell.core.designsystem.components.topBarScroll
 import app.coshell.core.designsystem.motion.CoShellExpandable
+import app.coshell.core.designsystem.motion.Tactile
+import app.coshell.core.designsystem.motion.tactileClickable
+import androidx.compose.ui.semantics.Role
 import app.coshell.core.designsystem.tokens.Motion
 
 typealias TabScroll = TopBarScroll
@@ -44,6 +47,7 @@ fun Modifier.tabScroll(scroll: TabScroll): Modifier = topBarScroll(scroll)
  * «where am I», e.g. the day at the top of «Операции» with its net — slides in below the title. On entering a tab the title rolls up
  * from below.
  * [search] puts a loupe among the actions; tapped, the field takes the title's place (#394 Б).
+ * [navigation] — a button before the title, [onTitleClick] — the title and its line are a button («Отчёты»: ‹ period ›, #568 «Б»).
  * Only scale, translation and alpha animate (performance.md).
  */
 @Composable
@@ -52,6 +56,8 @@ fun TabTopBar(
     scroll: TabScroll,
     subtitle: String? = null,
     search: TabSearch? = null,
+    navigation: @Composable () -> Unit = {},
+    onTitleClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     val scrolled = scroll.scrolled
@@ -68,9 +74,10 @@ fun TabTopBar(
                     label = "headerSearch",
                 ) { open ->
                     if (open && search != null) HeaderSearchField(search, onClose = { searching = false })
-                    else TitleBlock(title, subtitle, scrolled, { enter.value })
+                    else TitleBlock(title, subtitle, scrolled, { enter.value }, onTitleClick)
                 }
             },
+            navigationIcon = navigation,
             actions = {
                 TopBarActions {
                     if (search != null) {
@@ -87,8 +94,8 @@ fun TabTopBar(
 
 /** Title (rolls in on entry) and the «where am I» line under it. */
 @Composable
-private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, enter: () -> Float) {
-    Column {
+private fun TitleBlock(title: String, subtitle: String?, scrolled: Boolean, enter: () -> Float, onClick: (() -> Unit)?) {
+    Column(if (onClick == null) Modifier else Modifier.tactileClickable(Tactile.Control, role = Role.Button, onClick = onClick)) {
         Text(
             title,
             style = ScreenTitleStyle,

@@ -19,7 +19,7 @@ import app.coshell.reports.ReportsUiState.WhyRow
  */
 internal fun buildCapital(input: ReportInput, accounts: List<Account>, days: List<BalanceDay>, book: RateBook, format: MoneyFormat): Capital? {
     val periods = reportMonths(input.period.lastMonth, NET_WORTH_MONTHS, input.startDay)
-    val saved = monthlySeries(input.ledger, input.period.columnMonths(input.startDay)).associate { it.period to it.saved }
+    val saved = monthlySeries(input.ledger, input.columns).associate { it.period to it.saved }
     val worth = netWorth(accounts, days, periods, book, input.ledger.currency, input.today, saved) ?: return null
     return Capital(
         value = format.number(worth.now),

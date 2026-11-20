@@ -27,6 +27,9 @@ import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.appearance.AppearanceRoute
+import app.coshell.privacy.HiddenPill
+import app.coshell.privacy.pin.PinSetupRoute
+import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.export.ExportRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
@@ -171,6 +174,8 @@ fun CoShellNavHost(
                     },
                 )
             }
+            // Sums hidden by laying the phone down (#145): says how to show them; goes first of the quiet pills.
+            HiddenPill(visible = onBar && updatePill == null, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m))
             // The 1.0 greeting: only on «Обзор», and the update pill goes first.
             GreetingPill(
                 visible = onBar && onHome && greetingVisible && updatePill == null,
@@ -399,6 +404,15 @@ fun CoShellNavHost(
         }
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })
+        }
+        screen<PrivacyDestination> {
+            PrivacyRoute(
+                onBack = { navController.popBackStack() },
+                onPinSetup = { mode -> navController.navigate(PinSetupDestination(mode.name)) { launchSingleTop = true } },
+            )
+        }
+        screen<PinSetupDestination> {
+            PinSetupRoute(onDone = { navController.popBackStack() })
         }
         screen<ScreensSettingsDestination> {
             ScreensSettingsScreen(

@@ -14,6 +14,8 @@ AccountEditDestination	AccountEdit
 MoreDestination	More
 SettingsDestination	Set1Root
 AppearanceDestination	Set1Look
+PrivacyDestination	Priv145Settings
+PinSetupDestination	Priv145Set1
 ScreensSettingsDestination	Set1Screens
 HomeSettingsDestination	Set1Home
 HomeDetailsSettingsDestination	Set1HomeMore

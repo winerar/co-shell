@@ -31,6 +31,8 @@
 | Семья | Family | family | ✓ | ✓ |
 | Настройки | Set1Root | settings | ✓ | ✓ |
 | Внешний вид | Set1Look | appearance | ✓ | ✓ |
+| Конфиденциальность | Priv145Settings | privacy | ✓ | ✓ |
+| Вход по PIN | Priv145LockA | lock | ✓ | ✓ |
 | Настройки: экраны | Set1Screens | settings_screens | ✓ | ✓ |
 | Настройки: обзор | Set1Home | settings_home | ✓ | ✓ |
 | Настройки: обзор, подробности | Set1HomeMore | settings_home_details | ✓ | ✓ |

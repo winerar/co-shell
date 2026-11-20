@@ -2,6 +2,11 @@ package app.coshell.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
+import app.coshell.R
+import app.coshell.privacy.LocalPrivacyCenter
+import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -33,6 +38,8 @@ internal fun MoreRoute(
     val currencies by reportCurrencies.state.collectAsStateWithLifecycle()
     val mode by themeSettings.mode.collectAsStateWithLifecycle()
     val palette by themeSettings.palette.collectAsStateWithLifecycle()
+    val privacyCenter = LocalPrivacyCenter.current
+    val privacy by remember(privacyCenter) { privacyCenter?.options ?: MutableStateFlow(null) }.collectAsStateWithLifecycle()
     MoreScreen(
         actions = MoreActions(
             onAccounts = { navController.navigate(AccountsDestination) },
@@ -46,6 +53,7 @@ internal fun MoreRoute(
             onBackup = { navController.navigate(BackupDestination) },
             onImport = { navController.navigate(WalletImportDestination) },
             onAppearance = { navController.navigate(SettingsDestination) },
+            onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onHintsToggle = hints::setEnabled,
             onHintsReset = hints::reset,
@@ -59,6 +67,7 @@ internal fun MoreRoute(
             availableVersion = availableVersion,
             mainCurrency = currencies.currencies.firstOrNull(),
             appearance = appearanceSummary(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME),
+            privacy = if (privacy?.pinEnabled == true) stringResource(R.string.privacy_menu_on) else null,
             newMarks = marks,
             hintsEnabled = hintsOn,
         ),

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Ещё → Конфиденциальность», lock screen, hidden amounts (#145). -->
+<resources>
+    <string name="privacy_title">Privacy</string>
+    <string name="privacy_menu_hint">PIN, fingerprint, hidden amounts</string>
+    <string name="privacy_menu_on">PIN is on</string>
+    <string name="privacy_section_entry">Sign-in</string>
+    <string name="privacy_pin">PIN lock</string>
+    <string name="privacy_pin_on">Asked every time you open the app</string>
+    <string name="privacy_pin_off">Off</string>
+    <string name="privacy_biometric">Fingerprint or face</string>
+    <string name="privacy_biometric_hint">Instead of the PIN, if your phone supports it</string>
+    <string name="privacy_biometric_none">No fingerprint or face set up on this phone</string>
+    <string name="privacy_change_pin">Change PIN</string>
+    <string name="privacy_relock">Lock after leaving</string>
+    <string name="privacy_relock_now">At once</string>
+    <string name="privacy_relock_1">1 min</string>
+    <string name="privacy_relock_5">5 min</string>
+    <string name="privacy_relock_hint">Time to check your bank app and come back without the PIN</string>
+    <string name="privacy_relock_now_hint">The PIN is asked every time you come back</string>
+    <string name="privacy_section_amounts">Amounts</string>
+    <string name="privacy_hide_launch">Hide amounts on start</string>
+    <string name="privacy_hide_launch_hint">To show them, tap the eye on “Overview”</string>
+    <string name="privacy_face_down">Flip to hide</string>
+    <string name="privacy_face_down_hint">Lay the phone face down and amounts hide</string>
+    <string name="privacy_section_screen">Screen</string>
+    <string name="privacy_recents">Hide in recent apps</string>
+    <string name="privacy_recents_hint">A blank card instead of the screen</string>
+    <string name="privacy_screenshots">Block screenshots</string>
+    <string name="privacy_screenshots_hint">Screen recording too</string>
+    <string name="lock_enter">Enter your PIN</string>
+    <string name="lock_wrong">Wrong PIN. Try again.</string>
+    <string name="lock_wait">Too many attempts. Try again in %1$d s.</string>
+    <string name="lock_dots">Entered %1$d of %2$d</string>
+    <string name="lock_forgot">Forgot your PIN?</string>
+    <string name="lock_forgot_text">Confirm it\'s you with your phone\'s screen lock, then choose a new PIN. Your data stays safe.</string>
+    <string name="lock_forgot_continue">Continue</string>
+    <string name="lock_no_device_lock">Your phone has no screen lock. Turn it on in the phone\'s settings and try again.</string>
+    <string name="lock_ok">Got it</string>
+    <string name="lock_biometric_title">Unlock the app</string>
+    <string name="lock_biometric_use_pin">Use PIN</string>
+    <string name="pin_current">Enter your current PIN</string>
+    <string name="pin_create">Choose a PIN</string>
+    <string name="pin_create_hint">4 digits. We\'ll ask for it when you open the app.</string>
+    <string name="pin_repeat">Repeat the PIN</string>
+    <string name="pin_repeat_hint">Just to be sure</string>
+    <string name="pin_mismatch">The PINs don\'t match. Choose again.</string>
+    <string name="eye_hide">Hide amounts</string>
+    <string name="eye_show">Show amounts</string>
+    <string name="amounts_hidden_pill">Amounts hidden. Tap the eye to show them.</string>
+    <string name="amounts_hidden_dismiss">Close</string>
+</resources>

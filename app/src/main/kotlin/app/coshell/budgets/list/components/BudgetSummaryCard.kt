@@ -31,7 +31,7 @@ import app.coshell.core.designsystem.components.FlipCueClearance
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.format.breakableBeforeCurrency
+import app.coshell.ui.format.sentenceAmounts
 
 /**
  * The month at a glance (`BudA`): «Осталось 540 USD» (or «Перерасход»), «потрачено 640 из 1 180 USD · ещё 19 дней»,
@@ -84,7 +84,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         minFontSize = 16.sp, // shrinks, never loses the currency code (#432)
     )
     Text(
-        stringResource(R.string.budgets_spent_of, summary.spent, summary.planned).breakableBeforeCurrency(),
+        stringResource(R.string.budgets_spent_of, summary.spent, summary.planned).sentenceAmounts(),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -93,9 +93,9 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         val over = forecast.overBy != null
         Text(
             if (over) {
-                stringResource(R.string.budgets_forecast_over, forecast.amount, forecast.overBy.orEmpty()).breakableBeforeCurrency()
+                stringResource(R.string.budgets_forecast_over, forecast.amount, forecast.overBy.orEmpty()).sentenceAmounts()
             } else {
-                stringResource(R.string.budgets_forecast_ok, forecast.amount).breakableBeforeCurrency()
+                stringResource(R.string.budgets_forecast_ok, forecast.amount).sentenceAmounts()
             },
             style = MaterialTheme.typography.bodySmall,
             color = if (over) bulletColor(BulletTone.WARNING) else MaterialTheme.colorScheme.onSurfaceVariant,

@@ -1,5 +1,8 @@
 package app.coshell.ui.format
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.model.MoneyFormat
 
 /**
@@ -8,3 +11,8 @@ import app.coshell.core.model.MoneyFormat
  * engine would split the code itself («US / D»).
  */
 fun String.breakableBeforeCurrency(): String = replace(MoneyFormat.NBSP, ' ')
+
+/** A phrase with sums as shown now: [breakableBeforeCurrency] + hidden sums masked (#145: «потрачено •••• USD из •••• USD»). */
+@Composable
+@ReadOnlyComposable
+fun String.sentenceAmounts(): String = shownAmount(this).breakableBeforeCurrency()

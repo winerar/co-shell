@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.charts
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -125,9 +126,10 @@ private fun LabelAndValue(label: @Composable () -> Unit, trailing: @Composable (
 @Composable
 private fun ValueAndShare(value: String, share: String?) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
+    val shown = shownAmount(value)
     Text(
         buildAnnotatedString {
-            append(value)
+            append(shown)
             share?.let { withStyle(SpanStyle(color = muted)) { append(" · $it") } }
         },
         style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),

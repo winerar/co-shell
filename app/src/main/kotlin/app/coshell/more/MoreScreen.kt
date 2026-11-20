@@ -42,6 +42,8 @@ data class MoreState(
     val mainCurrency: String? = null,
     /** «Вольт · тёмная» under «Внешний вид». */
     val appearance: String? = null,
+    /** «PIN включён» / «PIN, отпечаток, скрытие сумм» under «Конфиденциальность». */
+    val privacy: String? = null,
     /** Keys of the rows that wear the «новое» pill (#335, `NewFeatures`). */
     val newMarks: Set<String> = emptySet(),
     /** «Подсказки» (#513). */
@@ -61,6 +63,8 @@ data class MoreActions(
     val onBackup: () -> Unit = {},
     val onImport: () -> Unit = {},
     val onAppearance: () -> Unit = {},
+    /** «Конфиденциальность» (#145). */
+    val onPrivacy: () -> Unit = {},
     val onFeedback: () -> Unit = {},
     val onHintsToggle: (Boolean) -> Unit = {},
     /** «Показать подсказки заново». */

@@ -22,7 +22,7 @@ import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.components.FlipCueClearance
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.HomeUiState
-import app.coshell.ui.format.breakableBeforeCurrency
+import app.coshell.ui.format.sentenceAmounts
 import app.coshell.ui.format.formatMonth
 
 /**
@@ -53,7 +53,7 @@ internal fun ColumnScope.TotalBack(state: HomeUiState) {
         }
         result?.let {
             Text(
-                stringResource(R.string.home_back_per_day, it.perDay).breakableBeforeCurrency(),
+                stringResource(R.string.home_back_per_day, it.perDay).sentenceAmounts(),
                 style = MaterialTheme.typography.bodySmall,
                 color = hero.hint,
                 modifier = Modifier.padding(top = Spacing.s),

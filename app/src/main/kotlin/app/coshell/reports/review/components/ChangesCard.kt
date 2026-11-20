@@ -1,5 +1,6 @@
 package app.coshell.reports.review.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import app.coshell.core.designsystem.theme.RateSmallStyle
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,7 @@ private fun ChangeRow(change: Change, onClick: () -> Unit) {
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(change.difference, style = RateTextStyle, color = color, maxLines = 1)
+            Text(shownAmount(change.difference), style = RateTextStyle, color = color, maxLines = 1)
             change.percent?.let { Text(signedPercent(it), style = MaterialTheme.typography.bodySmall, color = color) }
         }
         Icon(

@@ -2,15 +2,15 @@
 
 Owner's answers 2026-11-20: own 4-digit PIN + fingerprint/face, «Забыли PIN?» through the phone's own lock (data stays);
 hide sums with the «eye» and by laying the phone face down; recents preview and screenshots — by settings; relock: at once / 1 / 5 min.
-Proposals until the owner's «ок» (poll-privacy-145.json); imported by mockup_screens_feedback.py.
+Poll poll-privacy-145.json — all «А» (2026-11-20): keypad cells, «•••• USD», eye in the header; notes: theme colours, «блокировать»; imported by mockup_screens_feedback.py.
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 from mockup_screens_main import RECENT, tile, tiles, recent_card
 
 FEEDBACK = [
-    (145, 'Конфиденциальность: PIN, отпечаток, скрытие сумм · предложение 2026-11-20 (опрос)',
-     'Свой PIN из 4 цифр + отпечаток или лицо; «Забыли PIN?» — через блокировку телефона, данные не тронуты. Запирать: сразу / 1 / 5 мин. '
+    (145, 'Конфиденциальность: PIN, отпечаток, скрытие сумм · опрос 2026-11-20, все А',
+     'Свой PIN из 4 цифр + отпечаток или лицо; «Забыли PIN?» — через блокировку телефона, данные не тронуты. Блокировать: сразу / 1 / 5 мин. '
      'Суммы скрывает «глаз» и переворот телефона экраном вниз. Превью в недавних и скриншоты — переключатели в «Ещё → Конфиденциальность».'),
 ]
 
@@ -32,21 +32,21 @@ def dots(n, filled, color=LIME, error=False):
 
 
 def pin_keypad(finger=True, rounded=False):
-    """A — CoShellKeypad cells (16 radius, the amount keypad's look); B — round keys like the phone's own lock (new component)."""
+    """Icons — thin like everywhere (~1.5 px line at 24, owner 2026-11-20). A — CoShellKeypad cells (16 radius, the amount keypad's look); B — round keys like the phone's own lock (new component)."""
     def k(t, bg=KEY, col=INK, sz=26):
         r = '50%' if rounded else '16px'
         size = 'width: 76px; height: 76px; justify-self: center;' if rounded else ''
         return ('<span style="border-radius: %s; background: %s; color: %s; font-size: %dpx; %s %s display: flex; align-items: center; justify-content: center;">%s</span>'
                 % (r, bg, col, sz, MONO, size, t))
-    fp = k(svg(FINGER, LIME, 30, 1.7), KEY2) if finger else '<span></span>'
-    keys = ''.join(k(str(d)) for d in range(1, 10)) + fp + k('0') + k(svg('M20 6H9l-6 6 6 6h11zM12 9l6 6M18 9l-6 6', INK, 26, 1.7), KEY2)
+    fp = k(svg(FINGER, INK, 24, 1.5), KEY2) if finger else '<span></span>'
+    keys = ''.join(k(str(d)) for d in range(1, 10)) + fp + k('0') + k(svg('M20 6H9l-6 6 6 6h11zM12 9l6 6M18 9l-6 6', INK, 24, 1.5), KEY2)
     rows = '86px' if rounded else '64px'
     return '<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: %s; gap: %s;">%s</div>' % (rows, '10px' if rounded else '8px', keys)
 
 
 def lock_screen(rounded=False, filled=2, title='Введите PIN', sub='', error=False, link='Забыли PIN?', finger=True):
-    logo = ('<div style="width: 64px; height: 64px; border-radius: 20px; background: %s; display: flex; align-items: center; justify-content: center; margin: 0 auto;">%s</div>'
-            % (CHIP, svg('lock', LIME, 30, 1.8)))
+    logo = ('<div style="width: 56px; height: 56px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center; margin: 0 auto;">%s</div>'
+            % (LIME, svg('lock', ONLIME, 24, 1.5)))  # IconBadge(ic_lock, primary, badgeLarge): the theme's neon (owner: «в цветах темы»)
     sub_html = '<div style="margin-top: 8px; font-size: 14px; color: %s; text-align: center; min-height: 20px;">%s</div>' % (PINK if error else MUTED, sub)
     head = ('<div style="padding-top: 120px;">%s<div style="margin-top: 20px; font-size: 22px; font-weight: 700; text-align: center;">%s</div>%s'
             '<div style="margin-top: 24px;">%s</div></div>' % (logo, title, sub_html, dots(4, filled, error=error)))
@@ -79,7 +79,7 @@ def biometric():
               '<div style="margin: 28px auto 20px; width: 72px; height: 72px; border-radius: 50%%; border: 2px solid %s; display: flex; align-items: center; justify-content: center;">%s</div>'
               '<div style="text-align: left; height: 48px; line-height: 48px; font-size: 15px; color: %s; font-weight: 600;">Ввести PIN</div>'
               '<div style="font-size: 11px; color: %s;">Окно системы Android — как в банковских приложениях</div></div>'
-              % (MUTED, CYAN, svg(FINGER, CYAN, 40, 1.6), CYAN, MUTED2))
+              % (MUTED, CYAN, svg(FINGER, CYAN, 40, 1.0), CYAN, MUTED2))
     return lock_screen(filled=0) + '<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.55);"></div>' + prompt
 
 
@@ -162,7 +162,7 @@ def settings(on=True):
     lock = group([sw('Вход по PIN', 'Спросим при каждом входе' if on else 'Выключен', on),
                   sw('Отпечаток или лицо', 'Вместо PIN, если телефон умеет', on, on),
                   row('Сменить PIN', '', '', chevron()) if on else ''])
-    relock = ('<div style="padding: 12px 16px;"><div style="font-size: 15px; margin-bottom: 8px;">Запирать после выхода</div>%s'
+    relock = ('<div style="padding: 12px 16px;"><div style="font-size: 15px; margin-bottom: 8px;">Блокировать после выхода</div>%s'
               '<div style="margin-top: 6px; font-size: 12px; color: %s;">Успеете заглянуть в банк и вернуться без PIN</div></div>'
               % (segmented(['Сразу', '1 мин', '5 мин'], '1 мин'), MUTED))
     sums = group([sw('Скрывать суммы при запуске', 'Показать — «глаз» на «Обзоре»', False),
@@ -197,15 +197,14 @@ def recents():
                 '<span style="width: 28px; height: 28px; border-radius: 50%%; background: %s;"></span>%s</div>'
                 '<div style="height: 500px; border-radius: 24px; overflow: hidden; position: relative;">%s</div></div>' % (x, scale, LIME if name == 'co-shell' else '#4285F4', name, inner))
     ours = ('<div style="position: absolute; inset: 0; background: %s; display: flex; align-items: center; justify-content: center;">'
-            '<div style="width: 72px; height: 72px; border-radius: 22px; background: %s; display: flex; align-items: center; justify-content: center;">%s</div></div>' % (BG, CHIP, svg('lock', LIME, 34)))
+            '<div style="width: 72px; height: 72px; border-radius: 22px; background: %s; display: flex; align-items: center; justify-content: center;">%s</div></div>' % (BG, CHIP, svg('lock', LIME, 34, 1.1)))
     other = '<div style="position: absolute; inset: 0; background: #E9EEF6;"></div>'
     return ('<div style="position: absolute; inset: 0; background: #1E1F22;"></div>' + card(other, 'Банк', -200, 0.92) + card(ours, 'co-shell', 70)
             + '<div style="position: absolute; bottom: 60px; left: 0; right: 0; text-align: center; color: #fff; font-size: 14px;">Очистить всё</div>')
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Priv145LockA', '#145 · вход А: клавиши как у клавиатуры суммы', lock_a, 145),
-    ('Priv145LockB', '#145 · вход Б: круглые клавиши, как у блокировки телефона', lock_b, 145),
+    ('Priv145LockA', '#145 · вход: клавиши как у клавиатуры суммы', lock_a, 145),
     ('Priv145Bio', '#145 · отпечаток: окно системы поверх входа', biometric, 145),
     ('Priv145Error', '#145 · PIN не подошёл', lock_error, 145),
     ('Priv145Wait', '#145 · много попыток: пауза 30 с', lock_wait, 145),
@@ -213,10 +212,7 @@ BOARDS = [  # name, title, fn, issue number
     ('Priv145Set2', '#145 · создать PIN: повторите', lambda: setup(2), 145),
     ('Priv145Forgot', '#145 · «Забыли PIN?» → блокировка телефона', forgot, 145),
     ('Priv145Shown', '#145 · «Обзор»: суммы видны, «глаз» в шапке', home_visible, 145),
-    ('Priv145HideA', '#145 · скрыто А: «•••• USD», «глаз» в шапке', lambda: home_hidden('A'), 145),
-    ('Priv145HideB', '#145 · скрыто Б: «••••» без валюты', lambda: home_hidden('B'), 145),
-    ('Priv145HideC', '#145 · скрыто В: размытие', lambda: home_hidden('C'), 145),
-    ('Priv145EyeCard', '#145 · «глаз» на карточке, рядом с «Общий баланс»', lambda: home_hidden('A', True), 145),
+    ('Priv145HideA', '#145 · скрыто: «•••• USD», «глаз» в шапке', lambda: home_hidden('A'), 145),
     ('Priv145Flipped', '#145 · перевернули телефон: плашка «Суммы скрыты»', flipped_pill, 145),
     ('Priv145Settings', '#145 · Ещё → Конфиденциальность', settings, 145),
     ('Priv145SettingsOff', '#145 · Конфиденциальность: PIN выключен', settings_off, 145),

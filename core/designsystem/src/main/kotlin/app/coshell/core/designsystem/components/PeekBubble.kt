@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,7 +74,7 @@ private fun PeekRow(line: PeekLine) {
     val scheme = MaterialTheme.colorScheme
     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.l)) {
         if (line.amount != null) {
-            Text("≈ ${line.amount}", style = AmountTextStyle, color = scheme.onSurface, modifier = Modifier.weight(1f))
+            Text("≈ ${shownAmount(line.amount)}", style = AmountTextStyle, color = scheme.onSurface, modifier = Modifier.weight(1f))
         } else {
             Text(line.missing, style = MaterialTheme.typography.bodyMedium, color = LocalStatusPalette.current.warning, modifier = Modifier.weight(1f))
         }

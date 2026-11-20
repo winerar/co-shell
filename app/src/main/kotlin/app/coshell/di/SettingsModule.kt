@@ -18,6 +18,10 @@ import app.coshell.shake.data.PrefsShakeSettings
 import app.coshell.templates.data.PrefsTemplateUsage
 import app.coshell.theme.data.PrefsThemeSettings
 import app.coshell.transactions.edit.tip.PrefsTipSettings
+import app.coshell.core.domain.privacy.PinHasher
+import app.coshell.core.domain.privacy.PrivacySettings
+import app.coshell.privacy.data.Pbkdf2PinHasher
+import app.coshell.privacy.data.PrefsPrivacySettings
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,6 +31,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 interface SettingsModule {
+    @Binds
+    fun bindPrivacySettings(impl: PrefsPrivacySettings): PrivacySettings
+
+    @Binds
+    fun bindPinHasher(impl: Pbkdf2PinHasher): PinHasher
+
     @Binds
     fun bindShakeSettings(impl: PrefsShakeSettings): ShakeSettings
 

@@ -31,7 +31,7 @@ import app.coshell.core.designsystem.theme.RateSmallStyle
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.format.breakableBeforeCurrency
+import app.coshell.ui.format.sentenceAmounts
 
 /**
  * One envelope (`BudA` row): badge, name (and «папка · 3 категории»), «310 000 / 400 000 ARS», the bullet with
@@ -128,7 +128,7 @@ private fun subtitle(envelope: Envelope): String? {
 }
 
 @Composable
-internal fun captionText(caption: Caption): String = rawCaption(caption).breakableBeforeCurrency()
+internal fun captionText(caption: Caption): String = rawCaption(caption).sentenceAmounts()
 
 @Composable
 private fun rawCaption(caption: Caption): String = when (caption) {

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -46,12 +46,14 @@ import app.coshell.update.log.UpdateJournal
 import dagger.hilt.android.AndroidEntryPoint
 import app.coshell.hints.HintCenter
 import app.coshell.hints.LocalHintHost
+import app.coshell.privacy.PrivacyCenter
+import app.coshell.privacy.PrivacyHost
 import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     @Inject lateinit var foregroundSync: ForegroundSync
     @Inject lateinit var installEvents: InstallEvents
     @Inject lateinit var updateJournal: UpdateJournal
@@ -60,6 +62,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var receiptLinks: ReceiptLinks
     @Inject lateinit var paymentNotices: PaymentNotices
     @Inject lateinit var hintCenter: HintCenter
+    @Inject lateinit var privacy: PrivacyCenter
 
     private val askNotifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
@@ -110,14 +113,28 @@ class MainActivity : ComponentActivity() {
                     val systemHaptics = LocalHapticFeedback.current
                     // «Ввод операции → Вибрация»: off — every tap of the app stays silent.
                     val haptics = remember(systemHaptics, options.haptics) { if (options.haptics) systemHaptics else NoHaptics }
-                    CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
-                        CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
+                    // PIN lock and hidden sums over everything (#145); the language question stays under the lock.
+                    PrivacyHost(privacy) {
+                        CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
+                            CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
+                        }
+                        // The one-time language question over «Обзор» (#352).
+                        LanguagePromptHost()
                     }
-                    // The one-time language question over «Обзор» (#352).
-                    LanguagePromptHost()
                 }
             }
         }
+    }
+
+    // The relock delay counts from leaving the app; a rotation is not leaving (#145).
+    override fun onStart() {
+        super.onStart()
+        privacy.onForeground()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) privacy.onBackground()
     }
 
     override fun onNewIntent(intent: Intent) {

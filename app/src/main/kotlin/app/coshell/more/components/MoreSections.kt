@@ -68,6 +68,7 @@ internal fun moreSections(state: MoreState, actions: MoreActions): List<MoreSect
             R.string.more_section_app,
             listOf(
                 MoreItem(DesignR.drawable.ic_contrast, R.string.settings_title, c[18], state.appearance, actions.onAppearance),
+                MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, c[12], state.privacy ?: stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
                 MoreItem(
                     DesignR.drawable.ic_lightbulb,
                     R.string.hints_title,

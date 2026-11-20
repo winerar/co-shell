@@ -83,6 +83,11 @@
   фиксированная высота (шторка не прыгает), каждая клавиша — тактильная, тик клавиатуры. Логика ввода —
   чистая `AmountKeys.apply/normalize/display` (тест `AmountKeysTest`): текст вида `"32000 + 1500,5 − 200"` (`AmountKeys.terms` — слагаемые со знаками); сумму
   считает экран (`parsePositiveAmount` в `transactions/edit/ReceiptForm.kt`, итог должен быть больше нуля; конвертер — не ниже нуля).
+- **PIN** (#145, доска `Priv145LockA`) — `CoShellPinPad(onKey: (PinKey), backspaceLabel, biometricLabel)` (клетки `CoShellKeypad`, отпечаток слева от нуля,
+  `biometricLabel = null` — без него) и `CoShellPinDots(filled, description, error)`; экран — `app/.../privacy/pin/PinLayout`.
+- **Скрытые суммы** (#145) — `amount/LocalAmountsHidden` + `shownAmount(text)`/`maskAmounts` («•••• USD»): `AmountText`, `RollingAmountText`, подписи графиков,
+  `AccountCard`, `DayHeader`, пузырь сумм читают сами; сумма в своём `Text` или фразе — через `shownAmount` (в app фразы — `sentenceAmounts()`).
+  `CoShellSwitchRow(enabled = false)` — 38 %, не переключается («Отпечаток» без PIN).
 - **Значок счёта** — `category/AccountBadge` (скруглённый квадрат цвета счёта, 2 буквы названия или буквы банка,
   чернила тёмные/белые по яркости — `inkOn`); везде, где показан счёт (список, выбор счёта, лента в шторке); `initials = false` + `Sizes.miniBadge` —
   мини-значок 16 dp без букв в подписи строки операции (#505, на досках — `mini_badge`).

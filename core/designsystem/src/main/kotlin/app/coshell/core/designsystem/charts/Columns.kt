@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.charts
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -118,7 +119,7 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
             }
             // Rides on the bar's top; the offset is read at placement, so a growing bar does not recompose the text.
             Text(
-                column.valueLabel,
+                shownAmount(column.valueLabel),
                 style = RateTextStyle.copy(fontSize = MaterialTheme.typography.labelSmall.fontSize),
                 color = ink,
                 maxLines = 1,

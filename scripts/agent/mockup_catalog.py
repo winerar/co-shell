@@ -5,6 +5,7 @@ Each card: live bricks, then «brick() → Compose name». New brick in mockup_b
 from mockup_parts import *  # noqa: F401,F403
 from mockup_logic import per, proto
 import mockup_screens_main as m
+import mockup_screens_fb_privacy as pv
 import mockup_theme
 
 W, H = 1280, 1960
@@ -110,8 +111,9 @@ def components():
         section('Диалоги и шторки', stack(frame(scrim() + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]), 250),
                                           frame(scrim() + sheet('<div style="padding: 14px 16px;">%s</div>' % segmented(['Расход', 'Доход', 'Перевод'], 'Расход', 'lime'), 60), 160)),
                 'dialog(title, text, actions, body) → CoShellDialog · CoShellAlertDialog · sheet(inner, top) + scrim → CoShellSheet'),
-        section('Клавиатура и сумма', stack(m.big_amount('4 500', 'ARS'), m.keypad(), m.cat_grid('Продукты')),
-                'keypad → CoShellKeypad · big_amount · cat_grid · acc_chip — части шторки (transactions/edit/)'),
+        section('Клавиатура и сумма', stack(m.big_amount('4 500', 'ARS'), m.keypad(), m.cat_grid('Продукты'), pv.dots(4, 2), pv.pin_keypad()),
+                'keypad → CoShellKeypad · big_amount · cat_grid · acc_chip — части шторки (transactions/edit/) · '
+                'dots → CoShellPinDots · pin_keypad → CoShellPinPad (вход по PIN, #145: клетки клавиатуры суммы, отпечаток слева от нуля)'),
         section('Значки и прогресс', stack(line(badge('GA', '#F26E22', '#1A0A00'), mini_badge('#F26E22'), dot_icon('cart', LIME), tile_icon('rate', CYAN, CYANBG), swatch(VIOLET, True), swatch('#FF8A5C', new=True)),
                                            grid([icon_cell('cart', True), icon_cell('cafe'), icon_cell('taxi'), icon_cell('house')], 4),
                                            line(ring(0.45, '<span style="%s font-size: 20px; font-weight: 700;">45 %%</span>' % MONO, LIME, 110, 8), ring(0.72, '<b>2</b>', YELLOW, 110, 8)),

@@ -57,6 +57,8 @@ data class MoreActions(
     val onImport: () -> Unit = {},
     val onExport: () -> Unit = {},
     val onSettings: () -> Unit = {},
+    /** «Конфиденциальность» (#145). */
+    val onPrivacy: () -> Unit = {},
     val onFeedback: () -> Unit = {},
     /** Tap on the version card: the update screen. */
     val onOpenUpdate: () -> Unit = {},

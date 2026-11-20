@@ -33,6 +33,7 @@ internal fun MoreRoute(
             onImport = { navController.navigate(WalletImportDestination) },
             onExport = { navController.navigate(ExportDestination) },
             onSettings = { navController.navigate(SettingsDestination) },
+            onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onStartUpdate = onStartUpdate,

@@ -98,14 +98,16 @@ fun CoShellSwitchRow(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     leading: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true,
 ) = RowLayout(
-    modifier = modifier.tactileToggleable(value = checked, onValueChange = onCheckedChange),
-    enabled = true,
+    // Disabled (#145: «Отпечаток» while there is no PIN): 38 %, the row does not toggle.
+    modifier = if (enabled) modifier.tactileToggleable(value = checked, onValueChange = onCheckedChange) else modifier,
+    enabled = enabled,
     containerColor = Color.Transparent,
     title = { Text(title) },
     supporting = subtitle?.let { { Text(it) } },
     leading = leading,
-    trailing = { CoShellSwitch(checked = checked, onCheckedChange = null) },
+    trailing = { CoShellSwitch(checked = checked, onCheckedChange = null, enabled = enabled) },
 )
 
 @Composable

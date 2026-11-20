@@ -1,5 +1,6 @@
 package app.coshell.accounts.list.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,7 @@ internal fun AccountGroup(
             group.total?.let {
                 Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
                     Text(
-                        it,
+                        shownAmount(it),
                         style = RateTextStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.components
 
+import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -57,7 +58,7 @@ fun CoShellAccountCard(
             Text(kind, color = ink, style = MaterialTheme.typography.labelLarge)
         }
         Text(
-            balance,
+            shownAmount(balance),
             color = ink,
             style = AmountTitleStyle,
             maxLines = 1,

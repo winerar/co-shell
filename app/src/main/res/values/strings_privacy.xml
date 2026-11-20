@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Ещё → Конфиденциальность», lock screen, hidden amounts (#145). -->
+<resources>
+    <string name="privacy_title">Конфиденциальность</string>
+    <string name="privacy_menu_hint">PIN, отпечаток, скрытие сумм</string>
+    <string name="privacy_menu_on">PIN включён</string>
+    <string name="privacy_section_entry">Вход</string>
+    <string name="privacy_pin">Вход по PIN</string>
+    <string name="privacy_pin_on">Спросим при каждом входе</string>
+    <string name="privacy_pin_off">Выключен</string>
+    <string name="privacy_biometric">Отпечаток или лицо</string>
+    <string name="privacy_biometric_hint">Вместо PIN, если телефон умеет</string>
+    <string name="privacy_biometric_none">На телефоне нет отпечатка или лица</string>
+    <string name="privacy_change_pin">Сменить PIN</string>
+    <string name="privacy_relock">Блокировать после выхода</string>
+    <string name="privacy_relock_now">Сразу</string>
+    <string name="privacy_relock_1">1 мин</string>
+    <string name="privacy_relock_5">5 мин</string>
+    <string name="privacy_relock_hint">Успеете заглянуть в банк и вернуться без PIN</string>
+    <string name="privacy_relock_now_hint">PIN спросим при каждом возвращении</string>
+    <string name="privacy_section_amounts">Суммы</string>
+    <string name="privacy_hide_launch">Скрывать суммы при запуске</string>
+    <string name="privacy_hide_launch_hint">Показать — «глаз» на «Обзоре»</string>
+    <string name="privacy_face_down">Перевернуть — скрыть</string>
+    <string name="privacy_face_down_hint">Положили экраном вниз — суммы скрылись</string>
+    <string name="privacy_section_screen">Экран</string>
+    <string name="privacy_recents">Прятать в недавних</string>
+    <string name="privacy_recents_hint">Вместо экрана — пустая карточка</string>
+    <string name="privacy_screenshots">Запретить скриншоты</string>
+    <string name="privacy_screenshots_hint">И запись экрана</string>
+    <string name="lock_enter">Введите PIN</string>
+    <string name="lock_wrong">PIN не подошёл. Попробуйте ещё раз.</string>
+    <string name="lock_wait">Попыток много. Повторите через %1$d с.</string>
+    <string name="lock_dots">Введено %1$d из %2$d</string>
+    <string name="lock_forgot">Забыли PIN?</string>
+    <string name="lock_forgot_text">Подтвердите, что это вы, блокировкой телефона — и придумайте новый PIN. Данные не тронуты.</string>
+    <string name="lock_forgot_continue">Продолжить</string>
+    <string name="lock_no_device_lock">На телефоне нет блокировки экрана. Включите её в настройках телефона и повторите.</string>
+    <string name="lock_ok">Понятно</string>
+    <string name="lock_biometric_title">Вход в приложение</string>
+    <string name="lock_biometric_use_pin">Ввести PIN</string>
+    <string name="pin_current">Введите текущий PIN</string>
+    <string name="pin_create">Придумайте PIN</string>
+    <string name="pin_create_hint">4 цифры. Его спросим при входе.</string>
+    <string name="pin_repeat">Повторите PIN</string>
+    <string name="pin_repeat_hint">Чтобы не ошибиться</string>
+    <string name="pin_mismatch">PIN не совпал. Придумайте заново.</string>
+    <string name="eye_hide">Скрыть суммы</string>
+    <string name="eye_show">Показать суммы</string>
+    <string name="amounts_hidden_pill">Суммы скрыты. Нажмите «глаз», чтобы показать.</string>
+    <string name="amounts_hidden_dismiss">Закрыть</string>
+</resources>

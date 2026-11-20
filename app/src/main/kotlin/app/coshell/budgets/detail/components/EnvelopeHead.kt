@@ -22,7 +22,7 @@ import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.format.breakableBeforeCurrency
+import app.coshell.ui.format.sentenceAmounts
 
 /**
  * The top of `BudDetail`: «90 000 ARS» left (or overspent) and «осталось · 19 дней», the bullet with today's mark,
@@ -80,6 +80,6 @@ private fun stateLine(head: Head): String {
 
 @Composable
 private fun spentLine(head: Head): String {
-    val spent = stringResource(R.string.budget_detail_spent_of, head.envelope.spent, head.envelope.limit).breakableBeforeCurrency()
-    return head.paceToday?.let { spent + " · " + stringResource(R.string.budget_detail_pace, it).breakableBeforeCurrency() } ?: spent
+    val spent = stringResource(R.string.budget_detail_spent_of, head.envelope.spent, head.envelope.limit).sentenceAmounts()
+    return head.paceToday?.let { spent + " · " + stringResource(R.string.budget_detail_pace, it).sentenceAmounts() } ?: spent
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.theme.AmountHeroStyle
 import app.coshell.core.designsystem.theme.LocalHeroPalette
@@ -23,7 +24,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 @Composable
 internal fun BalancePreviewCard(totals: List<String>, modifier: Modifier = Modifier) {
     val main = totals.firstOrNull() ?: return
-    CoShellCard(modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s), accent = true) {
+    CoShellCard(modifier.fillMaxWidth().padding(horizontal = Spacing.l, vertical = Spacing.s), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l)) {
             Text(stringResource(R.string.report_currencies_preview), style = MaterialTheme.typography.labelLarge)
             AmountText(text = main, style = AmountHeroStyle, color = LocalHeroPalette.current.amount, minFontSize = MinAmount)

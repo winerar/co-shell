@@ -40,7 +40,7 @@ internal fun VersionCard(
 ) {
     val accent = MaterialTheme.colorScheme.primary
     val available = availableVersion != null
-    CoShellCard(modifier = modifier, tint = if (available) accent else null, onClick = onOpen) {
+    CoShellCard(modifier = modifier, onClick = onOpen) {
         Row(
             Modifier.fillMaxWidth().padding(Spacing.m),
             horizontalArrangement = Arrangement.spacedBy(Spacing.m),

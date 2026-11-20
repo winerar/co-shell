@@ -53,7 +53,7 @@ fun CoShellFlipCard(
             rotationX = angle.value
             cameraDistance = depth
         },
-        accent = true,
+        tone = CardTone.Hero,
         onClick = onFlip,
     ) {
         Box {

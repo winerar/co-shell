@@ -94,7 +94,7 @@ class NonTextContrastTest {
     }
 
     private companion object {
-        const val CARD_TINT = 0.12f // CoShellCard(tint)
+        const val CARD_TINT = 0.12f // CoShellCard(tone = Secondary/Warning/Danger)
         const val TAG_FILL = 0.18f // CoShellTagChip / CoShellTagPill
     }
 }

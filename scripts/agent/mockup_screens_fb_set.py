@@ -6,6 +6,7 @@ Static, one state — for the «ок» before code. Imported by mockup_screens_f
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 from mockup_screens_main import RECENT, balance_hero, tile, tiles
+import mockup_screens_fb_setcards as sc
 
 FEEDBACK = [
     (1118, 'Настройки и кастомизация экранов · 2026-11-17',
@@ -38,14 +39,16 @@ def sw(title, sub='', on=True):
 # ---- root ------------------------------------------------------------------------------------------------------------
 
 def root():
-    g = group([r('Внешний вид', 'Язык · тема · палитра · плотность списков', 'spark', VIOLET, VIOLETBG),
-               r('Экраны', 'Карточки «Обзора» · операции · счета', 'home', LIME, LIMEBG),
-               r('Деньги и даты', 'Валюты · начало месяца и недели', 'rate', CYAN, CYANBG),
-               r('Ввод операции', 'Встряхнуть · счёт и валюта · вибрация', 'plus', LIME, LIMEBG),
-               r('Уведомления', 'Платежи · время · траты партнёра', 'alert', YELLOW, YELLOWBG),
-               r('Данные и копия', 'Резервная копия · экспорт · синк по Wi-Fi', 'archive', CYAN, CYANBG)])
-    body = (note('Настройки этого телефона. Валюты, день начала месяца и счета в балансе — общие для семьи.', 4) + label('Настройки', top=10) + g)
-    return inner_screen('Настройки', body)
+    """Group cards (poll 2026-11-20, В): the main settings of each group inside its card, «Все ›» — the group screen."""
+    return inner_screen(sc.RU['title'], sc.cards_top(sc.RU))
+
+
+def root_more():
+    return inner_screen(sc.RU['title'], sc.cards_rest(sc.RU))
+
+
+def root_es():
+    return inner_screen(sc.ES['title'], sc.stress(sc.ES, sc.cards_top(sc.ES)))
 
 
 # ---- look ------------------------------------------------------------------------------------------------------------
@@ -196,7 +199,9 @@ def more_row():
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Set1Root', 'Настройки: группы', root, 1118),
+    ('Set1Root', 'Настройки: карточки групп', root, 1118),
+    ('Set1RootMore', 'Настройки: прокрутка', root_more, 1118),
+    ('Set1RootEs', 'Настройки: es, 320 dp, ×1,3', root_es, 1118),
     ('Set1More', 'Ещё: «Внешний вид» → «Настройки»', more_row, 1118),
     ('Set1Look', 'Внешний вид: язык, тема, палитра, плотность списков', look, 1118),
     ('Set1Screens', 'Экраны: Обзор, Операции, Отчёты, Счета', screens, 1118),

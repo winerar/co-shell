@@ -27,6 +27,10 @@ class SettingsAccountsViewModel @Inject constructor(
     val mainCurrency: StateFlow<String> = reportCurrencies.currencies.map { (it.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first()).value }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), ReportCurrencySettings.DEFAULT.first().value)
 
+    /** All totals currencies, main first (codes): the «Деньги и даты» card of «Настройки» joins them. */
+    val currencies: StateFlow<List<String>> = reportCurrencies.currencies.map { list -> list.map { it.value } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), ReportCurrencySettings.DEFAULT.map { it.value })
+
 
     val list: StateFlow<List<Account>> =
         accounts.observeAccounts(includeArchived = false).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())

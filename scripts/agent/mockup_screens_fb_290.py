@@ -168,7 +168,8 @@ def acc_form_a():
                      '<div style="margin-top: 10px; %s font-size: 28px; font-weight: 700; color: %s;">245 300,00 <span style="font-size: 14px;">ARS</span></div>'
                      % (HERO_HINT, MONO, LIME), pad='12px 14px')
     money = ('<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s%s</div>'
-             % (detail('lock', 'Валюта', 'ARS · заблок.'), detail('wallet', 'Нач. баланс', '120 000,00')))
+             % (detail('lock', 'Валюта', 'ARS · заблок.'), detail('wallet', 'Нач. баланс', '120 000,00'))
+             + '<div style="height: 6px;"></div>' + detail('refresh', 'Баланс сейчас · Исправить', '245 300,00 ARS'))  # balance adjustment
     types = ''.join(chip(t, t == 'Карта').replace('height: 36px', 'height: 32px') for t in ('Наличные', 'Карта', 'Вклад', 'Крипто', 'Другое'))
     sw = ('<div style="display: flex; align-items: center; gap: 10px;"><span style="flex-grow: 1; font-size: 14px;">Учитывать в общем балансе'
           '<span style="display: block; font-size: 11px; color: %s;">Выключите для долга или чужих денег</span></span>%s</div>' % (MUTED, switch(True)))

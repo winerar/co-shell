@@ -3,7 +3,9 @@ package app.coshell.accounts.edit
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
+import app.coshell.core.domain.AdjustBalanceUseCase
 import app.coshell.core.domain.DeleteAccountUseCase
+import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
@@ -11,10 +13,12 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
+import app.coshell.core.model.SystemCategories
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.AccountEditDestination
 import app.coshell.testing.FakeAccountRepository
+import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Instant
@@ -33,6 +37,7 @@ class AccountEditViewModelTest {
     private val usd = CurrencyCode("USD")
     private val accounts = FakeAccountRepository()
     private val transactions = FakeTransactionRepository()
+    private val categories = FakeCategoryRepository()
 
     private fun viewModel(accountId: String? = null) = AccountEditViewModel(
         savedStateHandle = SavedStateHandle(mapOf(AccountEditDestination.ARG_ACCOUNT_ID to accountId)),
@@ -41,6 +46,7 @@ class AccountEditViewModelTest {
         deleteAccount = DeleteAccountUseCase(accounts, transactions),
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
+        adjustBalance = AdjustBalanceUseCase(accounts, transactions, EnsureAdjustmentCategoriesUseCase(categories), IdGenerator { "adj" }),
     )
 
     @Test
@@ -180,5 +186,40 @@ class AccountEditViewModelTest {
         vm.delete()
         assertTrue(vm.state.value.isDone)
         assertNull(accounts.getAccount("a"))
+    }
+
+    @Test
+    fun `actual balance shows the difference and save records an adjustment`() = runTest {
+        accounts.saveAccount(Account("cash", "Cash", ars, initialBalanceMinor = 10_000))
+        val vm = viewModel("cash")
+        assertTrue(vm.state.value.canAdjust)
+        assertEquals("100,00\u00A0ARS", vm.state.value.currentBalance)
+
+        vm.onActualBalanceChange("75")
+        assertEquals("\u221225,00\u00A0ARS", vm.state.value.adjustment)
+        vm.save()
+
+        assertTrue(vm.state.value.isDone)
+        val adj = transactions.getTransaction("adj")!!
+        assertEquals(TransactionType.EXPENSE, adj.type)
+        assertEquals(Money(2_500, ars), adj.amount)
+        assertEquals(SystemCategories.ADJUSTMENT_EXPENSE_ID, adj.categoryId)
+    }
+
+    @Test
+    fun `bad actual balance blocks saving and blank records nothing`() = runTest {
+        accounts.saveAccount(Account("cash", "Cash", ars, initialBalanceMinor = 10_000))
+        val vm = viewModel("cash")
+
+        vm.onActualBalanceChange("12,3456")
+        vm.save()
+        assertEquals(BalanceError.TOO_MANY_FRACTION_DIGITS, vm.state.value.actualBalanceError)
+        assertFalse(vm.state.value.isDone)
+
+        vm.onActualBalanceChange("")
+        assertNull(vm.state.value.adjustment)
+        vm.save()
+        assertTrue(vm.state.value.isDone)
+        assertNull(transactions.getTransaction("adj"))
     }
 }

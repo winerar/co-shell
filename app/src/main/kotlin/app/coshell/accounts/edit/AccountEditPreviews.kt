@@ -33,4 +33,5 @@ internal val accountEditPreviewSample =
         type = AccountType.CASH,
         initialBalance = "1250,5",
         currencyLocked = true,
+        currentBalance = "1 870,25 USD",
     )

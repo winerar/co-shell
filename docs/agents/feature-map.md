@@ -120,3 +120,6 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 Ручной порядок (#338, доски `Fb338Acc`/`Fb338Cat`): `core:domain/Reorder` (номера, шаг 1024) + `order/ManualOrder` (первое перетаскивание
 нумерует весь список как на экране, вложение и вынос категории) + `ReorderUseCase`; режим «Порядок» — ⇅ в шапке «Счетов» и «Категорий»
 (`accounts/list/components/AccountsOrder`, `categories/list/components/CategoriesOrder` + `CategoryOrderRows`), каркас — `ui/order/OrderScreen`.
+Корректировка баланса из шторки счёта (2026-11-20, опрос: «А · плитка в «Деньги»», запись при «Сохранить»): `core:domain/AdjustBalanceUseCase` (разница
+реальный − текущий → доход/расход в «Корректировка баланса», дата — сейчас; та же разница = 0 — ничего), плитка «Баланс сейчас» и шторка
+`accounts/edit/components/ActualBalanceField` (`MoneySection`), состояние — `AccountEditUiState.actualBalance/adjustment`; доска `AccountEdit`.

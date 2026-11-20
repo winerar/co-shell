@@ -26,6 +26,13 @@ data class AccountEditUiState(
     val nameError: Boolean = false,
     val currencyError: CurrencyError? = null,
     val balanceError: BalanceError? = null,
+    /** Balance now, formatted with the code («245 300,00 ARS»); empty for a new account. */
+    val currentBalance: String = "",
+    /** The real balance as typed in «Исправить баланс»; empty — no adjustment. */
+    val actualBalance: String = "",
+    val actualBalanceError: BalanceError? = null,
+    /** The difference that will be recorded on save, signed («−2 500,00 ARS»); `null` — none. */
+    val adjustment: String? = null,
     /** Delete was refused because the account has transactions; offer archiving instead. */
     val deleteBlocked: Boolean = false,
     /** Saved or deleted: the screen should close. */
@@ -33,6 +40,9 @@ data class AccountEditUiState(
     /** Closing after creating an account outside the totals currencies: the «currency_account» pill (#513). */
     val foreignCurrencyAdded: Boolean = false,
 ) {
+    /** Only a saved account has a balance to correct. */
+    val canAdjust: Boolean get() = !isNew
+
     enum class CurrencyError { INVALID, LOCKED }
     enum class BalanceError { INVALID, TOO_MANY_FRACTION_DIGITS }
 }

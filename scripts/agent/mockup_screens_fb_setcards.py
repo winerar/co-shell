@@ -7,11 +7,7 @@ Picked 2026-11-20: В. Boards А/Б removed from the canvas (functions stay for 
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 
-FEEDBACK = [
-    (1120, 'Настройки: список, плитки или карточки-группы · 2026-11-20',
-     'Выбрано В (опрос 2026-11-20): карточка на группу: 1–2 главные настройки прямо внутри, «Все ›» — экран группы. '
-     'Стресс: испанский, ≈ 320 dp, шрифт ×1,3.'),
-]
+FEEDBACK = []
 
 RU = {
     'title': 'Настройки', 'intro': 'Настройки этого телефона. Валюты итогов — общие для семьи.', 'all': 'Все',
@@ -87,7 +83,7 @@ def section(name, icon, color, inner, all_):
     title = ('<div style="display: flex; align-items: center; gap: 8px; margin: 18px 4px 8px;">%s'
              '<span style="flex-grow: 1; min-width: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: %s;">%s</span>'
              '<span style="flex: none; font-size: 14px; font-weight: 600; color: %s;">%s ›</span></div>'
-             % (dot_icon(icon, color, 24), MUTED, name, CYAN, all_))
+             % (dot_icon(icon, color, 32), MUTED, name, CYAN, all_))
     return title + inner
 
 
@@ -127,8 +123,4 @@ def stress(t, body):
     return '<div style="%s">%s</div>' % (STRESS, body)
 
 
-BOARDS = [  # name, title, fn, issue number
-    ('SetCardsC', 'В · карточки-группы: верх', lambda: inner_screen(RU['title'], cards_top(RU)), 1120),
-    ('SetCardsC2', 'В · карточки-группы: прокрутка', lambda: inner_screen(RU['title'], cards_rest(RU)), 1120),
-    ('SetCardsCEs', 'В · es, 320 dp, ×1,3', lambda: inner_screen(ES['title'], stress(ES, cards_top(ES))), 1120),
-]
+BOARDS = []  # picked В: now boards Set1Root, Set1RootMore, Set1RootEs (mockup_screens_fb_set.py)

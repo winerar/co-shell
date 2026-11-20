@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-29af521d-lgutau`: вопрос владельца «карточки вместо списка в Настройках» — доски `SetCardsA/B/C/C2` + стресс es (ряд 1120 на «Предложениях», `mockup_screens_fb_setcards.py`), опрос https://claude.ai/artifact/7j1q38nm8MXfT2NxwZ69dL (`poll-settings-cards.json`): владелец выбрал **В** — карточки-группы (`settings-customization.md`). Код не менялся — следующий шаг.
+2026-11-20, `ccr-29af521d-lgutau`: вопрос владельца «карточки вместо списка в Настройках» — доски `SetCardsA/B/C/C2` + стресс es (ряд 1120 на «Предложениях», `mockup_screens_fb_setcards.py`), опрос https://claude.ai/artifact/7j1q38nm8MXfT2NxwZ69dL (`poll-settings-cards.json`): владелец выбрал **В** — карточки-группы; сделано в коде (`settings/SettingsCards.kt`), доски `Set1Root*`, эталоны `settings_*` (+ стресс es/×2).

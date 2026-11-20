@@ -154,4 +154,9 @@
     <string name="settings_home_tile_uncategorized">Без категории</string>
     <string name="settings_home_tiles_note">Плитка «Внимание» (нет курса) появляется сама на втором месте, когда нужно. Пока бюджетов нет, вместо «Бюджета» — «Без категории».</string>
     <string name="home_edit_hide">Скрыть</string>
+    <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
+    <string name="settings_group_all">Все ›</string>
+    <string name="settings_palette">Палитра</string>
+    <string name="settings_screens_row">Обзор, операции, отчёты, счета</string>
+    <string name="settings_screens_row_hint">что показывать и в каком порядке</string>
 </resources>

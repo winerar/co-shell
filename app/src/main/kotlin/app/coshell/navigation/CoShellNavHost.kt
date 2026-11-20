@@ -40,7 +40,7 @@ import app.coshell.settings.InputSettingsRoute
 import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
 import app.coshell.settings.SettingsActions
-import app.coshell.settings.SettingsScreen
+import app.coshell.settings.SettingsRoute
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
@@ -385,7 +385,7 @@ fun CoShellNavHost(
             )
         }
         screen<SettingsDestination> {
-            SettingsScreen(
+            SettingsRoute(
                 SettingsActions(
                     onBack = { navController.popBackStack() },
                     onLook = { navController.navigate(AppearanceDestination) },
@@ -394,6 +394,8 @@ fun CoShellNavHost(
                     onInput = { navController.navigate(InputSettingsDestination) },
                     onNotices = { navController.navigate(NoticeSettingsDestination) },
                     onData = { navController.navigate(DataSettingsDestination) },
+                    onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
+                    onBackup = { navController.navigate(BackupDestination) },
                 ),
             )
         }

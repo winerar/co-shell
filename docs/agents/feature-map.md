@@ -3,8 +3,9 @@
 Выделено из `project-structure.md` (правила структуры — там). По абзацу на фичу: модель, логика, Room, экраны.
 Добавил фичу или переложил файлы — обнови абзац.
 
-Порядок списков (#338): по умолчанию алфавит — `core:model/NameOrder.kt` (`ACCOUNT_ORDER`, `nameOrder`) и `CATEGORY_ORDER`
-(`CategoryTree.kt`); счета и категории сортирует `RoomAccountRepository`/`RoomCategoryRepository`, группы — `AccountGroupsBuilder`.
+Порядок списков (#338): по умолчанию алфавит (`ACCOUNT_ORDER`, `CATEGORY_ORDER`); после первого перетаскивания — `sortOrder`
+(`MANUAL_*_ORDER`, `accountOrder`/`categoryOrder(manual)`). Флаг — настройка семьи `accounts_order`/`categories_order` = `manual`
+(`ManualOrderSettings`, `RoomFamilySettings`); сортируют `RoomAccountRepository`/`RoomCategoryRepository`, `buildCategoryTree` порядок списка не меняет.
 
 `shake/` — не экран: `ShakeEffect` (акселерометр → вибрация → колбэк, подключён в `CoShellNavHost`),
 `ShakeSettingsViewModel` (выключатель, им пользуются `CoShellNavHost` и «Ещё»), `data/PrefsShakeSettings`;
@@ -114,4 +115,6 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 (черновик выбора — `WalletImportDraft`, шаги — `components/*Step.kt`), копия перед импортом — `importer/PreImportBackup`.
 Несовместимая версия у второго участника (#334): `core:data/sync/VersionGate.kt` (`peer_schema` пишет `SyncEngine` при pull), замок ввода — `app/.../gate/` (`InputLock` + `LocalInputLock.guard`, окно — `InputLockNote.kt`), плашка — `home/components/VersionGateBanner`, «+» с замком — `CoShellBottomBar(addLocked)`; провод — `CoShellNavHost` → `MainShell`.
 Экспорт CSV (#204, экран — после «ок»): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
-Ручной порядок (#338, экран — после «ок»): `core:domain/Reorder` — новые `sortOrder` при перетаскивании (меняется одна строка, шаг 1024).
+Ручной порядок (#338, доски `Fb338Acc`/`Fb338Cat`): `core:domain/Reorder` (номера, шаг 1024) + `order/ManualOrder` (первое перетаскивание
+нумерует весь список как на экране, вложение и вынос категории) + `ReorderUseCase`; режим «Порядок» — ⇅ в шапке «Счетов» и «Категорий»
+(`accounts/list/components/AccountsOrder`, `categories/list/components/CategoriesOrder` + `CategoryOrderRows`), каркас — `ui/order/OrderScreen`.

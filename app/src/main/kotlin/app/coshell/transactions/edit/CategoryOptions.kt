@@ -56,7 +56,8 @@ internal fun frequentCategories(
     limit: Int = FREQUENT_CATEGORIES,
 ): List<CategoryItem> {
     val byId = groups.flatMap { listOf(it.item) + it.children }.associateBy { it.id }
-    val leaves = groups.flatMap { if (it.isFolder) it.children else listOf(it.item) }
+    // Parent categories can be picked too (#439) — after every subcategory and plain category.
+    val leaves = groups.flatMap { if (it.isFolder) it.children else listOf(it.item) } + groups.filter { it.isFolder }.map { it.item }
     val ordered = (recent.mapNotNull { byId[it] } + leaves).distinctBy { it.id }
     if (ordered.size <= limit + 1) return ordered
     val top = ordered.take(limit)
@@ -64,21 +65,20 @@ internal fun frequentCategories(
     return if (top.any { it.id == selected.id }) top else top.take(limit - 1) + selected
 }
 
-/** How many categories the sheet can choose from — the number on «Все 24» (folders are not counted). */
-internal val List<CategoryGroup>.leafCount: Int get() = sumOf { if (it.isFolder) it.children.size else 1 }
+/** How many categories the sheet can choose from — the number on «Все 24» (a category with subcategories counts too: it can be picked). */
+internal val List<CategoryGroup>.leafCount: Int get() = sumOf { 1 + it.children.size }
 
 /** Places of the frequent grid; the eighth one is «Все N» (two rows of four). */
 internal const val FREQUENT_CATEGORIES = 7
 
 private fun Category.toItem() = CategoryItem(id, name, icon, color)
 
-/** Lines of the «Все категории» sheet of the entry sheet (#439): a folder's subcategories, or a category without a folder, as [categoryLines]. */
-internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String): List<ChoiceOption<String>> =
+/** Lines of the «Все категории» sheet of the entry sheet (#439): every category, a parent one with its subcategories, as [categoryLines]. */
+internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String, parentSubtitle: String): List<ChoiceOption<String>> =
     categoryLines(
-        groups.flatMap { g ->
-            if (g.children.isEmpty()) listOf(g.item.line(null)) else g.children.map { it.line(g.item.name) }
-        },
+        groups.flatMap { g -> listOf(g.item.line(null)) + g.children.map { it.line(g.item) } },
         noGroup,
+        parentSubtitle,
     )
 
-private fun CategoryItem.line(parent: String?) = CategoryLine(id, name, parent, icon, color)
+private fun CategoryItem.line(parent: CategoryItem?) = CategoryLine(id, name, parent?.name, icon, color, parent?.id)

@@ -1,5 +1,7 @@
 package app.coshell.accounts.list
 
+import app.coshell.core.model.Account
+import app.coshell.core.domain.order.ReorderUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
@@ -57,9 +59,16 @@ class AccountsViewModel @Inject constructor(
     clock: Clock = Clock.System,
     timeZone: TimeZone = TimeZone.currentSystemDefault(),
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    private val reorder: ReorderUseCase? = null,
 ) : ViewModel() {
 
     private val view = MutableStateFlow(AccountsView())
+
+    /** Active accounts as last shown, for «Порядок» (#338). */
+    private var shownActive: List<Account> = emptyList()
+
+    /** The order just dragged, shown until the saved one comes back from the database (no jump back on drop). */
+    private val localOrder = MutableStateFlow<List<String>?>(null)
 
     init {
         // «Настройки → Экраны → Счета»: how the list opens (grouping, archive); the user's taps override it afterwards.
@@ -74,8 +83,16 @@ class AccountsViewModel @Inject constructor(
         reportCurrencies?.currencies ?: flowOf(ReportCurrencySettings.DEFAULT),
     ) { list, currencies -> Conversion(list, currencies.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first(), clock.todayIn(timeZone)) }
 
+    private val ordered = combine(accounts.observeAccountsWithBalance(includeArchived = true), localOrder) { list, local ->
+        val repoOrder = list.filter { !it.account.archived }.map { it.account.id }
+        if (local != null && local == repoOrder) localOrder.value = null
+        val sorted = if (local == null || local == repoOrder) list else list.sortedBy { item -> local.indexOf(item.account.id).let { if (it < 0) Int.MAX_VALUE else it } }
+        shownActive = sorted.filter { !it.account.archived }.map { it.account }
+        sorted
+    }
+
     val state: StateFlow<AccountsUiState> =
-        combine(accounts.observeAccountsWithBalance(includeArchived = true), view, otherMembers.names(), conversion) { list, v, others, c ->
+        combine(ordered, view, otherMembers.names(), conversion) { list, v, others, c ->
             buildState(list, v.showArchived, others, v, c)
         }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccountsUiState(isLoading = true))
 
@@ -90,6 +107,14 @@ class AccountsViewModel @Inject constructor(
     fun onQuery(query: String) = view.update { it.copy(query = query) }
 
     fun onToggleSearch() = view.update { it.copy(searchOpen = !it.searchOpen, query = "") }
+
+    /** «Порядок» (#338): the active account at [from] goes to [to]; shown at once, saved for the family. */
+    fun moveAccount(from: Int, to: Int) {
+        val shown = shownActive
+        if (from !in shown.indices || to !in shown.indices || from == to) return
+        localOrder.value = shown.map { it.id }.toMutableList().apply { add(to, removeAt(from)) }
+        viewModelScope.launch { reorder?.moveAccount(shown, from, to) }
+    }
 
     internal fun buildState(
         accounts: List<AccountWithBalance>,

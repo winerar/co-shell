@@ -36,7 +36,7 @@ data class BudgetEditUiState(
     val chosen: Choice? get() = (folders + categories).firstOrNull { it.id == categoryId }
 
     /** A category or folder to put a limit on. [parent] — the folder of a subcategory. */
-    data class Choice(val id: String, val name: String, val icon: String?, val color: Long?, val parent: String? = null) {
+    data class Choice(val id: String, val name: String, val icon: String?, val color: Long?, val parent: String? = null, val parentId: String? = null) {
         val label: String get() = if (parent != null) "$parent / $name" else name
     }
 

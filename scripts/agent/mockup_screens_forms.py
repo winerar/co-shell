@@ -38,7 +38,7 @@ def categories():
     inc = ''.join('<div style="margin-top: 10px;">%s</div>' % card(row('<b>%s</b>' % t, 'без папки', dot_icon(i, c))) for t, i, c in INCOME)
     seg = per('k', ['exp', 'inc'], lambda k: segmented(['Расходы', 'Доходы'], 'Расходы' if k == 'exp' else 'Доходы', 'lime', ['go_k_exp', 'go_k_inc']))
     body = (seg + when('is_k_exp', exp) + when('is_k_inc', inc) + note('Показать архивные (2)', 14))
-    return proto('Категории', inner_screen('Категории', body) + fab('Добавить'), k='exp', food=True)
+    return proto('Категории', inner_screen('Категории', body, icon_button('swap', 'Изменить порядок')) + fab('Добавить'), k='exp', food=True)
 
 
 # ---- category / folder editor ---------------------------------------------------------------------------------------

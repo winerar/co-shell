@@ -57,6 +57,7 @@ data class TemplateEditUiState(
         val type: CategoryType,
         val name: String = label,
         val parent: String? = null,
+        val parentId: String? = null,
         val icon: String? = null,
         val color: Long? = null,
     )

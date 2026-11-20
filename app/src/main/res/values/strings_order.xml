@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Manual order by dragging (#338, boards Fb338Acc, Fb338Cat) -->
+    <string name="order_change">Изменить порядок</string>
+    <string name="order_done">Готово</string>
+    <string name="accounts_order_title">Порядок счетов</string>
+    <string name="categories_order_title">Порядок категорий</string>
+    <string name="accounts_order_hint">Удерживайте строку и перетащите. Порядок общий для семьи.</string>
+    <string name="categories_order_hint">Удерживайте строку и перетащите. На середину другой категории — станет подкатегорией, из группы наверх — отдельной.</string>
+    <string name="order_drop_into">Отпустите — «%1$s» станет подкатегорией</string>
+    <string name="order_move_up">Выше</string>
+    <string name="order_move_down">Ниже</string>
+    <string name="order_move_out">Сделать отдельной</string>
+    <string name="order_move_in">В «%1$s»</string>
+</resources>

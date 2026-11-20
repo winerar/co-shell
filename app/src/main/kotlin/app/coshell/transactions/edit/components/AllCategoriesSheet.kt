@@ -16,7 +16,8 @@ import app.coshell.ui.form.ChoiceSheet
 @Composable
 internal fun AllCategoriesSheet(groups: List<CategoryGroup>, selectedId: String?, onSelect: (String) -> Unit, onClosed: () -> Unit) {
     val noGroup = stringResource(R.string.transaction_categories_no_folder)
-    val options = remember(groups, noGroup) { categoryChoiceOptions(groups, noGroup) }
+    val parentSubtitle = stringResource(R.string.category_kind_folder)
+    val options = remember(groups, noGroup, parentSubtitle) { categoryChoiceOptions(groups, noGroup, parentSubtitle) }
     ChoiceSheet(
         title = stringResource(R.string.transaction_categories_all_title, groups.leafCount),
         options = options,

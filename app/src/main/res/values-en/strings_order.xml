@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Manual order by dragging (#338, boards Fb338Acc, Fb338Cat) -->
+    <string name="order_change">Change order</string>
+    <string name="order_done">Done</string>
+    <string name="accounts_order_title">Account order</string>
+    <string name="categories_order_title">Category order</string>
+    <string name="accounts_order_hint">Hold a row and drag it. The order is shared with your family.</string>
+    <string name="categories_order_hint">Hold a row and drag it. Drop it on the middle of another category to make it a subcategory; drag it out of a group to make it separate.</string>
+    <string name="order_drop_into">Release — “%1$s” becomes a subcategory</string>
+    <string name="order_move_up">Move up</string>
+    <string name="order_move_down">Move down</string>
+    <string name="order_move_out">Make separate</string>
+    <string name="order_move_in">Into “%1$s”</string>
+</resources>

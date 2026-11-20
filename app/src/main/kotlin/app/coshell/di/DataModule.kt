@@ -51,6 +51,8 @@ import app.coshell.core.domain.WipeAllDataUseCase
 import app.coshell.core.domain.importer.ImportRepository
 import app.coshell.core.domain.importer.wallet.WalletImportUseCase
 import app.coshell.core.domain.rates.ExchangeRateRepository
+import app.coshell.core.domain.settings.ManualOrderSettings
+import app.coshell.core.domain.order.ReorderUseCase
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.IdGenerator
@@ -86,11 +88,11 @@ object DataModule {
 
     @Provides @Singleton
     fun provideAccountRepository(db: CoShellDatabase, stamper: WriteStamper): AccountRepository =
-        RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
+        RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper, db.settingDao())
 
     @Provides @Singleton
     fun provideCategoryRepository(db: CoShellDatabase, stamper: WriteStamper): CategoryRepository =
-        RoomCategoryRepository(db.categoryDao(), stamper)
+        RoomCategoryRepository(db.categoryDao(), stamper, db.settingDao())
 
     @Provides @Singleton
     fun provideTransactionRepository(db: CoShellDatabase, stamper: WriteStamper): TransactionRepository =
@@ -115,6 +117,9 @@ object DataModule {
 
     @Provides
     fun provideMonthStartSettings(settings: RoomFamilySettings): MonthStartSettings = settings
+
+    @Provides
+    fun provideManualOrderSettings(settings: RoomFamilySettings): ManualOrderSettings = settings
 
     @Provides @Singleton
     fun provideTemplateRepository(db: CoShellDatabase, stamper: WriteStamper): TemplateRepository =
@@ -196,6 +201,10 @@ object DataModule {
     @Provides
     fun provideSaveAccount(accounts: AccountRepository, transactions: TransactionRepository) =
         SaveAccountUseCase(accounts, transactions)
+
+    @Provides
+    fun provideReorder(accounts: AccountRepository, categories: CategoryRepository, settings: ManualOrderSettings) =
+        ReorderUseCase(accounts, categories, settings)
 
     @Provides
     fun provideSaveCategory(categories: CategoryRepository, transactions: TransactionRepository) =

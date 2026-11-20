@@ -2,6 +2,7 @@ package app.coshell.core.data.repository
 
 import app.coshell.core.data.db.SettingDao
 import app.coshell.core.data.db.SettingEntity
+import app.coshell.core.domain.settings.ManualOrderSettings
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.domain.settings.ReportCurrencies
 import app.coshell.core.domain.settings.ReportCurrencySettings
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.map
 class RoomFamilySettings(
     private val settings: SettingDao,
     private val stamper: WriteStamper,
-) : ReportCurrencySettings, MonthStartSettings {
+) : ReportCurrencySettings, MonthStartSettings, ManualOrderSettings {
 
     override val currencies: Flow<List<CurrencyCode>> =
         settings.observe(REPORT_CURRENCIES).map(ReportCurrencies::decode).distinctUntilChanged()
@@ -32,6 +33,16 @@ class RoomFamilySettings(
         require(day in MonthStartSettings.DAYS) { "Month start day must be 1..31, got $day" }
         write(MONTH_START_DAY, day.toString())
     }
+
+    override val manualAccounts: Flow<Boolean> =
+        settings.observe(ACCOUNTS_ORDER).map(ManualOrderSettings::parse).distinctUntilChanged()
+
+    override val manualCategories: Flow<Boolean> =
+        settings.observe(CATEGORIES_ORDER).map(ManualOrderSettings::parse).distinctUntilChanged()
+
+    override suspend fun setManualAccounts() = write(ACCOUNTS_ORDER, ManualOrderSettings.ON)
+
+    override suspend fun setManualCategories() = write(CATEGORIES_ORDER, ManualOrderSettings.ON)
 
     /**
      * Brings over the report currencies this phone kept before #122. Written as the oldest possible
@@ -53,5 +64,9 @@ class RoomFamilySettings(
     companion object {
         const val REPORT_CURRENCIES = "report_currencies"
         const val MONTH_START_DAY = "month_start_day"
+
+        /** `manual` — the family dragged the list into its own order (#338); missing — alphabetically. */
+        const val ACCOUNTS_ORDER = "accounts_order"
+        const val CATEGORIES_ORDER = "categories_order"
     }
 }

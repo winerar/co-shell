@@ -241,6 +241,7 @@ fun CoShellNavHost(
                         onAllTemplates = { navController.navigate(TemplatesDestination) { launchSingleTop = true } },
                         onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
                         onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+                        onSendReceiptSample = { navController.navigate(FeedbackDestination(receiptSample = true)) { launchSingleTop = true } },
                     )
                 }
                 // New entries only: the words about the sheet sit in the dimmed strip above it (#513, `SheetCoach`).
@@ -483,6 +484,7 @@ fun CoShellNavHost(
                 onBack = { navController.popBackStack() },
                 onOpen = { navController.navigate(FeedbackDetailDestination(it)) { launchSingleTop = true } },
                 prefill = entry.toRoute<FeedbackDestination>().prefill,
+                receiptSample = entry.toRoute<FeedbackDestination>().receiptSample,
             )
         }
         screen<FeedbackDetailDestination> { entry ->
@@ -537,8 +539,9 @@ fun CoShellNavHost(
     if (receiptLinks != null) {
         val link by receiptLinks.link.collectAsStateWithLifecycle()
         LaunchedEffect(link) {
-            val text = link ?: return@LaunchedEffect
-            navController.navigate(TransactionEditDestination(receiptQr = text.ifBlank { null })) { launchSingleTop = true }
+            val shared = link ?: return@LaunchedEffect
+            val destination = TransactionEditDestination(receiptQr = shared.text.ifBlank { null }?.takeIf { shared.readable }, receiptUnread = !shared.readable)
+            navController.navigate(destination) { launchSingleTop = true }
             receiptLinks.consumed()
         }
     }

@@ -69,6 +69,8 @@ data class TransactionEditUiState(
     val payment: PaymentUi? = null,
     /** The sheet was filled from a receipt QR (#526, board «QrFilled»). */
     val scan: ScanUi? = null,
+    /** A shared receipt was not recognised (#561, board «RcUnreadA»): «Ввести вручную» or «Отправить образец». */
+    val receiptUnread: Boolean = false,
     /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */

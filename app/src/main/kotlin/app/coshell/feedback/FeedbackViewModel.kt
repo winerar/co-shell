@@ -1,5 +1,10 @@
 package app.coshell.feedback
 
+import app.coshell.core.domain.feedback.FeedbackAttachment
+import app.coshell.feedback.files.FeedbackFile
+import app.coshell.feedback.files.FeedbackFiles
+import app.coshell.receipt.inbox.ReceiptSamples
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.feedback.FeedbackResult
@@ -33,6 +38,8 @@ class FeedbackViewModel @Inject constructor(
     private val clock: Clock = Clock.System,
     private val statuses: FeedbackStatusSource = NoFeedbackStatus,
     private val installed: InstalledBuild = InstalledBuild(0),
+    private val files: FeedbackFiles = NoFeedbackFiles,
+    private val samples: ReceiptSamples = ReceiptSamples.NONE,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(FeedbackUiState())
@@ -75,6 +82,32 @@ class FeedbackViewModel @Inject constructor(
 
     fun onKind(kind: FeedbackKind) = _state.update { it.copy(kind = kind) }
 
+    /** From «Не удалось прочитать чек» (#561): kind «Формат чека», the shared file attached (once). */
+    fun prefillReceiptSample() {
+        val sample = samples.take()?.let(FeedbackFile::of)
+        _state.update { form ->
+            val attached = if (sample != null && form.files.none { it.path == sample.path }) form.files + sample else form.files
+            form.copy(kind = FeedbackKind.RECEIPT_FORMAT, files = attached.take(FeedbackAttachment.MAX_COUNT))
+        }
+    }
+
+    /** Files from the system picker, copied into the cache; the ones over the count are dropped. */
+    fun onPick(uris: List<String>) {
+        if (uris.isEmpty()) return
+        viewModelScope.launch {
+            val picked = uris.mapNotNull { files.fromUri(it) }
+            _state.update { form ->
+                form.copy(
+                    files = (form.files + picked).take(FeedbackAttachment.MAX_COUNT),
+                    fileError = picked.size < uris.size,
+                    result = null,
+                )
+            }
+        }
+    }
+
+    fun onRemoveFile(path: String) = _state.update { form -> form.copy(files = form.files.filterNot { it.path == path }, fileError = false, result = null) }
+
     /** «Написать ещё» after a successful send. */
     fun onWriteMore() = _state.update { it.copy(result = null) }
 
@@ -84,7 +117,10 @@ class FeedbackViewModel @Inject constructor(
         val message = kindLabel?.let { feedbackMessage(it, _state.value.text) } ?: _state.value.text
         _state.update { it.copy(isSending = true, result = null) }
         viewModelScope.launch {
-            val result = sendFeedback(message)
+            val attachments = _state.value.files.mapNotNull { file ->
+                files.bytes(file)?.let { FeedbackAttachment(file.name, file.mime, it) }
+            }
+            val result = sendFeedback(message, attachments)
             if (result is FeedbackResult.Sent) {
                 val sentAt = clock.now().toEpochMilliseconds()
                 history.add(SentFeedback(sentAt, message.trim(), result.documentId, FeedbackStatus(FeedbackStage.SENT)))
@@ -92,6 +128,7 @@ class FeedbackViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     text = if (result is FeedbackResult.Sent) "" else it.text,
+                    files = if (result is FeedbackResult.Sent) emptyList() else it.files,
                     isSending = false,
                     result = result,
                 )
@@ -102,6 +139,12 @@ class FeedbackViewModel @Inject constructor(
 
 /** The `versionCode` of the app on this phone (`BuildConfig.VERSION_CODE`, given by `FeedbackModule`). */
 data class InstalledBuild(val versionCode: Int)
+
+/** No files (previews, tests). */
+object NoFeedbackFiles : FeedbackFiles {
+    override suspend fun fromUri(uri: String): FeedbackFile? = null
+    override suspend fun bytes(file: FeedbackFile): ByteArray? = null
+}
 
 /** No status anywhere (previews, tests, builds without Firebase). */
 object NoFeedbackStatus : FeedbackStatusSource {

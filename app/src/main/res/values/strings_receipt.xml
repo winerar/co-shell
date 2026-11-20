@@ -15,4 +15,7 @@
     <string name="scan_cam_title">Камера нужна, чтобы прочитать QR</string>
     <string name="scan_cam_text">Видео не сохраняется и никуда не уходит.</string>
     <string name="scan_cam_allow">Разрешить</string>
+    <string name="receipt_unread_title">Не удалось прочитать чек</string>
+    <string name="receipt_unread_text">Такой формат приложение пока не знает. Отправьте образец — научим. Запись можно внести вручную.</string>
+    <string name="receipt_unread_send">Отправить образец</string>
 </resources>

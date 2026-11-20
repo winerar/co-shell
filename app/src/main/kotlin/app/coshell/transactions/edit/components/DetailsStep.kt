@@ -81,6 +81,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     }
     state.tip?.let { TipSheet(state, it, actions) }
     state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
+    if (state.receiptUnread) ReceiptUnreadDialog(actions.onReceiptUnreadManual, actions.onReceiptUnreadSend)
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 

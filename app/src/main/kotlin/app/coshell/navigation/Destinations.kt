@@ -146,7 +146,11 @@ data object PastReleasesDestination
 
 /** [prefill] — text typed in for the user (the sync banner's error code). */
 @Serializable
-data class FeedbackDestination(val prefill: String? = null)
+data class FeedbackDestination(
+    val prefill: String? = null,
+    /** From «Не удалось прочитать чек» (#561): theme «Формат чека» with the shared file attached. */
+    val receiptSample: Boolean = false,
+)
 
 /** One sent message by its send time (#157). */
 @Serializable
@@ -205,6 +209,8 @@ data class TransactionEditDestination(
     val paymentDate: String? = null,
     /** Text with the QR link of a receipt (#526): the sheet opens with its amount and date, a new expense. */
     val receiptQr: String? = null,
+    /** A shared receipt nothing could read (#561): the blank sheet opens with «Не удалось прочитать чек». */
+    val receiptUnread: Boolean = false,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
@@ -214,6 +220,7 @@ data class TransactionEditDestination(
         const val ARG_TEMPLATE_ID = "templateId"
         const val ARG_PAYMENT_DATE = "paymentDate"
         const val ARG_RECEIPT_QR = "receiptQr"
+        const val ARG_RECEIPT_UNREAD = "receiptUnread"
     }
 }
 

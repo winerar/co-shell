@@ -627,5 +627,4 @@
     <string name="transaction_categories_all_title">Todas las categorías · %1$d</string>
     <string name="transaction_categories_search">Buscar categoría</string>
     <string name="transaction_categories_nothing">No se ha encontrado nada</string>
-    <string name="transaction_categories_no_folder">Sin grupo</string>
 </resources>

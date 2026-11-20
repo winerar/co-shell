@@ -40,22 +40,22 @@ class CategoryOptionsTest {
     }
 
     @Test
-    fun `choice lines put parents with their subcategories first and the rest under no group`() {
-        val lines = categoryChoiceOptions(groups, "Остальные", "С подкатегориями")
+    fun `choice lines nest subcategories under their parent in the screen order`() {
+        val lines = categoryChoiceOptions(groups, "С подкатегориями")
         assertEquals(groups.leafCount, lines.size)
-        assertEquals(listOf("Еда", "Дом", "Остальные"), lines.map { it.group }.distinct())
-        assertEquals(listOf("еда", "продукты", "кафе"), lines.take(3).map { it.value })
-        assertEquals(listOf("С подкатегориями", null, null), lines.take(3).map { it.subtitle })
-        assertEquals(true, lines.all { it.hasBadge })
+        assertEquals(listOf("еда", "продукты", "кафе", "дом", "аренда", "свет", "c1"), lines.take(7).map { it.value })
+        assertEquals(listOf(false, true, true, false, true, true, false), lines.take(7).map { it.indent })
+        assertEquals(listOf("С подкатегориями", null, null, "С подкатегориями"), lines.take(4).map { it.subtitle })
+        assertEquals(true, lines.all { it.group == null && it.hasBadge })
     }
 
     @Test
-    fun `a subcategory of the same name stays under its parent`() {
+    fun `a subcategory of the same name is nested under its parent`() {
         val same = CategoryGroup(CategoryItem("kids", "Дети"), listOf(CategoryItem("kids2", "Дети")))
         val other = CategoryGroup(CategoryItem("taxi", "Такси"), emptyList())
-        val lines = categoryChoiceOptions(listOf(same, other), "Остальные", "С подкатегориями")
+        val lines = categoryChoiceOptions(listOf(same, other), "С подкатегориями")
         assertEquals(listOf("kids", "kids2", "taxi"), lines.map { it.value })
-        assertEquals(listOf("Дети", "Дети", "Остальные"), lines.map { it.group })
+        assertEquals(listOf(false, true, false), lines.map { it.indent })
         assertEquals(listOf("С подкатегориями", null, null), lines.map { it.subtitle })
     }
 }

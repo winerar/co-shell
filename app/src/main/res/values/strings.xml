@@ -125,6 +125,12 @@
     <string name="account_currency_locked">Валюту не изменить: по счёту есть операции</string>
     <string name="account_type">Тип</string>
     <string name="account_initial_balance">Начальный баланс</string>
+    <string name="account_balance_now">Баланс сейчас</string>
+    <string name="account_balance_adjust_title">Исправить баланс</string>
+    <string name="account_balance_actual">Реальный баланс</string>
+    <string name="account_balance_now_hint">Сейчас: %1$s. Введите, сколько на самом деле.</string>
+    <string name="account_balance_adjust_hint">Корректировка при сохранении: %1$s</string>
+    <string name="account_balance_adjust_pending" translatable="false">%1$s · %2$s</string>
     <string name="account_initial_balance_hint">Сумма до первой операции. Долг — со знаком минус.</string>
     <string name="account_included_in_total">Учитывать в общем балансе</string>
     <string name="account_included_in_total_hint">Выключите для долгов и чужих денег — счёт не войдёт в общий баланс</string>

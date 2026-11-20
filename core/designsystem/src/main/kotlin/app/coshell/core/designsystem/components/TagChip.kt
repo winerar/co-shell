@@ -60,7 +60,7 @@ fun CoShellTagChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
-        Box(Modifier.size(DotSize).background(ink, CircleShape))
+        Box(Modifier.size(DotSize).background(ink, CircleShape).fillEdge(ink, CircleShape, if (selected) sel.fill else colors.surfaceContainerHigh))
         Text(
             name,
             style = MaterialTheme.typography.labelLarge,

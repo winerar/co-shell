@@ -16,5 +16,5 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun CoShellDot(color: Color, modifier: Modifier = Modifier, size: Dp = 8.dp) {
-    Box(modifier.size(size).background(color, CircleShape))
+    Box(modifier.size(size).background(color, CircleShape).fillEdge(color, CircleShape))
 }

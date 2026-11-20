@@ -183,7 +183,8 @@ private fun BottomBarContent(
 @Composable
 private fun TabIcon(tab: CoShellTab, tint: Color) {
     if (!tab.badge) return Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
-    BadgedBox(badge = { Badge(containerColor = MaterialTheme.colorScheme.tertiary) }) {
+    val dot = MaterialTheme.colorScheme.tertiary
+    BadgedBox(badge = { Badge(Modifier.fillEdge(dot, CircleShape, MaterialTheme.colorScheme.surfaceContainerHigh), containerColor = dot) }) {
         Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
     }
 }

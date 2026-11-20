@@ -21,7 +21,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 fun CoShellSegmentBar(total: Int, kept: Int, keptColor: Color, restColor: Color, modifier: Modifier = Modifier) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         repeat(total) { index ->
-            Box(Modifier.weight(1f).height(Sizes.bullet).background(if (index < kept) keptColor else restColor, PillShape))
+            val fill = if (index < kept) keptColor else restColor
+            Box(Modifier.weight(1f).height(Sizes.bullet).background(fill, PillShape).fillEdge(fill, PillShape))
         }
     }
 }

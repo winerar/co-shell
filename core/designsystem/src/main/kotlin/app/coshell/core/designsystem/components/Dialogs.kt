@@ -90,7 +90,7 @@ fun CoShellConfirmCard(
         Column(Modifier.padding(start = Spacing.l + Spacing.xs, end = Spacing.l + Spacing.xs, top = Spacing.xl, bottom = Spacing.l + Spacing.xs)) {
             icon?.let {
                 val (bg, ink) = if (destructive) colors.errorContainer to colors.onErrorContainer else colors.secondaryContainer to colors.onSecondaryContainer
-                Box(Modifier.size(Sizes.pillHeight).background(bg, MaterialTheme.shapes.large), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(Sizes.pillHeight).background(bg, MaterialTheme.shapes.large).fillEdge(bg, MaterialTheme.shapes.large, colors.surfaceContainerHigh), contentAlignment = Alignment.Center) {
                     Icon(painterResource(it), contentDescription = null, tint = ink)
                 }
             }

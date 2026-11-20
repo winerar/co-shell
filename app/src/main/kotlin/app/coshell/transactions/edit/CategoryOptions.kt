@@ -74,10 +74,9 @@ internal const val FREQUENT_CATEGORIES = 7
 private fun Category.toItem() = CategoryItem(id, name, icon, color)
 
 /** Lines of the «Все категории» sheet of the entry sheet (#439): every category, a parent one with its subcategories, as [categoryLines]. */
-internal fun categoryChoiceOptions(groups: List<CategoryGroup>, noGroup: String, parentSubtitle: String): List<ChoiceOption<String>> =
+internal fun categoryChoiceOptions(groups: List<CategoryGroup>, parentSubtitle: String): List<ChoiceOption<String>> =
     categoryLines(
         groups.flatMap { g -> listOf(g.item.line(null)) + g.children.map { it.line(g.item) } },
-        noGroup,
         parentSubtitle,
     )
 

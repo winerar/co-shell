@@ -11,13 +11,12 @@ import app.coshell.ui.form.ChoiceSheet
 
 /**
  * «Все категории · 24» over the entry sheet (#439, poll Б): the one category list of the app — folders with their
- * subcategories under a caption, badges, a search; a tap picks the category and closes the sheet.
+ * subcategories nested under them (as on «Категории»), badges, a search; a tap picks the category and closes the sheet.
  */
 @Composable
 internal fun AllCategoriesSheet(groups: List<CategoryGroup>, selectedId: String?, onSelect: (String) -> Unit, onClosed: () -> Unit) {
-    val noGroup = stringResource(R.string.transaction_categories_no_folder)
     val parentSubtitle = stringResource(R.string.category_kind_folder)
-    val options = remember(groups, noGroup, parentSubtitle) { categoryChoiceOptions(groups, noGroup, parentSubtitle) }
+    val options = remember(groups, parentSubtitle) { categoryChoiceOptions(groups, parentSubtitle) }
     ChoiceSheet(
         title = stringResource(R.string.transaction_categories_all_title, groups.leafCount),
         options = options,

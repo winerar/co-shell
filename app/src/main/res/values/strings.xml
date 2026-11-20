@@ -653,5 +653,4 @@
     <string name="transaction_categories_all_title">Все категории · %1$d</string>
     <string name="transaction_categories_search">Найти категорию</string>
     <string name="transaction_categories_nothing">Ничего не нашлось</string>
-    <string name="transaction_categories_no_folder">Без группы</string>
 </resources>

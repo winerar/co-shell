@@ -98,4 +98,24 @@ class PrivacyHostTest {
         rule.runOnIdle { center.unlock() }
         rule.onNodeWithText("SHEET 1 5").assertIsDisplayed()
     }
+
+    @Test
+    fun `the lock fades over the app after the PIN and then leaves`() {
+        val now = 0L
+        val center = PrivacyCenter(Settings(), hasher, { now }, { now }, EmptyCoroutineContext, CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate))
+        rule.setContent { PrivacyHost(center, lockScreen = { Text("LOCK") }) { Text("HOME") } }
+        rule.onNodeWithText("LOCK").assertIsDisplayed()
+        rule.onNodeWithText("HOME").assertDoesNotExist()
+
+        rule.mainClock.autoAdvance = false
+        rule.runOnIdle { center.unlock() }
+        rule.mainClock.advanceTimeByFrame()
+        rule.mainClock.advanceTimeBy(50)
+        rule.onNodeWithText("HOME").assertExists()
+        rule.onNodeWithText("LOCK").assertExists()
+
+        rule.mainClock.advanceTimeBy(2_000)
+        rule.onNodeWithText("LOCK").assertDoesNotExist()
+        rule.onNodeWithText("HOME").assertIsDisplayed()
+    }
 }

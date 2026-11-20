@@ -16,13 +16,14 @@ data class DeviceInfo(
 
 /**
  * One message from the feedback form as it is sent. [diagnostics] — technical lines (update journal,
- * firmware, sync state; #216), no amounts or personal data.
+ * firmware, sync state; #216), no amounts or personal data. [attachments] — files the person chose to send.
  */
 data class FeedbackReport(
     val text: String,
     val createdAt: Instant,
     val device: DeviceInfo,
     val diagnostics: List<String> = emptyList(),
+    val attachments: List<FeedbackAttachment> = emptyList(),
 )
 
 interface DeviceInfoProvider {

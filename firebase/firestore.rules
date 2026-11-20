@@ -98,7 +98,9 @@ service cloud.firestore {
     match /feedback/{id} {
       allow get: if true;
       allow create: if request.resource.data.keys().hasOnly(
-                         ['text', 'createdAt', 'appVersion', 'versionCode', 'device', 'os', 'installationId', 'processed'])
+                         ['text', 'createdAt', 'appVersion', 'versionCode', 'device', 'os', 'installationId', 'processed', 'attachments'])
+                    && (!('attachments' in request.resource.data)
+                        || (request.resource.data.attachments is list && request.resource.data.attachments.size() <= 12))
                     && request.resource.data.text is string
                     && request.resource.data.text.size() > 0
                     && request.resource.data.text.size() <= 4000
@@ -109,6 +111,21 @@ service cloud.firestore {
                     && request.resource.data.os is string && request.resource.data.os.size() <= 100
                     && request.resource.data.installationId is string && request.resource.data.installationId.size() <= 64
                     && request.resource.data.processed == false;
+    }
+
+    // Files of a feedback message (FeedbackAttachment): base64 parts, created by anyone, read only by the robot
+    // (service account). Limits must match FeedbackAttachment and app/.../feedback/data/FeedbackDocument.kt.
+    match /feedback_files/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'mime', 'file', 'part', 'parts', 'data', 'createdAt'])
+                    && request.resource.data.name is string && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 120
+                    && request.resource.data.mime is string && request.resource.data.mime.size() <= 100
+                    && request.resource.data.file is int && request.resource.data.file >= 0 && request.resource.data.file < 3
+                    && request.resource.data.parts is int && request.resource.data.parts > 0 && request.resource.data.parts <= 8
+                    && request.resource.data.part is int && request.resource.data.part >= 0
+                    && request.resource.data.part < request.resource.data.parts
+                    && request.resource.data.data is string && request.resource.data.data.size() <= 700000
+                    && request.resource.data.createdAt is timestamp;
     }
   }
 }

@@ -330,6 +330,8 @@
     <string name="feedback_result_sent">Спасибо! Сообщение отправлено.</string>
     <string name="feedback_error_empty">Напишите хотя бы пару слов.</string>
     <string name="feedback_error_too_long">Чуть короче, пожалуйста: до %1$d символов.</string>
+    <string name="feedback_error_too_many_files">Файлов — не больше %1$d. Уберите лишние.</string>
+    <string name="feedback_error_files_too_large">Файлы слишком большие: всего до %1$d МБ.</string>
     <string name="feedback_error_not_configured">В этой сборке отправка не настроена.</string>
     <string name="feedback_error_failed">Не отправилось. Проверьте интернет — текст сохранён.</string>
     <string name="update_title">Обновление</string>

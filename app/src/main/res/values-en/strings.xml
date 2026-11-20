@@ -316,6 +316,8 @@
     <string name="feedback_result_sent">Thank you! Message sent.</string>
     <string name="feedback_error_empty">Please write at least a few words.</string>
     <string name="feedback_error_too_long">A bit shorter, please: up to %1$d characters.</string>
+    <string name="feedback_error_too_many_files">Up to %1$d files. Remove the extra ones.</string>
+    <string name="feedback_error_files_too_large">The files are too big: up to %1$d MB in total.</string>
     <string name="feedback_error_not_configured">Sending isn\'t set up in this build.</string>
     <string name="feedback_error_failed">Not sent. Check your internet — your text is saved.</string>
     <string name="update_title">Update</string>

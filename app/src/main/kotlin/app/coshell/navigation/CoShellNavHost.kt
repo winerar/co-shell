@@ -532,12 +532,13 @@ fun CoShellNavHost(
         }
     }
 
-    // A receipt QR opened from a scanner or the camera (#526): the entry sheet with its amount and date.
+    // A receipt QR opened from a scanner or the camera (#526), or a receipt shared from another app: the entry sheet with
+    // its amount and date; a share nothing could read opens the sheet blank.
     if (receiptLinks != null) {
         val link by receiptLinks.link.collectAsStateWithLifecycle()
         LaunchedEffect(link) {
             val text = link ?: return@LaunchedEffect
-            navController.navigate(TransactionEditDestination(receiptQr = text)) { launchSingleTop = true }
+            navController.navigate(TransactionEditDestination(receiptQr = text.ifBlank { null })) { launchSingleTop = true }
             receiptLinks.consumed()
         }
     }

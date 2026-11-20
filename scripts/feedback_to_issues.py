@@ -2,7 +2,7 @@
 """Turns new feedback from Firestore into GitHub issues (run by .github/workflows/feedback.yml).
 
 Reads documents of the `feedback` collection with `processed == false` (written by the app's
-feedback form), creates an issue labelled `source:app` + `status:triage` for each, then marks the document
+feedback form), commits their attached files to the branch `feedback-files` (feedback_files.py), creates an issue labelled `source:app` + `status:triage` for each, then marks the document
 `processed = true` with the issue number. An issue is created before marking, so a failure in
 between can at worst produce a duplicate issue, never lose a message. Then writes each issue's status
 back into its document for the app (feedback_status.py, #157).
@@ -20,6 +20,7 @@ import urllib.parse
 import urllib.error
 import urllib.request
 
+import feedback_files
 import feedback_status
 
 FIRESTORE = "https://firestore.googleapis.com/v1"
@@ -40,6 +41,8 @@ def decode_value(value):
         return value["timestampValue"]
     if "nullValue" in value:
         return None
+    if "arrayValue" in value:
+        return [decode_value(v) for v in value["arrayValue"].get("values", [])]
     return json.dumps(value, ensure_ascii=False)
 
 
@@ -74,7 +77,7 @@ def issue_title(text):
     return f"Отзыв: {first_line}"
 
 
-def issue_body(feedback):
+def issue_body(feedback, links=()):
     user_text, tech = split_text(feedback.get("text", ""))
     quoted = "\n".join(f"> {line}" if line else ">" for line in user_text.splitlines())
     created = feedback.get("createdAt", "?").replace("T", " ").split(".")[0].rstrip("Z")
@@ -90,6 +93,7 @@ def issue_body(feedback):
     return (
         f"{quoted}\n\n"
         f"| | |\n|---|---|\n{table}\n\n"
+        f"{feedback_files.links_section(list(links))}"
         f"{tech_details(tech)}"
         "_Создано автоматически из формы «Ещё → Обратная связь»._"
     )
@@ -140,9 +144,9 @@ def unprocessed_feedback(project, token):
     return oldest_first(decode_document(r["document"]) for r in rows if "document" in r)
 
 
-def create_issue(repo, token, feedback):
+def create_issue(repo, token, feedback, links=()):
     url = f"https://api.github.com/repos/{repo}/issues"
-    body = {"title": issue_title(split_text(feedback.get("text", ""))[0]), "body": issue_body(feedback), "labels": LABELS}
+    body = {"title": issue_title(split_text(feedback.get("text", ""))[0]), "body": issue_body(feedback, links), "labels": LABELS}
     issue = request("POST", url, token, body, {"Accept": "application/vnd.github+json"})
     return issue["number"]
 
@@ -164,9 +168,13 @@ def main():
         feedback_list = unprocessed_feedback(project, token)
         print(f"New feedback: {len(feedback_list)}")
         for feedback in feedback_list:
-            number = create_issue(repo, github_token, feedback)
+            # Files first: a failure leaves the message unprocessed, and the next run commits the same paths again.
+            parts = feedback_files.read_parts(request, decode_document, project, token, feedback.get("attachments") or [])
+            links = feedback_files.upload(request, repo, github_token, feedback["_id"], feedback_files.glue(parts))
+            number = create_issue(repo, github_token, feedback, links)
             mark_processed(feedback["_name"], token, number)
-            print(f"feedback/{feedback['_id']} → issue #{number}")
+            feedback_files.delete_parts(request, parts, token)
+            print(f"feedback/{feedback['_id']} → issue #{number}, files: {len(links)}")
         now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         updated = feedback_status.sync_statuses(request, project, token, repo, github_token, decode_document, now)
         print(f"Statuses updated: {updated}")

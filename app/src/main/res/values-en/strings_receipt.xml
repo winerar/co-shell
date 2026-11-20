@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">From a receipt QR · seller %1$s</string>
+    <string name="scan_source_document">From a receipt · %1$s</string>
     <string name="scan_dup_title">This receipt is already recorded</string>
     <string name="scan_dup_text">There is already one like it in Transactions: %1$s.</string>
     <string name="scan_dup_confirm">Record anyway</string>

@@ -40,6 +40,7 @@ import app.coshell.core.domain.DataWipeRepository
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
 import app.coshell.core.domain.CategoryNames
+import app.coshell.core.domain.AdjustBalanceUseCase
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
 import app.coshell.core.domain.RenameStarterCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
@@ -197,6 +198,16 @@ object DataModule {
 
     @Provides
     fun provideMissedPayments(templates: TemplateRepository, post: PostPaymentUseCase) = MissedPaymentsUseCase(templates, post)
+
+    @Provides
+    fun provideAdjustBalance(
+        accounts: AccountRepository,
+        transactions: TransactionRepository,
+        categories: CategoryRepository,
+        names: CategoryNames,
+        ids: IdGenerator,
+        clock: Clock,
+    ) = AdjustBalanceUseCase(accounts, transactions, EnsureAdjustmentCategoriesUseCase(categories, names), ids, clock)
 
     @Provides
     fun provideSaveAccount(accounts: AccountRepository, transactions: TransactionRepository) =

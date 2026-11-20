@@ -120,6 +120,11 @@
     <string name="account_currency_locked">La moneda no se puede cambiar: la cuenta tiene movimientos</string>
     <string name="account_type">Tipo</string>
     <string name="account_initial_balance">Saldo inicial</string>
+    <string name="account_balance_now">Saldo actual</string>
+    <string name="account_balance_adjust_title">Corregir saldo</string>
+    <string name="account_balance_actual">Saldo real</string>
+    <string name="account_balance_now_hint">Ahora: %1$s. Escribe cuánto hay de verdad.</string>
+    <string name="account_balance_adjust_hint">Ajuste al guardar: %1$s</string>
     <string name="account_initial_balance_hint">El importe antes del primer movimiento. Para una deuda, con signo menos.</string>
     <string name="account_included_in_total">Incluir en el saldo total</string>
     <string name="account_included_in_total_hint">Desactívalo para deudas o dinero ajeno — la cuenta no contará en el saldo total</string>

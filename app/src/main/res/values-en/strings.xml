@@ -117,6 +117,11 @@
     <string name="account_currency_locked">Currency can\'t change: the account has transactions</string>
     <string name="account_type">Type</string>
     <string name="account_initial_balance">Starting balance</string>
+    <string name="account_balance_now">Balance now</string>
+    <string name="account_balance_adjust_title">Correct balance</string>
+    <string name="account_balance_actual">Actual balance</string>
+    <string name="account_balance_now_hint">Now: %1$s. Enter how much there really is.</string>
+    <string name="account_balance_adjust_hint">Adjustment on save: %1$s</string>
     <string name="account_initial_balance_hint">The amount before the first transaction. For a debt, use a minus sign.</string>
     <string name="account_included_in_total">Include in total balance</string>
     <string name="account_included_in_total_hint">Turn off for debts or someone else\'s money — the account won\'t count in the total balance</string>

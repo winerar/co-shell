@@ -31,7 +31,7 @@ val LocalAmountPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalett
 val LocalStatusPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Lime, dark = false).status }
 
 /**
- * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(accent = true)`), filled
+ * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(tone = CardTone.Hero)`), filled
  * with a gradient of the palette in both themes. Light: the pastel neon gradient (issue #62) with dark ink; dark:
  * a deep gradient — neon, income and accent sunk into graphite (issue #249, variant Б) — with light text and the
  * main amount in neon. [hint] — grey lines, [track] — the empty part of a bar, [expense] and [warning] — overspent and
@@ -109,7 +109,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
         ThemeColors(
             scheme = scheme,
             amounts = AmountPalette(p.incomeDark, p.expenseDark, scheme.onSurfaceVariant),
-            status = StatusPalette(StatusColors.WarningDark, p.incomeDark),
+            status = StatusPalette(p.warningDark, p.incomeDark),
             hero = HeroPalette(
                 brush = Brush.linearGradient(stops),
                 content = scheme.onSurface,
@@ -117,7 +117,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
                 hint = readableOn(lerp(Color.White, p.backgroundDark, HERO_HINT_DARK), stops, Color.White),
                 track = HERO_TRACK_DARK,
                 expense = readableOn(lerp(p.expenseDark, Color.White, HERO_ALERT_SHIFT_DARK), stops, Color.White),
-                warning = readableOn(StatusColors.WarningDark, stops, Color.White),
+                warning = readableOn(p.warningDark, stops, Color.White),
             ),
             heroStops = stops,
         )
@@ -127,7 +127,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
         ThemeColors(
             scheme = scheme,
             amounts = AmountPalette(p.incomeLight, p.expenseLight, scheme.onSurfaceVariant),
-            status = StatusPalette(StatusColors.WarningLight, p.incomeLight),
+            status = StatusPalette(p.warningLight, p.incomeLight),
             hero = HeroPalette(
                 brush = Brush.linearGradient(stops),
                 content = scheme.onSurface,
@@ -135,7 +135,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
                 hint = readableOn(scheme.onSurfaceVariant, stops, scheme.onSurface),
                 track = scheme.onSurface.copy(alpha = HERO_TRACK_LIGHT_ALPHA),
                 expense = readableOn(lerp(p.expenseLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
-                warning = readableOn(lerp(StatusColors.WarningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
+                warning = readableOn(lerp(p.warningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
             ),
             heroStops = stops,
         )

@@ -3,6 +3,7 @@ package app.coshell.core.designsystem.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.category.inkOn
 import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Motion
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
@@ -46,7 +48,7 @@ fun CoShellAccountCard(
             .fillMaxWidth()
             .alpha(alpha)
             .background(fill, MaterialTheme.shapes.large)
-            .fillEdge(fill, MaterialTheme.shapes.large, MaterialTheme.colorScheme.background)
+            .then(accountEdgeColor(fill, MaterialTheme.colorScheme.background)?.let { Modifier.border(Sizes.hairline, it, MaterialTheme.shapes.large) } ?: Modifier)
             .padding(horizontal = Spacing.l, vertical = Spacing.m),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {

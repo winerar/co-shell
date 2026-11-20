@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.coShellButtonColors
@@ -35,7 +36,7 @@ data class VersionGateBannerState(val version: String? = null, val sizeMb: Strin
 @Composable
 fun VersionGateBanner(state: VersionGateBannerState, onUpdate: () -> Unit, modifier: Modifier = Modifier) {
     val warning = LocalStatusPalette.current.warning
-    CoShellCard(modifier = modifier.fillMaxWidth(), tint = warning) {
+    CoShellCard(modifier = modifier.fillMaxWidth(), tone = CardTone.Warning) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 Icon(painterResource(DesignR.drawable.ic_download), contentDescription = null, tint = warning, modifier = Modifier.size(Sizes.tileIcon))

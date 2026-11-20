@@ -1,6 +1,7 @@
 package app.coshell.wipe.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.coShellButtonColors
 import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
 import app.coshell.core.designsystem.theme.TitleStrongStyle
@@ -34,7 +35,7 @@ internal fun WipeConfirm(state: WipeDataUiState, onWordChange: (String) -> Unit,
     val confirmWord = stringResource(R.string.wipe_confirm_word)
     val danger = MaterialTheme.colorScheme.error
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
-        CoShellCard(tint = danger) {
+        CoShellCard(tone = CardTone.Danger) {
             Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                 Text(stringResource(R.string.wipe_family_title), style = TitleStrongStyle, color = danger)
                 Text(stringResource(R.string.wipe_family_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

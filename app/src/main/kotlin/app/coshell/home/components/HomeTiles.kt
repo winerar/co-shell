@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.domain.settings.HomeTile
 import app.coshell.settings.LocalScreenOptions
 import app.coshell.core.designsystem.amount.AmountText
@@ -96,7 +97,7 @@ private fun RatesTile(attention: HomeUiState.Attention, onClick: () -> Unit, mod
     CoShellTile(
         title = stringResource(R.string.home_attention_title),
         onClick = onClick,
-        tint = warning,
+        tone = CardTone.Warning,
         modifier = modifier,
     ) {
         Text(attention.count.toString(), style = AmountTitleStyle, color = warning)

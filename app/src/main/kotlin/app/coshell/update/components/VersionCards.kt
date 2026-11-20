@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.res.pluralStringResource
 import app.coshell.core.designsystem.charts.CoShellChangePill
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellArrowChip
 import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.Sizes
@@ -48,7 +49,7 @@ internal fun VersionCompareCard(installedName: String, installedCode: Int, relea
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
-        CoShellCard(Modifier.weight(1f).fillMaxHeight(), tint = colors.secondary) {
+        CoShellCard(Modifier.weight(1f).fillMaxHeight(), tone = CardTone.Secondary) {
             VersionColumn(stringResource(R.string.update_version_now), installedName, installedCode, Modifier.padding(Spacing.l), secondaryInk())
         }
         CoShellArrowChip()

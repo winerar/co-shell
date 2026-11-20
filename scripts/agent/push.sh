@@ -8,10 +8,9 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 # without an upstream — the local name.
 target=$branch
 up=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
-case "$up" in origin/*) target=${up#origin/} ;; esac
-for name in "$branch" "$target"; do
-    case "$name" in main | dev) echo "✗ refusing to push $name directly (PR into dev)"; exit 1 ;; esac
-done
+# A branch made from `origin/dev` (`start` moves the session branch there) tracks dev: that is its base, not its target.
+case "$up" in origin/main | origin/dev) ;; origin/*) target=${up#origin/} ;; esac
+case "$branch" in main | dev) echo "✗ refusing to push $branch directly (PR into dev)"; exit 1 ;; esac
 for wait in 0 2 4 8 16; do
     [ "$wait" -gt 0 ] && { echo "… push failed, retry in ${wait}s"; sleep "$wait"; }
     if out=$(git push -q -u origin "$branch:$target" "$@" 2>&1); then

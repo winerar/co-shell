@@ -86,8 +86,12 @@ class MainActivity : FragmentActivity() {
         lifecycleScope.launch {
             if (notificationAsk.awaitDue()) withStarted { askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS) }
         }
-        openPayment(intent)
-        receiptLinks.offer(intent)
+        // A share or a reminder is taken from a fresh start only: after the process was killed, or from «Недавние»,
+        // Android hands back the original intent — the same receipt would open again (its file permission long gone).
+        if (isFreshIntent(restored = savedInstanceState != null, flags = intent.flags)) {
+            openPayment(intent)
+            receiptLinks.offer(intent)
+        }
         setContent {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
             // already matches the phone's mode), so a chosen theme never flashes the other one.

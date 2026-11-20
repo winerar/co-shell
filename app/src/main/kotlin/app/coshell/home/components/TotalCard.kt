@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.RollingAmountText
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellFlipCard
 import app.coshell.core.designsystem.components.CoShellHint
@@ -41,7 +42,7 @@ import app.coshell.ui.format.formatDayMonth
 internal fun TotalCard(state: HomeUiState, onAccounts: () -> Unit) {
     var flipped by rememberSaveable { mutableStateOf(false) }
     if (state.monthResult == null && state.byCurrency.isEmpty()) {
-        CoShellCard(modifier = Modifier.fillMaxWidth(), accent = true) {
+        CoShellCard(modifier = Modifier.fillMaxWidth(), tone = CardTone.Hero) {
             Column(Modifier.padding(Spacing.l)) { TotalFront(state, onAccounts) }
         }
         return

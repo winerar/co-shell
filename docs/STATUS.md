@@ -71,4 +71,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-20, `ccr-962a3fe2-rfwk2r`: влиты #533 (вкл. #528, #525), #539, #514 одним PR; «↻» на героях не налезает на верхнюю строку (`FlipCueClearance`, доска `Flip519Bud*`); «≈» склеен с суммой (фильтр «Операций», «Капитал», оборот «Бюджетов»); релиз. #509 (смена типа сохранённой операции) и итог выражения на клавиатуре (#508) — ждут доски и «ок».
+2026-11-20, `ccr-6c7a9fc8-r1zy95`: карточки — только `CardTone` (основной, дополнительный, герой; `Warning`/`Danger` — исключение по `CardToneRuleTest`); обводка карточки счёта на тёмном фоне (`AccountCardContrastTest`, Revolut — текст 4,45, ждёт решения). Опрос «Цвет внимания»: https://claude.ai/artifact/SuGhKARCuM9YDw7DoYhFvq — после ответа заменить `StatusColors` на цвет темы (`scripts/agent/alert_colors.py`).

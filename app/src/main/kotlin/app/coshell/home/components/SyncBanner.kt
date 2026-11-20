@@ -1,6 +1,7 @@
 package app.coshell.home.components
 
 import androidx.compose.foundation.layout.Arrangement
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.coShellButtonColors
 import app.coshell.core.designsystem.theme.TitleSmallStrongStyle
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,7 @@ fun SyncBanner(state: SyncBannerState, actions: SyncBannerActions, modifier: Mod
     } else {
         null
     }
-    CoShellCard(modifier = modifier.fillMaxWidth(), tint = warning) {
+    CoShellCard(modifier = modifier.fillMaxWidth(), tone = CardTone.Warning) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
                 Icon(painterResource(DesignR.drawable.ic_sync), contentDescription = null, tint = warning, modifier = Modifier.size(Sizes.tileIcon))

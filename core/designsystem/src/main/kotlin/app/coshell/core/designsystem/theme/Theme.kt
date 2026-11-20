@@ -31,7 +31,7 @@ val LocalAmountPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalett
 val LocalStatusPalette = staticCompositionLocalOf { themeColorsFor(CoShellPalette.Lime, dark = false).status }
 
 /**
- * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(accent = true)`), filled
+ * The main block of a screen («Обзор» total, budgets month, envelope head — `CoShellCard(tone = CardTone.Hero)`), filled
  * with a gradient of the palette in both themes. Light: the pastel neon gradient (issue #62) with dark ink; dark:
  * a deep gradient — neon, income and accent sunk into graphite (issue #249, variant Б) — with light text and the
  * main amount in neon. [hint] — grey lines, [track] — the empty part of a bar, [expense] and [warning] — overspent and

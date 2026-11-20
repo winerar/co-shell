@@ -15,6 +15,7 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.amount.splitAmount
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
+import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellTile
 import app.coshell.core.designsystem.charts.bulletColor
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -29,7 +30,11 @@ internal fun BudgetTile(summary: BudgetsUiState.Summary, onClick: () -> Unit, mo
     val hot = summary.tone == BulletTone.WARNING || summary.tone == BulletTone.DANGER
     val title = summary.daysLeft?.let { pluralStringResource(R.plurals.home_budget_title_days, it, it) }
         ?: stringResource(R.string.home_budget_title)
-    CoShellTile(title = title, onClick = onClick, tint = if (hot) bulletColor(summary.tone) else null, modifier = modifier) {
+    CoShellTile(title = title, onClick = onClick, tone = when (summary.tone) {
+        BulletTone.WARNING -> CardTone.Warning
+        BulletTone.DANGER -> CardTone.Danger
+        else -> CardTone.Primary
+    }, modifier = modifier) {
         val (number, code) = splitAmount(summary.left)
         AmountText(
             number,

@@ -62,6 +62,24 @@ def reports_a():
     return tab_page('Отчёты', reports_body(), 'rep', REP_TABS)
 
 
+def reports_past():
+    """#568 «А»: a past month picked — the columns still run up to the current month, the picked one lit; the next ones can be tapped."""
+    struct = chart_card('На что ушли деньги', 'черта — май', total_line('1 180', 'за месяц')
+                        + ''.join(hbar(*x) for x in STRUCT[:3]))
+    months = chart_card('По месяцам', 'расходы', columns(MONTHS, 90, hi=0), 'margin-top: 10px;')
+    return tab_page('Отчёты', month_switch('Июнь 2026', 'USD') + struct + months, 'rep', REP_TABS)
+
+
+def reports_scrolled():
+    """#568 «Б»: the period row went under the header — «‹ Отчёты / Июнь 2026 · USD ›» in the capsule; a tap on the title opens «Период и валюта»."""
+    head = capsule(icon_button('back', 'Раньше') + '<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column;">'
+                   '<h1 style="margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2;">Отчёты</h1>'
+                   '<span style="font-size: 12px; color: %s;">Июнь 2026 · USD</span></div>%s' % (MUTED, icon_button('chev', 'Позже')), lead=4)
+    months = chart_card('По месяцам', 'расходы', columns(MONTHS, 90, hi=0), 'margin-top: 0;')
+    income = chart_card('Доходы и расходы', 'нажмите на месяц', columns([(m, v // 2 + 300) for m, v in MONTHS], 120, hi=0))
+    return head + '<div style="padding: 0 16px;">%s</div>' % (months + income) + nav_tabs('rep', REP_TABS)
+
+
 def drill():
     from mockup_screens_main import tx
     bars = chart_card('Дом за ноябрь', '290 USD · 38% трат', ''.join(
@@ -101,4 +119,6 @@ BOARDS = [  # name, title, fn, row key
     ('RepAll', 'Тап по «Другое»: все 24 категории', all_cats, 'rep'),
     ('RepDrill', 'Тап по «Дом»: из чего сложилось', drill, 'rep'),
     ('RepPeriod', 'Период и валюта — шторка', period_sheet, 'rep'),
+    ('RepPast', 'Прошлый месяц: столбики до текущего (#568 А)', reports_past, 'rep'),
+    ('RepScrolled', 'Прокрутили: период и стрелки в шапке (#568 Б)', reports_scrolled, 'rep'),
 ]

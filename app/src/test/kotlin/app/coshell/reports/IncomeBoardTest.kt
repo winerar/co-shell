@@ -39,10 +39,11 @@ class IncomeBoardTest {
             day(10, "salary", 2_000, TransactionType.INCOME), day(10, "cafe", 1_500),
         )!!
 
-        assertEquals((5..10).map { YearMonth(2026, it) }, income.columns.map { it.month })
-        assertEquals(1f, income.columns.last().earnedFraction, 0.001f)
-        assertEquals(0.55f, income.columns[4].spentFraction, 0.001f)
-        assertEquals(5, income.selected)
+        // October is past: the columns run up to the current month (#568), October is not the last one.
+        assertEquals((6..11).map { YearMonth(2026, it) }, income.columns.map { it.month })
+        assertEquals(1f, income.columns[4].earnedFraction, 0.001f)
+        assertEquals(0.55f, income.columns[3].spentFraction, 0.001f)
+        assertEquals(4, income.selected)
         assertEquals("+500", income.saved)
         assertFalse(income.overspent)
         assertEquals(25, income.rate)

@@ -39,6 +39,14 @@ internal class ReportInput(
     val compare: Boolean,
 )
 
+/** The months of «По месяцам» and «Доходы и расходы»: up to the current month while the period fits (#568). */
+internal val ReportInput.columns: List<BudgetPeriod>
+    get() = period.columnMonths(startDay, today)
+
+/** The column of the period's last month in [columns]; the last one if it is not there. */
+internal fun ReportInput.selectedColumn(columns: List<BudgetPeriod>): Int =
+    columns.indexOfFirst { it.month == period.lastMonth }.takeIf { it >= 0 } ?: columns.lastIndex
+
 /** The family month of a month report — marks «выше обычного» are counted only for one; `null` for other periods. */
 internal val ReportInput.month: BudgetPeriod?
     get() = if (period.kind == ReportPeriodKind.MONTH) budgetPeriod(period.firstMonth, startDay) else null
@@ -55,9 +63,9 @@ private fun Map<String, UsualMark>.toUi(month: BudgetPeriod, today: LocalDate, f
     mapValues { it.value.toUi(month, today, format) }
 
 /** The days to load for [this] report: the period, the period before it and the months of «По месяцам». */
-internal fun ReportPeriod.loadRange(startDay: Int): Pair<LocalDate, LocalDate> {
+internal fun ReportPeriod.loadRange(startDay: Int, today: LocalDate): Pair<LocalDate, LocalDate> {
     val previous = previous(startDay)
-    val columns = columnMonths(startDay)
+    val columns = columnMonths(startDay, today)
     return minOf(start, previous.start, columns.first().start) to maxOf(endExclusive, columns.last().endExclusive)
 }
 
@@ -144,12 +152,12 @@ private fun comparison(input: ReportInput, previous: ReportPeriod, format: Money
     }
 }
 
-/** Pure: «По месяцам» — spending of each month of [ReportPeriod.columnMonths], the period's last month highlighted. */
+/** Pure: «По месяцам» — spending of each month of [ReportInput.columns], the period's last month highlighted. */
 internal fun buildMonths(input: ReportInput, format: MoneyFormat): Months {
-    val series = monthlySeries(input.ledger, input.period.columnMonths(input.startDay))
+    val series = monthlySeries(input.ledger, input.columns)
     val scale = ChartScale.of(series.map { it.spent.amountMinor })
     return Months(
         columns = series.map { MonthColumn(it.period.month, format.number(it.spent), scale.of(it.spent.amountMinor)) },
-        selected = series.lastIndex,
+        selected = input.selectedColumn(series.map { it.period }),
     )
 }

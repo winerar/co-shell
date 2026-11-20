@@ -623,5 +623,4 @@
     <string name="transaction_categories_all_title">All categories · %1$d</string>
     <string name="transaction_categories_search">Find a category</string>
     <string name="transaction_categories_nothing">Nothing found</string>
-    <string name="transaction_categories_no_folder">No group</string>
 </resources>

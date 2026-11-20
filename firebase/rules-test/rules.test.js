@@ -119,4 +119,18 @@ test('feedback: anyone creates a well-formed message and reads it by id, but can
   await assertFails(getDocs(collection(anon, 'feedback')));
   await assertFails(updateDoc(doc(anon, 'feedback/f1'), { text: 'другое' }));
   await assertFails(deleteDoc(doc(anon, 'feedback/f1')));
+  await assertSucceeds(setDoc(doc(anon, 'feedback/f3'), { ...message, attachments: ['p1', 'p2'] }));
+  await assertFails(setDoc(doc(anon, 'feedback/f4'), { ...message, attachments: 'p1' }));
+});
+
+test('feedback files: anyone adds a well-formed part, nobody reads or changes it', async () => {
+  const anon = env.unauthenticatedContext().firestore();
+  const part = { name: 'chek.pdf', mime: 'application/pdf', file: 0, part: 0, parts: 1, data: 'JVBERi0=', createdAt: new Date() };
+  await assertSucceeds(setDoc(doc(anon, 'feedback_files/p1'), part));
+  await assertFails(setDoc(doc(anon, 'feedback_files/p2'), { ...part, part: 1 }));
+  await assertFails(setDoc(doc(anon, 'feedback_files/p3'), { ...part, data: 'x'.repeat(700001) }));
+  await assertFails(setDoc(doc(anon, 'feedback_files/p4'), { ...part, extra: 1 }));
+  await assertFails(getDoc(doc(anon, 'feedback_files/p1')));
+  await assertFails(updateDoc(doc(anon, 'feedback_files/p1'), { data: 'AA==' }));
+  await assertFails(deleteDoc(doc(anon, 'feedback_files/p1')));
 });

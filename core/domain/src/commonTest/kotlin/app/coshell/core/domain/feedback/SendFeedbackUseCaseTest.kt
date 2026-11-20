@@ -30,6 +30,14 @@ class SendFeedbackUseCaseTest {
     }
 
     @Test
+    fun `sends chosen files and refuses too many`() = runTest {
+        val file = FeedbackAttachment("chek.pdf", "application/pdf", byteArrayOf(1, 2, 3))
+        assertEquals(FeedbackResult.Sent("doc-1"), send("Формат чека: Teleshka", listOf(file)))
+        assertEquals(listOf(file), sender.sent.last().attachments)
+        assertEquals(FeedbackResult.TooManyFiles(FeedbackAttachment.MAX_COUNT), send("x", List(4) { file }))
+    }
+
+    @Test
     fun `refuses blank text`() = runTest {
         assertEquals(FeedbackResult.Empty, send(" \n "))
         assertTrue(sender.sent.isEmpty())

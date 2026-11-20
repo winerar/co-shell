@@ -33,13 +33,13 @@ internal fun ScanSourceLine(scan: ScanUi, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            painterResource(DesignR.drawable.ic_qr_code_scanner),
+            painterResource(if (scan.document) DesignR.drawable.ic_receipt_long else DesignR.drawable.ic_qr_code_scanner),
             contentDescription = null,
             modifier = Modifier.size(Sizes.tileIcon),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            stringResource(R.string.scan_source, scan.seller),
+            stringResource(if (scan.document) R.string.scan_source_document else R.string.scan_source, scan.seller),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

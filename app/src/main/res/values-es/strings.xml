@@ -320,6 +320,8 @@
     <string name="feedback_result_sent">¡Gracias! Mensaje enviado.</string>
     <string name="feedback_error_empty">Escribe al menos un par de palabras.</string>
     <string name="feedback_error_too_long">Un poco más corto, por favor: hasta %1$d caracteres.</string>
+    <string name="feedback_error_too_many_files">Hasta %1$d archivos. Quita los que sobran.</string>
+    <string name="feedback_error_files_too_large">Los archivos pesan demasiado: hasta %1$d MB en total.</string>
     <string name="feedback_error_not_configured">En esta compilación el envío no está configurado.</string>
     <string name="feedback_error_failed">No se envió. Revisa internet — el texto está guardado.</string>
     <string name="update_title">Actualización</string>

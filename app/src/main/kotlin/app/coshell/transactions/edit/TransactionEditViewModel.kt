@@ -12,14 +12,14 @@ import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.designsystem.components.keypad.AmountKeys
-import app.coshell.core.domain.quickentry.AfipReceiptQr
-import app.coshell.core.domain.quickentry.ReceiptQr
 import app.coshell.core.domain.quickentry.TipPrefs
 import app.coshell.core.domain.quickentry.Tips
 import app.coshell.core.domain.recurring.autoPaymentId
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.Currencies
@@ -94,7 +94,7 @@ class TransactionEditViewModel @Inject constructor(
     /** Text with a receipt QR link from the route (#526); applied once to a new form, like the template. */
     private var pendingReceipt: String? = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_QR]
     /** The receipt the form was filled from; the amount follows the chosen account until the person types their own. */
-    private var scannedQr: ReceiptQr? = null
+    private var scannedQr: Receipt? = null
     private var scanAmountTouched = false
 
     private var existing: Transaction? = null
@@ -169,7 +169,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Receipt QR (#526)
 
     private suspend fun applyReceipt(text: String) {
-        val qr = AfipReceiptQr.find(text) ?: return
+        val qr = ReceiptFormats.read(text) ?: return
         scannedQr = qr
         scanAmountTouched = false
         val duplicate = transactions.findByReceiptKey(qr.key)?.let { found ->
@@ -180,7 +180,7 @@ class TransactionEditViewModel @Inject constructor(
             )
         }
         _state.update { form ->
-            form.copy(scan = ScanUi(qr.sellerTaxIdText, qr.key, duplicate)).withReceipt(qr, moneyFormat)
+            form.copy(scan = ScanUi(qr.merchant, qr.key, duplicate)).withReceipt(qr, moneyFormat)
                 .withDebitSuggestion(converter, moneyFormat)
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }

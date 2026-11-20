@@ -1,29 +1,58 @@
 package app.coshell.receipt
 
 import android.content.Intent
-import app.coshell.core.domain.quickentry.AfipReceiptQr
+import android.net.Uri
+import android.os.Build
+import app.coshell.receipt.inbox.Incoming
+import app.coshell.receipt.inbox.ReceiptFileReader
+import app.coshell.receipt.inbox.SharedFile
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 /**
- * Hands the QR link of a receipt from outside (a scanner or the camera opening `afip.gob.ar/fe/qr`, #526) to the
- * navigation: `MainActivity` offers its intent, `CoShellNavHost` opens the entry sheet and says [consumed].
- * The link is read in the app, offline — it is never opened in a browser.
+ * Hands a receipt from outside to the navigation: a QR link opened by a scanner or the camera (`afip.gob.ar/fe/qr`, #526),
+ * or text or a file shared with «Поделиться» (a PDF from Telegram, a photo of a QR). `MainActivity` offers its intent,
+ * `CoShellNavHost` opens the entry sheet with [link] — the text the formats read (empty: nothing recognised, the sheet
+ * opens blank) — and says [consumed]. Everything is read in the app, offline; links are never opened in a browser.
  */
 @Singleton
-class ReceiptLinks @Inject constructor() {
+class ReceiptLinks @Inject constructor(private val files: ReceiptFileReader) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val pending = MutableStateFlow<String?>(null)
     val link: StateFlow<String?> = pending.asStateFlow()
 
-    /** `true` — the intent carried a receipt link. */
+    /** The last shared file, kept for «Формат чека» feedback when the receipt was not recognised. */
+    private val lastFile = MutableStateFlow<SharedFile?>(null)
+    val sharedFile: StateFlow<SharedFile?> = lastFile.asStateFlow()
+
+    /** `true` — the intent carried a receipt, shared text or a shared file. */
     fun offer(intent: Intent?): Boolean {
-        val text = textOf(intent?.action, intent?.dataString) ?: return false
-        pending.value = text
-        // Opened once: a recreated activity sees the same intent again.
-        intent?.data = null
+        intent ?: return false
+        val incoming = Incoming.of(
+            action = intent.action,
+            type = intent.type,
+            dataString = intent.dataString,
+            text = intent.getStringExtra(Intent.EXTRA_TEXT),
+            stream = stream(intent)?.toString(),
+        ) ?: return false
+        // Taken once: a recreated activity sees the same intent again.
+        intent.data = null
+        intent.action = Intent.ACTION_MAIN
+        when (incoming) {
+            is Incoming.Text -> pending.value = incoming.text
+            is Incoming.File -> scope.launch {
+                val read = files.read(incoming.uri, incoming.mime)
+                lastFile.value = read.file
+                pending.value = read.text
+            }
+        }
         return true
     }
 
@@ -31,9 +60,11 @@ class ReceiptLinks @Inject constructor() {
         pending.value = null
     }
 
-    companion object {
-        /** The text with the receipt link of a «view link» intent, or `null` when it is something else. */
-        fun textOf(action: String?, dataString: String?): String? =
-            dataString?.takeIf { action == Intent.ACTION_VIEW && AfipReceiptQr.find(it) != null }
-    }
+    private fun stream(intent: Intent): Uri? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        } ?: intent.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
 }

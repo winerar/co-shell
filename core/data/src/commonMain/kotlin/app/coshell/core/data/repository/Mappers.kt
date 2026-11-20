@@ -131,7 +131,7 @@ internal fun BudgetEntity.toModel() = Budget(
     id = id,
     categoryId = categoryId,
     startMonth = YearMonth.parse(month),
-    limit = Money(limitMinor, CurrencyCode(currency)),
+    limit = Money(if (zeroLimit) 0 else limitMinor, CurrencyCode(currency)),
     note = note?.takeIf { it.isNotBlank() },
     rollover = rollover,
     lastMonth = lastMonth?.let { YearMonth.parse(it) },
@@ -141,14 +141,18 @@ internal fun Budget.toEntity(stamp: Stamp) = BudgetEntity(
     id = id,
     categoryId = categoryId,
     month = startMonth.toString(),
-    limitMinor = limit.amountMinor,
+    limitMinor = storedLimitMinor(limit),
     currency = limit.currency.value,
     note = note,
     rollover = rollover,
     lastMonth = lastMonth?.toString(),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
+    zeroLimit = limit.isZero,
 )
+
+/** A zero limit goes out as one minimal unit: older versions require a positive limit (see `BudgetEntity`). */
+internal fun storedLimitMinor(limit: Money): Long = if (limit.isZero) 1 else limit.amountMinor
 
 internal fun TemplateEntity.toModel() = TransactionTemplate(
     id = id,

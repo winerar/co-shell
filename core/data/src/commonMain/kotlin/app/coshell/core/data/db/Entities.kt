@@ -97,7 +97,9 @@ data class TransactionEntity(
 /**
  * Limit of a category or a folder. [month] (`YYYY-MM`) is the first month it applies to — the name is
  * kept from v1, where a limit was for one month (synced fields are never renamed). Schema v8 added
- * [note], [rollover] and [lastMonth] (`YYYY-MM`, inclusive; `NULL` — no end).
+ * [note], [rollover] and [lastMonth] (`YYYY-MM`, inclusive; `NULL` — no end). Schema v16 (#576): a zero limit
+ * is stored as [limitMinor] = 1 + [zeroLimit] — older versions require a positive limit and would crash on 0,
+ * so they read "one cent" (overspent at once, as intended).
  */
 @Serializable
 @Entity(tableName = "budgets", indices = [Index("category_id", "month")])
@@ -114,6 +116,7 @@ data class BudgetEntity(
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @ColumnInfo(name = "zero_limit", defaultValue = "0") val zeroLimit: Boolean = false,
 )
 
 /**

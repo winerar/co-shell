@@ -5,7 +5,8 @@ import kotlinx.datetime.YearMonth
 /**
  * Monthly spending limit ("envelope") for a category or a folder, in its own currency.
  * It repeats every month from [startMonth] until [lastMonth]; changing the amount later adds
- * a new record from that month, so past months keep the limit they had.
+ * a new record from that month, so past months keep the limit they had. A zero [limit] means
+ * "not planned to spend at all" (#576): any spending is over it.
  */
 data class Budget(
     val id: String,
@@ -22,7 +23,7 @@ data class Budget(
     val lastMonth: YearMonth? = null,
 ) {
     init {
-        require(limit.isPositive) { "Budget limit must be positive" }
+        require(!limit.isNegative) { "Budget limit must not be negative" }
         require(note == null || note.isNotBlank()) { "Budget note must be null or not blank" }
     }
 

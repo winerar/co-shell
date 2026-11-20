@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.YearMonth
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNull
 
 class BudgetUseCasesTest {
@@ -92,14 +93,21 @@ class BudgetUseCasesTest {
     }
 
     @Test
-    fun `limits are refused for income, archived, missing and adjustment categories and for zero`() = runTest {
+    fun `limits are refused for income, archived, missing and adjustment categories and for a negative amount`() = runTest {
         val limit = Money(100_00, ars)
         assertEquals(Result.Invalid(Reason.NOT_EXPENSE), save("salary", october, limit))
         assertEquals(Result.Invalid(Reason.CATEGORY_NOT_FOUND), save("old", october, limit))
         assertEquals(Result.Invalid(Reason.CATEGORY_NOT_FOUND), save("nope", october, limit))
         assertEquals(Result.Invalid(Reason.SYSTEM_CATEGORY), save(SystemCategories.ADJUSTMENT_EXPENSE_ID, october, limit))
-        assertEquals(Result.Invalid(Reason.AMOUNT_NOT_POSITIVE), save("home", october, Money(0, ars)))
+        assertEquals(Result.Invalid(Reason.AMOUNT_NEGATIVE), save("home", october, Money(-1, ars)))
         assertEquals(emptyList(), budgets.getBudgets())
+    }
+
+    @Test
+    fun `a zero limit is saved - spent without a plan`() = runTest {
+        val saved = assertIs<Result.Saved>(save("home", october, Money(0, ars)))
+        assertEquals(Money(0, ars), saved.budget.limit)
+        assertEquals(listOf(saved.budget), budgets.getBudgets())
     }
 
     @Test

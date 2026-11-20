@@ -33,8 +33,9 @@ class BudgetTest {
     }
 
     @Test
-    fun `limit must be positive and a note must not be blank`() {
-        assertFailsWith<IllegalArgumentException> { Budget("b", "home", october, Money(0, ars)) }
+    fun `limit must not be negative and a note must not be blank`() {
+        assertEquals(Money(0, ars), Budget("b", "home", october, Money(0, ars)).limit)
+        assertFailsWith<IllegalArgumentException> { Budget("b", "home", october, Money(-1, ars)) }
         assertFailsWith<IllegalArgumentException> { Budget("b", "home", october, Money(1, ars), note = " ") }
     }
 

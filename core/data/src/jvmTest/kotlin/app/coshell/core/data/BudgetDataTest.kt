@@ -66,4 +66,16 @@ class BudgetDataTest {
 
         assertEquals(listOf(Money(450_000_00, ars)), budgets.getBudgets().map { it.limit })
     }
+
+    @Test
+    fun `a zero limit round-trips and older versions read one minimal unit instead of crashing`() = runTest {
+        budgets.applyBudgets(save = listOf(home(limit = 0)))
+
+        assertEquals(listOf(Money(0, ars)), budgets.getBudgets().map { it.limit })
+        val stored = db.syncDao().pendingBudgets().single()
+        assertEquals(1, stored.limitMinor)
+        val record = SyncCodec.encode(stored)
+        assertTrue("\"zeroLimit\":true" in record.json, record.json)
+        assertEquals(Money(0, ars), SyncCodec.budget(record).toModel().limit)
+    }
 }

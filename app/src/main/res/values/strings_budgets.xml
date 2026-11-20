@@ -86,7 +86,7 @@
     <string name="budget_no_folders">Категорий с подкатегориями пока нет — создайте их в «Ещё → Категории» или выберите обычную категорию.</string>
     <string name="budget_category_error">Выберите, на что лимит</string>
     <string name="budget_amount">В месяц</string>
-    <string name="budget_amount_error">Введите сумму больше нуля</string>
+    <string name="budget_amount_error">Введите сумму цифрами. Можно и 0</string>
     <string name="budget_average">В среднем за 3 месяца — %1$s</string>
     <string name="budget_currency">Валюта лимита</string>
     <string name="budget_inside">Подкатегории · необязательно</string>

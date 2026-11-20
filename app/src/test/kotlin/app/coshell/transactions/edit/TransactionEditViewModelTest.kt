@@ -225,6 +225,40 @@ class TransactionEditViewModelTest : TransactionEditTestBase() {
     }
 
     @Test
+    fun `a saved expense entered by mistake becomes income and keeps its amount and date (509)`() = runTest {
+        seed()
+        val date = LocalDateTime(2026, 11, 1, 9, 15).toInstant(zone)
+        transactions.saveTransaction(Transaction("t", TransactionType.EXPENSE, "card", Money(250_00, ars), date, categoryId = "food", note = "x"))
+        val vm = viewModel("t")
+        vm.onTypeChange(TransactionType.INCOME)
+        vm.save()
+        assertEquals(TransactionType.EXPENSE, transactions.getTransaction("t")!!.type) // no category of the new type yet: not saved
+        vm.onCategorySelect("salary")
+        vm.save()
+        val saved = transactions.getTransaction("t")!!
+        assertEquals(TransactionType.INCOME, saved.type)
+        assertEquals("salary", saved.categoryId)
+        assertEquals(Money(250_00, ars), saved.amount)
+        assertEquals(date, saved.date)
+        assertEquals("x", saved.note)
+    }
+
+    @Test
+    fun `a saved expense becomes a transfer without a category (509)`() = runTest {
+        seed()
+        transactions.saveTransaction(Transaction("t", TransactionType.EXPENSE, "card", Money(250_00, ars), now, categoryId = "food"))
+        val vm = viewModel("t")
+        vm.onTypeChange(TransactionType.TRANSFER)
+        vm.onToAccountSelect("cash")
+        vm.onToAmountChange("1")
+        vm.save()
+        val saved = transactions.getTransaction("t")!!
+        assertEquals(TransactionType.TRANSFER, saved.type)
+        assertEquals("cash", saved.toAccountId)
+        assertNull(saved.categoryId)
+    }
+
+    @Test
     fun `delete removes the transaction`() = runTest {
         seed()
         transactions.saveTransaction(Transaction("t", TransactionType.EXPENSE, "card", Money(1, ars), now))

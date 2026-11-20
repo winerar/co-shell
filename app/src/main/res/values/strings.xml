@@ -454,6 +454,7 @@
     <string name="account_shared">Общий счёт</string>
     <string name="account_shared_hint">Выключите для личного счёта — его увидят все, но с пометкой «личный»</string>
     <string name="account_personal_mine">личный</string>
+    <string name="account_selected">Выбран</string>
     <string name="account_personal_of">личный · %1$s</string>
 
     <string name="auto_backup_title">Автоматически раз в неделю</string>

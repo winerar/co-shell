@@ -1,5 +1,7 @@
 package app.coshell.screenshots
 
+import app.coshell.transactions.edit.allAccountsSample
+import app.coshell.transactions.edit.components.AccountPicker
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
@@ -246,6 +248,16 @@ class ScreensScreenshotTest {
     @Test
     fun `filter tags sheet light`() = shot("filter_tags_light") {
         Column { TagsChoices(ListFilter(tagIds = setOf("аня", "испанский")), transactionsFilterChoices) {} }
+    }
+
+    @Test
+    fun `account picker dark`() = shot("account_picker_dark", dark = true) {
+        Column { AccountPicker("Откуда списали?", allAccountsSample, listOf("galicia", "peso", "binance"), "galicia", {}) }
+    }
+
+    @Test
+    fun `account picker light`() = shot("account_picker_light") {
+        Column { AccountPicker("Откуда списали?", allAccountsSample, listOf("galicia", "peso", "binance"), "galicia", {}) }
     }
 
     @Test

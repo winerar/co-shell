@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import app.coshell.accounts.AccountGroupTitle
 import app.coshell.accounts.list.AccountsUiState
 import app.coshell.core.designsystem.amount.fitAmountAutoSize
 import app.coshell.core.designsystem.components.CoShellCard
@@ -25,7 +25,6 @@ import app.coshell.core.designsystem.motion.CoShellExpandable
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.RateTextStyle
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
@@ -53,17 +52,7 @@ internal fun AccountGroup(
         ) {
             val title = group.titleRes?.let { stringResource(it) } ?: group.titleText.orEmpty()
             // Title and total share the width: a long title ends in «…», a huge total shrinks; neither squeezes the other out (#431).
-            Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                Text(
-                    title.uppercase(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = if (muted) MaterialTheme.colorScheme.onSurfaceVariant else accentInk(),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false),
-                )
-                Text(group.rows.size.toString(), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            AccountGroupTitle(title, group.rows.size, Modifier.weight(1f), muted)
             group.total?.let {
                 Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
                     Text(

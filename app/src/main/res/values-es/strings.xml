@@ -440,6 +440,7 @@
     <string name="account_shared">Cuenta compartida</string>
     <string name="account_shared_hint">Desactívalo para una cuenta personal — todos la verán, marcada como «personal»</string>
     <string name="account_personal_mine">personal</string>
+    <string name="account_selected">Seleccionada</string>
     <string name="account_personal_of">personal · %1$s</string>
 
     <string name="auto_backup_title">Automática una vez por semana</string>

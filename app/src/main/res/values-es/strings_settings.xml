@@ -154,4 +154,9 @@
     <string name="settings_home_tile_uncategorized">Sin categoría</string>
     <string name="settings_home_tiles_note">El mosaico «Atención» (sin tipo de cambio) ocupa el segundo lugar solo cuando hace falta. Mientras no haya presupuestos, «Sin categoría» ocupa el lugar de «Presupuesto».</string>
     <string name="home_edit_hide">Ocultar</string>
+    <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
+    <string name="settings_group_all">Todo ›</string>
+    <string name="settings_palette">Paleta</string>
+    <string name="settings_screens_row">Resumen, movimientos, informes, cuentas</string>
+    <string name="settings_screens_row_hint">qué mostrar y en qué orden</string>
 </resources>

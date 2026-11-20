@@ -154,4 +154,9 @@
     <string name="settings_home_tile_uncategorized">Uncategorized</string>
     <string name="settings_home_tiles_note">The «Attention» tile (no rate) takes the second place by itself when needed. While there are no budgets, «Uncategorized» stands in for «Budget».</string>
     <string name="home_edit_hide">Hide</string>
+    <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
+    <string name="settings_group_all">All ›</string>
+    <string name="settings_palette">Palette</string>
+    <string name="settings_screens_row">Overview, transactions, reports, accounts</string>
+    <string name="settings_screens_row_hint">what to show and in what order</string>
 </resources>

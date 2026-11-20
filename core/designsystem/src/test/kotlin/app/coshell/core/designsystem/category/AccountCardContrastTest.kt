@@ -13,8 +13,8 @@ import org.junit.Test
  * preset, in every theme × both modes. Their text ([inkOn]) reads at ≥ 4.5:1 on the fill, and the card stands out from the
  * page at ≥ 3:1 — by itself or by its [accountEdgeColor] hairline.
  *
- * [known] — brand colours no ink reaches 4.5:1 on (mid-luminance blue): kept as the brand has it, with a floor, until the
- * owner decides (2026-11-20). A fixed one must leave the list.
+ * [known] — brand colours no ink reaches 4.5:1 on (mid-luminance blue): kept as the brand has it, with a floor —
+ * the owner's decision (2026-11-20: Revolut stays). A fixed one must leave the list.
  */
 class AccountCardContrastTest {
     private val fills: List<Pair<String, Color>> =

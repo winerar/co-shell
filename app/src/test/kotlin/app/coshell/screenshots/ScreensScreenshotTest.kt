@@ -31,6 +31,7 @@ import app.coshell.settings.InputSettingsScreen
 import app.coshell.settings.MoneySettingsScreen
 import app.coshell.settings.NoticeSettingsScreen
 import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsPreviewState
 import app.coshell.settings.SettingsScreen
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
@@ -369,10 +370,10 @@ class ScreensScreenshotTest {
     }
 
     @Test
-    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsActions()) }
+    fun `settings light`() = shot("settings_light") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test
-    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsActions()) }
+    fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test
     fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }

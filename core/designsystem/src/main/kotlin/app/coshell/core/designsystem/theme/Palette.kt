@@ -68,6 +68,9 @@ internal data class PaletteSpec(
     val incomeLight: Color,
     val expenseDark: Color,
     val expenseLight: Color,
+    /** Attention (warning cards, «no rate», ahead of a limit's pace): the theme's own hue, not amber for all (2026-11-20). */
+    val warningDark: Color,
+    val warningLight: Color,
     val backgroundDark: Color,
     val backgroundLight: Color,
 )

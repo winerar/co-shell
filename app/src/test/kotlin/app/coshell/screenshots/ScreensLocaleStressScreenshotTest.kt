@@ -1,5 +1,8 @@
 package app.coshell.screenshots
 
+import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsPreviewState
+import app.coshell.settings.SettingsScreen
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
@@ -67,6 +70,7 @@ class ScreensLocaleStressScreenshotTest {
     @Test fun `entry sheet es`() = es("entry_sheet") { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) }
     @Test fun `account edit es`() = es("account_edit") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
     @Test fun `category edit es`() = es("category_edit") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+    @Test fun `settings es`() = es("settings") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test @Config(qualifiers = RU)
     fun `home x2`() = x2("home") { HomeScreen(homeStressSample) }
@@ -86,6 +90,8 @@ class ScreensLocaleStressScreenshotTest {
     fun `account edit x2`() = x2("account_edit") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
     @Test @Config(qualifiers = RU)
     fun `category edit x2`() = x2("category_edit") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+    @Test @Config(qualifiers = RU)
+    fun `settings x2`() = x2("settings") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     private fun es(screen: String, content: @Composable () -> Unit) = shot("${screen}_stress_es_narrow_light", false, 1.3f, content)
 

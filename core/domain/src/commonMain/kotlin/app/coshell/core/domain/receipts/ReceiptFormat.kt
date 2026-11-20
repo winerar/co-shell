@@ -17,7 +17,7 @@ interface ReceiptFormat {
  * with an anonymised sample in `docs/samples/receipts/` (`docs/agents/receipts.md`).
  */
 object ReceiptFormats {
-    val all: List<ReceiptFormat> = listOf(AfipQrFormat, TeleshkaFormat)
+    val all: List<ReceiptFormat> = listOf(AfipQrFormat, TeleshkaFormat, AmeriabankFormat, TbankFormat)
 
     /** Texts longer than this are not receipts (a whole book shared by mistake); read only the head. */
     const val MAX_TEXT = 20_000

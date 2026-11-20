@@ -142,6 +142,7 @@ class TransactionEditViewModel @Inject constructor(
             .filter { !it.account.archived || it.account.id in used }
         val accountList = withBalances.map { it.account }
         val balances = withBalances.associate { it.account.id to moneyFormat.format(it.balance) }
+        val negative = withBalances.filter { it.balance.isNegative }.map { it.account.id }.toSet()
         accountsById = accountList.associateBy { it.id }
         allCategories = categories.observeCategories(includeArchived = true).first()
             .filter { !it.archived || it.id == transaction?.categoryId }
@@ -151,7 +152,7 @@ class TransactionEditViewModel @Inject constructor(
         val recent = transactions.observeTransactions(TransactionFilter(limit = RECENT_OPERATIONS)).first()
         recentCategoryIds = recent.mapNotNull { it.categoryId }.distinct()
         val base = TransactionEditUiState(
-            accounts = accountList.map { it.toOption(balances[it.id].orEmpty()) },
+            accounts = accountList.map { it.toOption(balances[it.id].orEmpty(), it.id in negative) },
             recentAccountIds = recent.map { it.accountId }.distinct().filter { it in accountsById }.take(RECENT_ACCOUNTS),
             today = today,
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),

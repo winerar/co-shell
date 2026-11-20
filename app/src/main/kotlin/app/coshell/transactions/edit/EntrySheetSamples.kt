@@ -3,6 +3,7 @@ package app.coshell.transactions.edit
 import app.coshell.transactions.edit.TransactionEditUiState.AccountOption
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryGroup
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
+import app.coshell.core.model.AccountType
 import kotlinx.datetime.LocalDate
 
 // Worst case of board `Fb290A` (#290) for previews and screenshots: receipt in another currency, tags, a note and
@@ -111,3 +112,17 @@ internal val tipSheetSample = app.coshell.transactions.edit.tip.TipUi(
     tipText = "1 330 ARS",
     canSave = true,
 )
+
+/** «Все ›» of the ribbon (board `EntryAllAccounts`): recent accounts, then groups by type, a negative balance. */
+internal val allAccountsSample: List<AccountOption> = listOf(
+    AccountOption("galicia", "Galicia", "ARS", AccountType.CARD, 0xFFF26E22, nb("1 250 000 ARS")),
+    AccountOption("mp", "Mercado Pago", "ARS", AccountType.CARD, 0xFF00B1EA, nb("96 400 ARS")),
+    AccountOption("credit", "Кредитка", "ARS", AccountType.CARD, 0xFFEC0000, nb("−42 000 ARS"), isNegative = true),
+    AccountOption("binance", "Binance", "USDT", AccountType.CRYPTO, 0xFFF0B90B, nb("1 840 USDT")),
+    AccountOption("peso", "Песо", "ARS", AccountType.CASH, 0xFFA8FF3E, nb("310 000 ARS")),
+    AccountOption("usd", "Доллары", "USD", AccountType.CASH, 0xFF2BE4FF, nb("1 000 USD")),
+    AccountOption("deposit", "Вклад", "USD", AccountType.DEPOSIT, 0xFFFFD43B, nb("1 500 USD")),
+)
+
+/** Amounts as `MoneyFormat` writes them: non-breaking spaces, so a balance never wraps. */
+private fun nb(text: String) = text.replace(' ', '\u00A0')

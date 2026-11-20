@@ -233,6 +233,7 @@ BOARDS = [
     ('EntryTransfer', '5 · Шторка: перевод между валютами', lambda: _entry().transfer()), ('EntryReceipt', '5 · Шторка: чек в другой валюте', lambda: _entry().receipt()),
     ('EntryEdit', '5 · Шторка: правка операции', lambda: _entry().edit()), ('EntryError', '5 · Шторка: не выбрана категория', lambda: _entry().error()),
     ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
+    ('EntryAllAccounts', '5 · Шторка: «Все ›» — все счета, как на «Счетах»', lambda: _entry().all_accounts()),
     ('CategoryBlocked', '7 · Категория: удалить нельзя', category_blocked),
     ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountDelete', '9 · Счёт: удалить?', account_delete),
     ('AccountBlocked', '9 · Счёт: удалить нельзя', account_blocked),

@@ -91,6 +91,7 @@ data class TransactionEditUiState(
         /** Formatted balance for the picker tile, `""` — unknown. */
         val balance: String = "",
         val fractionDigits: Int = 2,
+        val isNegative: Boolean = false,
     )
 
     /** Steps of the entry sheet (owner 2026-11-09: account first, then amount and category). */

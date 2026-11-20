@@ -440,6 +440,7 @@
     <string name="account_shared">Shared account</string>
     <string name="account_shared_hint">Turn off for a personal account — everyone still sees it, marked “personal”</string>
     <string name="account_personal_mine">personal</string>
+    <string name="account_selected">Selected</string>
     <string name="account_personal_of">personal · %1$s</string>
 
     <string name="auto_backup_title">Automatically once a week</string>

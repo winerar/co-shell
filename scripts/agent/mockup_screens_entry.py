@@ -117,3 +117,27 @@ def no_accounts():
     inner = ('<div style="padding: 20px 16px; display: flex; flex-direction: column; gap: 16px;"><h2 style="margin: 0; font-size: 22px;">Новая операция</h2>'
              '<div style="font-size: 16px; color: %s;">Чтобы записать операцию, сначала добавьте счёт.</div>%s</div>' % (MUTED, button('Добавить счёт', mt=0)))
     return scrim() + m.sheet(inner, 520)
+
+
+def all_accounts():
+    """«Все ›» of the ribbon (`AccountPicker`) — the same look as «Счета» (owner 2026-11-20: one look for the same data):
+    groups by type with title and count, rows (`AccountLine`: badge 40, name, type, balance) in one card, ✓ on the chosen one;
+    «Недавние» first, search at the bottom under the thumb."""
+    def head(title, count):
+        return ('<div style="display: flex; align-items: center; gap: 6px; margin: 14px 4px 8px;"><span style="font-size: 13px; font-weight: 600; color: %s; '
+                'letter-spacing: 0.04em; text-transform: uppercase;">%s</span><span style="font-size: 12px; color: %s;">%s</span></div>' % (LIME, title, MUTED, count))
+
+    def line(a, on=False):
+        trail = '<span style="display: flex; align-items: center; gap: 8px;">%s%s</span>' % (amount(a[5], a[6], INK, 15), svg('check', LIME, 20) if on else '')
+        return row(a[0], a[4], badge(a[1], a[2], a[3], 40, 12), trail)
+
+    chosen = 'Galicia'
+    recent = [acc('Galicia'), acc('Песо'), acc('Binance')]
+    body = head('Недавние', len(recent)) + group([line(a, a[0] == chosen) for a in recent])
+    for g, title, _ in GROUPS:
+        items = in_group(g)
+        body += head(title, len(items)) + group([line(a, a[0] == chosen) for a in items])
+    inner = ('<div style="padding: 8px 16px 0; display: flex; align-items: flex-end;"><h2 style="margin: 0; flex-grow: 1; font-size: 22px;">Откуда списали?</h2>'
+             '<span style="font-size: 12px; color: %s;">%d счетов</span></div><div style="padding: 0 16px; height: 560px; overflow: hidden;">%s</div>'
+             '<div style="padding: 8px 16px 12px;">%s</div>' % (MUTED, len(ACCOUNTS), body, search('Найти счёт')))
+    return scrim() + m.sheet(inner, 120)

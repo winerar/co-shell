@@ -208,6 +208,15 @@
       "page": "screens",
       "radius": 28
     },
+    "EntryAllAccounts.dc.html": {
+      "x": 2820,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Шторка: «Все ›» — все счета, как на «Счетах»",
+      "page": "screens",
+      "radius": 28
+    },
     "Accounts.dc.html": {
       "x": 0,
       "y": 3720,
@@ -2763,6 +2772,7 @@
     "EntryEdit.dc.html",
     "EntryError.dc.html",
     "EntryNoAccounts.dc.html",
+    "EntryAllAccounts.dc.html",
     "Accounts.dc.html",
     "AccountsSearch.dc.html",
     "AccountsEmpty.dc.html",
@@ -3105,13 +3115,13 @@
       "text": "Новая операция — шторка",
       "x": 0,
       "y": 2230,
-      "maxW": 2740,
+      "maxW": 3210,
       "w": 240
     },
     "s2": {
       "page": "screens",
       "text": "Шторка: шаг 1 — тип и счёт (недавние сверху, поиск внизу под пальцем), шаг 2 — своя клавиатура, сумма и категории над ней. Всё нажимаемое — в нижних 2/3.",
-      "x": 2820,
+      "x": 3290,
       "y": 2480,
       "w": 390
     },

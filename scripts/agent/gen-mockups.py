@@ -58,7 +58,7 @@ PAGE_MODULES = (tab_screens, ops_screens, form_screens, set_screens, catalog)
 LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew', 'HomeGreeting']),
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
-    ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryEdit', 'EntryError', 'EntryNoAccounts']),
+    ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),
     ('Счёт и категории', ['AccountEdit', 'AccountEditExisting', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),

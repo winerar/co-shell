@@ -89,9 +89,22 @@ def receipt():
     return sheet(type_bar('exp') + ribbon(3), amount_card('13,10', 'USDT', PINK, line, debited=True, links=''), categories('Кафе'), details())
 
 
+def edit_types(cur='exp'):
+    """CoShellSegmented of a saved operation: no camera and «Шаблоны» — those are for a new one (#509, poll «А»)."""
+    def cell(k, name, _):
+        on = k == cur
+        style = ('background: %s; color: %s; font-weight: 700; box-shadow: inset 0 0 0 2px %s;' % (LIME, ONLIME, ONLIME) if on
+                 else 'color: %s;' % MUTED)
+        return ('<span style="flex: 1; height: 40px; border-radius: 999px; %s font-size: 13px; display: flex; align-items: center; '
+                'justify-content: center;">%s</span>' % (style, name))
+    return ('<span style="flex-grow: 1; min-width: 0; height: 48px; border-radius: 999px; background: %s; display: flex; align-items: center; '
+            'padding: 4px; gap: 2px;">%s</span>' % (BAR, ''.join(cell(*x) for x in TYPES)))
+
+
 def edit():
-    head = ('<div style="display: flex; align-items: center; gap: 8px;"><span style="flex-grow: 1;"></span>%s%s</div>'
-            % (icon_button('copy', 'Дублировать', INK, True), icon_button('trash', 'Удалить', PINK, True)))
+    """A saved operation: its type switch next to «Дублировать» and «Удалить» (#509); amount, account and date stay on a change."""
+    head = ('<div style="display: flex; align-items: center; gap: 4px;">%s%s%s</div>'
+            % (edit_types(), icon_button('copy', 'Дублировать', INK, True), icon_button('trash', 'Удалить', PINK, True)))
     return sheet(head + ribbon(0), amount_card('32 000', 'ARS', PINK), categories('Продукты'), details('10 нояб.', 'Coto, на неделю', save_as=True))
 
 

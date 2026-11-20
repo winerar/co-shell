@@ -13,19 +13,21 @@ internal data class CategoryLine(
 )
 
 /**
- * Lines of every category list sheet (#439): each category with subcategories is a group under its own name — itself
- * first (when it can be picked, subtitled [parentSubtitle]), then its subcategories, even one and even of the same name
- * («Дети» → «Дети» is a category and its subcategory, not a double). Categories without subcategories and without a
- * parent go under [noGroup], after the groups. Order inside a run is kept.
+ * Lines of every category list sheet, laid out as the «Категории» screen: top-level categories in their order, one with
+ * subcategories subtitled [parentSubtitle] and followed by its subcategories, indented with a smaller badge («Дети» →
+ * «Дети» is a category and its subcategory inside, not a double). Subcategories whose parent cannot be picked keep the
+ * parent's name as a caption, after the rest. Search still finds a subcategory by its parent's name.
  */
-internal fun categoryLines(lines: List<CategoryLine>, noGroup: String, parentSubtitle: String): List<ChoiceOption<String>> {
-    fun CategoryLine.option(group: String, subtitle: String?) = ChoiceOption(id, name, subtitle, group, icon, color, hasBadge = true)
+internal fun categoryLines(lines: List<CategoryLine>, parentSubtitle: String): List<ChoiceOption<String>> {
     val byId = lines.associateBy { it.id }
-    val parents = lines.mapNotNull { line -> line.parentId?.let { it to (byId[it]?.name ?: line.parent ?: "") } }.distinct()
-    val grouped = parents.flatMap { (parentId, name) ->
-        listOfNotNull(byId[parentId]?.option(name, parentSubtitle)) +
-            lines.filter { it.parentId == parentId }.map { it.option(name, null) }
+    val children = lines.filter { it.parentId != null }.groupBy { it.parentId }
+    fun CategoryLine.option(subtitle: String? = null, indent: Boolean = false, group: String? = null) =
+        ChoiceOption(id, name, subtitle, group, icon, color, hasBadge = true, indent = indent, parent = parent)
+    val tree = lines.filter { it.parentId == null }.flatMap { top ->
+        val kids = children[top.id].orEmpty()
+        listOf(top.option(subtitle = parentSubtitle.takeIf { kids.isNotEmpty() })) + kids.map { it.option(indent = true) }
     }
-    val placed = grouped.map { it.value }.toSet()
-    return grouped + lines.filter { it.id !in placed }.map { it.option(noGroup, null) }
+    val orphans = lines.filter { it.parentId != null && it.parentId !in byId }
+        .map { it.option(group = it.parent ?: "") }
+    return tree + orphans
 }

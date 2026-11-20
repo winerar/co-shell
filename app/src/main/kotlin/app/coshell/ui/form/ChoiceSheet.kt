@@ -22,13 +22,16 @@ import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.components.CoShellSectionLabel
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.sheet.ModalSheet
 import app.coshell.core.designsystem.R as DesignR
 
 /**
  * One line of a [ChoiceSheet] (#439). [group] — the caption above a run of lines with the same group (options come
- * ordered by it); [icon] and [color] — the category badge on the left ([hasBadge] — also for a category with neither).
+ * ordered by it); [icon] and [color] — the category badge on the left ([hasBadge] — also for a category with neither);
+ * [indent] — a subcategory under its parent (a smaller, shifted badge, as on the «Категории» screen); [parent] — its
+ * parent's name, found by the search.
  */
 data class ChoiceOption<T>(
     val value: T,
@@ -38,6 +41,8 @@ data class ChoiceOption<T>(
     val icon: String? = null,
     val color: Long? = null,
     val hasBadge: Boolean = icon != null || color != null,
+    val indent: Boolean = false,
+    val parent: String? = null,
 )
 
 /**
@@ -108,7 +113,11 @@ internal fun <T> ColumnScope.ChoiceRows(
                 title = { Text(option.label, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                 supporting = option.subtitle?.let { { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) } },
                 leading = if (option.hasBadge) {
-                    { CategoryBadge(option.icon, option.color) }
+                    {
+                        // A subcategory: a smaller badge, shifted under its parent's — as on the «Категории» screen.
+                        if (option.indent) CategoryBadge(option.icon, option.color, Modifier.padding(start = Spacing.xl), size = Sizes.badgeSmall)
+                        else CategoryBadge(option.icon, option.color)
+                    }
                 } else {
                     null
                 },
@@ -139,11 +148,11 @@ object ChoiceSearch {
 
     fun shows(count: Int): Boolean = count >= MIN_OPTIONS
 
-    /** Options whose label, subtitle or group contain [query], ignoring case; a blank query keeps all. */
+    /** Options whose label, subtitle, group or parent contain [query], ignoring case; a blank query keeps all. */
     fun <T> filter(options: List<ChoiceOption<T>>, query: String): List<ChoiceOption<T>> {
         val q = query.trim()
         if (q.isEmpty()) return options
         return options.filter { it.label.contains(q, ignoreCase = true) || it.subtitle?.contains(q, ignoreCase = true) == true ||
-                it.group?.contains(q, ignoreCase = true) == true }
+                it.group?.contains(q, ignoreCase = true) == true || it.parent?.contains(q, ignoreCase = true) == true }
     }
 }

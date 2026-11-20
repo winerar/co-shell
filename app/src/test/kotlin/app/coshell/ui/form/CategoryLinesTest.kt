@@ -8,31 +8,33 @@ class CategoryLinesTest {
     private fun line(id: String, name: String, parent: Pair<String, String>? = null) =
         CategoryLine(id, name, parent?.second, "cart", 0xFF00AA00, parent?.first)
 
-    private fun lines(vararg all: CategoryLine) = categoryLines(all.toList(), "Без группы", "С подкатегориями")
+    private fun lines(vararg all: CategoryLine) = categoryLines(all.toList(), "С подкатегориями")
 
     @Test
-    fun `a parent with subcategories is a group, the rest go under no group after it`() {
+    fun `subcategories follow their parent, indented, in the given order`() {
         val food = "food" to "Еда"
         val result = lines(line("tea", "Чай"), line("food", "Еда"), line("shop", "Продукты", food), line("cafe", "Кафе", food))
-        assertEquals(listOf("food", "shop", "cafe", "tea"), result.map { it.value })
-        assertEquals(listOf("Еда", "Еда", "Еда", "Без группы"), result.map { it.group })
-        assertEquals(listOf("С подкатегориями", null, null, null), result.map { it.subtitle })
+        assertEquals(listOf("tea", "food", "shop", "cafe"), result.map { it.value })
+        assertEquals(listOf(false, false, true, true), result.map { it.indent })
+        assertEquals(listOf(null, "С подкатегориями", null, null), result.map { it.subtitle })
+        assertEquals(listOf<String?>(null, null, null, null), result.map { it.group })
     }
 
     @Test
-    fun `one subcategory of the same name is not a double`() {
+    fun `one subcategory of the same name is nested, not a double`() {
         val kids = "kids" to "Дети"
         val result = lines(line("kids", "Дети"), line("kids2", "Дети", kids))
         assertEquals(listOf("kids", "kids2"), result.map { it.value })
-        assertEquals(listOf("Дети", "Дети"), result.map { it.group })
+        assertEquals(listOf(false, true), result.map { it.indent })
     }
 
     @Test
-    fun `subcategories whose parent cannot be picked keep their group`() {
+    fun `subcategories whose parent cannot be picked keep its name as a caption, after the rest`() {
         val home = "home" to "Дом"
         val result = lines(line("repair", "Ремонт", home), line("taxi", "Такси"))
-        assertEquals(listOf("Дом", "Без группы"), result.map { it.group })
-        assertEquals(listOf(null, null), result.map { it.subtitle })
+        assertEquals(listOf("taxi", "repair"), result.map { it.value })
+        assertEquals(listOf(null, "Дом"), result.map { it.group })
+        assertEquals(listOf(false, false), result.map { it.indent })
     }
 
     @Test

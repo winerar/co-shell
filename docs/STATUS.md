@@ -72,3 +72,4 @@
 
 ## Последняя сессия
 2026-11-20, `claude/vozmi-584-qkjo58`: #584 «Умная категория» — логика `core:domain/categoryguess/CategoryGuess` + подстановка в шторке ввода (`withGuessedCategory`, `categoryGuessed`), тесты домена и VM. **Осталось:** серая подпись «по прошлым операциям» в карточке «Категория» — доска шторки (обе темы) → «ок» → код, строки на всех языках, подсказки (`hints.md`).
+2026-11-20 (там же): подготовка к ИИ (#583) — опрос с 32 досками в обеих темах: https://claude.ai/artifact/Ra9ECfZ2Y8ffXxXPLVSkeB (`poll-ai-583.json`, доски `mockup_poll_ai_*.py`, `agent.sh`-запуск — `python3 scripts/agent/mockup_poll_ai583.py <dir>`). Ответы — `ArtifactData list`, коллекция `answers`; после «ок» победители — на холст `docs/design/`, новые компоненты (искра ✦, подпись, метка) — карточки «Компоненты».

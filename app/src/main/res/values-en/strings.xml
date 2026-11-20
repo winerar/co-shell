@@ -255,6 +255,9 @@
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">new</string>
     <string name="more_section_money">Money</string>
+    <string name="more_section_rates">Currencies</string>
+    <string name="more_export_hint">Transactions for a period as CSV</string>
+    <string name="more_version_quiet">Version %1$s · build %2$d · up to date</string>
     <string name="more_section_family_data">Family and data</string>
     <string name="more_section_app">App</string>
     <string name="more_version_available">Version %1$s is out</string>

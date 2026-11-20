@@ -159,4 +159,6 @@
     <string name="settings_palette">Paleta</string>
     <string name="settings_screens_row">Resumen, movimientos, informes, cuentas</string>
     <string name="settings_screens_row_hint">qué mostrar y en qué orden</string>
+    <string name="settings_menu_hint">Tema, entrada, notificaciones, pantallas</string>
+    <string name="settings_help_title">Ayuda</string>
 </resources>

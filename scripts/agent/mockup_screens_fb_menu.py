@@ -119,9 +119,9 @@ def b_settings():
     return inner_screen('Настройки', settings_hints())
 
 
+# Picked 2026-11-20: Б (name stays «Ещё»). Board А removed from the canvas (functions stay for the poll page history);
+# board «More» (mockup_screens_tabs.py) draws Б.
 BOARDS = [  # name, title, fn, issue number
-    ('MoreA', '«Ещё» А: как сейчас', a_top, 1120),
-    ('MoreAEnd', '«Ещё» А: прокрутка', a_rest, 1120),
     ('MoreB', '«Ещё» Б: четыре группы', b_top, 1120),
     ('MoreBEnd', '«Ещё» Б: прокрутка', b_rest, 1120),
     ('MoreBUpdate', '«Ещё» Б: вышло обновление', b_update, 1120),

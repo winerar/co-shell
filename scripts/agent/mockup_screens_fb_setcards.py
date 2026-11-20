@@ -25,6 +25,7 @@ RU = {
     'input': [('Встряхнуть — сканер QR', 'когда приложение открыто'), ('Вибрация', 'касания и сохранение')],
     'notices': [('Напоминания о платежах', 'в день платежа'), ('Время напоминания', '9:00')],
     'data': [('Резервная копия', 'вчера 23:00 · раз в неделю'), ('Синхронизировать только по Wi-Fi', '')],
+    'help': [('Помощь', 'bulb', CYAN), ('Подсказки', 'Показываются'), ('Показать подсказки заново', 'Вернёт «Первые шаги» и советы')],
 }
 ES = {
     'title': 'Ajustes', 'intro': 'Ajustes de este teléfono. Las monedas de los totales son comunes a la familia.', 'all': 'Todo',
@@ -42,6 +43,7 @@ ES = {
     'input': [('Agitar — escáner QR', 'con la app abierta'), ('Vibración', 'toques y guardado')],
     'notices': [('Recordatorios de pagos', 'el día del pago'), ('Hora del recordatorio', '9:00')],
     'data': [('Copia de seguridad', 'ayer 23:00 · cada semana'), ('Sincronizar solo por Wi-Fi', '')],
+    'help': [('Ayuda', 'bulb', CYAN), ('Consejos', 'Se muestran'), ('Mostrar los consejos de nuevo', 'Recupera «Primeros pasos» y los consejos')],
 }
 
 STRESS = 'zoom: 1.6;'  # ≈ 320 dp × font 1.3 on a 390 board: (390 − 32) / ((320 − 32) / 1.3) ≈ 1.6
@@ -82,8 +84,9 @@ def section(name, icon, color, inner, all_):
     """CoShellFormSection: caps title (+ its icon), «Все ›» on the right, the group's main settings in the card."""
     title = ('<div style="display: flex; align-items: center; gap: 8px; margin: 18px 4px 8px;">%s'
              '<span style="flex-grow: 1; min-width: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: %s;">%s</span>'
-             '<span style="flex: none; font-size: 14px; font-weight: 600; color: %s;">%s ›</span></div>'
-             % (dot_icon(icon, color, 32), MUTED, name, CYAN, all_))
+             '%s</div>'
+             % (dot_icon(icon, color, 32), MUTED, name,
+                '<span style="flex: none; font-size: 14px; font-weight: 600; color: %s;">%s ›</span>' % (CYAN, all_) if all_ else ''))
     return title + inner
 
 
@@ -108,6 +111,7 @@ def cards_sections(t):
         section(*g[names[2]], group([val(*m) for m in t['money']]), t['all']),
         section(*g[names[1]], group([val(*t['screens'])]), t['all']),
         section(*g[names[5]], group([val(*t['data'][0]), sw(*t['data'][1], False)]), t['all']),
+        section(*t['help'][0], group([sw(*t['help'][1], True), val(*t['help'][2])]), ''),
     ]
 
 

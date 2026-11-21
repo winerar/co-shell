@@ -215,6 +215,8 @@ data class TransactionEditDestination(
     val receiptQr: String? = null,
     /** A shared receipt nothing could read (#561): the blank sheet opens with «Не удалось прочитать чек». */
     val receiptUnread: Boolean = false,
+    /** A draft of a quick note (#586): the sheet opens filled from it; once saved, the draft is gone. */
+    val draftId: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
@@ -225,12 +227,21 @@ data class TransactionEditDestination(
         const val ARG_PAYMENT_DATE = "paymentDate"
         const val ARG_RECEIPT_QR = "receiptQr"
         const val ARG_RECEIPT_UNREAD = "receiptUnread"
+        const val ARG_DRAFT_ID = "draftId"
     }
 }
 
 /** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment. */
 @Serializable
 data object RecurringListDestination
+
+/** «Быстрые заметки» (#586): the lines of expenses; «Обработать» makes drafts of them. */
+@Serializable
+data object NotesDestination
+
+/** «Черновики» (#586): drafts from the notes, checked and posted here. */
+@Serializable
+data object DraftsDestination
 
 /** «Все шаблоны»: search, «Часто», groups by type and category (#104). */
 @Serializable

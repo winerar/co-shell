@@ -28,6 +28,7 @@
     <string name="hint_budgets">Un límite es cuánto puedes gastar en una categoría al mes. Es una guía, no una prohibición.</string>
     <string name="hint_reports">Aquí ves en qué se va el dinero. Cuantos más movimientos, más clara la imagen.</string>
     <string name="hint_tags">Una etiqueta es una marca de color en un movimiento, como «vacaciones» o «regalos».</string>
+    <string name="hint_notes">¿Muchos gastos pequeños? Anótalos en una lista en «Notas rápidas» y procésalos de una vez.</string>
     <string name="hint_family">Juntos es más fácil: los movimientos de ambos teléfonos se reúnen en un solo lugar.</string>
     <string name="hint_ok">Entendido</string>
     <string name="hint_hold_select">Mantén pulsado un movimiento para elegir varios.</string>

@@ -20,6 +20,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     TAGS("tags", HintKind.WORD),
     FAMILY("family", HintKind.WORD),
     CURRENCY_RECEIPT("currency_receipt", HintKind.WORD),
+    NOTES("notes", HintKind.WORD),
     HOLD_SELECT("hold_select", HintKind.GESTURE),
     SWIPE_TABS("swipe_tabs", HintKind.GESTURE),
     TEMPLATE("template", HintKind.GESTURE),

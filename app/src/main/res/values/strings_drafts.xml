@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- «Быстрые заметки» и «Черновики» (#586, docs/design: Notes586*) -->
+    <string name="notes_title">Быстрые заметки</string>
+    <string name="notes_label">Заметка</string>
+    <string name="notes_placeholder">кофе 3500</string>
+    <string name="notes_hint">Каждая строка — одна трата. Счёт и день — по желанию.</string>
+    <string name="notes_empty_hint">Запишите траты строками, например «такси 2000» или «вчера аптека 4200». Потом нажмите «Обработать».</string>
+    <string name="notes_process">Обработать · %1$d</string>
+    <string name="notes_process_none">Обработать</string>
+    <string name="notes_processing">Обрабатываю…</string>
+    <string name="notes_menu_hint">Траты строками: кофе 3500</string>
+    <string name="drafts_title">Черновики</string>
+    <string name="drafts_title_count">Черновики · %1$d</string>
+    <string name="drafts_menu_hint">Из заметок: проверьте и запишите</string>
+    <string name="drafts_strip_hint">Проверьте и запишите</string>
+    <string name="drafts_summary">Черновиков: %1$d · готовы: %2$d</string>
+    <string name="drafts_hint_ready">Нажмите на строку, чтобы поправить.</string>
+    <string name="drafts_hint_unready">Нажмите на строку, чтобы дописать сумму или выбрать категорию.</string>
+    <string name="drafts_post">Записать · %1$d</string>
+    <string name="drafts_post_none">Записать</string>
+    <string name="drafts_posted">Записано: %1$d</string>
+    <string name="drafts_missing_amount">Нужна сумма</string>
+    <string name="drafts_missing_account">Выберите счёт</string>
+    <string name="drafts_missing_category">Выберите категорию</string>
+    <string name="drafts_day_today">сегодня</string>
+    <string name="drafts_day_yesterday">вчера</string>
+    <string name="drafts_untitled">Без названия</string>
+    <string name="drafts_category_ai">предложено ИИ</string>
+    <string name="drafts_caption" translatable="false">%1$s · %2$s</string>
+    <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
+    <string name="drafts_empty">Черновиков нет. Запишите траты в «Быстрых заметках» — они появятся здесь.</string>
+    <string name="drafts_empty_action">Быстрые заметки</string>
+</resources>

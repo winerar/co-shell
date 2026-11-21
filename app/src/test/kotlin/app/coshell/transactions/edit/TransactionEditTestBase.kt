@@ -10,6 +10,7 @@ import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.model.TransactionTemplate
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.SaveTransactionUseCase
+import app.coshell.core.domain.drafts.InMemoryDraftRepository
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -54,6 +55,7 @@ abstract class TransactionEditTestBase {
     protected val accounts = FakeAccountRepository()
     protected val categories = FakeCategoryRepository()
     protected val transactions = FakeTransactionRepository()
+    protected val drafts = InMemoryDraftRepository()
 
     protected suspend fun seed() {
         accounts.saveAccount(Account("card", "Карта", ars, sortOrder = 0))
@@ -77,6 +79,7 @@ abstract class TransactionEditTestBase {
         templateId: String? = null,
         receiptQr: String? = null,
         receiptUnread: Boolean = false,
+        draftId: String? = null,
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -86,6 +89,7 @@ abstract class TransactionEditTestBase {
                 TransactionEditDestination.ARG_TEMPLATE_ID to templateId,
                 TransactionEditDestination.ARG_RECEIPT_QR to receiptQr,
                 TransactionEditDestination.ARG_RECEIPT_UNREAD to receiptUnread,
+                TransactionEditDestination.ARG_DRAFT_ID to draftId,
             ),
         ),
         accounts = accounts,
@@ -101,6 +105,7 @@ abstract class TransactionEditTestBase {
         entryTemplates = fakeEntryTemplates(accounts, categories, templates, usage),
         entryTags = fakeEntryTags(),
         entryTip = fakeEntryTip(categories, transactions, tipSettings),
+        drafts = drafts,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

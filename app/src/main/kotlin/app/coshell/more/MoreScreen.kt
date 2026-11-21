@@ -42,6 +42,8 @@ data class MoreState(
     val availableVersion: String? = null,
     /** Keys of the rows that wear the «новое» pill (#335, `NewFeatures`). */
     val newMarks: Set<String> = emptySet(),
+    /** Drafts waiting (#586): the count on the «Черновики» row. */
+    val draftCount: Int = 0,
 )
 
 data class MoreActions(
@@ -60,6 +62,9 @@ data class MoreActions(
     /** «Конфиденциальность» (#145). */
     val onPrivacy: () -> Unit = {},
     val onFeedback: () -> Unit = {},
+    /** «Быстрые заметки» and «Черновики» (#586). */
+    val onNotes: () -> Unit = {},
+    val onDrafts: () -> Unit = {},
     /** Tap on the version card: the update screen. */
     val onOpenUpdate: () -> Unit = {},
     /** «Обновить» on the card: the download starts right away and the update screen opens. */
@@ -75,7 +80,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
-        val sections = moreSections(actions)
+        val sections = moreSections(actions, state.draftCount)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
@@ -107,10 +112,14 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                                     if (isNew) actions.onOpenedNew(item.newKey!!)
                                     item.onClick()
                                 },
-                                mark = if (isNew) {
-                                    { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
-                                } else {
-                                    null
+                                mark = when {
+                                    isNew -> {
+                                        { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
+                                    }
+                                    item.count != null -> {
+                                        { CoShellStatusChip(item.count.toString(), StatusTone.Fresh) }
+                                    }
+                                    else -> null
                                 },
                             )
                         }

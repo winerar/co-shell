@@ -26,6 +26,8 @@ internal data class MoreItem(
     val subtitle: String?,
     val onClick: () -> Unit,
     val newKey: String? = null,
+    /** A count after the title («Черновики · 5»), `null` — none. */
+    val count: Int? = null,
 )
 
 /**
@@ -33,7 +35,7 @@ internal data class MoreItem(
  * it, where it is kept, files in and out), the app itself. Colours come from the category palette, one per row, as on the old bento tiles.
  */
 @Composable
-internal fun moreSections(actions: MoreActions): List<MoreSection> {
+internal fun moreSections(actions: MoreActions, draftCount: Int = 0): List<MoreSection> {
     val c = CategoryPalette.colors
     return listOf(
         MoreSection(
@@ -43,6 +45,8 @@ internal fun moreSections(actions: MoreActions): List<MoreSection> {
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, c[8], stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, c[20], stringResource(R.string.budgets_menu_hint), actions.onBudgets),
                 MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, c[14], stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
+                MoreItem(DesignR.drawable.ic_edit_note, R.string.notes_title, c[16], stringResource(R.string.notes_menu_hint), actions.onNotes),
+                MoreItem(DesignR.drawable.ic_draft, R.string.drafts_title, c[13], stringResource(R.string.drafts_menu_hint), actions.onDrafts, count = draftCount.takeIf { it > 0 }),
             ),
         ),
         MoreSection(

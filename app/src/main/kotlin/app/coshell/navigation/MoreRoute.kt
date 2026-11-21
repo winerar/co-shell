@@ -6,6 +6,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import app.coshell.BuildConfig
+import app.coshell.home.DraftsCountViewModel
 import app.coshell.more.MoreActions
 import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
@@ -18,7 +19,9 @@ internal fun MoreRoute(
     availableVersion: String?,
     onStartUpdate: () -> Unit,
     newMarks: NewMarksViewModel = hiltViewModel(),
+    draftsCount: DraftsCountViewModel = hiltViewModel(),
 ) {
+    val drafts by draftsCount.count.collectAsStateWithLifecycle()
     val marks by newMarks.current.collectAsStateWithLifecycle()
     MoreScreen(
         actions = MoreActions(
@@ -35,6 +38,8 @@ internal fun MoreRoute(
             onSettings = { navController.navigate(SettingsDestination) },
             onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
+            onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
+            onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onStartUpdate = onStartUpdate,
             onOpenedNew = newMarks::opened,
@@ -44,6 +49,7 @@ internal fun MoreRoute(
             build = BuildConfig.VERSION_CODE,
             availableVersion = availableVersion,
             newMarks = marks,
+            draftCount = drafts,
         ),
     )
 }

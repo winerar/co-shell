@@ -62,6 +62,9 @@
 | Отчёты: тренд | Tr238DrillA | report_category_trend | ✓ | ✓ |
 | Отчёты: картина | Rp189IeA | reports_picture | ✓ | ✓ |
 | Капитал по месяцам | Rp189NwDrill | capital_month | ✓ | ✓ |
+| Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
+| Черновики | Notes586Drafts | drafts | ✓ | ✓ |
+| Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |

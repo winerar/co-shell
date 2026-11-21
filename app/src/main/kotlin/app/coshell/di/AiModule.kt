@@ -1,0 +1,60 @@
+package app.coshell.di
+
+import android.content.Context
+import app.coshell.BuildConfig
+import app.coshell.ai.AddonControl
+import app.coshell.ai.AddonLanguageModel
+import app.coshell.ai.AddonPackage
+import app.coshell.ai.AiAddonController
+import app.coshell.ai.AiDownloadService
+import app.coshell.ai.BoundAddonControl
+import app.coshell.ai.DeviceMemory
+import app.coshell.ai.SystemDeviceMemory
+import app.coshell.ai.ReleaseAddonPackage
+import app.coshell.core.domain.ai.LanguageModel
+import app.coshell.update.data.CacheApkDownloader
+import app.coshell.update.data.HttpReleaseSource
+import app.coshell.update.install.ApkInstaller
+import app.coshell.update.install.InstallEvents
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+
+/** The optional «ИИ на телефоне» add-on (#587): its control, its APK, the controller and the [LanguageModel] the app asks. */
+@Module
+@InstallIn(SingletonComponent::class)
+object AiModule {
+    @Provides
+    @Singleton
+    fun provideAddonControl(@ApplicationContext context: Context): AddonControl = BoundAddonControl(context)
+
+    @Provides
+    @Singleton
+    fun provideAddonPackage(@ApplicationContext context: Context, installer: ApkInstaller): AddonPackage = ReleaseAddonPackage(
+        HttpReleaseSource(ReleaseAddonPackage.baseUrl(BuildConfig.UPDATE_BASE_URL)),
+        CacheApkDownloader(context, "ai-addon"),
+        installer,
+    )
+
+    /** One per process: the model download keeps going after the screen is closed. */
+    @Provides
+    @Singleton
+    fun provideController(@ApplicationContext context: Context, control: AddonControl, addon: AddonPackage, events: InstallEvents) =
+        AiAddonController(
+            control, addon, events.outcomes, CoroutineScope(SupervisorJob() + Dispatchers.Default),
+            keepAlive = { AiDownloadService.start(context) },
+        )
+
+    @Provides
+    fun provideDeviceMemory(@ApplicationContext context: Context): DeviceMemory = SystemDeviceMemory(context)
+
+    @Provides
+    @Singleton
+    fun provideLanguageModel(@ApplicationContext context: Context): LanguageModel = AddonLanguageModel(context)
+}

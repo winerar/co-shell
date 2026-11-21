@@ -67,7 +67,7 @@ def envelope_detail():
     nt = message('Аренда 280 000 до 5-го, свет и газ ~60 000', 'info', 'Заметка')
     ops = card(tx('Аренда', 'Наличные · Миша', '−280 000', 'ARS', 'e', 'house', CYAN) + tx('Свет', 'Galicia · Аня', '−30 000', 'ARS', 'e', 'bolt', CYAN))
     body = top + nt + label('Категории') + cats + label('Операции за ноябрь') + ops
-    return inner_screen('Дом · ноябрь', body, icon_button('note', 'Изменить лимит', MUTED))
+    return inner_screen('Дом · ноябрь', body, icon_button('edit', 'Изменить лимит', MUTED))  # pencil, #575 poll A
 
 
 def home_budget():

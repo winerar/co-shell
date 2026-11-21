@@ -72,7 +72,7 @@
     <string name="budget_no_folders">No categories with subcategories yet — create them in “More → Categories” or pick a regular category.</string>
     <string name="budget_category_error">Choose what the limit is for</string>
     <string name="budget_amount">Per month</string>
-    <string name="budget_amount_error">Enter an amount greater than zero</string>
+    <string name="budget_amount_error">Enter the amount in digits. 0 works too</string>
     <string name="budget_average">3-month average — %1$s</string>
     <string name="budget_currency">Limit currency</string>
     <string name="budget_inside">Subcategories · optional</string>

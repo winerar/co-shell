@@ -19,7 +19,8 @@ import app.coshell.transactions.edit.leafCount
 
 /**
  * «Категория · частые» (#290, board `Fb290A`): seven categories one tap away and «Все 24» — the «Все категории»
- * sheet by folder. The chosen one is named on the right of the caption («Кафе ✓»), so a pick from «Все» is seen.
+ * sheet by folder. The chosen one is named on the right of the caption («Кафе ✓»), so a pick from «Все» is seen;
+ * an automatic guess (#584) shows [GuessCaption] there instead until a manual pick.
  */
 @Composable
 internal fun CategoryBlock(state: TransactionEditUiState, actions: TransactionEditActions) {
@@ -30,9 +31,10 @@ internal fun CategoryBlock(state: TransactionEditUiState, actions: TransactionEd
         if (hasMore) listOf(GridPlace.All(total, stringResource(R.string.transaction_categories_all)) { allOpen = true }) else emptyList()
     CoShellFormSection(
         title = stringResource(if (hasMore) R.string.entry_section_category_frequent else R.string.entry_section_category),
-        trailing = state.categoryName?.let { name ->
-            { Text("$name ✓", style = MaterialTheme.typography.labelMedium, color = accentInk(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
-        },
+        trailing = state.categoryGuessSource?.takeIf { state.categoryGuessed }?.let { source -> { GuessCaption(source) } }
+            ?: state.categoryName?.let { name ->
+                { Text("$name ✓", style = MaterialTheme.typography.labelMedium, color = accentInk(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+            },
     ) {
         if (state.categories.isEmpty()) {
             Text(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import app.coshell.core.designsystem.motion.tactileCircleClickable
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import app.coshell.R
 import app.coshell.accounts.edit.components.AccountColorSection
 import app.coshell.accounts.edit.components.AccountPreviewCard
 import app.coshell.accounts.edit.components.AccountTypeSection
+import app.coshell.accounts.edit.components.BalanceSavedPill
 import app.coshell.accounts.edit.components.BankPresets
 import app.coshell.accounts.edit.components.MoneySection
 import app.coshell.core.designsystem.category.AccountBadge
@@ -41,53 +43,56 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
     var colorsOpen by rememberSaveable { mutableStateOf(false) }
 
-    EditSheetLayout(
-        title = stringResource(if (state.isNew) R.string.account_edit_title_new else R.string.account_edit_title),
-        onSave = actions.onSave,
-        saveEnabled = !state.isLoading,
-        titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
-    ) {
-        if (state.isLoading) return@EditSheetLayout
-        val colorLabel = stringResource(R.string.category_color)
-        Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            AccountPreviewCard(state)
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
-                AccountBadge(
-                    state.name,
-                    state.color,
-                    size = Sizes.badgeLarge,
-                    modifier = Modifier
-                        .semantics { contentDescription = colorLabel }
-                        .tactileCircleClickable { colorsOpen = true },
-                )
-                CoShellTextField(
-                    value = state.name,
-                    onValueChange = actions.onNameChange,
-                    label = stringResource(R.string.account_name),
-                    error = if (state.nameError) stringResource(R.string.account_name_error) else null,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-            MoneySection(state, actions)
-            AccountTypeSection(state.type, actions.onTypeChange)
-            AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
-            CoShellFormSection(stringResource(R.string.account_section_balance)) {
-                CoShellSwitchLine(
-                    title = stringResource(R.string.account_included_in_total),
-                    subtitle = stringResource(R.string.account_included_in_total_short),
-                    checked = state.includedInTotal,
-                    onCheckedChange = actions.onIncludedInTotalChange,
-                )
-                if (state.showSharing) {
-                    CoShellSwitchLine(
-                        title = stringResource(R.string.account_shared),
-                        subtitle = stringResource(R.string.account_shared_short),
-                        checked = state.shared,
-                        onCheckedChange = actions.onSharedChange,
+    Box {
+        EditSheetLayout(
+            title = stringResource(if (state.isNew) R.string.account_edit_title_new else R.string.account_edit_title),
+            onSave = actions.onSave,
+            saveEnabled = !state.isLoading,
+            titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
+        ) {
+            if (state.isLoading) return@EditSheetLayout
+            val colorLabel = stringResource(R.string.category_color)
+            Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                AccountPreviewCard(state)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+                    AccountBadge(
+                        state.name,
+                        state.color,
+                        size = Sizes.badgeLarge,
+                        modifier = Modifier
+                            .semantics { contentDescription = colorLabel }
+                            .tactileCircleClickable { colorsOpen = true },
                     )
+                    CoShellTextField(
+                        value = state.name,
+                        onValueChange = actions.onNameChange,
+                        label = stringResource(R.string.account_name),
+                        error = if (state.nameError) stringResource(R.string.account_name_error) else null,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                MoneySection(state, actions)
+                AccountTypeSection(state.type, actions.onTypeChange)
+                AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
+                CoShellFormSection(stringResource(R.string.account_section_balance)) {
+                    CoShellSwitchLine(
+                        title = stringResource(R.string.account_included_in_total),
+                        subtitle = stringResource(R.string.account_included_in_total_short),
+                        checked = state.includedInTotal,
+                        onCheckedChange = actions.onIncludedInTotalChange,
+                    )
+                    if (state.showSharing) {
+                        CoShellSwitchLine(
+                            title = stringResource(R.string.account_shared),
+                            subtitle = stringResource(R.string.account_shared_short),
+                            checked = state.shared,
+                            onCheckedChange = actions.onSharedChange,
+                        )
+                    }
                 }
             }
         }
+        BalanceSavedPill(state.balanceSaved, actions.onDismissBalanceSaved, Modifier.align(Alignment.BottomCenter))
     }
 
     if (colorsOpen) {

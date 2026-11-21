@@ -166,6 +166,10 @@ data object ConverterDestination
 @Serializable
 data object ReportCurrenciesDestination
 
+/** «Ещё → Настройки → Умные функции → ИИ на телефоне» (#587). */
+@Serializable
+data object AiAddonDestination
+
 /**
  * Category editor. `categoryId == null` creates a new category of [type] (a [CategoryType] name),
  * optionally inside folder [parentId]; [asFolder] opens it as a new folder.

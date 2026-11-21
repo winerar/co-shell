@@ -1,0 +1,71 @@
+name: "Дополнение «ИИ на телефоне»: выпуск для приложения (#587)"
+
+# Builds ai-addon signed with the app's RELEASE key and publishes it to the public releases repository under the fixed tag `ai-addon`
+# (version.json + the APK), where the app's «ИИ на телефоне» screen downloads it (step 1). By hand only: Actions → Run workflow;
+# needs the same secrets as the app's release (RELEASE_KEYSTORE_*, RELEASES_TOKEN). Like every workflow, a new one runs from `main`
+# (docs/agents/ci.md). Pre-release + `--latest=false`: the app's own `releases/latest/download` must never point at the add-on.
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Ветка или коммит"
+        type: string
+        default: main
+
+env:
+  RELEASES_REPO: ${{ github.repository_owner }}/co-shell-releases
+
+jobs:
+  addon-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+
+      - name: Check the secrets
+        env:
+          KEYSTORE: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          if [ -z "$KEYSTORE" ] || [ -z "$TOKEN" ]; then echo "::error::RELEASE_KEYSTORE_BASE64 and RELEASES_TOKEN are needed"; exit 1; fi
+
+      - name: Build the signed APK
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          export RELEASE_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
+          ./gradlew -p ai-addon assembleRelease --console=plain
+          rm -f "$RUNNER_TEMP/release.jks"
+
+      - name: Update files
+        run: |
+          printf '## Дополнение «ИИ на телефоне»\n\nНеобязательное дополнение для приложения co-shell.\n' > addon-notes.md
+          python3 scripts/make-update-files.py ai-addon/build/outputs/apk/release/ai-addon-release.apk \
+            "${{ github.run_number }}" "0.1" addon-notes.md \
+            "https://github.com/$RELEASES_REPO/releases/download/ai-addon" update-files
+
+      - name: Publish under the fixed tag
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          gh release delete ai-addon --repo "$RELEASES_REPO" --yes --cleanup-tag || true
+          gh release create ai-addon update-files/co-shell-*.apk update-files/version.json \
+            --repo "$RELEASES_REPO" --prerelease --latest=false \
+            --title "AI add-on ${{ github.run_number }}" \
+            --notes "Дополнение «ИИ на телефоне» (#587): скачивается из приложения, вручную ставить не нужно."

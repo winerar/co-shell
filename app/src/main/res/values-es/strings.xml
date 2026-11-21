@@ -124,7 +124,9 @@
     <string name="account_balance_adjust_title">Corregir saldo</string>
     <string name="account_balance_actual">Saldo real</string>
     <string name="account_balance_now_hint">Ahora: %1$s. Escribe cuánto hay de verdad.</string>
-    <string name="account_balance_adjust_hint">Ajuste al guardar: %1$s</string>
+    <string name="account_balance_adjust_hint">Diferencia: %1$s — no es gasto ni ingreso</string>
+    <string name="account_balance_save">Guardar saldo</string>
+    <string name="account_balance_saved">Saldo corregido: %1$s</string>
     <string name="account_initial_balance_hint">El importe antes del primer movimiento. Para una deuda, con signo menos.</string>
     <string name="account_included_in_total">Incluir en el saldo total</string>
     <string name="account_included_in_total_hint">Desactívalo para deudas o dinero ajeno — la cuenta no contará en el saldo total</string>
@@ -616,6 +618,8 @@
     <string name="entry_section_amount_debited">Importe · cargado</string>
     <string name="entry_section_category">Categoría</string>
     <string name="entry_section_category_frequent">Categoría · frecuentes</string>
+    <string name="entry_category_guess_history">por movimientos anteriores</string>
+    <string name="entry_category_guess_name">por el nombre</string>
     <string name="entry_section_details">Detalles</string>
     <string name="entry_receipt_add">+ Importe de la compra</string>
     <string name="entry_receipt">Importe de la compra</string>

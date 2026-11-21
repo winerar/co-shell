@@ -8,6 +8,8 @@ core/domain/            KMP (jvm): интерфейсы репозиториев
 core/data/              KMP (android + jvm для тестов): Room, DAO, репозитории, JSON-бэкап,
                         sync/ (SyncEngine), remote/ (Firestore REST), auth/ (Firebase Auth REST), family/
 core/designsystem/      Android library: тема CoShellTheme, токены, шрифт цифр, общие компоненты (`design-system.md`)
+ai-addon/               необязательное дополнение «ИИ на телефоне» (#587): отдельный APK с LiteRT-LM, свой Gradle-проект вне `check`;
+                        приложение зовёт его сервис через `app/.../ai/AddonLanguageModel` (`ARCHITECTURE.md` §9)
 scripts/                скрипты CI и инструменты (иконки, файлы обновлений, отзывы → issues) + test_*.py
 scripts/agent/          служебные скрипты агента: agent.sh — вход, flow.sh — флоу — scripts.md
 scripts/ci/             логика workflow (automerge.sh); release_notes.py — в scripts/ (тесты рядом)

@@ -48,11 +48,11 @@ class BudgetFormTest {
     }
 
     @Test
-    fun `typed limit must be a positive number in the currency`() {
+    fun `typed limit must be a number in the currency, zero included`() {
         assertEquals(Money.ofMajor(400_000, currency = ars), parseLimit("400 000", "ARS"))
         assertEquals(Money.ofMajor(12, 50, ars), parseLimit("12,5", "ARS"))
         assertNull(parseLimit("", "ARS"))
-        assertNull(parseLimit("0", "ARS"))
+        assertEquals(Money(0, ars), parseLimit("0", "ARS"))
         assertNull(parseLimit("-5", "ARS"))
         assertNull(parseLimit("abc", "ARS"))
         assertNull(parseLimit("100", "??"))

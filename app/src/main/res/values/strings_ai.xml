@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- «ИИ на телефоне» (#587): the screen and its row in «Настройки». -->
+    <string name="ai_title">ИИ на телефоне</string>
+    <string name="ai_off_title">Выключен</string>
+    <string name="ai_off_text">Необязательно. ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.</string>
+    <string name="ai_off_chip">без него всё работает как раньше</string>
+    <string name="ai_step1_title">Шаг 1 из 2</string>
+    <string name="ai_step1_text">Android спросит, можно ли установить дополнение. Нажмите «Установить».</string>
+    <string name="ai_step1_chip">ждём ваше «Установить»</string>
+    <string name="ai_step2_title">Шаг 2 из 2 · скачиваю</string>
+    <string name="ai_step2_text">Можно закрыть экран: загрузка продолжится.</string>
+    <string name="ai_on_title">Включён</string>
+    <string name="ai_on_text">Работает без интернета. Занимает 2,5 ГБ.</string>
+    <string name="ai_on_chip">готов</string>
+    <string name="ai_progress">%1$s из %2$s МБ · %3$d %%</string>
+    <string name="ai_fact_size">Размер</string>
+    <string name="ai_fact_size_text">Дополнение 20 МБ + модель 2,5 ГБ</string>
+    <string name="ai_fact_memory">Память телефона</string>
+    <string name="ai_fact_memory_text">Нужно от 6 ГБ</string>
+    <string name="ai_fact_privacy">Приватность</string>
+    <string name="ai_fact_privacy_text">Всё считается на телефоне, без интернета</string>
+    <string name="ai_addon">Дополнение</string>
+    <string name="ai_addon_done">установлено</string>
+    <string name="ai_addon_now">ждём установки</string>
+    <string name="ai_model">Модель</string>
+    <string name="ai_model_now">скачиваю…</string>
+    <string name="ai_model_wait">потом, около 2,5 ГБ</string>
+    <string name="ai_where">Где работает</string>
+    <string name="ai_use_receipts">Незнакомые чеки</string>
+    <string name="ai_use_receipts_text">«Прочитать с ИИ»</string>
+    <string name="ai_use_notes">Быстрые заметки и голос</string>
+    <string name="ai_use_notes_text">разбор сложных фраз</string>
+    <string name="ai_use_category">Категория для нового получателя</string>
+    <string name="ai_use_category_text">подсказка</string>
+    <string name="ai_on_note">Дополнение (20 МБ) останется. Убрать его можно в настройках телефона, в списке приложений.</string>
+    <string name="ai_enable">Включить · 2,5 ГБ</string>
+    <string name="ai_cancel">Отменить</string>
+    <string name="ai_delete_model">Удалить модель</string>
+    <string name="ai_data_title">Скачать 2,5 ГБ?</string>
+    <string name="ai_data_text">Лучше по Wi-Fi: мобильный интернет может быть платным. Удалить можно в любой момент.</string>
+    <string name="ai_data_confirm">Скачать</string>
+    <string name="ai_problem_no_file">Дополнение пока недоступно. Попробуйте позже.</string>
+    <string name="ai_problem_cancelled">Установка отменена. Нажмите «Включить», когда будете готовы.</string>
+    <string name="ai_problem_install">Дополнение не установилось. Проверьте, что можно ставить приложения, и повторите.</string>
+    <string name="ai_problem_download">Не удалось скачать. Проверьте интернет и повторите: загрузка продолжится с того же места.</string>
+    <string name="settings_smart_title">Умные функции</string>
+    <string name="ai_settings_off">Выключен · необязательно</string>
+    <string name="ai_settings_loading">Скачиваю…</string>
+    <string name="ai_settings_on">Включён</string>
+    <string name="ai_weak_title">Этому телефону не подойдёт</string>
+    <string name="ai_weak_text">Для ИИ нужно от 6 ГБ памяти, здесь %1$d. Всё остальное работает как раньше.</string>
+    <string name="ai_download_title">Скачиваю ИИ</string>
+    <string name="ai_download_step1">Шаг 1 из 2 · дополнение</string>
+    <string name="ai_download_channel">Загрузка ИИ</string>
+</resources>

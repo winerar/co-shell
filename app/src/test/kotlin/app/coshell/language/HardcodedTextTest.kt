@@ -134,10 +134,15 @@ class HardcodedTextTest {
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/DefaultCategories.kt" to "starter category names in all languages",
             "core/model/src/commonMain/kotlin/app/coshell/core/model/SystemCategories.kt" to "«Корректировка баланса» in all languages",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/quickentry/AmountInText.kt" to "currency words the parser understands",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/quickentry/QuickNoteParser.kt" to "day and account words of a quick note the parser understands (ru/es/en)",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/TeleshkaFormat.kt" to "labels printed on the shop receipt, read by the parser",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/AmeriabankFormat.kt" to "labels printed on the bank receipt, read by the parser",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/TbankFormat.kt" to "labels printed on the bank receipt, read by the parser",
             "app/src/main/kotlin/app/coshell/wipe/WipeDataUiState.kt" to "confirm words accepted in every language",
             "app/src/main/kotlin/app/coshell/crash/notice/CrashNoticeViewModel.kt" to "issue title prefix read by the developer",
             "core/designsystem/src/main/kotlin/app/coshell/core/designsystem/category/BankColors.kt" to "bank brand names and search aliases",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/categoryguess/BrandsRussiaWorld.kt" to "brand names and kinds of places the dictionary matches against payees (data, #584)",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/categoryguess/BrandDictionary.kt" to "letter folding for matching payee names («ё» → «е»), not interface text",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/update/NoteEntries.kt" to "markup of release notes written by the team (\"Исправлено:\"), not interface text",
         )
     }

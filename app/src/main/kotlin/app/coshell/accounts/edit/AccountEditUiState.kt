@@ -33,6 +33,8 @@ data class AccountEditUiState(
     val actualBalanceError: BalanceError? = null,
     /** The difference that will be recorded on save, signed («−2 500,00 ARS»); `null` — none. */
     val adjustment: String? = null,
+    /** «Сохранить баланс» recorded this adjustment («+12 000,00 ARS»): the «Баланс исправлен» pill; `null` — nothing to say. */
+    val balanceSaved: String? = null,
     /** Delete was refused because the account has transactions; offer archiving instead. */
     val deleteBlocked: Boolean = false,
     /** Saved or deleted: the screen should close. */

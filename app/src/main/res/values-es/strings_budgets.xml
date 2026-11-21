@@ -76,7 +76,7 @@
     <string name="budget_no_folders">Aún no hay categorías con subcategorías — créalas en «Más → Categorías» o elige una categoría normal.</string>
     <string name="budget_category_error">Elige para qué es el límite</string>
     <string name="budget_amount">Al mes</string>
-    <string name="budget_amount_error">Escribe un importe mayor que cero</string>
+    <string name="budget_amount_error">Escribe el importe con números. También vale 0</string>
     <string name="budget_average">Media de 3 meses — %1$s</string>
     <string name="budget_currency">Moneda del límite</string>
     <string name="budget_inside">Subcategorías · opcional</string>

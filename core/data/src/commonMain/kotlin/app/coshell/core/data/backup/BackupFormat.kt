@@ -1,6 +1,7 @@
 package app.coshell.core.data.backup
 
 import app.coshell.core.data.repository.ScheduleCodec
+import app.coshell.core.data.repository.storedLimitMinor
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
@@ -154,15 +155,20 @@ internal data class BudgetDto(
     val note: String? = null,
     val rollover: Boolean = false,
     val lastMonth: String? = null,
+    /** Since schema v16 (#576): the limit is zero; [limit] then holds one minimal unit for older versions. */
+    val zeroLimit: Boolean = false,
 ) {
     fun toModel() = Budget(
-        id, categoryId, YearMonth.parse(month), limit.toModel(),
+        id, categoryId, YearMonth.parse(month), if (zeroLimit) limit.toModel().let { Money(0, it.currency) } else limit.toModel(),
         note?.takeIf { it.isNotBlank() }, rollover, lastMonth?.let { YearMonth.parse(it) },
     )
 }
 
 internal fun Budget.toDto() =
-    BudgetDto(id, categoryId, startMonth.toString(), limit.toDto(), note, rollover, lastMonth?.toString())
+    BudgetDto(
+        id, categoryId, startMonth.toString(), Money(storedLimitMinor(limit), limit.currency).toDto(),
+        note, rollover, lastMonth?.toString(), zeroLimit = limit.isZero,
+    )
 
 /** `1 from = rate to` on [date] (`YYYY-MM-DD`); [rate] is a plain decimal string, never a JSON number. */
 @Serializable

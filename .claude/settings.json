@@ -30,7 +30,8 @@
     ],
     "deny": [
       "Read(./build/**)",
-      "Read(./**/build/**)",
+      "Read(./app/build/**)",
+      "Read(./core/*/build/**)",
       "Read(./docs/design/mockups/**)",
       "Read(./**/*.png)",
       "Read(./.gradle/**)",

@@ -129,8 +129,9 @@
     <string name="account_balance_adjust_title">Исправить баланс</string>
     <string name="account_balance_actual">Реальный баланс</string>
     <string name="account_balance_now_hint">Сейчас: %1$s. Введите, сколько на самом деле.</string>
-    <string name="account_balance_adjust_hint">Корректировка при сохранении: %1$s</string>
-    <string name="account_balance_adjust_pending" translatable="false">%1$s · %2$s</string>
+    <string name="account_balance_adjust_hint">Разница: %1$s — не трата и не доход</string>
+    <string name="account_balance_save">Сохранить баланс</string>
+    <string name="account_balance_saved">Баланс исправлен: %1$s</string>
     <string name="account_initial_balance_hint">Сумма до первой операции. Долг — со знаком минус.</string>
     <string name="account_included_in_total">Учитывать в общем балансе</string>
     <string name="account_included_in_total_hint">Выключите для долгов и чужих денег — счёт не войдёт в общий баланс</string>
@@ -644,6 +645,8 @@
     <string name="entry_section_amount_debited">Сумма · списано</string>
     <string name="entry_section_category">Категория</string>
     <string name="entry_section_category_frequent">Категория · частые</string>
+    <string name="entry_category_guess_history">по прошлым операциям</string>
+    <string name="entry_category_guess_name">по названию</string>
     <string name="entry_section_details">Детали</string>
     <string name="entry_receipt_add">+ Сумма покупки</string>
     <string name="entry_receipt">Сумма покупки</string>

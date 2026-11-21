@@ -9,7 +9,7 @@ import app.coshell.core.designsystem.components.CoShellAmountField
 
 /**
  * «Исправить баланс»: the real balance of the account. The hint says the current one, then the difference that
- * «Сохранить» records as a «Корректировка баланса» operation (not spending or income).
+ * «Сохранить баланс» records as a «Корректировка баланса» operation (not spending or income) right away (#581).
  */
 @Composable
 internal fun ActualBalanceField(state: AccountEditUiState, onValueChange: (String) -> Unit) {

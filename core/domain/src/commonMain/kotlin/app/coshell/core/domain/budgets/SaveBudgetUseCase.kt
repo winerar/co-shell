@@ -12,6 +12,7 @@ import kotlinx.datetime.YearMonth
  * Sets the limit of a category or a folder "from this month on". Earlier months keep their limit:
  * a record that started before [month] stays, a new one starts at [month]. A limit that already
  * starts at [month] is replaced. A category inside a folder may have its own limit next to the folder's.
+ * Zero is a valid limit: "not planned" (#576).
  */
 class SaveBudgetUseCase(
     private val categories: CategoryRepository,
@@ -22,7 +23,7 @@ class SaveBudgetUseCase(
         data class Invalid(val reason: Reason) : Result
     }
 
-    enum class Reason { CATEGORY_NOT_FOUND, NOT_EXPENSE, SYSTEM_CATEGORY, AMOUNT_NOT_POSITIVE }
+    enum class Reason { CATEGORY_NOT_FOUND, NOT_EXPENSE, SYSTEM_CATEGORY, AMOUNT_NEGATIVE }
 
     suspend operator fun invoke(
         categoryId: String,
@@ -35,7 +36,7 @@ class SaveBudgetUseCase(
         val category = categories.getCategory(categoryId)?.takeUnless { it.archived }
             ?: return Result.Invalid(Reason.CATEGORY_NOT_FOUND)
         if (category.type != CategoryType.EXPENSE) return Result.Invalid(Reason.NOT_EXPENSE)
-        if (!limit.isPositive) return Result.Invalid(Reason.AMOUNT_NOT_POSITIVE)
+        if (limit.isNegative) return Result.Invalid(Reason.AMOUNT_NEGATIVE)
 
         val records = budgets.getBudgets().filter { it.categoryId == categoryId }
         val budget = Budget(

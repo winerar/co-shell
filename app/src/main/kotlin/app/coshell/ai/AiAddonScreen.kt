@@ -70,6 +70,7 @@ fun AiAddonScreen(state: AiAddonUiState, actions: AiAddonActions) {
                 AiAddonStage.STEP_ADDON -> Steps(addon = StepState.NOW, model = StepState.WAIT)
                 AiAddonStage.STEP_MODEL -> Steps(addon = StepState.DONE, model = StepState.NOW)
                 AiAddonStage.ON -> WhereItWorks()
+                AiAddonStage.UNSUPPORTED -> Facts()
             }
             state.problem?.let { CoShellMessage(stringResource(it.messageRes()), isError = true) }
         }
@@ -94,17 +95,23 @@ private fun StatusCard(state: AiAddonUiState) {
         AiAddonStage.STEP_ADDON -> R.string.ai_step1_title to R.string.ai_step1_text
         AiAddonStage.STEP_MODEL -> R.string.ai_step2_title to R.string.ai_step2_text
         AiAddonStage.ON -> R.string.ai_on_title to R.string.ai_on_text
+        AiAddonStage.UNSUPPORTED -> R.string.ai_weak_title to R.string.ai_weak_text
     }
     CoShellCard(Modifier.fillMaxWidth(), tone = CardTone.Hero) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
             IconBadge(DesignR.drawable.ic_spark, LocalHeroPalette.current.amount)
             Text(stringResource(title), style = MaterialTheme.typography.headlineSmall, color = LocalHeroPalette.current.content)
-            Text(stringResource(text), style = MaterialTheme.typography.bodyMedium, color = LocalHeroPalette.current.hint)
+            Text(
+                if (state.stage == AiAddonStage.UNSUPPORTED) stringResource(text, state.memoryGb) else stringResource(text),
+                style = MaterialTheme.typography.bodyMedium,
+                color = LocalHeroPalette.current.hint,
+            )
             when (state.stage) {
                 AiAddonStage.OFF -> CoShellStatusChip(stringResource(R.string.ai_off_chip), StatusTone.Done)
                 AiAddonStage.STEP_ADDON -> if (state.progress == null) CoShellStatusChip(stringResource(R.string.ai_step1_chip), StatusTone.Work) else Bar(state)
                 AiAddonStage.STEP_MODEL -> Bar(state)
                 AiAddonStage.ON -> CoShellStatusChip(stringResource(R.string.ai_on_chip), StatusTone.Done)
+                AiAddonStage.UNSUPPORTED -> Unit
             }
         }
     }
@@ -181,6 +188,7 @@ private fun MainAction(state: AiAddonUiState, actions: AiAddonActions, modifier:
         }
         AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL ->
             CoShellOutlinedButton(actions.onCancel, modifier.fillMaxWidth()) { Text(stringResource(R.string.ai_cancel)) }
+        AiAddonStage.UNSUPPORTED -> Unit
         AiAddonStage.ON -> CoShellOutlinedButton(actions.onDeleteModel, modifier.fillMaxWidth()) { Text(stringResource(R.string.ai_delete_model)) }
     }
 }

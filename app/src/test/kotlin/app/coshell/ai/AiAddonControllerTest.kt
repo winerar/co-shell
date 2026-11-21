@@ -47,8 +47,10 @@ class AiAddonControllerTest {
 
     private val outcomes = MutableSharedFlow<InstallOutcome>(extraBufferCapacity = 1)
 
+    private var keepAliveCalls = 0
+
     private fun TestScope.controller(control: FakeControl, pkg: AddonPackage) =
-        AiAddonController(control, pkg, outcomes, this, pollMs = 100, installWaitMs = 10_000)
+        AiAddonController(control, pkg, outcomes, this, pollMs = 100, installWaitMs = 10_000, keepAlive = { keepAliveCalls++ })
 
     @Test
     fun `nothing installed - installs the add-on, downloads the model, ends on`() = runTest(UnconfinedTestDispatcher()) {
@@ -145,6 +147,18 @@ class AiAddonControllerTest {
         assertEquals(AiAddonPhase.Off, controller.state.value.phase)
         assertTrue(control.installed)
         assertNull(controller.state.value.problem)
+    }
+
+    @Test
+    fun `turning on starts the foreground keep-alive once`() = runTest(UnconfinedTestDispatcher()) {
+        val control = FakeControl(installed = true).apply { download = { flow { emit(ModelProgress(1, 10)); kotlinx.coroutines.awaitCancellation() } } }
+        val controller = controller(control, FakePackage(control))
+        controller.enable()
+        controller.enable()
+        runCurrent()
+        assertEquals(1, keepAliveCalls)
+        controller.cancel()
+        runCurrent()
     }
 
     @Test

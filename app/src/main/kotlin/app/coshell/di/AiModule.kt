@@ -6,7 +6,10 @@ import app.coshell.ai.AddonControl
 import app.coshell.ai.AddonLanguageModel
 import app.coshell.ai.AddonPackage
 import app.coshell.ai.AiAddonController
+import app.coshell.ai.AiDownloadService
 import app.coshell.ai.BoundAddonControl
+import app.coshell.ai.DeviceMemory
+import app.coshell.ai.SystemDeviceMemory
 import app.coshell.ai.ReleaseAddonPackage
 import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.update.data.CacheApkDownloader
@@ -42,8 +45,14 @@ object AiModule {
     /** One per process: the model download keeps going after the screen is closed. */
     @Provides
     @Singleton
-    fun provideController(control: AddonControl, addon: AddonPackage, events: InstallEvents) =
-        AiAddonController(control, addon, events.outcomes, CoroutineScope(SupervisorJob() + Dispatchers.Default))
+    fun provideController(@ApplicationContext context: Context, control: AddonControl, addon: AddonPackage, events: InstallEvents) =
+        AiAddonController(
+            control, addon, events.outcomes, CoroutineScope(SupervisorJob() + Dispatchers.Default),
+            keepAlive = { AiDownloadService.start(context) },
+        )
+
+    @Provides
+    fun provideDeviceMemory(@ApplicationContext context: Context): DeviceMemory = SystemDeviceMemory(context)
 
     @Provides
     @Singleton

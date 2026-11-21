@@ -39,6 +39,14 @@ class AiAddonScreenshotTest {
 
     @Test fun `on light`() = shot("ai_addon_on_light") { AiAddonScreen(AiAddonUiState(AiAddonStage.ON), AiAddonActions()) }
 
+    @Test fun `weak light`() = shot("ai_addon_weak_light") {
+        AiAddonScreen(AiAddonUiState(AiAddonStage.UNSUPPORTED, memoryGb = 4), AiAddonActions())
+    }
+
+    @Test fun `weak dark`() = shot("ai_addon_weak_dark", dark = true) {
+        AiAddonScreen(AiAddonUiState(AiAddonStage.UNSUPPORTED, memoryGb = 4), AiAddonActions())
+    }
+
     @Test fun `problem dark`() = shot("ai_addon_problem_dark", dark = true) {
         AiAddonScreen(AiAddonUiState(problem = AiAddonProblem.DOWNLOAD_FAILED), AiAddonActions())
     }

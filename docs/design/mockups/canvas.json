@@ -649,6 +649,15 @@
       "page": "screens",
       "radius": 28
     },
+    "AiWeak.dc.html": {
+      "x": 2350,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "ИИ на телефоне: слабый телефон (меньше 6 ГБ)",
+      "page": "screens",
+      "radius": 28
+    },
     "ImportStart.dc.html": {
       "x": 0,
       "y": 11160,
@@ -2883,6 +2892,7 @@
     "AiStep2.dc.html",
     "AiOn.dc.html",
     "AiData.dc.html",
+    "AiWeak.dc.html",
     "ImportStart.dc.html",
     "ImportError.dc.html",
     "ImportSummary.dc.html",
@@ -3260,7 +3270,7 @@
       "text": "ИИ на телефоне",
       "x": 0,
       "y": 9670,
-      "maxW": 2270,
+      "maxW": 2740,
       "w": 240
     },
     "row9": {

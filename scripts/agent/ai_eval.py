@@ -52,12 +52,22 @@ def ask(llm, prompt, sch):
     return out, dt, r['usage']['completion_tokens']
 
 
+FEWSHOT = [0]
+
+
+def examples(gold, skip, n):
+    """«Shell» idea: what this family categorised before (other payees only, never the one asked) — local knowledge in the prompt."""
+    others = [p for p in gold['payees'] if p['payee'] != skip]
+    return '; '.join('%s -> %s' % (p['payee'], p['category']) for p in others[::max(1, len(others) // n)][:n])
+
+
 def task_category(llm, gold, limit):
     cats = gold['categories']
     ok = abstain = n = 0
     sch = schema({'category': {'type': 'string', 'enum': cats + ['unknown']}})
     for c in gold['payees'][:limit]:
-        out, dt, tk = ask(llm, 'My categories: %s.\nThe payee of a purchase is "%s". Pick the one category it belongs to, or "unknown".' % (', '.join(cats), c['payee']), sch)
+        hist = ('\nEarlier this family categorised: %s.' % examples(gold, c['payee'], FEWSHOT[0])) if FEWSHOT[0] else ''
+        out, dt, tk = ask(llm, 'My categories: %s.%s\nThe payee of a purchase is "%s". Pick the one category it belongs to, or "unknown".' % (', '.join(cats), hist, c['payee']), sch)
         got = out.get('category')
         ok += got == c['category']
         abstain += got == 'unknown'
@@ -131,8 +141,10 @@ def main():
     ap.add_argument('models', nargs='+')
     ap.add_argument('--tasks', default='category,notes,voice,receipt')
     ap.add_argument('--limit', type=int, default=1000)
+    ap.add_argument('--fewshot', type=int, default=0, help='N earlier examples of the family in the category prompt')
     ap.add_argument('--out')
     a = ap.parse_args()
+    FEWSHOT[0] = a.fewshot
     report = [run(m, a.tasks.split(','), a.limit) for m in a.models]
     for r in report:
         print('%s (%d МБ, load %.1f s, %.1f tok/s, RSS %d МБ)' % (r['model'], r['size_mb'], r['load_s'], r['tok_per_s'], r['peak_rss_mb']))

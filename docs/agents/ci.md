@@ -76,3 +76,4 @@
   самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
 - Упавший `check` пишет короткую сводку (`scripts/agent/build-summary.sh --ci`) в summary джоба и одним
   комментарием `<!-- ci-summary -->` в PR (обновляется; после зелёного — «исправлено»).
+- `aibench.yml` — только вручную (Actions → «Замер моделей»): собирает `tools/aibench` и кладёт APK пре-релизом `aibench-N`; в CI приложения и в релиз не входит. Запускается из копии в `main` (после релиза).

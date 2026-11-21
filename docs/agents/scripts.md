@@ -58,6 +58,8 @@
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |
 | `stability` (`compose-stability.py`) | отчёты компилятора Compose для `app` (`--rerun`, ~1,5 мин) → падает на нестабильном классе состояния (`*UiState*`, `*State`) (#383) |
+| `aibench` | APK замера моделей на телефоне (`tools/aibench`, отдельный Gradle-проект вне `check`; на телефон — workflow `aibench.yml`, пре-релиз `aibench-N`) (#587) |
+| `python3 scripts/agent/ai_eval.py <модель.gguf>… [--tasks …] [--fewshot N]` | точность малых моделей на ПК по `docs/samples/ai/eval.json` (категория, заметки, голос, чеки); нужен `pip install llama-cpp-python`; `docs/research/on-device-ai.md` |
 
 Скрипты CI и для владельца — в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,
 `material-symbol-to-vector.py`, `test-rules.sh`) и `scripts/ci/`.

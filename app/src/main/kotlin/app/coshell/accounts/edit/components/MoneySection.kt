@@ -26,7 +26,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «Деньги» (#290, board `AccountEdit`): «Валюта» and «Начальный баланс» as two tiles, each opening its own small sheet;
- * a saved account also gets «Баланс сейчас» — the real balance, recorded as an adjustment on save.
+ * a saved account also gets «Баланс сейчас» — the real balance; «Сохранить баланс» in its sheet records the adjustment at once (#581).
  * A locked currency says so on the tile; an error is said under the tiles, so a bad value is seen without opening.
  */
 @Composable
@@ -62,7 +62,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
             CoShellDetailTile(
                 icon = painterResource(DesignR.drawable.ic_refresh),
                 label = stringResource(R.string.account_balance_now),
-                value = state.adjustment?.let { stringResource(R.string.account_balance_adjust_pending, state.actualBalance, it) } ?: state.currentBalance,
+                value = state.currentBalance,
                 onClick = { adjustOpen = true },
                 modifier = Modifier.fillMaxWidth(),
                 amount = true,
@@ -76,7 +76,19 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
         }
     }
     if (adjustOpen) {
-        FormSheet(stringResource(R.string.account_balance_adjust_title), onClosed = { adjustOpen = false }) {
+        FormSheet(
+            stringResource(R.string.account_balance_adjust_title),
+            // Closed without «Сохранить баланс» — the typed number is dropped, nothing waits for «Сохранить».
+            onClosed = { adjustOpen = false; actions.onActualBalanceChange("") },
+            actionLabel = stringResource(R.string.account_balance_save),
+            onAction = { close ->
+                // Records it right away (#581, poll A); a bad number stays open with its error.
+                if (state.actualBalanceError == null) {
+                    actions.onSaveBalance()
+                    close()
+                }
+            },
+        ) {
             ActualBalanceField(state, actions.onActualBalanceChange)
         }
     }

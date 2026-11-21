@@ -222,4 +222,38 @@ class AccountEditViewModelTest {
         assertTrue(vm.state.value.isDone)
         assertNull(transactions.getTransaction("adj"))
     }
+
+    @Test
+    fun `save balance records the adjustment at once and keeps the form open`() = runTest {
+        accounts.saveAccount(Account("cash", "Cash", ars, initialBalanceMinor = 10_000))
+        val vm = viewModel("cash")
+
+        vm.onActualBalanceChange("120")
+        vm.saveBalance()
+
+        assertFalse(vm.state.value.isDone)
+        assertEquals("+20,00\u00A0ARS", vm.state.value.balanceSaved)
+        assertEquals("120,00\u00A0ARS", vm.state.value.currentBalance)
+        assertEquals("", vm.state.value.actualBalance)
+        val adj = transactions.getTransaction("adj")!!
+        assertEquals(TransactionType.INCOME, adj.type)
+        assertEquals(Money(2_000, ars), adj.amount)
+
+        vm.dismissBalanceSaved()
+        assertNull(vm.state.value.balanceSaved)
+    }
+
+    @Test
+    fun `save balance with a bad or blank number records nothing`() = runTest {
+        accounts.saveAccount(Account("cash", "Cash", ars, initialBalanceMinor = 10_000))
+        val vm = viewModel("cash")
+
+        vm.onActualBalanceChange("abc")
+        vm.saveBalance()
+        vm.onActualBalanceChange("")
+        vm.saveBalance()
+
+        assertNull(transactions.getTransaction("adj"))
+        assertNull(vm.state.value.balanceSaved)
+    }
 }

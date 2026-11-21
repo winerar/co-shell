@@ -33,7 +33,7 @@ import app.coshell.ui.top.ScreenTopBar
 
 /**
  * «Дом · ноябрь» (mockup `BudDetail`, #183): what is left, the note, the folder's categories, the month's operations.
- * The note icon in the bar opens the limit editor; a tap on an operation opens it for editing.
+ * The pencil in the bar opens the limit editor (#575); a tap on an operation opens it for editing.
  */
 @Composable
 fun BudgetDetailScreen(state: BudgetDetailUiState, actions: BudgetDetailActions, categoryId: String) {
@@ -45,7 +45,7 @@ fun BudgetDetailScreen(state: BudgetDetailUiState, actions: BudgetDetailActions,
                 if (state.head != null) {
                     CoShellIconButton(onClick = { actions.onEditLimit(categoryId) }) {
                         Icon(
-                            painterResource(DesignR.drawable.ic_description),
+                            painterResource(DesignR.drawable.ic_edit),
                             stringResource(R.string.budget_detail_edit),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

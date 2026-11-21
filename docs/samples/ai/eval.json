@@ -352,6 +352,104 @@
    "title": "coto",
    "day": 0,
    "amount_minor": 5230000
+  },
+  {
+   "line": "24000 десерты",
+   "amount_minor": 2400000,
+   "title": "десерты",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "37100 аптека",
+   "amount_minor": 3710000,
+   "title": "аптека",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "Субе по 30к",
+   "amount_minor": 3000000,
+   "title": "Субе",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "овощи 12000",
+   "amount_minor": 1200000,
+   "title": "овощи",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "15000 такси",
+   "amount_minor": 1500000,
+   "title": "такси",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "подарок 8к",
+   "amount_minor": 800000,
+   "title": "подарок",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "коммуналка 45 000",
+   "amount_minor": 4500000,
+   "title": "коммуналка",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "18500 продукты вчера",
+   "amount_minor": 1850000,
+   "title": "продукты",
+   "day": -1,
+   "style": "owner"
+  },
+  {
+   "line": "кафе 2300",
+   "amount_minor": 230000,
+   "title": "кафе",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "Субе 5к",
+   "amount_minor": 500000,
+   "title": "Субе",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "мясо 31200",
+   "amount_minor": 3120000,
+   "title": "мясо",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "кофе по 3к",
+   "amount_minor": 300000,
+   "title": "кофе",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "40000 бензин",
+   "amount_minor": 4000000,
+   "title": "бензин",
+   "day": 0,
+   "style": "owner"
+  },
+  {
+   "line": "аптека 7к позавчера",
+   "amount_minor": 700000,
+   "title": "аптека",
+   "day": -2,
+   "style": "owner"
   }
  ],
  "voice": [

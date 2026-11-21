@@ -71,7 +71,7 @@ def task_notes(llm, gold, limit, label='notes'):
     ok = amt = n = 0
     for c in gold[label][:limit]:
         text = c['line'] if label == 'notes' else c['phrase']
-        out, dt, tk = ask(llm, 'Today is %s. Parse one spending note. amount = the amount as digits with a dot for decimals, no spaces, in the units written (3 500 -> 3500, 6,99 usd -> 6.99, '
+        out, dt, tk = ask(llm, 'Today is %s. Parse one spending note. amount = the amount as digits with a dot for decimals, no spaces, in the units written (3 500 -> 3500, 6,99 usd -> 6.99, \"к\"/k = thousand: 30к -> 30000, '
                           '"три пятьсот" -> 3500, "two thousand five hundred" -> 2500); title = short thing bought, same language; day = 0 today, -1 yesterday, -2 day before yesterday.\n'
                           'Example: "кофе 1 200 карта" -> {"amount": "1200", "title": "кофе", "day": 0}\nNote: "%s"' % (TODAY, text), sch)
         a = minor(out.get('amount', '')) == c['amount_minor']

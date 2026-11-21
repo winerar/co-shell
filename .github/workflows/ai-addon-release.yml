@@ -56,7 +56,7 @@ jobs:
       - name: Update files
         run: |
           printf '## Дополнение «ИИ на телефоне»\n\nНеобязательное дополнение для приложения co-shell.\n' > addon-notes.md
-          python3 scripts/make-update-files.py ai-addon/build/outputs/apk/release/ai-addon-release.apk \
+          python3 scripts/make-update-files.py ai-addon/build/outputs/apk/release/*-release.apk \
             "${{ github.run_number }}" "0.1" addon-notes.md \
             "https://github.com/$RELEASES_REPO/releases/download/ai-addon" update-files
 

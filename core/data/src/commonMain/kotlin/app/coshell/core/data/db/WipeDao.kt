@@ -41,8 +41,13 @@ interface WipeDao {
     )
     suspend fun deleteTransactions(now: Long, by: String?)
 
+    /** Drafts are device-only: no tombstones, they just go. */
+    @Query("DELETE FROM drafts")
+    suspend fun clearDrafts()
+
     @Transaction
     suspend fun wipeAll(now: Long, by: String?) {
+        clearDrafts()
         deleteTransactions(now, by)
         deleteBudgets(now, by)
         deleteTemplates(now, by)

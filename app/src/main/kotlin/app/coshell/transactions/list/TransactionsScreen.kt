@@ -116,6 +116,9 @@ fun TransactionsScreen(
                         if (rowCount >= TAGS_HINT_ROWS && !state.filter.isActive) {
                             WordHint(HintId.TAGS, R.string.hint_tags, Modifier.padding(horizontal = Spacing.l))
                         }
+                        if (rowCount >= NOTES_HINT_ROWS && !state.filter.isActive) {
+                            WordHint(HintId.NOTES, R.string.hint_notes, Modifier.padding(horizontal = Spacing.l))
+                        }
                     }
                 }
             }
@@ -147,6 +150,9 @@ fun TransactionsScreen(
 
 /** «Теги» word hint appears in «Операции» from this many rows (`hints.md`). */
 internal const val TAGS_HINT_ROWS = 10
+
+/** Many small expenses: the word about «Быстрые заметки» (#586). */
+internal const val NOTES_HINT_ROWS = 20
 
 /**
  * The day whose title or rows are at the top of the list at item [index]: the list is the filter bar (when

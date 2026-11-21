@@ -49,7 +49,7 @@ class FakeApkInstaller : ApkInstaller {
     val installed = mutableListOf<File>()
     override fun canInstall() = allowed
     override fun openInstallPermissionSettings() { settingsOpened++ }
-    override suspend fun install(file: File) { installed += file }
+    override suspend fun install(file: File, packageName: String?) { installed += file }
     val manual = mutableListOf<File>()
     override fun installManually(file: File) { manual += file }
 }

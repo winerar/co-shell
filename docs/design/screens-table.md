@@ -45,6 +45,9 @@
 | Настройки: ввод операции | Set1Entry | settings_input | ✓ | ✓ |
 | Настройки: уведомления | Set1Notices | settings_notices | ✓ | ✓ |
 | Настройки: данные и копия | Set1Data | settings_data | ✓ | ✓ |
+| ИИ на телефоне | AiOff | ai_addon | ✓ | ✓ |
+| ИИ на телефоне: шаги | AiStep2 | ai_addon_loading | ✓ | ✓ |
+| ИИ на телефоне: включён | AiOn | ai_addon_on | ✓ | ✓ |
 | Резервная копия | Backup | backup | ✓ | ✓ |
 | Копия: автоматическая | BackupAuto | backup_auto | ✓ | ✓ |
 | Ещё | More | more | ✓ | ✓ |

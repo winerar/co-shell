@@ -33,12 +33,12 @@ class PackageInstallerApkInstaller @Inject constructor(
         context.startActivity(intent)
     }
 
-    override suspend fun install(file: File) = withContext(Dispatchers.IO) {
+    override suspend fun install(file: File, packageName: String?) = withContext(Dispatchers.IO) {
         val installer = context.packageManager.packageInstaller
         // A session left by an earlier attempt (dialog never shown, app killed) would hold the APK copy.
         installer.mySessions.forEach { runCatching { installer.abandonSession(it.sessionId) } }
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL).apply {
-            setAppPackageName(context.packageName)
+            setAppPackageName(packageName ?: context.packageName)
             setSize(file.length())
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 // Lets Android skip the dialog once co-shell itself installed the previous version.

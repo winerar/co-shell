@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- The «сделал ИИ» spark (poll 2026-11-20): a four-point star in a thin outline, like the other icons. -->
+    <path
+        android:pathData="M12,3l2,6l6,2l-6,2l-2,6l-2,-6l-6,-2l6,-2z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round" />
+</vector>

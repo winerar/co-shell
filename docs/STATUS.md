@@ -59,7 +59,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1815 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
+- Тесты: всего 1826 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v14.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 

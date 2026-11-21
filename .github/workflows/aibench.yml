@@ -39,7 +39,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp tools/aibench/build/outputs/apk/debug/aibench-debug.apk co-shell-aibench.apk
+          cp tools/aibench/build/outputs/apk/debug/*-debug.apk co-shell-aibench.apk
           gh release create "aibench-${{ github.run_number }}" co-shell-aibench.apk --prerelease \
             --title "AI bench ${{ github.run_number }}" \
             --notes "Замер моделей на телефоне (#587). Установите APK, скачайте модель, нажмите «Тест», скопируйте отчёт." \

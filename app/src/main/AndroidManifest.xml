@@ -4,6 +4,11 @@
 
     <!-- Self-update (version.json, APK) and the daily exchange rates download. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The optional «ИИ на телефоне» add-on (#587): its service is bound only by apps signed with the same key. -->
+    <uses-permission android:name="app.coshell.ai.permission.BIND" />
+    <queries>
+        <package android:name="app.coshell.ai" />
+    </queries>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Short buzz when a shake opens the new-transaction screen. -->
     <uses-permission android:name="android.permission.VIBRATE" />

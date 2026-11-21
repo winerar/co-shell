@@ -31,6 +31,7 @@ import app.coshell.privacy.HiddenPill
 import app.coshell.privacy.pin.PinSetupRoute
 import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.export.ExportRoute
+import app.coshell.ai.AiAddonRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
 import app.coshell.settings.HomeDetailsRoute
@@ -402,8 +403,12 @@ fun CoShellNavHost(
                     onData = { navController.navigate(DataSettingsDestination) },
                     onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
+                    onAiAddon = { navController.navigate(AiAddonDestination) { launchSingleTop = true } },
                 ),
             )
+        }
+        screen<AiAddonDestination> {
+            AiAddonRoute(onBack = { navController.popBackStack() })
         }
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })

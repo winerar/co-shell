@@ -21,9 +21,11 @@ interface ApkDownloader {
     suspend fun download(release: AppRelease, onProgress: (Float) -> Unit): File
 }
 
-class CacheApkDownloader @Inject constructor(@ApplicationContext context: Context) : ApkDownloader {
+class CacheApkDownloader(context: Context, folder: String) : ApkDownloader {
+    @Inject constructor(@ApplicationContext context: Context) : this(context, "updates")
 
-    private val dir = File(context.cacheDir, "updates")
+    /** Its own folder: a download wipes every other file in it (the add-on's APK must not delete the app's pending update). */
+    private val dir = File(context.cacheDir, folder)
 
     override suspend fun download(release: AppRelease, onProgress: (Float) -> Unit): File =
         withContext(Dispatchers.IO) {

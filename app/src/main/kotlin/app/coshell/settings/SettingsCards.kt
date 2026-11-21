@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.ai.AiAddonStage
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -97,6 +98,18 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
                 checked = state.wifiOnly, onCheckedChange = actions.onWifiOnly,
             )
         }
+    }
+
+/** «Умные функции»: the one row «ИИ на телефоне» with its state (#587, board `Set1Root`); the screen is `ai/AiAddonScreen`. */
+@Composable
+internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
+    GroupCard(DesignR.drawable.ic_spark, 6, R.string.settings_smart_title, onAll = null) {
+        val hint = when (state.ai) {
+            AiAddonStage.OFF -> R.string.ai_settings_off
+            AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL -> R.string.ai_settings_loading
+            AiAddonStage.ON -> R.string.ai_settings_on
+        }
+        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon) }
     }
 
 /** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */

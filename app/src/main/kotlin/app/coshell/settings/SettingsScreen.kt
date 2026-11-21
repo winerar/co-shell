@@ -13,6 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.ai.AiAddonStage
+import app.coshell.ai.AiAddonViewModel
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.motion.LocalThemeReveal
@@ -38,6 +40,7 @@ data class SettingsActions(
     val onData: () -> Unit = {},
     val onCurrencies: () -> Unit = {},
     val onBackup: () -> Unit = {},
+    val onAiAddon: () -> Unit = {},
     val onThemeMode: (ThemeMode) -> Unit = {},
     val onShake: (Boolean) -> Unit = {},
     val onHaptics: (Boolean) -> Unit = {},
@@ -60,6 +63,8 @@ data class SettingsState(
     val weekStart: WeekStart = WeekStart.SYSTEM,
     val wifiOnly: Boolean = false,
     val hints: Boolean = true,
+    /** «ИИ на телефоне» on the «Умные функции» card (#587). */
+    val ai: AiAddonStage = AiAddonStage.OFF,
 )
 
 @Composable
@@ -71,7 +76,9 @@ fun SettingsRoute(
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
     hints: HintsViewModel = hiltViewModel(),
+    ai: AiAddonViewModel = hiltViewModel(),
 ) {
+    val aiState by ai.state.collectAsStateWithLifecycle()
     val hintsOn by hints.enabled.collectAsStateWithLifecycle()
     val mode by theme.mode.collectAsStateWithLifecycle()
     val palette by theme.palette.collectAsStateWithLifecycle()
@@ -86,7 +93,7 @@ fun SettingsRoute(
     SettingsScreen(
         SettingsState(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
-            options.weekStart, options.syncWifiOnly, hintsOn,
+            options.weekStart, options.syncWifiOnly, hintsOn, aiState.stage,
         ),
         actions.copy(
             onThemeMode = { m -> if (m != mode) reveal.change { theme.setMode(m) } },
@@ -115,6 +122,7 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
             item(key = "money") { MoneyCard(state, actions) }
             item(key = "screens") { ScreensCard(actions) }
             item(key = "data") { DataCard(state, actions) }
+            item(key = "smart") { SmartCard(state, actions) }
             item(key = "help") { HelpCard(state, actions) }
         }
     }

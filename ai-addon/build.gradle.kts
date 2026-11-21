@@ -15,7 +15,7 @@ android {
         applicationId = "app.coshell.ai"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
+        versionCode = (System.getenv("BUILD_NUMBER") ?: "1").toInt()
         versionName = "0.1"
     }
 
@@ -27,6 +27,24 @@ android {
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
+        }
+        // The release add-on is signed with the app's release key (secrets decoded by the workflow): the bind permission is signature-level.
+        val releaseStore = providers.environmentVariable("RELEASE_KEYSTORE_FILE").orNull
+        if (releaseStore != null) {
+            create("release") {
+                storeFile = file(releaseStore)
+                storePassword = providers.environmentVariable("RELEASE_KEYSTORE_PASSWORD").get()
+                keyAlias = providers.environmentVariable("RELEASE_KEY_ALIAS").get()
+                keyPassword = providers.environmentVariable("RELEASE_KEY_PASSWORD").get()
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // No R8: the engine is native code plus a thin wrapper, and a shrinker risks its JNI names for little gain.
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 

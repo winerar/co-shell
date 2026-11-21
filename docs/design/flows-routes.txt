@@ -49,3 +49,4 @@ TemplateEditDestination	Rec143RepeatA
 BudgetsDestination	BudA
 BudgetDetailDestination	BudDetail
 BudgetEditDestination	BudEdit
+AiAddonDestination	AiOff

@@ -32,7 +32,7 @@ ICON = {
     'user': 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', 'mail': 'M3 6h18v12H3zM3 6l9 7 9-7',
     'alert': 'M12 4l9 16H3zM12 10v4M12 17v.01', 'info': 'M12 8v.01M12 11v6M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z',
     'google': 'M20 12h-8M20 12a8 8 0 1 1-2.3-5.7', 'logout': 'M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10',
-    'folder': 'M3 6h6l2 2h10v11H3z', 'calendar': 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', 'note': 'M5 4h14v16H5zM8 9h8M8 13h8M8 17h5',
+    'folder': 'M3 6h6l2 2h10v11H3z', 'calendar': 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', 'note': 'M5 4h14v16H5zM8 9h8M8 13h8M8 17h5', 'edit': 'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',
     'rate': 'M4 17l5-5 4 4 7-7M14 9h6v6', 'lock': 'M6 11h12v9H6zM9 11V8a3 3 0 0 1 6 0v3', 'bulb': 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z', 'spark': 'M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z',
     'chart': 'M5 20V11M12 20V4M19 20v-6', 'budget': 'M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 3v9h9', 'bolt': 'M13 3L5 13h6l-1 8 8-10h-6z',
     'school': 'M3 9l9-5 9 5-9 5zM7 11v5c3 2 7 2 10 0v-5', 'bus': 'M6 4h12v12H6zM6 11h12M8 19v-3M16 19v-3', 'wifi': 'M5 12a10 10 0 0 1 14 0M8 15a6 6 0 0 1 8 0M12 18h.01',

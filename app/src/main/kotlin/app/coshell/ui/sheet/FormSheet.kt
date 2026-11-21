@@ -12,12 +12,24 @@ import app.coshell.core.designsystem.components.CoShellSheetLayout
 /**
  * A small sheet over a form (#290: a detail opens its own sheet instead of growing the form): [title], the content
  * and «Готово». Lives in its own `Dialog`, so it can open from any screen or sheet; [content] gets `close`.
+ * [actionLabel] + [onAction] replace «Готово» with an action that does something itself («Сохранить баланс», #581);
+ * [onAction] gets `close` and decides whether to close.
  */
 @Composable
-fun FormSheet(title: String, onClosed: () -> Unit, content: @Composable ColumnScope.(close: () -> Unit) -> Unit) {
+fun FormSheet(
+    title: String,
+    onClosed: () -> Unit,
+    actionLabel: String? = null,
+    onAction: ((close: () -> Unit) -> Unit)? = null,
+    content: @Composable ColumnScope.(close: () -> Unit) -> Unit,
+) {
     Dialog(onDismissRequest = onClosed, properties = CoShellSheetDialogProperties) {
         CoShellSheet(onClosed = onClosed) { close ->
-            CoShellSheetLayout(title = title, actionLabel = stringResource(R.string.keypad_done), onAction = close) { content(close) }
+            CoShellSheetLayout(
+                title = title,
+                actionLabel = actionLabel ?: stringResource(R.string.keypad_done),
+                onAction = { onAction?.invoke(close) ?: close() },
+            ) { content(close) }
         }
     }
 }

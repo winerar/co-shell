@@ -17,7 +17,7 @@
   («+ Чек», «В шаблон») или текст. Внутри — `CoShellDetailTile(icon, label, value, empty)` (плитка 40 dp) и `CoShellCheckTile` (галочка словами),
   `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
   В app (`ui/form`, `ui/sheet`): `IconStrip`/`ColorStrip` (одна строка + «Все 52»/«+29»), `IconColorSheet` (все иконки и цвета,
-  `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы).
+  `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы; `actionLabel`/`onAction` — своё действие вместо «Готово», «Сохранить баланс» #581).
 - **Лента счетов** — `CoShellAccountRibbon(accounts: List<RibbonAccount>, selectedId, onSelect, onAll, allLabel)` (#505, доска `CompChoice`): значки 44 в ячейках 48, выбранный — кольцо `themeEdge()`, в конце «Все ›».
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка outline / неон + рамка цветом текста с галкой или чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».

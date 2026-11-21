@@ -107,6 +107,30 @@ class AccountEditViewModel @Inject constructor(
         it.copy(actualBalance = value, actualBalanceError = (actual as? ParsedActual.Bad)?.error, adjustment = diff?.let(::signed))
     }
 
+    /**
+     * «Сохранить баланс» (#581, poll A): records the adjustment right away, without «Сохранить» of the account;
+     * the form stays open with the new balance and says what was recorded.
+     */
+    fun saveBalance() {
+        val account = existing ?: return
+        val actual = parseActual(_state.value.actualBalance) as? ParsedActual.Amount ?: return
+        val diff = balance?.let { actual.money - it }
+        viewModelScope.launch {
+            if (adjustBalance(account.id, actual.money) !is AdjustBalanceUseCase.Result.Adjusted) return@launch
+            balance = actual.money
+            _state.update {
+                it.copy(
+                    currentBalance = moneyFormat.format(actual.money),
+                    actualBalance = "",
+                    adjustment = null,
+                    balanceSaved = diff?.let(::signed),
+                )
+            }
+        }
+    }
+
+    fun dismissBalanceSaved() = _state.update { it.copy(balanceSaved = null) }
+
     fun onIncludedInTotalChange(value: Boolean) = _state.update { it.copy(includedInTotal = value) }
 
     fun onColorChange(value: Long?) = _state.update { it.copy(color = value) }

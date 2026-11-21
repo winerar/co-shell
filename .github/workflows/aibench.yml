@@ -1,0 +1,46 @@
+name: "Замер моделей: APK для телефона (#587)"
+
+# Builds tools/aibench (a standalone tool app that downloads on-device models and measures them on the phone) and
+# publishes the APK as a pre-release `aibench-<run>` — open the release page on the phone and install the file.
+# By hand only: Actions → this workflow → Run workflow. Not part of the app's CI or release (docs/agents/ci.md).
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Ветка или коммит"
+        type: string
+        default: dev
+
+permissions:
+  contents: write
+
+jobs:
+  aibench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+
+      - name: Build the APK
+        run: ./gradlew -p tools/aibench assembleDebug --console=plain
+
+      - name: Publish a pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp tools/aibench/build/outputs/apk/debug/aibench-debug.apk co-shell-aibench.apk
+          gh release create "aibench-${{ github.run_number }}" co-shell-aibench.apk --prerelease \
+            --title "AI bench ${{ github.run_number }}" \
+            --notes "Замер моделей на телефоне (#587). Установите APK, скачайте модель, нажмите «Тест», скопируйте отчёт." \
+            --target "${{ github.sha }}"

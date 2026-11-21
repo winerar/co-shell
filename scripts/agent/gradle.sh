@@ -7,7 +7,7 @@
 # Example: scripts/agent/gradle.sh :app:testDebugUnitTest --tests '*UpdateControllerTest'
 set -uo pipefail
 cd "$(dirname "$0")/../.."
-init=scripts/agent/maven-mirror.init.gradle
+init="$PWD/scripts/agent/maven-mirror.init.gradle"
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
 

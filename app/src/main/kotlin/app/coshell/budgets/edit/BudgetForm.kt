@@ -33,10 +33,10 @@ internal fun insideFolder(folderId: String, categories: List<Category>, budgets:
         .sortedBy { it.name.lowercase() }
         .map { Inside(it.id, it.name, it.icon, it.color, budgets.forCategory(it.id, month)?.limit?.let(format::format)) }
 
-/** The limit typed in [currency]; `null` — empty, not a number or not above zero. */
+/** The limit typed in [currency]; `null` — empty, not a number or negative. Zero is fine (#576). */
 internal fun parseLimit(amount: String, currency: String): Money? {
     val code = CurrencyCode.parseOrNull(currency) ?: return null
-    return MoneyParser.parseOrNull(amount, code)?.takeIf { it.isPositive }
+    return MoneyParser.parseOrNull(amount, code)?.takeUnless { it.isNegative }
 }
 
 /** Currencies a limit can be in: the report currencies first, then those of the accounts and of the current limit. */

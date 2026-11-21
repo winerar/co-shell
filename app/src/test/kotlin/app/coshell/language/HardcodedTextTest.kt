@@ -134,6 +134,7 @@ class HardcodedTextTest {
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/DefaultCategories.kt" to "starter category names in all languages",
             "core/model/src/commonMain/kotlin/app/coshell/core/model/SystemCategories.kt" to "«Корректировка баланса» in all languages",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/quickentry/AmountInText.kt" to "currency words the parser understands",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/quickentry/QuickNoteParser.kt" to "day and account words of a quick note the parser understands (ru/es/en)",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/TeleshkaFormat.kt" to "labels printed on the shop receipt, read by the parser",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/AmeriabankFormat.kt" to "labels printed on the bank receipt, read by the parser",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/receipts/TbankFormat.kt" to "labels printed on the bank receipt, read by the parser",

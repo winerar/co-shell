@@ -48,4 +48,9 @@
     <string name="ai_settings_off">Выключен · необязательно</string>
     <string name="ai_settings_loading">Скачиваю…</string>
     <string name="ai_settings_on">Включён</string>
+    <string name="ai_weak_title">Этому телефону не подойдёт</string>
+    <string name="ai_weak_text">Для ИИ нужно от 6 ГБ памяти, здесь %1$d. Всё остальное работает как раньше.</string>
+    <string name="ai_download_title">Скачиваю ИИ</string>
+    <string name="ai_download_step1">Шаг 1 из 2 · дополнение</string>
+    <string name="ai_download_channel">Загрузка ИИ</string>
 </resources>

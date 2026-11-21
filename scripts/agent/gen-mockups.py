@@ -51,7 +51,7 @@ PAGES = {
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),
     'AccountEdit': ('Счёт: редактор без прокрутки (#290)', False), 'AccountAdjust': ('Счёт: «Исправить баланс» — «Сохранить баланс» сразу (#581)', False), 'AccountAdjusted': ('Счёт: баланс исправлен, плашка (#581)', False), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
     'AiOff': ('ИИ на телефоне: выключен, «Включить»', False), 'AiStep1': ('ИИ на телефоне: шаг 1, установка дополнения', False), 'AiStep2': ('ИИ на телефоне: шаг 2, скачивание модели', False),
-    'AiOn': ('ИИ на телефоне: включён', False), 'AiData': ('ИИ на телефоне: вопрос про мобильный интернет', False),
+    'AiOn': ('ИИ на телефоне: включён', False), 'AiWeak': ('ИИ на телефоне: слабый телефон (меньше 6 ГБ)', False), 'AiData': ('ИИ на телефоне: вопрос про мобильный интернет', False),
     'Backup': ('Резервная копия', False), 'Wipe': ('Стереть все данные (тапайте)', True),
     'Components': ('Компоненты: кирпичи макетов → имена в коде', True), 'History': ('История решений', False),
 }
@@ -66,7 +66,7 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
     ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
     ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError']),
-    ('ИИ на телефоне', ['AiOff', 'AiStep1', 'AiStep2', 'AiOn', 'AiData']),
+    ('ИИ на телефоне', ['AiOff', 'AiStep1', 'AiStep2', 'AiOn', 'AiData', 'AiWeak']),
     ('Импорт из Wallet', ['ImportStart', 'ImportError', 'ImportSummary', 'ImportAccounts', 'ImportCategories', 'ImportTransfers', 'ImportPreview', 'ImportDone']),
 ]
 

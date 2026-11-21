@@ -48,4 +48,9 @@
     <string name="ai_settings_off">Off · optional</string>
     <string name="ai_settings_loading">Downloading…</string>
     <string name="ai_settings_on">On</string>
+    <string name="ai_weak_title">Not for this phone</string>
+    <string name="ai_weak_text">AI needs 6 GB of memory or more, this phone has %1$d. Everything else works as before.</string>
+    <string name="ai_download_title">Downloading AI</string>
+    <string name="ai_download_step1">Step 1 of 2 · add-on</string>
+    <string name="ai_download_channel">AI download</string>
 </resources>

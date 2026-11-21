@@ -3,7 +3,7 @@ package app.coshell.ai
 import androidx.compose.runtime.Immutable
 
 /** Which of the five states of the screen (boards `AiOff`, `AiStep1`, `AiStep2`, `AiOn`, and `AiData` over `AiOff`). */
-enum class AiAddonStage { OFF, STEP_ADDON, STEP_MODEL, ON }
+enum class AiAddonStage { OFF, STEP_ADDON, STEP_MODEL, ON, UNSUPPORTED }
 
 /** «ИИ на телефоне»: the stage, the bar and its already formatted words, what went wrong, whether «Скачать 2,5 ГБ?» is open. */
 @Immutable
@@ -16,4 +16,6 @@ data class AiAddonUiState(
     val totalMb: Long = 0,
     val problem: AiAddonProblem? = null,
     val askData: Boolean = false,
+    /** Whole gigabytes of the phone (for «здесь 4»), only meaningful in [AiAddonStage.UNSUPPORTED]. */
+    val memoryGb: Int = 0,
 )

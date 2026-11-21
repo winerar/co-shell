@@ -105,7 +105,7 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
 internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
     GroupCard(DesignR.drawable.ic_spark, 6, R.string.settings_smart_title, onAll = null) {
         val hint = when (state.ai) {
-            AiAddonStage.OFF -> R.string.ai_settings_off
+            AiAddonStage.OFF, AiAddonStage.UNSUPPORTED -> R.string.ai_settings_off
             AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL -> R.string.ai_settings_loading
             AiAddonStage.ON -> R.string.ai_settings_on
         }

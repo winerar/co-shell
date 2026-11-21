@@ -82,5 +82,12 @@ def data():
     return board('ИИ на телефоне: вопрос про мобильный интернет', scrim(under) + dlg)
 
 
-BOARDS = [('AiOff', off), ('AiStep1', step1), ('AiStep2', step2), ('AiOn', on), ('AiData', data)]
+def weak():
+    """Phone under 6 GB (poll 2026-11-21, «А»): the card says why, no button."""
+    body = (status_card('Этому телефону не подойдёт', 'Для ИИ нужно от 6 ГБ памяти, здесь 4. Всё остальное работает как раньше: чеки по QR, подсказки категории по истории.')
+            + '<div style="height: 10px;"></div>' + facts())
+    return board('ИИ на телефоне: слабый телефон', screen(body))
+
+
+BOARDS = [('AiWeak', weak), ('AiOff', off), ('AiStep1', step1), ('AiStep2', step2), ('AiOn', on), ('AiData', data)]
 FEEDBACK = []

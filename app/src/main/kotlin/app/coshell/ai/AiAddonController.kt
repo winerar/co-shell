@@ -45,6 +45,8 @@ class AiAddonController(
     private val scope: CoroutineScope,
     private val pollMs: Long = 1_000,
     private val installWaitMs: Long = 5 * 60_000,
+    /** Starts what keeps the process alive while the work runs (a foreground service with a notification); nothing in tests. */
+    private val keepAlive: () -> Unit = {},
 ) {
     private val mutable = MutableStateFlow(AiAddonState())
     val state: StateFlow<AiAddonState> = mutable.asStateFlow()
@@ -64,6 +66,7 @@ class AiAddonController(
     fun enable() {
         if (job?.isActive == true) return
         mutable.value = AiAddonState()
+        keepAlive()
         job = scope.launch { runCatching { turnOn() }.onFailure { if (it !is kotlinx.coroutines.CancellationException) fail(AiAddonProblem.DOWNLOAD_FAILED) } }
     }
 

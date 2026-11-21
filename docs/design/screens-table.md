@@ -48,6 +48,7 @@
 | ИИ на телефоне | AiOff | ai_addon | ✓ | ✓ |
 | ИИ на телефоне: шаги | AiStep2 | ai_addon_loading | ✓ | ✓ |
 | ИИ на телефоне: включён | AiOn | ai_addon_on | ✓ | ✓ |
+| ИИ на телефоне: слабый телефон | AiWeak | ai_addon_weak | ✓ | ✓ |
 | Резервная копия | Backup | backup | ✓ | ✓ |
 | Копия: автоматическая | BackupAuto | backup_auto | ✓ | ✓ |
 | Ещё | More | more | ✓ | ✓ |

@@ -1,5 +1,8 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.domain.categoryguess.CategoryGuess
+import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Money
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
@@ -49,5 +52,20 @@ class TransactionEditGuessTest : TransactionEditTestBase() {
         vm.onNoteChange("Panadería Sol")
         assertEquals("food", vm.state.value.categoryId)
         assertFalse(vm.state.value.categoryGuessed)
+    }
+
+    @Test
+    fun `a brand never seen before is guessed from the dictionary and marked`() = runTest {
+        seed()
+        categories.saveCategory(Category("rest", "Кафе", CategoryType.EXPENSE, icon = "restaurant"))
+        val vm = viewModel()
+        vm.onNoteChange("Starbucks")
+        assertEquals("rest", vm.state.value.categoryId)
+        assertTrue(vm.state.value.categoryGuessed)
+        assertEquals(CategoryGuess.Source.DICTIONARY, vm.state.value.categoryGuessSource)
+
+        vm.onNoteChange("Juan Pérez")
+        assertNull(vm.state.value.categoryId)
+        assertNull(vm.state.value.categoryGuessSource)
     }
 }

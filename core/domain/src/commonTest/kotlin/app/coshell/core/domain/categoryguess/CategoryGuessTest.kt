@@ -84,4 +84,27 @@ class CategoryGuessTest {
         assertNull(guess(listOf(tx("food", payee = "Disco")), payee = null))
         assertNull(guess(listOf(tx("food", payee = "Disco")), payee = "Disco", type = TransactionType.TRANSFER))
     }
+
+    @Test
+    fun `an unknown payee falls back to the brand dictionary`() {
+        val withIcons = categories + listOf(Category("rest", "Кафе", CategoryType.EXPENSE, icon = "restaurant"))
+        val s = CategoryGuess.suggest(emptyList(), TransactionType.EXPENSE, withIcons, payee = "Starbucks")
+        assertEquals("rest", s?.categoryId)
+        assertEquals(CategoryGuess.Source.DICTIONARY, s?.source)
+        // …the note works too, and history beats the dictionary.
+        assertEquals("rest", CategoryGuess.suggest(emptyList(), TransactionType.EXPENSE, withIcons, note = "Cafe Martinez\nflat white")?.categoryId)
+        val past = listOf(tx("food", payee = "Starbucks"))
+        val h = CategoryGuess.suggest(past, TransactionType.EXPENSE, withIcons, payee = "Starbucks")
+        assertEquals("food", h?.categoryId)
+        assertEquals(CategoryGuess.Source.HISTORY, h?.source)
+    }
+
+    @Test
+    fun `the dictionary never suggests for income transfers or unknown places`() {
+        val withIcons = categories + listOf(Category("rest", "Кафе", CategoryType.EXPENSE, icon = "restaurant"))
+        assertNull(CategoryGuess.suggest(emptyList(), TransactionType.INCOME, withIcons, payee = "Starbucks"))
+        assertNull(CategoryGuess.suggest(emptyList(), TransactionType.TRANSFER, withIcons, payee = "Starbucks"))
+        assertNull(CategoryGuess.suggest(emptyList(), TransactionType.EXPENSE, withIcons, payee = "Juan Pérez"))
+        assertNull(CategoryGuess.suggest(emptyList(), TransactionType.EXPENSE, categories, payee = "Starbucks"))
+    }
 }

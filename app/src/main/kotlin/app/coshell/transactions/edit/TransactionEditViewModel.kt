@@ -267,7 +267,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false)
+        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false, categoryGuessSource = null)
             .withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
     }
 
@@ -277,8 +277,8 @@ class TransactionEditViewModel @Inject constructor(
      */
     private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
         if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
-        val guess = CategoryGuess.guess(history, type, allCategories, scan?.seller, scan?.key, note)
-        return copy(categoryId = guess, categoryGuessed = guess != null)
+        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key, note)
+        return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source)
     }
 
     /** «↩ Возврат» chip of an expense (#208): the same category, the sign flips. */
@@ -331,7 +331,7 @@ class TransactionEditViewModel @Inject constructor(
     /** Selecting a folder selects the folder itself and opens its subcategories. */
     fun onCategorySelect(id: String) = _state.update {
         categoryTouched = true
-        it.copy(categoryId = id, categoryError = false, categoryGuessed = false).withCategoryOptions(allCategories, recentCategoryIds)
+        it.copy(categoryId = id, categoryError = false, categoryGuessed = false, categoryGuessSource = null).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }

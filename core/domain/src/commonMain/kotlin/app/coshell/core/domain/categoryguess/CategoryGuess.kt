@@ -42,6 +42,29 @@ object CategoryGuess {
             ?: mostFrequent(past) { noteKey != null && noteKey(it.note) == noteKey }
     }
 
+    /** Where a suggested category came from: the family's own past operations, or the brand dictionary (a payee never seen before). */
+    enum class Source { HISTORY, DICTIONARY }
+
+    class Suggestion(val categoryId: String, val source: Source)
+
+    /**
+     * History first ([guess]); for an expense nobody has recorded before — [BrandDictionary] by the payee, then by the first line of
+     * the note («Starbucks», «farmacia»). A payee the dictionary does not know gets nothing: the person chooses.
+     */
+    fun suggest(
+        history: List<Transaction>,
+        type: TransactionType,
+        categories: List<Category>,
+        payee: String? = null,
+        receiptKey: String? = null,
+        note: String = "",
+    ): Suggestion? {
+        guess(history, type, categories, payee, receiptKey, note)?.let { return Suggestion(it, Source.HISTORY) }
+        if (type != TransactionType.EXPENSE) return null
+        val icon = BrandDictionary.iconOf(payee) ?: BrandDictionary.iconOf(note.lineSequence().firstOrNull { it.isNotBlank() })
+        return BrandDictionary.categoryFor(icon, categories)?.let { Suggestion(it, Source.DICTIONARY) }
+    }
+
     private fun mostFrequent(past: List<Transaction>, matches: (Transaction) -> Boolean): String? {
         val found = past.filter(matches).mapNotNull { it.categoryId }
         if (found.isEmpty()) return null

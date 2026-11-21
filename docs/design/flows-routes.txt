@@ -50,3 +50,5 @@ BudgetsDestination	BudA
 BudgetDetailDestination	BudDetail
 BudgetEditDestination	BudEdit
 AiAddonDestination	AiOff
+NotesDestination	Notes586Input
+DraftsDestination	Notes586Drafts

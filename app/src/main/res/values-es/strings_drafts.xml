@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notas rápidas y Borradores (#586) -->
+    <string name="notes_title">Notas rápidas</string>
+    <string name="notes_label">Nota</string>
+    <string name="notes_placeholder">café 3500</string>
+    <string name="notes_hint">Cada línea es un gasto. La cuenta y el día son opcionales.</string>
+    <string name="notes_empty_hint">Escribe los gastos línea por línea, como «taxi 2000» o «ayer farmacia 4200». Luego toca «Procesar».</string>
+    <string name="notes_process">Procesar · %1$d</string>
+    <string name="notes_process_none">Procesar</string>
+    <string name="notes_processing">Procesando…</string>
+    <string name="notes_menu_hint">Gastos en líneas: café 3500</string>
+    <string name="drafts_title">Borradores</string>
+    <string name="drafts_title_count">Borradores · %1$d</string>
+    <string name="drafts_menu_hint">De las notas: revisa y registra</string>
+    <string name="drafts_strip_hint">Revisa y registra</string>
+    <string name="drafts_summary">Borradores: %1$d · listos: %2$d</string>
+    <string name="drafts_hint_ready">Toca una fila para corregirla.</string>
+    <string name="drafts_hint_unready">Toca una fila para añadir el importe o elegir una categoría.</string>
+    <string name="drafts_post">Registrar · %1$d</string>
+    <string name="drafts_post_none">Registrar</string>
+    <string name="drafts_posted">Registrados: %1$d</string>
+    <string name="drafts_missing_amount">Falta el importe</string>
+    <string name="drafts_missing_account">Elige una cuenta</string>
+    <string name="drafts_missing_category">Elige una categoría</string>
+    <string name="drafts_day_today">hoy</string>
+    <string name="drafts_day_yesterday">ayer</string>
+    <string name="drafts_untitled">Sin título</string>
+    <string name="drafts_category_ai">sugerido por la IA</string>
+    <string name="drafts_caption" translatable="false">%1$s · %2$s</string>
+    <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
+    <string name="drafts_empty">No hay borradores. Anota los gastos en «Notas rápidas» y aparecerán aquí.</string>
+    <string name="drafts_empty_action">Notas rápidas</string>
+</resources>

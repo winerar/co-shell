@@ -18,9 +18,9 @@ import kotlinx.coroutines.IO
     entities = [
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
-        SettingEntity::class, TagEntity::class, SyncExtraEntity::class,
+        SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class,
     ],
-    version = 16,
+    version = 17,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -38,6 +38,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 13, to = 14), // v14: templates.account_currency — payment in another currency (#415)
         AutoMigration(from = 14, to = 15), // v15: transactions.receipt_key — scanned receipt (#526)
         AutoMigration(from = 15, to = 16), // v16: budgets.zero_limit — a zero limit (#576)
+        AutoMigration(from = 16, to = 17), // v17: drafts — quick notes, device-only (#586)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
@@ -56,6 +57,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun wipeDao(): WipeDao
     abstract fun integrityDao(): IntegrityDao
     abstract fun reportDao(): ReportDao
+    abstract fun draftDao(): DraftDao
 
     companion object {
         const val FILE_NAME = "coshell.db"

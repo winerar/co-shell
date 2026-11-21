@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.core.domain.categoryguess.CategoryGuess
+import app.coshell.core.domain.drafts.DraftRepository
+import app.coshell.core.domain.drafts.InMemoryDraftRepository
+import app.coshell.core.model.DraftCategorySource
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.AccountRepository
@@ -74,6 +77,7 @@ class TransactionEditViewModel @Inject constructor(
     private val entryTags: EntryTags,
     private val entryTip: EntryTip,
     private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    private val drafts: DraftRepository = InMemoryDraftRepository(),
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -91,6 +95,9 @@ class TransactionEditViewModel @Inject constructor(
     /** «Провести» from «Скоро» (#143): the payment's day; applied with the route's template, cleared with it. */
     private var paymentDate: LocalDate? = savedStateHandle.get<String>(TransactionEditDestination.ARG_PAYMENT_DATE)
         ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+
+    /** A draft of a quick note from the route (#586): fills a new form once; saved — the draft is gone. */
+    private val draftId: String? = savedStateHandle[TransactionEditDestination.ARG_DRAFT_ID]
 
     /** Text with a receipt QR link from the route (#526); applied once to a new form, like the template. */
     private var pendingReceipt: String? = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_QR]
@@ -175,6 +182,38 @@ class TransactionEditViewModel @Inject constructor(
         pendingTemplateId = null
         if (transaction == null && template == null) pendingReceipt?.let { applyReceipt(it) }
         pendingReceipt = null
+        if (transaction == null && template == null) draftId?.let { applyDraft(it) }
+    }
+
+    /**
+     * A new form from a draft (#586): the amount, account, category, day and the line as the note. An amount in another currency
+     * than the account's goes to «Сумма покупки» (the debited sum follows from the rate, as with a receipt).
+     */
+    private suspend fun applyDraft(id: String) {
+        val draft = drafts.getDraft(id) ?: return
+        val source = draft.categorySource
+        _state.update { form ->
+            val accountId = draft.accountId?.takeIf { it in accountsById } ?: form.accountId
+            val sameCurrency = accountId == null || accountsById[accountId]?.currency == draft.currency
+            val typed = draft.money?.let { moneyFormat.formatForEditing(it) }.orEmpty()
+            form.copy(
+                type = TransactionType.EXPENSE,
+                accountId = accountId,
+                amount = if (sameCurrency) typed else "",
+                receiptEnabled = !sameCurrency && typed.isNotEmpty(),
+                receiptCurrency = if (!sameCurrency) draft.currency.value else "",
+                receiptAmount = if (!sameCurrency) typed else "",
+                categoryId = draft.categoryId?.takeIf { cid -> allCategories.any { it.id == cid } },
+                categoryGuessed = source == DraftCategorySource.HISTORY || source == DraftCategorySource.DICTIONARY,
+                categoryGuessSource = when (source) {
+                    DraftCategorySource.HISTORY -> CategoryGuess.Source.HISTORY
+                    DraftCategorySource.DICTIONARY -> CategoryGuess.Source.DICTIONARY
+                    else -> null
+                },
+                date = Instant.fromEpochMilliseconds(draft.dateMillis).toLocalDateTime(timeZone).date,
+                note = draft.title,
+            ).withDebitSuggestion(converter, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds)
+        }
     }
 
     // endregion
@@ -484,6 +523,7 @@ class TransactionEditViewModel @Inject constructor(
                         entryTemplates.used(id)
                         paymentDate?.let { entryTemplates.paid(id, it) }
                     }
+                    draftId?.let { drafts.deleteDrafts(listOf(it)) }
                     _state.update { it.copy(isDone = true) }
                 }
                 is SaveTransactionUseCase.Result.Invalid -> _state.update { it.copy(tip = null).withError(result.reason) }

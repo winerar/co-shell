@@ -77,6 +77,8 @@ import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.rates.list.RatesRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
+import app.coshell.drafts.list.DraftsRoute
+import app.coshell.drafts.notes.NotesRoute
 import app.coshell.recurring.list.RecurringListRoute
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
@@ -210,6 +212,7 @@ fun CoShellNavHost(
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
+                    onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                 ),
                 gate = if (locked) {
                     VersionGateBannerState(updateAvailable?.versionName, updateAvailable?.sizeBytes?.let(::megabytes))
@@ -277,6 +280,25 @@ fun CoShellNavHost(
                 onUse = { navController.navigate(TransactionEditDestination(templateId = it)) { launchSingleTop = true } },
                 onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
                 onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
+            )
+        }
+        screen<NotesDestination> {
+            NotesRoute(
+                onBack = { navController.popBackStack() },
+                // Two steps: the note, then its drafts; «назад» from the drafts goes past the note.
+                onDone = {
+                    navController.navigate(DraftsDestination) {
+                        popUpTo<NotesDestination> { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+            )
+        }
+        screen<DraftsDestination> {
+            DraftsRoute(
+                onBack = { navController.popBackStack() },
+                onEdit = { navController.navigate(TransactionEditDestination(draftId = it)) { launchSingleTop = true } },
+                onNotes = { navController.navigate(NotesDestination) { popUpTo<DraftsDestination> { inclusive = true }; launchSingleTop = true } },
             )
         }
         screen<RecurringListDestination> {

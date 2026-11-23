@@ -7,6 +7,7 @@ import app.coshell.core.data.auth.AuthManager
 import app.coshell.core.data.auth.FirebaseAuthApi
 import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.SyncDao
+import app.coshell.core.data.family.CurrentFamily
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.data.integrity.IntegrityCheck
 import app.coshell.core.data.remote.FirestoreClient
@@ -72,9 +73,13 @@ object SyncModule {
     @Provides
     fun provideSyncDao(db: CoShellDatabase): SyncDao = db.syncDao()
 
+    /** Id of the family this phone syncs with; [FamilyService] keeps it up to date (#661: many families). */
     @Provides @Singleton
-    fun provideSyncEngine(dao: SyncDao, client: FirestoreClient, clock: Clock, integrity: IntegrityCheck): SyncEngine =
-        SyncEngine(dao, FirestoreRemoteStore(client, FamilyRemote.FAMILY_ID), clock, integrity)
+    fun provideCurrentFamily(): CurrentFamily = CurrentFamily()
+
+    @Provides @Singleton
+    fun provideSyncEngine(dao: SyncDao, client: FirestoreClient, clock: Clock, integrity: IntegrityCheck, family: CurrentFamily): SyncEngine =
+        SyncEngine(dao, FirestoreRemoteStore(client) { family.require() }, clock, integrity)
 
     @Provides
     fun provideIntegrityCheck(db: CoShellDatabase): IntegrityCheck = IntegrityCheck(db.integrityDao())
@@ -89,14 +94,15 @@ object SyncModule {
         backup: BackupRepository,
         bell: FamilyBell,
         clock: Clock,
+        currentFamily: CurrentFamily,
     ): FamilyService {
         val writer = SafetyBackupWriter(context)
-        return FamilyService(isConfigured, auth, remote, dao, engine, backup, clock, bell) { writer.write(it) }
+        return FamilyService(isConfigured, auth, remote, dao, engine, backup, clock, bell, currentFamily) { writer.write(it) }
     }
 
     @Provides @Singleton
-    fun provideFamilyBell(http: HttpClient, auth: AuthManager): FamilyBell =
-        FamilyBell(http, UrlConnectionEventStream(), if (isConfigured) databaseUrl else "", auth)
+    fun provideFamilyBell(http: HttpClient, auth: AuthManager, family: CurrentFamily): FamilyBell =
+        FamilyBell(http, UrlConnectionEventStream(), if (isConfigured) databaseUrl else "", auth) { family.require() }
 
     @Provides
     fun provideOtherMembers(family: FamilyService): OtherMembers = OtherMembers { family.otherMemberNames() }

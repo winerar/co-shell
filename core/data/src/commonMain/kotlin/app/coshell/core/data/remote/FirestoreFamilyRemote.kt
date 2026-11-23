@@ -13,7 +13,8 @@ import kotlinx.serialization.json.put
 
 /**
  * `families/{id}`: `ownerUid`, `memberUids` (for rules), `members` (map uid → {name, email}), `createdAt`.
- * `invites/{email}`: `familyId`, `invitedBy`, `createdAt`. Layout must match firebase/firestore.rules.
+ * `invites/{email}`: `familyId`, `invitedBy`, `createdAt`. `users/{uid}`: `familyId`, `updatedAt` — which family the person is in.
+ * Layout must match firebase/firestore.rules.
  */
 class FirestoreFamilyRemote(private val client: FirestoreClient) : FamilyRemote {
 
@@ -30,6 +31,12 @@ class FirestoreFamilyRemote(private val client: FirestoreClient) : FamilyRemote 
         if (e.isPermissionDenied) null else throw e
     }
 
+    override suspend fun pointer(uid: String): String? = try {
+        client.get("users/$uid")?.let { FsFields.of(it).string("familyId") }
+    } catch (e: ApiException) {
+        if (e.isPermissionDenied) null else throw e
+    }
+
     override suspend fun create(familyId: String, me: Member): Boolean = try {
         client.commit(listOf(buildJsonObject {
             put("update", buildJsonObject {
@@ -42,7 +49,7 @@ class FirestoreFamilyRemote(private val client: FirestoreClient) : FamilyRemote 
             })
             put("currentDocument", buildJsonObject { put("exists", false) })
             put("updateTransforms", serverTime("createdAt"))
-        }))
+        }, pointerWrite(me.uid, familyId)))
         true
     } catch (e: ApiException) {
         // Exists already: the precondition fails, or rules deny it as an update.
@@ -65,7 +72,62 @@ class FirestoreFamilyRemote(private val client: FirestoreClient) : FamilyRemote 
                     put("appendMissingElements", buildJsonObject { put("values", buildJsonArray { add(fsString(me.uid)) }) })
                 })
             })
-        }))
+        }, pointerWrite(me.uid, invite.familyId),
+            // The invitation is used up (a removed person must not come back with it).
+            buildJsonObject { put("delete", client.name("invites/${normalizeEmail(invite.email)}")) }))
+    }
+
+    override suspend fun setPointer(uid: String, familyId: String) {
+        client.commit(listOf(pointerWrite(uid, familyId)))
+    }
+
+    override suspend fun remove(familyId: String, uid: String, me: String) {
+        val removal = buildJsonObject {
+            put("update", buildJsonObject { put("name", client.name("families/$familyId")) })
+            put("updateMask", buildJsonObject {
+                put("fieldPaths", buildJsonArray { add(kotlinx.serialization.json.JsonPrimitive("members.`$uid`")) })
+            })
+            put("currentDocument", buildJsonObject { put("exists", true) })
+            put("updateTransforms", buildJsonArray {
+                add(buildJsonObject {
+                    put("fieldPath", "memberUids")
+                    put("removeAllFromArray", buildJsonObject { put("values", buildJsonArray { add(fsString(uid)) }) })
+                })
+            })
+        }
+        client.commit(if (uid == me) listOf(removal, pointerDelete(uid)) else listOf(removal))
+    }
+
+    override suspend fun deleteFamily(familyId: String, me: String) {
+        // Records first (the rules check the family document while they exist), then invitations, then the family.
+        while (true) {
+            val names = client.runQuery("families/$familyId", recordNames()).mapNotNull { it["name"]?.jsonPrimitive?.content }
+            if (names.isEmpty()) break
+            client.commit(names.map { buildJsonObject { put("delete", it) } })
+        }
+        invites(familyId).forEach { cancelInvite(it.email) }
+        client.commit(listOf(buildJsonObject { put("delete", client.name("families/$familyId")) }, pointerDelete(me)))
+    }
+
+    override suspend fun clearPointer(uid: String) {
+        client.commit(listOf(pointerDelete(uid)))
+    }
+
+    private fun pointerWrite(uid: String, familyId: String) = buildJsonObject {
+        put("update", buildJsonObject {
+            put("name", client.name("users/$uid"))
+            put("fields", JsonObject(mapOf("familyId" to fsString(familyId))))
+        })
+        put("updateTransforms", serverTime("updatedAt"))
+    }
+
+    private fun pointerDelete(uid: String) = buildJsonObject { put("delete", client.name("users/$uid")) }
+
+    /** Names of up to [PAGE] records of the family (no fields: nothing to read but the names). */
+    private fun recordNames() = buildJsonObject {
+        put("from", buildJsonArray { add(buildJsonObject { put("collectionId", "records") }) })
+        put("select", buildJsonObject { put("fields", buildJsonArray { add(buildJsonObject { put("fieldPath", "__name__") }) }) })
+        put("limit", PAGE)
     }
 
     override suspend fun invite(familyId: String, email: String, invitedBy: String) {
@@ -120,5 +182,10 @@ class FirestoreFamilyRemote(private val client: FirestoreClient) : FamilyRemote 
     private fun parseInvite(email: String, doc: JsonObject): Invite? {
         val f = FsFields.of(doc)
         return Invite(email, f.string("familyId") ?: return null, f.string("invitedBy").orEmpty())
+    }
+
+    private companion object {
+        /** Deletes per commit (Firestore allows up to 500 writes). */
+        const val PAGE = 400
     }
 }

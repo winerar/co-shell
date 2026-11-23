@@ -56,6 +56,11 @@ class FirebaseAuthApi(
         )
     }
 
+    /** Deletes the account; Firebase may answer `CREDENTIAL_TOO_OLD_LOGIN_AGAIN` — then the person signs in again first. */
+    suspend fun deleteAccount(idToken: String) {
+        post("$identityHost/v1/accounts:delete?key=$apiKey", buildJsonObject { put("idToken", idToken) }.toString())
+    }
+
     private suspend fun post(url: String, body: String): JsonObject =
         FirestoreJson.parseToJsonElement(http.send(HttpRequest("POST", url, body)).orThrow().body).jsonObject
 

@@ -26,6 +26,7 @@ import app.coshell.family.components.JoinedBlock
 import app.coshell.family.components.NoAccessBlock
 import app.coshell.family.components.NotConfiguredBlock
 import app.coshell.family.components.OfflineBlock
+import app.coshell.family.components.RemovedBlock
 import app.coshell.family.components.SignedOutBlock
 import app.coshell.ui.top.ScreenTopBar
 
@@ -48,6 +49,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
                 FamilyState.SignedOut -> SignedOutBlock(state.isBusy, actions.onSignIn)
                 is FamilyState.Checking -> CheckingBlock(family.email)
                 is FamilyState.NoAccess -> NoAccessBlock(family.email, state.isBusy, actions)
+                is FamilyState.Removed -> RemovedBlock(state.isBusy, actions)
                 is FamilyState.Invited -> InvitedBlock(family.email, state.isBusy, actions)
                 is FamilyState.Offline -> OfflineBlock(family.email, state.isBusy, actions)
                 is FamilyState.Joined -> JoinedBlock(family, state, actions)

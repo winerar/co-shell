@@ -27,6 +27,8 @@ sealed interface FamilyMessage {
     /** An action failed; [kind] says why, as on the sync banner of «Обзора» (#124); [code] — server's answer. */
     data class ActionFailed(val kind: SyncIssueKind, val code: String? = null) : FamilyMessage
     data object InvalidEmail : FamilyMessage
+    /** Deleting the account needs a recent sign-in: sign in again and repeat. */
+    data object LoginAgain : FamilyMessage
     data class InviteSent(val email: String) : FamilyMessage { override val isError get() = false }
     data class Synced(val received: Int, val sent: Int) : FamilyMessage { override val isError get() = false }
 

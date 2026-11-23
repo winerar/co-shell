@@ -17,6 +17,8 @@ data class AccountEditUiState(
     /** Colour of the account's card (category palette), `null` — no colour. */
     val color: Long? = null,
     /** Last digits of the card or account as typed («Для чеков», #577); empty — not linked. */
+    /** A travel pass (#645): shown as the «Проездной» type, the balance on the card is checked by hand. */
+    val prepaid: Boolean = false,
     val cardDigits: String = "",
     val cardDigitsError: Boolean = false,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */

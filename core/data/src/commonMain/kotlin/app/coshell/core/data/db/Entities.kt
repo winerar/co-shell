@@ -32,6 +32,7 @@ data class AccountEntity(
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
     @ColumnInfo(name = "card_digits") val cardDigits: String? = null,
+    @ColumnInfo(defaultValue = "0") val prepaid: Boolean = false,
 )
 
 @Serializable

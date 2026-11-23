@@ -37,7 +37,7 @@ internal fun AccountsOrder(rows: List<AccountsUiState.Row>, onMove: (Int, Int) -
             ) {
                 CoShellListRow(
                     title = { Text(row.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                    supporting = { Text(stringResource(row.type.labelRes), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    supporting = { Text(stringResource(if (row.prepaid) R.string.account_type_prepaid else row.type.labelRes), maxLines = 1, overflow = TextOverflow.Ellipsis) },
                     leading = { AccountBadge(row.name, row.color) },
                     trailing = { DragHandle() },
                 )

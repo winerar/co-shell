@@ -33,6 +33,8 @@ data class AccountsUiState(
         /** Balance in the main report currency when it differs: «≈ 1 220 USD». */
         val converted: String? = null,
         val currency: String = "",
+        /** A travel pass (#645): its type reads «Проездной». */
+        val prepaid: Boolean = false,
         internal val money: Money? = null,
     )
 

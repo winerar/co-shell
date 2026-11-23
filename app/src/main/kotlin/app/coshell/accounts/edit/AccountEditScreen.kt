@@ -73,13 +73,13 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     )
                 }
                 MoneySection(state, actions)
-                AccountTypeSection(state.type, actions.onTypeChange)
+                AccountTypeSection(state.type, state.prepaid, actions.onTypeChange, actions.onPrepaidSelect)
                 ReceiptDigitsSection(state, actions)
                 AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
                 CoShellFormSection(stringResource(R.string.account_section_balance)) {
                     CoShellSwitchLine(
                         title = stringResource(R.string.account_included_in_total),
-                        subtitle = stringResource(R.string.account_included_in_total_short),
+                        subtitle = stringResource(if (state.prepaid) R.string.account_prepaid_total_hint else R.string.account_included_in_total_short),
                         checked = state.includedInTotal,
                         onCheckedChange = actions.onIncludedInTotalChange,
                     )

@@ -100,6 +100,31 @@ class AccountEditViewModelTest {
     }
 
     @Test
+    fun `a travel pass is saved as another account out of the total and another type clears it`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("SUBE")
+        vm.onPrepaidSelect()
+        assertTrue(vm.state.value.prepaid)
+        assertEquals(AccountType.OTHER, vm.state.value.type)
+        assertFalse(vm.state.value.includedInTotal)
+        vm.onInitialBalanceChange("2 400")
+        vm.save()
+
+        val saved = accounts.getAccount("new")!!
+        assertTrue(saved.prepaid)
+        assertEquals(AccountType.OTHER, saved.type)
+        assertTrue(saved.excludedFromTotal)
+        assertEquals(240_000, saved.initialBalanceMinor)
+
+        val again = viewModel("new")
+        assertTrue(again.state.value.prepaid)
+        again.onTypeChange(AccountType.CARD)
+        assertFalse(again.state.value.prepaid)
+        again.save()
+        assertFalse(accounts.getAccount("new")!!.prepaid)
+    }
+
+    @Test
     fun `new account outside the totals currencies asks for the currency pill`() = runTest {
         val vm = viewModel()
         vm.onNameChange("Pesos")

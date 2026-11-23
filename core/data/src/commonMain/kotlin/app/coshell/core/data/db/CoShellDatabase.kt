@@ -20,7 +20,7 @@ import kotlinx.coroutines.IO
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class,
     ],
-    version = 18,
+    version = 19,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -40,6 +40,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 15, to = 16), // v16: budgets.zero_limit — a zero limit (#576)
         AutoMigration(from = 16, to = 17), // v17: drafts — quick notes, device-only (#586)
         AutoMigration(from = 17, to = 18), // v18: accounts.card_digits — a bank receipt finds its account (#577)
+        AutoMigration(from = 18, to = 19), // v19: accounts.prepaid — a travel pass (#645)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)

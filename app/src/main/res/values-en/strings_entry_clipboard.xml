@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="entry_paste_clipboard">Paste from clipboard</string>
+    <string name="entry_clipboard_none">No amount in the clipboard. Copy text that has one.</string>
+    <string name="entry_clipboard_none_close">Close</string>
+</resources>

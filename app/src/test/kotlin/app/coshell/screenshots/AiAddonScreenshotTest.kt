@@ -31,6 +31,8 @@ class AiAddonScreenshotTest {
 
     @Test fun `off light`() = shot("ai_addon_light") { AiAddonScreen(AiAddonUiState(), AiAddonActions()) }
 
+    @Test fun `step 1 download dark`() = shot("ai_addon_addon_loading_dark", dark = true) { AiAddonScreen(STEP1_LOAD, AiAddonActions()) }
+
     @Test fun `step 2 dark`() = shot("ai_addon_loading_dark", dark = true) { AiAddonScreen(STEP2, AiAddonActions()) }
 
     @Test fun `step 2 light`() = shot("ai_addon_loading_light") { AiAddonScreen(STEP2, AiAddonActions()) }
@@ -59,6 +61,7 @@ class AiAddonScreenshotTest {
     }
 
     private companion object {
+        val STEP1_LOAD = AiAddonUiState(AiAddonStage.STEP_ADDON, progress = 0.4f, doneMb = 8, totalMb = 20)
         val STEP2 = AiAddonUiState(AiAddonStage.STEP_MODEL, progress = 0.42f, doneMb = 1_060, totalMb = 2_500)
     }
 }

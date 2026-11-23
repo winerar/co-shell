@@ -79,11 +79,19 @@ class AiDownloadService : Service() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
             val (text, percent) = when (phase) {
-                is AiAddonPhase.InstallingAddon -> context.getString(R.string.ai_download_step1) to ((phase.progress ?: 0f) * 100).toInt()
+                is AiAddonPhase.InstallingAddon -> {
+                    val progress = phase.progress
+                    val percent = ((progress ?: 0f) * 100).toInt()
+                    val line = if (progress != null && phase.total > 0) {
+                        megabytes(context, (phase.total * progress).toLong(), phase.total, percent)
+                    } else {
+                        context.getString(R.string.ai_download_step1)
+                    }
+                    line to percent
+                }
                 is AiAddonPhase.DownloadingModel -> {
-                    val number = NumberFormat.getIntegerInstance()
                     val percent = if (phase.total > 0) (phase.done * 100 / phase.total).toInt() else 0
-                    val line = if (phase.total > 0) context.getString(R.string.ai_progress, number.format(phase.done / MB), number.format(phase.total / MB), percent) else context.getString(R.string.ai_step2_title)
+                    val line = if (phase.total > 0) megabytes(context, phase.done, phase.total, percent) else context.getString(R.string.ai_step2_title)
                     line to percent
                 }
                 else -> "" to 0
@@ -105,6 +113,18 @@ class AiDownloadService : Service() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
             val channel = NotificationChannel(CHANNEL, context.getString(R.string.ai_download_channel), NotificationManager.IMPORTANCE_LOW)
             context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        }
+
+        /** «1 060 из 2 500 МБ · 42 % · осталось 1 440 МБ» — the same words as the screen. */
+        private fun megabytes(context: Context, done: Long, total: Long, percent: Int): String {
+            val number = NumberFormat.getIntegerInstance()
+            val doneMb = done / MB
+            val totalMb = total / MB
+            return context.getString(
+                R.string.settings_join,
+                context.getString(R.string.ai_progress, number.format(doneMb), number.format(totalMb), percent),
+                context.getString(R.string.ai_left, number.format((totalMb - doneMb).coerceAtLeast(0))),
+            )
         }
 
         private const val MB = 1_000_000L

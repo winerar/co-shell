@@ -121,10 +121,15 @@ private fun StatusCard(state: AiAddonUiState) {
 private fun Bar(state: AiAddonUiState) {
     val fraction = state.progress
     if (fraction == null) CoShellLinearProgress() else CoShellLinearProgress({ fraction })
-    if (state.stage == AiAddonStage.STEP_MODEL && state.totalMb > 0) {
+    if (state.totalMb > 0) {
         val number = NumberFormat.getIntegerInstance()
         Text(
             stringResource(R.string.ai_progress, number.format(state.doneMb), number.format(state.totalMb), ((fraction ?: 0f) * 100).toInt()),
+            style = MaterialTheme.typography.bodySmall,
+            color = LocalHeroPalette.current.hint,
+        )
+        Text(
+            stringResource(R.string.ai_left, number.format(state.leftMb)),
             style = MaterialTheme.typography.bodySmall,
             color = LocalHeroPalette.current.hint,
         )

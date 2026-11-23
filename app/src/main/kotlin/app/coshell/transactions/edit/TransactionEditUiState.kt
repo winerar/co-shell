@@ -77,6 +77,8 @@ data class TransactionEditUiState(
     val scan: ScanUi? = null,
     /** A shared receipt was not recognised (#561, board «RcUnreadA»): «Ввести вручную» or «Отправить образец». */
     val receiptUnread: Boolean = false,
+    /** A bank receipt names a card the app does not know yet (#577, board «ReceiptWhichAccount»): «Какой это счёт?». */
+    val receiptAccountAsk: ReceiptAccountAsk? = null,
     /** «Вставить из буфера» found no amount in the text (#321): the pill under the row. */
     val clipboardNone: Boolean = false,
     /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */

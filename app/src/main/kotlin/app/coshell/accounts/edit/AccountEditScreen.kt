@@ -22,6 +22,7 @@ import app.coshell.accounts.edit.components.AccountTypeSection
 import app.coshell.accounts.edit.components.BalanceSavedPill
 import app.coshell.accounts.edit.components.BankPresets
 import app.coshell.accounts.edit.components.MoneySection
+import app.coshell.accounts.edit.components.ReceiptDigitsSection
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellSwitchLine
@@ -73,6 +74,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                 }
                 MoneySection(state, actions)
                 AccountTypeSection(state.type, actions.onTypeChange)
+                ReceiptDigitsSection(state, actions)
                 AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
                 CoShellFormSection(stringResource(R.string.account_section_balance)) {
                     CoShellSwitchLine(

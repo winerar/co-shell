@@ -18,4 +18,15 @@
     <string name="receipt_unread_title">Не удалось прочитать чек</string>
     <string name="receipt_unread_text">Такой формат приложение пока не знает. Отправьте образец — научим. Запись можно внести вручную.</string>
     <string name="receipt_unread_send">Отправить образец</string>
+    <string name="receipt_account_title">Какой это счёт?</string>
+    <string name="receipt_account_hint">В чеке карта …%1$s. Выберите счёт, и в следующий раз чек найдёт его сам.</string>
+    <string name="receipt_account_hint_to">В чеке счёт зачисления …%1$s. Выберите счёт, и в следующий раз чек найдёт его сам.</string>
+    <string name="account_digits_section">Для чеков</string>
+    <string name="account_digits_tile">Последние цифры карты или счёта</string>
+    <string name="account_digits_empty">Не заданы</string>
+    <string name="account_digits_sheet_title">Цифры карты или счёта</string>
+    <string name="account_digits_sheet_sub">По ним чек из банка найдёт этот счёт. Пусто — счёт не привязан.</string>
+    <string name="account_digits_field">Последние цифры</string>
+    <string name="account_digits_field_hint">Из чека банка: «4083********3900» → 3900</string>
+    <string name="account_digits_error">Введите четыре цифры.</string>
 </resources>

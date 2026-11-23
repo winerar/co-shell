@@ -1,6 +1,7 @@
 package app.coshell.core.domain.receipts
 
 import app.coshell.core.domain.quickentry.AmountInText
+import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import kotlinx.datetime.LocalDate
@@ -38,7 +39,7 @@ object AmeriabankFormat : ReceiptFormat {
         val details = lines.firstNotNullOfOrNull { DETAILS.find(it)?.groupValues?.get(1) }.orEmpty()
         val merchant = merchantOf(details) ?: lines.firstNotNullOfOrNull { PAYEE.find(it)?.groupValues?.get(1) } ?: "Ameriabank"
         val key = "$id:$date:$debit:${total.amountMinor}:${details.substringAfter(':', details).filter { it.isLetterOrDigit() }.take(40).lowercase()}"
-        return Receipt(total = total, date = date, merchant = merchant, key = key, format = id)
+        return Receipt(total = total, date = date, merchant = merchant, key = key, format = id, debitDigits = Account.digitsOf(debit))
     }
 
     /** «Ք: Spotify P4856C4BE6 STOCKHOLM 75» → «Spotify»: words up to the first one with a digit (a terminal code). */

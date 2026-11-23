@@ -80,6 +80,7 @@ class AccountEditViewModel @Inject constructor(
                     archived = account.archived,
                     includedInTotal = !account.excludedFromTotal,
                     color = account.color,
+                    cardDigits = account.cardDigits.orEmpty(),
                     shared = account.isShared,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
@@ -134,6 +135,10 @@ class AccountEditViewModel @Inject constructor(
     fun onIncludedInTotalChange(value: Boolean) = _state.update { it.copy(includedInTotal = value) }
 
     fun onColorChange(value: Long?) = _state.update { it.copy(color = value) }
+
+    /** «Для чеков» (#577): only digits, at most [Account.CARD_DIGITS] of them. */
+    fun onCardDigitsChange(value: String) =
+        _state.update { it.copy(cardDigits = value.filter { c -> c in '0'..'9' }.take(Account.CARD_DIGITS), cardDigitsError = false) }
 
     fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
 
@@ -214,8 +219,14 @@ class AccountEditViewModel @Inject constructor(
             }
             return null
         }
+        val digits = form.cardDigits.trim()
+        if (digits.isNotEmpty() && digits.length != Account.CARD_DIGITS) {
+            _state.update { it.copy(cardDigitsError = true) }
+            return null
+        }
         val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
         return base.copy(
+            cardDigits = digits.ifEmpty { null },
             name = name,
             currency = currency,
             type = form.type,

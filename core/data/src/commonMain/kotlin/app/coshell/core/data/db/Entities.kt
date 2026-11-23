@@ -31,6 +31,7 @@ data class AccountEntity(
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @ColumnInfo(name = "card_digits") val cardDigits: String? = null,
 )
 
 @Serializable

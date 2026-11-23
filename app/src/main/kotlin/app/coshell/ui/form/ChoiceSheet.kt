@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
+import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellSearchField
@@ -43,6 +44,8 @@ data class ChoiceOption<T>(
     val hasBadge: Boolean = icon != null || color != null,
     val indent: Boolean = false,
     val parent: String? = null,
+    /** An account (#577): its badge — the same as in «Счета» — instead of the category one. */
+    val accountName: String? = null,
 )
 
 /**
@@ -112,10 +115,11 @@ internal fun <T> ColumnScope.ChoiceRows(
             CoShellListRow(
                 title = { Text(option.label, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                 supporting = option.subtitle?.let { { Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis) } },
-                leading = if (option.hasBadge) {
+                leading = if (option.hasBadge || option.accountName != null) {
                     {
                         // A subcategory: a smaller badge, shifted under its parent's — as on the «Категории» screen.
-                        if (option.indent) CategoryBadge(option.icon, option.color, Modifier.padding(start = Spacing.xl), size = Sizes.badgeSmall)
+                        if (option.accountName != null) AccountBadge(option.accountName, option.color)
+                        else if (option.indent) CategoryBadge(option.icon, option.color, Modifier.padding(start = Spacing.xl), size = Sizes.badgeSmall)
                         else CategoryBadge(option.icon, option.color)
                     }
                 } else {

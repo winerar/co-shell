@@ -20,8 +20,11 @@ sealed interface AiAddonPhase {
     /** Nothing installed, or the model is gone. */
     data object Off : AiAddonPhase
 
-    /** Step 1: [progress] of the add-on's APK (0..1) while it downloads, `null` while Android asks the person to install it. */
-    data class InstallingAddon(val progress: Float?) : AiAddonPhase
+    /**
+     * Step 1: [progress] of the add-on's APK (0..1) while it downloads, `null` while Android asks the person to install it;
+     * [total] — the APK's size in bytes (`0` — not known), for «3 из 20 МБ».
+     */
+    data class InstallingAddon(val progress: Float?, val total: Long = 0) : AiAddonPhase
 
     /** Step 2: the model is coming ([total] is `0` until known). */
     data class DownloadingModel(val done: Long, val total: Long) : AiAddonPhase
@@ -104,7 +107,7 @@ class AiAddonController(
         mutable.value = AiAddonState(AiAddonPhase.InstallingAddon(0f))
         val release = addon.latest() ?: return fail(AiAddonProblem.NO_ADDON_FILE).let { false }
         val file = try {
-            addon.download(release) { p -> mutable.value = AiAddonState(AiAddonPhase.InstallingAddon(p)) }
+            addon.download(release) { p -> mutable.value = AiAddonState(AiAddonPhase.InstallingAddon(p, release.sizeBytes)) }
         } catch (e: java.io.IOException) {
             return fail(AiAddonProblem.DOWNLOAD_FAILED).let { false }
         }

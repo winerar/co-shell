@@ -14,6 +14,7 @@
     <string name="ai_on_text">Works without internet. Takes 2.5 GB.</string>
     <string name="ai_on_chip">ready</string>
     <string name="ai_progress">%1$s of %2$s MB · %3$d%%</string>
+    <string name="ai_left">%1$s MB left</string>
     <string name="ai_fact_size">Size</string>
     <string name="ai_fact_size_text">Add-on 20 MB + model 2.5 GB</string>
     <string name="ai_fact_memory">Phone memory</string>

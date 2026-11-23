@@ -14,6 +14,7 @@
     <string name="ai_on_text">Funciona sin internet. Ocupa 2,5 GB.</string>
     <string name="ai_on_chip">lista</string>
     <string name="ai_progress">%1$s de %2$s MB · %3$d %%</string>
+    <string name="ai_left">faltan %1$s MB</string>
     <string name="ai_fact_size">Tamaño</string>
     <string name="ai_fact_size_text">Complemento 20 MB + modelo 2,5 GB</string>
     <string name="ai_fact_memory">Memoria del teléfono</string>

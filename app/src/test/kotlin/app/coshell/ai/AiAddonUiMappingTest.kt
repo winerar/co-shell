@@ -18,6 +18,16 @@ class AiAddonUiMappingTest {
     }
 
     @Test
+    fun `the add-on step counts megabytes too, and what is left`() {
+        val addon = AiAddonState(AiAddonPhase.InstallingAddon(0.4f, 20_000_000)).toUi(false)
+        assertEquals(8L, addon.doneMb)
+        assertEquals(20L, addon.totalMb)
+        assertEquals(12L, addon.leftMb)
+        assertEquals(1_440L, AiAddonState(AiAddonPhase.DownloadingModel(1_060_000_000, 2_500_000_000)).toUi(false).leftMb)
+        assertEquals(0L, AiAddonState(AiAddonPhase.InstallingAddon(null, 20_000_000)).toUi(false).totalMb)
+    }
+
+    @Test
     fun `a size not known yet has no bar`() {
         assertEquals(null, AiAddonState(AiAddonPhase.DownloadingModel(0, 0)).toUi(false).progress)
     }

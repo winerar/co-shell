@@ -622,8 +622,17 @@
       "page": "screens",
       "radius": 28
     },
-    "AiStep2.dc.html": {
+    "AiStep1Load.dc.html": {
       "x": 940,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "ИИ на телефоне: шаг 1, скачивание дополнения",
+      "page": "screens",
+      "radius": 28
+    },
+    "AiStep2.dc.html": {
+      "x": 1410,
       "y": 9920,
       "w": 390,
       "h": 844,
@@ -632,7 +641,7 @@
       "radius": 28
     },
     "AiOn.dc.html": {
-      "x": 1410,
+      "x": 1880,
       "y": 9920,
       "w": 390,
       "h": 844,
@@ -641,7 +650,7 @@
       "radius": 28
     },
     "AiData.dc.html": {
-      "x": 1880,
+      "x": 2350,
       "y": 9920,
       "w": 390,
       "h": 844,
@@ -650,7 +659,7 @@
       "radius": 28
     },
     "AiWeak.dc.html": {
-      "x": 2350,
+      "x": 2820,
       "y": 9920,
       "w": 390,
       "h": 844,
@@ -2988,6 +2997,7 @@
     "FeedbackError.dc.html",
     "AiOff.dc.html",
     "AiStep1.dc.html",
+    "AiStep1Load.dc.html",
     "AiStep2.dc.html",
     "AiOn.dc.html",
     "AiData.dc.html",
@@ -3380,7 +3390,7 @@
       "text": "ИИ на телефоне",
       "x": 0,
       "y": 9670,
-      "maxW": 2740,
+      "maxW": 3210,
       "w": 240
     },
     "row9": {

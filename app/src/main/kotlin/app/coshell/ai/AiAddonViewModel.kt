@@ -45,7 +45,15 @@ class AiAddonViewModel @Inject constructor(
 /** The phase for the «Настройки» row and the screen alike. */
 internal fun AiAddonState.toUi(askData: Boolean): AiAddonUiState = when (val p = phase) {
     AiAddonPhase.Off -> AiAddonUiState(AiAddonStage.OFF, problem = problem, askData = askData)
-    is AiAddonPhase.InstallingAddon -> AiAddonUiState(AiAddonStage.STEP_ADDON, progress = p.progress)
+    is AiAddonPhase.InstallingAddon -> {
+        val measured = p.progress != null && p.total > 0
+        AiAddonUiState(
+            AiAddonStage.STEP_ADDON,
+            progress = p.progress,
+            doneMb = if (measured) (p.total * (p.progress ?: 0f)).toLong() / MB else 0,
+            totalMb = if (measured) p.total / MB else 0,
+        )
+    }
     is AiAddonPhase.DownloadingModel -> {
         val fraction = if (p.total > 0) (p.done.toFloat() / p.total).coerceIn(0f, 1f) else null
         AiAddonUiState(AiAddonStage.STEP_MODEL, fraction, p.done / MB, p.total / MB)

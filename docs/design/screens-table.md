@@ -47,6 +47,7 @@
 | Настройки: данные и копия | Set1Data | settings_data | ✓ | ✓ |
 | ИИ на телефоне | AiOff | ai_addon | ✓ | ✓ |
 | ИИ на телефоне: шаги | AiStep2 | ai_addon_loading | ✓ | ✓ |
+| ИИ на телефоне: скачивание дополнения | AiStep1Load | ai_addon_addon_loading | — | ✓ |
 | ИИ на телефоне: включён | AiOn | ai_addon_on | ✓ | ✓ |
 | ИИ на телефоне: слабый телефон | AiWeak | ai_addon_weak | ✓ | ✓ |
 | Резервная копия | Backup | backup | ✓ | ✓ |
@@ -73,6 +74,7 @@
 
 ## Без полного набора эталонов
 
+- ИИ на телефоне: скачивание дополнения (ai_addon_addon_loading: light)
 
 ## Сверка 1 в 1 (2026-11-16)
 

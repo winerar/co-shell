@@ -5,8 +5,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,6 +18,7 @@ import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.model.TransactionType
 import app.coshell.templates.strip.TemplateStripViewModel
 import app.coshell.transactions.edit.tip.TipUi
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import app.coshell.gate.LocalInputLock
 
@@ -35,6 +39,9 @@ fun TransactionEditRoute(
     val lock = LocalInputLock.current
     val haptics = LocalHapticFeedback.current
     val addConfirm = LocalAddConfirm.current
+    val clipboard = LocalClipboard.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var saving by remember { mutableStateOf(false) }
     LaunchedEffect(state.isDone) {
         if (!state.isDone) return@LaunchedEffect
@@ -78,6 +85,10 @@ fun TransactionEditRoute(
             onPaymentSkip = lock.guard(viewModel::onPaymentSkip),
             onAllTemplates = onAllTemplates,
             onScanReceipt = onScanReceipt,
+            onPasteClipboard = {
+                scope.launch { viewModel.onPasteText(clipboard.getClipEntry()?.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.coerceToText(context)?.toString()) }
+            },
+            onClipboardNoneDismiss = viewModel::onClipboardNoneDismiss,
             onNewTemplate = onNewTemplate,
             onSaveAsTemplate = lock.guard2(viewModel::saveAsTemplate),
             onTagToggle = viewModel::onTagToggle,
@@ -136,6 +147,9 @@ data class TransactionEditActions(
     val onPaymentSkip: () -> Unit = {},
     val onAllTemplates: () -> Unit = {},
     val onScanReceipt: () -> Unit = {},
+    /** «Вставить из буфера» (#321): the screen reads the clipboard on the tap. */
+    val onPasteClipboard: () -> Unit = {},
+    val onClipboardNoneDismiss: () -> Unit = {},
     val onNewTemplate: () -> Unit = {},
     val onSaveAsTemplate: (name: String, rememberAmount: Boolean) -> Unit = { _, _ -> },
     /** A tag pill or a row of the «Теги» sheet (#293). */

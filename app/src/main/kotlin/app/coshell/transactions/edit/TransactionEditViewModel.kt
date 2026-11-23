@@ -16,6 +16,7 @@ import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.designsystem.components.keypad.AmountKeys
+import app.coshell.core.domain.quickentry.AmountInText
 import app.coshell.core.domain.quickentry.TipPrefs
 import app.coshell.core.domain.quickentry.Tips
 import app.coshell.core.domain.recurring.autoPaymentId
@@ -27,6 +28,7 @@ import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
 import app.coshell.core.model.Currencies
+import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
@@ -238,6 +240,34 @@ class TransactionEditViewModel @Inject constructor(
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
     }
+
+    /**
+     * «Вставить из буфера» (#321): [text] is what the clipboard held, read on the tap. A receipt of a known format fills the sheet
+     * as a share does; otherwise the amount, its currency and the rest of the line (the note) are taken from the text.
+     */
+    fun onPasteText(text: String?) {
+        viewModelScope.launch {
+            val body = text?.trim().orEmpty()
+            if (body.isNotEmpty() && ReceiptFormats.read(body) != null) {
+                applyReceipt(body)
+                _state.update { it.copy(clipboardNone = false) }
+                return@launch
+            }
+            val accountCurrency = _state.value.accountId?.let { accountsById[it]?.currency }
+            val fallback = accountCurrency ?: accountsById.values.firstOrNull()?.currency ?: CurrencyCode("USD")
+            val found = body.takeIf { it.isNotEmpty() }
+                ?.let { AmountInText.find(it, fallback, known = accountsById.values.map { a -> a.currency }.toSet()) }
+            _state.update { form ->
+                if (found == null) form.copy(clipboardNone = true)
+                else form.withClipboardAmount(found, accountCurrency, moneyFormat)
+                    .withDebitSuggestion(converter, moneyFormat)
+                    .withGuessedCategory()
+                    .withCategoryOptions(allCategories, recentCategoryIds)
+            }
+        }
+    }
+
+    fun onClipboardNoneDismiss() = _state.update { it.copy(clipboardNone = false) }
 
     /** «Ввести вручную» or «Отправить образец» in «Не удалось прочитать чек» (#561): the window closes. */
     fun onReceiptUnreadDismiss() = _state.update { it.copy(receiptUnread = false) }

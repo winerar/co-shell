@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="entry_paste_clipboard">Pegar del portapapeles</string>
+    <string name="entry_clipboard_none">No hay un importe en el portapapeles. Copia un texto que lo tenga.</string>
+    <string name="entry_clipboard_none_close">Cerrar</string>
+</resources>

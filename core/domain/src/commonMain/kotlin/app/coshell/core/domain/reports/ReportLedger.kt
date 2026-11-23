@@ -55,6 +55,19 @@ class ReportLedger(
     fun spentByAuthor(from: LocalDate, toExclusive: LocalDate): Map<String?, CategorySums> =
         spending.groupBy { it.authorId }.mapValues { (_, entries) -> sum(entries, from, toExclusive) }
 
+    /** Net spending of each day in [from] ..< [toExclusive] (#553); days without operations are absent. */
+    fun spentByDay(from: LocalDate, toExclusive: LocalDate): DaySums {
+        val sums = linkedMapOf<LocalDate, Money>()
+        val missing = linkedSetOf<CurrencyCode>()
+        for (e in spending) {
+            if (e.day < from || e.day >= toExclusive) continue
+            val rate = book.find(e.amount.currency, currency, e.day)?.rate
+            if (rate == null) { missing += e.amount.currency; continue }
+            sums[e.day] = (sums[e.day] ?: Money.zero(currency)) + rate.convert(e.amount, currency)
+        }
+        return DaySums(sums, missing)
+    }
+
     fun spent(period: BudgetPeriod): CategorySums = spent(period.start, period.endExclusive)
 
     fun earned(period: BudgetPeriod): CategorySums = earned(period.start, period.endExclusive)

@@ -130,4 +130,10 @@ object Sizes {
 
     /** A control row (arrows + month + pill) is split in two below this width × the font scale (#379). */
     val narrowRow = 340.dp
+
+    /** A day of [app.coshell.core.designsystem.components.CoShellHeatGrid] (#553): 48 dp, a thumb-size target. */
+    val heatCell = 48.dp
+    val heatSwatch = 18.dp
+    val heatTodayRing = 1.5.dp
+    val heatSelectedRing = 2.dp
 }

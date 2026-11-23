@@ -80,6 +80,36 @@ def reports_scrolled():
     return head + '<div style="padding: 0 16px;">%s</div>' % (months + income) + nav_tabs('rep', REP_TABS)
 
 
+CAL = {2: 1, 3: 3, 4: 0, 5: 3, 6: 2, 7: 4, 8: 1, 9: 2, 10: 3, 12: 2, 13: 1, 14: 4, 15: 2, 16: 3, 18: 3, 19: 2, 20: 4, 21: 1, 22: 2, 23: 3}
+
+
+def heat_cell(d, lv, today=False, sel=False, quiet=False):
+    bg = 'transparent' if quiet else (mix(LIME, [0, 18, 38, 62, 100][lv]) if lv else mix(CYAN, 10))
+    ring = ('box-shadow: inset 0 0 0 2px %s;' % INK) if sel else (('box-shadow: inset 0 0 0 1.5px %s;' % INK) if today else '')
+    return ('<span style="height: 44px; border-radius: 16px; background: %s; %s display: flex; align-items: center; justify-content: center; font-size: 14px; color: %s; opacity: %s;">%d</span>'
+            % (bg, ring, MUTED if quiet else INK, '0.55' if quiet else '1', d))
+
+
+def calendar_card(sel=18):
+    head = ''.join('<span style="text-align: center; font-size: 12px; color: %s;">%s</span>' % (MUTED, w) for w in 'ПВСЧПСВ')
+    blanks = '<span></span>' * 6
+    cells = ''.join(heat_cell(d, CAL.get(d, 0), today=d == 23, sel=d == sel, quiet=d > 23) for d in range(1, 31))
+    legend = ''.join('<span style="width: 18px; height: 18px; border-radius: 8px; background: %s;"></span>' % mix(LIME, q) for q in (18, 38, 62, 100))
+    grid = '<div style="margin-top: 10px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px;">%s%s%s</div>' % (head, blanks, cells)
+    foot = ('<div style="margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;"><span>меньше</span>%s<span>больше</span>'
+            '<span style="flex-grow: 1; text-align: right;">без трат: 4 дня</span></div>' % (MUTED, legend))
+    return chart_card('Календарь трат', 'нажмите на день', grid + foot)
+
+
+def reports_calendar():
+    """#553 «А»: «Календарь» — the second tab of «Отчёты»; the tapped day's operations under the grid."""
+    from mockup_screens_main import tx
+    ops = card(day('СРЕДА, 18 НОЯБРЯ', '−44', 'USD') + tx('Продукты', 'Карта · Диа', '−28,40', 'USD', 'e', 'cart', CYAN)
+               + tx('Кафе', 'Наличные · Миша', '−9,60', 'USD', 'e', 'cafe', CYAN) + tx('Такси', 'Карта · Диа', '−6,00', 'USD', 'e', 'taxi', CYAN))
+    return tab_page('Отчёты', segmented(['Обзор', 'Календарь'], 'Календарь') + month_switch('Ноябрь 2026', 'USD') + calendar_card()
+                    + '<div style="margin-top: 10px;">%s</div>' % ops, 'rep', REP_TABS)
+
+
 def drill():
     from mockup_screens_main import tx
     bars = chart_card('Дом за ноябрь', '290 USD · 38% трат', ''.join(
@@ -121,4 +151,5 @@ BOARDS = [  # name, title, fn, row key
     ('RepPeriod', 'Период и валюта — шторка', period_sheet, 'rep'),
     ('RepPast', 'Прошлый месяц: столбики до текущего (#568 А)', reports_past, 'rep'),
     ('RepScrolled', 'Прокрутили: период и стрелки в шапке (#568 Б)', reports_scrolled, 'rep'),
+    ('RepCalendar', 'Календарь трат: вкладка «Календарь», день — под сеткой (#553 А)', reports_calendar, 'rep'),
 ]

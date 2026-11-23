@@ -73,7 +73,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     )
                 }
                 MoneySection(state, actions)
-                AccountTypeSection(state.type, state.prepaid, actions.onTypeChange, actions.onPrepaidSelect)
+                AccountTypeSection(state.type, state.prepaid, state.credit, actions.onTypeChange, actions.onPrepaidSelect, actions.onCreditSelect)
                 ReceiptDigitsSection(state, actions)
                 AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
                 CoShellFormSection(stringResource(R.string.account_section_balance)) {

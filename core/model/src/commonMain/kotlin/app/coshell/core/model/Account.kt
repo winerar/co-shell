@@ -27,6 +27,11 @@ data class Account(
      * app, which cannot read a new type, still shows the account.
      */
     val prepaid: Boolean = false,
+    /**
+     * A credit card (#686): its conditions; `null` — an ordinary account. Stored as type [AccountType.OTHER] + these fields for the same
+     * reason as [prepaid]: an older version cannot read a new type. The balance is the debt when it is negative.
+     */
+    val credit: CreditTerms? = null,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

@@ -15,13 +15,21 @@ import app.coshell.core.designsystem.components.CoShellFormSection
 /** «Тип» (#290): the account type as small pills — all five on one line (cash, card, deposit…) in a form card. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun AccountTypeSection(selected: AccountType, prepaid: Boolean, onSelect: (AccountType) -> Unit, onPrepaid: () -> Unit) {
+internal fun AccountTypeSection(
+    selected: AccountType,
+    prepaid: Boolean,
+    credit: Boolean,
+    onSelect: (AccountType) -> Unit,
+    onPrepaid: () -> Unit,
+    onCredit: () -> Unit,
+) {
     CoShellFormSection(stringResource(R.string.account_type)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.xs), verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
             AccountType.entries.forEach { type ->
-                CoShellChoicePill(stringResource(type.labelRes), selected == type && !prepaid, onClick = { onSelect(type) })
+                CoShellChoicePill(stringResource(type.labelRes), selected == type && !prepaid && !credit, onClick = { onSelect(type) })
             }
             CoShellChoicePill(stringResource(R.string.account_type_prepaid), prepaid, onClick = onPrepaid)
+            CoShellChoicePill(stringResource(R.string.account_type_credit), credit, onClick = onCredit)
         }
     }
 }

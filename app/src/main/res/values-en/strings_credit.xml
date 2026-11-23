@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type_credit">Credit card</string>
+    <string name="account_type_credit_full">Credit card</string>
+    <string name="account_credit_terms">Card terms</string>
+    <string name="account_credit_summary">Limit %1$s · due day %2$s · %3$s</string>
+    <string name="account_credit_min_percent">min %1$s%%</string>
+    <string name="account_credit_min_sum">min %1$s</string>
+    <string name="account_credit_empty">Not set</string>
+    <string name="account_credit_limit">Credit limit</string>
+    <string name="account_credit_pay_day">Due by (day of the month)</string>
+    <string name="account_credit_min_percent_tab">% of debt</string>
+    <string name="account_credit_min_sum_tab">Amount</string>
+    <string name="account_credit_min_label">Minimum payment</string>
+    <string name="account_credit_min_hint">An amount or a percent — as in the contract</string>
+    <string name="account_credit_error">Enter the limit, the day of the month (1–31) and the minimum payment.</string>
+    <string name="account_credit_due">pay by %1$s</string>
+    <string name="account_credit_available">%1$s available of %2$s</string>
+    <string name="credit_payment_title">Credit card payment</string>
+    <string name="credit_payment_when">%1$s · %2$s</string>
+    <string name="credit_payment_minimum">minimum %1$s</string>
+    <string name="credit_payment_post_a11y">Record the payment on card %1$s</string>
+    <string name="account_credit_beta_hint">New feature: check “available” and the payment against the bank statement.</string>
+</resources>

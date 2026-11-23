@@ -96,3 +96,4 @@ WorkManager создаётся через `CoShellApp.workManagerConfiguration`,
 (курсы на сегодня — `core:domain/rates/CurrentRates.kt`, диалог ручного курса — `ManualRateForm.kt` +
 
 Продолжение (новее) — [`feature-map-2.md`](feature-map-2.md).
+Кредитная карта (#686, опрос 2026-11-23 «А»×4, метка «бета»): модель `core:model/CreditTerms` (лимит, число месяца, `MinPayment` — процент или сумма), расчёт `core:domain/credit/CreditCard` (долг, «Доступно», срок, минимум) и `CreditPayments` (`creditPaymentsDue`: платёж к сроку, закрыт переводами на карту за цикл); редактор — пилюля «Кредитка», плитка «Условия карты» (`accounts/edit/CreditForm.kt`, `components/CreditTermsFields`); список «Счета» — `accounts/list/components/CreditMeter` под `AccountLine(below)`; «Скоро» — `UpcomingViewModel.credit` + `CreditPaymentItem`, «Провести» → `TransactionEditDestination(creditCardId)` → `transactions/edit/CreditPaymentEntry`. Льготный период и проценты — второй шаг.

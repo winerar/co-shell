@@ -1,7 +1,9 @@
 package app.coshell.accounts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,12 +48,14 @@ fun AccountLine(
     /** «не в общем балансе»: the subtitle in the attention colour. */
     warn: Boolean = false,
     selected: Boolean = false,
+    /** Something under the row, inside the same card — the meter of a credit card (#686). */
+    below: (@Composable () -> Unit)? = null,
 ) {
     val palette = LocalAmountPalette.current
-    CoShellListRow(
+    val line: @Composable (Modifier) -> Unit = { rowModifier -> CoShellListRow(
         compact = LocalCompactLists.current,
         title = { Text(name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        modifier = modifier,
+        modifier = rowModifier,
         supporting = {
             Text(
                 supporting,
@@ -88,7 +92,15 @@ fun AccountLine(
             }
         },
         onClick = onClick,
-    )
+    ) }
+    if (below == null) {
+        line(modifier)
+    } else {
+        Column(modifier) {
+            line(Modifier)
+            Box(Modifier.padding(start = Spacing.m, end = Spacing.m, bottom = Spacing.m)) { below() }
+        }
+    }
 }
 
 /** Title of an account group, as on «Счета»: the name in capitals (accent, or grey for [muted]) and the count. */

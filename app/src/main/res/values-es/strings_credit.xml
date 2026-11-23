@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type_credit">Crédito</string>
+    <string name="account_type_credit_full">Tarjeta de crédito</string>
+    <string name="account_credit_terms">Condiciones de la tarjeta</string>
+    <string name="account_credit_summary">Límite %1$s · pago el día %2$s · %3$s</string>
+    <string name="account_credit_min_percent">mín. %1$s %%</string>
+    <string name="account_credit_min_sum">mín. %1$s</string>
+    <string name="account_credit_empty">Sin definir</string>
+    <string name="account_credit_limit">Límite de crédito</string>
+    <string name="account_credit_pay_day">Pagar antes del (día del mes)</string>
+    <string name="account_credit_min_percent_tab">% de la deuda</string>
+    <string name="account_credit_min_sum_tab">Importe</string>
+    <string name="account_credit_min_label">Pago mínimo</string>
+    <string name="account_credit_min_hint">Un importe o un porcentaje, como en el contrato</string>
+    <string name="account_credit_error">Indica el límite, el día del mes (1–31) y el pago mínimo.</string>
+    <string name="account_credit_due">pagar antes del %1$s</string>
+    <string name="account_credit_available">%1$s disponible de %2$s</string>
+    <string name="credit_payment_title">Pago de la tarjeta de crédito</string>
+    <string name="credit_payment_when">%1$s · %2$s</string>
+    <string name="credit_payment_minimum">mínimo %1$s</string>
+    <string name="credit_payment_post_a11y">Anotar el pago de la tarjeta %1$s</string>
+    <string name="account_credit_beta_hint">Función nueva: compara el «disponible» y el pago con el extracto del banco.</string>
+</resources>

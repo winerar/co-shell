@@ -82,12 +82,13 @@ class AccountEditViewModel @Inject constructor(
                     color = account.color,
                     cardDigits = account.cardDigits.orEmpty(),
                     prepaid = account.prepaid,
+                    credit = account.credit != null,
                     shared = account.isShared,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
                     currentBalance = balance?.let(moneyFormat::format).orEmpty(),
-                )
+                ).let { s -> account.credit?.let { c -> s.withCreditTerms(c, account.currency, moneyFormat) } ?: s }
             }
         }
     }
@@ -98,10 +99,18 @@ class AccountEditViewModel @Inject constructor(
         if (it.currencyLocked) it else it.copy(currency = value.trim().uppercase(), currencyError = null)
     }
 
-    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value, prepaid = false) }
+    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value, prepaid = false, credit = false, creditError = false) }
+
+    /** «Кредитка» (#686): stored as «Другое» + conditions; a credit card is not a travel pass. */
+    fun onCreditSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = false, credit = true) }
+
+    fun onCreditLimitChange(value: String) = _state.update { it.copy(creditLimit = value, creditError = false) }
+    fun onCreditPayDayChange(value: String) = _state.update { it.copy(creditPayDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
+    fun onCreditMinSumChange(sum: Boolean) = _state.update { if (it.creditMinSum == sum) it else it.copy(creditMinSum = sum, creditMin = "", creditError = false) }
+    fun onCreditMinChange(value: String) = _state.update { it.copy(creditMin = value, creditError = false) }
 
     /** «Проездной» (#645): a type of its own for the person, stored as «Другое» + a flag; the top-up is an expense, so the account is out of the total. */
-    fun onPrepaidSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = true, includedInTotal = false) }
+    fun onPrepaidSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = true, credit = false, includedInTotal = false) }
 
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
 
@@ -228,8 +237,14 @@ class AccountEditViewModel @Inject constructor(
             _state.update { it.copy(cardDigitsError = true) }
             return null
         }
+        val credit = if (form.credit) parseCreditTerms(form, currency) else null
+        if (form.credit && credit == null) {
+            _state.update { it.copy(creditError = true) }
+            return null
+        }
         val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
         return base.copy(
+            credit = credit,
             cardDigits = digits.ifEmpty { null },
             prepaid = form.prepaid,
             name = name,

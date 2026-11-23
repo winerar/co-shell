@@ -225,9 +225,12 @@ data class TransactionEditDestination(
     val receiptUnread: Boolean = false,
     /** A draft of a quick note (#586): the sheet opens filled from it; once saved, the draft is gone. */
     val draftId: String? = null,
+    /** «Провести» a credit card payment (#686): a new transfer into this card for the minimum payment; the source account is chosen. */
+    val creditCardId: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
+        const val ARG_CREDIT_CARD = "creditCardId"
         const val ARG_TRANSACTION_ID = "transactionId"
         const val ARG_TYPE = "type"
         const val ARG_COPY_FROM = "copyFrom"

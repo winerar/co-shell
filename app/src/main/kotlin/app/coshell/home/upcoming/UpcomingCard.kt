@@ -27,6 +27,7 @@ import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellSectionLink
+import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.recurring.SOON_DAYS
 import app.coshell.recurring.PaymentAmount
@@ -51,6 +52,8 @@ internal fun UpcomingCard(
     modifier: Modifier = Modifier,
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (templateId: String) -> Unit = {},
+    credit: List<CreditPaymentRow> = emptyList(),
+    onPostCredit: (accountId: String) -> Unit = {},
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth().padding(start = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -63,6 +66,12 @@ internal fun UpcomingCard(
                     if (index > 0) CoShellDivider()
                     UpcomingRowItem(row, onPost)
                     if (row.bulk) MissedActions(row, { onPostAll(row) }, { onSkipAll(row.item.id) })
+                }
+            }
+            credit.forEachIndexed { index, row ->
+                key("credit-" + row.accountId) {
+                    if (rows.isNotEmpty() || index > 0) CoShellDivider()
+                    CreditPaymentItem(row, onPostCredit)
                 }
             }
         }
@@ -118,4 +127,33 @@ private fun MissedActions(row: UpcomingRow, onPostAll: () -> Unit, onSkipAll: ()
             Text(stringResource(R.string.recurring_skip_missed), maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
+}
+
+/** The payment of a credit card (#686): the card's badge, «Платёж по кредитке», its day and the minimum; «Провести» opens the transfer. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun CreditPaymentItem(row: CreditPaymentRow, onPost: (String) -> Unit) {
+    CoShellListRow(
+        title = { Text(stringResource(R.string.credit_payment_title), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+                verticalArrangement = Arrangement.spacedBy(Spacing.xxs),
+                itemVerticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.credit_payment_when, row.name, formatWeekdayDayMonthShort(row.due)))
+                Text(stringResource(R.string.credit_payment_minimum, row.minimum))
+            }
+        },
+        leading = { AccountBadge(row.name, row.color) },
+        trailing = {
+            val label = stringResource(R.string.credit_payment_post_a11y, row.name)
+            CoShellButton(
+                onClick = { onPost(row.accountId) },
+                tone = ButtonTone.Tonal,
+                contentPadding = PaddingValues(horizontal = Spacing.l),
+                modifier = Modifier.semantics { contentDescription = label },
+            ) { Text(stringResource(R.string.recurring_post)) }
+        },
+    )
 }

@@ -14,6 +14,8 @@ import json
 import os
 import sys
 
+import privacy_pages
+
 LANGS = [("ru", "RU"), ("en", "EN"), ("es", "ES")]
 TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site", "index.template.html")
 
@@ -92,6 +94,7 @@ def build(manifest, out_dir, template):
             f.write(page(template, lang, manifest))
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(chooser())
+    privacy_pages.write_all(out_dir)
     open(os.path.join(out_dir, ".nojekyll"), "w").close()
 
 

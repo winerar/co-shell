@@ -20,7 +20,7 @@ ROWS = [
     ('Итоги месяца: истории', 'Rec554Top', 'month_recap'), ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),
     ('Операции', 'Operations', 'transactions'), ('Операции: прокрутка', 'OpsScrolled', 'transactions_scrolled'),
     ('Шторка ввода', 'Main', 'entry_sheet'), ('Шторка: возврат', 'Fb208C', 'entry_refund'),
-    ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: QR чека', 'Qr526Filled', 'entry_scan'), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),
+    ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: QR чека', 'Qr526Filled', 'entry_scan'), ('Шторка: категория предложена ИИ', 'EntryGuessAi', None), ('Шторка: категория по истории', 'EntryGuessHist', None), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),
     ('Счета', 'Accounts', 'accounts'), ('Счета: пусто', 'AccountsEmpty', 'accounts_empty'),
     ('Редактор счёта', 'AccountEdit', 'account_edit'),
     ('Категории', 'Categories', 'categories'), ('Редактор категории', 'CategoryEdit', 'category_edit'),

@@ -635,6 +635,7 @@
     <string name="entry_section_category_frequent">Category · frequent</string>
     <string name="entry_category_guess_history">from past entries</string>
     <string name="entry_category_guess_name">by name</string>
+    <string name="entry_category_guess_ai">suggested by AI</string>
     <string name="entry_section_details">Details</string>
     <string name="entry_receipt_add">+ Purchase amount</string>
     <string name="entry_receipt">Purchase amount</string>

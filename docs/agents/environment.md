@@ -34,3 +34,5 @@
 - (11-09) Посмотреть экран глазами без телефона: временный Robolectric-тест с `@GraphicsMode(NATIVE)`,
   `@Config(qualifiers = "w393dp-h1000dp-xxhdpi")`, `onRoot().captureToImage()` → PNG в scratchpad, `Read` PNG;
   перед `captureToImage` — `mainClock.advanceTimeBy(3000)` (лесенка входа). Тест потом удалить.
+- (11-23) Холст: `Artifact read` с `page: true` отдаёт 47 КБ страницы типа — не нужен; живой индекс — `read` с `path: project/canvas.json` (сохраняется в scratchpad), доски — `paths`. Слоты рядов репо на живом холсте заняты (холст отстаёт): свои новые доски — **новым рядом ниже всех** (`y = max(y+h) + 360`) + заметка-заголовок `title1` с `page`; публиковать `root` + `file_path` индекса + `files` только своих досок. Не существующие на холсте доски читать не нужно.
+

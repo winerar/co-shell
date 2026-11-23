@@ -208,8 +208,17 @@
       "page": "screens",
       "radius": 28
     },
-    "EntryGuessHist.dc.html": {
+    "EntryUnsaved.dc.html": {
       "x": 2350,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Новая операция: плашка «Не сохранено» — «Продолжить» / «✕» (#323)",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryGuessHist.dc.html": {
+      "x": 2820,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -218,7 +227,7 @@
       "radius": 28
     },
     "EntryGuessAi.dc.html": {
-      "x": 2820,
+      "x": 3290,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -227,7 +236,7 @@
       "radius": 28
     },
     "EntryEdit.dc.html": {
-      "x": 3290,
+      "x": 3760,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -236,7 +245,7 @@
       "radius": 28
     },
     "EntryError.dc.html": {
-      "x": 3760,
+      "x": 4230,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -245,7 +254,7 @@
       "radius": 28
     },
     "EntryNoAccounts.dc.html": {
-      "x": 4230,
+      "x": 4700,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -254,7 +263,7 @@
       "radius": 28
     },
     "EntryAllAccounts.dc.html": {
-      "x": 4700,
+      "x": 5170,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -1572,7 +1581,7 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 4860,
+      "h": 4992,
       "title": "Воркфлоу",
       "page": "flows"
     },
@@ -3303,6 +3312,7 @@
     "EntryReceipt.dc.html",
     "EntryReceiptTransfer.dc.html",
     "ReceiptWhichAccount.dc.html",
+    "EntryUnsaved.dc.html",
     "EntryGuessHist.dc.html",
     "EntryGuessAi.dc.html",
     "EntryEdit.dc.html",
@@ -3710,13 +3720,13 @@
       "text": "Новая операция — шторка",
       "x": 0,
       "y": 2230,
-      "maxW": 5090,
+      "maxW": 5560,
       "w": 240
     },
     "s2": {
       "page": "screens",
       "text": "Шторка: шаг 1 — тип и счёт (недавние сверху, поиск внизу под пальцем), шаг 2 — своя клавиатура, сумма и категории над ней. Всё нажимаемое — в нижних 2/3.",
-      "x": 5170,
+      "x": 5640,
       "y": 2480,
       "w": 390
     },

@@ -37,17 +37,23 @@ fun ScreenTopBar(
     onBack: (() -> Unit)?,
     backEnabled: Boolean = true,
     subtitle: String? = null,
+    /** A status mark right after the title («бета», #643); `null` — none. */
+    mark: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     CoShellTopBar(
         title = {
             Column {
-                Text(
-                    title,
-                    style = ScreenTitleStyle,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        title,
+                        style = ScreenTitleStyle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    mark?.invoke()
+                }
                 if (subtitle != null) {
                     Text(
                         subtitle,

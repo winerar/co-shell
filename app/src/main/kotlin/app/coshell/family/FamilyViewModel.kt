@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.core.data.db.SyncDao
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.data.family.FamilyState
+import app.coshell.core.data.remote.ApiException
 import app.coshell.core.data.sync.SyncEngine
 import app.coshell.core.domain.family.isPlausibleEmail
 import app.coshell.core.domain.family.normalizeEmail
@@ -92,6 +93,23 @@ class FamilyViewModel @Inject constructor(
     }
 
     fun signOut() = busy { service.signOut() }
+
+    /** A member leaves the family; the data on the phone stays (#653). */
+    fun leave() = busy { network { service.leave() } }
+
+    /** The owner removes [uid] from the family. */
+    fun removeMember(uid: String) = busy { network { service.removeMember(uid) } }
+
+    /** The owner deletes the family and its cloud data for everyone. */
+    fun deleteFamily() = busy { network { service.deleteFamily() } }
+
+    /** Deletes the cloud account; a stale sign-in asks to sign in again first. */
+    fun deleteAccount() = busy {
+        runCatching { service.deleteAccount() }.onFailure { e ->
+            if (e is CancellationException) throw e
+            message(if (e is ApiException && e.isLoginTooOld) FamilyMessage.LoginAgain else FamilyMessage.failed(e))
+        }
+    }
 
     fun dismissMessage() = local.update { it.copy(message = null) }
 

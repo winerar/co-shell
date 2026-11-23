@@ -75,6 +75,8 @@ data class TransactionEditUiState(
     val scan: ScanUi? = null,
     /** A shared receipt was not recognised (#561, board «RcUnreadA»): «Ввести вручную» or «Отправить образец». */
     val receiptUnread: Boolean = false,
+    /** «Вставить из буфера» found no amount in the text (#321): the pill under the row. */
+    val clipboardNone: Boolean = false,
     /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */

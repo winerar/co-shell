@@ -73,4 +73,24 @@ class NoteHintsTest {
         assertEquals(true, model.lastPrompt.contains("0: диско"))
         assertEquals(true, model.lastPrompt.contains("1: лента"))
     }
+
+    private val accounts = listOf("Galicia · ARS · card", "Cash · ARS · cash")
+
+    @Test
+    fun `the account must be one of the labels, case does not matter`() {
+        val answer = """[{"i":0,"account":"cash · ars · cash"},{"i":1,"account":"Santander · ARS · card"},{"i":2,"title":"Disco","account":"Galicia"}]"""
+        val hints = NoteHints(Fake()).parse(answer, 3, categories, accounts)
+        assertEquals(NoteHint(null, null, account = "Cash · ARS · cash"), hints[0])
+        assertNull(hints[1])
+        assertEquals(NoteHint("Disco", null), hints[2])
+    }
+
+    @Test
+    fun `accounts are offered to the model only when given`() = runTest {
+        val model = Fake(answer = "[]")
+        NoteHints(model).read(listOf("кофе 3500"), categories)
+        assertEquals(false, "Accounts" in model.lastPrompt)
+        NoteHints(model).read(listOf("кофе 3500 мп"), categories, accounts)
+        assertEquals(true, "Accounts" in model.lastPrompt && "Galicia · ARS · card" in model.lastPrompt)
+    }
 }

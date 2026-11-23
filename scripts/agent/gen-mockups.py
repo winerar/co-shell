@@ -24,6 +24,7 @@ import mockup_screens_templates as tpl_screens  # noqa: E402
 import mockup_screens_budgets as bud_screens  # noqa: E402
 import mockup_screens_reports as rep_screens  # noqa: E402
 import mockup_screens_review as mon_screens  # noqa: E402
+import mockup_screens_recap as recap_screens  # noqa: E402
 import mockup_screens_trend as trend_screens  # noqa: E402
 import mockup_screens_picture as picture_screens  # noqa: E402
 import mockup_screens_recurring as rec_screens  # noqa: E402
@@ -40,7 +41,7 @@ import mockup_catalog_style as comp_style  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
-PLAN = (tpl_screens, rec_screens, rec415_screens, bud_screens, rep_screens, mon_screens, trend_screens, picture_screens, notes_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
+PLAN = (tpl_screens, rec_screens, rec415_screens, bud_screens, rep_screens, mon_screens, recap_screens, trend_screens, picture_screens, notes_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
@@ -51,7 +52,7 @@ PAGES = {
     'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True), 'HomeGreeting': ('Обзор: поздравление на 1.0 (тапайте)', True),
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),
     'AccountEdit': ('Счёт: редактор без прокрутки (#290)', False), 'AccountAdjust': ('Счёт: «Исправить баланс» — «Сохранить баланс» сразу (#581)', False), 'AccountAdjusted': ('Счёт: баланс исправлен, плашка (#581)', False), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
-    'AiOff': ('ИИ на телефоне: выключен, «Включить»', False), 'AiStep1': ('ИИ на телефоне: шаг 1, установка дополнения', False), 'AiStep2': ('ИИ на телефоне: шаг 2, скачивание модели', False),
+    'AiOff': ('ИИ на телефоне: выключен, «Включить»', False), 'AiStep1': ('ИИ на телефоне: шаг 1, установка дополнения', False), 'AiStep1Load': ('ИИ на телефоне: шаг 1, скачивание дополнения', False), 'AiStep2': ('ИИ на телефоне: шаг 2, скачивание модели', False),
     'AiOn': ('ИИ на телефоне: включён', False), 'AiWeak': ('ИИ на телефоне: слабый телефон (меньше 6 ГБ)', False), 'AiData': ('ИИ на телефоне: вопрос про мобильный интернет', False),
     'Backup': ('Резервная копия', False), 'Wipe': ('Стереть все данные (тапайте)', True),
     'Components': ('Компоненты: кирпичи макетов → имена в коде', True), 'History': ('История решений', False),
@@ -65,9 +66,9 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),
     ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountEditExisting', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
-    ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
+    ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyFull', 'FamilyMemberSheet', 'FamilyRemoveConfirm', 'FamilyLeave', 'FamilyDelete', 'FamilyDeleteAccount', 'FamilyRemoved', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
     ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError']),
-    ('ИИ на телефоне', ['AiOff', 'AiStep1', 'AiStep2', 'AiOn', 'AiData', 'AiWeak']),
+    ('ИИ на телефоне', ['AiOff', 'AiStep1', 'AiStep1Load', 'AiStep2', 'AiOn', 'AiData', 'AiWeak']),
     ('Импорт из Wallet', ['ImportStart', 'ImportError', 'ImportSummary', 'ImportAccounts', 'ImportCategories', 'ImportTransfers', 'ImportPreview', 'ImportDone']),
 ]
 

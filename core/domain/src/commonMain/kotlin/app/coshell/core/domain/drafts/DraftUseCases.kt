@@ -50,8 +50,9 @@ class ProcessQuickNoteUseCase(
             fallback = last?.currency ?: CurrencyCode("USD"), known = live.mapTo(mutableSetOf()) { it.currency }, now = now(),
             local = localCurrency(),
         )
-        val ask = hints?.let { QuickNoteDrafts.needsModel(lines, ctx) }.orEmpty()
-        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(ask.map { lines[it] }, expense.map { it.name }).orEmpty()
+        val ask = hints?.let { QuickNoteDrafts.needsModel(lines, ctx, it.broad) }.orEmpty()
+        val labels = live.filter { !it.archived }.map(AccountLabels::of)
+        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(ask.map { lines[it] }, expense.map { it.name }, labels).orEmpty()
         val byLine = ask.zip(read).mapNotNull { (i, hint) -> hint?.let { i to it } }.toMap()
         val made = QuickNoteDrafts.build(lines, ctx, ids, byLine)
         drafts.saveDrafts(made)

@@ -62,18 +62,37 @@ def report_currencies():
 
 # ---- family / backup ------------------------------------------------------------------------------------------------
 
-def family():
+def family_screen(role='owner', full=False):
+    """«Ещё → Семья» in the family (#653, #661): members «N из 10», leave / sign out, the danger zone. `role` — owner or member."""
+    owner = role == 'owner'
+    n = 10 if full else 2
     pair = ('<span style="display: flex;">%s<span style="margin-left: -12px; border-radius: 50%%; box-shadow: 0 0 0 3px %s;">%s</span></span>'
             % (badge('М', VIOLET, '#1A0533', 52, 26), '#314617', badge('А', CYAN, '#002A2E', 52, 26)))
     hero = hero_card('<div style="display: flex; align-items: center; gap: 14px;">%s<span><div style="font-size: 20px; font-weight: 700;">Общий бюджет</div>'
-                '<div style="font-size: 13px; color: %s;">2 участника</div></span></div><div style="display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px;">'
+                '<div style="font-size: 13px; color: %s;">Участников: %d из 10</div></span></div><div style="display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px;">'
                 '<span style="width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span><span style="flex-grow: 1;">Синхронизировано: 2 мин назад</span>%s</div>'
-                % (pair, HERO_HINT, OK, amount('за 2–3 с', '', HERO_HINT, 12)), pad='16px', radius=20)
+                % (pair, HERO_HINT, n, OK, amount('за 2–3 с', '', HERO_HINT, 12)), pad='16px', radius=20)
     invite = '<span style="width: 40px; height: 40px; border-radius: 50%%; border: 1px dashed %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LINE2, svg('plus', MUTED, 18))
-    members = group([row('Вы', 'создатель семьи', badge('М', VIOLET, '#1A0533', 40, 20)), row('Второй участник', 'вошёл · 12 операций за неделю', badge('А', CYAN, '#002A2E', 40, 20)),
-                     row('Пригласить', 'по адресу Google-аккаунта', invite, '', LIME)])
-    body = hero + button('Синхронизировать сейчас', 'violet', 'refresh') + label('Участники') + members + label('Аккаунт') + group([row('Выйти', 'Данные останутся, синхронизация остановится', svg('logout'))])
-    return board('Семья', inner_screen('Семья', body))
+    me = row('Вы', 'создатель семьи' if owner else 'Аня · аня@gmail.com', badge('М', VIOLET, '#1A0533', 40, 20))
+    other = row('Второй участник' if owner else 'Создатель семьи', 'вошёл · 12 операций за неделю', badge('А', CYAN, '#002A2E', 40, 20), chevron() if owner else '')
+    rows = [me, other]
+    if full:
+        rows.append(row('Ещё 7 участников', 'список прокручивается', badge('+7', CHIP, INK, 40, 20)))
+        rows.append(row('Пригласить', 'Семья заполнена: 10 из 10', invite, '', MUTED))
+    else:
+        rows.append(row('Пригласить', 'по адресу Google-аккаунта', invite, '', LIME))
+    leave = (row('Выйти из семьи', 'Владелец не может выйти: сначала удалите семью', svg('logout'), '', MUTED) if owner
+             else row('Выйти из семьи', 'Вы перестанете видеть общие данные', svg('logout')))
+    account = group([leave, row('Выйти из аккаунта', 'Данные останутся, синхронизация остановится', svg('logout'))])
+    danger_rows = ([row('Удалить семью', 'Общие данные удалятся из облака у всех', svg('trash', PINK), '', PINK)] if owner else [])
+    danger_rows.append(row('Удалить аккаунт', 'Вход и облачные данные удалятся навсегда', svg('trash', PINK), '', PINK))
+    body = (hero + button('Синхронизировать сейчас', 'violet', 'refresh') + label('Участники') + group(rows) + label('Аккаунт') + account
+            + label('Опасная зона') + group(danger_rows))
+    return inner_screen('Семья', body)
+
+
+def family():
+    return board('Семья', family_screen(), height=1120)
 
 
 def backup_screen(enabled=True, msg=''):

@@ -21,6 +21,7 @@ internal fun FamilyMessageCard(message: FamilyMessage, modifier: Modifier = Modi
             SyncIssueKind.QUOTA -> stringResource(R.string.family_msg_quota)
             SyncIssueKind.SERVER -> stringResource(R.string.family_msg_server, message.code.orEmpty())
         }
+        FamilyMessage.LoginAgain -> stringResource(R.string.family_msg_login_again)
         FamilyMessage.InvalidEmail -> stringResource(R.string.family_msg_invalid_email)
         is FamilyMessage.InviteSent -> stringResource(R.string.family_msg_invite_sent, message.email)
         is FamilyMessage.Synced -> stringResource(R.string.family_msg_synced, message.received, message.sent)

@@ -17,6 +17,7 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.R
+import app.coshell.ui.ai.BetaMark
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.components.CoShellCheckMark
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -34,7 +35,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 
 /**
- * A draft (#586, board `Notes586Drafts`): tick (only a ready one can be ticked), title, «счёт · день», then the category with where
+ * A draft (#586, board `Notes586Drafts`): tick (any row: ready ones to post, any to delete, #628), title, «счёт · день», then the category with where
  * it came from or the mark of what is missing; the amount on the right. A tap on the row opens the entry sheet.
  */
 @Composable
@@ -66,7 +67,7 @@ internal fun DraftRow(row: DraftRowUi, today: LocalDate, onClick: () -> Unit, on
         leading = {
             Box(
                 Modifier.sizeIn(minWidth = Sizes.button, minHeight = Sizes.button)
-                    .tactileClickable(enabled = row.ready, role = Role.Checkbox, onClick = onToggle),
+                    .tactileClickable(role = Role.Checkbox, onClick = onToggle),
                 contentAlignment = Alignment.Center,
             ) { CoShellCheckMark(if (row.checked) ToggleableState.On else ToggleableState.Off) }
         },
@@ -104,13 +105,17 @@ private fun Missing(row: DraftRowUi) {
         DraftCategorySource.AI -> stringResource(R.string.drafts_category_ai)
         null -> null
     }
-    Text(
-        if (source != null) stringResource(R.string.drafts_caption, category, source) else category,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-    )
+    Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            if (source != null) stringResource(R.string.drafts_caption, category, source) else category,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f, fill = false),
+        )
+        if (row.source == DraftCategorySource.AI) BetaMark()
+    }
 }
 
 private val MinAmountSize = 9.sp

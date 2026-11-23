@@ -35,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.ai.BetaMark
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import java.text.NumberFormat
@@ -56,7 +57,7 @@ data class AiAddonActions(
 @Composable
 fun AiAddonScreen(state: AiAddonUiState, actions: AiAddonActions) {
     Scaffold(
-        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack) },
+        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack, mark = { BetaMark() }) },
         bottomBar = { MainAction(state, actions, Modifier.aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m)) },
     ) { padding ->
         Column(
@@ -121,10 +122,15 @@ private fun StatusCard(state: AiAddonUiState) {
 private fun Bar(state: AiAddonUiState) {
     val fraction = state.progress
     if (fraction == null) CoShellLinearProgress() else CoShellLinearProgress({ fraction })
-    if (state.stage == AiAddonStage.STEP_MODEL && state.totalMb > 0) {
+    if (state.totalMb > 0) {
         val number = NumberFormat.getIntegerInstance()
         Text(
             stringResource(R.string.ai_progress, number.format(state.doneMb), number.format(state.totalMb), ((fraction ?: 0f) * 100).toInt()),
+            style = MaterialTheme.typography.bodySmall,
+            color = LocalHeroPalette.current.hint,
+        )
+        Text(
+            stringResource(R.string.ai_left, number.format(state.leftMb)),
             style = MaterialTheme.typography.bodySmall,
             color = LocalHeroPalette.current.hint,
         )

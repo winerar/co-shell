@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recap_title">Resumen de %1$s</string>
+    <string name="recap_percent">%1$d %%</string>
+    <string name="recap_empty">Este mes no hay movimientos.</string>
+    <string name="recap_progress">Historia %1$d de %2$d. Toca para seguir.</string>
+    <string name="recap_top_title">Lo que más fue a «%1$s»</string>
+    <string name="recap_top_donut">Parte de cada categoría en el gasto del mes</string>
+    <string name="recap_vs_lighter">Un mes %1$d %% más ligero que el anterior</string>
+    <string name="recap_vs_heavier">Un mes %1$d %% más caro que el anterior</string>
+    <string name="recap_vs_same">Casi igual que el mes anterior</string>
+    <string name="recap_previous">Mes anterior</string>
+    <string name="recap_this">Este mes</string>
+    <string name="recap_weeks_title">Semana más cara: %1$s</string>
+    <string name="recap_weeks_caption">Gasto por semanas del mes</string>
+    <string name="recap_new_title">Categoría nueva del mes</string>
+    <string name="recap_new_text">Antes no había gastos en ella.</string>
+    <string name="recap_weekend_more">Los fines de semana cuestan más que los laborables</string>
+    <string name="recap_weekend_less">Los fines de semana son más tranquilos</string>
+    <string name="recap_weekend_caption">Gasto medio por día con movimientos</string>
+    <string name="recap_weekdays">Laborables</string>
+    <string name="recap_weekend">Fines de semana</string>
+    <string name="recap_days">Días con movimientos: %1$d</string>
+    <string name="recap_details">Detalles</string>
+    <string name="recap_phrase_good_start">Buen comienzo</string>
+    <string name="recap_phrase_first_month">Primer mes registrado</string>
+    <string name="recap_phrase_lighter">Un mes %1$d %% más ligero que el anterior</string>
+    <string name="recap_phrase_limits_kept">Todos los límites en orden</string>
+    <string name="recap_phrase_streak">Días seguidos con movimientos: %1$d</string>
+    <string name="recap_phrase_same">Casi igual que el mes anterior</string>
+    <string name="recap_phrase_saved">Queda el %1$d %% de los ingresos</string>
+    <string name="recap_phrase_busy">Un mes intenso, pero todo registrado</string>
+</resources>

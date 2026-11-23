@@ -47,7 +47,7 @@
     <string name="hint_template">Трата повторяется? Сохраните шаблон, и она внесётся в одно нажатие.</string>
     <string name="hint_open">Открыть</string>
     <string name="hint_limit_80">%1$s: ещё можно %2$s. Заглядывайте в «Бюджеты», когда захотите.</string>
-    <string name="hint_month_end">Месяц закончился. Посмотрите итоги: Отчёты.</string>
+    <string name="hint_month_end">Месяц закончился. Посмотрите итоги.</string>
     <string name="hint_entry_minimal">Нужны только сумма и счёт. Остальное можно пропустить.</string>
     <string name="hint_keypad_math">Можно складывать и вычитать: 300 + 150.</string>
     <string name="hint_entry_refund">Вернули деньги? Отметьте «Это возврат».</string>

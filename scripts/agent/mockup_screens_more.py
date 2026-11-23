@@ -96,6 +96,51 @@ def family_invite_sent():
                + label('Участники') + members + button('Синхронизировать сейчас', 'violet', 'refresh', 16))
 
 
+def family_member_sheet():
+    """The owner opens a member (#653): one destructive row; it asks again before removing."""
+    from mockup_screens_settings import family_screen
+    inner = ('<div style="padding: 8px 20px 20px;"><h2 style="margin: 12px 0 0; font-size: 20px;">Второй участник</h2>'
+             '<div style="font-size: 13px; color: %s; margin-top: 2px;">anya@gmail.com</div><div style="margin-top: 12px;">%s</div></div>'
+             % (MUTED, row('Исключить из семьи', 'Доступ к общему бюджету закроется. Данные на телефоне останутся.', svg('trash', PINK), '', PINK)))
+    return family_screen() + scrim() + sheet(inner, top=560)
+
+
+def family_remove_confirm():
+    from mockup_screens_settings import family_screen
+    return family_screen() + scrim() + dialog('Исключить из семьи?', 'Второй участник больше не увидит общий бюджет, а данные на телефоне останутся.',
+                                              [('Отмена', 'text'), ('Исключить', 'danger')])
+
+
+def family_leave():
+    from mockup_screens_settings import family_screen
+    return family_screen('member') + scrim() + dialog('Выйти из семьи?', 'Данные на телефоне останутся, синхронизация остановится. Другие участники продолжат пользоваться общим бюджетом.',
+                                                      [('Отмена', 'text'), ('Выйти', 'primary')])
+
+
+def family_delete():
+    from mockup_screens_settings import family_screen
+    return family_screen() + scrim() + dialog('Удалить семью?', 'Общие данные удалятся из облака у всех участников. Данные на телефонах останутся.',
+                                              [('Отмена', 'text'), ('Удалить семью', 'danger')])
+
+
+def family_delete_account():
+    from mockup_screens_settings import family_screen
+    return family_screen() + scrim() + dialog('Удалить аккаунт?', 'Семья удалится у всех, а ваш аккаунт — навсегда. Данные на телефонах останутся.',
+                                              [('Отмена', 'text'), ('Удалить аккаунт', 'danger')])
+
+
+def family_full():
+    from mockup_screens_settings import family_screen
+    return family_screen(full=True)
+
+
+def family_removed():
+    """Removed by the owner, or the family was deleted (#653): the data stays, a new family is one tap away."""
+    return fam(message('Вас убрали из семьи. Данные на телефоне остались, общий бюджет больше не обновляется.', 'ok')
+               + group([row('Создать семью', 'Только для первого участника. Данные этого телефона станут общими.', svg('plus')),
+                        row('Выйти из аккаунта', 'Данные останутся, синхронизация остановится', svg('logout'))]))
+
+
 def family_not_configured():
     return fam(empty('cloud', 'Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.'))
 
@@ -247,6 +292,10 @@ BOARDS = [
     ('FamilySignedOut', '13 · Семья: вход', family_signed_out), ('FamilyNoAccess', '13 · Семья: нет доступа', family_no_access),
     ('FamilyInvited', '13 · Семья: приглашение', family_invited), ('FamilyJoinMode', '13 · Семья: свои операции на телефоне', family_join_mode),
     ('FamilyInviteSent', '13 · Семья: приглашение отправлено', family_invite_sent), ('FamilyInviteDialog', '13 · Семья: пригласить, ошибка адреса', family_invite_dialog),
+    ('FamilyMemberSheet', '13 · Семья: участник (исключить)', family_member_sheet), ('FamilyRemoveConfirm', '13 · Семья: исключить?', family_remove_confirm),
+    ('FamilyLeave', '13 · Семья: выйти?', family_leave), ('FamilyDelete', '13 · Семья: удалить семью?', family_delete),
+    ('FamilyDeleteAccount', '13 · Семья: удалить аккаунт?', family_delete_account), ('FamilyFull', '13 · Семья: заполнена (10 из 10)', family_full),
+    ('FamilyRemoved', '13 · Семья: вас убрали', family_removed),
     ('FamilyOffline', '13 · Семья: нет связи', family_offline), ('FamilyNotConfigured', '13 · Семья: не настроено', family_not_configured),
     ('BackupAuto', '14 · Копия: автокопия включена', backup_auto),
     ('BackupError', '14 · Копия: ошибка файла', lambda: backup_auto(message('Это не файл резервной копии Co-Shell.', 'error'))),

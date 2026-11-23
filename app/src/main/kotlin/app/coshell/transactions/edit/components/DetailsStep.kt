@@ -42,6 +42,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.transactions.edit.TransactionEditUiState
+import app.coshell.transactions.edit.showsPasteRow
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.ui.form.DateChips
@@ -58,6 +59,7 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
         if (state.showsTypeSwitch) TypeBar(state, actions)
+        if (state.showsPasteRow) PasteRow(state, actions)
         Header(state, actions)
         AccountRibbonBlock(state, actions)
         Column(

@@ -14,6 +14,7 @@
     <string name="ai_on_text">Работает без интернета. Занимает 2,5 ГБ.</string>
     <string name="ai_on_chip">готов</string>
     <string name="ai_progress">%1$s из %2$s МБ · %3$d %%</string>
+    <string name="ai_left">осталось %1$s МБ</string>
     <string name="ai_fact_size">Размер</string>
     <string name="ai_fact_size_text">Дополнение 20 МБ + модель 2,5 ГБ</string>
     <string name="ai_fact_memory">Память телефона</string>
@@ -53,4 +54,5 @@
     <string name="ai_download_title">Скачиваю ИИ</string>
     <string name="ai_download_step1">Шаг 1 из 2 · дополнение</string>
     <string name="ai_download_channel">Загрузка ИИ</string>
+    <string name="beta">бета</string>
 </resources>

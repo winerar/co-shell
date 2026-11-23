@@ -59,6 +59,8 @@ data class TransactionEditUiState(
     val categoryGuessed: Boolean = false,
     /** What the guess came from: «по прошлым операциям» ([CategoryGuess.Source.HISTORY]) or «по словарю» (a brand never seen before); `null` when not guessed. */
     val categoryGuessSource: app.coshell.core.domain.categoryguess.CategoryGuess.Source? = null,
+    /** The model chose the category (#594, «предложено ИИ» with the spark): set together with [categoryGuessed], gone after a manual pick. */
+    val categoryByAi: Boolean = false,
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
     /** Which part of the two-step sheet is shown: a new operation starts on the account. */

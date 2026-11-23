@@ -13,6 +13,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellBottomBar
+import app.coshell.core.designsystem.components.FanAction
 import app.coshell.core.designsystem.components.TabDrag
 import app.coshell.core.designsystem.components.CoShellTab
 import app.coshell.core.designsystem.motion.LocalAddConfirm
@@ -48,6 +49,7 @@ internal fun MainBottomBar(
     current: NavDestination?,
     onTab: (TopLevel) -> Unit,
     onAdd: () -> Unit,
+    onFan: (FanTarget) -> Unit = {},
     visible: Boolean = true,
     moreBadge: Boolean = false,
     reportsBadge: Boolean = false,
@@ -58,6 +60,10 @@ internal fun MainBottomBar(
     // `swipe_tabs`: after the second tab change by button the swipe is worth a mention (hints.md).
     var buttonChanges by rememberSaveable { mutableIntStateOf(0) }
     CoachHint(mapOf(HintId.SWIPE_TABS to R.string.hint_swipe_tabs), enabled = buttonChanges >= SWIPE_HINT_AFTER)
+    // `hold_plus` (#623): after the second tap on «+» the fan under a hold is worth a mention (hints.md).
+    var addTaps by rememberSaveable { mutableIntStateOf(0) }
+    CoachHint(mapOf(HintId.HOLD_PLUS to R.string.hint_hold_plus), enabled = addTaps >= HOLD_HINT_AFTER)
+    val fan = FanTarget.entries.map { target -> FanAction(target.icon, stringResource(target.label)) { onFan(target) } }
     CoShellBottomBar(
         tabs = tabs.map { CoShellTab(it.icon, stringResource(it.label), selected = current.isOn(it), badge = (moreBadge && it == TopLevel.MORE) || (reportsBadge && it == TopLevel.REPORTS)) },
         onTab = {
@@ -65,12 +71,17 @@ internal fun MainBottomBar(
             onTab(tabs[it])
         },
         addLabel = stringResource(if (addLocked) R.string.gate_add_locked else R.string.transaction_add),
-        onAdd = onAdd,
+        onAdd = {
+            addTaps++
+            onAdd()
+        },
         visible = visible,
         addConfirm = LocalAddConfirm.current,
         addLocked = addLocked,
         drag = drag,
+        fan = fan,
     )
 }
 
 private const val SWIPE_HINT_AFTER = 2
+private const val HOLD_HINT_AFTER = 2

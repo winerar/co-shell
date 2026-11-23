@@ -107,6 +107,15 @@
       "page": "screens",
       "radius": 28
     },
+    "HomeHoldFan.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: удержали «+» — веер QR чека · Заметка · Шаблон, палец на «Заметке» (#623)",
+      "page": "screens",
+      "radius": 28
+    },
     "Operations.dc.html": {
       "x": 0,
       "y": 1240,
@@ -1581,7 +1590,7 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 4992,
+      "h": 5124,
       "title": "Воркфлоу",
       "page": "flows"
     },
@@ -3337,6 +3346,7 @@
     "UpdateWhatsNew.dc.html",
     "HomeGreeting.dc.html",
     "HomeCreditSoon.dc.html",
+    "HomeHoldFan.dc.html",
     "Operations.dc.html",
     "OpsScrolled.dc.html",
     "OpsSelect.dc.html",
@@ -3728,13 +3738,13 @@
       "text": "Обзор",
       "x": 0,
       "y": -250,
-      "maxW": 3210,
+      "maxW": 3680,
       "w": 240
     },
     "s0": {
       "page": "screens",
       "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
-      "x": 3290,
+      "x": 3760,
       "y": 0,
       "w": 390
     },

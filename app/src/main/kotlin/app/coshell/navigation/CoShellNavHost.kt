@@ -169,6 +169,13 @@ fun CoShellNavHost(
         navController = navController,
         snackbar = snackbar,
         onAdd = lock.guard { navController.navigate(TransactionEditDestination()) { launchSingleTop = true } },
+        onFan = lock.guard1 { target ->
+            when (target) {
+                FanTarget.RECEIPT -> navController.navigate(ReceiptScanDestination) { launchSingleTop = true }
+                FanTarget.NOTES -> navController.navigate(NotesDestination) { launchSingleTop = true }
+                FanTarget.TEMPLATE -> navController.navigate(TemplatesDestination) { launchSingleTop = true }
+            }
+        },
         moreBadge = updateAvailable != null,
         reportsBadge = reportsDot && !onReports,
         inputLock = lock,

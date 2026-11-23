@@ -52,6 +52,10 @@ data class CapitalMonthDestination(
     val currency: String,
 )
 
+/** «Итоги октября» (#554): stories of [year]-[month]; the card on «Обзор» opens them, the last story — [MonthReviewDestination]. */
+@Serializable
+data class MonthRecapDestination(val year: Int, val month: Int)
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)

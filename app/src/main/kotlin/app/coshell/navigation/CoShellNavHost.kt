@@ -48,6 +48,8 @@ import app.coshell.settings.SettingsRoute
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
+import app.coshell.shortcuts.ShortcutLink
+import app.coshell.shortcuts.ShortcutLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
@@ -58,6 +60,7 @@ import app.coshell.reports.capital.CapitalMonthRoute
 import app.coshell.reports.all.ReportCategoriesRoute
 import app.coshell.reports.category.ReportCategoryRoute
 import app.coshell.reports.review.MonthLimitsRoute
+import app.coshell.reports.recap.MonthRecapRoute
 import app.coshell.reports.review.MonthReviewRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
@@ -114,6 +117,7 @@ fun CoShellNavHost(
     access: AccessViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
+    shortcutLinks: ShortcutLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -188,7 +192,11 @@ fun CoShellNavHost(
                         when (target) {
                             HintTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
                             HintTarget.APPEARANCE -> navController.navigate(AppearanceDestination) { launchSingleTop = true }
-                            HintTarget.REPORTS -> navController.navigateToTab(TopLevel.REPORTS)
+                            HintTarget.MONTH_RECAP -> {
+                                // «month_end» shows in the first days of a month: the month that just ended.
+                                val last = java.time.YearMonth.now().minusMonths(1)
+                                navController.navigate(MonthRecapDestination(last.year, last.monthValue)) { launchSingleTop = true }
+                            }
                         }
                     },
                 )
@@ -223,7 +231,7 @@ fun CoShellNavHost(
                     onBudget = { id, month ->
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
-                    onReview = { month -> navController.navigate(MonthReviewDestination(month.year, month.month.number)) { launchSingleTop = true } },
+                    onReview = { month -> navController.navigate(MonthRecapDestination(month.year, month.month.number)) { launchSingleTop = true } },
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
@@ -387,6 +395,13 @@ fun CoShellNavHost(
                 viewModel = hiltViewModel(tab),
                 onBack = { navController.popBackStack() },
                 onCategory = { navController.navigate(it) { launchSingleTop = true } },
+            )
+        }
+        screen<MonthRecapDestination> { entry ->
+            val route = entry.toRoute<MonthRecapDestination>()
+            MonthRecapRoute(
+                onBack = { navController.popBackStack() },
+                onDetails = { navController.navigate(MonthReviewDestination(route.year, route.month)) { launchSingleTop = true } },
             )
         }
         screen<MonthReviewDestination> { entry ->
@@ -587,6 +602,20 @@ fun CoShellNavHost(
             val destination = TransactionEditDestination(receiptQr = shared.text.ifBlank { null }?.takeIf { shared.readable }, receiptUnread = !shared.readable)
             navController.navigate(destination) { launchSingleTop = true }
             receiptLinks.consumed()
+        }
+    }
+
+    // A launcher shortcut (#555): the same entry sheet «+» opens, of the chosen type or filled from a template.
+    if (shortcutLinks != null) {
+        val link by shortcutLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val shortcut = link ?: return@LaunchedEffect
+            val destination = when (shortcut) {
+                is ShortcutLink.NewOperation -> TransactionEditDestination(type = shortcut.type.name)
+                is ShortcutLink.FromTemplate -> TransactionEditDestination(templateId = shortcut.templateId)
+            }
+            navController.navigate(destination) { launchSingleTop = true }
+            shortcutLinks.consumed()
         }
     }
 }

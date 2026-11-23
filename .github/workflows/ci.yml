@@ -42,6 +42,7 @@ jobs:
       FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       FIREBASE_DATABASE_URL: ${{ vars.FIREBASE_DATABASE_URL }}
+      AI_PROXY_URL: ${{ vars.AI_PROXY_URL }}
     steps:
       - uses: actions/checkout@v7
         with:

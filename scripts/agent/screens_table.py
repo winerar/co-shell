@@ -17,7 +17,7 @@ ROWS = [
     ('Обзор', 'Home', 'home'), ('Обзор: первый запуск', 'HomeEmpty', 'home_empty'),
     ('Обзор: нет курса', 'HomeAttention', 'home_attention'), ('Обзор: бюджеты', 'BudHome', 'home_budget'),
     ('Обзор: «Скоро»', 'Rec143HomeA', 'recurring_home'), ('Обзор: итог месяца', 'Mon236A', 'home_review'),
-    ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),
+    ('Итоги месяца: истории', 'Rec554Top', 'month_recap'), ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),
     ('Операции', 'Operations', 'transactions'), ('Операции: прокрутка', 'OpsScrolled', 'transactions_scrolled'),
     ('Шторка ввода', 'Main', 'entry_sheet'), ('Шторка: возврат', 'Fb208C', 'entry_refund'),
     ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: QR чека', 'Qr526Filled', 'entry_scan'), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),

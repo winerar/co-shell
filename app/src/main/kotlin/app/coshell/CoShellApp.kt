@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import app.coshell.shortcuts.LauncherShortcuts
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
@@ -33,6 +34,7 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var workerFactory: HiltWorkerFactory
     @Inject lateinit var crashLog: CrashLog
     @Inject lateinit var reminderWatch: ReminderWatch
+    @Inject lateinit var launcherShortcuts: LauncherShortcuts
 
     /** Lives as long as the process; for short one-off startup work only. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -61,5 +63,7 @@ class CoShellApp : Application(), Configuration.Provider {
         }
         // The payment reminder goes away once the payment is handled here or on the other phone (#406).
         appScope.launch { reminderWatch.run() }
+        // Launcher shortcuts: the three types and the two frequent templates (#555).
+        appScope.launch { launcherShortcuts.run() }
     }
 }

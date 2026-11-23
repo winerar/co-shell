@@ -33,6 +33,8 @@ android {
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${env("GOOGLE_WEB_CLIENT_ID")}\"")
         // Realtime Database for the instant-sync bell; empty → <project>-default-rtdb.firebaseio.com.
         buildConfigField("String", "FIREBASE_DATABASE_URL", "\"${env("FIREBASE_DATABASE_URL")}\"")
+        // Cloud note parsing (#635, tools/ai-proxy): address of the Cloudflare Worker; empty → the cloud model is unavailable.
+        buildConfigField("String", "AI_PROXY_URL", "\"${env("AI_PROXY_URL")}\"")
     }
 
     androidResources {

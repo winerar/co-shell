@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="entry_paste_clipboard">Вставить из буфера</string>
+    <string name="entry_clipboard_none">В буфере нет суммы. Скопируйте текст с ней.</string>
+    <string name="entry_clipboard_none_close">Закрыть</string>
+</resources>

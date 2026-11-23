@@ -33,7 +33,7 @@ ROWS = [
     ('Настройки: отчёты', 'Set1Reports', 'settings_reports'), ('Настройки: счета', 'Set1Accounts', 'settings_accounts'),
     ('Настройки: деньги и даты', 'Set1Money', 'settings_money'), ('Настройки: ввод операции', 'Set1Entry', 'settings_input'),
     ('Настройки: уведомления', 'Set1Notices', 'settings_notices'), ('Настройки: данные и копия', 'Set1Data', 'settings_data'),
-    ('ИИ на телефоне', 'AiOff', 'ai_addon'), ('ИИ на телефоне: шаги', 'AiStep2', 'ai_addon_loading'), ('ИИ на телефоне: включён', 'AiOn', 'ai_addon_on'), ('ИИ на телефоне: слабый телефон', 'AiWeak', 'ai_addon_weak'),
+    ('ИИ на телефоне', 'AiOff', 'ai_addon'), ('ИИ на телефоне: шаги', 'AiStep2', 'ai_addon_loading'), ('ИИ на телефоне: скачивание дополнения', 'AiStep1Load', 'ai_addon_addon_loading'), ('ИИ на телефоне: включён', 'AiOn', 'ai_addon_on'), ('ИИ на телефоне: слабый телефон', 'AiWeak', 'ai_addon_weak'),
     ('Резервная копия', 'Backup', 'backup'), ('Копия: автоматическая', 'BackupAuto', 'backup_auto'),
     ('Ещё', 'More', 'more'), ('Обновление', 'Update', 'update_available'),
     ('Бюджеты', 'BudA', 'budgets'), ('Бюджет: лимит', 'BudDetail', 'budget_detail'), ('Бюджет: правка', 'BudEdit', 'budget_edit'),

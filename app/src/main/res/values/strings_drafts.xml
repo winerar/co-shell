@@ -13,7 +13,6 @@
     <string name="drafts_title">Черновики</string>
     <string name="drafts_title_count">Черновики · %1$d</string>
     <string name="drafts_menu_hint">Из заметок: проверьте и запишите</string>
-    <string name="drafts_strip_hint">Проверьте и запишите</string>
     <string name="drafts_summary">Черновиков: %1$d · готовы: %2$d</string>
     <string name="drafts_hint_ready">Нажмите на строку, чтобы поправить.</string>
     <string name="drafts_hint_unready">Нажмите на строку, чтобы дописать сумму или выбрать категорию.</string>
@@ -37,4 +36,8 @@
         <item quantity="many">%1$d строк не похожи на траты — они остались в заметке.</item>
         <item quantity="other">%1$d строки не похожи на траты — они остались в заметке.</item>
     </plurals>
+    <string name="drafts_delete">Удалить · %1$d</string>
+    <string name="drafts_deleted">Удалено черновиков: %1$d</string>
+    <string name="notes_strip_drafts">Траты строками · черновиков: %1$d</string>
+    <string name="notes_strip_write">Записать</string>
 </resources>

@@ -99,8 +99,10 @@ data class HomeActions(
     val onPostPayment: (templateId: String, date: LocalDate) -> Unit = { _, _ -> },
     /** «Все N ›» in «Скоро» → «Регулярные платежи» (#403). */
     val onRecurring: () -> Unit = {},
-    /** «Черновики · N» under the balance → «Черновики» (#586). */
+    /** The «Быстрые заметки» row under the balance → «Черновики» while any wait (#586, #641). */
     val onDrafts: () -> Unit = {},
+    /** «Записать» on that row → «Быстрые заметки» (#641). */
+    val onNotes: () -> Unit = {},
 )
 
 @Composable
@@ -241,7 +243,7 @@ fun HomeScreen(
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
             firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
             if (finale) item(key = "steps-finale") { StepsFinale(onFinale, listItemMotion()) }
-            if (draftCount > 0) item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, listItemMotion()) }
+            item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, actions.onNotes, listItemMotion()) }
             if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->

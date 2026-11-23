@@ -31,8 +31,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * «Черновики» (#586): the drafts oldest first, ready ones ticked until the person unticks them; «Записать» posts the ticked ones
- * and offers «Отменить» (the operations go away, the drafts come back).
+ * «Черновики» (#586): the drafts oldest first, ready ones ticked until the person unticks them; «Записать» posts the ticked ready ones
+ * and offers «Отменить» (the operations go away, the drafts come back); «Удалить» (#628) removes every ticked one, also with «Отменить».
  */
 @HiltViewModel
 class DraftsViewModel @Inject constructor(
@@ -46,19 +46,21 @@ class DraftsViewModel @Inject constructor(
     private val clock: Clock,
     private val timeZone: TimeZone,
 ) : ViewModel() {
-    private val unticked = MutableStateFlow<Set<String>>(emptySet())
+    /** Rows whose tick the person flipped: a ready row starts ticked, an unready one unticked (#628: those can be ticked to delete). */
+    private val flipped = MutableStateFlow<Set<String>>(emptySet())
 
     val state: StateFlow<DraftsUiState> = combine(
         drafts.observeDrafts(),
         accounts.observeAccounts(includeArchived = true),
         categories.observeCategories(includeArchived = true),
-        unticked,
-    ) { list, accountList, categoryList, off ->
+        flipped,
+    ) { list, accountList, categoryList, flip ->
         val accountMap = accountList.associateBy { it.id }
         val categoryMap = categoryList.associateBy { it.id }
         DraftsUiState(
             isLoading = false,
             today = day(clock.now()),
+            ticksTouched = list.any { it.id in flip },
             rows = list.map { draft ->
                 val missing = DraftCheck.missing(draft, accountMap.filterValues { !it.archived }, categoryMap)
                 DraftRowUi(
@@ -70,7 +72,7 @@ class DraftsViewModel @Inject constructor(
                     missing = missing,
                     categoryName = draft.categoryId?.let { categoryMap[it]?.name },
                     source = draft.categorySource,
-                    checked = missing == null && draft.id !in off,
+                    checked = (missing == null) != (draft.id in flip),
                 )
             },
         )
@@ -78,11 +80,23 @@ class DraftsViewModel @Inject constructor(
 
     private fun day(moment: Instant) = moment.toLocalDateTime(timeZone).date
 
-    /** The tick of a ready row. */
-    fun onToggle(id: String) = unticked.update { if (id in it) it - id else it + id }
+    /** The tick of a row. */
+    fun onToggle(id: String) = flipped.update { if (id in it) it - id else it + id }
+
+    /** «Удалить · N» (#628): removes every ticked draft and offers «Отменить» (they come back as they were). */
+    fun delete() {
+        if (state.value.deleteCount == 0) return
+        val ids = state.value.rows.filter { it.checked }.map { it.id }
+        viewModelScope.launch {
+            val before = drafts.observeDrafts().first().filter { it.id in ids }
+            drafts.deleteDrafts(ids)
+            flipped.update { it - ids.toSet() }
+            undo.offer(UndoOffer(R.string.drafts_deleted, listOf(before.size)) { drafts.saveDrafts(before) })
+        }
+    }
 
     fun post() {
-        val ids = state.value.rows.filter { it.checked }.map { it.id }
+        val ids = state.value.rows.filter { it.checked && it.ready }.map { it.id }
         if (ids.isEmpty()) return
         viewModelScope.launch {
             val before = drafts.observeDrafts().first().filter { it.id in ids }

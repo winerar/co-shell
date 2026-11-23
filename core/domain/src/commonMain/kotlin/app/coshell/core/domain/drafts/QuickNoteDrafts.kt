@@ -18,8 +18,8 @@ import app.coshell.core.model.TransactionType
 
 /**
  * Turns the text of a quick note into drafts (#586): [lines] splits it, [build] reads each line by rules ([QuickNoteParser]),
- * picks the account (a word of its name — «сбер», #632; the word «карта»/«нал»; an account in the [Context.local] currency of the
- * country the phone is in — #633; else the one used last) and the category ([CategoryGuess]: past entries, then the brand dictionary,
+ * picks the account (a word of its name — «сбер», #632; the model's choice, #635; the word «карта»/«нал»; the currency the order of the number
+ * suggests — «кофе 5» is dollars, [CurrencyGuess]; an account in the [Context.local] currency of the country the phone is in — #633; else the one used last) and the category ([CategoryGuess]: past entries, then the brand dictionary,
  * then the model's [NoteHint]). A line without a number becomes a draft without an amount («Нужна сумма») if something says it is
  * a purchase; a line nothing recognises, or one the model calls «not an expense», is [isNoise] and stays in the note (#630).
  * Pure code: the model is asked by the caller, one request for all the lines that need it ([needsModel]).
@@ -83,7 +83,14 @@ object QuickNoteDrafts {
         val named = note?.money?.currency.takeIf { note?.currencyFound == true }
         val byHint = hint?.account?.let { AccountLabels.find(it, ctx.accounts.filter { a -> !a.archived }) }
             ?.takeIf { (named == null || it.currency == named) && kindFits(note?.account, it) }
-        val account = mention?.account?.takeIf { named == null || it.currency == named } ?: byHint ?: pickAccount(note?.account, named, ctx)
+        val byName = mention?.account?.takeIf { named == null || it.currency == named } ?: byHint
+        // No currency typed and no account named: the order of the number says which currency it is (#635).
+        val guessed = if (byName == null && named == null && note != null) {
+            CurrencyGuess.byMagnitude(CurrencyGuess.wholeUnits(note.money.amountMinor, note.money.currency), ctx.accounts, ctx.history)
+        } else {
+            null
+        }
+        val account = byName ?: pickAccount(note?.account, named ?: guessed, ctx)
         val currency = note?.money?.currency?.takeIf { note.currencyFound } ?: account?.currency ?: ctx.fallback
         // A number read in the fallback currency is read again in the account's one (JPY has no cents).
         val amount = if (note != null && !note.currencyFound && currency != ctx.fallback) {

@@ -29,13 +29,13 @@ import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellStatusChip
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.StatusTone
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import java.text.NumberFormat
 
@@ -57,7 +57,7 @@ data class AiAddonActions(
 fun AiAddonScreen(state: AiAddonUiState, actions: AiAddonActions) {
     Scaffold(
         topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack) },
-        bottomBar = { MainAction(state, actions, Modifier.padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m)) },
+        bottomBar = { MainAction(state, actions, Modifier.aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m)) },
     ) { padding ->
         Column(
             Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()).verticalScroll(rememberScrollState())

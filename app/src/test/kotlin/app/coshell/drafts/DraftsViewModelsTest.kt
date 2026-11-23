@@ -103,6 +103,20 @@ class DraftsViewModelsTest {
     }
 
     @Test
+    fun `a line that is not about money stays in the note`() = runTest {
+        seed()
+        val store = MemoryNote("кофе 3500\nтест заметки")
+        val vm = notes(store)
+        val done = mutableListOf<Unit>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.done.toList(done) }
+        vm.process()
+        assertEquals(1, drafts.items.value.size)
+        assertEquals("тест заметки", store.value)
+        assertEquals(1, vm.state.value.skipped)
+        assertEquals(1, done.size)
+    }
+
+    @Test
     fun `an empty note is not processed`() = runTest {
         seed()
         val vm = notes(MemoryNote(""))

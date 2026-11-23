@@ -31,4 +31,10 @@
     <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
     <string name="drafts_empty">Черновиков нет. Запишите траты в «Быстрых заметках» — они появятся здесь.</string>
     <string name="drafts_empty_action">Быстрые заметки</string>
+    <plurals name="notes_skipped">
+        <item quantity="one">%1$d строка не похожа на трату — она осталась в заметке.</item>
+        <item quantity="few">%1$d строки не похожи на траты — они остались в заметке.</item>
+        <item quantity="many">%1$d строк не похожи на траты — они остались в заметке.</item>
+        <item quantity="other">%1$d строки не похожи на траты — они остались в заметке.</item>
+    </plurals>
 </resources>

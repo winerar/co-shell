@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.charts.CoShellBarRow
@@ -114,7 +115,7 @@ private fun CategoryBar(item: OrderedRow, onClick: () -> Unit, modifier: Modifie
         fraction = row.fraction,
         color = row.color?.let { categoryColor(it) } ?: MaterialTheme.colorScheme.primary,
         ghost = row.ghost,
-        ghostDescription = row.ghostValue?.let { stringResource(R.string.reports_ghost_value, it) },
+        ghostDescription = row.ghostValue?.let { stringResource(R.string.reports_ghost_value, shownAmount(it)) },
         leading = { CategoryBadge(row.icon, row.color, size = Sizes.badgeSmall) },
         badge = row.mark?.let { mark -> { MarkPill(mark) } },
         badgeDescription = row.mark?.let { markDescription(it) },

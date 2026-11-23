@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.ChartPair
 import app.coshell.core.designsystem.charts.CoShellPairedColumns
 import app.coshell.core.designsystem.components.CoShellCard
@@ -53,7 +54,7 @@ internal fun IncomeCard(income: Income, onMonth: (YearMonth) -> Unit, modifier: 
                     label = formatMonthShort(it.month),
                     first = it.earnedFraction,
                     second = it.spentFraction,
-                    description = stringResource(R.string.reports_income_description, formatMonthYear(it.month), it.earned, it.spent),
+                    description = stringResource(R.string.reports_income_description, formatMonthYear(it.month), shownAmount(it.earned), shownAmount(it.spent)),
                 )
             }
             CoShellPairedColumns(
@@ -90,7 +91,7 @@ private fun Stats(income: Income) {
 private fun Stat(label: String, value: String, color: Color, modifier: Modifier) {
     Column(modifier.semantics(mergeDescendants = true) {}) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
-        Text(value, style = AmountStatStyle, color = color, maxLines = 1)
+        Text(shownAmount(value), style = AmountStatStyle, color = color, maxLines = 1)
     }
 }
 

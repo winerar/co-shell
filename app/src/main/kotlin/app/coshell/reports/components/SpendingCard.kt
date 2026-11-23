@@ -85,7 +85,7 @@ internal fun SpendingCard(
             val name = categoryName(other.firstName)
             val head = if (other.more > 0) stringResource(R.string.reports_other_more, name, other.more) else stringResource(R.string.reports_other, name)
             Text(
-                "$head · ${other.value} · ${other.percent}%",
+                "$head · ${shownAmount(other.value)} · ${other.percent}%",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
@@ -114,7 +114,7 @@ internal fun SpendingBar(bar: Bar, modifier: Modifier = Modifier, onClick: (() -
         fraction = bar.fraction,
         color = bar.color?.let { categoryColor(it) } ?: MaterialTheme.colorScheme.primary,
         ghost = bar.ghost,
-        ghostDescription = bar.ghostValue?.let { stringResource(R.string.reports_ghost_value, it) },
+        ghostDescription = bar.ghostValue?.let { stringResource(R.string.reports_ghost_value, shownAmount(it)) },
         leading = { CategoryBadge(bar.icon, bar.color, size = Sizes.badgeSmall) },
         badge = bar.mark?.let { mark -> { MarkPill(mark) } },
         badgeDescription = bar.mark?.let { markDescription(it) },

@@ -33,7 +33,7 @@ class DraftsTest {
     private val dollars = Account("a3", "Dollars", usd, AccountType.CASH)
     private val cafe = Category("c1", "Кафе", CategoryType.EXPENSE)
     private val taxi = Category("c2", "Такси", CategoryType.EXPENSE)
-    private val food = Category("c3", "Продукты", CategoryType.EXPENSE)
+    private val food = Category("c3", "Продукты", CategoryType.EXPENSE, icon = "food")
     private val salary = Category("c4", "Зарплата", CategoryType.INCOME)
 
     private fun spent(id: String, account: String, category: String, payee: String) = Transaction(
@@ -83,7 +83,36 @@ class DraftsTest {
     fun `a line without a number is a draft without an amount`() {
         val draft = QuickNoteDrafts.build(listOf("купил хлеб"), ctx(), ids()).single()
         assertNull(draft.amountMinor)
-        assertEquals("купил хлеб", draft.title)
+        assertEquals("хлеб", draft.title)
+        assertEquals("c3", draft.categoryId)
+    }
+
+    @Test
+    fun `a line nothing recognises and without a number is not a draft`() {
+        assertEquals(emptyList(), QuickNoteDrafts.build(listOf("тест заметки"), ctx(), ids()))
+        assertEquals(true, QuickNoteDrafts.isNoise("тест заметки", ctx()))
+        assertEquals(false, QuickNoteDrafts.isNoise("тест 500", ctx())) // a number: maybe a purchase named their own way
+    }
+
+    @Test
+    fun `a word of an account name picks that account and leaves the title`() {
+        val sber = Account("s", "Сбер. счёт AMD", CurrencyCode("AMD"), AccountType.CARD)
+        val draft = QuickNoteDrafts.build(listOf("такси 2000 сбер"), ctx(accounts = listOf(galicia, sber)), ids()).single()
+        assertEquals("s", draft.accountId)
+        assertEquals("такси", draft.title)
+        assertEquals(CurrencyCode("AMD"), draft.currency)
+        val mp = Account("m", "Mercado Pago", ars, AccountType.CARD)
+        assertEquals("m", QuickNoteDrafts.build(listOf("обед 12к мп"), ctx(accounts = listOf(galicia, mp)), ids()).single().accountId)
+    }
+
+    @Test
+    fun `without a named currency the account in the local currency wins over the last used one`() {
+        val amd = Account("s", "Сбер", CurrencyCode("AMD"), AccountType.CARD)
+        val history = listOf(spent("t1", "s", "c1", "x"))
+        val base = ctx(history, accounts = listOf(amd, galicia))
+        val local = QuickNoteDrafts.Context(base.accounts, base.categories, base.history, base.fallback, base.known, base.now, local = ars)
+        assertEquals("a1", QuickNoteDrafts.build(listOf("кофе 3500"), local, ids()).single().accountId)
+        assertEquals("s", QuickNoteDrafts.build(listOf("кофе 3500"), base, ids()).single().accountId)
     }
 
     @Test
@@ -116,8 +145,8 @@ class DraftsTest {
         val categories = FakeCategoryRepository().apply { listOf(cafe, taxi, food).forEach { saveCategory(it) } }
         val transactions = FakeTransactionRepository().apply { saveTransaction(spent("t1", "a1", "c1", "кофе")) }
         val drafts = InMemoryDraftRepository()
-        val made = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids(), { now })("кофе 3500, поездка 2000")
-        assertEquals(2, made)
+        val made = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids()) { now }("кофе 3500, поездка 2000")
+        assertEquals(2, made.made)
         val byTitle = drafts.items.value.associateBy { it.title }
         assertEquals(DraftCategorySource.HISTORY, byTitle.getValue("кофе").categorySource)
         assertEquals("c2", byTitle.getValue("Такси").categoryId)
@@ -126,11 +155,26 @@ class DraftsTest {
     }
 
     @Test
+    fun `a line the model calls not an expense is skipped`() = runTest {
+        val model = object : LanguageModel {
+            override val available = true
+            override suspend fun complete(system: String, prompt: String) = "[{\"i\":0,\"expense\":false}]"
+        }
+        val accounts = FakeAccountRepository().apply { saveAccount(galicia) }
+        val categories = FakeCategoryRepository().apply { listOf(cafe, taxi).forEach { saveCategory(it) } }
+        val drafts = InMemoryDraftRepository()
+        val result = ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, NoteHints(model), ids()) { now }("встреча 15")
+        assertEquals(0, result.made)
+        assertEquals(listOf("встреча 15"), result.skipped)
+        assertEquals(emptyList(), drafts.items.value)
+    }
+
+    @Test
     fun `without a model nothing is guessed beyond history and names`() = runTest {
         val accounts = FakeAccountRepository().apply { saveAccount(galicia) }
         val categories = FakeCategoryRepository().apply { listOf(cafe, taxi).forEach { saveCategory(it) } }
         val drafts = InMemoryDraftRepository()
-        ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, null, ids(), { now })("поездка 2000")
+        ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, null, ids()) { now }("поездка 2000")
         assertNull(drafts.items.value.single().categoryId)
     }
 

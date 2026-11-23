@@ -13,7 +13,6 @@ import app.coshell.hints.WordHint
 import app.coshell.home.components.DraftsStrip
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +65,7 @@ import app.coshell.home.components.TotalCard
 import app.coshell.home.sync.SyncBannerState
 import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.reports.review.MonthReviewUiState
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
@@ -202,7 +202,7 @@ fun HomeScreen(
         topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) { EyeButton() } },
         bottomBar = {
             if (editing) {
-                Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {
+                Box(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {
                     CoShellButton(onClick = { editing = false }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.keypad_done)) }
                 }
             }

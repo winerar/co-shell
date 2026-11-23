@@ -14,9 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.R
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.update.components.UpdateDetails
 import app.coshell.update.components.UpdateHero
@@ -35,7 +35,7 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             ScreenTopBar(stringResource(R.string.update_title), onBack = actions.onBack)
         },
         bottomBar = {
-            UpdateMainAction(state, actions, Modifier.padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m))
+            UpdateMainAction(state, actions, Modifier.aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m))
         },
     ) { padding ->
         Column(

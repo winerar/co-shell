@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.budgets.detail.BudgetDetailUiState.Head
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.components.CardTone
@@ -61,7 +62,7 @@ internal fun EnvelopeHead(head: Head, modifier: Modifier = Modifier) {
             )
             if (extra.isNotEmpty()) {
                 Text(
-                    extra.joinToString(" · "),
+                    shownAmount(extra.joinToString(" · ")),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = Spacing.xs),
@@ -80,6 +81,6 @@ private fun stateLine(head: Head): String {
 
 @Composable
 private fun spentLine(head: Head): String {
-    val spent = stringResource(R.string.budget_detail_spent_of, head.envelope.spent, head.envelope.limit).sentenceAmounts()
-    return head.paceToday?.let { spent + " · " + stringResource(R.string.budget_detail_pace, it).sentenceAmounts() } ?: spent
+    val spent = stringResource(R.string.budget_detail_spent_of, shownAmount(head.envelope.spent), shownAmount(head.envelope.limit)).sentenceAmounts()
+    return head.paceToday?.let { spent + " · " + stringResource(R.string.budget_detail_pace, shownAmount(it)).sentenceAmounts() } ?: spent
 }

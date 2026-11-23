@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * «Быстрые заметки» (#586): the text is kept as it is typed; «Обработать» turns each line into a draft, empties the note and
- * says [done] so the screen moves on to «Черновики» (two steps, owner poll 2026-11-21).
+ * «Быстрые заметки» (#586): the text is kept as it is typed; «Обработать» turns each line into a draft, keeps in the note only the
+ * lines that are not about money (#630) and says [done] so the screen moves on to «Черновики» (two steps, owner poll 2026-11-21).
  */
 @HiltViewModel
 class NotesViewModel @Inject constructor(
@@ -40,7 +40,7 @@ class NotesViewModel @Inject constructor(
     }
 
     fun onTextChange(text: String) {
-        _state.update { it.copy(text = text, lineCount = QuickNoteDrafts.lines(text).size) }
+        _state.update { it.copy(text = text, lineCount = QuickNoteDrafts.lines(text).size, skipped = 0) }
         viewModelScope.launch { store.save(text) }
     }
 
@@ -49,14 +49,16 @@ class NotesViewModel @Inject constructor(
         if (current.isLoading || current.processing || current.lineCount == 0) return
         _state.update { it.copy(processing = true) }
         viewModelScope.launch {
-            val made = runCatching { process(current.text) }.getOrDefault(0)
-            if (made > 0) {
-                store.save("")
-                _state.value = NotesUiState()
-                _done.send(Unit)
-            } else {
+            val result = runCatching { process(current.text) }.getOrNull()
+            if (result == null) {
                 _state.update { it.copy(processing = false) }
+                return@launch
             }
+            // Lines that are not about money stay in the note (#630); the rest became drafts.
+            val left = result.skipped.joinToString("\n")
+            store.save(left)
+            _state.value = NotesUiState(text = left, lineCount = result.skipped.size, skipped = result.skipped.size)
+            if (result.made > 0) _done.send(Unit)
         }
     }
 }

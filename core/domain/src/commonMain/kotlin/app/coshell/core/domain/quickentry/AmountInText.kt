@@ -16,18 +16,21 @@ data class TextAmount(val money: Money, val currencyFound: Boolean, val note: St
  *
  * - Numbers: groups of three split by space, dot, comma or apostrophe, then an optional decimal part;
  *   the separators are resolved by [MoneyParser] for the currency («12.500» in ARS is twelve thousand five hundred).
- * - Currency: a code next to the number (`USD`, `ars`, any of [known]) or a sign: `₽`/`руб` — RUB, `֏`/`драм` — AMD,
- *   `€` — EUR, `US$`/`U$S` — USD, a bare `$` — [dollarSign] (pesos in Argentina, where «$» means ARS).
+ * - Currency: a code next to the number (`USD`, `ars`, any of [known]), a sign or a word ([CurrencyWords]: `₽`/«рублей» — RUB,
+ *   `֏`/«драм» — AMD, «песо» — ARS, «долларов» — USD, `€`/«евро» — EUR…), `US$`/`U$S` — USD, a bare `$` — [dollarSign]
+ *   (pesos in Argentina, where «$» means ARS).
  * - Which number: the first one with a currency; with none — the first that looks like money (has grouping or
  *   decimals), else the first. Card tails (`*1234`), times (`12:30`) and dates (`13/11`) are skipped.
  */
 object AmountInText {
 
     private val NUMBER = Regex("""(?<![\d.,])(\d{1,3}(?:[ \u00A0\u202F.,']\d{3})+(?:[.,]\d{1,8})?|\d+(?:[.,]\d{1,8})?)(?!\d)""")
-    private val SIGN_BEFORE = Regex("""(US\$|U\${'$'}S|\$|€|₽|֏|(?<![A-Za-z])[A-Za-z]{3,4})\s?$""")
-    private val SIGN_AFTER = Regex("""^\s?(US\$|\$|€|₽|֏|руб\.?|р\.|драм|[A-Za-z]{3,4}(?![A-Za-z]))""", RegexOption.IGNORE_CASE)
+    private val SIGN_BEFORE = Regex("""(US\$|U\${'$'}S|\$|€|₽|֏|(?<!\p{L})\p{L}{3,10})\s?$""")
+    private val SIGN_AFTER = Regex("""^\s?(US\$|\$|€|₽|֏|р\.|\p{L}{3,10}(?!\p{L})\.?)""", RegexOption.IGNORE_CASE)
     private val BUILT_IN = setOf("USD", "EUR", "ARS", "AMD", "RUB", "USDT", "BRL", "GEL", "KZT", "TRY")
     private const val NOTE_MAX = 120
+    /** Characters looked at on each side of a number for its currency: «долларов» and a space fit. */
+    private const val WINDOW = 12
     private const val TRIM = " \t\n-–—:·,;|"
 
     fun find(
@@ -58,8 +61,8 @@ object AmountInText {
         val digits = text.substring(range)
         if (digits.all { it == '0' || !it.isDigit() }) return null
 
-        val head = text.substring(maxOf(0, range.first - 6), range.first)
-        val tail = text.substring(range.last + 1, minOf(text.length, range.last + 7))
+        val head = text.substring(maxOf(0, range.first - WINDOW), range.first)
+        val tail = text.substring(range.last + 1, minOf(text.length, range.last + 1 + WINDOW))
         var span = range
         var currency: CurrencyCode? = null
         SIGN_BEFORE.find(head)?.let { m ->
@@ -78,8 +81,8 @@ object AmountInText {
         "$" -> dollar
         "us$", "u\$s" -> CurrencyCode("USD")
         "€" -> CurrencyCode("EUR")
-        "₽", "руб", "руб.", "р." -> CurrencyCode("RUB")
-        "֏", "драм" -> CurrencyCode("AMD")
-        else -> raw.uppercase().takeIf { it in codes }?.let(::CurrencyCode)
+        "₽", "р." -> CurrencyCode("RUB")
+        "֏" -> CurrencyCode("AMD")
+        else -> raw.uppercase().takeIf { it.length in 3..4 && it in codes }?.let(::CurrencyCode) ?: CurrencyWords.of(raw)
     }
 }

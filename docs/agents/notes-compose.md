@@ -3,6 +3,8 @@
 Грабли Compose, Material 3 и компилятора Compose, найденные в работе (вынесено из `notes.md`).
 Формат тот же: `- (дата) факт — что из этого следует`.
 
+- (11-23, #624) Свой хост снэкбара вместо Material `SnackbarHost` должен **сам** вызывать `dismiss()` по таймеру: тайм-аут живёт в `SnackbarHost`, а `showSnackbar` ждёт вечно (`CoShellSnackbarHost`, `SnackbarTimeoutTest`).
+- (11-23, #640) Внешний `Scaffold` с нижней панелью отдаёт `bottom = 0`, когда панель уехала (внутренние экраны): полосу системных кнопок никто не вычитает — кнопке внизу нужен `navigationBarsPadding` (`aboveBottomBars()`).
 - (11-12) Compose `lerp(Color, Color, t)` смешивает в **Oklab**, не в sRGB — подбирать цвета/контраст заранее скриптом с Oklab (как в #249), иначе числа не сойдутся с `ColorContrastTest`. (11-13, #271) Тёмный герой — узкое место новых палитр: яркий `primary` (Лимон) валит подсказку → темнее `backgroundDark`.
 - (11-10) `Modifier.drawBehind` на `NavigationBar`/`Surface` рисует **под** их фоном — фон закрасит рисунок.
   Фон ставить своим `background()` перед `drawBehind`, а `containerColor = Transparent` (так пилюля вкладки).

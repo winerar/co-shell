@@ -9,7 +9,7 @@
   телефонах это один документ.
 - `downloaded_rates` — кэш загрузки, ключ `(date, from_currency, to_currency)`, плюс `source` и
   `downloaded_at`; не синхронизируется, **не в бэкапе**. Сохранять только используемые валюты:
-  `snapshot.keepOnly(repo.usedCurrencies())` (USD остаётся всегда — для кросс-курсов).
+  `snapshot.keepOnly(repo.usedCurrencies())` (USD остаётся всегда — для кросс-курсов); валюты, которые есть только у архивных счетов и их операций, не считаются (#604).
 - Дата — текст `YYYY-MM-DD`, курс — текст `Rate.toPlainString()`; `REAL` запрещён.
 - Для загрузки истории: `downloadedDates()` и `operationDates(timeZone)` (дни живых операций; день
   считается в Kotlin по часовому поясу телефона — в БД время операции в миллисекундах).

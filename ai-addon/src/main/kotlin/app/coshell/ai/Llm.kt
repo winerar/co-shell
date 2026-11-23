@@ -32,7 +32,8 @@ class Llm(private val context: Context) {
         )
         try {
             e.createConversation(config).use { conversation ->
-                val message = conversation.sendMessage("/no_think\n$prompt")
+                // Thinking is off in the config; the Qwen-only «/no_think» tag is not sent to Gemma (#587 tuning: it was noise in the prompt).
+                val message = conversation.sendMessage(prompt)
                 return message.contents.contents.filterIsInstance<Content.Text>().joinToString("") { it.text }
             }
         } finally {

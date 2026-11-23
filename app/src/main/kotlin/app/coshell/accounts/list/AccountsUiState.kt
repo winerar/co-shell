@@ -2,6 +2,7 @@ package app.coshell.accounts.list
 
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Money
+import kotlinx.datetime.LocalDate
 
 data class AccountsUiState(
     val isLoading: Boolean = false,
@@ -35,8 +36,13 @@ data class AccountsUiState(
         val currency: String = "",
         /** A travel pass (#645): its type reads «Проездной». */
         val prepaid: Boolean = false,
+        /** A credit card (#686): what is left of the limit and when the payment is due. */
+        val credit: Credit? = null,
         internal val money: Money? = null,
-    )
+    ) {
+        /** [used] is the share of the limit spent (0–1) for the meter; [due] — `null` while there is no debt. */
+        data class Credit(val available: String, val limit: String, val used: Float, val due: LocalDate?)
+    }
 
     /** A foldable group of the list with its total; [key] is stable across recompositions. */
     data class Group(

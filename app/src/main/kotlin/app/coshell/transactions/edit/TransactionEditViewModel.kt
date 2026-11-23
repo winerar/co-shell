@@ -25,6 +25,7 @@ import app.coshell.core.domain.recurring.autoPaymentId
 import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.credit.CreditCard
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptAccounts
 import app.coshell.core.domain.receipts.ReceiptFormats
@@ -104,6 +105,9 @@ class TransactionEditViewModel @Inject constructor(
     /** «Провести» from «Скоро» (#143): the payment's day; applied with the route's template, cleared with it. */
     private var paymentDate: LocalDate? = savedStateHandle.get<String>(TransactionEditDestination.ARG_PAYMENT_DATE)
         ?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+
+    /** «Провести» a credit card payment from «Скоро» (#686): a new transfer into this card for the minimum payment. */
+    private val creditCardId: String? = savedStateHandle[TransactionEditDestination.ARG_CREDIT_CARD]
 
     /** A draft of a quick note from the route (#586): fills a new form once; saved — the draft is gone. */
     private val draftId: String? = savedStateHandle[TransactionEditDestination.ARG_DRAFT_ID]
@@ -191,6 +195,11 @@ class TransactionEditViewModel @Inject constructor(
         pendingTemplateId = null
         if (transaction == null && template == null) pendingReceipt?.let { applyReceipt(it) }
         pendingReceipt = null
+        creditCardId?.takeIf { transaction == null && template == null }?.let { id ->
+            val card = withBalances.firstOrNull { it.account.id == id } ?: return@let
+            val minimum = card.account.credit?.let { CreditCard.status(it, card.balance, today).minPayment } ?: return@let
+            _state.update { it.withCreditPayment(card.account, minimum, accountList.filter { a -> !a.archived }, moneyFormat) }
+        }
         if (transaction == null && template == null) draftId?.let { applyDraft(it) }
     }
 

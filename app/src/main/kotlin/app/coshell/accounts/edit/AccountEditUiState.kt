@@ -19,6 +19,16 @@ data class AccountEditUiState(
     /** Last digits of the card or account as typed («Для чеков», #577); empty — not linked. */
     /** A travel pass (#645): shown as the «Проездной» type, the balance on the card is checked by hand. */
     val prepaid: Boolean = false,
+    /** A credit card (#686): the «Кредитка» type and its conditions as typed in «Условия карты». */
+    val credit: Boolean = false,
+    val creditLimit: String = "",
+    /** Day of the month the payment is due. */
+    val creditPayDay: String = "",
+    /** The minimum payment is a sum (`true`) or a percent of the debt. */
+    val creditMinSum: Boolean = false,
+    val creditMin: String = "",
+    /** Saving was refused: the conditions of a credit card are not complete. */
+    val creditError: Boolean = false,
     val cardDigits: String = "",
     val cardDigitsError: Boolean = false,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */

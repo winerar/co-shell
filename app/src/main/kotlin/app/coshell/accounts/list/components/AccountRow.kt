@@ -7,6 +7,7 @@ import app.coshell.R
 import app.coshell.accounts.AccountLine
 import app.coshell.accounts.labelRes
 import app.coshell.accounts.list.AccountsUiState
+import app.coshell.ui.format.formatDayMonthShort
 
 /**
  * Row of the accounts list (owner 2026-11-09: «счетов будет больше десятка») — the shared [AccountLine] with the type,
@@ -14,11 +15,18 @@ import app.coshell.accounts.list.AccountsUiState
  */
 @Composable
 internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
-    val type = stringResource(if (row.prepaid) R.string.account_type_prepaid else row.type.labelRes)
+    val type = stringResource(
+        when {
+            row.prepaid -> R.string.account_type_prepaid
+            row.credit != null -> R.string.account_type_credit_full
+            else -> row.type.labelRes
+        },
+    )
+    val due = row.credit?.due?.let { stringResource(R.string.account_credit_due, formatDayMonthShort(it)) }
     val personal = row.personalOf?.let {
         if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
     }
-    val base = listOfNotNull(type, personal).joinToString(" · ")
+    val base = listOfNotNull(type, due, personal).joinToString(" · ")
     AccountLine(
         name = row.name,
         color = row.color,
@@ -29,5 +37,6 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
         isNegative = row.isNegative,
         converted = row.converted,
         warn = row.excludedFromTotal,
+        below = row.credit?.let { credit -> { CreditMeter(credit) } },
     )
 }

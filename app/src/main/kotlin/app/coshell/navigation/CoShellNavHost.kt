@@ -236,6 +236,9 @@ fun CoShellNavHost(
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
+                    onPostCredit = { cardId ->
+                        navController.navigate(TransactionEditDestination(type = "TRANSFER", creditCardId = cardId)) { launchSingleTop = true }
+                    },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                     onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },

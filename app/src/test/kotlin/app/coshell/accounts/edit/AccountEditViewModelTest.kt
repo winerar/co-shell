@@ -9,7 +9,9 @@ import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.CreditTerms
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
@@ -122,6 +124,59 @@ class AccountEditViewModelTest {
         assertFalse(again.state.value.prepaid)
         again.save()
         assertFalse(accounts.getAccount("new")!!.prepaid)
+    }
+
+    @Test
+    fun `a credit card keeps its conditions and another type drops them`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Кредитка")
+        vm.onCurrencyChange("amd")
+        vm.onCreditSelect()
+        assertTrue(vm.state.value.credit)
+        assertEquals(AccountType.OTHER, vm.state.value.type)
+        vm.onCreditLimitChange("500 000")
+        vm.onCreditPayDayChange("1x5")
+        assertEquals("15", vm.state.value.creditPayDay)
+        vm.onCreditMinSumChange(true)
+        vm.onCreditMinChange("9 000")
+        vm.save()
+
+        val saved = accounts.getAccount("new")!!
+        assertEquals(CreditTerms(500_000_00, 15, MinPayment.Fixed(9_000_00)), saved.credit)
+
+        val again = viewModel("new")
+        assertTrue(again.state.value.credit)
+        assertEquals("15", again.state.value.creditPayDay)
+        again.onTypeChange(AccountType.CARD)
+        again.save()
+        assertNull(accounts.getAccount("new")!!.credit)
+    }
+
+    @Test
+    fun `a credit card without full conditions is not saved`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Кредитка")
+        vm.onCreditSelect()
+        vm.onCreditLimitChange("500 000")
+        vm.save()
+
+        assertTrue(vm.state.value.creditError)
+        assertFalse(vm.state.value.isDone)
+        assertNull(accounts.getAccount("new"))
+        vm.onCreditPayDayChange("15")
+        assertFalse(vm.state.value.creditError)
+    }
+
+    @Test
+    fun `a travel pass and a credit card exclude each other`() = runTest {
+        val vm = viewModel()
+        vm.onCreditSelect()
+        vm.onPrepaidSelect()
+        assertTrue(vm.state.value.prepaid)
+        assertFalse(vm.state.value.credit)
+        vm.onCreditSelect()
+        assertTrue(vm.state.value.credit)
+        assertFalse(vm.state.value.prepaid)
     }
 
     @Test

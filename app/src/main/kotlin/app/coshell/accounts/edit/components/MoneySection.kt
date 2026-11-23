@@ -34,6 +34,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
     var currencyOpen by rememberSaveable { mutableStateOf(false) }
     var balanceOpen by rememberSaveable { mutableStateOf(false) }
     var adjustOpen by rememberSaveable { mutableStateOf(false) }
+    var creditOpen by rememberSaveable { mutableStateOf(false) }
     CoShellFormSection(stringResource(R.string.account_section_money)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
             CoShellDetailTile(
@@ -71,11 +72,26 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 amount = true,
             )
         }
+        if (state.credit) {
+            CoShellDetailTile(
+                icon = painterResource(DesignR.drawable.ic_credit_card),
+                label = stringResource(R.string.account_credit_terms),
+                value = creditSummary(state),
+                onClick = { creditOpen = true },
+                modifier = Modifier.fillMaxWidth(),
+                empty = state.creditLimit.isBlank(),
+            )
+        }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
     }
     if (currencyOpen) {
         FormSheet(stringResource(R.string.account_currency), onClosed = { currencyOpen = false }) {
             CurrencyFields(state, actions.onCurrencyChange)
+        }
+    }
+    if (creditOpen) {
+        FormSheet(stringResource(R.string.account_credit_terms), onClosed = { creditOpen = false }) {
+            CreditTermsFields(state, actions)
         }
     }
     if (adjustOpen) {
@@ -104,6 +120,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
 
 @Composable
 private fun moneyError(state: AccountEditUiState): String? = when {
+    state.creditError -> stringResource(R.string.account_credit_error)
     state.currencyError == CurrencyError.INVALID -> stringResource(R.string.account_currency_error)
     state.currencyError == CurrencyError.LOCKED -> stringResource(R.string.account_currency_locked)
     state.balanceError == BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)

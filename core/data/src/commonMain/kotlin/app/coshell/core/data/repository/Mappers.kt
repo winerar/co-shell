@@ -10,6 +10,8 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
+import app.coshell.core.model.CreditTerms
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
@@ -42,7 +44,18 @@ internal fun AccountEntity.toModel() = Account(
     color = color,
     cardDigits = cardDigits,
     prepaid = prepaid,
+    credit = credit(),
 )
+
+/** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
+private fun AccountEntity.credit(): CreditTerms? = creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor)
+
+internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMinor: Long?): CreditTerms? {
+    val limit = limitMinor ?: return null
+    val day = payDay ?: return null
+    val min = minBp?.let { MinPayment.Percent(it) } ?: minMinor?.let { MinPayment.Fixed(it) } ?: return null
+    return runCatching { CreditTerms(limit, day, min) }.getOrNull()
+}
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     id = id,
@@ -58,6 +71,10 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     color = color,
     cardDigits = cardDigits,
     prepaid = prepaid,
+    creditLimitMinor = credit?.limitMinor,
+    creditPayDay = credit?.payDay,
+    creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
+    creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

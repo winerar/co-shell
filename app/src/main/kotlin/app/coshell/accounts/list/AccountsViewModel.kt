@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
+import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.model.CreditTerms
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.ui.offMain
@@ -56,8 +58,8 @@ class AccountsViewModel @Inject constructor(
     otherMembers: OtherMembers = OtherMembers { flowOf(emptyMap()) },
     rates: ExchangeRateRepository? = null,
     reportCurrencies: ReportCurrencySettings? = null,
-    clock: Clock = Clock.System,
-    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+    private val clock: Clock = Clock.System,
+    private val timeZone: TimeZone = TimeZone.currentSystemDefault(),
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
     private val reorder: ReorderUseCase? = null,
 ) : ViewModel() {
@@ -132,7 +134,8 @@ class AccountsViewModel @Inject constructor(
                     ?.let { "≈" + MoneyFormat.NBSP + moneyFormat.format(it.sum) } // «≈» never wraps away from the amount (#431)
             }
         }
-        val toRow = { item: AccountWithBalance -> toRow(item, others, conversion?.main, convert) }
+        val today = conversion?.today ?: clock.todayIn(timeZone)
+        val toRow = { item: AccountWithBalance -> toRow(item, others, conversion?.main, convert, today) }
         val (archived, active) = accounts.partition { it.account.archived }
         val activeRows = active.map(toRow)
         val shown = if (view.query.isBlank()) activeRows else activeRows.filter { it.name.contains(view.query.trim(), ignoreCase = true) }
@@ -156,6 +159,7 @@ class AccountsViewModel @Inject constructor(
         others: Map<String, String>,
         main: CurrencyCode?,
         convert: (List<Money>) -> String?,
+        today: LocalDate,
     ) = AccountsUiState.Row(
         id = item.account.id,
         name = item.account.name,
@@ -169,6 +173,18 @@ class AccountsViewModel @Inject constructor(
         converted = if (item.account.currency == main) null else convert(listOf(item.balance)),
         currency = item.account.currency.value,
         prepaid = item.account.prepaid,
+        credit = item.account.credit?.let { creditRow(it, item.balance, today) },
         money = item.balance,
     )
+
+    /** «Доступно … из …» and the payment day of a credit card (#686): from its conditions and the balance. */
+    private fun creditRow(terms: CreditTerms, balance: Money, today: LocalDate): AccountsUiState.Row.Credit {
+        val status = CreditCard.status(terms, balance, today)
+        return AccountsUiState.Row.Credit(
+            available = moneyFormat.format(status.available),
+            limit = moneyFormat.format(status.limit),
+            used = (status.debt.amountMinor.toFloat() / status.limit.amountMinor).coerceIn(0f, 1f),
+            due = status.dueDate,
+        )
+    }
 }

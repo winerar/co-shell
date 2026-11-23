@@ -33,6 +33,11 @@ data class AccountEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
     @ColumnInfo(name = "card_digits") val cardDigits: String? = null,
     @ColumnInfo(defaultValue = "0") val prepaid: Boolean = false,
+    @ColumnInfo(name = "credit_limit_minor") val creditLimitMinor: Long? = null,
+    @ColumnInfo(name = "credit_pay_day") val creditPayDay: Int? = null,
+    /** Minimum payment as a share of the debt in basis points (500 = 5 %); `null` — see [creditMinMinor]. */
+    @ColumnInfo(name = "credit_min_bp") val creditMinBp: Int? = null,
+    @ColumnInfo(name = "credit_min_minor") val creditMinMinor: Long? = null,
 )
 
 @Serializable

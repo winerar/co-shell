@@ -81,6 +81,7 @@ abstract class TransactionEditTestBase {
         templateId: String? = null,
         receiptQr: String? = null,
         receiptUnread: Boolean = false,
+        creditCardId: String? = null,
         draftId: String? = null,
         categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
     ) = TransactionEditViewModel(
@@ -93,6 +94,7 @@ abstract class TransactionEditTestBase {
                 TransactionEditDestination.ARG_RECEIPT_QR to receiptQr,
                 TransactionEditDestination.ARG_RECEIPT_UNREAD to receiptUnread,
                 TransactionEditDestination.ARG_DRAFT_ID to draftId,
+                TransactionEditDestination.ARG_CREDIT_CARD to creditCardId,
             ),
         ),
         accounts = accounts,

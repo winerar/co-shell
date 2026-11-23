@@ -1,8 +1,10 @@
 package app.coshell.core.data.backup
 
 import app.coshell.core.data.repository.ScheduleCodec
+import app.coshell.core.data.repository.creditTermsOf
 import app.coshell.core.data.repository.storedLimitMinor
 import app.coshell.core.model.Account
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
@@ -71,16 +73,25 @@ internal data class AccountDto(
     val color: Long? = null,
     val cardDigits: String? = null,
     val prepaid: Boolean = false,
+    val creditLimitMinor: Long? = null,
+    val creditPayDay: Int? = null,
+    val creditMinBp: Int? = null,
+    val creditMinMinor: Long? = null,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
         isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits, prepaid,
+        creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor),
     )
 }
 
 internal fun Account.toDto() = AccountDto(
     id, name, currency.value, type.name, initialBalanceMinor, isShared, ownerMemberId, archived, sortOrder,
     excludedFromTotal, color, cardDigits, prepaid,
+    creditLimitMinor = credit?.limitMinor,
+    creditPayDay = credit?.payDay,
+    creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
+    creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
 )
 
 @Serializable

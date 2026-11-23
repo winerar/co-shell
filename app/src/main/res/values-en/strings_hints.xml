@@ -45,7 +45,7 @@
     <string name="hint_template">Spending repeats? Save a template and it goes in with one tap.</string>
     <string name="hint_open">Open</string>
     <string name="hint_limit_80">%1$s: you can still spend %2$s. Look into “Budgets” whenever you like.</string>
-    <string name="hint_month_end">The month is over. See the totals: Reports.</string>
+    <string name="hint_month_end">The month is over. See the recap.</string>
     <string name="hint_entry_minimal">Only the amount and the account are needed. You can skip the rest.</string>
     <string name="hint_keypad_math">You can add and subtract: 300 + 150.</string>
     <string name="hint_entry_refund">Got money back? Tick “This is a refund”.</string>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recap_title">Итоги %1$s</string>
+    <string name="recap_empty">В этом месяце записей нет.</string>
+    <string name="recap_progress">История %1$d из %2$d. Нажмите, чтобы листать.</string>
+    <string name="recap_percent">%1$d %%</string>
+    <string name="recap_top_title">Больше всего — на «%1$s»</string>
+    <string name="recap_top_donut">Доли категорий в тратах месяца</string>
+    <string name="recap_vs_lighter">Месяц легче прошлого на %1$d %%</string>
+    <string name="recap_vs_heavier">Месяц дороже прошлого на %1$d %%</string>
+    <string name="recap_vs_same">Месяц почти как прошлый</string>
+    <string name="recap_previous">Прошлый месяц</string>
+    <string name="recap_this">Этот месяц</string>
+    <string name="recap_weeks_title">Самая дорогая неделя: %1$s</string>
+    <string name="recap_weeks_caption">Траты по неделям месяца</string>
+    <string name="recap_new_title">Новая категория месяца</string>
+    <string name="recap_new_text">Раньше трат в ней не было.</string>
+    <string name="recap_weekend_more">Выходные дороже будней</string>
+    <string name="recap_weekend_less">Выходные спокойнее будней</string>
+    <string name="recap_weekend_caption">Средняя трата за день с записями</string>
+    <string name="recap_weekdays">Будни</string>
+    <string name="recap_weekend">Выходные</string>
+    <string name="recap_days">Дней с записями: %1$d</string>
+    <string name="recap_details">Подробнее</string>
+    <string name="recap_phrase_good_start">Хорошее начало</string>
+    <string name="recap_phrase_first_month">Первый месяц записан</string>
+    <string name="recap_phrase_lighter">Месяц легче прошлого на %1$d %%</string>
+    <string name="recap_phrase_limits_kept">Все лимиты в норме</string>
+    <string name="recap_phrase_streak">Дней подряд с записями: %1$d</string>
+    <string name="recap_phrase_same">Месяц почти как прошлый</string>
+    <string name="recap_phrase_saved">Осталось %1$d %% дохода</string>
+    <string name="recap_phrase_busy">Месяц был насыщенным, зато всё записано</string>
+</resources>

@@ -8,6 +8,7 @@ ReportsDestination	RepA
 ReportCategoriesDestination	RepAll
 ReportCategoryDestination	RepDrill
 CapitalMonthDestination	Rp189NwDrill
+MonthRecapDestination	Rec554Top
 MonthReviewDestination	Mon236Screen
 MonthReviewLimitsDestination	Mon236Limits
 AccountEditDestination	AccountEdit

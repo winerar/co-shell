@@ -10,6 +10,7 @@
 | Обзор: бюджеты | BudHome | home_budget | ✓ | ✓ |
 | Обзор: «Скоро» | Rec143HomeA | recurring_home | ✓ | ✓ |
 | Обзор: итог месяца | Mon236A | home_review | ✓ | ✓ |
+| Итоги месяца: истории | Rec554Top | month_recap | ✓ | ✓ |
 | Итог месяца | Mon236Screen | month_review | ✓ | ✓ |
 | Итог месяца: лимиты | Mon236Limits | month_review_limits | ✓ | ✓ |
 | Операции | Operations | transactions | ✓ | ✓ |

@@ -49,6 +49,13 @@ class NotesScreenshotTest {
 
     @Test fun `drafts light`() = shot("drafts_light") { DraftsScreen(DraftsUiState(false, rows, today), DraftsActions()) }
 
+    @Test fun `drafts delete dark`() = shot("drafts_delete_dark", dark = true) { DraftsScreen(deleting, DraftsActions()) }
+
+    @Test fun `drafts delete light`() = shot("drafts_delete_light") { DraftsScreen(deleting, DraftsActions()) }
+
+    /** Board `Notes628Delete`: the unready rows ticked to delete, the ready ones unticked. */
+    private val deleting get() = DraftsUiState(false, rows.map { it.copy(checked = !it.ready) }, today, ticksTouched = true)
+
     @Test fun `drafts empty dark`() = shot("drafts_empty_dark", dark = true) { DraftsScreen(DraftsUiState(false, emptyList(), today), DraftsActions()) }
 
     @Test fun `drafts empty light`() = shot("drafts_empty_light") { DraftsScreen(DraftsUiState(false, emptyList(), today), DraftsActions()) }

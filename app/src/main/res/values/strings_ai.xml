@@ -54,4 +54,5 @@
     <string name="ai_download_title">Скачиваю ИИ</string>
     <string name="ai_download_step1">Шаг 1 из 2 · дополнение</string>
     <string name="ai_download_channel">Загрузка ИИ</string>
+    <string name="beta">бета</string>
 </resources>

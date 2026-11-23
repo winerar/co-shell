@@ -35,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.ai.BetaMark
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import java.text.NumberFormat
@@ -56,7 +57,7 @@ data class AiAddonActions(
 @Composable
 fun AiAddonScreen(state: AiAddonUiState, actions: AiAddonActions) {
     Scaffold(
-        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack) },
+        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack, mark = { BetaMark() }) },
         bottomBar = { MainAction(state, actions, Modifier.aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m)) },
     ) { padding ->
         Column(

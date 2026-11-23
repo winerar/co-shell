@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -26,6 +27,7 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.RowGroupScope
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.ai.BetaMark
 import app.coshell.core.domain.settings.WeekStart
 import app.coshell.theme.components.ThemeModePicker
 import app.coshell.theme.components.labelRes
@@ -109,7 +111,7 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
             AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL -> R.string.ai_settings_loading
             AiAddonStage.ON -> R.string.ai_settings_on
         }
-        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon) }
+        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon, beta = true) }
     }
 
 /** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */
@@ -141,9 +143,14 @@ private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int,
 
 /** A setting shown by its value: tap opens where it is chosen. */
 @Composable
-private fun ValueRow(title: String, value: String, onClick: () -> Unit) = CoShellListRow(
-    title = title,
-    subtitle = value,
+private fun ValueRow(title: String, value: String, onClick: () -> Unit, beta: Boolean = false) = CoShellListRow(
+    title = {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+            Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+            if (beta) BetaMark()
+        }
+    },
+    supporting = { Text(value, maxLines = Int.MAX_VALUE, overflow = TextOverflow.Ellipsis) },
     trailing = { Icon(painterResource(DesignR.drawable.ic_chevron_right), contentDescription = null) },
     onClick = onClick,
     dense = true,

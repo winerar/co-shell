@@ -170,4 +170,25 @@ class DraftsViewModelsTest {
         assertTrue(transactions.items.value.isEmpty())
         assertEquals(listOf("a", "b"), drafts.items.value.map { it.id })
     }
+
+    @Test
+    fun `ticked drafts of any kind are deleted with undo, ready ones stay`() = runTest {
+        seed()
+        drafts.saveDrafts(listOf(draft("a"), draft("b", amount = null), draft("c", amount = null)))
+        val vm = draftsViewModel()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.state.collect {} }
+        var offer: UndoOffer? = null
+        undo.offers.onEach { offer = it }.launchIn(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+        vm.onToggle("a") // untick the ready one
+        vm.onToggle("b") // tick the unready ones
+        vm.onToggle("c")
+        assertEquals(2, vm.state.value.deleteCount)
+        assertEquals(0, vm.state.value.postCount)
+        vm.delete()
+        assertEquals(listOf("a"), drafts.items.value.map { it.id })
+        assertTrue(transactions.items.value.isEmpty())
+        assertEquals(listOf<Any>(2), offer!!.args)
+        offer!!.undo()
+        assertEquals(setOf("a", "b", "c"), drafts.items.value.map { it.id }.toSet())
+    }
 }

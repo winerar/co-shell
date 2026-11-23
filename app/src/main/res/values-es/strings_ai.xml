@@ -54,4 +54,5 @@
     <string name="ai_download_title">Descargando la IA</string>
     <string name="ai_download_step1">Paso 1 de 2 · complemento</string>
     <string name="ai_download_channel">Descarga de la IA</string>
+    <string name="beta">beta</string>
 </resources>

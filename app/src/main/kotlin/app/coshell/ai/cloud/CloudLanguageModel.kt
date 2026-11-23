@@ -25,6 +25,9 @@ class CloudLanguageModel(
 ) : LanguageModel {
     override val available: Boolean get() = baseUrl.isNotBlank() && signedIn()
 
+    /** Free for the phone and quick: every note line goes here, with the accounts to choose from. */
+    override val cheap: Boolean get() = true
+
     override suspend fun complete(system: String, prompt: String): String? {
         if (!available) return null
         return try {

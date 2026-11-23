@@ -45,10 +45,19 @@ object QuickNoteDrafts {
     /** One expense per line; several on a line go after «, » or «;» (a comma inside a number — «15,50» — has no space after it). */
     fun lines(text: String): List<String> = text.split(SPLIT).map { it.trim() }.filter { it.isNotEmpty() }
 
-    /** Lines the rules could not finish or whose category nothing could guess: only these go to the model. */
-    fun needsModel(lines: List<String>, ctx: Context): List<Int> = lines.indices.filter { i ->
+    /**
+     * Lines the rules could not finish or whose category nothing could guess: only these go to the model. With a [broad] (cheap, cloud)
+     * model also the lines whose way of paying the rules did not find, when there is a choice of accounts (#635).
+     */
+    fun needsModel(lines: List<String>, ctx: Context, broad: Boolean = false): List<Int> = lines.indices.filter { i ->
         val read = read(lines[i], ctx)
-        read == null || suggest(read.title.ifBlank { lines[i] }, ctx) == null
+        read == null || suggest(read.title.ifBlank { lines[i] }, ctx) == null || (broad && accountUnsure(read, ctx))
+    }
+
+    /** No account word, no named currency and no account-name word in the line, but more than one account to choose from. */
+    private fun accountUnsure(note: QuickNote, ctx: Context): Boolean {
+        val live = ctx.accounts.filter { !it.archived }
+        return live.size > 1 && note.account == null && !note.currencyFound && AccountMention.find(note.title, live) == null
     }
 
     /** Drafts of the lines that are not [isNoise], in order. */
@@ -72,7 +81,9 @@ object QuickNoteDrafts {
         val mention = AccountMention.find(titleOf(line, note, ctx), ctx.accounts.filter { !it.archived })
         val title = (hint?.title ?: mention?.title ?: titleOf(line, note, ctx)).trim()
         val named = note?.money?.currency.takeIf { note?.currencyFound == true }
-        val account = mention?.account?.takeIf { named == null || it.currency == named } ?: pickAccount(note?.account, named, ctx)
+        val byHint = hint?.account?.let { AccountLabels.find(it, ctx.accounts.filter { a -> !a.archived }) }
+            ?.takeIf { (named == null || it.currency == named) && kindFits(note?.account, it) }
+        val account = mention?.account?.takeIf { named == null || it.currency == named } ?: byHint ?: pickAccount(note?.account, named, ctx)
         val currency = note?.money?.currency?.takeIf { note.currencyFound } ?: account?.currency ?: ctx.fallback
         // A number read in the fallback currency is read again in the account's one (JPY has no cents).
         val amount = if (note != null && !note.currencyFound && currency != ctx.fallback) {
@@ -94,6 +105,13 @@ object QuickNoteDrafts {
             id = id, title = title, currency = currency, amountMinor = amount, accountId = account?.id,
             categoryId = categoryId, categorySource = source, dateMillis = ctx.now - (note?.daysAgo ?: 0) * DAY_MS, createdAt = ctx.now,
         )
+    }
+
+    /** The model's account must agree with the word «карта»/«нал» of the line, if there is one. */
+    private fun kindFits(word: AccountWord?, account: Account): Boolean = when (word) {
+        AccountWord.CARD -> account.type == AccountType.CARD
+        AccountWord.CASH -> account.type == AccountType.CASH
+        null -> true
     }
 
     private fun read(line: String, ctx: Context): QuickNote? = QuickNoteParser.parse(line, ctx.fallback, ctx.known)

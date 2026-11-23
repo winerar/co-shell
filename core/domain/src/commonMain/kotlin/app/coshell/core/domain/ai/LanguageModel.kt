@@ -13,4 +13,10 @@ interface LanguageModel {
      * model failed or was cancelled. Cancelling the coroutine stops the generation.
      */
     suspend fun complete(system: String, prompt: String): String?
+
+    /**
+     * `true` when a request costs the phone nothing and is fast (the cloud model, #635): then every quick-note line is read by it
+     * (payment method too), not only the lines the rules could not finish. The slow model on the phone keeps `false`.
+     */
+    val cheap: Boolean get() = false
 }

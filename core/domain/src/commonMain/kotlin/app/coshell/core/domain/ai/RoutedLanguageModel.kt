@@ -19,6 +19,8 @@ class RoutedLanguageModel(
 
     override val available: Boolean get() = cloudAllowed || phone.available
 
+    override val cheap: Boolean get() = cloudAllowed
+
     override suspend fun complete(system: String, prompt: String): String? {
         if (cloudAllowed) cloud.complete(system, prompt)?.let { return it }
         return if (phone.available) phone.complete(system, prompt) else null

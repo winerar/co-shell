@@ -3,6 +3,7 @@ package app.coshell.family.components
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.RowGroupScope
 import app.coshell.core.designsystem.tokens.Spacing
@@ -41,6 +42,24 @@ internal fun NoAccessBlock(email: String, busy: Boolean, actions: FamilyActions)
     FamilyHint(stringResource(R.string.family_no_access, email))
     FamilyRows {
         row { ActionRow(DesignR.drawable.ic_refresh, stringResource(R.string.family_check_again), actions.onRetry, enabled = !busy) }
+        row {
+            ActionRow(
+                icon = DesignR.drawable.ic_group,
+                title = stringResource(R.string.family_create),
+                subtitle = stringResource(R.string.family_create_hint),
+                onClick = actions.onCreateFamily,
+                enabled = !busy,
+            )
+        }
+        row { SignOutRow(busy, actions.onSignOut) }
+    }
+}
+
+/** Was in a family and is not any more (removed, or the family was deleted): the data stays, a new family is one tap away. */
+@Composable
+internal fun RemovedBlock(busy: Boolean, actions: FamilyActions) {
+    CoShellMessage(stringResource(R.string.family_removed), isError = false, modifier = Modifier.padding(horizontal = Spacing.l))
+    FamilyRows {
         row {
             ActionRow(
                 icon = DesignR.drawable.ic_group,

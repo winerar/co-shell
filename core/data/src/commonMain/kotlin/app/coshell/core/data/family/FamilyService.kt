@@ -10,7 +10,8 @@ import app.coshell.core.data.sync.SyncIssue
 import app.coshell.core.data.sync.SyncResult
 import app.coshell.core.domain.BackupRepository
 import app.coshell.core.domain.family.FamilyRemote
-import app.coshell.core.domain.family.FamilyRemote.Companion.FAMILY_ID
+import app.coshell.core.domain.family.FamilyRemote.Companion.LEGACY_FAMILY_ID
+import app.coshell.core.data.sync.VersionGate
 import app.coshell.core.model.Family
 import app.coshell.core.model.Invite
 import app.coshell.core.model.Member
@@ -43,6 +44,8 @@ class FamilyService(
     private val backup: BackupRepository,
     private val clock: Clock = Clock.System,
     private val bell: ChangeBell = ChangeBell.None,
+    private val currentFamily: CurrentFamily = CurrentFamily(),
+    private val newFamilyId: () -> String = { FamilyRemote.newFamilyId() },
     private val safetyBackup: suspend (json: String) -> Unit,
 ) {
     private val _state = MutableStateFlow<FamilyState>(if (configured) FamilyState.SignedOut else FamilyState.NotConfigured)
@@ -67,6 +70,7 @@ class FamilyService(
         val session = auth.session.value ?: return run { _state.value = FamilyState.SignedOut }
         val cached = cachedFamily()
         val me = cached?.member(session.uid)
+        currentFamily.id = if (cached != null && me != null) cached.id else null
         _state.value = if (cached != null && me != null) FamilyState.Joined(cached, me) else FamilyState.Checking(session.email)
     }
 
@@ -75,16 +79,7 @@ class FamilyService(
         if (!configured) return
         val session = auth.session.value ?: return run { _state.value = FamilyState.SignedOut }
         try {
-            val family = remote.family(FAMILY_ID)
-            val me = family?.member(session.uid)
-            _state.value = when {
-                family != null && me != null -> { cache(family); FamilyState.Joined(family, me) }
-                else -> {
-                    cache(null)
-                    remote.inviteFor(session.email)?.let { FamilyState.Invited(session.email, it) }
-                        ?: FamilyState.NoAccess(session.email)
-                }
-            }
+            _state.value = resolve(session.uid, session.email)
         } catch (e: ApiException) {
             if (e.isUnauthenticated) {
                 signOut()
@@ -97,6 +92,37 @@ class FamilyService(
         }
     }
 
+    /**
+     * Which family this person is in. While a membership is known (cache) only that family is read — the same one
+     * read per check as before. Otherwise the pointer `users/{uid}` names the family; a member of the old `main`
+     * family has no pointer yet (it is written now). Not a member any more after being one → [FamilyState.Removed].
+     */
+    private suspend fun resolve(uid: String, email: String): FamilyState {
+        val known = (_state.value as? FamilyState.Joined)?.family?.id ?: cachedFamily()?.id
+        val pointer = if (known == null) remote.pointer(uid) else null
+        val id = known ?: pointer ?: LEGACY_FAMILY_ID
+        val family = remote.family(id)
+        val me = family?.member(uid)
+        if (family != null && me != null) {
+            if (known == null && pointer == null) runCatching { remote.setPointer(uid, id) } // old `main` members
+            cache(family)
+            currentFamily.id = family.id
+            return FamilyState.Joined(family, me)
+        }
+        val wasIn = known != null || pointer != null
+        cache(null)
+        currentFamily.id = null
+        if (known != null) resetSyncPosition()
+        return remote.inviteFor(email)?.let { FamilyState.Invited(email, it) }
+            ?: if (wasIn) FamilyState.Removed(email) else FamilyState.NoAccess(email)
+    }
+
+    /** The pull cursor and peer schema belong to one family: forget them when the family changes. */
+    private suspend fun resetSyncPosition() {
+        dao.setState(SyncStateEntity(SyncEngine.CURSOR, ""))
+        dao.setState(SyncStateEntity(VersionGate.KEY, ""))
+    }
+
     suspend fun signIn(googleIdToken: String) {
         auth.signInWithGoogle(googleIdToken)
         clearIssue()
@@ -104,8 +130,11 @@ class FamilyService(
     }
 
     suspend fun signOut() {
+        // Removed from the family: its trace on the server goes too, or the next sign-in would show it again.
+        if (_state.value is FamilyState.Removed) auth.uid?.let { runCatching { remote.clearPointer(it) } }
         auth.signOut()
         cache(null)
+        currentFamily.id = null
         clearIssue()
         _state.value = if (configured) FamilyState.SignedOut else FamilyState.NotConfigured
     }
@@ -113,7 +142,10 @@ class FamilyService(
     /** Creates the family with this phone's data in it. `false` — a family already exists (need an invite). */
     suspend fun createFamily(): Boolean {
         val me = currentMember() ?: return false
-        if (!remote.create(FAMILY_ID, me)) return false
+        val id = newFamilyId()
+        if (!remote.create(id, me)) return false
+        cache(null)
+        resetSyncPosition()
         dao.markAllPending()
         refresh()
         return true
@@ -130,6 +162,7 @@ class FamilyService(
         val invited = _state.value as? FamilyState.Invited ?: return
         val me = currentMember() ?: return
         remote.join(invited.invite, me)
+        resetSyncPosition()
         if (keepLocalData) {
             dao.markAllPending()
         } else {
@@ -150,6 +183,58 @@ class FamilyService(
     }
 
     suspend fun cancelInvite(email: String) = remote.cancelInvite(email)
+
+    /** A member leaves (the owner cannot: they delete the family). The data on the phone stays; sync stops. */
+    suspend fun leave() {
+        val joined = _state.value as? FamilyState.Joined ?: return
+        check(!joined.family.isOwner(joined.me.uid)) { "The owner deletes the family instead of leaving" }
+        remote.remove(joined.family.id, joined.me.uid, joined.me.uid)
+        forgetFamily()
+    }
+
+    /** The owner removes [uid] from the family; their phone learns it on its next check. */
+    suspend fun removeMember(uid: String) {
+        val joined = _state.value as? FamilyState.Joined ?: return
+        check(joined.family.isOwner(joined.me.uid) && uid != joined.me.uid) { "Only the owner removes others" }
+        remote.remove(joined.family.id, uid, joined.me.uid)
+        refresh()
+    }
+
+    /** The owner deletes the family and its cloud data for everyone; data on the phones stays. */
+    suspend fun deleteFamily() {
+        val joined = _state.value as? FamilyState.Joined ?: return
+        check(joined.family.isOwner(joined.me.uid)) { "Only the owner deletes the family" }
+        remote.deleteFamily(joined.family.id, joined.me.uid)
+        forgetFamily()
+    }
+
+    /**
+     * Deletes the cloud account: the family (owner) or the membership (member), the pointer, the Firebase user.
+     * Data on the phone stays. [ApiException.isLoginTooOld] — sign in again and repeat; nothing is lost by repeating.
+     */
+    suspend fun deleteAccount() {
+        val uid = auth.uid ?: return
+        when (val s = _state.value) {
+            is FamilyState.Joined ->
+                if (s.family.isOwner(uid)) remote.deleteFamily(s.family.id, uid) else remote.remove(s.family.id, uid, uid)
+            else -> runCatching { remote.clearPointer(uid) }
+        }
+        auth.deleteAccount()
+        cache(null)
+        currentFamily.id = null
+        resetSyncPosition()
+        clearIssue()
+        _state.value = if (configured) FamilyState.SignedOut else FamilyState.NotConfigured
+    }
+
+    /** Out of the family on the server: forget it here and ask again where the person stands (no access, or invited). */
+    private suspend fun forgetFamily() {
+        cache(null)
+        currentFamily.id = null
+        resetSyncPosition()
+        _state.value = FamilyState.Checking(auth.session.value?.email.orEmpty())
+        refresh()
+    }
 
     /**
      * One sync run if this phone is in the family, else `null`. While the family has a single

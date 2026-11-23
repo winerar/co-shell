@@ -48,6 +48,9 @@
   wipe, markAllPending) + `SyncEngine` + `WipeDao` + бэкап + **`kind` в `firebase/firestore.rules`** (владелец
   публикует правила заново, иначе отправка падает). Образец — шаблоны (#169).
 
+- **Много семей (#661, #653):** путь `families/{id}/…`, id — `CurrentFamily` (не константа); указатель `users/{uid}`; лимит 10; выход/исключение/удаление
+  не трогают Room — только облако и `sync_state` (при смене семьи сбрасываются `pull_cursor` и `peer_schema`). Правила и тесты — `firebase/firestore.rules`, `firebase/rules-test/`.
+
 ## Ошибка синка и «Стереть всё»
 - `sync_state["sync_issue"]` — последняя ошибка синка (`SyncIssue`: вид|начало|код), снимается удачным синком;
   её читает плашка на «Обзоре». Пишет только `FamilyService`.

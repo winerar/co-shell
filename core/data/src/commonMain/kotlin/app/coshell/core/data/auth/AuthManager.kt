@@ -17,6 +17,9 @@ interface AuthGateway : IdTokenProvider {
     val uid: String? get() = session.value?.uid
     suspend fun signInWithGoogle(googleIdToken: String): AuthSession
     fun signOut()
+
+    /** Deletes the Firebase account itself (the person's cloud sign-in); the session ends. */
+    suspend fun deleteAccount()
 }
 
 /**
@@ -39,6 +42,11 @@ class AuthManager(
     }
 
     override fun signOut() = update(null)
+
+    override suspend fun deleteAccount() {
+        api.deleteAccount(idToken())
+        update(null)
+    }
 
     override suspend fun idToken(): String = mutex.withLock {
         val current = _session.value ?: throw NotSignedInException()

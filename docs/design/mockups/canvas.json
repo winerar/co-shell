@@ -475,8 +475,71 @@
       "page": "screens",
       "radius": 28
     },
-    "FamilyInviteSent.dc.html": {
+    "FamilyFull.dc.html": {
       "x": 2350,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: заполнена (10 из 10)",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyMemberSheet.dc.html": {
+      "x": 2820,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: участник (исключить)",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyRemoveConfirm.dc.html": {
+      "x": 3290,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: исключить?",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyLeave.dc.html": {
+      "x": 3760,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: выйти?",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyDelete.dc.html": {
+      "x": 4230,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: удалить семью?",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyDeleteAccount.dc.html": {
+      "x": 4700,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: удалить аккаунт?",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyRemoved.dc.html": {
+      "x": 5170,
+      "y": 7440,
+      "w": 390,
+      "h": 844,
+      "title": "Семья: вас убрали",
+      "page": "screens",
+      "radius": 28
+    },
+    "FamilyInviteSent.dc.html": {
+      "x": 5640,
       "y": 7440,
       "w": 390,
       "h": 844,
@@ -485,7 +548,7 @@
       "radius": 28
     },
     "FamilyInviteDialog.dc.html": {
-      "x": 2820,
+      "x": 6110,
       "y": 7440,
       "w": 390,
       "h": 844,
@@ -494,7 +557,7 @@
       "radius": 28
     },
     "FamilyOffline.dc.html": {
-      "x": 3290,
+      "x": 6580,
       "y": 7440,
       "w": 390,
       "h": 844,
@@ -503,7 +566,7 @@
       "radius": 28
     },
     "FamilyNotConfigured.dc.html": {
-      "x": 3760,
+      "x": 7050,
       "y": 7440,
       "w": 390,
       "h": 844,
@@ -2981,6 +3044,13 @@
     "FamilyInvited.dc.html",
     "FamilyJoinMode.dc.html",
     "Family.dc.html",
+    "FamilyFull.dc.html",
+    "FamilyMemberSheet.dc.html",
+    "FamilyRemoveConfirm.dc.html",
+    "FamilyLeave.dc.html",
+    "FamilyDelete.dc.html",
+    "FamilyDeleteAccount.dc.html",
+    "FamilyRemoved.dc.html",
     "FamilyInviteSent.dc.html",
     "FamilyInviteDialog.dc.html",
     "FamilyOffline.dc.html",
@@ -3365,7 +3435,7 @@
       "text": "Семья и синхронизация",
       "x": 0,
       "y": 7190,
-      "maxW": 4150,
+      "maxW": 7440,
       "w": 240
     },
     "row7": {

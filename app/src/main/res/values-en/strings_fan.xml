@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fan_receipt">Receipt QR</string>
+    <string name="fan_notes">Note</string>
+    <string name="fan_template">Template</string>
+</resources>

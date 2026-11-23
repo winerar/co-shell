@@ -23,6 +23,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     NOTES("notes", HintKind.WORD),
     HOLD_SELECT("hold_select", HintKind.GESTURE),
     SWIPE_TABS("swipe_tabs", HintKind.GESTURE),
+    HOLD_PLUS("hold_plus", HintKind.GESTURE),
     TEMPLATE("template", HintKind.GESTURE),
     EDIT_TAP("edit_tap", HintKind.GESTURE),
     FLIP_CARD("flip_card", HintKind.GESTURE),

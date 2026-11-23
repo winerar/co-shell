@@ -181,8 +181,26 @@
       "page": "screens",
       "radius": 28
     },
-    "EntryGuessHist.dc.html": {
+    "EntryReceiptTransfer.dc.html": {
       "x": 1410,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Чек «Перевод между своими счетами» → шторка «Перевод»: оба счёта найдены по цифрам (#646, #578)",
+      "page": "screens",
+      "radius": 28
+    },
+    "ReceiptWhichAccount.dc.html": {
+      "x": 1880,
+      "y": 2480,
+      "w": 390,
+      "h": 844,
+      "title": "Цифры чека не знакомы: «Какой это счёт?» — запомним в счёте (#577)",
+      "page": "screens",
+      "radius": 28
+    },
+    "EntryGuessHist.dc.html": {
+      "x": 2350,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -191,7 +209,7 @@
       "radius": 28
     },
     "EntryGuessAi.dc.html": {
-      "x": 1880,
+      "x": 2820,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -200,7 +218,7 @@
       "radius": 28
     },
     "EntryEdit.dc.html": {
-      "x": 2350,
+      "x": 3290,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -209,7 +227,7 @@
       "radius": 28
     },
     "EntryError.dc.html": {
-      "x": 2820,
+      "x": 3760,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -218,7 +236,7 @@
       "radius": 28
     },
     "EntryNoAccounts.dc.html": {
-      "x": 3290,
+      "x": 4230,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -227,7 +245,7 @@
       "radius": 28
     },
     "EntryAllAccounts.dc.html": {
-      "x": 3760,
+      "x": 4700,
       "y": 2480,
       "w": 390,
       "h": 844,
@@ -319,8 +337,17 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountEditExisting.dc.html": {
+    "AccountDigits.dc.html": {
       "x": 1410,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: «Последние цифры карты или счёта» (#577)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountEditExisting.dc.html": {
+      "x": 1880,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -329,7 +356,7 @@
       "radius": 28
     },
     "AccountDelete.dc.html": {
-      "x": 1880,
+      "x": 2350,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -338,7 +365,7 @@
       "radius": 28
     },
     "AccountBlocked.dc.html": {
-      "x": 2350,
+      "x": 2820,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -347,7 +374,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 2820,
+      "x": 3290,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -357,7 +384,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 3290,
+      "x": 3760,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -367,7 +394,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 3760,
+      "x": 4230,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -376,7 +403,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 4230,
+      "x": 4700,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -1473,7 +1500,7 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 4728,
+      "h": 4860,
       "title": "Воркфлоу",
       "page": "flows"
     },
@@ -3201,6 +3228,8 @@
     "Main.dc.html",
     "EntryTransfer.dc.html",
     "EntryReceipt.dc.html",
+    "EntryReceiptTransfer.dc.html",
+    "ReceiptWhichAccount.dc.html",
     "EntryGuessHist.dc.html",
     "EntryGuessAi.dc.html",
     "EntryEdit.dc.html",
@@ -3216,6 +3245,7 @@
     "AccountEdit.dc.html",
     "AccountAdjust.dc.html",
     "AccountAdjusted.dc.html",
+    "AccountDigits.dc.html",
     "AccountEditExisting.dc.html",
     "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
@@ -3600,13 +3630,13 @@
       "text": "Новая операция — шторка",
       "x": 0,
       "y": 2230,
-      "maxW": 4150,
+      "maxW": 5090,
       "w": 240
     },
     "s2": {
       "page": "screens",
       "text": "Шторка: шаг 1 — тип и счёт (недавние сверху, поиск внизу под пальцем), шаг 2 — своя клавиатура, сумма и категории над ней. Всё нажимаемое — в нижних 2/3.",
-      "x": 4230,
+      "x": 5170,
       "y": 2480,
       "w": 390
     },
@@ -3632,7 +3662,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 4620,
+      "maxW": 5090,
       "w": 240
     },
     "row5": {

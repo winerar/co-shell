@@ -175,7 +175,7 @@ def acc_form_a():
           '<span style="display: block; font-size: 11px; color: %s;">Выключите для долга или чужих денег</span></span>%s</div>' % (MUTED, switch(True)))
     body = (hero + name_line('Галисия · карта', 'wallet', '#F26E22')
             + block('Деньги', money) + block('Тип', '<div style="display: flex; flex-wrap: wrap; gap: 6px;">%s</div>' % types)
-            + block('Цвет', color_row('#FF8A3D'), right=small_link('Как у Galicia')) + block('Баланс', sw))
+            + block('Для чеков', detail('wallet', 'Последние цифры карты или счёта', '…3900')) + block('Цвет', color_row('#FF8A3D'), right=small_link('Как у Galicia')) + block('Баланс', sw))
     return page('Счёт', body)
 
 

@@ -10,6 +10,12 @@ import app.coshell.ai.AiDownloadService
 import app.coshell.ai.BoundAddonControl
 import app.coshell.ai.DeviceMemory
 import app.coshell.ai.SystemDeviceMemory
+import app.coshell.ai.cloud.CloudLanguageModel
+import app.coshell.ai.cloud.PrefsCloudAiSettings
+import app.coshell.core.data.auth.AuthGateway
+import app.coshell.family.data.UrlConnectionHttpClient
+import app.coshell.core.domain.ai.CloudAiSettings
+import app.coshell.core.domain.ai.RoutedLanguageModel
 import app.coshell.ai.ReleaseAddonPackage
 import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.update.data.CacheApkDownloader
@@ -56,5 +62,18 @@ object AiModule {
 
     @Provides
     @Singleton
-    fun provideLanguageModel(@ApplicationContext context: Context): LanguageModel = AddonLanguageModel(context)
+    fun provideAddonLanguageModel(@ApplicationContext context: Context) = AddonLanguageModel(context)
+
+    @Provides
+    fun provideCloudAiSettings(impl: PrefsCloudAiSettings): CloudAiSettings = impl
+
+    /** Cloud (#635, only when the person allowed it) → the phone → rules. `AI_PROXY_URL` is empty in builds without the Worker. */
+    @Provides
+    @Singleton
+    fun provideLanguageModel(addon: AddonLanguageModel, auth: AuthGateway, settings: CloudAiSettings): LanguageModel =
+        RoutedLanguageModel(
+            cloud = CloudLanguageModel(UrlConnectionHttpClient(timeoutMs = 40_000), auth, BuildConfig.AI_PROXY_URL) { auth.session.value != null },
+            phone = addon,
+            settings = settings,
+        )
 }

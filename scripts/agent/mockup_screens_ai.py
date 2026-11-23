@@ -2,6 +2,7 @@
 always ask before 2,5 GB = «А»). Boards `AiOff`, `AiStep1`, `AiStep2`, `AiOn`, `AiData`; the row in «Настройки» is drawn in `Set1Root`
 (mockup_screens_fb_setcards.py). Imported by mockup_screens_feedback.py.
 """
+from mockup_catalog_bricks import status_chip
 from mockup_bricks import *  # noqa: F401,F403
 
 TEXT = 'Необязательно. ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.'
@@ -47,7 +48,9 @@ def footer(inner):
 
 
 def screen(title_body, bottom=''):
-    return inner_screen('ИИ на телефоне', '<div style="margin-top: 8px;">%s</div>' % title_body) + bottom
+    # «бета» after the title (#643 «А», poll 2026-11-23).
+    title = 'ИИ на телефоне <span style="display: inline-flex; vertical-align: middle; margin-left: 4px;">%s</span>' % status_chip('бета', 'manual')
+    return inner_screen(title, '<div style="margin-top: 8px;">%s</div>' % title_body) + bottom
 
 
 def off():

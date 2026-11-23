@@ -13,7 +13,6 @@
     <string name="drafts_title">Borradores</string>
     <string name="drafts_title_count">Borradores · %1$d</string>
     <string name="drafts_menu_hint">De las notas: revisa y registra</string>
-    <string name="drafts_strip_hint">Revisa y registra</string>
     <string name="drafts_summary">Borradores: %1$d · listos: %2$d</string>
     <string name="drafts_hint_ready">Toca una fila para corregirla.</string>
     <string name="drafts_hint_unready">Toca una fila para añadir el importe o elegir una categoría.</string>
@@ -36,4 +35,8 @@
         <item quantity="many">%1$d líneas no parecen gastos, así que quedaron en la nota.</item>
         <item quantity="other">%1$d líneas no parecen gastos, así que quedaron en la nota.</item>
     </plurals>
+    <string name="drafts_delete">Eliminar · %1$d</string>
+    <string name="drafts_deleted">Borradores eliminados: %1$d</string>
+    <string name="notes_strip_drafts">Gastos en líneas · borradores: %1$d</string>
+    <string name="notes_strip_write">Anotar</string>
 </resources>

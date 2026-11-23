@@ -4,6 +4,7 @@
 inline and «Все ›» to the group screen. Stress boards: Spanish, ≈ 320 dp with font ×1,3 (CSS zoom over the body).
 Picked 2026-11-20: В. Boards А/Б removed from the canvas (functions stay for the poll page history).
 """
+from mockup_catalog_bricks import status_chip
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 
@@ -96,7 +97,9 @@ def sw(title, sub, on):
     return row(title, sub, '', switch(on), min_h=52)
 
 
-def val(title, sub):
+def val(title, sub, beta=False):
+    if beta:  # «бета» after the title (#643 «А», poll 2026-11-23)
+        title += ' <span style="display: inline-flex; vertical-align: middle; margin-left: 4px;">%s</span>' % status_chip('бета', 'manual')
     return row(title, sub, '', chevron(), min_h=52)
 
 
@@ -113,7 +116,7 @@ def cards_sections(t):
         section(*g[names[2]], group([val(*m) for m in t['money']]), t['all']),
         section(*g[names[1]], group([val(*t['screens'])]), t['all']),
         section(*g[names[5]], group([val(*t['data'][0]), sw(*t['data'][1], False)]), t['all']),
-        section(*t['smart'][0], group([val(*t['smart'][1])]), ''),
+        section(*t['smart'][0], group([val(*t['smart'][1], beta=True)]), ''),
         section(*t['help'][0], group([sw(*t['help'][1], True), val(*t['help'][2])]), ''),
     ]
 

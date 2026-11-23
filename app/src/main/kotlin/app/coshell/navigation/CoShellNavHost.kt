@@ -213,6 +213,7 @@ fun CoShellNavHost(
                     },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
+                    onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
                 ),
                 gate = if (locked) {
                     VersionGateBannerState(updateAvailable?.versionName, updateAvailable?.sizeBytes?.let(::megabytes))

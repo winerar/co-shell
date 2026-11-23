@@ -18,6 +18,7 @@ fun DraftsRoute(onBack: () -> Unit, onEdit: (String) -> Unit, onNotes: () -> Uni
             onEdit = lock.guard1(onEdit),
             onToggle = viewModel::onToggle,
             onPost = lock.guard { viewModel.post() },
+            onDelete = viewModel::delete,
             onNotes = onNotes,
         ),
     )

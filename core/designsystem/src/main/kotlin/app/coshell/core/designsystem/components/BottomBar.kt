@@ -72,9 +72,11 @@ fun CoShellBottomBar(
     addConfirm: ConfirmPulse? = null,
     addLocked: Boolean = false,
     drag: TabDrag? = null,
+    /** Hold the «+»: these buttons open as a fan (#623); empty — no fan. */
+    fan: List<FanAction> = emptyList(),
 ) {
     AnimatedVisibility(visible = visible, enter = BarIn, exit = BarOut) {
-        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked, drag)
+        BottomBarContent(tabs, onTab, addLabel, onAdd, addConfirm, addLocked, drag, fan)
     }
 }
 
@@ -127,6 +129,7 @@ private fun BottomBarContent(
     addConfirm: ConfirmPulse?,
     addLocked: Boolean,
     drag: TabDrag?,
+    fan: List<FanAction>,
 ) {
     val dark = LocalDarkTheme.current
     val scheme = MaterialTheme.colorScheme
@@ -160,7 +163,7 @@ private fun BottomBarContent(
         ) {
             tabs.forEachIndexed { index, tab ->
                 if (index == tabs.size / 2) {
-                    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    CoShellActionFan(fan, enabled = !addLocked, modifier = Modifier.weight(1f)) {
                         AddButton(addLabel, onAdd, addConfirm, addLocked)
                     }
                 }

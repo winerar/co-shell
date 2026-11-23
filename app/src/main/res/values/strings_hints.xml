@@ -22,6 +22,7 @@
     <string name="hints_reset_hint">Вернёт «Первые шаги» и советы</string>
     <string name="hint_flip_card">Нажмите на карточку, чтобы перевернуть: на обороте самое полезное за месяц.</string>
     <string name="hint_swipe_tabs">Листайте вбок, чтобы сменить вкладку.</string>
+    <string name="hint_hold_plus">Удерживайте «+»: QR чека, заметка и шаблон — веером.</string>
     <string name="hint_close">Закрыть подсказку</string>
     <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
     <string name="hint_accounts">Счёт — место, где лежат деньги. Баланс считается сам.</string>

@@ -76,6 +76,11 @@ object Sizes {
     val panelInset = 32.dp
     /** The «+» circle in the middle of the bar — a button, so [button] high like all of them. */
     val bottomBarAdd = 48.dp
+    /** The round buttons of the fan over «+» (CoShellActionFan, #623, board `EwHoldA`) and their distance from the «+». */
+    val fanButton = 56.dp
+    val fanRadius = 120.dp
+    /** Room of a fan item: the button and its caption under it. */
+    val fanItemWidth = 88.dp
     /** Buttons inside an action bar (CoShellActionBar): 48 dp in the 64 dp capsule. */
     val actionBarButton = 48.dp
     /** A currency code tile in a rates row («USD» on «Курсах валют»). */

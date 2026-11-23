@@ -65,6 +65,7 @@
   `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.
   Тег-переключатель — `CoShellTagChip(name, color, selected, onClick, removeLabel)` (34 dp; вкл — заливка цвета тега, «✕» — в
   выбранных), `CoShellTagMoreChip(label)` — пунктирная «Все N» (#293, строка в шторке ввода и шторка «Теги»).
+- **Веер над «+»** — `CoShellActionFan(actions, enabled) { «+» }`, `FanAction(icon, label, onSelect)` (#623, доски `HomeHoldFan`, `CompChoice`): удержание раскрывает на дуге круглые кнопки (`Sizes.fanButton` 56, `fanRadius` 120), ведут палец и отпускают — действие, мимо — закрыть; короткое нажатие как раньше. Геометрия — `ActionFanGeometry`; цели — `navigation/FanTarget`.
 - **Кнопка добавления** — `CoShellAddFab(label, onClick)`: **круглая «+» 56 dp без текста**, внизу справа (`Scaffold(floatingActionButton)`),
   одна на экран-список; `label` — только имя для озвучки («Новый счёт»). Под списком — `Sizes.fabClearance`. Ни «+» в шапке, ни строки
   «добавить» в списке, ни пунктира (выбор владельца 2026-11-16, #408; такой стиль — для всех будущих кнопок добавления; `AddButtonRuleTest`).

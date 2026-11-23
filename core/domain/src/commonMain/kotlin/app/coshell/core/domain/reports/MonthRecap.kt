@@ -39,6 +39,9 @@ data class MonthRecap(
     /** Change against the previous month in whole percents, negative — lighter; `null` — no comparison. */
     val changePercent: Int? get() = previousSpent?.let { percentOf(spent - it, it) }
 
+    /** Share of the income left, in whole percents (negative — spent more); `null` — nothing came in. */
+    val savingsRate: Int? get() = percentOf(earned - spent, earned)
+
     /** The week with the largest spending (0-based), `null` when nothing was spent. */
     val busiestWeek: Int? get() = weeks.withIndex().maxByOrNull { it.value.amountMinor }?.takeIf { it.value.isPositive }?.index
 

@@ -5,6 +5,8 @@ import app.coshell.home.homeBudgetPreviewSample
 import app.coshell.home.homePreviewSample
 import app.coshell.reports.review.MonthLimitsScreen
 import app.coshell.reports.review.MonthReviewSamples
+import app.coshell.reports.recap.MonthRecapSamples
+import app.coshell.reports.recap.MonthRecapScreen
 import app.coshell.reports.review.MonthReviewScreen
 
 import android.app.Application
@@ -64,6 +66,31 @@ class ReportsScreenshotTest {
 
     @Test
     fun `category drill light`() = shot("report_category_light") { drill() }
+
+    // «Итоги октября» (#554, boards Rec554*): each story, the first in both themes.
+    @Test
+    fun `month recap dark`() = shot("month_recap_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state) }
+
+    @Test
+    fun `month recap light`() = shot("month_recap_light") { MonthRecapScreen(MonthRecapSamples.state) }
+
+    @Test
+    fun `month recap comparison`() = shot("month_recap_vs_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 1) }
+
+    @Test
+    fun `month recap weeks`() = shot("month_recap_weeks_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 2) }
+
+    @Test
+    fun `month recap new category`() = shot("month_recap_new_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 3) }
+
+    @Test
+    fun `month recap weekend`() = shot("month_recap_weekend_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 4) }
+
+    @Test
+    fun `month recap final`() = shot("month_recap_final_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 5) }
+
+    @Test @Config(qualifiers = "+en")
+    fun `month recap english`() = shot("month_recap_en", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 5) }
 
     @Test
     fun `month review dark`() = shot("month_review_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="access_title">Co-Shell is by invitation</string>
+    <string name="access_text">Enter the code you were sent. You need it once — after that everything works offline.</string>
+    <string name="access_field">Invitation code</string>
+    <string name="access_continue">Continue</string>
+    <string name="access_where">Where do I get a code?</string>
+    <string name="access_where_title">Where do I get a code?</string>
+    <string name="access_where_text">The person who invited you gives it out. Ask them for your personal code: it has 12 characters, for example K7QX-M2PD-9WTA.</string>
+    <string name="access_where_ok">Got it</string>
+    <string name="access_err_malformed">A code has 12 characters: letters and digits, for example K7QX-M2PD-9WTA.</string>
+    <string name="access_err_not_found">There is no such code. Check that everything is typed correctly.</string>
+    <string name="access_err_revoked">This code no longer works. Ask for a new one.</string>
+    <string name="access_err_full">The code is already on every phone it allows. Ask for a new one.</string>
+    <string name="access_err_network">No connection. Check your internet and try again.</string>
+    <string name="access_locked_title">Access closed</string>
+    <string name="access_locked_text">The invitation code no longer works. Data on this phone stays, but you can\'t add anything new. Ask the person who invited you.</string>
+    <string name="access_locked_enter">Enter another code</string>
+    <string name="access_locked_backup">Save a backup</string>
+</resources>

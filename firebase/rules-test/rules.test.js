@@ -239,3 +239,47 @@ test('only the owner deletes the family: records, invitations, then the family i
   // the person's own pointer is theirs to drop
   await assertSucceeds(deleteDoc(doc(db(wife), `users/${wife.uid}`)));
 });
+
+// ---- invitation codes for the closed test (#666) ------------------------------------------------------------------
+
+const CODE = 'K7QXM2PD9WTA';
+const anon = () => env.unauthenticatedContext().firestore();
+
+async function seedCode(over = {}) {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), `access_codes/${CODE}`),
+      { label: 'Аня', createdAt: new Date(), revoked: false, maxDevices: 2, devices: [], ...over });
+  });
+}
+
+const addDevice = (id, c = anon()) => updateDoc(doc(c, `access_codes/${CODE}`), { devices: arrayUnion(id) });
+
+test('access code: anyone reads it by its exact id, nobody lists, creates or deletes codes', async () => {
+  await seedCode();
+  await assertSucceeds(getDoc(doc(anon(), `access_codes/${CODE}`)));
+  await assertFails(getDocs(collection(anon(), 'access_codes')));
+  await assertFails(setDoc(doc(anon(), 'access_codes/NEWCODE'), { label: 'x', revoked: false, maxDevices: 99, devices: [] }));
+  await assertFails(setDoc(doc(db(owner), 'access_codes/NEWCODE'), { label: 'x', revoked: false, maxDevices: 99, devices: [] }));
+  await assertFails(deleteDoc(doc(anon(), `access_codes/${CODE}`)));
+});
+
+test('access code: a device registers itself up to the limit, once each', async () => {
+  await seedCode();
+  await assertSucceeds(addDevice('phone-1'));
+  await assertSucceeds(addDevice('phone-2', db(wife)));
+  await assertFails(addDevice('phone-3')); // the third phone
+  await assertSucceeds(getDoc(doc(anon(), `access_codes/${CODE}`)));
+});
+
+test('access code: nothing but one new device may change; a revoked code takes no devices', async () => {
+  await seedCode({ devices: ['phone-1'] });
+  const ref = doc(anon(), `access_codes/${CODE}`);
+  await assertFails(updateDoc(ref, { revoked: true }));
+  await assertFails(updateDoc(ref, { maxDevices: 99 }));
+  await assertFails(updateDoc(ref, { label: 'другой' }));
+  await assertFails(updateDoc(ref, { devices: [] })); // removing devices
+  await assertFails(updateDoc(ref, { devices: ['phone-2', 'phone-3'] })); // swapping, two at once
+  await assertFails(addDevice('phone-1')); // already there: nothing to add
+  await seedCode({ revoked: true });
+  await assertFails(addDevice('phone-9'));
+});

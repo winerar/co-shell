@@ -24,6 +24,7 @@ usage() {
     tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage, backlog)
     issue <N> [строк]     одна задача: заголовок, метки, описание (дешевле MCP)
     sync                  влить origin/dev в текущую ветку, показать конфликты
+    invite [имя]          коды приглашения для закрытого теста: как выдать/отозвать (docs/setup/invite.md), с именем — готовая команда gh
     hotfix                срочный фикс сбоя: ветка от origin/main, PR в main (docs/agents/hotfix.md)
     push                  push текущей ветки с повтором при сетевых ошибках (2–16 с)
     stamp                 STATUS: «Обновлено» = сегодня, «всего N» тестов из последнего прогона
@@ -70,6 +71,12 @@ case "$cmd" in
     tasks) exec "$here/tasks.sh" "$@" ;;
     issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;
+    invite)
+        echo "Коды приглашения — кнопка в GitHub: Actions → «Приглашения: коды для закрытого теста» → Run workflow."
+        echo "  выдать:   action = «выдать код», name = кому, devices = сколько телефонов (3 по умолчанию) — код в сводке запуска"
+        echo "  отозвать: action = «отозвать код», code = K7QX-M2PD-9WTA;  все коды: action = «показать все коды»"
+        [ $# -gt 0 ] && echo "  из консоли владельца: gh workflow run invite.yml -f action='выдать код' -f name='$*'"
+        echo "Подробно: docs/setup/invite.md" ;;
     hotfix) exec "$here/hotfix.sh" "$@" ;;
     push) exec "$here/push.sh" "$@" ;;
     stamp) exec "$here/stamp-status.sh" "$@" ;;

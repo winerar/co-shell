@@ -4,18 +4,21 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.access.AccessCenter
+import app.coshell.access.AccessState
 import app.coshell.core.data.db.SyncDao
 import app.coshell.core.data.sync.VersionGate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /**
  * Entry is closed until the update (#334, board `Fb334A`): the other phone runs a newer, incompatible
- * version ([VersionGate]). Looking stays open; saving, deleting and «+» answer with [onBlocked]
+ * version ([VersionGate]); or because the invitation code was revoked (#666, `access/`). Looking stays open; saving, deleting and «+» answer with [onBlocked]
  * (a note with «Обновить») instead of writing.
  */
 @Immutable
@@ -35,8 +38,13 @@ val LocalInputLock = staticCompositionLocalOf { InputLock() }
 
 /** Reads the gate from Room for the app shell. */
 @HiltViewModel
-class InputLockViewModel @Inject constructor(syncDao: SyncDao) : ViewModel() {
-    val locked: StateFlow<Boolean> = syncDao.observeState(VersionGate.KEY)
-        .map(VersionGate::isLocked)
+class InputLockViewModel @Inject constructor(syncDao: SyncDao, access: AccessCenter) : ViewModel() {
+    private val versionLocked = syncDao.observeState(VersionGate.KEY).map(VersionGate::isLocked)
+
+    /** The invitation code was revoked (#666): entry is closed, the data stays. */
+    val accessLocked: StateFlow<Boolean> = access.state.map { it is AccessState.Revoked }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    val locked: StateFlow<Boolean> = combine(versionLocked, accessLocked) { version, access -> version || access }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 }

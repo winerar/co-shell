@@ -67,6 +67,7 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
     ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyFull', 'FamilyMemberSheet', 'FamilyRemoveConfirm', 'FamilyLeave', 'FamilyDelete', 'FamilyDeleteAccount', 'FamilyRemoved', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
     ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError']),
+    ('Закрытое тестирование', ['AccessGate', 'AccessLocked']),
     ('ИИ на телефоне', ['AiOff', 'AiStep1', 'AiStep1Load', 'AiStep2', 'AiOn', 'AiData', 'AiWeak']),
     ('Импорт из Wallet', ['ImportStart', 'ImportError', 'ImportSummary', 'ImportAccounts', 'ImportCategories', 'ImportTransfers', 'ImportPreview', 'ImportDone']),
 ]

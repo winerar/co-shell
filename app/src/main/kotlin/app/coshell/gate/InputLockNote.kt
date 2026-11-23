@@ -14,11 +14,12 @@ import app.coshell.core.designsystem.R as DesignR
 /**
  * The app's [InputLock]. A blocked tap opens a short window — why, and «Обновить» ([onUpdate]). A window,
  * not a snackbar: the tap often comes from an editor sheet, and the shell's snackbar sits under it.
+ * [accessLocked] (the invitation code was revoked, #666): a blocked tap calls [onAccessBlocked] instead.
  */
 @Composable
-fun rememberInputLock(locked: Boolean, onUpdate: () -> Unit): InputLock {
+fun rememberInputLock(locked: Boolean, onUpdate: () -> Unit, accessLocked: Boolean = false, onAccessBlocked: () -> Unit = {}): InputLock {
     var noteShown by rememberSaveable { mutableStateOf(false) }
-    if (noteShown && locked) {
+    if (noteShown && locked && !accessLocked) {
         CoShellAlertDialog(
             title = stringResource(R.string.gate_banner_title_any),
             text = stringResource(R.string.gate_locked_note),
@@ -32,5 +33,6 @@ fun rememberInputLock(locked: Boolean, onUpdate: () -> Unit): InputLock {
             icon = DesignR.drawable.ic_lock,
         )
     }
-    return remember(locked) { InputLock(locked) { noteShown = true } }
+    // A revoked code is the more basic reason: its window («Доступ закрыт») answers the blocked tap.
+    return remember(locked, accessLocked) { InputLock(locked) { if (accessLocked) onAccessBlocked() else noteShown = true } }
 }

@@ -47,6 +47,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import app.coshell.hints.HintCenter
 import app.coshell.hints.LocalHintHost
 import app.coshell.privacy.PrivacyCenter
+import app.coshell.access.AccessHost
 import app.coshell.privacy.PrivacyHost
 import javax.inject.Inject
 import kotlinx.coroutines.coroutineScope
@@ -119,11 +120,14 @@ class MainActivity : FragmentActivity() {
                     val haptics = remember(systemHaptics, options.haptics) { if (options.haptics) systemHaptics else NoHaptics }
                     // PIN lock and hidden sums over everything (#145); the language question stays under the lock.
                     PrivacyHost(privacy) {
-                        CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
-                            CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
+                        // The invitation code of the closed test comes before everything but the PIN (#666).
+                        AccessHost {
+                            CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
+                                CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
+                            }
+                            // The one-time language question over «Обзор» (#352).
+                            LanguagePromptHost()
                         }
-                        // The one-time language question over «Обзор» (#352).
-                        LanguagePromptHost()
                     }
                 }
             }

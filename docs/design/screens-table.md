@@ -29,6 +29,15 @@
 | Конвертер: все валюты | Conv2AllType | converter_all | ✓ | ✓ |
 | Валюты отчётов | ReportCurrencies | report_currencies | ✓ | ✓ |
 | Семья | Family | family | ✓ | ✓ |
+| Семья: заполнена (10 из 10) | FamilyFull | — | — | — |
+| Семья: участник | FamilyMemberSheet | — | — | — |
+| Семья: исключить? | FamilyRemoveConfirm | — | — | — |
+| Семья: выйти? | FamilyLeave | — | — | — |
+| Семья: удалить семью? | FamilyDelete | — | — | — |
+| Семья: удалить аккаунт? | FamilyDeleteAccount | — | — | — |
+| Семья: вас убрали | FamilyRemoved | — | — | — |
+| Код приглашения | AccessGate | — | — | — |
+| Доступ закрыт | AccessLocked | — | — | — |
 | Настройки | Set1Root | settings | ✓ | ✓ |
 | Внешний вид | Set1Look | appearance | ✓ | ✓ |
 | Конфиденциальность | Priv145Settings | privacy | ✓ | ✓ |
@@ -74,6 +83,15 @@
 
 ## Без полного набора эталонов
 
+- Семья: заполнена (10 из 10) (нет эталона: light, dark)
+- Семья: участник (нет эталона: light, dark)
+- Семья: исключить? (нет эталона: light, dark)
+- Семья: выйти? (нет эталона: light, dark)
+- Семья: удалить семью? (нет эталона: light, dark)
+- Семья: удалить аккаунт? (нет эталона: light, dark)
+- Семья: вас убрали (нет эталона: light, dark)
+- Код приглашения (нет эталона: light, dark)
+- Доступ закрыт (нет эталона: light, dark)
 - ИИ на телефоне: скачивание дополнения (ai_addon_addon_loading: light)
 
 ## Сверка 1 в 1 (2026-11-16)

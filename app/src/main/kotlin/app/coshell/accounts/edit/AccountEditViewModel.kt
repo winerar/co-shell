@@ -203,61 +203,14 @@ class AccountEditViewModel @Inject constructor(
     fun dismissDeleteBlocked() = _state.update { it.copy(deleteBlocked = false) }
 
     /** Validates the form; on errors updates the state and returns null. */
-    private fun buildAccount(form: AccountEditUiState): Account? {
-        val name = form.name.trim()
-        val currency = CurrencyCode.parseOrNull(form.currency)
-        var balanceError: BalanceError? = null
-        val balanceMinor = when {
-            currency == null -> null
-            form.initialBalance.isBlank() -> 0L
-            else -> when (val parsed = MoneyParser.parse(form.initialBalance, currency)) {
-                is MoneyParser.Result.Success -> parsed.money.amountMinor
-                is MoneyParser.Result.Error -> {
-                    balanceError = if (parsed.reason == MoneyParser.Reason.TOO_MANY_FRACTION_DIGITS) {
-                        BalanceError.TOO_MANY_FRACTION_DIGITS
-                    } else {
-                        BalanceError.INVALID
-                    }
-                    null
-                }
+    private fun buildAccount(form: AccountEditUiState): Account? =
+        when (val result = buildAccount(form, existing) { ids.newId() }) {
+            is AccountFormResult.Valid -> result.account
+            is AccountFormResult.Invalid -> {
+                _state.update(result.showErrors)
+                null
             }
         }
-        if (name.isEmpty() || currency == null || balanceMinor == null) {
-            _state.update {
-                it.copy(
-                    nameError = name.isEmpty(),
-                    currencyError = if (currency == null) CurrencyError.INVALID else null,
-                    balanceError = balanceError,
-                )
-            }
-            return null
-        }
-        val digits = form.cardDigits.trim()
-        if (digits.isNotEmpty() && digits.length != Account.CARD_DIGITS) {
-            _state.update { it.copy(cardDigitsError = true) }
-            return null
-        }
-        val credit = if (form.credit) parseCreditTerms(form, currency) else null
-        if (form.credit && credit == null) {
-            _state.update { it.copy(creditError = true) }
-            return null
-        }
-        val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
-        return base.copy(
-            credit = credit,
-            cardDigits = digits.ifEmpty { null },
-            prepaid = form.prepaid,
-            name = name,
-            currency = currency,
-            type = form.type,
-            initialBalanceMinor = balanceMinor,
-            excludedFromTotal = !form.includedInTotal,
-            color = form.color,
-            isShared = form.shared,
-            // The repository makes the current member the owner of a new personal account.
-            ownerMemberId = if (form.shared) null else base.ownerMemberId,
-        )
-    }
 
     private sealed interface ParsedActual {
         data object None : ParsedActual
@@ -271,9 +224,7 @@ class AccountEditViewModel @Inject constructor(
         if (text.isBlank()) return ParsedActual.None
         return when (val parsed = MoneyParser.parse(text, currency)) {
             is MoneyParser.Result.Success -> ParsedActual.Amount(parsed.money)
-            is MoneyParser.Result.Error -> ParsedActual.Bad(
-                if (parsed.reason == MoneyParser.Reason.TOO_MANY_FRACTION_DIGITS) BalanceError.TOO_MANY_FRACTION_DIGITS else BalanceError.INVALID,
-            )
+            is MoneyParser.Result.Error -> ParsedActual.Bad(parsed.toBalanceError())
         }
     }
 

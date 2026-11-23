@@ -4,4 +4,6 @@
     <cache-path name="updates" path="updates/" />
     <!-- The CSV of «Экспорт в CSV» (#204), shared with the chooser's app. -->
     <cache-path name="exports" path="exports/" />
+    <!-- The picture of «Итоги месяца» → «Поделиться» (#554). -->
+    <cache-path name="recap" path="recap/" />
 </paths>

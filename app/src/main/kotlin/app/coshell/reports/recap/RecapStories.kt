@@ -111,11 +111,12 @@ internal fun WeekendStory(state: MonthRecapUiState, modifier: Modifier) {
 }
 
 @Composable
-internal fun FinalStory(state: MonthRecapUiState, onDetails: () -> Unit, modifier: Modifier) {
+internal fun FinalStory(state: MonthRecapUiState, onDetails: (() -> Unit)?, modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         StoryTitle(phraseText(state))
         Caption(stringResource(R.string.recap_days, state.recordedDays))
-        CoShellButton(onDetails, Modifier.fillMaxWidth().padding(top = Spacing.m)) { Text(stringResource(R.string.recap_details)) }
+        // The picture has no button: it is a still image.
+        if (onDetails != null) CoShellButton(onDetails, Modifier.fillMaxWidth().padding(top = Spacing.m)) { Text(stringResource(R.string.recap_details)) }
     }
 }
 

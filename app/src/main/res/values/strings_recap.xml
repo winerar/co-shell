@@ -30,4 +30,6 @@
     <string name="recap_phrase_same">Месяц почти как прошлый</string>
     <string name="recap_phrase_saved">Осталось %1$d %% дохода</string>
     <string name="recap_phrase_busy">Месяц был насыщенным, зато всё записано</string>
+    <string name="recap_share">Поделиться итогами</string>
+    <string name="recap_share_mark" translatable="false">co-shell · %1$s</string>
 </resources>

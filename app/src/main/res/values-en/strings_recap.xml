@@ -30,4 +30,5 @@
     <string name="recap_phrase_same">About the same as last month</string>
     <string name="recap_phrase_saved">%1$d %% of income left</string>
     <string name="recap_phrase_busy">A busy month, but everything is recorded</string>
+    <string name="recap_share">Share the recap</string>
 </resources>

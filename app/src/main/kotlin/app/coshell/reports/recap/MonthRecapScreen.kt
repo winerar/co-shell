@@ -12,19 +12,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.core.designsystem.charts.CoShellMeter
 import app.coshell.core.designsystem.components.CardTone
+import app.coshell.core.designsystem.components.CoShellIconButton
+import androidx.compose.material3.Icon
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.reports.RecapCard
+import app.coshell.core.designsystem.R as DesignR
 import app.coshell.ui.format.formatMonthOf
 import app.coshell.ui.top.ScreenTopBar
 
@@ -34,16 +41,32 @@ import app.coshell.ui.top.ScreenTopBar
  * One card is always on screen; a month with nothing in it has no stories.
  */
 @Composable
-fun MonthRecapScreen(state: MonthRecapUiState, onBack: () -> Unit = {}, onDetails: () -> Unit = {}, startAt: Int = 0) {
+fun MonthRecapScreen(
+    state: MonthRecapUiState,
+    onBack: () -> Unit = {},
+    onDetails: () -> Unit = {},
+    startAt: Int = 0,
+    onShare: (ImageBitmap) -> Unit = {},
+) {
     val month = state.month
-    Scaffold(topBar = { ScreenTopBar(month?.let { stringResource(R.string.recap_title, formatMonthOf(it)) }.orEmpty(), onBack = onBack) }) { padding ->
+    var sharing by remember { mutableStateOf(false) }
+    var index by rememberSaveable { mutableIntStateOf(startAt) }
+    val shareLabel = stringResource(R.string.recap_share)
+    Scaffold(
+        topBar = {
+            ScreenTopBar(month?.let { stringResource(R.string.recap_title, formatMonthOf(it)) }.orEmpty(), onBack = onBack) {
+                if (month != null && state.cards.isNotEmpty() && !sharing) {
+                    CoShellIconButton(onClick = { sharing = true }) { Icon(painterResource(DesignR.drawable.ic_upload), shareLabel) }
+                }
+            }
+        },
+    ) { padding ->
         if (state.isLoading || month == null) return@Scaffold
         val side = Modifier.padding(horizontal = Spacing.l)
         if (state.cards.isEmpty()) {
             CoShellMessage(stringResource(R.string.recap_empty), isError = false, modifier = side.padding(padding).padding(top = Spacing.l))
             return@Scaffold
         }
-        var index by rememberSaveable { mutableIntStateOf(startAt) }
         val last = state.cards.lastIndex
         val at = index.coerceIn(0, last)
         Column(Modifier.fillMaxSize().padding(padding).then(side)) {
@@ -61,20 +84,21 @@ fun MonthRecapScreen(state: MonthRecapUiState, onBack: () -> Unit = {}, onDetail
                 tone = CardTone.Hero,
                 onClick = { index = if (at < last) at + 1 else 0 },
             ) {
-                Story(state.cards[at], state, onDetails, Modifier.fillMaxSize().padding(Spacing.l))
+                Story(state.cards[at], state, onDetails, forPicture = false, Modifier.fillMaxSize().padding(Spacing.l))
             }
+            if (sharing) RecapPictureCapture(state.cards[at], state) { picture -> sharing = false; onShare(picture) }
         }
     }
 }
 
 @Composable
-private fun Story(card: RecapCard, state: MonthRecapUiState, onDetails: () -> Unit, modifier: Modifier) = when (card) {
+internal fun Story(card: RecapCard, state: MonthRecapUiState, onDetails: () -> Unit, forPicture: Boolean, modifier: Modifier) = when (card) {
     RecapCard.TOP_CATEGORIES -> TopStory(state, modifier)
     RecapCard.VS_PREVIOUS -> VsStory(state, modifier)
     RecapCard.WEEKS -> WeeksStory(state, modifier)
     RecapCard.NEW_CATEGORY -> NewStory(state, modifier)
     RecapCard.WEEKEND -> WeekendStory(state, modifier)
-    RecapCard.FINAL -> FinalStory(state, onDetails, modifier)
+    RecapCard.FINAL -> FinalStory(state, onDetails.takeUnless { forPicture }, modifier)
 }
 
 @Composable

@@ -30,4 +30,5 @@
     <string name="recap_phrase_same">Casi igual que el mes anterior</string>
     <string name="recap_phrase_saved">Queda el %1$d %% de los ingresos</string>
     <string name="recap_phrase_busy">Un mes intenso, pero todo registrado</string>
+    <string name="recap_share">Compartir el resumen</string>
 </resources>

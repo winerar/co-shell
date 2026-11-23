@@ -17,9 +17,9 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import app.coshell.core.designsystem.components.CoShellHint
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
@@ -51,7 +51,7 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
                 CoShellButton(
                     onClick = actions.onPost,
                     enabled = state.postCount > 0,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m),
+                    modifier = Modifier.fillMaxWidth().aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m),
                 ) { Text(label) }
             }
         },

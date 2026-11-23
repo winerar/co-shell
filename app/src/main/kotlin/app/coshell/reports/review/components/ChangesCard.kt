@@ -60,7 +60,7 @@ private fun ChangeRow(change: Change, onClick: () -> Unit) {
         Column(Modifier.weight(1f)) {
             Text(categoryName(change.name), style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
-                stringResource(R.string.review_change_usual, change.amount, change.usual),
+                stringResource(R.string.review_change_usual, shownAmount(change.amount), shownAmount(change.usual)),
                 style = RateSmallStyle,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,

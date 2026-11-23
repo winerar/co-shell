@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.ChartColumn
 import app.coshell.core.designsystem.charts.CoShellColumns
 import app.coshell.core.designsystem.components.CoShellCard
@@ -32,7 +33,7 @@ internal fun MonthsCard(months: Months, onMonth: (YearMonth) -> Unit, modifier: 
                 label = formatMonthShort(column.month),
                 valueLabel = column.value,
                 fraction = column.fraction,
-                description = stringResource(R.string.reports_months_description, formatMonthYear(column.month), column.value),
+                description = stringResource(R.string.reports_months_description, formatMonthYear(column.month), shownAmount(column.value)),
             )
         }
         CoShellColumns(columns, Modifier.padding(Spacing.l), selected = months.selected, onSelect = { onMonth(months.columns[it].month) })

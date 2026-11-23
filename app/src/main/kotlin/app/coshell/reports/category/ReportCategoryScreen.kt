@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellDivider
 import androidx.compose.material3.MaterialTheme
@@ -92,7 +93,7 @@ private fun Head(state: ReportCategoryUiState, modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f).padding(end = Spacing.s),
             )
             Text(
-                state.total?.let { stringResource(R.string.report_drill_share, it, state.currency, state.percent) }
+                state.total?.let { stringResource(R.string.report_drill_share, shownAmount(it), state.currency, state.percent) }
                     ?: stringResource(R.string.report_drill_refunds),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellMessage
@@ -35,6 +34,7 @@ import app.coshell.importer.wallet.components.previewStep
 import app.coshell.importer.wallet.components.startStep
 import app.coshell.importer.wallet.components.summaryStep
 import app.coshell.importer.wallet.components.transfersStep
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.top.ScreenTopBar
 import kotlinx.datetime.TimeZone
@@ -53,7 +53,7 @@ fun WalletImportScreen(state: WalletImportUiState, actions: WalletImportActions,
                     stringResource(R.string.import_step_of, state.steps.indexOf(state.step) + 1, state.steps.size),
             )
         },
-        bottomBar = { Box(Modifier.padding(bottom = LocalBottomBarInset.current)) { BottomButton(state, actions) } },
+        bottomBar = { Box(Modifier.aboveBottomBars()) { BottomButton(state, actions) } },
     ) { padding ->
         val draft = state.draft
         LazyColumn(

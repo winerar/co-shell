@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.budgets.detail.BudgetDetailUiState.Inner
 import app.coshell.budgets.list.components.EnvelopeRow
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -45,10 +46,10 @@ internal fun FolderCategories(
 private fun PlainRow(inner: Inner.Plain, onClick: () -> Unit) {
     CoShellListRow(
         title = inner.name,
-        subtitle = listOf(
+        subtitle = shownAmount(listOf(
             inner.spent?.let { stringResource(R.string.budget_detail_spent, it) } ?: stringResource(R.string.budgets_caption_idle),
             stringResource(R.string.budget_inside_none),
-        ).joinToString(" · "),
+        ).joinToString(" · ")),
         leading = { CategoryBadge(inner.icon, inner.color) },
         trailing = {
             Text(stringResource(R.string.budget_inside_add), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)

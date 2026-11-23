@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.charts.CoShellBarRow
@@ -50,7 +51,7 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
                         fraction = row.fraction,
                         color = color,
                         leading = { CoShellAvatar(name, color) },
-                        caption = row.top.joinToString(" · ") { "${it.name ?: deleted} ${it.value}" },
+                        caption = row.top.map { "${it.name ?: deleted} ${shownAmount(it.value)}" }.joinToString(" · "),
                         onClick = onMember?.let { open -> { open(row.memberId) } },
                     )
                 }

@@ -157,6 +157,17 @@ class ExchangeRateRepositoryTest {
     }
 
     @Test
+    fun `currencies of archived accounts need no rates`() = runTest {
+        val accounts = RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
+        val transactions = RoomTransactionRepository(db.transactionDao(), stamper)
+        accounts.saveAccount(Account("card", "Bybit", usdt))
+        accounts.saveAccount(Account("rub", "Сбер", CurrencyCode("RUB"), archived = true))
+        val at = Instant.parse("2026-11-09T12:00:00Z")
+        transactions.saveTransaction(Transaction("old", TransactionType.EXPENSE, "rub", Money(500_00, CurrencyCode("RUB")), at))
+        assertEquals(setOf(usdt), rates.usedCurrencies())
+    }
+
+    @Test
     fun `operation days are local calendar days of live operations`() = runTest {
         val accounts = RoomAccountRepository(db.accountDao(), db.transactionDao(), stamper)
         val transactions = RoomTransactionRepository(db.transactionDao(), stamper)

@@ -24,5 +24,11 @@
   {"name": "area:design-system", "color": "d4c5f9", "description": "Сквозное: дизайн-система"},
   {"name": "area:reliability", "color": "d4c5f9", "description": "Сквозное: надёжность данных и семья"},
   {"name": "area:performance", "color": "d4c5f9", "description": "Сквозное: производительность"},
-  {"name": "area:delivery", "color": "d4c5f9", "description": "Сквозное: доставка, CI, релизы"}
+  {"name": "area:delivery", "color": "d4c5f9", "description": "Сквозное: доставка, CI, релизы"},
+
+  {"name": "sp:1", "color": "ededed", "description": "Оценка: час-два, одна правка"},
+  {"name": "sp:2", "color": "ededed", "description": "Оценка: полсессии"},
+  {"name": "sp:3", "color": "ededed", "description": "Оценка: одна сессия"},
+  {"name": "sp:5", "color": "ededed", "description": "Оценка: сессия с макетом и опросом или две"},
+  {"name": "sp:8", "color": "ededed", "description": "Оценка: больше двух сессий — дробить на подзадачи"}
 ]

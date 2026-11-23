@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.charts.bulletColor
@@ -84,7 +85,7 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         minFontSize = 16.sp, // shrinks, never loses the currency code (#432)
     )
     Text(
-        stringResource(R.string.budgets_spent_of, summary.spent, summary.planned).sentenceAmounts(),
+        stringResource(R.string.budgets_spent_of, shownAmount(summary.spent), shownAmount(summary.planned)).sentenceAmounts(),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -93,9 +94,9 @@ private fun SummaryContent(summary: BudgetsUiState.Summary) {
         val over = forecast.overBy != null
         Text(
             if (over) {
-                stringResource(R.string.budgets_forecast_over, forecast.amount, forecast.overBy.orEmpty()).sentenceAmounts()
+                stringResource(R.string.budgets_forecast_over, shownAmount(forecast.amount), shownAmount(forecast.overBy.orEmpty())).sentenceAmounts()
             } else {
-                stringResource(R.string.budgets_forecast_ok, forecast.amount).sentenceAmounts()
+                stringResource(R.string.budgets_forecast_ok, shownAmount(forecast.amount)).sentenceAmounts()
             },
             style = MaterialTheme.typography.bodySmall,
             color = if (over) bulletColor(BulletTone.WARNING) else MaterialTheme.colorScheme.onSurfaceVariant,

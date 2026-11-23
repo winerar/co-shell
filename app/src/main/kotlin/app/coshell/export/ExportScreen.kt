@@ -30,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellFilterChip
@@ -41,6 +40,7 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.export.CsvExport
 import app.coshell.core.model.TransactionType
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.format.formatMonthYear
 import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.form.ChoiceOption
@@ -143,7 +143,7 @@ fun ExportScreen(state: ExportUiState, actions: ExportActions) {
     Scaffold(
         topBar = { ScreenTopBar(stringResource(R.string.export_title), onBack = actions.onBack) },
         bottomBar = {
-            Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {
+            Box(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {
                 CoShellButton(onClick = actions.onExport, enabled = state.count > 0, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(R.string.export_action))
                 }

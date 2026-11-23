@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.components.CoShellCard
@@ -51,7 +52,7 @@ internal fun CapitalCard(capital: Capital, currency: String, modifier: Modifier 
                 Text(stringResource(R.string.reports_capital_caption), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Head(capital, currency)
-            val description = capital.points.joinToString(", ") { "${formatMonthYear(it.month)} ${it.value}" }
+            val description = capital.points.map { "${formatMonthYear(it.month)} ${shownAmount(it.value)}" }.joinToString(", ")
             CoShellLine(
                 points = capital.points.map { LinePoint(formatMonthShort(it.month).take(1), it.minor) },
                 description = stringResource(R.string.reports_capital_description, description),
@@ -65,12 +66,12 @@ internal fun CapitalCard(capital: Capital, currency: String, modifier: Modifier 
 
 @Composable
 private fun Head(capital: Capital, currency: String) {
-    val change = capital.change + (capital.percent?.let { " · " + (if (it > 0) "+" else "") + "$it%" } ?: "")
+    val change = shownAmount(capital.change) + (capital.percent?.let { " · " + (if (it > 0) "+" else "") + "$it%" } ?: "")
     val line = if (capital.months >= YEAR) stringResource(R.string.reports_capital_year, change)
     else stringResource(R.string.reports_capital_months, change, capital.months)
     Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
         Text(
-            capital.value,
+            shownAmount(capital.value),
             style = AmountHeadlineStyle,
             maxLines = 1,
         )
@@ -122,7 +123,7 @@ private fun Why(rows: List<WhyRow>) {
 @Composable
 private fun RowScope.Cell(text: String, color: Color, label: Boolean = false, bold: Boolean = false) {
     Text(
-        text,
+        if (label) text else shownAmount(text),
         style = if (label) MaterialTheme.typography.labelSmall
         else if (bold) AmountCellStrongStyle else AmountCellStyle,
         color = color,

@@ -29,6 +29,26 @@ class NoteHintsTest {
     }
 
     @Test
+    fun `a long note goes in parts and answers land on their own lines`() = runTest {
+        val model = Fake(answer = """[{"i":1,"title":"Coto","category":"Продукты"}]""")
+        val hints = NoteHints(model).read((0 until 12).map { "line $it" }, categories)
+        assertEquals(2, model.calls)
+        assertEquals(12, hints.size)
+        assertEquals(NoteHint("Coto", "Продукты"), hints[1])
+        assertEquals(NoteHint("Coto", "Продукты"), hints[11]) // index 1 of the second part
+        assertNull(hints[10])
+    }
+
+    @Test
+    fun `the model may say a line is not an expense`() = runTest {
+        val model = Fake(answer = """[{"i":0,"expense":false},{"i":1,"title":"Coto","category":"Продукты","expense":true}]""")
+        val hints = NoteHints(model).read(listOf("тест", "coto"), categories)
+        assertEquals(NoteHint(null, null, expense = false), hints[0])
+        assertEquals(NoteHint("Coto", "Продукты"), hints[1])
+        assertEquals(true, "expense" in model.lastPrompt)
+    }
+
+    @Test
     fun `titles with digits, repeated or out of range indexes are dropped`() = runTest {
         val model = Fake(answer = """[{"i":0,"title":"кофе 3500"},{"i":5,"title":"x"},{"i":1,"title":"Coto","category":"Кафе"},{"i":1,"title":"again"}]""")
         val hints = NoteHints(model).read(listOf("a", "b"), categories)

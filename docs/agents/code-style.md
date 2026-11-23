@@ -33,7 +33,7 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - Edge-to-edge: внешний `Scaffold` (`CoShellNavHost`) поглощает только нижний отступ; строку
   статуса обрабатывает `Scaffold` экрана (через `padding` или `TopAppBar`). Нижнюю капсулу внешний `Scaffold` не вычитает из
   экрана: прокручиваемое тело — `contentPadding = underBars(padding, …)` (или `.verticalScroll(..).padding(underBars(padding))`),
-  никогда `.padding(padding)` на самом списке; своя кнопка внизу в `bottomBar` — с `padding(bottom = LocalBottomBarInset.current)`.
+  никогда `.padding(padding)` на самом списке; своя кнопка внизу в `bottomBar` — `Modifier.aboveBottomBars()` (`ui/bar/BottomButtonPadding.kt`: капсула на вкладках + полоса системных кнопок на внутренних экранах, #640).
 
 ## Иконки
 - Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.

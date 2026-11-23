@@ -257,6 +257,9 @@
     <string name="shake_to_add_hint">Con la app abierta</string>
     <string name="transaction_deleted">Movimiento eliminado</string>
     <string name="transactions_deleted_many">Movimientos eliminados: %d</string>
+    <string name="entry_saved">Guardado · %1$s</string>
+    <string name="entry_undone">Deshecho · %1$s</string>
+    <string name="action_restore">Restaurar</string>
     <string name="transactions_selected">%d seleccionados</string>
     <string name="transactions_selection_clear">Anular selección</string>
     <string name="transactions_delete_selected">Eliminar · %d</string>

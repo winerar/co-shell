@@ -47,6 +47,7 @@ import app.coshell.transactions.edit.tip.TipContext
 import app.coshell.transactions.edit.tip.TipUi
 import app.coshell.transactions.edit.tip.refreshed
 import app.coshell.ui.offMain
+import app.coshell.undo.SavedEntries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
@@ -87,6 +88,7 @@ class TransactionEditViewModel @Inject constructor(
     private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
     private val drafts: DraftRepository = InMemoryDraftRepository(),
     private val categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
+    private val savedEntries: SavedEntries = SavedEntries { _, _ -> },
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -637,6 +639,8 @@ class TransactionEditViewModel @Inject constructor(
                         saveTransaction(operation)
                         entryTip.remember(ui)
                     }
+                    // A new operation (not an edit) gets «Сохранено · Отменить» and the shake window (#325).
+                    if (existing == null) savedEntries.saved(listOfNotNull(transaction, tip?.first), moneyFormat.format(transaction.amount))
                     templateId?.let { id ->
                         entryTemplates.used(id)
                         paymentDate?.let { entryTemplates.paid(id, it) }

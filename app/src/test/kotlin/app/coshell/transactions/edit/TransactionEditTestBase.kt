@@ -24,6 +24,7 @@ import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.SavedEntries
 import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
@@ -83,6 +84,7 @@ abstract class TransactionEditTestBase {
         receiptUnread: Boolean = false,
         draftId: String? = null,
         categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
+        savedEntries: SavedEntries = SavedEntries { _, _ -> },
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -110,6 +112,7 @@ abstract class TransactionEditTestBase {
         entryTip = fakeEntryTip(categories, transactions, tipSettings),
         drafts = drafts,
         categoryAi = categoryAi,
+        savedEntries = savedEntries,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

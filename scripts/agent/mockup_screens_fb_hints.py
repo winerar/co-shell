@@ -162,6 +162,29 @@ def currency_hint():
     return board('Валюта покупки: подсказка', scrim(home(4, '')) + sheet(head + body, top=300))
 
 
+def _ops_rows(bottom_overlay):
+    rows = ''.join(tx(*r) for r in RECENT)
+    return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bottom_overlay)
+
+
+def saved_snack():
+    """#325: after a NEW operation is saved, «Сохранено · сумма · Отменить» for 4 s (the same window lets a shake undo it); edits show nothing."""
+    return _ops_rows(snackbar('Сохранено · 3 500 ARS', 'Отменить', 96))
+
+
+def undone_snack():
+    """#325: a shake in that window removes the save: «Отменено · сумма · Вернуть» (4 s); later a shake opens the receipt scanner as before."""
+    return _ops_rows(snackbar('Отменено · 3 500 ARS', 'Вернуть', 96))
+
+
+def shake_hint():
+    """#325 gesture hint (once, after the first saved operation, 0,6 s after its snackbar left): `CoShellCoachCard`, «Понятно»."""
+    card_html = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 96px; padding: 12px 8px 4px 16px; border-radius: 24px; background: %s; border: 1px solid %s;">'
+                 '<div style="font-size: 14px; line-height: 1.4; padding-right: 12px;">Ошиблись? Сразу после сохранения встряхните телефон — операция отменится.</div>'
+                 '<div style="text-align: right; color: %s; font-size: 14px; font-weight: 700; padding: 8px 12px;">Понятно</div></div>' % (KEY, LINE2, LIME))
+    return _ops_rows(card_html)
+
+
 BOARDS = [  # name, title, fn, issue number
     ('Hint513Home0', '#513 · «Обзор», новичок: строка «Первые шаги»', home_new, 513),
     ('Hint513Home2', '#513 · «Обзор», два шага из четырёх', home_two, 513),
@@ -176,4 +199,7 @@ BOARDS = [  # name, title, fn, issue number
     ('Hint513Tags', '#513 · «Теги»: подсказка под заголовком', tags_hint, 513),
     ('Hint513Currency', '#513 · «Валюта покупки»: подсказка под заголовком', currency_hint, 513),
     ('Hint513Settings', '#513 · «Ещё → Приложение»: подсказки', app_settings, 513),
+    ('Undo325Saved', '#325 · снэкбар «Сохранено · Отменить» (4 с)', saved_snack, 325),
+    ('Undo325Shaken', '#325 · встряхнули: «Отменено · Вернуть»', undone_snack, 325),
+    ('Hint325Shake', '#325 · подсказка-жест «Встряхните» (один раз)', shake_hint, 325),
 ]

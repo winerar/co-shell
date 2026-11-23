@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -54,6 +52,7 @@ class FamilyService(
     /** Cached family for the list screens (author names); `null` — not in a family. */
     val joined: Family? get() = (_state.value as? FamilyState.Joined)?.family
 
+    private val familyCache = FamilyCache(dao)
     private var loaded = false
     private var membersCheckedAt: Instant? = null
 
@@ -68,7 +67,7 @@ class FamilyService(
         if (!configured || loaded) return
         loaded = true
         val session = auth.session.value ?: return run { _state.value = FamilyState.SignedOut }
-        val cached = cachedFamily()
+        val cached = familyCache.load()
         val me = cached?.member(session.uid)
         currentFamily.id = if (cached != null && me != null) cached.id else null
         _state.value = if (cached != null && me != null) FamilyState.Joined(cached, me) else FamilyState.Checking(session.email)
@@ -98,19 +97,19 @@ class FamilyService(
      * family has no pointer yet (it is written now). Not a member any more after being one → [FamilyState.Removed].
      */
     private suspend fun resolve(uid: String, email: String): FamilyState {
-        val known = (_state.value as? FamilyState.Joined)?.family?.id ?: cachedFamily()?.id
+        val known = (_state.value as? FamilyState.Joined)?.family?.id ?: familyCache.load()?.id
         val pointer = if (known == null) remote.pointer(uid) else null
         val id = known ?: pointer ?: LEGACY_FAMILY_ID
         val family = remote.family(id)
         val me = family?.member(uid)
         if (family != null && me != null) {
             if (known == null && pointer == null) runCatching { remote.setPointer(uid, id) } // old `main` members
-            cache(family)
+            familyCache.save(family)
             currentFamily.id = family.id
             return FamilyState.Joined(family, me)
         }
         val wasIn = known != null || pointer != null
-        cache(null)
+        familyCache.save(null)
         currentFamily.id = null
         if (known != null) resetSyncPosition()
         return remote.inviteFor(email)?.let { FamilyState.Invited(email, it) }
@@ -133,7 +132,7 @@ class FamilyService(
         // Removed from the family: its trace on the server goes too, or the next sign-in would show it again.
         if (_state.value is FamilyState.Removed) auth.uid?.let { runCatching { remote.clearPointer(it) } }
         auth.signOut()
-        cache(null)
+        familyCache.save(null)
         currentFamily.id = null
         clearIssue()
         _state.value = if (configured) FamilyState.SignedOut else FamilyState.NotConfigured
@@ -144,7 +143,7 @@ class FamilyService(
         val me = currentMember() ?: return false
         val id = newFamilyId()
         if (!remote.create(id, me)) return false
-        cache(null)
+        familyCache.save(null)
         resetSyncPosition()
         dao.markAllPending()
         refresh()
@@ -220,7 +219,7 @@ class FamilyService(
             else -> runCatching { remote.clearPointer(uid) }
         }
         auth.deleteAccount()
-        cache(null)
+        familyCache.save(null)
         currentFamily.id = null
         resetSyncPosition()
         clearIssue()
@@ -229,7 +228,7 @@ class FamilyService(
 
     /** Out of the family on the server: forget it here and ask again where the person stands (no access, or invited). */
     private suspend fun forgetFamily() {
-        cache(null)
+        familyCache.save(null)
         currentFamily.id = null
         resetSyncPosition()
         _state.value = FamilyState.Checking(auth.session.value?.email.orEmpty())
@@ -302,26 +301,7 @@ class FamilyService(
     private fun currentMember(): Member? =
         auth.session.value?.let { Member(it.uid, it.name, it.email) }
 
-    private suspend fun cachedFamily(): Family? =
-        dao.state(FAMILY_KEY)?.let { runCatching { json.decodeFromString<CachedFamily>(it).toModel() }.getOrNull() }
-
-    private suspend fun cache(family: Family?) =
-        dao.setState(SyncStateEntity(FAMILY_KEY, family?.let { json.encodeToString(CachedFamily.of(it)) } ?: ""))
-
-    @Serializable
-    private data class CachedFamily(val id: String, val ownerUid: String, val members: List<CachedMember>) {
-        fun toModel() = Family(id, ownerUid, members.map { Member(it.uid, it.name, it.email) })
-        companion object {
-            fun of(f: Family) = CachedFamily(f.id, f.ownerUid, f.members.map { CachedMember(it.uid, it.name, it.email) })
-        }
-    }
-
-    @Serializable
-    private data class CachedMember(val uid: String, val name: String, val email: String)
-
     private companion object {
-        const val FAMILY_KEY = "family"
         val MEMBERS_CHECK = 1.minutes
-        val json = Json { ignoreUnknownKeys = true }
     }
 }

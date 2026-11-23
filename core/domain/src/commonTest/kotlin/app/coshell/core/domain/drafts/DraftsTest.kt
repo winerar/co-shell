@@ -257,4 +257,39 @@ class DraftsTest {
         assertEquals("a4", accountOf("кофе 3500 карта", "Mercado Pago · ARS · card")) // same kind: the model chooses among cards
         assertEquals(null, accountOf("кофе 3500 usd", "Mercado Pago · ARS · card")) // a named currency the account does not have: the person chooses
     }
+
+    private fun spentIn(id: String, account: Account, whole: Long) = Transaction(
+        id = id, type = TransactionType.EXPENSE, accountId = account.id, amount = Money(whole * 100, account.currency),
+        date = Instant.fromEpochMilliseconds(now - 1), categoryId = "c1", payee = "кофе",
+    )
+
+    private fun made(line: String, history: List<Transaction> = emptyList(), accounts: List<Account> = listOf(galicia, dollars)) =
+        QuickNoteDrafts.build(listOf(line), ctx(history, accounts), ids()).single()
+
+    @Test
+    fun `the order of the number picks the currency when none is typed`() {
+        val pesos = made("кофе 3500")
+        assertEquals("a1", pesos.accountId)
+        assertEquals(350_000L, pesos.amountMinor)
+        val small = made("кофе 5")
+        assertEquals("a3", small.accountId)
+        assertEquals(usd, small.currency)
+        assertEquals(500L, small.amountMinor)
+    }
+
+    @Test
+    fun `past expenses beat the rough prior, a tie and one currency change nothing`() {
+        val history = listOf(30L, 40L, 50L).mapIndexed { i, w -> spentIn("p$i", galicia, w) } +
+            listOf(2L, 5L, 9L).mapIndexed { i, w -> spentIn("d$i", dollars, w) }
+        assertEquals("a1", made("кофе 40", history).accountId) // pesos here are small: 2 digits, as the number
+        assertEquals("a3", made("кофе 4", history).accountId)
+        assertEquals("a1", made("кофе 400").accountId) // 3 digits: as far from dollars as from pesos, the usual choice
+        assertEquals("a1", made("кофе 5", accounts = listOf(galicia, cash)).accountId) // all pesos
+    }
+
+    @Test
+    fun `a typed currency or a named account wins over the order of the number`() {
+        assertEquals("a1", made("кофе 5 ars").accountId)
+        assertEquals("a1", made("кофе 5 galicia").accountId)
+    }
 }

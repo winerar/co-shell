@@ -81,6 +81,7 @@ class AccountEditViewModel @Inject constructor(
                     includedInTotal = !account.excludedFromTotal,
                     color = account.color,
                     cardDigits = account.cardDigits.orEmpty(),
+                    prepaid = account.prepaid,
                     shared = account.isShared,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
@@ -97,7 +98,10 @@ class AccountEditViewModel @Inject constructor(
         if (it.currencyLocked) it else it.copy(currency = value.trim().uppercase(), currencyError = null)
     }
 
-    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value) }
+    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value, prepaid = false) }
+
+    /** «Проездной» (#645): a type of its own for the person, stored as «Другое» + a flag; the top-up is an expense, so the account is out of the total. */
+    fun onPrepaidSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = true, includedInTotal = false) }
 
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
 
@@ -227,6 +231,7 @@ class AccountEditViewModel @Inject constructor(
         val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
         return base.copy(
             cardDigits = digits.ifEmpty { null },
+            prepaid = form.prepaid,
             name = name,
             currency = currency,
             type = form.type,

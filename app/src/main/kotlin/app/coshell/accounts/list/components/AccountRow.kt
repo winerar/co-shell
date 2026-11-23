@@ -14,7 +14,7 @@ import app.coshell.accounts.list.AccountsUiState
  */
 @Composable
 internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, modifier: Modifier = Modifier) {
-    val type = stringResource(row.type.labelRes)
+    val type = stringResource(if (row.prepaid) R.string.account_type_prepaid else row.type.labelRes)
     val personal = row.personalOf?.let {
         if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
     }

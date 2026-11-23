@@ -70,16 +70,17 @@ internal data class AccountDto(
     val excludedFromTotal: Boolean = false,
     val color: Long? = null,
     val cardDigits: String? = null,
+    val prepaid: Boolean = false,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
-        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits,
+        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits, prepaid,
     )
 }
 
 internal fun Account.toDto() = AccountDto(
     id, name, currency.value, type.name, initialBalanceMinor, isShared, ownerMemberId, archived, sortOrder,
-    excludedFromTotal, color, cardDigits,
+    excludedFromTotal, color, cardDigits, prepaid,
 )
 
 @Serializable

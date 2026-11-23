@@ -21,6 +21,12 @@ data class Account(
     val color: Long? = null,
     /** Last [CARD_DIGITS] digits of the card or the account number as a bank receipt prints them (#577), `null` — not linked. */
     val cardDigits: String? = null,
+    /**
+     * A prepaid card — a travel pass (SUBE, «Тройка»; #645): a top-up is an ordinary expense from a card, so the balance on the card is
+     * a number the person checks by hand («Сверить баланс»). Stored as type [AccountType.OTHER] + this flag: an older version of the
+     * app, which cannot read a new type, still shows the account.
+     */
+    val prepaid: Boolean = false,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

@@ -168,6 +168,7 @@ class AccountsViewModel @Inject constructor(
         personalOf = if (item.account.isShared || others.isEmpty()) null else others[item.account.ownerMemberId].orEmpty(),
         converted = if (item.account.currency == main) null else convert(listOf(item.balance)),
         currency = item.account.currency.value,
+        prepaid = item.account.prepaid,
         money = item.balance,
     )
 }

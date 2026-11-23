@@ -48,20 +48,23 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 modifier = Modifier.weight(1f),
                 empty = state.currency.isBlank() || state.currencyLocked,
             )
-            CoShellDetailTile(
-                icon = painterResource(DesignR.drawable.ic_account_balance_wallet),
-                label = stringResource(R.string.account_initial_balance_short),
-                value = state.initialBalance.ifBlank { "0" },
-                onClick = { balanceOpen = true },
-                modifier = Modifier.weight(1f),
-                empty = state.initialBalance.isBlank(),
-                amount = true,
-            )
+            // A saved travel pass has no starting balance to show: its number is «Баланс на карте» below (#645).
+            if (!(state.prepaid && state.canAdjust)) {
+                CoShellDetailTile(
+                    icon = painterResource(DesignR.drawable.ic_account_balance_wallet),
+                    label = stringResource(if (state.prepaid) R.string.account_balance_on_card else R.string.account_initial_balance_short),
+                    value = state.initialBalance.ifBlank { "0" },
+                    onClick = { balanceOpen = true },
+                    modifier = Modifier.weight(1f),
+                    empty = state.initialBalance.isBlank(),
+                    amount = true,
+                )
+            }
         }
         if (state.canAdjust) {
             CoShellDetailTile(
                 icon = painterResource(DesignR.drawable.ic_refresh),
-                label = stringResource(R.string.account_balance_now),
+                label = stringResource(if (state.prepaid) R.string.account_balance_on_card_check else R.string.account_balance_now),
                 value = state.currentBalance,
                 onClick = { adjustOpen = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -77,7 +80,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
     }
     if (adjustOpen) {
         FormSheet(
-            stringResource(R.string.account_balance_adjust_title),
+            stringResource(if (state.prepaid) R.string.account_balance_check_title else R.string.account_balance_adjust_title),
             // Closed without «Сохранить баланс» — the typed number is dropped, nothing waits for «Сохранить».
             onClosed = { adjustOpen = false; actions.onActualBalanceChange("") },
             actionLabel = stringResource(R.string.account_balance_save),

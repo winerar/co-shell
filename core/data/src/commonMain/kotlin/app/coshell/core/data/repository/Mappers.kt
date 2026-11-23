@@ -41,6 +41,7 @@ internal fun AccountEntity.toModel() = Account(
     excludedFromTotal = excludedFromTotal,
     color = color,
     cardDigits = cardDigits,
+    prepaid = prepaid,
 )
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
@@ -56,6 +57,7 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     excludedFromTotal = excludedFromTotal,
     color = color,
     cardDigits = cardDigits,
+    prepaid = prepaid,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

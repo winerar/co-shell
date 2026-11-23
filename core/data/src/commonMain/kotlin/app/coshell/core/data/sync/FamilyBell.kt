@@ -8,7 +8,7 @@ import app.coshell.core.data.remote.HttpRequest
 import app.coshell.core.data.remote.HttpResponse
 import app.coshell.core.data.remote.ServerSentEvent
 import app.coshell.core.data.remote.serverSentEvents
-import app.coshell.core.domain.family.FamilyRemote.Companion.FAMILY_ID
+import app.coshell.core.domain.family.FamilyRemote.Companion.LEGACY_FAMILY_ID
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -34,9 +34,9 @@ fun interface ChangeBell {
 
 /**
  * Instant sync while the app is open (docs/ARCHITECTURE.md §10, «Звонок»). Firestore REST has no
- * listener, so after sending its edits a phone writes `{at, by}` to `families/main/ping` in the
+ * listener, so after sending its edits a phone writes `{at, by}` to `families/<id>/ping` in the
  * Realtime Database, and the other phone, holding an SSE stream on that node, pulls at once.
- * The ping carries no budget data. Access: `families/main/members/{uid}` in the RTDB
+ * The ping carries no budget data. Access: `families/<id>/members/{uid}` in the RTDB
  * (`firebase/database.rules.json`) — the first member adds themselves, members add the others.
  *
  * [databaseUrl] blank — the bell is off (polling still works).
@@ -44,12 +44,12 @@ fun interface ChangeBell {
 class FamilyBell(
     private val http: HttpClient,
     private val stream: EventStreamClient,
-    databaseUrl: String,
+    private val databaseUrl: String,
     private val auth: AuthGateway,
-    familyId: String = FAMILY_ID,
+    private val familyId: () -> String = { LEGACY_FAMILY_ID },
 ) : ChangeBell {
     private val enabled = databaseUrl.isNotBlank()
-    private val base = "${databaseUrl.trimEnd('/')}/families/$familyId"
+    private val base get() = "${databaseUrl.trimEnd('/')}/families/${familyId()}"
 
     /** Tells the other phones to pull. Throws [ApiException] if the database refused. */
     override suspend fun ring() {

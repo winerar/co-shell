@@ -46,7 +46,7 @@ class FirestoreEmulatorTest {
         val family = FirestoreFamilyRemote(client)
         val db = createInMemoryCoShellDatabase()
         val transactions = RoomTransactionRepository(db.transactionDao(), WriteStamper { auth.uid })
-        val engine = SyncEngine(db.syncDao(), FirestoreRemoteStore(client, FamilyRemote.FAMILY_ID))
+        val engine = SyncEngine(db.syncDao(), FirestoreRemoteStore(client, FamilyRemote.LEGACY_FAMILY_ID))
         lateinit var me: Member
 
         init {
@@ -76,7 +76,7 @@ class FirestoreEmulatorTest {
         val owner = Phone("owner@gmail.com")
         val wife = Phone("Wife@Gmail.com")
         val stranger = Phone("stranger@gmail.com")
-        val id = FamilyRemote.FAMILY_ID
+        val id = FamilyRemote.LEGACY_FAMILY_ID
 
         assertTrue(owner.family.create(id, owner.me))
         assertFalse(stranger.family.create(id, stranger.me), "the only family already exists")

@@ -499,7 +499,7 @@
     <string name="family_join">Присоединиться к семье</string>
     <string name="family_join_hint">На телефон загрузится общий бюджет</string>
     <string name="family_offline">Вы вошли как %1$s. Нет связи с сервером — проверьте интернет.</string>
-    <string name="family_sign_out">Выйти</string>
+    <string name="family_sign_out">Выйти из аккаунта</string>
     <string name="family_sign_out_hint">Данные останутся, синхронизация остановится</string>
     <string name="family_sync_now">Синхронизировать сейчас</string>
     <string name="family_never_synced">Ещё не синхронизировано</string>
@@ -508,12 +508,6 @@
     <string name="family_members">Участники</string>
     <string name="family_account_section">Аккаунт</string>
     <string name="family_budget_title">Общий бюджет</string>
-    <plurals name="family_members_count">
-        <item quantity="one">%1$d участник</item>
-        <item quantity="few">%1$d участника</item>
-        <item quantity="many">%1$d участников</item>
-        <item quantity="other">%1$d участника</item>
-    </plurals>
     <!-- Changes reach the other phone through a live listener — in seconds, not on a timer. -->
     <string name="family_sync_speed">за 2–3 с</string>
     <string name="family_you">Вы</string>
@@ -539,6 +533,33 @@
     <string name="family_msg_invalid_email">Похоже, адрес введён с ошибкой.</string>
     <string name="family_msg_invite_sent">Приглашение для %1$s готово. Теперь нужно установить приложение и войти через Google с этим адресом.</string>
     <string name="family_msg_synced">Готово: получено %1$d, отправлено %2$d.</string>
+    <string name="family_members_of">Участников: %1$d из %2$d</string>
+    <string name="family_invite_full">Семья заполнена: %1$d из %1$d</string>
+    <string name="family_leave">Выйти из семьи</string>
+    <string name="family_leave_hint">Вы перестанете видеть общие данные</string>
+    <string name="family_leave_owner_hint">Владелец не может выйти: сначала удалите семью</string>
+    <string name="family_leave_title">Выйти из семьи?</string>
+    <string name="family_leave_text">Данные на телефоне останутся, синхронизация остановится. Другие участники продолжат пользоваться общим бюджетом.</string>
+    <string name="family_leave_confirm">Выйти</string>
+    <string name="family_danger_section">Опасная зона</string>
+    <string name="family_delete">Удалить семью</string>
+    <string name="family_delete_hint">Общие данные удалятся из облака у всех</string>
+    <string name="family_delete_title">Удалить семью?</string>
+    <string name="family_delete_text">Общие данные удалятся из облака у всех участников. Данные на телефонах останутся.</string>
+    <string name="family_delete_confirm">Удалить семью</string>
+    <string name="family_delete_account">Удалить аккаунт</string>
+    <string name="family_delete_account_hint">Вход и облачные данные удалятся навсегда</string>
+    <string name="family_delete_account_title">Удалить аккаунт?</string>
+    <string name="family_delete_account_text_member">Вы выйдете из семьи, а аккаунт удалится навсегда. Данные на телефоне останутся.</string>
+    <string name="family_delete_account_text_owner">Семья удалится у всех, а ваш аккаунт — навсегда. Данные на телефонах останутся.</string>
+    <string name="family_delete_account_confirm">Удалить аккаунт</string>
+    <string name="family_remove">Исключить из семьи</string>
+    <string name="family_remove_hint">Доступ к общему бюджету закроется. Данные на телефоне останутся.</string>
+    <string name="family_remove_title">Исключить из семьи?</string>
+    <string name="family_remove_text">%1$s больше не увидит общий бюджет, а данные на телефоне останутся.</string>
+    <string name="family_remove_confirm">Исключить</string>
+    <string name="family_removed">Вас убрали из семьи. Данные на телефоне остались, общий бюджет больше не обновляется.</string>
+    <string name="family_msg_login_again">Чтобы удалить аккаунт, войдите заново и повторите.</string>
     <!-- Sync banner on «Обзор» (board 17А, feedback #102) -->
     <string name="sync_banner_offline_title">Нет интернета</string>
     <string name="sync_banner_offline_text">Изменения сохранены на телефоне — отправим и получим их сами, когда появится сеть.</string>

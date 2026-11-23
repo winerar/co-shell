@@ -32,6 +32,10 @@ fun FamilyRoute(onBack: () -> Unit, viewModel: FamilyViewModel = hiltViewModel()
             onCancelInvite = viewModel::cancelInvite,
             onSyncNow = viewModel::syncNow,
             onSignOut = viewModel::signOut,
+            onLeave = viewModel::leave,
+            onRemoveMember = viewModel::removeMember,
+            onDeleteFamily = viewModel::deleteFamily,
+            onDeleteAccount = viewModel::deleteAccount,
         ),
     )
 }
@@ -49,4 +53,8 @@ data class FamilyActions(
     val onCancelInvite: (email: String) -> Unit = {},
     val onSyncNow: () -> Unit = {},
     val onSignOut: () -> Unit = {},
+    val onLeave: () -> Unit = {},
+    val onRemoveMember: (uid: String) -> Unit = {},
+    val onDeleteFamily: () -> Unit = {},
+    val onDeleteAccount: () -> Unit = {},
 )

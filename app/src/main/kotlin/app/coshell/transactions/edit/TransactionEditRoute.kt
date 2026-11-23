@@ -106,6 +106,8 @@ fun TransactionEditRoute(
                 viewModel.onReceiptUnreadDismiss()
                 onSendReceiptSample()
             },
+            onReceiptAccountPick = viewModel::onReceiptAccountPick,
+            onReceiptAccountSkip = viewModel::onReceiptAccountSkip,
             onKey = { key ->
                 if (key == KeypadKey.Done && lock.locked) {
                     lock.onBlocked()
@@ -168,4 +170,7 @@ data class TransactionEditActions(
     /** «Не удалось прочитать чек» of a shared receipt (#561): enter by hand, or send the file as a sample. */
     val onReceiptUnreadManual: () -> Unit = {},
     val onReceiptUnreadSend: () -> Unit = {},
+    /** «Какой это счёт?» of a bank receipt (#577): the chosen account remembers the digits; the window closes without a choice. */
+    val onReceiptAccountPick: (String) -> Unit = {},
+    val onReceiptAccountSkip: () -> Unit = {},
 )

@@ -69,6 +69,37 @@ class AccountEditViewModelTest {
     }
 
     @Test
+    fun `card digits are kept as four numbers and saved with the account`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Карта")
+        vm.onCardDigitsChange("40 83**3900-77")
+        assertEquals("4083", vm.state.value.cardDigits)
+        vm.onCardDigitsChange("3900")
+        vm.save()
+
+        assertTrue(vm.state.value.isDone)
+        assertEquals("3900", accounts.getAccount("new")!!.cardDigits)
+    }
+
+    @Test
+    fun `fewer than four digits are refused and an empty field unlinks the account`() = runTest {
+        accounts.saveAccount(Account("a", "Карта", ars, cardDigits = "3900"))
+        val vm = viewModel("a")
+        assertEquals("3900", vm.state.value.cardDigits)
+
+        vm.onCardDigitsChange("39")
+        vm.save()
+        assertTrue(vm.state.value.cardDigitsError)
+        assertFalse(vm.state.value.isDone)
+
+        vm.onCardDigitsChange("")
+        assertFalse(vm.state.value.cardDigitsError)
+        vm.save()
+        assertTrue(vm.state.value.isDone)
+        assertNull(accounts.getAccount("a")!!.cardDigits)
+    }
+
+    @Test
     fun `new account outside the totals currencies asks for the currency pill`() = runTest {
         val vm = viewModel()
         vm.onNameChange("Pesos")

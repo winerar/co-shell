@@ -19,12 +19,22 @@ data class Account(
     val excludedFromTotal: Boolean = false,
     /** Colour of the account's card and badge as 0xAARRGGBB (the category palette), `null` — no colour. */
     val color: Long? = null,
+    /** Last [CARD_DIGITS] digits of the card or the account number as a bank receipt prints them (#577), `null` — not linked. */
+    val cardDigits: String? = null,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }
+        require(cardDigits == null || (cardDigits.length == CARD_DIGITS && cardDigits.all { it in '0'..'9' })) { "Card digits must be $CARD_DIGITS digits" }
     }
 
     val initialBalance: Money get() = Money(initialBalanceMinor, currency)
+
+    companion object {
+        const val CARD_DIGITS = 4
+
+        /** «4083********3900», «1570 0000 0000 0001», «3900» → the last [CARD_DIGITS] digits; `null` when there are fewer. */
+        fun digitsOf(text: String): String? = text.filter { it in '0'..'9' }.takeIf { it.length >= CARD_DIGITS }?.takeLast(CARD_DIGITS)
+    }
 }
 
 enum class AccountType { CASH, CARD, DEPOSIT, CRYPTO, OTHER }

@@ -26,6 +26,7 @@ import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptAccounts
 import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -240,13 +241,62 @@ class TransactionEditViewModel @Inject constructor(
             )
         }
         _state.update { form ->
-            form.copy(scan = ScanUi(qr.merchant, qr.key, duplicate)).withReceipt(qr, moneyFormat)
-                .withDebitSuggestion(converter, moneyFormat)
-                .withGuessedCategory()
-                .withCategoryOptions(allCategories, recentCategoryIds)
+            if (qr.transfer != null) {
+                form.withReceiptTransfer(qr, moneyFormat, duplicate).withCategoryOptions(allCategories, recentCategoryIds)
+            } else {
+                form.copy(scan = ScanUi(qr.merchant, qr.key, duplicate)).withReceipt(qr, moneyFormat)
+                    .withDebitSuggestion(converter, moneyFormat)
+                    .withGuessedCategory()
+                    .withCategoryOptions(allCategories, recentCategoryIds)
+            }
         }
-        askAiCategory()
+        if (qr.transfer == null) askAiCategory()
+        linkReceiptAccounts(qr)
     }
+
+    /**
+     * A bank receipt prints the last digits of the card or account (#577): a single account with them is chosen (both sides of a
+     * transfer, #646); digits no account has yet — «Какой это счёт?», the answer is remembered in the account.
+     */
+    private fun linkReceiptAccounts(qr: Receipt) {
+        val live = accountsById.values.filter { !it.archived }
+        val debitDigits = qr.debitDigits
+        val toDigits = qr.transfer?.toDigits
+        val from = ReceiptAccounts.find(live, debitDigits)
+        val to = ReceiptAccounts.find(live, toDigits)
+        from?.let { setReceiptAccount(it.id, target = false) }
+        to?.let { setReceiptAccount(it.id, target = true) }
+        val ask = when {
+            debitDigits != null && from == null -> ReceiptAccountAsk(debitDigits)
+            toDigits != null && to == null -> ReceiptAccountAsk(toDigits, target = true)
+            else -> null
+        }
+        if (ask != null && live.isNotEmpty()) _state.update { it.copy(receiptAccountAsk = ask) }
+    }
+
+    private fun setReceiptAccount(id: String, target: Boolean) = _state.update { form ->
+        if (target) return@update form.copy(toAccountId = id.takeIf { it != form.accountId }, toAccountError = null)
+        val chosen = form.copy(accountId = id, accountError = false, toAccountId = form.toAccountId?.takeIf { it != id })
+        val qr = scannedQr
+        if (qr != null && qr.transfer == null) chosen.withReceipt(qr, moneyFormat).withDebitSuggestion(converter, moneyFormat) else chosen
+    }
+
+    /** «Какой это счёт?» answered: the digits stay in the account, the account is chosen; a transfer may still ask for its other side. */
+    fun onReceiptAccountPick(id: String) {
+        val ask = _state.value.receiptAccountAsk ?: return
+        _state.update { it.copy(receiptAccountAsk = null) }
+        val account = accountsById[id] ?: return
+        val linked = account.copy(cardDigits = ask.digits)
+        accountsById = accountsById + (id to linked)
+        setReceiptAccount(id, ask.target)
+        viewModelScope.launch {
+            accounts.saveAccount(linked)
+            scannedQr?.let { qr -> if (!ask.target) linkReceiptAccounts(qr.copy(debitDigits = null)) }
+        }
+    }
+
+    /** «Пропустить» — closing «Какой это счёт?»: the account stays as it is, nothing is remembered. */
+    fun onReceiptAccountSkip() = _state.update { it.copy(receiptAccountAsk = null) }
 
     /**
      * «Вставить из буфера» (#321): [text] is what the clipboard held, read on the tap. A receipt of a known format fills the sheet
@@ -575,7 +625,7 @@ class TransactionEditViewModel @Inject constructor(
         val built = buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
         // A new expense made from a scanned receipt remembers which one, to warn when it is scanned again (#526).
         val scanKey = current.scan?.key
-        return if (existing == null && scanKey != null && built.type == TransactionType.EXPENSE) built.copy(receiptKey = scanKey) else built
+        return if (existing == null && scanKey != null && (built.type == TransactionType.EXPENSE || built.type == TransactionType.TRANSFER)) built.copy(receiptKey = scanKey) else built
     }
 
     /** Saves [transaction] and, with [tip] (#322), the tip operation after it; remembers the tip's account and category. */

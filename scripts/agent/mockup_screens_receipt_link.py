@@ -15,7 +15,7 @@ DOC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%s" s
 AMERIA = ('AM', '#B01E2F', '#FFFFFF')
 
 
-def source_line(text='Из чека · Америабанк'):
+def source_line(text='Из чека · Ameriabank'):
     return ('<div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s<span>%s</span></div>' % (MUTED, DOC % MUTED, text))
 
 
@@ -25,26 +25,25 @@ def receipt_transfer():
     return board('Перевод из чека', e.sheet(e.type_bar('tr') + e.ribbon(2, 'Откуда') + e.ribbon(0, 'Куда'), sums, e.details(refund=False)))
 
 
-def choice_row(name, on):
-    mark = svg('check', LIME, 22, 2.2) if on else '<span style="width: 22px;"></span>'
-    return ('<div style="display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 4px;">%s<span style="flex-grow: 1; font-size: 16px; %s">%s</span>%s</div>'
-            % (badge(AMERIA[0], AMERIA[1], AMERIA[2], 36, 10), 'font-weight: 700;' if on else '', name, mark))
+def choice_row(name):
+    return ('<div style="display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 4px;">%s<span style="flex-grow: 1; font-size: 16px;">%s</span></div>'
+            % (badge(AMERIA[0], AMERIA[1], AMERIA[2], 36, 10), name))
 
 
 def which_account():
-    """ChoiceSheet: «Какой это счёт?» — the card of the receipt is not linked yet; the choice fills «Для чеков» of the account."""
-    rows = '<div>%s%s%s</div>' % (choice_row('Ameria · карта', True), choice_row('Ameria · накопительный', False), choice_row('Galicia', False))
-    note = '<div style="margin: 8px 0 12px; font-size: 12px; color: %s;">Запомним: в следующий раз выберем сами.</div>' % MUTED
+    """ChoiceSheet (`ReceiptAccountSheet`): a tap on an account chooses it and saves the digits in it — no extra button."""
+    rows = '<div>%s%s%s</div>' % (choice_row('Ameria · карта'), choice_row('Ameria · накопительный'), choice_row('Galicia'))
     under = e.sheet(e.type_bar('exp') + e.ribbon(0), e.amount_card('3 000', 'AMD', PINK, source_line(), links=''), e.categories(), e.details())
-    return board('Какой это счёт?', md.modal_sheet(under, 'Какой это счёт?', rows + note + button('Запомнить', mt=0),
-                                                     'В чеке карта …3900. Выберите счёт, и в следующий раз чек найдёт его сам.', top=330))
+    return board('Какой это счёт?', md.modal_sheet(under, 'Какой это счёт?', rows,
+                                                     'В чеке карта …3900. Выберите счёт, и в следующий раз чек найдёт его сам.', top=350))
 
 
 def digits_sheet():
-    """FormSheet over the account editor: the last digits of the card or the account number; the keypad is digits only."""
+    """FormSheet over the account editor: the last digits of the card or the account number."""
     body = (field('Последние цифры', '3900', hint='Из чека банка: «4083********3900» → 3900', mono=True)
+            + '<div style="margin-top: 10px; font-size: 12px; color: %s;">По ним чек из банка найдёт этот счёт. Пусто — счёт не привязан.</div>' % MUTED
             + '<div style="height: 12px;"></div>' + button('Готово', mt=0))
-    return board('Цифры карты или счёта', md.modal_sheet(p.acc_form_a(), 'Цифры карты или счёта', body, 'По ним чек из банка найдёт этот счёт.', top=420))
+    return board('Цифры карты или счёта', md.modal_sheet(p.acc_form_a(), 'Цифры карты или счёта', body, '', top=440))
 
 
 BOARDS = [('EntryReceiptTransfer', receipt_transfer), ('ReceiptWhichAccount', which_account), ('AccountDigits', digits_sheet)]

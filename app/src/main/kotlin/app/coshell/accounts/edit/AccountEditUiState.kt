@@ -16,6 +16,9 @@ data class AccountEditUiState(
     val includedInTotal: Boolean = true,
     /** Colour of the account's card (category palette), `null` — no colour. */
     val color: Long? = null,
+    /** Last digits of the card or account as typed («Для чеков», #577); empty — not linked. */
+    val cardDigits: String = "",
+    val cardDigitsError: Boolean = false,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */
     val shared: Boolean = true,
     /** The family has other members, so «shared / personal» means something. */

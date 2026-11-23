@@ -18,4 +18,15 @@
     <string name="receipt_unread_title">Couldn\'t read the receipt</string>
     <string name="receipt_unread_text">The app doesn\'t know this format yet. Send a sample and we\'ll teach it. You can enter the operation by hand.</string>
     <string name="receipt_unread_send">Send a sample</string>
+    <string name="receipt_account_title">Which account is this?</string>
+    <string name="receipt_account_hint">The receipt shows card …%1$s. Pick an account and next time the receipt will find it on its own.</string>
+    <string name="receipt_account_hint_to">The receipt shows the receiving account …%1$s. Pick an account and next time the receipt will find it on its own.</string>
+    <string name="account_digits_section">For receipts</string>
+    <string name="account_digits_tile">Last digits of the card or account</string>
+    <string name="account_digits_empty">Not set</string>
+    <string name="account_digits_sheet_title">Card or account digits</string>
+    <string name="account_digits_sheet_sub">A bank receipt will find this account by them. Empty — the account is not linked.</string>
+    <string name="account_digits_field">Last digits</string>
+    <string name="account_digits_field_hint">From a bank receipt: “4083********3900” → 3900</string>
+    <string name="account_digits_error">Enter four digits.</string>
 </resources>

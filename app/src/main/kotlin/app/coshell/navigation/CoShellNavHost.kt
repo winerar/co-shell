@@ -49,6 +49,8 @@ import app.coshell.settings.SettingsRoute
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
+import app.coshell.shortcuts.ShortcutLink
+import app.coshell.shortcuts.ShortcutLinks
 import app.coshell.accounts.list.AccountsRoute
 import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
@@ -113,6 +115,7 @@ fun CoShellNavHost(
     inputLock: InputLockViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
+    shortcutLinks: ShortcutLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -588,6 +591,20 @@ fun CoShellNavHost(
             val destination = TransactionEditDestination(receiptQr = shared.text.ifBlank { null }?.takeIf { shared.readable }, receiptUnread = !shared.readable)
             navController.navigate(destination) { launchSingleTop = true }
             receiptLinks.consumed()
+        }
+    }
+
+    // A launcher shortcut (#555): the same entry sheet «+» opens, of the chosen type or filled from a template.
+    if (shortcutLinks != null) {
+        val link by shortcutLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val shortcut = link ?: return@LaunchedEffect
+            val destination = when (shortcut) {
+                is ShortcutLink.NewOperation -> TransactionEditDestination(type = shortcut.type.name)
+                is ShortcutLink.FromTemplate -> TransactionEditDestination(templateId = shortcut.templateId)
+            }
+            navController.navigate(destination) { launchSingleTop = true }
+            shortcutLinks.consumed()
         }
     }
 }

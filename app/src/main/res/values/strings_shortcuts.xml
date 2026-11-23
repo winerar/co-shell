@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shortcut_expense">Расход</string>
+    <string name="shortcut_expense_long">Новый расход</string>
+    <string name="shortcut_income">Доход</string>
+    <string name="shortcut_income_long">Новый доход</string>
+    <string name="shortcut_transfer">Перевод</string>
+    <string name="shortcut_transfer_long">Новый перевод</string>
+    <string name="shortcut_template_label" translatable="false">%1$s · %2$s</string>
+</resources>

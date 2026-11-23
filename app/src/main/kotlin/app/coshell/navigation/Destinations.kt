@@ -174,6 +174,10 @@ data object ReportCurrenciesDestination
 @Serializable
 data object AiAddonDestination
 
+/** «Ещё → Настройки → Умные функции → Облачный разбор» (#635). */
+@Serializable
+data object CloudAiDestination
+
 /**
  * Category editor. `categoryId == null` creates a new category of [type] (a [CategoryType] name),
  * optionally inside folder [parentId]; [asFolder] opens it as a new folder.

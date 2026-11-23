@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.tokens.Spacing
@@ -80,6 +81,11 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
             return@Scaffold
         }
         LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Spacing.l))) {
+            if (state.cloudLimited) {
+                item(key = "cloud", contentType = "message") {
+                    CoShellMessage(stringResource(R.string.cloud_limit_message), isError = false, modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs))
+                }
+            }
             item(key = "summary", contentType = "hint") {
                 CoShellHint(
                     stringResource(R.string.drafts_summary, state.rows.size, state.readyCount),

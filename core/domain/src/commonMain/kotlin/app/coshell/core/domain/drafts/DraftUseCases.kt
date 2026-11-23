@@ -31,8 +31,8 @@ class ProcessQuickNoteUseCase(
     private val localCurrency: () -> CurrencyCode? = { null },
     private val now: () -> Long,
 ) {
-    /** [made] drafts; [skipped] — lines that are not about money (#630), to be left in the note. */
-    data class Result(val made: Int, val skipped: List<String>)
+    /** [made] drafts; [skipped] — lines that are not about money (#630), to be left in the note; [limited] — the cloud's daily limit ended the request (#635). */
+    data class Result(val made: Int, val skipped: List<String>, val limited: Boolean = false)
 
     /**
      * Drafts made and lines skipped; the text is not touched (the caller keeps only [Result.skipped] in the note). A number without a
@@ -57,7 +57,7 @@ class ProcessQuickNoteUseCase(
         val made = QuickNoteDrafts.build(lines, ctx, ids, byLine)
         drafts.saveDrafts(made)
         val skipped = lines.indices.filter { QuickNoteDrafts.isNoise(lines[it], ctx, byLine[it]) }.map { lines[it] }
-        return Result(made.size, skipped)
+        return Result(made.size, skipped, limited = hints?.limited == true)
     }
 
     private companion object {

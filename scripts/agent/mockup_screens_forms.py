@@ -5,6 +5,7 @@ from mockup_parts import *  # noqa: F401,F403
 from mockup_logic import go, flip, per, proto, tap, toggled, when
 import mockup_screens_account_adjust as account_adjust
 import mockup_screens_ai as ai_screens
+import mockup_screens_cloud as cloud_screens
 
 # Category palette: the first row follows the theme accents, the rest are fixed category colours.
 SWATCHES = [LIME, CYAN, VIOLET, '#FF4FD8', YELLOW, '#FF8A5C', PINK, OK, '#FF7A6B', '#E07A4F', '#FF8FA3', '#FFC46B', '#D99A5B', '#E8D3A2', '#6BB8FF', '#7A8494']
@@ -148,4 +149,4 @@ def colors():
 from mockup_screens_fb_290 import acc_form_a, cat_form_a  # noqa: E402  (the chosen #290 form «А» = the app's editors)
 
 # CategoryEdit / AccountEdit are the editors the app has since #290 (the old boards `category_edit` / `account_edit` above are gone from the canvas).
-BOARDS = [('Categories', categories), ('CategoryEdit', lambda: board('Категория', cat_form_a())), ('AccountEdit', lambda: board('Счёт', acc_form_a())), ('Colors', colors)] + account_adjust.BOARDS + ai_screens.BOARDS
+BOARDS = [('Categories', categories), ('CategoryEdit', lambda: board('Категория', cat_form_a())), ('AccountEdit', lambda: board('Счёт', acc_form_a())), ('Colors', colors)] + account_adjust.BOARDS + ai_screens.BOARDS + cloud_screens.BOARDS

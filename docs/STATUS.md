@@ -71,6 +71,6 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-23, `ccr-df0d2bf5-zpksb1`: фичи без ИИ — доски и опрос (кода нет, ждём «ок»): календарь трат #553, долги #552, итоги месяца #554.
-Опрос: https://claude.ai/artifact/4Y3E8gFnu711AFmBPusZj6 (`docs/design/poll-features-1123.json`; доски — `scripts/agent/mockup_poll_{calendar553,debts552,recap554}.py` + `mockup_poll_f_common.py`).
-#204 (CSV) уже сделан (`export/`, `CsvExport`) — задачу можно закрыть. Дальше — ответы опроса → код, по одной фиче на сессию.
+2026-11-23, `ccr-df0d2bf5-zpksb1`: опрос функций без ИИ (все А, https://claude.ai/artifact/4Y3E8gFnu711AFmBPusZj6) → **сделан календарь трат #553**: вкладка «Календарь» в «Отчётах», `CoShellHeatGrid`, `SpendingCalendar`, доска `RepCalendar`, эталоны.
+Ждут кода (ответы опроса «А»): долги #552 (синхронизируемая таблица + баланс счёта; владелец спросил, отражать ли долги в доходах/расходах — рекомендация: двигают баланс, но не траты в отчётах), итоги месяца #554 (истории, фразы, «Поделиться»).
+#204 (CSV) уже сделан — задачу закрыть. Доски опроса — `scripts/agent/mockup_poll_{calendar553,debts552,recap554}.py`.

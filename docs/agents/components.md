@@ -106,6 +106,7 @@
   - `CoShellColumns(List<ChartColumn>, selected, average, onSelect)` — столбцы по месяцам: выбранный — акцент, число над столбцом,
     призрак — пунктирный контур, `average` — пунктир поперёк; TalkBack — `ChartColumn.description`.
   - `CoShellDonut(slices, description) { центр }` — кольцо ≤ `DONUT_MAX_SLICES` + «Другое» (хвост группирует вызывающий), дуги — `donutArcs`.
+  - `CoShellHeatGrid(weekdays, leadingBlanks, cells: List<HeatCell>, selected, onSelect)` + `CoShellHeatLegend(less, more, trailing)` — «Календарь трат» (#553, доска `RepCalendar`, эталоны `heat_*`): ячейка 48 dp, уровень 0–4 — доля неона темы (`fillEdge`), сегодня — кольцо `themeEdge()`, выбранный — толще, будущие — тихие.
   - **«Пуля» бюджета** — `CoShellBullet(fraction, tone, mark)`: заполнение = потрачено/лимит, черта = темп на сегодня;
     `BulletTone` NORMAL/WARNING/DANGER/IDLE, цвет для текста того же состояния — `bulletColor`; высоты `Sizes.bullet*`.
   Дорожка нейтральная в обеих темах. Остальные графики — #168.

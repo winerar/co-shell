@@ -80,6 +80,8 @@ fun CoShellColumns(
         horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
         columns.forEachIndexed { index, column ->
+            // A default description hides its sum with the label (#600); a given one is the caller's to mask.
+            val spoken = column.description ?: "${column.label}: ${shownAmount(column.valueLabel)}"
             val click = onSelect?.let { select -> Modifier.tactileClickable(onClick = { select(index) }) } ?: Modifier
             ColumnBar(
                 column,
@@ -87,7 +89,7 @@ fun CoShellColumns(
                 height = height,
                 entrance = { entrance.value },
                 modifier = Modifier.weight(1f).then(click).semantics(mergeDescendants = true) {
-                    contentDescription = column.description ?: "${column.label}: ${column.valueLabel}"
+                    contentDescription = spoken
                     this.selected = index == selected
                 },
             )

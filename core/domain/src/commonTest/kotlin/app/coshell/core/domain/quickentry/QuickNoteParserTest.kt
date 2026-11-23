@@ -83,4 +83,35 @@ class QuickNoteParserTest {
         assertNull(QuickNoteParser.parse("купил хлеб", ars))
         assertNull(QuickNoteParser.parse("", ars))
     }
+
+    @Test
+    fun `a currency named by a word is read and dropped from the title`() {
+        val amd = CurrencyCode("AMD")
+        fun read(line: String) = QuickNoteParser.parse(line, amd, setOf(amd, ars))!!
+        assertEquals(CurrencyCode("ARS"), read("кофе 3500 песо").money.currency)
+        assertEquals("кофе", read("кофе 3500 песо").title)
+        assertEquals(CurrencyCode("USD"), read("обед 15 долларов").money.currency)
+        assertEquals(CurrencyCode("RUB"), read("метро 70 рублей").money.currency)
+        assertEquals(CurrencyCode("RUB"), read("метро 70 руб.").money.currency)
+        assertEquals(amd, read("такси 1500 драм").money.currency)
+        assertEquals(CurrencyCode("EUR"), read("museo 20 euros").money.currency)
+        assertEquals(false, read("кофе 3500").currencyFound)
+    }
+
+    @Test
+    fun `payment words pick the kind of account`() {
+        assertEquals(AccountWord.CASH, QuickNoteParser.parse("такси 2000 нал", ars)!!.account)
+        assertEquals(AccountWord.CASH, QuickNoteParser.parse("хлеб 500 налом", ars)!!.account)
+        assertEquals(AccountWord.CARD, QuickNoteParser.parse("кофе 3500 с карты", ars)!!.account)
+        assertEquals("кофе", QuickNoteParser.parse("кофе 3500 с карты", ars)!!.title)
+        assertEquals(AccountWord.CARD, QuickNoteParser.parse("super 12000 débito", ars)!!.account)
+    }
+
+    @Test
+    fun `words that only say I spent are dropped`() {
+        assertEquals("хлеб", QuickNoteParser.parse("купил хлеб 500", ars)!!.title)
+        assertEquals("продукты", QuickNoteParser.parse("потратил на продукты 8000", ars)!!.title)
+        assertEquals("la luz", QuickNoteParser.parse("pagué la luz 30000", ars)!!.title)
+        assertEquals("купил", QuickNoteParser.parse("купил 500", ars)!!.title)
+    }
 }

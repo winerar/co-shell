@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.accounts.list.components.AccountRow
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.components.underBars
@@ -117,7 +118,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
             }
             Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
                 Text(
-                    state.value,
+                    shownAmount(state.value),
                     style = AmountHeadlineStyle,
                     maxLines = 1,
                 )
@@ -129,7 +130,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
                 )
                 state.change?.let {
                     Text(
-                        stringResource(R.string.capital_month_change, it),
+                        stringResource(R.string.capital_month_change, shownAmount(it)),
                         style = MaterialTheme.typography.bodySmall,
                         color = if (state.falling) LocalAmountPalette.current.expense else LocalStatusPalette.current.success,
                         maxLines = 1,
@@ -137,7 +138,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
                     )
                 }
             }
-            val description = state.points.joinToString(", ") { "${formatMonthYear(it.month)} ${it.value}" }
+            val description = state.points.map { "${formatMonthYear(it.month)} ${shownAmount(it.value)}" }.joinToString(", ")
             CoShellLine(
                 points = state.points.map { LinePoint(formatMonthShort(it.month).take(1), it.minor) },
                 description = stringResource(R.string.reports_capital_description, description),

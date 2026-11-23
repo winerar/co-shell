@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.budgets.edit.BudgetEditUiState
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -26,7 +27,7 @@ internal fun InsideFolder(rows: List<BudgetEditUiState.Inside>, onOpen: (String)
         rows.forEach { row ->
             CoShellListRow(
                 title = row.name,
-                subtitle = row.limit?.let { stringResource(R.string.budget_inside_limit, it) } ?: stringResource(R.string.budget_inside_none),
+                subtitle = row.limit?.let { stringResource(R.string.budget_inside_limit, shownAmount(it)) } ?: stringResource(R.string.budget_inside_none),
                 leading = { CategoryBadge(row.icon, row.color, size = Sizes.badgeSmall) },
                 trailing = {
                     if (row.limit == null) {

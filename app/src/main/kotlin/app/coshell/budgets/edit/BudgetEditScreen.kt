@@ -23,6 +23,7 @@ import app.coshell.R
 import app.coshell.budgets.edit.components.BudgetPickers
 import app.coshell.budgets.edit.components.BudgetPicker
 import app.coshell.budgets.edit.components.InsideFolder
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
@@ -81,7 +82,7 @@ fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
                 label = stringResource(R.string.budget_amount),
                 currency = state.currency,
                 error = stringResource(R.string.budget_amount_error).takeIf { state.amountError },
-                hint = state.average?.let { stringResource(R.string.budget_average, it) },
+                hint = state.average?.let { stringResource(R.string.budget_average, shownAmount(it)) },
             )
             if (state.currencies.size > 1) {
                 CoShellFilterChip(selected = false, onClick = { picker = BudgetPicker.CURRENCY }, label = {

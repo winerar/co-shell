@@ -30,11 +30,14 @@
         android:supportsRtl="true"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.CoShell">
+        <!-- singleTask (#627): a receipt shared from another app comes to the running app (onNewIntent), not a new
+             window in the sender's task each time. Portrait only (#626): the screens are made for one hand. -->
         <activity
             android:name=".MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

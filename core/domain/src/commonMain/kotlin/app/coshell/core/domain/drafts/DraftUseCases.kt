@@ -27,15 +27,20 @@ class ProcessQuickNoteUseCase(
     private val drafts: DraftRepository,
     private val hints: NoteHints?,
     private val ids: IdGenerator = IdGenerator.Random,
+    /** The currency of the country the phone is in (by the mobile network, #633), `null` when unknown. */
+    private val localCurrency: () -> CurrencyCode? = { null },
     private val now: () -> Long,
 ) {
+    /** [made] drafts; [skipped] — lines that are not about money (#630), to be left in the note. */
+    data class Result(val made: Int, val skipped: List<String>)
+
     /**
-     * The number of drafts made; the text is not touched (the caller clears the note once this returns). A number without a
+     * Drafts made and lines skipped; the text is not touched (the caller keeps only [Result.skipped] in the note). A number without a
      * currency is read in the currency of the account used last (else the first account, else USD); known currencies are the accounts'.
      */
-    suspend operator fun invoke(text: String): Int {
+    suspend operator fun invoke(text: String): Result {
         val lines = QuickNoteDrafts.lines(text)
-        if (lines.isEmpty()) return 0
+        if (lines.isEmpty()) return Result(0, emptyList())
         val expense = categories.observeCategories(CategoryType.EXPENSE).first()
         val live = accounts.observeAccounts().first()
         val history = transactions.observeTransactions(TransactionFilter(limit = HISTORY)).first()
@@ -43,12 +48,15 @@ class ProcessQuickNoteUseCase(
         val ctx = QuickNoteDrafts.Context(
             accounts = live, categories = expense, history = history,
             fallback = last?.currency ?: CurrencyCode("USD"), known = live.mapTo(mutableSetOf()) { it.currency }, now = now(),
+            local = localCurrency(),
         )
         val ask = hints?.let { QuickNoteDrafts.needsModel(lines, ctx) }.orEmpty()
         val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(ask.map { lines[it] }, expense.map { it.name }).orEmpty()
         val byLine = ask.zip(read).mapNotNull { (i, hint) -> hint?.let { i to it } }.toMap()
-        drafts.saveDrafts(QuickNoteDrafts.build(lines, ctx, ids, byLine))
-        return lines.size
+        val made = QuickNoteDrafts.build(lines, ctx, ids, byLine)
+        drafts.saveDrafts(made)
+        val skipped = lines.indices.filter { QuickNoteDrafts.isNoise(lines[it], ctx, byLine[it]) }.map { lines[it] }
+        return Result(made.size, skipped)
     }
 
     private companion object {

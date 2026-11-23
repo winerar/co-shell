@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.theme.AmountTextStyle
 import app.coshell.core.designsystem.theme.AmountTitleStyle
@@ -53,7 +54,7 @@ internal fun ColumnScope.TotalBack(state: HomeUiState) {
         }
         result?.let {
             Text(
-                stringResource(R.string.home_back_per_day, it.perDay).sentenceAmounts(),
+                stringResource(R.string.home_back_per_day, shownAmount(it.perDay)).sentenceAmounts(),
                 style = MaterialTheme.typography.bodySmall,
                 color = hero.hint,
                 modifier = Modifier.padding(top = Spacing.s),

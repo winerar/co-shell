@@ -12,6 +12,7 @@ import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.PostDraftsUseCase
 import app.coshell.core.domain.drafts.ProcessQuickNoteUseCase
 import app.coshell.core.model.IdGenerator
+import app.coshell.drafts.LocalCurrency
 import app.coshell.drafts.NoteStore
 import app.coshell.drafts.PrefsNoteStore
 import dagger.Module
@@ -40,7 +41,8 @@ object DraftsModule {
         model: LanguageModel,
         ids: IdGenerator,
         clock: Clock,
-    ) = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids) { clock.now().toEpochMilliseconds() }
+        local: LocalCurrency,
+    ) = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids, local::current) { clock.now().toEpochMilliseconds() }
 
     @Provides
     fun providePostDrafts(

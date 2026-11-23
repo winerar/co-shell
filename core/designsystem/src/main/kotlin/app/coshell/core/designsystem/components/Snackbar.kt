@@ -33,6 +33,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.tokens.Spacing
+import kotlinx.coroutines.delay
 
 /**
  * Snackbar host of the app («Операция удалена · Отменить»): the bar rides up from the bottom edge (from
@@ -41,6 +42,14 @@ import app.coshell.core.designsystem.tokens.Spacing
  */
 @Composable
 fun CoShellSnackbarHost(state: SnackbarHostState, modifier: Modifier = Modifier) {
+    // Material's own SnackbarHost dismisses on timeout; this host replaces it, so it must do the same (#624),
+    // otherwise `showSnackbar` waits forever and the bar stays until the next one.
+    val current = state.currentSnackbarData
+    LaunchedEffect(current) {
+        val total = current?.visuals?.duration?.millis() ?: return@LaunchedEffect
+        delay(total)
+        current.dismiss()
+    }
     AnimatedContent(
         targetState = state.currentSnackbarData,
         modifier = modifier,

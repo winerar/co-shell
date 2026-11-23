@@ -1,5 +1,6 @@
 package app.coshell.reports.recap
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +62,9 @@ fun MonthRecapScreen(state: MonthRecapUiState, onBack: () -> Unit = {}, onDetail
                 tone = CardTone.Hero,
                 onClick = { index = if (at < last) at + 1 else 0 },
             ) {
-                Story(state.cards[at], state, onDetails, Modifier.fillMaxSize().padding(Spacing.l))
+                AnimatedContent(at, transitionSpec = { storyTransition(last) }, label = "story") { shown ->
+                    Story(state.cards[shown.coerceIn(0, last)], state, onDetails, Modifier.fillMaxSize().padding(Spacing.l))
+                }
             }
         }
     }

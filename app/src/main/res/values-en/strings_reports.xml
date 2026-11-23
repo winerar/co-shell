@@ -137,4 +137,26 @@
     <string name="capital_month_change">%1$s this month</string>
     <string name="capital_month_search">Find an account · %1$d</string>
     <string name="capital_month_order_change">By change</string>
+    <string name="reports_tab_overview">Overview</string>
+    <string name="reports_tab_calendar">Calendar</string>
+    <string name="reports_calendar_title">Spending calendar</string>
+    <string name="reports_calendar_cue">tap a day</string>
+    <string name="reports_calendar_less">less</string>
+    <string name="reports_calendar_more">more</string>
+    <plurals name="reports_calendar_nospend">
+        <item quantity="one">no spending: %d day</item>
+        <item quantity="other">no spending: %d days</item>
+    </plurals>
+    <string name="reports_calendar_day_spent">%1$s, spent %2$s %3$s</string>
+    <string name="reports_calendar_day_none">%1$s, nothing spent</string>
+    <string name="reports_calendar_day_title">%1$s · transactions: %2$d</string>
+    <string name="reports_calendar_empty">Nothing spent this month yet. Tap “+” to add the first one.</string>
+    <string name="reports_calendar_day_empty">No transactions on this day.</string>
+    <string name="reports_weekday_1">M</string>
+    <string name="reports_weekday_2">T</string>
+    <string name="reports_weekday_3">W</string>
+    <string name="reports_weekday_4">T</string>
+    <string name="reports_weekday_5">F</string>
+    <string name="reports_weekday_6">S</string>
+    <string name="reports_weekday_7">S</string>
 </resources>

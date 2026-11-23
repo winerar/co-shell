@@ -151,4 +151,28 @@
     <string name="capital_month_change">%1$s за месяц</string>
     <string name="capital_month_search">Найти счёт · %1$d</string>
     <string name="capital_month_order_change">По изменению</string>
+    <string name="reports_tab_overview">Обзор</string>
+    <string name="reports_tab_calendar">Календарь</string>
+    <string name="reports_calendar_title">Календарь трат</string>
+    <string name="reports_calendar_cue">нажмите на день</string>
+    <string name="reports_calendar_less">меньше</string>
+    <string name="reports_calendar_more">больше</string>
+    <plurals name="reports_calendar_nospend">
+        <item quantity="one">без трат: %d день</item>
+        <item quantity="few">без трат: %d дня</item>
+        <item quantity="many">без трат: %d дней</item>
+        <item quantity="other">без трат: %d дня</item>
+    </plurals>
+    <string name="reports_calendar_day_spent">%1$s, потрачено %2$s %3$s</string>
+    <string name="reports_calendar_day_none">%1$s, трат нет</string>
+    <string name="reports_calendar_day_title">%1$s · операций: %2$d</string>
+    <string name="reports_calendar_empty">Трат в этом месяце пока нет. Нажмите «+», чтобы записать первую.</string>
+    <string name="reports_calendar_day_empty">В этот день операций нет.</string>
+    <string name="reports_weekday_1">П</string>
+    <string name="reports_weekday_2">В</string>
+    <string name="reports_weekday_3">С</string>
+    <string name="reports_weekday_4">Ч</string>
+    <string name="reports_weekday_5">П</string>
+    <string name="reports_weekday_6">С</string>
+    <string name="reports_weekday_7">В</string>
 </resources>

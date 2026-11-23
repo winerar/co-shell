@@ -12,6 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import app.coshell.core.designsystem.components.CoShellIconButton
+import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.rememberSegmentSwipe
+import app.coshell.core.designsystem.components.segmentSwipe
 import app.coshell.core.designsystem.tokens.Motion
 import app.coshell.core.designsystem.R as DesignR
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +23,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,21 +37,15 @@ import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.LocalHintHost
 import app.coshell.hints.WordHint
 import app.coshell.core.designsystem.components.underBars
-import app.coshell.core.designsystem.components.CoShellCard
-import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.reports.components.CapitalCard
-import app.coshell.reports.components.IncomeCard
-import app.coshell.reports.components.MembersCard
-import app.coshell.reports.components.MonthsCard
 import app.coshell.reports.components.PeriodSwitch
 import app.coshell.reports.components.ReportChoice
 import app.coshell.reports.components.ReportPeriodSheet
-import app.coshell.reports.components.SpendingCard
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 
 /**
@@ -73,6 +69,8 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
             onDismiss = { sheetOpen = false },
         )
     }
+    var tab by rememberSaveable { mutableIntStateOf(0) }
+    val swipe = rememberSegmentSwipe()
     val list = rememberLazyListState()
     // The period row went under the header: its title and arrows move into the capsule (#568, poll «Б»).
     val periodGone by remember { derivedStateOf { list.periodGone() } }
@@ -92,13 +90,21 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
         LazyColumn(
-            Modifier.fillMaxSize(),
+            Modifier.fillMaxSize().segmentSwipe(swipe, tab, 2, onSelect = { tab = it }),
             state = list,
             contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (period == null) return@LazyColumn
             if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports) }
+            item(key = "tabs") {
+                CoShellSegmented(
+                    listOf(stringResource(R.string.reports_tab_overview), stringResource(R.string.reports_tab_calendar)),
+                    selected = tab,
+                    onSelect = { tab = it },
+                    swipe = swipe,
+                )
+            }
             item(key = PERIOD_KEY) {
                 PeriodSwitch(
                     title = periodTitle(period),
@@ -108,31 +114,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
                     onOpenSheet = { sheetOpen = true },
                 )
             }
-            val spending = state.spending
-            if (spending == null) {
-                item(key = "empty") { Empty(stringResource(R.string.reports_period_title)) }
-            } else {
-                item(key = "spending") {
-                    SpendingCard(
-                        spending,
-                        state.currency,
-                        ghostCaption = if (state.compare) ghostCaption(period, state.startDay) else null,
-                        onAll = actions.onAllCategories,
-                        onBar = actions.onCategory,
-                    )
-                }
-            }
-            state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
-            state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
-            state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
-            if (state.members.isNotEmpty()) item(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
-            item(key = "note") {
-                val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()
-                CoShellHint(
-                    if (missing.isEmpty()) stringResource(R.string.reports_rate_note, state.currency)
-                    else stringResource(R.string.reports_rate_note, state.currency) + ". " + stringResource(R.string.reports_missing, missing.joinToString()),
-                )
-            }
+            if (tab == 1) calendarItems(state, actions) else overviewItems(state, period, actions)
         }
     }
 }
@@ -162,18 +144,6 @@ private fun BarArrow(shown: Boolean, next: Boolean, onClick: () -> Unit) {
 private const val PERIOD_KEY = "period"
 private const val HALF_TURN = 180f
 
-@Composable
-private fun Empty(sheetTitle: String) {
-    CoShellCard {
-        Text(
-            stringResource(R.string.reports_empty, sheetTitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(Spacing.l),
-        )
-    }
-}
-
 /** Everything the screen can ask for; defaults make previews short. */
 data class ReportsActions(
     val onShift: (Int) -> Unit = {},
@@ -186,4 +156,8 @@ data class ReportsActions(
     val onMember: (String?) -> Unit = {},
     /** A point of «Капитал»: the accounts at that month end. */
     val onCapital: (YearMonth) -> Unit = {},
+    /** A day of «Календарь трат» (#553). */
+    val onDay: (LocalDate) -> Unit = {},
+    /** A row of the tapped day: the operation's id. */
+    val onTransaction: (String) -> Unit = {},
 )

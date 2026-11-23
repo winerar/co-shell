@@ -2,6 +2,7 @@ package app.coshell.reports
 
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
+import app.coshell.transactions.list.TransactionsUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 
@@ -28,6 +29,11 @@ data class ReportsUiState(
     val members: List<MemberRow> = emptyList(),
     /** «Капитал» (#189); `null` — no account counted into the total. */
     val capital: Capital? = null,
+    /** «Календарь трат» (#553) of the period's last month. */
+    val calendar: Calendar? = null,
+    /** The tapped day of [calendar] and its operations (rows as in «Операции»); `null` — none chosen. */
+    val selectedDay: LocalDate? = null,
+    val dayOps: TransactionsUiState.Day? = null,
 ) {
     /** Nothing was spent in the period (the cards say so instead of empty charts). */
     val isEmpty: Boolean get() = !isLoading && spending == null
@@ -147,6 +153,14 @@ data class ReportsUiState(
     )
 
     /** [name] `null` — a category deleted on another phone. */
+    /** A month in weeks; [leadingBlanks] empty places before the first day (the week starts on Monday). */
+    data class Calendar(val leadingBlanks: Int, val cells: List<CalendarCell>, val noSpendDays: Int, val missing: List<String> = emptyList()) {
+        val isEmpty: Boolean get() = cells.none { it.level > 0 }
+    }
+
+    /** One day: [spent] is the formatted amount without the code, `null` when nothing was spent. */
+    data class CalendarCell(val date: LocalDate, val level: Int, val spent: String?, val today: Boolean, val future: Boolean)
+
     data class TopFolder(val name: String?, val value: String)
 
     /**

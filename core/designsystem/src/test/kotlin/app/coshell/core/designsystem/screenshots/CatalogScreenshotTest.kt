@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ChartsCatalog
+import app.coshell.core.designsystem.catalog.HeatCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.PinSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
@@ -56,6 +57,13 @@ class CatalogScreenshotTest {
 
     @Test
     fun `charts light`() = shot("charts_light") { ChartsCatalog() }
+
+    /** #553: the spending calendar. */
+    @Test
+    fun `heat dark`() = shot("heat_dark", dark = true) { HeatCatalog() }
+
+    @Test
+    fun `heat light`() = shot("heat_light") { HeatCatalog() }
 
     @Test
     fun `tokens light`() = shot("tokens_light") { TokensCatalog() }

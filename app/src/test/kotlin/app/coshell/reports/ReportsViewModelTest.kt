@@ -22,6 +22,8 @@ import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeExchangeRateRepository
 import app.coshell.testing.FakeReportCurrencySettings
 import app.coshell.testing.FakeReportRepository
+import app.coshell.testing.FakeTagRepository
+import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Clock
@@ -85,12 +87,14 @@ class ReportsViewModelTest {
         items.value = mapOf("cash" to Account("cash", "Доллары", usd, initialBalanceMinor = 1_000_00))
     }
 
-    private fun viewModel(options: ScreenOptions = ScreenOptions()) = ReportsViewModel(
+    private fun viewModel(options: ScreenOptions = ScreenOptions(), transactions: FakeTransactionRepository = FakeTransactionRepository()) = ReportsViewModel(
         reports,
         categories,
         accounts,
         FakeExchangeRateRepository(),
         OtherMembers { others },
+        transactions,
+        FakeTagRepository(),
         FakeReportCurrencySettings(listOf(usd, CurrencyCode("ARS"))),
         monthStart,
         MoneyFormat.RU,
@@ -210,5 +214,55 @@ class ReportsViewModelTest {
         assertEquals(listOf("+1\u202F600", "-600"), capital.why.take(2).map { it.saved.replace('\u2212', '-') })
         assertEquals("0", capital.why.first().rates)
         assertEquals(listOf<String?>(null), state.members.map { it.name })
+    }
+
+    @Test
+    fun `calendar is the shown month in weeks starting on Monday, brighter days for bigger spending`() = runTest {
+        val vm = viewModel()
+        vm.state.launchIn(backgroundScope)
+        val calendar = vm.state.first { it.calendar != null }.calendar!!
+
+        // 1 November 2026 is a Sunday: six empty places in the Monday-first week.
+        assertEquals(6, calendar.leadingBlanks)
+        assertEquals(30, calendar.cells.size)
+        assertEquals(listOf(2, 3, 10), calendar.cells.filter { it.spent != null }.map { it.date.day })
+        assertEquals(listOf(4, 1, 2), calendar.cells.filter { it.spent != null }.map { it.level })
+        assertEquals(true, calendar.cells[10].today)
+        assertEquals(true, calendar.cells[11].future)
+        // The 1st..11th is 11 days, three with spending.
+        assertEquals(8, calendar.noSpendDays)
+    }
+
+    @Test
+    fun `a tapped day shows its operations under the grid and the same day again hides them`() = runTest {
+        val transactions = FakeTransactionRepository()
+        transactions.saveTransaction(
+            app.coshell.core.model.Transaction("t1", TransactionType.EXPENSE, "cash", usd(60), LocalDate(2026, 11, 10).atStartOfDayIn(TimeZone.UTC), categoryId = "cafe"),
+        )
+        val vm = viewModel(transactions = transactions)
+        vm.state.launchIn(backgroundScope)
+        vm.state.first { it.calendar != null }
+
+        vm.onDay(LocalDate(2026, 11, 10))
+        val shown = vm.state.first { it.dayOps != null }
+        assertEquals(LocalDate(2026, 11, 10), shown.selectedDay)
+        assertEquals(listOf("t1"), shown.dayOps!!.rows.map { it.id })
+
+        vm.onDay(LocalDate(2026, 11, 10))
+        val hidden = vm.state.first { it.selectedDay == null }
+        assertNull(hidden.dayOps)
+    }
+
+    @Test
+    fun `a day of another month is dropped when the period moves`() = runTest {
+        val vm = viewModel()
+        vm.state.launchIn(backgroundScope)
+        vm.state.first { it.calendar != null }
+        vm.onDay(LocalDate(2026, 11, 10))
+        vm.state.first { it.selectedDay != null }
+
+        vm.onShift(-1)
+
+        assertNull(vm.state.first { it.period == ReportPeriod.month(YearMonth(2026, 10)) }.selectedDay)
     }
 }

@@ -365,6 +365,7 @@ fun CoShellNavHost(
                         .savedStateHandle[PRESET_MEMBER] = preset.encode()
                 },
                 onCapital = { navController.navigate(it) { launchSingleTop = true } },
+                onTransaction = { navController.navigate(TransactionEditDestination(transactionId = it)) },
             )
         }
         screen<CapitalMonthDestination> {

@@ -61,3 +61,20 @@ class MakeLandingTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PrivacyPagesTest(unittest.TestCase):
+    def test_same_blocks_in_every_language(self):
+        import privacy_pages as pp
+        for kind in ("privacy", "delete"):
+            shapes = {lang: [(k, len(v) if k == "ul" else 0) for k, v in pp.TEXTS[lang][kind]] for lang in pp.LANGS}
+            self.assertEqual(shapes["ru"], shapes["en"])
+            self.assertEqual(shapes["ru"], shapes["es"])
+
+    def test_writes_all_pages(self):
+        import tempfile, os, privacy_pages as pp
+        with tempfile.TemporaryDirectory() as d:
+            pp.write_all(d)
+            for kind in ("privacy", "delete"):
+                for lang in pp.LANGS:
+                    self.assertTrue(os.path.getsize(os.path.join(d, kind, lang, "index.html")) > 500)

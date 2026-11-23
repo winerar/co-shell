@@ -10,4 +10,6 @@ data class NotesUiState(
     val processing: Boolean = false,
     val isLoading: Boolean = false,
     val skipped: Int = 0,
+    /** The cloud answers («Облачный разбор» is on, #635): a line under «Обработать» says where the text goes. */
+    val cloud: Boolean = false,
 )

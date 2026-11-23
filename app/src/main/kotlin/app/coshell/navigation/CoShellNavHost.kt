@@ -32,6 +32,7 @@ import app.coshell.privacy.pin.PinSetupRoute
 import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.export.ExportRoute
 import app.coshell.ai.AiAddonRoute
+import app.coshell.ai.cloud.CloudAiRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
 import app.coshell.settings.HomeDetailsRoute
@@ -458,11 +459,15 @@ fun CoShellNavHost(
                     onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                     onBackup = { navController.navigate(BackupDestination) },
                     onAiAddon = { navController.navigate(AiAddonDestination) { launchSingleTop = true } },
+                    onCloudAi = { navController.navigate(CloudAiDestination) { launchSingleTop = true } },
                 ),
             )
         }
         screen<AiAddonDestination> {
             AiAddonRoute(onBack = { navController.popBackStack() })
+        }
+        screen<CloudAiDestination> {
+            CloudAiRoute(onBack = { navController.popBackStack() })
         }
         screen<AppearanceDestination> {
             AppearanceRoute(onBack = { navController.popBackStack() })

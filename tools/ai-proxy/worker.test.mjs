@@ -39,7 +39,7 @@ test("valid token and body returns the model text", async () => {
   const { env, fetch, calls } = setup();
   const res = await handle(await req(await token()), env, { fetch, nowSec: NOW });
   assert.equal(res.status, 200);
-  assert.deepEqual(await res.json(), { text: "[{\"i\":0}]" });
+  assert.deepEqual(await res.json(), { text: "[{\"i\":0}]", left: 1, limit: 2 });
   const sent = JSON.parse(calls.at(-1).init.body);
   assert.equal(sent.model, "claude-haiku-5-5");
   assert.match(sent.system, /^You only parse/);
@@ -70,6 +70,8 @@ test("daily limit per person stops the third request", async () => {
   const codes = [];
   for (let i = 0; i < 3; i++) codes.push((await handle(await req(t), env, { fetch, nowSec: NOW })).status);
   assert.deepEqual(codes, [200, 200, 429]);
+  const over = await handle(await req(t), env, { fetch, nowSec: NOW });
+  assert.deepEqual(await over.json(), { error: "limit", left: 0, limit: 2 });
 });
 
 test("upstream failure becomes 502 without leaking details", async () => {

@@ -19,4 +19,7 @@ interface LanguageModel {
      * (payment method too), not only the lines the rules could not finish. The slow model on the phone keeps `false`.
      */
     val cheap: Boolean get() = false
+
+    /** The last request was refused because the daily limit of the cloud is over (#635); the caller says so once and the phone model carries on. */
+    val limited: Boolean get() = false
 }

@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1997 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v17.
+- Тесты: всего 2001 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v17.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -76,4 +76,4 @@
 #623 (полукруг на удержании «+») — в «Очередь».
 2026-11-23, `ccr-f440f20c-zxznzl`: план Google Play и экономика (#636) — `docs/research/play-release-plan.md`, `monetization.md`; подзадачи #651–#658, #660. Решено: личный аккаунт, ключ подписи — текущий, Play — бесплатная урезанная версия, полная — APK с лендинга, подписка через Telegram, без российских сервисов. Далее: #653 выход/удаление, #661 много семей (лимит 10), #662 вход через Telegram. Ждёт владельца: #657, #658.
 2026-11-23, `claude/config-model-5qci53`: #653/#661 (семьи) влиты (PR #664). Закрытое тестирование без Play (`docs/research/closed-testing-plan.md`, опрос решён «А»): шлюз с кодом приглашения #666, выдача кодов #667, лендинг #660 — сделаны и **выключены**; включение владельцем — `docs/setup/invite.md`, `landing.md`.
-2026-11-23, `claude/model-config-23r3yg`: облачный разбор Haiku (#635) — `tools/ai-proxy/` (Worker), `RoutedLanguageModel` (облако → телефон → правила), `app/ai/cloud/`; переключателя в UI пока нет. Опрос: https://claude.ai/artifact/GErQoSEsnWsyUCCMUQkxJd (`poll-cloud-ai.json`), владельцу — #674. Дальше: ответ → доски → экран, строки ru/en/es, подсказки; категория #584, чеки #561, голос #585 — на тот же `LanguageModel`. `docs/agents/cloud-ai.md`.
+2026-11-23, `claude/model-config-23r3yg`: облачный разбор Haiku (#635) — Worker `tools/ai-proxy/`, `RoutedLanguageModel`, счёт и валюта в заметках (`AccountLabels`, `CurrencyGuess`), экран «Облачный разбор» (опрос «А»×3, доски `Cloud*`, `poll-cloud-ai.json`). Строка скрыта без `AI_PROXY_URL`. Ждёт владельца: Worker — #674. Дальше: #584/#561/#585 на тот же `LanguageModel`. `docs/agents/cloud-ai.md`.

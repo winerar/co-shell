@@ -26,6 +26,9 @@ class NoteHints(private val model: LanguageModel) {
     /** The model is cheap (cloud): the caller sends every line, not only the unfinished ones (#635). */
     val broad: Boolean get() = model.cheap
 
+    /** The cloud refused the last request: the daily limit is over (#635). */
+    val limited: Boolean get() = model.limited
+
     /**
      * Hints for [lines] (same order); empty list entries are `null`. Without a model or on any failure — all `null`.
      * [accounts] — labels of the person's live accounts; the model may name one as the way of paying (never invent one).

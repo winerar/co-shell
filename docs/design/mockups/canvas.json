@@ -346,8 +346,35 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountEditExisting.dc.html": {
+    "AccountPass.dc.html": {
       "x": 1880,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Проездной (SUBE, «Тройка»): тип «Проездной», «Баланс на карте · Сверить», вне общего баланса (#645)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountPassCheck.dc.html": {
+      "x": 2350,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Проездной: «Сверить баланс» — «Сохранить баланс» сразу (#645)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountsPass.dc.html": {
+      "x": 2820,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: проездной в списке, «не в общем балансе» (#645)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountEditExisting.dc.html": {
+      "x": 3290,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -356,7 +383,7 @@
       "radius": 28
     },
     "AccountDelete.dc.html": {
-      "x": 2350,
+      "x": 3760,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -365,7 +392,7 @@
       "radius": 28
     },
     "AccountBlocked.dc.html": {
-      "x": 2820,
+      "x": 4230,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -374,7 +401,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 3290,
+      "x": 4700,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -384,7 +411,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 3760,
+      "x": 5170,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -394,7 +421,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 4230,
+      "x": 5640,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -403,7 +430,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 4700,
+      "x": 6110,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3246,6 +3273,9 @@
     "AccountAdjust.dc.html",
     "AccountAdjusted.dc.html",
     "AccountDigits.dc.html",
+    "AccountPass.dc.html",
+    "AccountPassCheck.dc.html",
+    "AccountsPass.dc.html",
     "AccountEditExisting.dc.html",
     "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
@@ -3662,7 +3692,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 5090,
+      "maxW": 6500,
       "w": 240
     },
     "row5": {

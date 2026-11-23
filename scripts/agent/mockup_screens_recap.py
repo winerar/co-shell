@@ -56,6 +56,47 @@ def final():
     return story(5, 'Месяц легче прошлого на 14 %', btn, 'Дней с записями: 22')
 
 
+def share_action():
+    return icon_button('upload', 'Поделиться', INK)
+
+
+def share_screen(body, overlay=''):
+    return inner_head('Итоги октября', share_action()) + '<div style="padding: 0 16px;">%s</div>%s' % (body, overlay)
+
+
+def share_final():
+    """Share icon in the top bar of every story (not only the last): one tap → picture of the card in the system «Поделиться»."""
+    inner = ('<div style="font-size: 20px; font-weight: 700; line-height: 1.25;">Месяц легче прошлого на 14 %%</div>'
+             '<div style="margin-top: 16px;">%s</div><div style="margin-top: 12px; font-size: 14px; color: %s;">Дней с записями: 22</div>' % (button('Подробнее'), HERO_HINT))
+    return share_screen(bars(5) + hero_card(inner, pad='20px', extra='margin-top: 12px; min-height: 520px;'))
+
+
+def share_image():
+    """The picture itself (1080 × 1350 at 4:5, drawn at 390 wide): the story card on the theme gradient, amounts hidden, a quiet mark below."""
+    mark = '<div style="margin-top: 20px; font-size: 13px; color: %s; text-align: center;">co-shell · Итоги октября</div>' % HERO_HINT
+    inner = ('<div style="font-size: 22px; font-weight: 700; line-height: 1.25;">Больше всего — на «Продукты»</div><div style="margin-top: 20px;">%s</div>%s%s'
+             % ('<div style="display: flex; justify-content: center;">%s</div>' % donut([(v / 1140, c) for _, v, c in CATS],
+                '<b style="%s font-size: 18px;">••••</b><span style="font-size: 11px; color: %s;">USD</span>' % (MONO, HERO_HINT), 170, 22),
+                ''.join('<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;"><span style="width: 14px; height: 14px; border-radius: 50%%; background: %s;"></span>'
+                        '<span style="flex: 1; font-size: 16px;">%s</span><span style="font-size: 15px; color: %s;">%d %%</span></div>' % (c, n, HERO_HINT, round(v * 100 / 1140)) for n, v, c in CATS),
+                mark))
+    return '<div style="padding: 40px 16px;">%s</div>' % hero_card(inner, pad='24px', extra='min-height: 700px;')
+
+
+def share_choice():
+    """Variant Б: «Поделиться» first asks how — amounts hidden (default) or shown — in the small sheet."""
+    body = ('<div style="padding: 8px 16px 24px;"><div style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">Поделиться итогами</div>'
+            '<div style="display: flex; flex-direction: column; gap: 8px;">%s%s</div>%s</div>' % (
+        row_line('Без сумм', 'Проценты и слова — безопаснее для чата', True), row_line('С суммами', 'Как на экране', False), button('Поделиться')))
+    return share_screen('<div style="height: 560px;"></div>', sheet(body, top=480))
+
+
+def row_line(title, sub, on):
+    edge = 'box-shadow: inset 0 0 0 2px %s;' % LIME if on else 'box-shadow: inset 0 0 0 1px %s;' % LINE2
+    return ('<div style="padding: 10px 16px; border-radius: 999px; %s"><div style="font-size: 16px; font-weight: %d;">%s</div>'
+            '<div style="font-size: 13px; color: %s;">%s</div></div>' % (edge, 700 if on else 400, title, MUTED, sub))
+
+
 BOARDS = [
     ('Rec554Top', 'Истории «А»: 1 — больше всего ушло на…', top, 'recap'),
     ('Rec554Vs', 'Истории «А»: 2 — сравнение с прошлым месяцем', vs, 'recap'),
@@ -63,4 +104,7 @@ BOARDS = [
     ('Rec554New', 'Истории «А»: 4 — новая категория месяца', new, 'recap'),
     ('Rec554Weekend', 'Истории «А»: 5 — будни и выходные', weekend, 'recap'),
     ('Rec554Final', 'Истории «А»: 6 — слова по результату и «Подробнее»', final, 'recap'),
+    ('Rec554Share', 'Поделиться: значок в шапке историй (один нажим → картинка)', share_final, 'recap'),
+    ('Rec554ShareImg', 'Поделиться: сама картинка 4:5, суммы скрыты', share_image, 'recap'),
+    ('Rec554ShareAsk', 'Поделиться, вариант Б: сначала шторка «Без сумм / С суммами»', share_choice, 'recap'),
 ]

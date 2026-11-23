@@ -32,4 +32,17 @@
     <string name="recap_phrase_busy">Месяц был насыщенным, зато всё записано</string>
     <string name="recap_share">Поделиться итогами</string>
     <string name="recap_share_mark" translatable="false">co-shell · %1$s</string>
+    <plurals name="recap_streak_title">
+        <item quantity="one">Записывали %1$d день подряд</item>
+        <item quantity="few">Записывали %1$d дня подряд</item>
+        <item quantity="many">Записывали %1$d дней подряд</item>
+        <item quantity="other">Записывали %1$d дня подряд</item>
+    </plurals>
+    <string name="recap_streak_range" translatable="false">%1$d–%2$d %3$s</string>
+    <string name="recap_streak_caption">Самая длинная серия месяца</string>
+    <string name="recap_share_title">Поделиться итогами</string>
+    <string name="recap_share_hidden">Без сумм</string>
+    <string name="recap_share_hidden_hint">Проценты и слова — безопаснее для чата</string>
+    <string name="recap_share_shown">С суммами</string>
+    <string name="recap_share_shown_hint">Как на экране</string>
 </resources>

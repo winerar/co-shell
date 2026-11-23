@@ -37,5 +37,8 @@ internal object MonthRecapSamples {
         phrase = RecapPhrase.LIGHTER,
         phraseNumber = 14,
         recordedDays = 22,
+        streak = 13,
+        streakFrom = 7,
+        streakTo = 19,
     )
 }

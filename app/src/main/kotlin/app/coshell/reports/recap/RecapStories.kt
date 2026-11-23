@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
@@ -23,6 +24,7 @@ import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.reports.RecapPhrase
 import app.coshell.reports.categoryName
+import app.coshell.ui.format.formatMonthOf
 
 /** The bodies of the stories of [MonthRecapScreen] (boards `RecapS1…S6`); each is a title, one chart or number, a line. */
 
@@ -107,6 +109,21 @@ internal fun WeekendStory(state: MonthRecapUiState, modifier: Modifier) {
             selected = 1,
         )
         Caption(stringResource(R.string.recap_weekend_caption))
+    }
+}
+
+@Composable
+internal fun StreakStory(state: MonthRecapUiState, modifier: Modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        StoryTitle(pluralStringResource(R.plurals.recap_streak_title, state.streak, state.streak))
+        if (state.streakInOneMonth) {
+            val month = state.month
+            Text(
+                stringResource(R.string.recap_streak_range, state.streakFrom, state.streakTo, month?.let { formatMonthOf(it) }.orEmpty()),
+                style = MaterialTheme.typography.headlineMedium,
+            )
+        }
+        Caption(stringResource(R.string.recap_streak_caption))
     }
 }
 

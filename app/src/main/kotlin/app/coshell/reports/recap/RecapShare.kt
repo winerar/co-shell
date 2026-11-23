@@ -39,21 +39,21 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * «Поделиться» on the recap stories (#554, owner poll 2026-11-23 «А», boards `Rec554Share`, `Rec554ShareImg`): one tap draws
- * the story on screen as a 4:5 picture — amounts hidden, a quiet mark below — and hands it to the system share sheet.
+ * «Поделиться» on the recap stories (#554, owner poll 2026-11-23 «А», boards `Rec554Share`, `Rec554ShareImg`): the icon asks «Без сумм / С суммами» (boards `Rec554ShareAsk`), then
+ * draws the story on screen as a 4:5 picture — amounts hidden by default, a quiet mark below — and hands it to the system share sheet.
  */
 
 /**
- * Draws [card] off screen at 1080 × 1350 px (360 dp at density 3, whatever the phone has) with the amounts masked and calls
+ * Draws [card] off screen at 1080 × 1350 px (360 dp at density 3, whatever the phone has) with the amounts masked (unless [amountsShown]) and calls
  * [onCaptured] once; the charts get [SETTLE_MS] to finish their entrance first. Nothing of it is visible while it works.
  */
 @Composable
-internal fun RecapPictureCapture(card: RecapCard, state: MonthRecapUiState, onCaptured: (ImageBitmap) -> Unit) {
+internal fun RecapPictureCapture(card: RecapCard, state: MonthRecapUiState, amountsShown: Boolean, onCaptured: (ImageBitmap) -> Unit) {
     val layer = rememberGraphicsLayer()
     val month = state.month ?: return
     CompositionLocalProvider(
         LocalDensity provides Density(PICTURE_DENSITY, fontScale = 1f),
-        LocalAmountsHidden provides true,
+        LocalAmountsHidden provides !amountsShown,
     ) {
         // A zero-size holder: the picture node inside keeps its real size (a zero-size node is not drawn at all).
         Box(Modifier.layout { measurable, _ -> measurable.measure(Constraints()).let { layout(0, 0) { it.place(0, 0) } } }) {

@@ -84,10 +84,10 @@ def share_image():
 
 
 def share_choice():
-    """Variant Б: «Поделиться» first asks how — amounts hidden (default) or shown — in the small sheet."""
+    """«Поделиться»: a tap on the icon asks how — amounts hidden (default) or shown; a tap on a line shares at once (ChoiceSheet)."""
     body = ('<div style="padding: 8px 16px 24px;"><div style="font-size: 20px; font-weight: 700; margin-bottom: 12px;">Поделиться итогами</div>'
             '<div style="display: flex; flex-direction: column; gap: 8px;">%s%s</div>%s</div>' % (
-        row_line('Без сумм', 'Проценты и слова — безопаснее для чата', True), row_line('С суммами', 'Как на экране', False), button('Поделиться')))
+        row_line('Без сумм', 'Проценты и слова — безопаснее для чата', True), row_line('С суммами', 'Как на экране', False), ''))
     return share_screen('<div style="height: 560px;"></div>', sheet(body, top=480))
 
 
@@ -98,16 +98,8 @@ def row_line(title, sub, on):
 
 
 def streak():
-    """Story «Серия записей»: the longest run of days with entries in the month; no pressure, a missed day is not mentioned."""
-    days = ''.join('<div style="flex: 1; height: 28px; border-radius: 8px; background: %s;"></div>' % (LIME if i in range(6, 19) else LINE2) for i in range(31))
-    grid = '<div style="display: flex; gap: 3px;">%s</div>' % days
-    return story(5, 'Записывали 13 дней подряд', grid + '<div style="margin-top: 16px; font-size: 28px; font-weight: 700;">7–19 октября</div>', 'Самая длинная серия месяца')
-
-
-def coffee():
-    """Story «Кафе в чашках»: the month's «Кафе» total in typical «Кафе» entries (median of the last 3 months) — offline, own data."""
-    cups = ''.join('<span style="display: inline-block; width: 22px; height: 22px; border-radius: 50%%; margin: 0 4px 4px 0; background: %s;"></span>' % '#FFB86B' for _ in range(34))
-    return story(4, 'На кафе ушло как 34 обычные траты в кафе', '<div style="max-width: 300px;">%s</div>' % cups, 'Обычная трата в кафе — 3 500 ARS, это ваша середина за 3 месяца')
+    """Story «Серия записей»: the longest run of days with entries; no pressure, a missed day is not mentioned. The number is the title, no strip."""
+    return story(5, 'Записывали 13 дней подряд', '<div style="font-size: 28px; font-weight: 700;">7–19 октября</div>', 'Самая длинная серия месяца')
 
 
 BOARDS = [
@@ -118,8 +110,7 @@ BOARDS = [
     ('Rec554Weekend', 'Истории «А»: 5 — будни и выходные', weekend, 'recap'),
     ('Rec554Final', 'Истории «А»: 6 — слова по результату и «Подробнее»', final, 'recap'),
     ('Rec554Streak', 'Новая история: серия дней подряд с записями', streak, 'recap'),
-    ('Rec554Coffee', 'Новая история: кафе в «обычных тратах» (по своим данным)', coffee, 'recap'),
     ('Rec554Share', 'Поделиться: значок в шапке историй (один нажим → картинка)', share_final, 'recap'),
     ('Rec554ShareImg', 'Поделиться: сама картинка 4:5, суммы скрыты', share_image, 'recap'),
-    ('Rec554ShareAsk', 'Поделиться, вариант Б: сначала шторка «Без сумм / С суммами»', share_choice, 'recap'),
+    ('Rec554ShareAsk', 'Поделиться: значок → шторка «Без сумм / С суммами», нажатие строки делится сразу', share_choice, 'recap'),
 ]

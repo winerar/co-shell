@@ -31,4 +31,14 @@
     <string name="recap_phrase_saved">%1$d %% of income left</string>
     <string name="recap_phrase_busy">A busy month, but everything is recorded</string>
     <string name="recap_share">Share the recap</string>
+    <plurals name="recap_streak_title">
+        <item quantity="one">%1$d day in a row with entries</item>
+        <item quantity="other">%1$d days in a row with entries</item>
+    </plurals>
+    <string name="recap_streak_caption">The longest streak of the month</string>
+    <string name="recap_share_title">Share the recap</string>
+    <string name="recap_share_hidden">Without amounts</string>
+    <string name="recap_share_hidden_hint">Percents and words — safer for a chat</string>
+    <string name="recap_share_shown">With amounts</string>
+    <string name="recap_share_shown_hint">As on the screen</string>
 </resources>

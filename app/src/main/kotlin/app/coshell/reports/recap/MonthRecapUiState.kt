@@ -29,6 +29,11 @@ data class MonthRecapUiState(
     /** The number inside the phrase: percent lighter, percent left, days in a row. */
     val phraseNumber: Int = 0,
     val recordedDays: Int = 0,
+    /** The longest run of days with records; [streakFrom]–[streakTo] are its day numbers, [streakInOneMonth] — they can be told with one month name. */
+    val streak: Int = 0,
+    val streakFrom: Int = 0,
+    val streakTo: Int = 0,
+    val streakInOneMonth: Boolean = true,
 ) {
     data class NamedCategory(val id: String, /** `null` — deleted on another phone. */ val name: String?, val color: Long)
 

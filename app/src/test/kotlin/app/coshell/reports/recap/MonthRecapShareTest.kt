@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -31,9 +32,15 @@ class MonthRecapShareTest {
         compose.setContent { CoShellTheme { MonthRecapScreen(MonthRecapSamples.state, onShare = { pictures += it }) } }
         compose.mainClock.autoAdvance = false
         compose.onNodeWithContentDescription("Поделиться итогами").performClick()
-        compose.mainClock.advanceTimeByFrame()
-        compose.onRoot().captureToImage() // Robolectric draws only on demand: the picture is recorded in that pass
-        compose.mainClock.advanceTimeBy(3_000)
+        compose.mainClock.advanceTimeBy(1_000)
+        compose.onNodeWithText("Без сумм").performClick()
+        // A phone draws every frame; Robolectric only on demand — so draw each step until the picture is handed over.
+        repeat(80) {
+            if (pictures.isEmpty()) {
+                compose.onRoot().captureToImage()
+                compose.mainClock.advanceTimeBy(50)
+            }
+        }
         compose.waitForIdle()
         assertEquals(1, pictures.size)
         assertEquals(1080, pictures.single().width)

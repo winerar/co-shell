@@ -13,10 +13,12 @@ import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
 import app.coshell.reports.recap.MonthRecapUiState.NamedCategory
 import kotlin.math.abs
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 /** Pure: the recap of [month] from the budget data, counted by `monthRecap` in the main report currency. */
 internal fun buildMonthRecap(snapshot: BudgetSource.Snapshot, month: YearMonth, today: LocalDate, format: MoneyFormat): MonthRecapUiState {
@@ -28,6 +30,8 @@ internal fun buildMonthRecap(snapshot: BudgetSource.Snapshot, month: YearMonth, 
     val recap = monthRecap(ledger, categories, period, before, limitsTally(progress))
     if (!recap.spent.isPositive) return MonthRecapUiState(month = month, currency = snapshot.mainCurrency.value)
     val byId = categories.associateBy { it.id }
+    val streakStart = period.start.plus(DatePeriod(days = recap.streakStart))
+    val streakEnd = streakStart.plus(DatePeriod(days = (recap.streak - 1).coerceAtLeast(0)))
     val busiest = recap.weeks.maxOf { it.amountMinor }.coerceAtLeast(1L)
     return MonthRecapUiState(
         month = month,
@@ -50,6 +54,10 @@ internal fun buildMonthRecap(snapshot: BudgetSource.Snapshot, month: YearMonth, 
         phrase = recap.phrase,
         phraseNumber = phraseNumber(recap),
         recordedDays = recap.recordedDays,
+        streak = recap.streak,
+        streakFrom = streakStart.dayOfMonth,
+        streakTo = streakEnd.dayOfMonth,
+        streakInOneMonth = streakStart.month == streakEnd.month,
     )
 }
 

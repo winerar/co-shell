@@ -32,6 +32,8 @@ import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.reports.RecapCard
 import app.coshell.core.designsystem.R as DesignR
+import app.coshell.ui.form.ChoiceOption
+import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.format.formatMonthOf
 import app.coshell.ui.top.ScreenTopBar
 
@@ -49,18 +51,20 @@ fun MonthRecapScreen(
     onShare: (ImageBitmap) -> Unit = {},
 ) {
     val month = state.month
-    var sharing by remember { mutableStateOf(false) }
+    var asking by remember { mutableStateOf(false) }
+    var sharing by remember { mutableStateOf<Boolean?>(null) }
     var index by rememberSaveable { mutableIntStateOf(startAt) }
     val shareLabel = stringResource(R.string.recap_share)
     Scaffold(
         topBar = {
             ScreenTopBar(month?.let { stringResource(R.string.recap_title, formatMonthOf(it)) }.orEmpty(), onBack = onBack) {
-                if (month != null && state.cards.isNotEmpty() && !sharing) {
-                    CoShellIconButton(onClick = { sharing = true }) { Icon(painterResource(DesignR.drawable.ic_upload), shareLabel) }
+                if (month != null && state.cards.isNotEmpty() && sharing == null) {
+                    CoShellIconButton(onClick = { asking = true }) { Icon(painterResource(DesignR.drawable.ic_upload), shareLabel) }
                 }
             }
         },
     ) { padding ->
+        if (asking) ShareChoice(onPick = { sharing = it; asking = false }, onDismiss = { asking = false })
         if (state.isLoading || month == null) return@Scaffold
         val side = Modifier.padding(horizontal = Spacing.l)
         if (state.cards.isEmpty()) {
@@ -86,7 +90,7 @@ fun MonthRecapScreen(
             ) {
                 Story(state.cards[at], state, onDetails, forPicture = false, Modifier.fillMaxSize().padding(Spacing.l))
             }
-            if (sharing) RecapPictureCapture(state.cards[at], state) { picture -> sharing = false; onShare(picture) }
+            sharing?.let { shown -> RecapPictureCapture(state.cards[at], state, amountsShown = shown) { picture -> sharing = null; onShare(picture) } }
         }
     }
 }
@@ -98,8 +102,24 @@ internal fun Story(card: RecapCard, state: MonthRecapUiState, onDetails: () -> U
     RecapCard.WEEKS -> WeeksStory(state, modifier)
     RecapCard.NEW_CATEGORY -> NewStory(state, modifier)
     RecapCard.WEEKEND -> WeekendStory(state, modifier)
+    RecapCard.STREAK -> StreakStory(state, modifier)
     RecapCard.FINAL -> FinalStory(state, onDetails.takeUnless { forPicture }, modifier)
 }
 
 @Composable
 internal fun StoryTitle(text: String) = Text(text, style = MaterialTheme.typography.titleLarge)
+
+/** «Поделиться итогами»: how — [onPick] gets `true` for «С суммами» (boards `Rec554ShareAsk`). */
+@Composable
+private fun ShareChoice(onPick: (Boolean) -> Unit, onDismiss: () -> Unit) {
+    ChoiceSheet(
+        title = stringResource(R.string.recap_share_title),
+        options = listOf(
+            ChoiceOption(false, stringResource(R.string.recap_share_hidden), stringResource(R.string.recap_share_hidden_hint)),
+            ChoiceOption(true, stringResource(R.string.recap_share_shown), stringResource(R.string.recap_share_shown_hint)),
+        ),
+        selected = false,
+        onPick = onPick,
+        onDismiss = onDismiss,
+    )
+}

@@ -26,6 +26,9 @@ import app.coshell.core.domain.rates.CurrencyConverter
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.domain.quickentry.EntryDraftStore
+import app.coshell.core.domain.quickentry.EntryDrafts
+import app.coshell.core.domain.quickentry.InMemoryEntryDraftStore
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptAccounts
 import app.coshell.core.domain.receipts.ReceiptFormats
@@ -57,6 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -88,6 +92,7 @@ class TransactionEditViewModel @Inject constructor(
     private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
     private val drafts: DraftRepository = InMemoryDraftRepository(),
     private val categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
+    private val entryDrafts: EntryDraftStore = InMemoryEntryDraftStore(),
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -141,6 +146,12 @@ class TransactionEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { load() }
+        // What is typed is kept as it changes (a call, the app killed): the next «+» offers it (#323). Saved or discarded — cleared.
+        viewModelScope.launch {
+            _state.map { draftOf(it, accountsById, clock.now()) }
+                .distinctUntilChanged { a, b -> a?.copy(savedAt = b?.savedAt ?: a.savedAt) == b }
+                .collect { draft -> if (draft != null) entryDrafts.save(draft) }
+        }
         viewModelScope.launch {
             // Parsing and indexing every known rate is heavy: off the main thread (#258).
             rates.observeRates().map { list -> CurrencyConverter(RateBook.of(list)) }.offMain().collect { built ->
@@ -201,6 +212,12 @@ class TransactionEditViewModel @Inject constructor(
             _state.update { it.withCreditPayment(card.account, minimum, accountList.filter { a -> !a.archived }, moneyFormat) }
         }
         if (transaction == null && template == null) draftId?.let { applyDraft(it) }
+        // A plain new sheet offers what the last closed one had (#323).
+        if (isPlainNew(transaction, template)) {
+            EntryDrafts.toOffer(entryDrafts.load(), clock.now())?.let { offer ->
+                _state.update { it.copy(unsaved = unsavedUi(offer, clock.now(), allCategories, moneyFormat)) }
+            }
+        }
     }
 
     /**
@@ -235,6 +252,23 @@ class TransactionEditViewModel @Inject constructor(
     }
 
     // endregion
+
+    /** A new operation from nothing: not an edit, a copy, a template, a receipt, a draft of notes or a credit card payment. */
+    private fun isPlainNew(transaction: Transaction?, template: Transaction?): Boolean =
+        transactionId == null && transaction == null && copyFromId == null && template == null && templateId == null && scannedQr == null && draftId == null && creditCardId == null &&
+            !_state.value.receiptUnread
+
+    /** «Продолжить» on the plate «Не сохранено» (#323): the draft goes back into the form. */
+    fun onUnsavedContinue() {
+        val draft = entryDrafts.load() ?: return _state.update { it.copy(unsaved = null) }
+        _state.update { it.withDraft(draft, accountsById, allCategories, moneyFormat).withDebitSuggestion(converter, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds) }
+    }
+
+    /** «✕» on the plate: the draft is forgotten. */
+    fun onUnsavedDiscard() {
+        entryDrafts.clear()
+        _state.update { it.copy(unsaved = null) }
+    }
 
     // region Receipt QR (#526)
 
@@ -651,6 +685,7 @@ class TransactionEditViewModel @Inject constructor(
                         paymentDate?.let { entryTemplates.paid(id, it) }
                     }
                     draftId?.let { drafts.deleteDrafts(listOf(it)) }
+                    entryDrafts.clear()
                     _state.update { it.copy(isDone = true) }
                 }
                 is SaveTransactionUseCase.Result.Invalid -> _state.update { it.copy(tip = null).withError(result.reason) }

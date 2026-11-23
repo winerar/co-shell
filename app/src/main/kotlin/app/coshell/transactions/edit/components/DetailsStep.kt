@@ -58,6 +58,7 @@ import app.coshell.ui.format.formatDayMonth
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+        state.unsaved?.takeIf { state.isNew }?.let { UnsavedPlate(it, actions.onUnsavedContinue, actions.onUnsavedDiscard) }
         if (state.showsTypeSwitch) TypeBar(state, actions)
         if (state.showsPasteRow) PasteRow(state, actions)
         Header(state, actions)

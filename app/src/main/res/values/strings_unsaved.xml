@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsaved_title">Не сохранено</string>
+    <string name="unsaved_continue">Продолжить</string>
+    <string name="unsaved_discard">Забыть несохранённое</string>
+    <string name="unsaved_now">только что</string>
+    <string name="unsaved_minutes">%1$d мин назад</string>
+    <string name="unsaved_hours">%1$d ч назад</string>
+</resources>

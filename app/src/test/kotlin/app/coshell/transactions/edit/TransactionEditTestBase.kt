@@ -58,6 +58,9 @@ abstract class TransactionEditTestBase {
     protected val categories = FakeCategoryRepository()
     protected val transactions = FakeTransactionRepository()
     protected val drafts = InMemoryDraftRepository()
+    protected val entryDraftStore = app.coshell.core.domain.quickentry.InMemoryEntryDraftStore()
+    /** Another «now» for a test that waits (the draft of #323 grows old); the view model reads it through the clock. */
+    protected var nowOverride: Instant? = null
 
     protected suspend fun seed() {
         accounts.saveAccount(Account("card", "Карта", ars, sortOrder = 0))
@@ -103,7 +106,7 @@ abstract class TransactionEditTestBase {
         saveTransaction = SaveTransactionUseCase(accounts, categories, transactions),
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
-        clock = object : Clock { override fun now(): Instant = now },
+        clock = object : Clock { override fun now(): Instant = nowOverride ?: now },
         timeZone = zone,
         rates = rates,
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
@@ -112,6 +115,7 @@ abstract class TransactionEditTestBase {
         entryTip = fakeEntryTip(categories, transactions, tipSettings),
         drafts = drafts,
         categoryAi = categoryAi,
+        entryDrafts = entryDraftStore,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

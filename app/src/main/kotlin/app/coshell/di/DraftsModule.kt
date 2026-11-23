@@ -45,6 +45,9 @@ object DraftsModule {
     ) = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids, local::current) { clock.now().toEpochMilliseconds() }
 
     @Provides
+    fun provideEntryDraftStore(impl: app.coshell.transactions.edit.PrefsEntryDraftStore): app.coshell.core.domain.quickentry.EntryDraftStore = impl
+
+    @Provides
     fun providePostDrafts(
         accounts: AccountRepository,
         categories: CategoryRepository,

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsaved_title">Sin guardar</string>
+    <string name="unsaved_continue">Continuar</string>
+    <string name="unsaved_discard">Olvidar lo que no se guardó</string>
+    <string name="unsaved_now">ahora mismo</string>
+    <string name="unsaved_minutes">hace %1$d min</string>
+    <string name="unsaved_hours">hace %1$d h</string>
+</resources>

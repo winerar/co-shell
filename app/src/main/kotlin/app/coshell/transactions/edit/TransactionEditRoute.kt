@@ -106,6 +106,8 @@ fun TransactionEditRoute(
                 viewModel.onReceiptUnreadDismiss()
                 onSendReceiptSample()
             },
+            onUnsavedContinue = viewModel::onUnsavedContinue,
+            onUnsavedDiscard = viewModel::onUnsavedDiscard,
             onReceiptAccountPick = viewModel::onReceiptAccountPick,
             onReceiptAccountSkip = viewModel::onReceiptAccountSkip,
             onKey = { key ->
@@ -173,4 +175,7 @@ data class TransactionEditActions(
     /** «Какой это счёт?» of a bank receipt (#577): the chosen account remembers the digits; the window closes without a choice. */
     val onReceiptAccountPick: (String) -> Unit = {},
     val onReceiptAccountSkip: () -> Unit = {},
+    /** The plate «Не сохранено» (#323): put the draft back, or forget it. */
+    val onUnsavedContinue: () -> Unit = {},
+    val onUnsavedDiscard: () -> Unit = {},
 )

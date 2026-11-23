@@ -36,6 +36,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     BACKUP("backup", HintKind.MOMENT),
     THEME("theme", HintKind.MOMENT),
     CURRENCY_ACCOUNT("currency_account", HintKind.MOMENT),
+    PIN_FORGOT("pin_forgot", HintKind.MOMENT),
     ;
 
     companion object {

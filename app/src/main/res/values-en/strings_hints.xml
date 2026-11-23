@@ -51,5 +51,6 @@
     <string name="hint_keypad_math">You can add and subtract: 300 + 150.</string>
     <string name="hint_entry_refund">Got money back? Tick “This is a refund”.</string>
     <string name="hint_currency_account">Money in another currency? Totals are counted in your totals currencies, the rate is filled in for you.</string>
+    <string name="hint_pin_forgot">PIN is on. If you forget it, tap “Forgot PIN?” when signing in.</string>
     <string name="hint_currency_receipt">Enter the purchase amount and the rate is worked out for you.</string>
 </resources>

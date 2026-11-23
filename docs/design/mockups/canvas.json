@@ -802,6 +802,15 @@
       "page": "screens",
       "radius": 28
     },
+    "Hint602PinForgot.dc.html": {
+      "x": 4700,
+      "y": 8680,
+      "w": 390,
+      "h": 844,
+      "title": "#602 · плашка после включения PIN: «Забыли PIN?»",
+      "page": "screens",
+      "radius": 28
+    },
     "AccessGate.dc.html": {
       "x": 0,
       "y": 9920,
@@ -3386,6 +3395,7 @@
     "Feedback.dc.html",
     "FeedbackSent.dc.html",
     "FeedbackError.dc.html",
+    "Hint602PinForgot.dc.html",
     "AccessGate.dc.html",
     "AccessLocked.dc.html",
     "AiOff.dc.html",
@@ -3789,13 +3799,13 @@
       "text": "Настройки, копия, стирание, отзыв",
       "x": 0,
       "y": 8430,
-      "maxW": 4620,
+      "maxW": 5090,
       "w": 240
     },
     "s7": {
       "page": "screens",
       "text": "Палитры на доске «Настройки» перекрашивают весь холст — как в приложении.",
-      "x": 4700,
+      "x": 5170,
       "y": 8680,
       "w": 390
     },

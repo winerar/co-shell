@@ -69,7 +69,7 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountDigits', 'AccountPass', 'AccountPassCheck', 'AccountsPass', 'CreditEdit', 'CreditTerms', 'CreditTermsSum', 'AccountsCredit', 'AccountEditExisting', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
     ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyFull', 'FamilyMemberSheet', 'FamilyRemoveConfirm', 'FamilyLeave', 'FamilyDelete', 'FamilyDeleteAccount', 'FamilyRemoved', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
-    ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError']),
+    ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError', 'Hint602PinForgot']),
     ('Закрытое тестирование', ['AccessGate', 'AccessLocked']),
     ('ИИ на телефоне и в облаке', ['AiOff', 'AiStep1', 'AiStep1Load', 'AiStep2', 'AiOn', 'AiData', 'AiWeak', 'CloudOff', 'CloudOn', 'CloudConsent', 'CloudNoLogin', 'CloudNotes', 'CloudBusy', 'CloudLimit']),
     ('Импорт из Wallet', ['ImportStart', 'ImportError', 'ImportSummary', 'ImportAccounts', 'ImportCategories', 'ImportTransfers', 'ImportPreview', 'ImportDone']),

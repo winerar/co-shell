@@ -51,5 +51,6 @@
     <string name="hint_keypad_math">Puedes sumar y restar: 300 + 150.</string>
     <string name="hint_entry_refund">¿Te devolvieron dinero? Marca «Es una devolución».</string>
     <string name="hint_currency_account">¿Dinero en otra moneda? Los totales se cuentan en las monedas de los totales y el tipo de cambio se pone solo.</string>
+    <string name="hint_pin_forgot">PIN activado. Si lo olvidas, pulsa «¿Olvidaste el PIN?» al entrar.</string>
     <string name="hint_currency_receipt">Indica el importe de la compra y el tipo de cambio se calcula solo.</string>
 </resources>

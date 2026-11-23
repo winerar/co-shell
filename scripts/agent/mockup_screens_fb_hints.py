@@ -162,6 +162,12 @@ def currency_hint():
     return board('Валюта покупки: подсказка', scrim(home(4, '')) + sheet(head + body, top=300))
 
 
+def pin_forgot():
+    """#602 (poll 2026-11-23 «А»): right after the PIN is turned on, one warm moment names the way back; it shows once."""
+    from mockup_screens_fb_privacy import settings
+    return board('Конфиденциальность: PIN включён', settings(True) + pill_box('PIN включён. Забудете — на экране входа нажмите «Забыли PIN?».', 'check', two=True))
+
+
 BOARDS = [  # name, title, fn, issue number
     ('Hint513Home0', '#513 · «Обзор», новичок: строка «Первые шаги»', home_new, 513),
     ('Hint513Home2', '#513 · «Обзор», два шага из четырёх', home_two, 513),
@@ -175,5 +181,6 @@ BOARDS = [  # name, title, fn, issue number
     ('Hint513EntryCoach', '#513 · шторка ввода: карточка «Понятно» над шторкой', entry_hint, 513),
     ('Hint513Tags', '#513 · «Теги»: подсказка под заголовком', tags_hint, 513),
     ('Hint513Currency', '#513 · «Валюта покупки»: подсказка под заголовком', currency_hint, 513),
+    ('Hint602PinForgot', '#602 · плашка после включения PIN: «Забыли PIN?»', pin_forgot, 602),
     ('Hint513Settings', '#513 · «Ещё → Приложение»: подсказки', app_settings, 513),
 ]

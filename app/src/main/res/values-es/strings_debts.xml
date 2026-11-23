@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debts_title">Deudas</string>
+    <string name="debts_tab_lent">Me deben</string>
+    <string name="debts_tab_borrowed">Debo</string>
+    <string name="debts_total_lent">Me deben: %1$s</string>
+    <string name="debts_total_borrowed">Debo: %1$s</string>
+    <string name="debts_tab_empty_lent">Todavía nadie te debe.</string>
+    <string name="debts_tab_empty_borrowed">Todavía no le debes a nadie.</string>
+    <string name="debts_empty">Aún no hay deudas. Toca «+» para añadir la primera.</string>
+    <string name="debts_add">Nueva deuda</string>
+    <string name="debts_left_of">Quedan %1$s de %2$s</string>
+    <string name="debts_due_date">hasta el %1$s</string>
+    <string name="debts_no_due">sin fecha</string>
+    <string name="debts_due_today">vence hoy</string>
+    <plurals name="debts_due_in">
+        <item quantity="one">en %1$d día</item>
+        <item quantity="many">en %1$d días</item>
+        <item quantity="other">en %1$d días</item>
+    </plurals>
+    <plurals name="debts_late">
+        <item quantity="one">venció hace %1$d día</item>
+        <item quantity="many">venció hace %1$d días</item>
+        <item quantity="other">venció hace %1$d días</item>
+    </plurals>
+    <string name="debts_closed_show">Cerradas: %1$d</string>
+    <string name="debts_closed_hide">Ocultar cerradas</string>
+    <string name="debts_closed_label">cerrada</string>
+    <string name="debts_new_title">Nueva deuda</string>
+    <string name="debts_new_hint">El importe cambia el saldo de la cuenta, pero no cuenta como gasto ni ingreso.</string>
+    <string name="debts_field_person">Quién</string>
+    <string name="debts_field_amount">Importe</string>
+    <string name="debts_field_account_lent">Desde la cuenta</string>
+    <string name="debts_field_account_borrowed">A la cuenta</string>
+    <string name="debts_field_due">Devolver antes del</string>
+    <string name="debts_field_note">Nota</string>
+    <string name="debts_due_none">Sin fecha</string>
+    <string name="debts_error_person">Escribe un nombre</string>
+    <string name="debts_error_amount">Escribe un importe mayor que cero</string>
+    <string name="debts_error_account">Elige una cuenta</string>
+    <string name="debts_error_too_much">Más de lo que queda por devolver</string>
+    <string name="debts_error_closed">La deuda ya está cerrada</string>
+    <string name="debts_detail_summary">Total %1$s · devuelto %2$s</string>
+    <string name="debts_detail_returns">Devoluciones</string>
+    <string name="debts_return">Devolvieron una parte</string>
+    <string name="debts_return_account_lent">A la cuenta</string>
+    <string name="debts_return_account_borrowed">Desde la cuenta</string>
+    <string name="debts_return_save">Guardar</string>
+    <string name="debts_close">Cerrar la deuda</string>
+    <string name="debts_close_title">¿Cerrar la deuda?</string>
+    <string name="debts_close_text">Lo que queda, %1$s, se da por saldado; el dinero de las cuentas no se mueve.</string>
+    <string name="debts_delete_title">¿Eliminar la deuda?</string>
+    <string name="debts_delete_text">Se eliminan la deuda y todas las devoluciones; los saldos vuelven a como estaban.</string>
+    <string name="debts_menu_hint">Quién te debe y a quién debes</string>
+    <string name="debts_soon_lent">%1$s devolverá</string>
+    <string name="debts_soon_borrowed">Devuelves a %1$s</string>
+    <string name="debts_soon_amount_in" translatable="false">+%1$s</string>
+    <string name="debts_soon_amount_out" translatable="false">−%1$s</string>
+</resources>

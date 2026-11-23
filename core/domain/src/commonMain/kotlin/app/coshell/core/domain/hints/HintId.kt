@@ -16,6 +16,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     ENTRY_REFUND("entry_refund", HintKind.WORD),
     CATEGORIES("categories", HintKind.WORD),
     BUDGETS("budgets", HintKind.WORD),
+    DEBTS("debts", HintKind.WORD),
     REPORTS("reports", HintKind.WORD),
     TAGS("tags", HintKind.WORD),
     FAMILY("family", HintKind.WORD),

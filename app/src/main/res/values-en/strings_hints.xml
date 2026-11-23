@@ -26,6 +26,7 @@
     <string name="hint_accounts">An account is where your money sits. The balance adds up by itself.</string>
     <string name="hint_scan_receipt">Got a QR on the receipt? Tap the camera icon: the amount and date fill in by themselves.</string>
     <string name="hint_categories">A category is what the money went on. The ready-made ones will do; add your own later.</string>
+    <string name="hint_debts">A debt is kept apart from spending: the account balance changes, spending and income do not.</string>
     <string name="hint_budgets">A limit is how much you can spend on a category in a month. A guide, not a ban.</string>
     <string name="hint_reports">Here you see where the money goes. The more entries, the clearer the picture.</string>
     <string name="hint_tags">A tag is a coloured label on a transaction, like “holiday” or “gifts”.</string>

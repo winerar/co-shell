@@ -65,6 +65,8 @@ data class MoreActions(
     /** «Быстрые заметки» and «Черновики» (#586). */
     val onNotes: () -> Unit = {},
     val onDrafts: () -> Unit = {},
+    /** «Долги» (#552). */
+    val onDebts: () -> Unit = {},
     /** Tap on the version card: the update screen. */
     val onOpenUpdate: () -> Unit = {},
     /** «Обновить» on the card: the download starts right away and the update screen opens. */

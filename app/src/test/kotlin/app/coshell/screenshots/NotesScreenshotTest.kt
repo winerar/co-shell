@@ -9,6 +9,10 @@ import androidx.compose.ui.test.onRoot
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.domain.drafts.DraftMissing
 import app.coshell.core.model.DraftCategorySource
+import app.coshell.debts.list.DebtsActions
+import app.coshell.debts.list.DebtsScreen
+import app.coshell.debts.list.DebtsUiState
+import app.coshell.debts.list.debtsPreviewState
 import app.coshell.drafts.list.DraftRowUi
 import app.coshell.drafts.list.DraftsActions
 import app.coshell.drafts.list.DraftsScreen
@@ -59,6 +63,14 @@ class NotesScreenshotTest {
     @Test fun `drafts empty dark`() = shot("drafts_empty_dark", dark = true) { DraftsScreen(DraftsUiState(false, emptyList(), today), DraftsActions()) }
 
     @Test fun `drafts empty light`() = shot("drafts_empty_light") { DraftsScreen(DraftsUiState(false, emptyList(), today), DraftsActions()) }
+
+    @Test fun `debts dark`() = shot("debts_dark", dark = true) { DebtsScreen(debtsPreviewState(), DebtsActions()) }
+
+    @Test fun `debts light`() = shot("debts_light") { DebtsScreen(debtsPreviewState(), DebtsActions()) }
+
+    @Test fun `debts empty dark`() = shot("debts_empty_dark", dark = true) { DebtsScreen(DebtsUiState(isLoading = false), DebtsActions()) }
+
+    @Test fun `debts empty light`() = shot("debts_empty_light") { DebtsScreen(DebtsUiState(isLoading = false), DebtsActions()) }
 
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false

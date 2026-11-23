@@ -71,6 +71,7 @@ import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.upcoming.CreditPaymentRow
+import app.coshell.home.upcoming.DebtDueRow
 import app.coshell.home.upcoming.UpcomingCard
 import app.coshell.home.upcoming.UpcomingRow
 import app.coshell.home.upcoming.UpcomingViewModel
@@ -100,6 +101,7 @@ data class HomeActions(
     val onPostPayment: (templateId: String, date: LocalDate) -> Unit = { _, _ -> },
     /** «Провести» in the credit card line of «Скоро» (#686). */
     val onPostCredit: (accountId: String) -> Unit = {},
+    val onOpenDebt: (debtId: String) -> Unit = {},
     /** «Все N ›» in «Скоро» → «Регулярные платежи» (#403). */
     val onRecurring: () -> Unit = {},
     /** The «Быстрые заметки» row under the balance → «Черновики» while any wait (#586, #641). */
@@ -132,6 +134,7 @@ fun HomeRoute(
     val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
     val upcomingTotal by upcomingViewModel.total.collectAsStateWithLifecycle()
     val creditPayments by upcomingViewModel.credit.collectAsStateWithLifecycle()
+    val debtDue by upcomingViewModel.debtDue.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
         onSignIn = actions.onFamily,
@@ -150,6 +153,7 @@ fun HomeRoute(
         upcoming = upcoming,
         upcomingTotal = upcomingTotal,
         creditPayments = creditPayments,
+        debtDue = debtDue,
         onPostAll = lock.guard1 { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
         onSkipAll = lock.guard1(upcomingViewModel::skipAll),
         gate = gate,
@@ -181,6 +185,7 @@ fun HomeScreen(
     upcoming: List<UpcomingRow> = emptyList(),
     upcomingTotal: Int = upcoming.size,
     creditPayments: List<CreditPaymentRow> = emptyList(),
+    debtDue: List<DebtDueRow> = emptyList(),
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
@@ -201,7 +206,7 @@ fun HomeScreen(
     val cards = LocalScreenOptions.current.home.visible.filter { card ->
         when (card) {
             HomeCard.REVIEW -> review?.month != null
-            HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty()
+            HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
@@ -259,8 +264,8 @@ fun HomeScreen(
                         HomeCard.REVIEW -> review?.month?.let { month ->
                             MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
                         }
-                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty() || creditPayments.isNotEmpty()) {
-                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll, creditPayments, actions.onPostCredit)
+                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty()) {
+                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll, creditPayments, actions.onPostCredit, debtDue, actions.onOpenDebt)
                         }
                         HomeCard.TILES -> HomeTiles(
                             state,

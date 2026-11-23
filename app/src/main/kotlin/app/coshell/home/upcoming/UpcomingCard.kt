@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
+import app.coshell.core.domain.debts.DebtBook
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,6 +56,8 @@ internal fun UpcomingCard(
     onSkipAll: (templateId: String) -> Unit = {},
     credit: List<CreditPaymentRow> = emptyList(),
     onPostCredit: (accountId: String) -> Unit = {},
+    debts: List<DebtDueRow> = emptyList(),
+    onOpenDebt: (debtId: String) -> Unit = {},
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth().padding(start = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -72,6 +76,12 @@ internal fun UpcomingCard(
                 key("credit-" + row.accountId) {
                     if (rows.isNotEmpty() || index > 0) CoShellDivider()
                     CreditPaymentItem(row, onPostCredit)
+                }
+            }
+            debts.forEachIndexed { index, row ->
+                key("debt-" + row.debtId) {
+                    if (rows.isNotEmpty() || credit.isNotEmpty() || index > 0) CoShellDivider()
+                    DebtDueItem(row, onOpenDebt)
                 }
             }
         }
@@ -157,3 +167,20 @@ private fun CreditPaymentItem(row: CreditPaymentRow, onPost: (String) -> Unit) {
         },
     )
 }
+
+/** A debt's return day (#552): who, when (in words, never red) and what is left; a tap opens the debt's card. */
+@Composable
+private fun DebtDueItem(row: DebtDueRow, onOpen: (String) -> Unit) {
+    val whenText = when (row.stage) {
+        DebtBook.Stage.TODAY -> stringResource(R.string.debts_due_today)
+        DebtBook.Stage.LATE -> pluralStringResource(R.plurals.debts_late, row.days, row.days)
+        else -> pluralStringResource(R.plurals.debts_due_in, row.days, row.days)
+    }
+    CoShellListRow(
+        title = { Text(stringResource(if (row.lent) R.string.debts_soon_lent else R.string.debts_soon_borrowed, row.person), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = { Text(whenText) },
+        trailing = { Text(stringResource(if (row.lent) R.string.debts_soon_amount_in else R.string.debts_soon_amount_out, row.left)) },
+        onClick = { onOpen(row.debtId) },
+    )
+}
+

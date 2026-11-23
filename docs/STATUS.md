@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 1989 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v17.
+- Тесты: всего 1997 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v17.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,8 +69,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-23, `claude/config-model-m92ovj`: #555 ярлыки на значке готовы (`shortcuts/`, тесты, доска Flows, whats-new). Опрос https://claude.ai/artifact/3snRhQNMg7aCJHpP81zaBG (`docs/design/poll-entry-ways.json`): все «А» — #623 веер на удержании «+», #602 «Забыли PIN?» через блокировку телефона, #323 плашка «Не сохранено», #321 «Вставить из буфера». Дальше по каждой: доска на холст → код (по сессии на задачу).
-2026-11-23, `claude/model-config-v1vj6h`: итоги месяца историями (#554, опрос «А» из `ccr-df0d2bf5-zpksb1`): `MonthRecap`/`RecapPhrases` (тесты), экран `reports/recap/` (6 историй, ru/en/es), карточка «Обзора» и плашка `month_end` ведут туда, доски `Rec554*`, эталоны `month_recap_*` (PNG не просмотрены агентом — глянуть владельцу). Осталось: «Поделиться» картинкой.
+2026-11-23, `claude/config-model-m92ovj` (ч. 2): #321 «Вставить из буфера» готов (доски `Clip321*`, `PasteRow`, `onPasteText`, тесты, whats-new). Опрос по #623/#602/#323 — все «А», доски и код — по сессии на задачу.
 Починено: #640 кнопки внизу (`aboveBottomBars`), #624 плашка «Отменить», #627 одно окно (`singleTask`), #626 портрет, #600/#601 скрытые суммы, #604 курсы без архивных.
 ИИ частями по 10 строк — нужен новый запуск `ai-addon-release.yml`. Метки `sp:*` (#642).
 Опрос #628/#643/#641 (все рекомендованные, `docs/design/poll-notes-628.json`): «Удалить · N» в «Черновиках», `BetaMark`, строка «Быстрые заметки» на «Обзоре» (доски `Notes628Delete`, `Notes641Home`).

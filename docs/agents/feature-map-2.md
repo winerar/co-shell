@@ -25,7 +25,7 @@
 `core:data/db/ImportDao` + `repository/RoomImportRepository`. Экран-мастер — `app/.../importer/wallet/`
 (черновик выбора — `WalletImportDraft`, шаги — `components/*Step.kt`), копия перед импортом — `importer/PreImportBackup`.
 Несовместимая версия у второго участника (#334): `core:data/sync/VersionGate.kt` (`peer_schema` пишет `SyncEngine` при pull), замок ввода — `app/.../gate/` (`InputLock` + `LocalInputLock.guard`, окно — `InputLockNote.kt`), плашка — `home/components/VersionGateBanner`, «+» с замком — `CoShellBottomBar(addLocked)`; провод — `CoShellNavHost` → `MainShell`.
-Экспорт CSV (#204, экран — после «ок»): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
+Экспорт CSV (#204, готов: `export/ExportScreen`): `core:domain/export/CsvExport` — файл «;», суммы с запятой, BOM, фильтр периода и счетов.
 Ручной порядок (#338, доски `Fb338Acc`/`Fb338Cat`): `core:domain/Reorder` (номера, шаг 1024) + `order/ManualOrder` (первое перетаскивание
 нумерует весь список как на экране, вложение и вынос категории) + `ReorderUseCase`; режим «Порядок» — ⇅ в шапке «Счетов» и «Категорий»
 (`accounts/list/components/AccountsOrder`, `categories/list/components/CategoriesOrder` + `CategoryOrderRows`), каркас — `ui/order/OrderScreen`.

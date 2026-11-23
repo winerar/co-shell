@@ -464,18 +464,33 @@
     <string name="account_selected">Выбран</string>
     <string name="account_personal_of">личный · %1$s</string>
 
-    <string name="auto_backup_title">Автоматически раз в неделю</string>
+    <string name="auto_backup_title">Автокопия</string>
     <string name="auto_backup_on">Автокопия включена</string>
     <string name="auto_backup_choose">Выбрать папку для автокопий</string>
     <string name="auto_backup_folder">Папка: %1$s</string>
-    <string name="auto_backup_off">Выберите папку — копия будет сохраняться туда раз в неделю (хранятся последние 8).</string>
+    <string name="auto_backup_off">Выберите папку — копии будут сохраняться сами: раз в день, неделю или месяц.</string>
     <string name="auto_backup_pending">Первая копия скоро появится</string>
-    <string name="auto_backup_last">Последняя: %1$s · раз в неделю</string>
+    <string name="auto_backup_last">Последняя: %1$s</string>
     <string name="auto_backup_failed">Не удалось сохранить копию. Выберите папку ещё раз — возможно, доступ к ней пропал</string>
     <string name="auto_backup_off_title">Автокопия выключена</string>
     <string name="auto_backup_failed_title">Копия не сохранилась</string>
     <string name="auto_backup_folder_change">нажмите, чтобы сменить</string>
     <string name="auto_backup_folder_hint">на телефоне или Google Диске</string>
+    <string name="auto_backup_period_daily">Каждый день</string>
+    <string name="auto_backup_period_weekly">Раз в неделю</string>
+    <string name="auto_backup_period_monthly">Раз в месяц</string>
+    <string name="auto_backup_month_hint">Если в месяце меньше дней — копия сделается в последний.</string>
+    <string name="auto_backup_time">Время</string>
+    <string name="auto_backup_time_hint">Копия сохранится в это время или чуть позже, когда телефон будет свободен.</string>
+    <string name="auto_backup_keep">Хранить</string>
+    <string name="auto_backup_keep_hint">Старые копии в папке удалятся. Ваши копии «Сохранить» не тронем.</string>
+    <string name="auto_backup_next">Следующая: %1$s, %2$s</string>
+    <plurals name="auto_backup_keep_value">
+        <item quantity="one">последняя %1$d копия</item>
+        <item quantity="few">последние %1$d копии</item>
+        <item quantity="many">последние %1$d копий</item>
+        <item quantity="other">последние %1$d копии</item>
+    </plurals>
     <plurals name="auto_backup_days_left">
         <item quantity="one">день до копии</item>
         <item quantity="few">дня до копии</item>

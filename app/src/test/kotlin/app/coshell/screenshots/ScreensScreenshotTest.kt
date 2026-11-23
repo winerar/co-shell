@@ -479,4 +479,4 @@ class ScreensScreenshotTest {
     }
 }
 
-private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2)
+private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2, nextDay = "вс, 29 ноября", nextTime = "3:00")

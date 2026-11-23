@@ -33,7 +33,7 @@ class FolderBackupWriter @Inject constructor(@ApplicationContext private val con
         }
     }
 
-    suspend fun write(treeUri: String, fileName: String, json: String) = withContext(Dispatchers.IO) {
+    suspend fun write(treeUri: String, fileName: String, json: String, keep: Int = AutoBackupPolicy.KEEP) = withContext(Dispatchers.IO) {
         try {
             val tree = treeUri.toUri()
             val dir = DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
@@ -45,7 +45,7 @@ class FolderBackupWriter @Inject constructor(@ApplicationContext private val con
             resolver.openOutputStream(target, "wt")?.bufferedWriter(Charsets.UTF_8)?.use { it.write(json) }
                 ?: throw IOException("Cannot open $fileName")
             val names = children(tree)
-            AutoBackupPolicy.toPrune(names.keys.toList()).forEach { name ->
+            AutoBackupPolicy.toPrune(names.keys.toList(), keep).forEach { name ->
                 runCatching { DocumentsContract.deleteDocument(resolver, DocumentsContract.buildDocumentUriUsingTree(tree, names.getValue(name))) }
             }
         } catch (e: SecurityException) {

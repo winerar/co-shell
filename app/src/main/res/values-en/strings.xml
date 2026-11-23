@@ -445,18 +445,31 @@
     <string name="account_selected">Selected</string>
     <string name="account_personal_of">personal · %1$s</string>
 
-    <string name="auto_backup_title">Automatically once a week</string>
+    <string name="auto_backup_title">Auto backup</string>
     <string name="auto_backup_on">Auto backup is on</string>
     <string name="auto_backup_choose">Choose a folder for auto backups</string>
     <string name="auto_backup_folder">Folder: %1$s</string>
-    <string name="auto_backup_off">Choose a folder — a backup will be saved there once a week; the last 8 are kept.</string>
+    <string name="auto_backup_off">Choose a folder — backups will be saved there on their own: daily, weekly or monthly.</string>
     <string name="auto_backup_pending">The first backup will appear soon</string>
-    <string name="auto_backup_last">Last: %1$s · once a week</string>
+    <string name="auto_backup_last">Last: %1$s</string>
     <string name="auto_backup_failed">Couldn\'t save the backup. Choose the folder again — access to it may have been lost</string>
     <string name="auto_backup_off_title">Auto backup is off</string>
     <string name="auto_backup_failed_title">Backup wasn\'t saved</string>
     <string name="auto_backup_folder_change">tap to change</string>
     <string name="auto_backup_folder_hint">on the phone or Google Drive</string>
+    <string name="auto_backup_period_daily">Every day</string>
+    <string name="auto_backup_period_weekly">Once a week</string>
+    <string name="auto_backup_period_monthly">Once a month</string>
+    <string name="auto_backup_month_hint">If the month is shorter, the backup is made on its last day.</string>
+    <string name="auto_backup_time">Time</string>
+    <string name="auto_backup_time_hint">The backup is saved at this time, or a little later if the phone is busy.</string>
+    <string name="auto_backup_keep">Keep</string>
+    <string name="auto_backup_keep_hint">Older backups in the folder are deleted. Backups you save by hand stay.</string>
+    <string name="auto_backup_next">Next: %1$s, %2$s</string>
+    <plurals name="auto_backup_keep_value">
+        <item quantity="one">last %1$d backup</item>
+        <item quantity="other">last %1$d backups</item>
+    </plurals>
     <plurals name="auto_backup_days_left">
         <item quantity="one">day until backup</item>
         <item quantity="other">days until backup</item>

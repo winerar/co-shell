@@ -730,6 +730,69 @@
       "page": "screens",
       "radius": 28
     },
+    "CloudOff.dc.html": {
+      "x": 3290,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Облачный разбор: выключен",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudOn.dc.html": {
+      "x": 3760,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Облачный разбор: включён",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudConsent.dc.html": {
+      "x": 4230,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Облачный разбор: вопрос перед включением",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudNoLogin.dc.html": {
+      "x": 4700,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Облачный разбор: нужен вход в «Семью»",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudNotes.dc.html": {
+      "x": 5170,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Быстрые заметки: строки прочитает облачный ИИ",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudBusy.dc.html": {
+      "x": 5640,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Быстрые заметки: читает облачный ИИ",
+      "page": "screens",
+      "radius": 28
+    },
+    "CloudLimit.dc.html": {
+      "x": 6110,
+      "y": 9920,
+      "w": 390,
+      "h": 844,
+      "title": "Черновики: дневной лимит облака",
+      "page": "screens",
+      "radius": 28
+    },
     "ImportStart.dc.html": {
       "x": 0,
       "y": 11160,
@@ -1365,7 +1428,7 @@
       "x": 0,
       "y": 0,
       "w": 1840,
-      "h": 4596,
+      "h": 4728,
       "title": "Воркфлоу",
       "page": "flows"
     },
@@ -3126,6 +3189,13 @@
     "AiOn.dc.html",
     "AiData.dc.html",
     "AiWeak.dc.html",
+    "CloudOff.dc.html",
+    "CloudOn.dc.html",
+    "CloudConsent.dc.html",
+    "CloudNoLogin.dc.html",
+    "CloudNotes.dc.html",
+    "CloudBusy.dc.html",
+    "CloudLimit.dc.html",
     "ImportStart.dc.html",
     "ImportError.dc.html",
     "ImportSummary.dc.html",
@@ -3517,10 +3587,10 @@
     "row8": {
       "kind": "title1",
       "page": "screens",
-      "text": "ИИ на телефоне",
+      "text": "ИИ на телефоне и в облаке",
       "x": 0,
       "y": 9670,
-      "maxW": 3210,
+      "maxW": 6500,
       "w": 240
     },
     "row9": {

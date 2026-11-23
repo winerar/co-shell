@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Análisis en la nube (#635): the screen, its row in Ajustes, the line in Notas rápidas and the limit message. -->
+    <string name="cloud_title">Análisis en la nube</string>
+    <string name="cloud_off_title">Desactivado</string>
+    <string name="cloud_off_text">Opcional. Si tu teléfono es poco potente o la IA en él está desactivada, una IA en la nube lee las líneas de las notas, los recibos que no se leen y la voz.</string>
+    <string name="cloud_off_chip">sin esto todo funciona como antes</string>
+    <string name="cloud_nologin_chip">hace falta iniciar sesión: Más → Familia</string>
+    <string name="cloud_on_title">Activado</string>
+    <string name="cloud_on_text">Funciona cuando hay internet.</string>
+    <string name="cloud_on_text_left">Funciona cuando hay internet. Quedan hoy: %1$d de %2$d.</string>
+    <string name="cloud_on_chip">listo</string>
+    <string name="cloud_fact_sent">Se envía</string>
+    <string name="cloud_fact_sent_text">el texto de la nota o del recibo y los nombres de categorías y cuentas</string>
+    <string name="cloud_fact_kept">No se envía</string>
+    <string name="cloud_fact_kept_text">importes y saldos, historial, nombres y datos de la familia</string>
+    <string name="cloud_fact_net">Hace falta internet</string>
+    <string name="cloud_fact_net_text">sin conexión todo funciona como antes</string>
+    <string name="cloud_use_notes">Notas rápidas y voz</string>
+    <string name="cloud_use_notes_text">línea, cuenta y categoría</string>
+    <string name="cloud_consent_title">¿Activar el análisis en la nube?</string>
+    <string name="cloud_consent_text">El texto de una nota o recibo y los nombres de tus categorías y cuentas se enviarán a un servidor de IA. Los importes, saldos y el historial se quedan en tu teléfono. Puedes desactivarlo cuando quieras.</string>
+    <string name="cloud_consent_confirm">Activar</string>
+    <string name="cloud_consent_dismiss">Ahora no</string>
+    <string name="cloud_settings_off">Desactivado · necesita internet</string>
+    <string name="cloud_settings_on">Activado</string>
+    <string name="cloud_notes_line">Una IA en la nube leerá las líneas</string>
+    <string name="cloud_notes_busy">Una IA en la nube está leyendo…</string>
+    <string name="cloud_limit_message">Límite diario del análisis en la nube alcanzado. Lo demás lo leyeron las reglas y la IA del teléfono, no se pierde nada.</string>
+</resources>

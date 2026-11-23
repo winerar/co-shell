@@ -26,7 +26,7 @@ RU = {
     'input': [('Встряхнуть — сканер QR', 'когда приложение открыто'), ('Вибрация', 'касания и сохранение')],
     'notices': [('Напоминания о платежах', 'в день платежа'), ('Время напоминания', '9:00')],
     'data': [('Резервная копия', 'вчера 23:00 · раз в неделю'), ('Синхронизировать только по Wi-Fi', '')],
-    'smart': [('Умные функции', 'spark', VIOLET), ('ИИ на телефоне', 'Выключен · необязательно')],
+    'smart': [('Умные функции', 'spark', VIOLET), ('ИИ на телефоне', 'Выключен · необязательно'), ('Облачный разбор', 'Выключен · нужен интернет')],
     'help': [('Помощь', 'bulb', CYAN), ('Подсказки', 'Показываются'), ('Показать подсказки заново', 'Вернёт «Первые шаги» и советы')],
 }
 ES = {
@@ -45,7 +45,7 @@ ES = {
     'input': [('Agitar — escáner QR', 'con la app abierta'), ('Vibración', 'toques y guardado')],
     'notices': [('Recordatorios de pagos', 'el día del pago'), ('Hora del recordatorio', '9:00')],
     'data': [('Copia de seguridad', 'ayer 23:00 · cada semana'), ('Sincronizar solo por Wi-Fi', '')],
-    'smart': [('Funciones inteligentes', 'spark', VIOLET), ('IA en el teléfono', 'Desactivada · opcional')],
+    'smart': [('Funciones inteligentes', 'spark', VIOLET), ('IA en el teléfono', 'Desactivada · opcional'), ('Análisis en la nube', 'Desactivado · necesita internet')],
     'help': [('Ayuda', 'bulb', CYAN), ('Consejos', 'Se muestran'), ('Mostrar los consejos de nuevo', 'Recupera «Primeros pasos» y los consejos')],
 }
 
@@ -116,7 +116,7 @@ def cards_sections(t):
         section(*g[names[2]], group([val(*m) for m in t['money']]), t['all']),
         section(*g[names[1]], group([val(*t['screens'])]), t['all']),
         section(*g[names[5]], group([val(*t['data'][0]), sw(*t['data'][1], False)]), t['all']),
-        section(*t['smart'][0], group([val(*t['smart'][1], beta=True)]), ''),
+        section(*t['smart'][0], group([val(*t['smart'][1], beta=True), val(*t['smart'][2], beta=True)]), ''),
         section(*t['help'][0], group([sw(*t['help'][1], True), val(*t['help'][2])]), ''),
     ]
 

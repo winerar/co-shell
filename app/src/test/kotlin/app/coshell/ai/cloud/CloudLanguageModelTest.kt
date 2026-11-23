@@ -22,7 +22,7 @@ class CloudLanguageModelTest {
     }
 
     private fun model(http: Http, url: String = "https://w.example", signedIn: Boolean = true, token: suspend () -> String = { "tok" }) =
-        CloudLanguageModel(http, { token() }, url) { signedIn }
+        CloudLanguageModel(http, { token() }, url, signedIn = { signedIn })
 
     @Test
     fun `sends system and prompt with the token and returns the text`() = runTest {
@@ -51,5 +51,20 @@ class CloudLanguageModelTest {
         assertNull(model(Http(body = "not json")).complete("s", "p"))
         assertNull(model(Http(body = """{"text":"  "}""")).complete("s", "p"))
         assertNull(model(Http(), token = { error("expired") }).complete("s", "p"))
+    }
+
+    @Test
+    fun `the quota of every answer is reported and the limit is remembered until the next success`() = runTest {
+        val heard = mutableListOf<Pair<Int, Int>>()
+        fun with(http: Http) = CloudLanguageModel(http, { "tok" }, "https://w.example", { true }, { left, limit -> heard += left to limit })
+        val ok = with(Http(body = """{"text":"[1]","left":87,"limit":100}"""))
+        assertEquals("[1]", ok.complete("s", "p"))
+        assertEquals(listOf(87 to 100), heard)
+        assertFalse(ok.limited)
+        val over = with(Http(code = 429, body = """{"error":"limit","left":0,"limit":100}"""))
+        assertNull(over.complete("s", "p"))
+        assertTrue(over.limited)
+        assertEquals(0 to 100, heard.last())
+        assertNull(with(Http(code = 502, body = "{}")).also { it.complete("s", "p") }.complete("s", "p"))
     }
 }

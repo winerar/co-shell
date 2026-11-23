@@ -28,6 +28,8 @@ data class DraftsUiState(
     val today: LocalDate = LocalDate(1970, 1, 1),
     /** The person changed the ticks: only then «Удалить · N» stands beside «Записать» (boards `Notes586Drafts` vs `Notes628Delete`). */
     val ticksTouched: Boolean = false,
+    /** The cloud's daily limit ended the note's processing just before (#635, board `CloudLimit`): one calm line on top. */
+    val cloudLimited: Boolean = false,
 ) {
     val readyCount: Int get() = rows.count { it.ready }
     val postCount: Int get() = rows.count { it.checked && it.ready }

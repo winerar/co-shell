@@ -27,7 +27,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -69,11 +71,23 @@ object AiModule {
 
     /** Cloud (#635, only when the person allowed it) → the phone → rules. `AI_PROXY_URL` is empty in builds without the Worker. */
     @Provides
+    @Named("aiProxyUrl")
+    fun provideAiProxyUrl(): String = BuildConfig.AI_PROXY_URL
+
+    @Provides
     @Singleton
-    fun provideLanguageModel(addon: AddonLanguageModel, auth: AuthGateway, settings: CloudAiSettings): LanguageModel =
-        RoutedLanguageModel(
-            cloud = CloudLanguageModel(UrlConnectionHttpClient(timeoutMs = 40_000), auth, BuildConfig.AI_PROXY_URL) { auth.session.value != null },
-            phone = addon,
-            settings = settings,
-        )
+    fun provideLanguageModel(
+        addon: AddonLanguageModel,
+        auth: AuthGateway,
+        settings: PrefsCloudAiSettings,
+        clock: Clock,
+        @Named("aiProxyUrl") proxyUrl: String,
+    ): LanguageModel = RoutedLanguageModel(
+        cloud = CloudLanguageModel(
+            UrlConnectionHttpClient(timeoutMs = 40_000), auth, proxyUrl, { auth.session.value != null },
+            onQuota = { left, limit -> settings.recordQuota(left, limit, clock.now().toEpochMilliseconds() / 86_400_000L) },
+        ),
+        phone = addon,
+        settings = settings,
+    )
 }

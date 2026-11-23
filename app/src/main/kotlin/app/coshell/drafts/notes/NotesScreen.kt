@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -42,11 +44,25 @@ fun NotesScreen(state: NotesUiState, actions: NotesActions) {
         topBar = { ScreenTopBar(stringResource(R.string.notes_title), onBack = actions.onBack) },
         bottomBar = {
             val label = if (state.lineCount > 0) stringResource(R.string.notes_process, state.lineCount) else stringResource(R.string.notes_process_none)
-            CoShellButton(
-                onClick = actions.onProcess,
-                enabled = state.lineCount > 0 && !state.processing && !state.isLoading,
-                modifier = Modifier.fillMaxWidth().aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m),
-            ) { Text(if (state.processing) stringResource(R.string.notes_processing) else label) }
+            Column(
+                Modifier.fillMaxWidth().aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m),
+                verticalArrangement = Arrangement.spacedBy(Spacing.s),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // Board `CloudNotes` / `CloudBusy`: while the cloud is on, say where the text goes.
+                if (state.cloud) {
+                    Text(
+                        stringResource(if (state.processing) R.string.cloud_notes_busy else R.string.cloud_notes_line),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                CoShellButton(
+                    onClick = actions.onProcess,
+                    enabled = state.lineCount > 0 && !state.processing && !state.isLoading,
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(if (state.processing) stringResource(R.string.notes_processing) else label) }
+            }
         },
     ) { padding ->
         if (state.isLoading) return@Scaffold

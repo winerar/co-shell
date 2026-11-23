@@ -102,7 +102,7 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
         }
     }
 
-/** «Умные функции»: the one row «ИИ на телефоне» with its state (#587, board `Set1Root`); the screen is `ai/AiAddonScreen`. */
+/** «Умные функции»: the rows «ИИ на телефоне» (#587) and «Облачный разбор» (#635, when this build has the Worker) with their state (board `Set1Root`); the screens are `ai/AiAddonScreen`, `ai/cloud/CloudAiScreen`. */
 @Composable
 internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
     GroupCard(DesignR.drawable.ic_spark, 6, R.string.settings_smart_title, onAll = null) {
@@ -112,6 +112,14 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
             AiAddonStage.ON -> R.string.ai_settings_on
         }
         row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon, beta = true) }
+        state.cloud?.let { on ->
+            row {
+                ValueRow(
+                    stringResource(R.string.cloud_title), stringResource(if (on) R.string.cloud_settings_on else R.string.cloud_settings_off),
+                    actions.onCloudAi, beta = true,
+                )
+            }
+        }
     }
 
 /** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */

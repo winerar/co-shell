@@ -2,6 +2,8 @@ package app.coshell.drafts.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.ai.cloud.CloudLimitNotice
+import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.core.domain.drafts.ProcessQuickNoteUseCase
 import app.coshell.core.domain.drafts.QuickNoteDrafts
 import app.coshell.drafts.NoteStore
@@ -24,8 +26,11 @@ import kotlinx.coroutines.launch
 class NotesViewModel @Inject constructor(
     private val store: NoteStore,
     private val process: ProcessQuickNoteUseCase,
+    model: LanguageModel,
+    private val limitNotice: CloudLimitNotice,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(NotesUiState(isLoading = true))
+    private val cloud = model.cheap
+    private val _state = MutableStateFlow(NotesUiState(isLoading = true, cloud = cloud))
     val state: StateFlow<NotesUiState> = _state.asStateFlow()
 
     private val _done = Channel<Unit>(Channel.BUFFERED)
@@ -35,7 +40,7 @@ class NotesViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val text = store.text()
-            _state.value = NotesUiState(text = text, lineCount = QuickNoteDrafts.lines(text).size)
+            _state.value = NotesUiState(text = text, lineCount = QuickNoteDrafts.lines(text).size, cloud = cloud)
         }
     }
 
@@ -57,7 +62,8 @@ class NotesViewModel @Inject constructor(
             // Lines that are not about money stay in the note (#630); the rest became drafts.
             val left = result.skipped.joinToString("\n")
             store.save(left)
-            _state.value = NotesUiState(text = left, lineCount = result.skipped.size, skipped = result.skipped.size)
+            if (result.limited) limitNotice.raise()
+            _state.value = NotesUiState(text = left, lineCount = result.skipped.size, skipped = result.skipped.size, cloud = cloud)
             if (result.made > 0) _done.send(Unit)
         }
     }

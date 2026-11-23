@@ -1,6 +1,9 @@
 package app.coshell.drafts
 
+import app.coshell.ai.cloud.CloudLimitNotice
 import app.coshell.core.domain.SaveTransactionUseCase
+import app.coshell.core.domain.ai.LanguageModel
+import app.coshell.core.domain.ai.NoteHints
 import app.coshell.core.domain.drafts.DraftMissing
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
 import app.coshell.core.domain.drafts.PostDraftsUseCase
@@ -63,14 +66,19 @@ class DraftsViewModelsTest {
         categories.saveCategory(Category("cafe", "Кафе", CategoryType.EXPENSE))
     }
 
-    private fun notes(store: NoteStore) = NotesViewModel(
-        store, ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, null, ids) { now.toEpochMilliseconds() },
+    private class FakeModel(override val cheap: Boolean = false, override val limited: Boolean = false) : LanguageModel {
+        override val available = true
+        override suspend fun complete(system: String, prompt: String): String? = null
+    }
+
+    private fun notes(store: NoteStore, model: FakeModel = FakeModel(), notice: CloudLimitNotice = CloudLimitNotice(), hints: NoteHints? = null) = NotesViewModel(
+        store, ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, hints, ids) { now.toEpochMilliseconds() }, model, notice,
     )
 
     private fun draftsViewModel() = DraftsViewModel(
         drafts, accounts, categories, transactions,
         PostDraftsUseCase(accounts, categories, drafts, SaveTransactionUseCase(accounts, categories, transactions), ids),
-        undo, MoneyFormat.RU, object : Clock { override fun now() = now }, TimeZone.UTC,
+        undo, MoneyFormat.RU, object : Clock { override fun now() = now }, TimeZone.UTC, CloudLimitNotice(),
     )
 
     private fun draft(id: String, amount: Long? = 3_500_00, category: String? = "cafe") =
@@ -190,5 +198,23 @@ class DraftsViewModelsTest {
         assertEquals(listOf<Any>(2), offer!!.args)
         offer!!.undo()
         assertEquals(setOf("a", "b", "c"), drafts.items.value.map { it.id }.toSet())
+    }
+
+    @Test
+    fun `the cloud line shows only while the cloud answers`() = runTest {
+        seed()
+        assertFalse(notes(MemoryNote("кофе 3500")).state.value.cloud)
+        assertTrue(notes(MemoryNote("кофе 3500"), FakeModel(cheap = true)).state.value.cloud)
+    }
+
+    @Test
+    fun `a limit hit while processing is handed to the drafts screen once`() = runTest {
+        seed()
+        val notice = CloudLimitNotice()
+        val model = FakeModel(cheap = true, limited = true)
+        val vm = notes(MemoryNote("кофе 3500"), model, notice, NoteHints(model))
+        vm.process()
+        assertTrue(notice.take())
+        assertFalse(notice.take())
     }
 }

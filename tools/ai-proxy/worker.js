@@ -59,7 +59,8 @@ export async function handle(request, env, deps = {}) {
   const day = new Date(nowSec * 1000).toISOString().slice(0, 10);
   const counterKey = `u:${uid}:${day}`;
   const used = Number((await env.USAGE.get(counterKey)) ?? 0);
-  if (used >= Number(env.DAILY_LIMIT ?? DEFAULT_DAILY_LIMIT)) return json({ error: "limit" }, 429);
+  if (used >= Number(env.DAILY_LIMIT ?? DEFAULT_DAILY_LIMIT)) return json({ error: "limit", left: 0, limit: Number(env.DAILY_LIMIT ?? DEFAULT_DAILY_LIMIT) }, 429);
+  const limit = Number(env.DAILY_LIMIT ?? DEFAULT_DAILY_LIMIT);
   await env.USAGE.put(counterKey, String(used + 1), { expirationTtl: 2 * 24 * 3600 });
 
   const reply = await fetchFn("https://api.anthropic.com/v1/messages", {
@@ -77,7 +78,7 @@ export async function handle(request, env, deps = {}) {
   if (!reply.ok) return json({ error: "upstream", status: reply.status }, 502);
   const data = await reply.json();
   const text = (data.content ?? []).filter((b) => b.type === "text").map((b) => b.text).join("");
-  return json({ text });
+  return json({ text, left: Math.max(limit - used - 1, 0), limit });
 }
 
 export default { fetch: (request, env) => handle(request, env) };

@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2113 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v20.
+- Тесты: всего 2117 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v20.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,5 +69,5 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-23, `ccr-3a15f027-j0t4l5`: рефакторинг файлов >200 строк. Сделано: `CoShellNavHost` (+`ReportsGraph`, `SettingsGraph`), `NoteDraftEntry`, `SettingsGroups` → `Input/Notice/DataSettings`, `FamilyCache` из `FamilyService`. Дальше: `TransactionEditViewModel` (~690), `HomeScreen` (300), `AccountEditViewModel` (299); по #374/#379 — стресс-снимки en/es, ×1,3/×2, 320 dp.
+2026-11-23, `ccr-3a15f027-j0t4l5`: рефакторинг файлов >200 строк. Сделано: `CoShellNavHost` (+`ReportsGraph`, `SettingsGraph`), `NoteDraftEntry`, `SettingsGroups` → `Input/Notice/DataSettings`, `FamilyCache`, `HomeScreen` → `HomeRoute`/`HomeActions`, `AccountForm` (проверка формы счёта, тест). Дальше: `TransactionEditViewModel` (~690), `DataModule` (251), файлы дизайн-системы >200; по #374/#379 — стресс-снимки en/es, ×1,3/×2, 320 dp.
 Параллельные сессии 2026-11-23 (кратко): #652 политика на лендинге; календарь трат #553; #321 буфер; #635 облачный разбор (ждёт #674); #577/#646/#578 цифры карты; #686 кредитка; #323, #623. Ждут кода: долги #552, итоги месяца #554. Ждут владельца: #657, #658, #674. Доски опросов — `scripts/agent/mockup_poll_*.py`.

@@ -28,6 +28,7 @@ import app.coshell.navigation.CoShellNavHost
 import app.coshell.recurring.notify.NotificationPermissionAsk
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.recurring.notify.PaymentLinks
+import app.coshell.shortcuts.ShortcutLinks
 import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.settings.ListDensityViewModel
@@ -60,6 +61,7 @@ class MainActivity : FragmentActivity() {
     @Inject lateinit var notificationAsk: NotificationPermissionAsk
     @Inject lateinit var paymentLinks: PaymentLinks
     @Inject lateinit var receiptLinks: ReceiptLinks
+    @Inject lateinit var shortcutLinks: ShortcutLinks
     @Inject lateinit var paymentNotices: PaymentNotices
     @Inject lateinit var hintCenter: HintCenter
     @Inject lateinit var privacy: PrivacyCenter
@@ -91,6 +93,7 @@ class MainActivity : FragmentActivity() {
         if (isFreshIntent(restored = savedInstanceState != null, flags = intent.flags)) {
             openPayment(intent)
             receiptLinks.offer(intent)
+            shortcutLinks.offer(intent)
         }
         setContent {
             // Nothing is drawn until the saved theme is read (a few ms; the window background
@@ -120,7 +123,7 @@ class MainActivity : FragmentActivity() {
                     // PIN lock and hidden sums over everything (#145); the language question stays under the lock.
                     PrivacyHost(privacy) {
                         CompositionLocalProvider(LocalCompactLists provides compactLists, LocalScreenOptions provides options, LocalHapticFeedback provides haptics, LocalHintHost provides hintCenter) {
-                            CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks)
+                            CoShellNavHost(paymentLinks = paymentLinks, receiptLinks = receiptLinks, shortcutLinks = shortcutLinks)
                         }
                         // The one-time language question over «Обзор» (#352).
                         LanguagePromptHost()
@@ -146,6 +149,7 @@ class MainActivity : FragmentActivity() {
         setIntent(intent)
         openPayment(intent)
         receiptLinks.offer(intent)
+        shortcutLinks.offer(intent)
     }
 
     /** «Изменить сумму» / «Провести» on the reminder (#405): the sheet opens, the reminder is answered. */

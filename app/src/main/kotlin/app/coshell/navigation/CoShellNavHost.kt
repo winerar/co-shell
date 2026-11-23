@@ -99,6 +99,8 @@ import app.coshell.greeting.GreetingPill
 import app.coshell.greeting.GreetingViewModel
 import app.coshell.update.notice.UpdatePill
 import app.coshell.wipe.WipeDataRoute
+import app.coshell.access.AccessLockedDialog
+import app.coshell.access.AccessViewModel
 import app.coshell.gate.InputLockViewModel
 import app.coshell.gate.rememberInputLock
 import app.coshell.home.components.VersionGateBannerState
@@ -113,6 +115,7 @@ fun CoShellNavHost(
     greeting: GreetingViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
     inputLock: InputLockViewModel = hiltViewModel(),
+    access: AccessViewModel = hiltViewModel(),
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
     shortcutLinks: ShortcutLinks? = null,
@@ -134,7 +137,20 @@ fun CoShellNavHost(
         updateAvailable?.let(updates::startUpdate)
         navController.navigate(UpdateDestination) { launchSingleTop = true }
     }
-    val lock = rememberInputLock(locked, openUpdate)
+    val accessLocked by inputLock.accessLocked.collectAsStateWithLifecycle()
+    val accessNote by access.note.collectAsStateWithLifecycle()
+    val lock = rememberInputLock(locked, openUpdate, accessLocked, access::showNote)
+    // «Доступ закрыт» (#666): on opening a closed app and after a blocked tap; the data can be saved from here.
+    if (accessLocked && accessNote) {
+        AccessLockedDialog(
+            onEnterCode = access::changeCode,
+            onBackup = {
+                access.dismissNote()
+                navController.navigate(BackupDestination) { launchSingleTop = true }
+            },
+            onDismiss = access::dismissNote,
+        )
+    }
 
     // «Месяц закончился» leaves a dot on «Отчёты» until that tab is opened (#513).
     val hintHost = LocalHintHost.current

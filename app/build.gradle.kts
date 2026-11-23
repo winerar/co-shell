@@ -22,6 +22,8 @@ android {
         // Release builds: 0.N, N = releases so far (scripts/ci/version_name.py, only on main); others — "0.0".
         versionName = providers.environmentVariable("VERSION_NAME").orNull ?: "0.0"
         buildConfigField("String", "UPDATE_BASE_URL", "\"\"")
+        // The invitation gate of the closed test (#666): only release builds with `ACCESS_GATE=true` from CI ask for a code.
+        buildConfigField("boolean", "ACCESS_GATE", "false")
         // Feedback form → Firestore (docs/setup/feedback.md). Not secrets: the Web API key is public
         // by design, access is limited by Firestore rules. Empty locally → the form says "not configured".
         buildConfigField("String", "FIREBASE_PROJECT_ID", "\"${env("FIREBASE_PROJECT_ID")}\"")
@@ -81,6 +83,7 @@ android {
             // Only release builds update themselves; the URL comes from CI (public releases repo).
             val updateUrl = providers.environmentVariable("UPDATE_BASE_URL").orNull.orEmpty()
             buildConfigField("String", "UPDATE_BASE_URL", "\"$updateUrl\"")
+            buildConfigField("boolean", "ACCESS_GATE", (providers.environmentVariable("ACCESS_GATE").orNull == "true").toString())
         }
     }
 

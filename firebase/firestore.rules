@@ -127,6 +127,20 @@ service cloud.firestore {
       allow delete: if isMember(resource.data.familyId) || (hasVerifiedEmail() && email == myEmail());
     }
 
+    // Invitation codes for the closed test (#666): created, revoked and listed only by the robot (service account,
+    // .github/workflows/invite.yml). The app reads one code by its exact id (60 random bits: it cannot be guessed, and
+    // listing is closed) and adds its own installation to `devices` — at most `maxDevices`, one per write, never removed.
+    match /access_codes/{code} {
+      allow get: if true;
+      allow update: if resource.data.revoked == false
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['devices'])
+                    && request.resource.data.devices is list
+                    && request.resource.data.devices.size() == resource.data.devices.size() + 1
+                    && request.resource.data.devices.size() <= resource.data.maxDevices
+                    && request.resource.data.devices.toSet().size() == request.resource.data.devices.size()
+                    && request.resource.data.devices.toSet().hasAll(resource.data.devices.toSet());
+    }
+
     // Feedback form: the app (no sign-in) may only CREATE a well-formed message and GET one by its
     // random id (the phone keeps the ids of its own messages and shows their status, #157).
     // Nobody can list, change or delete them from the app; the GitHub Action reads them with a

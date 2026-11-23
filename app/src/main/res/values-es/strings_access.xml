@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="access_title">Co-Shell es solo por invitación</string>
+    <string name="access_text">Introduce el código que te enviaron. Lo necesitas una vez: después todo funciona sin internet.</string>
+    <string name="access_field">Código de invitación</string>
+    <string name="access_continue">Continuar</string>
+    <string name="access_where">¿Dónde consigo un código?</string>
+    <string name="access_where_title">¿Dónde consigo un código?</string>
+    <string name="access_where_text">Lo da quien te invitó. Pídele tu código personal: tiene 12 caracteres, por ejemplo K7QX-M2PD-9WTA.</string>
+    <string name="access_where_ok">Entendido</string>
+    <string name="access_err_malformed">Un código tiene 12 caracteres: letras y números, por ejemplo K7QX-M2PD-9WTA.</string>
+    <string name="access_err_not_found">Ese código no existe. Comprueba que lo escribiste bien.</string>
+    <string name="access_err_revoked">Este código ya no sirve. Pide uno nuevo.</string>
+    <string name="access_err_full">El código ya está en todos los teléfonos que permite. Pide uno nuevo.</string>
+    <string name="access_err_network">Sin conexión. Revisa tu internet y vuelve a intentarlo.</string>
+    <string name="access_locked_title">Acceso cerrado</string>
+    <string name="access_locked_text">El código de invitación ya no sirve. Los datos de este teléfono se quedan, pero no puedes añadir nada nuevo. Habla con quien te invitó.</string>
+    <string name="access_locked_enter">Introducir otro código</string>
+    <string name="access_locked_backup">Guardar una copia de seguridad</string>
+</resources>

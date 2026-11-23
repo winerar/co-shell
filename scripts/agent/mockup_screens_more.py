@@ -141,6 +141,23 @@ def family_removed():
                         row('Выйти из аккаунта', 'Данные останутся, синхронизация остановится', svg('logout'))]))
 
 
+# ---- invitation code of the closed test (#666) ---------------------------------------------------------------------
+
+def access_gate():
+    """The code screen: shown in place of the whole app while the phone has no valid code (poll 2026-11-23, «А»)."""
+    return board('Код приглашения', empty('lock', 'Co-Shell для приглашённых')
+                 + '<p style="margin: 12px 28px 0; text-align: center; font-size: 14px; line-height: 1.4; color: %s;">Введите код, который вам прислали. Он нужен один раз — потом всё работает без интернета.</p>' % INK2
+                 + '<div style="margin: 16px 16px 0;">' + field('Код приглашения', 'K7QX-M2PD-9WTA', mono=True)
+                 + button('Продолжить', 'primary', mt=16) + button('Где взять код?', 'text', mt=4) + '</div>')
+
+
+def access_locked():
+    """The code was revoked: the window over «Обзор»; the data stays, entry is closed (poll 2026-11-23, «А»)."""
+    from mockup_screens_main import home
+    return home() + scrim() + dialog('Доступ закрыт', 'Код приглашения больше не действует. Данные на телефоне остались, но записывать новое нельзя. Обратитесь к тому, кто вас пригласил.',
+                                    [('Сохранить резервную копию', 'text'), ('Ввести другой код', 'primary')])
+
+
 def family_not_configured():
     return fam(empty('cloud', 'Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.'))
 
@@ -296,6 +313,7 @@ BOARDS = [
     ('FamilyLeave', '13 · Семья: выйти?', family_leave), ('FamilyDelete', '13 · Семья: удалить семью?', family_delete),
     ('FamilyDeleteAccount', '13 · Семья: удалить аккаунт?', family_delete_account), ('FamilyFull', '13 · Семья: заполнена (10 из 10)', family_full),
     ('FamilyRemoved', '13 · Семья: вас убрали', family_removed),
+    ('AccessGate', '21 · Код приглашения', access_gate), ('AccessLocked', '21 · Доступ закрыт', access_locked),
     ('FamilyOffline', '13 · Семья: нет связи', family_offline), ('FamilyNotConfigured', '13 · Семья: не настроено', family_not_configured),
     ('BackupAuto', '14 · Копия: автокопия включена', backup_auto),
     ('BackupError', '14 · Копия: ошибка файла', lambda: backup_auto(message('Это не файл резервной копии Co-Shell.', 'error'))),

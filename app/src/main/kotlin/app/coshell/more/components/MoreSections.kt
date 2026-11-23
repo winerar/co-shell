@@ -28,6 +28,8 @@ internal data class MoreItem(
     val newKey: String? = null,
     /** A count after the title («Черновики · 5»), `null` — none. */
     val count: Int? = null,
+    /** The «новое» pill without a stored key (an update is out). */
+    val fresh: Boolean = false,
 )
 
 /**
@@ -35,7 +37,7 @@ internal data class MoreItem(
  * it, where it is kept, files in and out), the app itself. Colours come from the category palette, one per row, as on the old bento tiles.
  */
 @Composable
-internal fun moreSections(actions: MoreActions, draftCount: Int = 0): List<MoreSection> {
+internal fun moreSections(actions: MoreActions, draftCount: Int = 0, versionName: String = "", build: Int = 0, availableVersion: String? = null): List<MoreSection> {
     val c = CategoryPalette.colors
     return listOf(
         MoreSection(
@@ -71,6 +73,11 @@ internal fun moreSections(actions: MoreActions, draftCount: Int = 0): List<MoreS
                 MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, c[16], stringResource(R.string.settings_menu_hint), actions.onSettings),
                 MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, c[12], stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, c[1], stringResource(R.string.feedback_menu_hint), actions.onFeedback),
+                MoreItem(
+                    DesignR.drawable.ic_info, R.string.about_title, c[3],
+                    if (availableVersion != null) stringResource(R.string.more_version_available, availableVersion) else stringResource(R.string.more_version_quiet, versionName, build),
+                    actions.onOpenUpdate, fresh = availableVersion != null,
+                ),
             ),
         ),
     )

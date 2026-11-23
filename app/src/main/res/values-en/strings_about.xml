@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">About the app</string>
+    <string name="about_description">A family budget without the fuss: log spending in a couple of taps and see where the money goes. For the whole family, in any currency, from your phone.</string>
+    <string name="about_principles">Principles</string>
+    <string name="about_principle_family">A budget for the whole family</string>
+    <string name="about_principle_family_hint">Any number of members, any currency</string>
+    <string name="about_principle_offline">Works offline</string>
+    <string name="about_principle_offline_hint">Everything is kept on your phone, sync happens when there is a network</string>
+    <string name="about_principle_data">Your data is yours</string>
+    <string name="about_principle_data_hint">The backup is a file you keep, and erasing takes one step</string>
+    <string name="about_feedback">Send feedback</string>
+</resources>

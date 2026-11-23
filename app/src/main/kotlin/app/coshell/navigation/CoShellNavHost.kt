@@ -444,10 +444,6 @@ fun CoShellNavHost(
             MoreRoute(
                 navController = navController,
                 availableVersion = updateAvailable?.versionName,
-                onStartUpdate = {
-                    updateAvailable?.let(updates::startUpdate)
-                    navController.navigate(UpdateDestination)
-                },
             )
         }
         screen<SettingsDestination> {
@@ -542,6 +538,7 @@ fun CoShellNavHost(
             UpdateRoute(
                 onBack = { navController.popBackStack() },
                 onPastReleases = { navController.navigate(PastReleasesDestination) { launchSingleTop = true } },
+                onFeedback = { navController.navigate(FeedbackDestination()) },
             )
         }
         screen<PastReleasesDestination> {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">О приложении</string>
+    <string name="about_name" translatable="false">Co-Shell</string>
+    <string name="about_description">Семейный бюджет без хлопот: записывайте траты за пару нажатий и видите, куда уходят деньги. Для всей семьи, в любых валютах, с телефона.</string>
+    <string name="about_principles">Принципы</string>
+    <string name="about_principle_family">Общий бюджет семьи</string>
+    <string name="about_principle_family_hint">Любое число участников, любые валюты</string>
+    <string name="about_principle_offline">Работает без интернета</string>
+    <string name="about_principle_offline_hint">Всё хранится на телефоне, синк — когда есть сеть</string>
+    <string name="about_principle_data">Ваши данные — ваши</string>
+    <string name="about_principle_data_hint">Резервная копия — файл у вас, стереть можно в один шаг</string>
+    <string name="about_feedback">Отправить отзыв</string>
+</resources>

@@ -11,13 +11,13 @@ import mockup_screens_fb_menu as menu
 
 FEEDBACK = [
     (440, 'Отзыв #440 · «Ещё → О приложении» · 2026-11-23',
-     'Опрос «А»: экран «Обновление» становится «О приложении». Сверху — иконка, название, версия, два предложения о том, что это, '
+     'Опрос «А» (правки владельца: «Общий бюджет семьи», не «на двоих»; больше цветов темы в значках): экран «Обновление» становится «О приложении». Сверху — иконка, название, версия, два предложения о том, что это, '
      'и три принципа; ниже всё, что было на экране обновления. В «Ещё → Приложение» строка «О приложении» с версией вместо тихой строки внизу.'),
 ]
 
 SHIELD = 'M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6zM9 12l2 2 4-4'
-PRINCIPLES = [('wallet', 'Деньги на двоих', 'Общий бюджет семьи, любые валюты'), ('rate', 'Работает без интернета', 'Всё хранится на телефоне, синк — когда есть сеть'),
-              (SHIELD, 'Ваши данные — ваши', 'Резервная копия — файл у вас, стереть можно в один шаг')]
+PRINCIPLES = [('wallet', 'Общий бюджет семьи', 'Любое число участников, любые валюты', LIME), ('rate', 'Работает без интернета', 'Всё хранится на телефоне, синк — когда есть сеть', CYAN),
+              (SHIELD, 'Ваши данные — ваши', 'Резервная копия — файл у вас, стереть можно в один шаг', VIOLET)]
 
 
 def app_head(sub):
@@ -28,14 +28,14 @@ def app_head(sub):
 
 
 def about_card():
-    text = 'Семейный бюджет без хлопот: записывайте траты за пару нажатий и видите, куда уходят деньги. Для двоих, в любых валютах, с телефона.'
-    rows = [row(t, s, tile_icon(i, LIME), '', min_h=56) for i, t, s in PRINCIPLES]
+    text = 'Семейный бюджет без хлопот: записывайте траты за пару нажатий и видите, куда уходят деньги. Для всей семьи, в любых валютах, с телефона.'
+    rows = [row(t, s, tile_icon(i, c), '', min_h=56) for i, t, s, c in PRINCIPLES]
     return ('<div style="padding: 0 16px;">%s%s</div>' % (card('<div style="font-size: 14px; line-height: 1.45;">%s</div>' % text, pad='14px', extra='margin-top: 18px;'),
                                                            label('Принципы', top=14) + group(rows)))
 
 
 def links():
-    return group([row('Политика конфиденциальности', '', '', chevron(), min_h=52), row('Отправить отзыв', 'Ошибка или идея', '', chevron(), min_h=52)])
+    return group([row('Отправить отзыв', 'Ошибка или идея', tile_icon('mail', PINK), chevron(), min_h=56)])
 
 
 def older():
@@ -47,16 +47,16 @@ def about_latest():
     mine = card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">'
                 '<span style="font-size: 12px; color: %s;">Ваша версия</span><span style="%s font-size: 20px; font-weight: 700;">1.2</span>'
                 '<span style="font-size: 12px; color: %s;">сборка 512</span></span><span style="font-size: 12px; color: %s; text-align: right;">актуальная<br>проверили только что</span></div>'
-                % (tile_icon('check', ONLIME, LIME), MUTED, MONO, MUTED, MUTED), pad='14px', extra='margin-top: 12px;')
+                % (tile_icon('check', LIME), MUTED, MONO, MUTED, MUTED), pad='14px', extra='margin-top: 12px;')
     body = (app_head('Версия 1.2 · сборка 512') + about_card() + '<div style="padding: 0 16px;">%s%s%s</div>'
             % (mine, notes_card('Что в этой версии', '', NOTES, older()), '<div style="margin-top: 14px;">%s</div>' % links()))
-    return top_bar('О приложении') + body + footer(button('Проверить обновление', 'outline', 'refresh', 0))
+    return top_bar('О приложении') + '<div style="height: 690px; overflow: hidden;">%s</div>' % body + footer(button('Проверить обновление', 'outline', 'refresh', 0))
 
 
 def about_update():
     body = (app_head('Версия 1.2 · сборка 512') + '<div style="padding: 0 16px;">%s%s</div>'
             % (versions(('1.2', 'сборка 512'), ('1.3', 'сборка 520')), notes_card('Что нового в 1.3', '3 пункта', NOTES)) + about_card())
-    return top_bar('О приложении') + body + footer(button('Обновить', 'primary', 'download', 0), manual_link())
+    return top_bar('О приложении') + '<div style="height: 640px; overflow: hidden;">%s</div>' % body + footer(button('Обновить', 'primary', 'download', 0), manual_link())
 
 
 def more_app(update=False):

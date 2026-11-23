@@ -69,5 +69,5 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-23, `ccr-3a15f027-j0t4l5`: рефакторинг файлов >200 строк. Сделано: `CoShellNavHost` (+`ReportsGraph`, `SettingsGraph`), `NoteDraftEntry`, `SettingsGroups` → `Input/Notice/DataSettings`, `FamilyCache` из `FamilyService`. Дальше: `TransactionEditViewModel` (~690), `HomeScreen` (300), `AccountEditViewModel` (299); по #374/#379 — стресс-снимки en/es, ×1,3/×2, 320 dp.
+2026-11-23, `ccr-4639814b-5gwznv`: опрос тем (#493, #442) — https://claude.ai/artifact/2ZeBcAyKq5Sjn1qUXBbyCE: неоновые Б (чистый неон в карточке, панели в тон основного), второй цвет Б, нежные А; решения — `design-system.md` §«Цвета», цвета — `scripts/agent/themes_493_inks.py`. Дальше: доски светлой темы → код (`PaletteSpecs`, `ColorSchemes`, `Color`, `AccentColors`, `themes_1_0.py`) → эталоны.
 Параллельные сессии 2026-11-23 (кратко): #652 политика на лендинге; календарь трат #553; #321 буфер; #635 облачный разбор (ждёт #674); #577/#646/#578 цифры карты; #686 кредитка; #323, #623. Ждут кода: долги #552, итоги месяца #554. Ждут владельца: #657, #658, #674. Доски опросов — `scripts/agent/mockup_poll_*.py`.

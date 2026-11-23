@@ -72,7 +72,11 @@ interface ReportDao {
            FROM transactions WHERE deleted = 0 GROUP BY epoch_day, account_id
            UNION ALL
            SELECT (date + :offsetMs) / 86400000 AS epoch_day, to_account_id AS account_id, SUM(to_amount_minor) AS delta_minor
-           FROM transactions WHERE deleted = 0 AND type = 'TRANSFER' GROUP BY epoch_day, to_account_id""",
+           FROM transactions WHERE deleted = 0 AND type = 'TRANSFER' GROUP BY epoch_day, to_account_id
+           UNION ALL
+           SELECT (date + :offsetMs) / 86400000 AS epoch_day, account_id,
+                  SUM(CASE WHEN (direction = 'LENT') = (kind = 'ISSUE') THEN -amount_minor ELSE amount_minor END) AS delta_minor
+           FROM debt_events WHERE deleted = 0 AND kind IN ('ISSUE', 'RETURN') AND account_id IS NOT NULL GROUP BY epoch_day, account_id""",
     )
     fun observeBalanceDays(offsetMs: Long): Flow<List<BalanceDayRow>>
 }

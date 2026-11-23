@@ -191,3 +191,28 @@ data class BalanceDelta(
     @ColumnInfo(name = "account_id") val accountId: String,
     @ColumnInfo(name = "delta_minor") val deltaMinor: Long,
 )
+
+/**
+ * One event of a debt (#552, `DebtEvent`): issued, returned in part, closed. Synced (`kind` = `debtEvent`), in the backup, wiped by «Стереть всё».
+ * Events are only added or soft-deleted, so two phones never overwrite one another. `date` — epoch ms UTC, `due_date` — `YYYY-MM-DD`.
+ */
+@Serializable
+@Entity(tableName = "debt_events")
+data class DebtEventEntity(
+    @PrimaryKey val id: String,
+    @ColumnInfo(name = "debt_id") val debtId: String,
+    val kind: String,
+    val direction: String,
+    @ColumnInfo(name = "amount_minor") val amountMinor: Long,
+    val currency: String,
+    @ColumnInfo(name = "account_id") val accountId: String? = null,
+    val date: Long,
+    val person: String = "",
+    @ColumnInfo(name = "due_date") val dueDate: String? = null,
+    val note: String = "",
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+

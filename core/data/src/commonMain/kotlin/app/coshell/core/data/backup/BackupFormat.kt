@@ -14,6 +14,9 @@ import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.core.model.DebtDirection
+import app.coshell.core.model.DebtEvent
+import app.coshell.core.model.DebtEventKind
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
@@ -44,6 +47,8 @@ internal data class BackupFile(
     val settings: List<SettingDto> = emptyList(),
     /** Since schema v11: operation tags (#129); operations reference them from `labels`. */
     val tags: List<TagDto> = emptyList(),
+    /** Since schema v21: events of debts and loans (#552); optional, no version bump. */
+    val debtEvents: List<DebtEventDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -234,3 +239,29 @@ internal data class TagDto(val id: String, val name: String, val color: Long? = 
 }
 
 internal fun Tag.toDto() = TagDto(id, name, color)
+
+/** One event of a debt (#552); [kind] and [direction] are enum names, [date] — epoch ms UTC, [dueDate] — `YYYY-MM-DD`. */
+@Serializable
+internal data class DebtEventDto(
+    val id: String,
+    val debtId: String,
+    val kind: String,
+    val direction: String,
+    val amount: MoneyDto,
+    val accountId: String? = null,
+    val date: Long,
+    val person: String = "",
+    val dueDate: String? = null,
+    val note: String = "",
+) {
+    fun toModel() = DebtEvent(
+        id, debtId, DebtEventKind.valueOf(kind), DebtDirection.valueOf(direction), amount.toModel(),
+        Instant.fromEpochMilliseconds(date), accountId, person, dueDate?.let(LocalDate::parse), note,
+    )
+}
+
+internal fun DebtEvent.toDto() = DebtEventDto(
+    id, debtId, kind.name, direction.name, MoneyDto(amount.amountMinor, amount.currency.value),
+    accountId, date.toEpochMilliseconds(), person, dueDate?.toString(), note,
+)
+

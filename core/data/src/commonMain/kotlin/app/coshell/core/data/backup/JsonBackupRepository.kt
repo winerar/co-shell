@@ -17,6 +17,7 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.ExchangeRate
+import app.coshell.core.model.DebtEvent
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
@@ -53,6 +54,7 @@ class JsonBackupRepository(
             templates = database.templateDao().getAll().map { it.toModel().toDto() },
             settings = database.settingDao().getAll().map { SettingDto(it.id, it.value) },
             tags = database.tagDao().getAll().map { it.toModel().toDto() },
+            debtEvents = database.debtDao().getAll().map { it.toModel().toDto() },
         )
         json.encodeToString(BackupFile.serializer(), file)
     }
@@ -84,6 +86,7 @@ class JsonBackupRepository(
                 file.manualRates.map { it.toModel() },
                 file.templates.map { it.toModel() },
                 file.tags.map { it.toModel() },
+                file.debtEvents.map { it.toModel() },
             )
         } catch (e: IllegalArgumentException) {
             return BackupImportResult.Corrupted(e.message ?: "invalid record")
@@ -101,6 +104,7 @@ class JsonBackupRepository(
             // Values are parsed leniently on read (a broken one falls back to the default), so no checks here.
             settings = file.settings.map { SettingEntity(it.key, it.value, stamp.now, stamp.by) },
             tags = models.tags.map { it.toEntity(stamp) },
+            debtEvents = models.debtEvents.map { it.toEntity(stamp) },
         )
         return BackupImportResult.Imported(
             models.accounts.size, models.categories.size, models.transactions.size, models.budgets.size,
@@ -172,5 +176,6 @@ class JsonBackupRepository(
         val manualRates: List<ExchangeRate>,
         val templates: List<TransactionTemplate>,
         val tags: List<Tag>,
+        val debtEvents: List<DebtEvent>,
     )
 }

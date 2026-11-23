@@ -9,7 +9,6 @@ import app.coshell.core.domain.ai.PayeeCategoryAi
 import app.coshell.core.domain.categoryguess.CategoryGuess
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
-import app.coshell.core.model.DraftCategorySource
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.AccountRepository
@@ -220,35 +219,10 @@ class TransactionEditViewModel @Inject constructor(
         }
     }
 
-    /**
-     * A new form from a draft (#586): the amount, account, category, day and the line as the note. An amount in another currency
-     * than the account's goes to «Сумма покупки» (the debited sum follows from the rate, as with a receipt).
-     */
+    /** A new form from a draft of a quick note (#586); the mapping lives in `NoteDraftEntry.kt`. */
     private suspend fun applyDraft(id: String) {
         val draft = drafts.getDraft(id) ?: return
-        val source = draft.categorySource
-        _state.update { form ->
-            val accountId = draft.accountId?.takeIf { it in accountsById } ?: form.accountId
-            val sameCurrency = accountId == null || accountsById[accountId]?.currency == draft.currency
-            val typed = draft.money?.let { moneyFormat.formatForEditing(it) }.orEmpty()
-            form.copy(
-                type = TransactionType.EXPENSE,
-                accountId = accountId,
-                amount = if (sameCurrency) typed else "",
-                receiptEnabled = !sameCurrency && typed.isNotEmpty(),
-                receiptCurrency = if (!sameCurrency) draft.currency.value else "",
-                receiptAmount = if (!sameCurrency) typed else "",
-                categoryId = draft.categoryId?.takeIf { cid -> allCategories.any { it.id == cid } },
-                categoryGuessed = source == DraftCategorySource.HISTORY || source == DraftCategorySource.DICTIONARY,
-                categoryGuessSource = when (source) {
-                    DraftCategorySource.HISTORY -> CategoryGuess.Source.HISTORY
-                    DraftCategorySource.DICTIONARY -> CategoryGuess.Source.DICTIONARY
-                    else -> null
-                },
-                date = Instant.fromEpochMilliseconds(draft.dateMillis).toLocalDateTime(timeZone).date,
-                note = draft.title,
-            ).withDebitSuggestion(converter, moneyFormat).withCategoryOptions(allCategories, recentCategoryIds)
-        }
+        _state.update { it.withNoteDraft(draft, accountsById, allCategories, recentCategoryIds, converter, moneyFormat, timeZone) }
     }
 
     // endregion

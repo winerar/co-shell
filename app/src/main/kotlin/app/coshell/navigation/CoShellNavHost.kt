@@ -26,26 +26,7 @@ import app.coshell.hints.HintBannerHost
 import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
-import app.coshell.appearance.AppearanceRoute
 import app.coshell.privacy.HiddenPill
-import app.coshell.privacy.pin.PinSetupRoute
-import app.coshell.privacy.settings.PrivacyRoute
-import app.coshell.export.ExportRoute
-import app.coshell.ai.AiAddonRoute
-import app.coshell.ai.cloud.CloudAiRoute
-import app.coshell.settings.AccountsSettingsRoute
-import app.coshell.settings.BalanceAccountsRoute
-import app.coshell.settings.HomeDetailsRoute
-import app.coshell.settings.HomeSettingsRoute
-import app.coshell.settings.DataSettingsRoute
-import app.coshell.settings.OpsSettingsRoute
-import app.coshell.settings.ReportsSettingsRoute
-import app.coshell.settings.ScreensSettingsScreen
-import app.coshell.settings.InputSettingsRoute
-import app.coshell.settings.MoneySettingsRoute
-import app.coshell.settings.NoticeSettingsRoute
-import app.coshell.settings.SettingsActions
-import app.coshell.settings.SettingsRoute
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
@@ -56,13 +37,6 @@ import app.coshell.backup.BackupRoute
 import app.coshell.budgets.detail.BudgetDetailRoute
 import app.coshell.budgets.edit.BudgetEditRoute
 import app.coshell.budgets.list.BudgetsRoute
-import app.coshell.reports.ReportsRoute
-import app.coshell.reports.capital.CapitalMonthRoute
-import app.coshell.reports.all.ReportCategoriesRoute
-import app.coshell.reports.category.ReportCategoryRoute
-import app.coshell.reports.review.MonthLimitsRoute
-import app.coshell.reports.recap.MonthRecapRoute
-import app.coshell.reports.review.MonthReviewRoute
 import app.coshell.categories.edit.CategoryEditRoute
 import app.coshell.categories.list.CategoriesRoute
 import app.coshell.core.designsystem.components.CoShellSheet
@@ -87,7 +61,6 @@ import app.coshell.recurring.list.RecurringListRoute
 import app.coshell.templates.edit.TemplateEditRoute
 import app.coshell.templates.list.TemplatesRoute
 import app.coshell.transactions.edit.TransactionEditRoute
-import app.coshell.transactions.list.PRESET_MEMBER
 import app.coshell.transactions.list.PRESET_UNCATEGORIZED
 import app.coshell.transactions.list.TransactionsRoute
 import app.coshell.undo.UndoSnackbarEffect
@@ -98,7 +71,6 @@ import app.coshell.update.notice.UpdateNoticeViewModel
 import app.coshell.greeting.GreetingPill
 import app.coshell.greeting.GreetingViewModel
 import app.coshell.update.notice.UpdatePill
-import app.coshell.wipe.WipeDataRoute
 import app.coshell.access.AccessLockedDialog
 import app.coshell.access.AccessViewModel
 import app.coshell.gate.InputLockViewModel
@@ -381,66 +353,7 @@ fun CoShellNavHost(
                 onAddAccount = { navController.navigate(AccountEditDestination()) },
             )
         }
-        screen<ReportsDestination> {
-            ReportsRoute(
-                onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
-                onCategory = { navController.navigate(it) { launchSingleTop = true } },
-                onMember = { preset ->
-                    navController.navigateToTab(TopLevel.TRANSACTIONS)
-                    navController.getBackStackEntry<TransactionsDestination>()
-                        .savedStateHandle[PRESET_MEMBER] = preset.encode()
-                },
-                onCapital = { navController.navigate(it) { launchSingleTop = true } },
-                onTransaction = { navController.navigate(TransactionEditDestination(transactionId = it)) },
-            )
-        }
-        screen<CapitalMonthDestination> {
-            CapitalMonthRoute(
-                onBack = { navController.popBackStack() },
-                onAccount = { navController.navigate(AccountEditDestination(it)) },
-            )
-        }
-        screen<ReportCategoriesDestination> { entry ->
-            // The tab's entry sits under this one: «Все категории» shows its period, currency and data.
-            val tab = remember(entry) { navController.getBackStackEntry<ReportsDestination>() }
-            ReportCategoriesRoute(
-                viewModel = hiltViewModel(tab),
-                onBack = { navController.popBackStack() },
-                onCategory = { navController.navigate(it) { launchSingleTop = true } },
-            )
-        }
-        screen<MonthRecapDestination> { entry ->
-            val route = entry.toRoute<MonthRecapDestination>()
-            MonthRecapRoute(
-                onBack = { navController.popBackStack() },
-                onDetails = { navController.navigate(MonthReviewDestination(route.year, route.month)) { launchSingleTop = true } },
-            )
-        }
-        screen<MonthReviewDestination> { entry ->
-            val route = entry.toRoute<MonthReviewDestination>()
-            MonthReviewRoute(
-                onBack = { navController.popBackStack() },
-                onCategory = { navController.navigate(it) { launchSingleTop = true } },
-                onLimit = { id -> navController.navigate(BudgetDetailDestination(id, route.year, route.month)) { launchSingleTop = true } },
-                onAllLimits = { navController.navigate(MonthReviewLimitsDestination) { launchSingleTop = true } },
-            )
-        }
-        screen<MonthReviewLimitsDestination> { entry ->
-            // The review's entry sits under this one: the limits are of its month, from its data.
-            val review = remember(entry) { navController.getBackStackEntry<MonthReviewDestination>() }
-            val route = review.toRoute<MonthReviewDestination>()
-            MonthLimitsRoute(
-                viewModel = hiltViewModel(review),
-                onBack = { navController.popBackStack() },
-                onLimit = { id -> navController.navigate(BudgetDetailDestination(id, route.year, route.month)) { launchSingleTop = true } },
-            )
-        }
-        screen<ReportCategoryDestination> {
-            ReportCategoryRoute(
-                onBack = { navController.popBackStack() },
-                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
-            )
-        }
+        reportsGraph(navController)
         dialog<ConverterDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> ConverterRoute(onClose = close) }
         }
@@ -457,94 +370,7 @@ fun CoShellNavHost(
                 },
             )
         }
-        screen<SettingsDestination> {
-            SettingsRoute(
-                SettingsActions(
-                    onBack = { navController.popBackStack() },
-                    onLook = { navController.navigate(AppearanceDestination) },
-                    onScreens = { navController.navigate(ScreensSettingsDestination) },
-                    onMoney = { navController.navigate(MoneySettingsDestination) },
-                    onInput = { navController.navigate(InputSettingsDestination) },
-                    onNotices = { navController.navigate(NoticeSettingsDestination) },
-                    onData = { navController.navigate(DataSettingsDestination) },
-                    onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
-                    onBackup = { navController.navigate(BackupDestination) },
-                    onAiAddon = { navController.navigate(AiAddonDestination) { launchSingleTop = true } },
-                    onCloudAi = { navController.navigate(CloudAiDestination) { launchSingleTop = true } },
-                ),
-            )
-        }
-        screen<AiAddonDestination> {
-            AiAddonRoute(onBack = { navController.popBackStack() })
-        }
-        screen<CloudAiDestination> {
-            CloudAiRoute(onBack = { navController.popBackStack() })
-        }
-        screen<AppearanceDestination> {
-            AppearanceRoute(onBack = { navController.popBackStack() })
-        }
-        screen<PrivacyDestination> {
-            PrivacyRoute(
-                onBack = { navController.popBackStack() },
-                onPinSetup = { mode -> navController.navigate(PinSetupDestination(mode.name)) { launchSingleTop = true } },
-            )
-        }
-        screen<PinSetupDestination> {
-            PinSetupRoute(onDone = { navController.popBackStack() })
-        }
-        screen<ScreensSettingsDestination> {
-            ScreensSettingsScreen(
-                onHome = { navController.navigate(HomeSettingsDestination) },
-                onOps = { navController.navigate(OpsSettingsDestination) },
-                onReports = { navController.navigate(ReportsSettingsDestination) },
-                onAccounts = { navController.navigate(AccountsSettingsDestination) },
-                onBack = { navController.popBackStack() },
-            )
-        }
-        screen<HomeSettingsDestination> {
-            HomeSettingsRoute(
-                onDetails = { navController.navigate(HomeDetailsSettingsDestination) },
-                onBalance = { navController.navigate(BalanceAccountsDestination) },
-                onBack = { navController.popBackStack() },
-            )
-        }
-        screen<BalanceAccountsDestination> {
-            BalanceAccountsRoute(onBack = { navController.popBackStack() })
-        }
-        screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
-        screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
-        screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
-        screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }
-        screen<MoneySettingsDestination> {
-            MoneySettingsRoute(
-                onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
-                onBack = { navController.popBackStack() },
-            )
-        }
-        screen<InputSettingsDestination> {
-            InputSettingsRoute(onBack = { navController.popBackStack() })
-        }
-        screen<NoticeSettingsDestination> {
-            NoticeSettingsRoute(onBack = { navController.popBackStack() })
-        }
-        screen<DataSettingsDestination> {
-            DataSettingsRoute(
-                onBackup = { navController.navigate(BackupDestination) },
-                onImport = { navController.navigate(WalletImportDestination) },
-                onExport = { navController.navigate(ExportDestination) },
-                onWipe = { navController.navigate(WipeDataDestination) },
-                onBack = { navController.popBackStack() },
-            )
-        }
-        screen<ExportDestination> { ExportRoute(onBack = { navController.popBackStack() }) }
-        screen<WipeDataDestination> {
-            WipeDataRoute(
-                onBack = { navController.popBackStack() },
-                onImport = {
-                    navController.navigate(WalletImportDestination) { popUpTo<WipeDataDestination> { inclusive = true } }
-                },
-            )
-        }
+        settingsGraph(navController)
         screen<UpdateDestination> {
             UpdateRoute(
                 onBack = { navController.popBackStack() },

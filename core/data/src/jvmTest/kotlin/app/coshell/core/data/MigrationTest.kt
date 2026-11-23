@@ -275,6 +275,21 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `17 to 18 adds local_only to accounts, off for existing ones`() {
+        helper.createDatabase(17).use { v17 ->
+            v17.execSQL(
+                """INSERT INTO accounts (id, name, currency, type, initial_balance_minor, is_shared,
+                   owner_member_id, archived, sort_order, updated_at, updated_by, deleted, pending_sync)
+                   VALUES ('a1', 'Cash', 'ARS', 'CASH', 5000, 1, NULL, 0, 0, 1, NULL, 0, 1)""",
+            )
+        }
+
+        helper.runMigrationsAndValidate(18, emptyList()).use { v18 ->
+            assertEquals("Cash|0", v18.single("SELECT name || '|' || local_only FROM accounts"))
+        }
+    }
+
     private fun SQLiteConnection.single(sql: String, column: Int = 0): String =
         prepare(sql).use { statement ->
             check(statement.step()) { "No rows: $sql" }

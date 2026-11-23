@@ -50,6 +50,16 @@ class AccountsViewModelTest {
     }
 
     @Test
+    fun `local-only account is marked in the list`() {
+        val vm = AccountsViewModel(FakeAccountRepository(), MoneyFormat.RU)
+        val items = listOf(
+            AccountWithBalance(Account("shared", "Общий", ars), Money(0, ars)),
+            AccountWithBalance(Account("mine", "Копилка", ars, localOnly = true), Money(0, ars)),
+        )
+        assertEquals(mapOf("shared" to false, "mine" to true), vm.buildState(items, showArchived = false).active.associate { it.id to it.localOnly })
+    }
+
+    @Test
     fun `converted balance keeps the approx sign glued to the amount`() {
         val usd = CurrencyCode("USD")
         val vm = AccountsViewModel(FakeAccountRepository(), MoneyFormat.RU)

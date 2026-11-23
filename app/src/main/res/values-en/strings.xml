@@ -137,7 +137,6 @@
     <string name="account_bank_like">Like %1$s</string>
     <string name="account_banks">Banks and apps</string>
     <string name="account_included_in_total_short">Turn off for debts or someone else\'s money</string>
-    <string name="account_shared_short">Turn off for a personal account</string>
     <string name="account_initial_balance_error">Enter the amount in digits</string>
     <string name="account_initial_balance_fraction_error">Too many decimal places</string>
     <string name="account_delete_confirm_title">Delete account?</string>
@@ -439,8 +438,12 @@
     <string name="rates_sources">Sources: fawazahmed0/currency-api and</string>
     <string name="rates_sources_daily">Rates update automatically once a day.</string>
 
-    <string name="account_shared">Shared account</string>
-    <string name="account_shared_hint">Turn off for a personal account — everyone still sees it, marked “personal”</string>
+    <string name="account_local_only">Only me</string>
+    <string name="account_local_only_short">The other member won\'t see this account or its transactions</string>
+    <string name="account_local_only_transfers">The other member won\'t see transfers between this account and shared ones.</string>
+    <string name="account_local_only_off">If you turn this off, the other member will see the account and all its transactions.</string>
+    <string name="account_local_only_locked">“Only me” can be turned on only when creating an account.</string>
+    <string name="account_local_only_label">only me</string>
     <string name="account_personal_mine">personal</string>
     <string name="account_selected">Selected</string>
     <string name="account_personal_of">personal · %1$s</string>

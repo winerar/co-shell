@@ -3,6 +3,7 @@ package app.coshell.accounts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.theme.RateTextStyle
 import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.R as DesignR
 
@@ -46,11 +48,26 @@ fun AccountLine(
     /** «не в общем балансе»: the subtitle in the attention colour. */
     warn: Boolean = false,
     selected: Boolean = false,
+    /** «Только у меня» (#558): a lock after the name. */
+    locked: Boolean = false,
+    lockedDescription: String? = null,
 ) {
     val palette = LocalAmountPalette.current
     CoShellListRow(
         compact = LocalCompactLists.current,
-        title = { Text(name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                Text(name, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                if (locked) {
+                    Icon(
+                        painterResource(DesignR.drawable.ic_lock),
+                        contentDescription = lockedDescription,
+                        modifier = Modifier.size(Sizes.tileIcon),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        },
         modifier = modifier,
         supporting = {
             Text(

@@ -24,6 +24,7 @@ import app.coshell.accounts.edit.components.BankPresets
 import app.coshell.accounts.edit.components.MoneySection
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellFormSection
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSwitchLine
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Sizes
@@ -81,13 +82,22 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                         checked = state.includedInTotal,
                         onCheckedChange = actions.onIncludedInTotalChange,
                     )
-                    if (state.showSharing) {
-                        CoShellSwitchLine(
-                            title = stringResource(R.string.account_shared),
-                            subtitle = stringResource(R.string.account_shared_short),
-                            checked = state.shared,
-                            onCheckedChange = actions.onSharedChange,
-                        )
+                    if (state.showSharing || state.localOnly) {
+                        if (state.localOnlyLocked) {
+                            CoShellHint(stringResource(R.string.account_local_only_locked))
+                        } else {
+                            CoShellSwitchLine(
+                                title = stringResource(R.string.account_local_only),
+                                subtitle = stringResource(R.string.account_local_only_short),
+                                checked = state.localOnly,
+                                onCheckedChange = actions.onLocalOnlyChange,
+                            )
+                            if (state.localOnly) {
+                                CoShellHint(stringResource(R.string.account_local_only_transfers))
+                            } else if (!state.isNew) {
+                                CoShellHint(stringResource(R.string.account_local_only_off))
+                            }
+                        }
                     }
                 }
             }

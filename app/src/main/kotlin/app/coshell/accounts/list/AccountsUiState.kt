@@ -28,6 +28,8 @@ data class AccountsUiState(
         val excludedFromTotal: Boolean = false,
         /** Personal account: `""` — mine, a name — the other member's; `null` — shared. */
         val personalOf: String? = null,
+        /** «Только у меня» (#558): lock and a caption; the account never leaves this phone. */
+        val localOnly: Boolean = false,
         /** The account's colour (stored palette value or a bank preset), `null` — none. */
         val color: Long? = null,
         /** Balance in the main report currency when it differs: «≈ 1 220 USD». */

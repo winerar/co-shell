@@ -145,7 +145,6 @@
     <string name="account_bank_like">Как у %1$s</string>
     <string name="account_banks">Банки и приложения</string>
     <string name="account_included_in_total_short">Выключите для долгов и чужих денег</string>
-    <string name="account_shared_short">Выключите для личного счёта</string>
     <string name="account_initial_balance_error">Введите сумму цифрами</string>
     <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой</string>
     <string name="account_delete_confirm_title">Удалить счёт?</string>
@@ -458,8 +457,12 @@
     <string name="rates_sources_daily">Курсы обновляются сами раз в день.</string>
     <string name="rates_attribution" translatable="false">Rates By Exchange Rate API</string>
 
-    <string name="account_shared">Общий счёт</string>
-    <string name="account_shared_hint">Выключите для личного счёта — его увидят все, но с пометкой «личный»</string>
+    <string name="account_local_only">Только у меня</string>
+    <string name="account_local_only_short">Второй участник не увидит счёт и операции по нему</string>
+    <string name="account_local_only_transfers">Переводы между этим счётом и общими второй участник не увидит.</string>
+    <string name="account_local_only_off">Если выключить, второй участник увидит счёт и все операции по нему.</string>
+    <string name="account_local_only_locked">«Только у меня» включается при создании счёта.</string>
+    <string name="account_local_only_label">только у меня</string>
     <string name="account_personal_mine">личный</string>
     <string name="account_selected">Выбран</string>
     <string name="account_personal_of">личный · %1$s</string>

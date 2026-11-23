@@ -140,7 +140,6 @@
     <string name="account_bank_like">Como %1$s</string>
     <string name="account_banks">Bancos y apps</string>
     <string name="account_included_in_total_short">Desactívalo para deudas o dinero ajeno</string>
-    <string name="account_shared_short">Desactívalo para una cuenta personal</string>
     <string name="account_initial_balance_error">Escribe el importe en cifras</string>
     <string name="account_initial_balance_fraction_error">Demasiados decimales</string>
     <string name="account_delete_confirm_title">¿Eliminar la cuenta?</string>
@@ -444,8 +443,12 @@
     <string name="rates_sources">Fuentes: fawazahmed0/currency-api y</string>
     <string name="rates_sources_daily">Los cambios se actualizan solos una vez al día.</string>
 
-    <string name="account_shared">Cuenta compartida</string>
-    <string name="account_shared_hint">Desactívalo para una cuenta personal — todos la verán, marcada como «personal»</string>
+    <string name="account_local_only">Solo yo</string>
+    <string name="account_local_only_short">La otra persona no verá la cuenta ni sus movimientos</string>
+    <string name="account_local_only_transfers">La otra persona no verá las transferencias entre esta cuenta y las compartidas.</string>
+    <string name="account_local_only_off">Si lo desactivas, la otra persona verá la cuenta y todos sus movimientos.</string>
+    <string name="account_local_only_locked">«Solo yo» solo se activa al crear la cuenta.</string>
+    <string name="account_local_only_label">solo yo</string>
     <string name="account_personal_mine">personal</string>
     <string name="account_selected">Seleccionada</string>
     <string name="account_personal_of">personal · %1$s</string>

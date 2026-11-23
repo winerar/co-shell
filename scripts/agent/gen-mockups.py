@@ -66,7 +66,7 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
     ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),
-    ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountEditExisting', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
+    ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountEditExisting', 'AccountEditLocal', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
     ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyFull', 'FamilyMemberSheet', 'FamilyRemoveConfirm', 'FamilyLeave', 'FamilyDelete', 'FamilyDeleteAccount', 'FamilyRemoved', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
     ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError']),

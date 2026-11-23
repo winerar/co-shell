@@ -69,16 +69,18 @@ internal data class AccountDto(
     val sortOrder: Int = 0,
     val excludedFromTotal: Boolean = false,
     val color: Long? = null,
+    /** «Только у меня» (#558); absent in older copies — shared. */
+    val localOnly: Boolean = false,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
-        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color,
+        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, localOnly,
     )
 }
 
 internal fun Account.toDto() = AccountDto(
     id, name, currency.value, type.name, initialBalanceMinor, isShared, ownerMemberId, archived, sortOrder,
-    excludedFromTotal, color,
+    excludedFromTotal, color, localOnly,
 )
 
 @Serializable

@@ -31,6 +31,8 @@ data class AccountEntity(
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    /** «Только у меня» (#558): the row and its operations never leave the phone; not in the sync JSON. */
+    @Transient @ColumnInfo(name = "local_only", defaultValue = "0") val localOnly: Boolean = false,
 )
 
 @Serializable

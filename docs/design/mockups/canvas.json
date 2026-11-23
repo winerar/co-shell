@@ -310,8 +310,17 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountDelete.dc.html": {
+    "AccountEditLocal.dc.html": {
       "x": 1880,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: «Только у меня»",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountDelete.dc.html": {
+      "x": 2350,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -320,7 +329,7 @@
       "radius": 28
     },
     "AccountBlocked.dc.html": {
-      "x": 2350,
+      "x": 2820,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -329,7 +338,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 2820,
+      "x": 3290,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -339,7 +348,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 3290,
+      "x": 3760,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -349,7 +358,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 3760,
+      "x": 4230,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -358,7 +367,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 4230,
+      "x": 4700,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3179,6 +3188,7 @@
     "AccountAdjust.dc.html",
     "AccountAdjusted.dc.html",
     "AccountEditExisting.dc.html",
+    "AccountEditLocal.dc.html",
     "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
     "Colors.dc.html",
@@ -3592,7 +3602,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 4620,
+      "maxW": 5090,
       "w": 240
     },
     "row5": {

@@ -81,6 +81,8 @@ class AccountEditViewModel @Inject constructor(
                     includedInTotal = !account.excludedFromTotal,
                     color = account.color,
                     shared = account.isShared,
+                    localOnly = account.localOnly,
+                    localOnlyLocked = !account.localOnly,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
@@ -135,7 +137,7 @@ class AccountEditViewModel @Inject constructor(
 
     fun onColorChange(value: Long?) = _state.update { it.copy(color = value) }
 
-    fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
+    fun onLocalOnlyChange(value: Boolean) = _state.update { if (it.localOnlyLocked) it else it.copy(localOnly = value) }
 
     fun save() {
         val current = _state.value
@@ -223,6 +225,7 @@ class AccountEditViewModel @Inject constructor(
             excludedFromTotal = !form.includedInTotal,
             color = form.color,
             isShared = form.shared,
+            localOnly = form.localOnly,
             // The repository makes the current member the owner of a new personal account.
             ownerMemberId = if (form.shared) null else base.ownerMemberId,
         )

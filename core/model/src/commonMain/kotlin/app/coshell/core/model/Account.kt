@@ -19,6 +19,11 @@ data class Account(
     val excludedFromTotal: Boolean = false,
     /** Colour of the account's card and badge as 0xAARRGGBB (the category palette), `null` — no colour. */
     val color: Long? = null,
+    /**
+     * «Только у меня» (#558): the account and every operation on it stay on this phone — they are never sent
+     * to the family and never taken from it. Still in the backup and in this phone's totals.
+     */
+    val localOnly: Boolean = false,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

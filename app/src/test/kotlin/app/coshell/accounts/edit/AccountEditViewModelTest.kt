@@ -69,6 +69,34 @@ class AccountEditViewModelTest {
     }
 
     @Test
+    fun `local-only mark can be set when creating an account`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Копилка")
+        vm.onLocalOnlyChange(true)
+        vm.save()
+
+        assertTrue(accounts.getAccount("new")!!.localOnly)
+    }
+
+    @Test
+    fun `local-only mark cannot be switched on for a saved account but can be switched off`() = runTest {
+        accounts.saveAccount(Account("shared", "Общий", ars))
+        accounts.saveAccount(Account("mine", "Копилка", ars, localOnly = true))
+
+        val shared = viewModel("shared")
+        assertTrue(shared.state.value.localOnlyLocked)
+        shared.onLocalOnlyChange(true)
+        assertFalse(shared.state.value.localOnly)
+
+        val mine = viewModel("mine")
+        assertFalse(mine.state.value.localOnlyLocked)
+        assertTrue(mine.state.value.localOnly)
+        mine.onLocalOnlyChange(false)
+        mine.save()
+        assertFalse(accounts.getAccount("mine")!!.localOnly)
+    }
+
+    @Test
     fun `new account outside the totals currencies asks for the currency pill`() = runTest {
         val vm = viewModel()
         vm.onNameChange("Pesos")

@@ -8,6 +8,8 @@ import kotlinx.coroutines.test.runTest
 
 class RoutedLanguageModelTest {
     private class Fake(override var available: Boolean, var answer: String?) : LanguageModel {
+        var cheapValue = false
+        override val cheap: Boolean get() = cheapValue
         var calls = 0
         override suspend fun complete(system: String, prompt: String): String? { calls++; return answer }
     }
@@ -47,6 +49,12 @@ class RoutedLanguageModelTest {
         val model = routed(Fake(false, "c"), Fake(false, "p"), on = true)
         assertFalse(model.available)
         assertEquals(null, model.complete("s", "p"))
+    }
+
+    @Test
+    fun `cheap only while the cloud is the one answering`() {
+        assertFalse(routed(Fake(true, "c"), Fake(true, "p"), on = false).cheap)
+        assertTrue(routed(Fake(true, "c").also { it.cheapValue = true }, Fake(true, "p"), on = true).cheap)
     }
 
     @Test

@@ -3,6 +3,8 @@ package app.coshell.drafts.list
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -38,17 +40,25 @@ import kotlinx.datetime.minus
  * A draft (#586, board `Notes586Drafts`): tick (any row: ready ones to post, any to delete, #628), title, «счёт · день», then the category with where
  * it came from or the mark of what is missing; the amount on the right. A tap on the row opens the entry sheet.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun DraftRow(row: DraftRowUi, today: LocalDate, onClick: () -> Unit, onToggle: () -> Unit) {
     CoShellListRow(
         // The amount shares the title's line, so the captions under it keep the whole width («Выберите категорию» is not cut).
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-                Text(row.title.ifBlank { stringResource(R.string.drafts_untitled) }, Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                if (row.amount != null) {
-                    AmountText(row.amount, style = AmountTextStyle, minFontSize = MinAmountSize)
-                } else {
-                    Text("—", style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            // A long title keeps its words and the amount drops under it (wide amount, big font): not «К…» beside «−3 500,00 ARS».
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+                verticalArrangement = Arrangement.spacedBy(Spacing.xxs),
+                itemVerticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(row.title.ifBlank { stringResource(R.string.drafts_untitled) }, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+                    if (row.amount != null) {
+                        AmountText(row.amount, style = AmountTextStyle, minFontSize = MinAmountSize)
+                    } else {
+                        Text("—", style = AmountTextStyle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
             }
         },

@@ -4,6 +4,16 @@ import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsPreviewState
 import app.coshell.settings.SettingsScreen
 import android.app.Application
+import kotlinx.datetime.LocalDate
+import app.coshell.drafts.notes.NotesUiState
+import app.coshell.drafts.notes.NotesScreen
+import app.coshell.drafts.notes.NotesActions
+import app.coshell.drafts.list.DraftsUiState
+import app.coshell.drafts.list.DraftsScreen
+import app.coshell.drafts.list.DraftsActions
+import app.coshell.drafts.list.DraftRowUi
+import app.coshell.core.model.DraftCategorySource
+import app.coshell.core.domain.drafts.DraftMissing
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -70,6 +80,8 @@ class ScreensLocaleStressScreenshotTest {
     @Test fun `entry sheet es`() = es("entry_sheet") { TransactionEditScreen(entrySheetStressSample, TransactionEditActions()) }
     @Test fun `account edit es`() = es("account_edit") { AccountEditScreen(accountEditStressSample, AccountEditActions()) }
     @Test fun `category edit es`() = es("category_edit") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
+    @Test fun `notes es`() = es("notes") { NotesScreen(notesStressSample, NotesActions()) }
+    @Test fun `drafts es`() = es("drafts") { DraftsScreen(draftsStressSample, DraftsActions()) }
     @Test fun `settings es`() = es("settings") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     @Test @Config(qualifiers = RU)
@@ -91,6 +103,10 @@ class ScreensLocaleStressScreenshotTest {
     @Test @Config(qualifiers = RU)
     fun `category edit x2`() = x2("category_edit") { CategoryEditScreen(categoryEditStressSample, CategoryEditActions()) }
     @Test @Config(qualifiers = RU)
+    fun `notes x2`() = x2("notes") { NotesScreen(notesStressSample, NotesActions()) }
+    @Test @Config(qualifiers = RU)
+    fun `drafts x2`() = x2("drafts") { DraftsScreen(draftsStressSample, DraftsActions()) }
+    @Test @Config(qualifiers = RU)
     fun `settings x2`() = x2("settings") { SettingsScreen(SettingsPreviewState, SettingsActions()) }
 
     private fun es(screen: String, content: @Composable () -> Unit) = shot("${screen}_stress_es_narrow_light", false, 1.3f, content)
@@ -109,6 +125,18 @@ class ScreensLocaleStressScreenshotTest {
         compose.onRoot().captureRoboImage("src/test/screenshots/$name.png")
     }
 }
+
+private val notesStressSample = NotesUiState("кофе 3500\nтакси 2000\nхлеб 850 карта\nвчера аптека 4200", 4)
+private val draftsToday = LocalDate(2026, 11, 21)
+private val draftsStressSample = DraftsUiState(
+    false,
+    listOf(
+        DraftRowUi("1", "Кофе", "Galicia", draftsToday, "−3 500,00 ARS", null, "Кафе", DraftCategorySource.HISTORY, true),
+        DraftRowUi("2", "Купил хлеб в магазине у дома по дороге с работы", "Galicia", draftsToday, null, DraftMissing.AMOUNT, null, null, false),
+        DraftRowUi("3", "Netflix", "Galicia", draftsToday, "−7 500,00 ARS", DraftMissing.CATEGORY, null, null, false),
+    ),
+    draftsToday,
+)
 
 private const val ES = "es-w320dp-h720dp-xhdpi"
 private const val RU = "ru-w320dp-h720dp-xhdpi"

@@ -5,6 +5,7 @@ Type + camera + templates (new only) → ribbon of account badges («Откуд�
 and the static `Entry*` boards listed in `mockup_screens_main.BOARDS`.
 """
 from mockup_parts import *  # noqa: F401,F403
+from mockup_catalog_bricks import status_chip
 from mockup_logic import go
 import mockup_screens_main as m
 import mockup_screens_fb_290 as p
@@ -52,11 +53,23 @@ def slot(lbl, value, cur, hint=''):
             '<span style="%s font-size: 13px; color: %s;">%s</span></div>%s</div>' % (LINE2, MUTED, lbl, MONO, value, MONO, MUTED, cur, h))
 
 
-def categories(selected=None, error=False):
+HISTORY = 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4M12 8v4l3 2'
+
+
+def guess_caption(source):
+    """The grey line of an automatic category (#584, #594; `GuessCaption`, `AiGuessCaption`): where it came from; the model's one has a spark and «бета»."""
+    ai = source == 'ai'
+    icon = svg('spark', MUTED, 14, 2) if ai else svg(HISTORY, MUTED, 14, 2)
+    word = 'предложено ИИ' if ai else 'по прошлым операциям'
+    beta = ' ' + status_chip('бета', 'manual') if ai else ''
+    return ('<span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: %s; white-space: nowrap;">%s%s%s</span>' % (MUTED, icon, word, beta))
+
+
+def categories(selected=None, error=False, caption=''):
     cells = [p.cat_cell(n, ic, col, n == selected) for n, ic, col in m.CATS[:7]] + [p.all_cell('Все')]
     err = '<div style="font-size: 12px; color: %s; margin-top: 6px;">Выберите категорию</div>' % PINK if error else ''
     title = 'Категория' if selected else 'Категория · частые'
-    return p.block(title, p.grid4(cells) + err, right=p.small_link(selected + ' ✓') if selected else '')
+    return p.block(title, p.grid4(cells) + err, right=caption or (p.small_link(selected + ' ✓') if selected else ''))
 
 
 def details(day='Сегодня, 19 нояб.', note=None, refund=True, save_as=False):
@@ -87,6 +100,11 @@ def transfer():
 def receipt():
     line = slot('Сумма покупки', '13 300', 'ARS ▾', '1 USDT = 1 015 ARS')
     return sheet(type_bar('exp') + ribbon(3), amount_card('13,10', 'USDT', PINK, line, debited=True, links=''), categories('Кафе'), details())
+
+
+def guess(source):
+    """A new expense whose category was filled by itself: by past entries (#584) or by the model (#594); one tap changes it."""
+    return sheet(type_bar('exp') + ribbon(0), amount_card('3 500', 'ARS', PINK), categories('Кафе', caption=guess_caption(source)), details(note='Starbucks'))
 
 
 def edit_types(cur='exp'):

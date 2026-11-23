@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.core.domain.ai.NoLanguageModel
+import app.coshell.core.domain.ai.PayeeCategoryAi
 import app.coshell.core.domain.categoryguess.CategoryGuess
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
@@ -27,6 +29,7 @@ import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
+import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
@@ -47,6 +50,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
 import kotlin.time.Instant
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,6 +85,7 @@ class TransactionEditViewModel @Inject constructor(
     private val entryTip: EntryTip,
     private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
     private val drafts: DraftRepository = InMemoryDraftRepository(),
+    private val categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -239,6 +245,7 @@ class TransactionEditViewModel @Inject constructor(
                 .withGuessedCategory()
                 .withCategoryOptions(allCategories, recentCategoryIds)
         }
+        askAiCategory()
     }
 
     /**
@@ -336,7 +343,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false, categoryGuessSource = null)
+        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false, categoryGuessSource = null, categoryByAi = false)
             .withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
     }
 
@@ -347,7 +354,8 @@ class TransactionEditViewModel @Inject constructor(
     private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
         if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
         val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key, note)
-        return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source)
+        if (guess == null && categoryByAi) return this
+        return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source, categoryByAi = false)
     }
 
     /** «↩ Возврат» chip of an expense (#208): the same category, the sign flips. */
@@ -400,7 +408,7 @@ class TransactionEditViewModel @Inject constructor(
     /** Selecting a folder selects the folder itself and opens its subcategories. */
     fun onCategorySelect(id: String) = _state.update {
         categoryTouched = true
-        it.copy(categoryId = id, categoryError = false, categoryGuessed = false, categoryGuessSource = null).withCategoryOptions(allCategories, recentCategoryIds)
+        it.copy(categoryId = id, categoryError = false, categoryGuessed = false, categoryGuessSource = null, categoryByAi = false).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }
@@ -409,8 +417,38 @@ class TransactionEditViewModel @Inject constructor(
     fun onDatePicked(millisUtc: Long) =
         onDateSelect(Instant.fromEpochMilliseconds(millisUtc).toLocalDateTime(TimeZone.UTC).date)
 
-    fun onNoteChange(value: String) = _state.update {
-        it.copy(note = value).withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
+    fun onNoteChange(value: String) {
+        _state.update { it.copy(note = value).withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds) }
+        askAiCategory()
+    }
+
+    private var aiJob: Job? = null
+
+    /**
+     * #594: a new expense whose seller or note nothing in the history or the brand dictionary knows asks the model for a category (when the
+     * model is there); the sheet stays usable meanwhile and a manual pick wins. Caption «предложено ИИ» until the person picks.
+     */
+    private fun askAiCategory() {
+        val s = _state.value
+        val text = (s.scan?.seller ?: s.note).trim()
+        val open = s.isNew && !s.isCopy && !categoryTouched && s.type == TransactionType.EXPENSE && (s.categoryId == null || s.categoryByAi)
+        if (!categoryAi.available || !open || text.length < AI_MIN_TEXT) {
+            aiJob?.cancel()
+            return
+        }
+        aiJob?.cancel()
+        aiJob = viewModelScope.launch {
+            delay(AI_DELAY_MS)
+            val options = allCategories.filter { it.type == CategoryType.EXPENSE && !it.archived }
+            val name = categoryAi.suggest(text, options.map { it.name }) ?: return@launch
+            val category = options.firstOrNull { it.name == name } ?: return@launch
+            _state.update { cur ->
+                val same = (cur.scan?.seller ?: cur.note).trim() == text
+                if (categoryTouched || !same || (cur.categoryId != null && !cur.categoryByAi) || cur.categoryGuessed && !cur.categoryByAi) cur
+                else cur.copy(categoryId = category.id, categoryGuessed = true, categoryGuessSource = null, categoryByAi = true, categoryError = false)
+                    .withCategoryOptions(allCategories, recentCategoryIds)
+            }
+        }
     }
 
     /** A pill in the row or a row of the «Теги» sheet: on ↔ off. */
@@ -574,5 +612,9 @@ class TransactionEditViewModel @Inject constructor(
     private companion object {
         const val RECENT_ACCOUNTS = 4
         const val RECENT_OPERATIONS = 500
+
+        /** #594: the model is asked for a seller or note of at least this many letters, a moment after the last keystroke. */
+        const val AI_MIN_TEXT = 3
+        const val AI_DELAY_MS = 700L
     }
 }

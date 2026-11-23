@@ -10,6 +10,8 @@ import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.model.TransactionTemplate
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.SaveTransactionUseCase
+import app.coshell.core.domain.ai.NoLanguageModel
+import app.coshell.core.domain.ai.PayeeCategoryAi
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -80,6 +82,7 @@ abstract class TransactionEditTestBase {
         receiptQr: String? = null,
         receiptUnread: Boolean = false,
         draftId: String? = null,
+        categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -106,6 +109,7 @@ abstract class TransactionEditTestBase {
         entryTags = fakeEntryTags(),
         entryTip = fakeEntryTip(categories, transactions, tipSettings),
         drafts = drafts,
+        categoryAi = categoryAi,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

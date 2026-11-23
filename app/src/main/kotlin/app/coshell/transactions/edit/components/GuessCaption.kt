@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import app.coshell.ui.ai.BetaMark
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.tokens.Spacing
@@ -29,5 +30,18 @@ internal fun GuessCaption(source: CategoryGuess.Source) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         Icon(painterResource(DesignR.drawable.ic_history), contentDescription = null, Modifier.size(Spacing.l), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(text, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
+}
+
+/** The same line when the model chose (#594, board `EntryGuessAi`): a spark, «предложено ИИ» and the «бета» mark (#643). */
+@Composable
+internal fun AiGuessCaption() {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+        Icon(painterResource(DesignR.drawable.ic_spark), contentDescription = null, Modifier.size(Spacing.l), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            stringResource(R.string.entry_category_guess_ai), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1, overflow = TextOverflow.Ellipsis,
+        )
+        BetaMark()
     }
 }

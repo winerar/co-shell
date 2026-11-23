@@ -15,6 +15,7 @@ import app.coshell.ai.cloud.PrefsCloudAiSettings
 import app.coshell.core.data.auth.AuthGateway
 import app.coshell.family.data.UrlConnectionHttpClient
 import app.coshell.core.domain.ai.CloudAiSettings
+import app.coshell.core.domain.ai.PayeeCategoryAi
 import app.coshell.core.domain.ai.RoutedLanguageModel
 import app.coshell.ai.ReleaseAddonPackage
 import app.coshell.core.domain.ai.LanguageModel
@@ -70,6 +71,9 @@ object AiModule {
     fun provideCloudAiSettings(impl: PrefsCloudAiSettings): CloudAiSettings = impl
 
     /** Cloud (#635, only when the person allowed it) → the phone → rules. `AI_PROXY_URL` is empty in builds without the Worker. */
+    @Provides
+    fun providePayeeCategoryAi(model: LanguageModel): PayeeCategoryAi = PayeeCategoryAi(model)
+
     @Provides
     @Named("aiProxyUrl")
     fun provideAiProxyUrl(): String = BuildConfig.AI_PROXY_URL

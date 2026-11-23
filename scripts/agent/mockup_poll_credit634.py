@@ -26,7 +26,7 @@ def form():
                        % (HERO_HINT, MONO, LIME), pad='12px 14px')
     types = ''.join(p.chip(t, t == 'Кредитка').replace('height: 36px', 'height: 32px') for t in ('Наличные', 'Карта', 'Вклад', 'Крипто', 'Другое', 'Проездной', 'Кредитка'))
     money = ('<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s%s</div>' % (p.detail('lock', 'Валюта', 'AMD · заблок.'), p.detail('refresh', 'Баланс сейчас', '−180 000,00'))
-             + '<div style="height: 6px;"></div>' + p.detail('wallet', 'Условия карты · Лимит 500 000 · платёж до 15-го · от 5 %', 'Изменить'))
+             + '<div style="height: 6px;"></div>' + p.detail('wallet', 'Условия карты', 'Лимит 500 000 · до 15-го · от 5 %'))
     body = (hero + p.name_line('Ameria · кредитка', 'wallet', COLOR) + p.block('Деньги', money)
             + p.block('Тип', '<div style="display: flex; flex-wrap: wrap; gap: 6px;">%s</div>' % types) + p.block('Цвет', p.color_row(COLOR)))
     return p.page('Счёт', body)

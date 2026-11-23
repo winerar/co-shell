@@ -98,6 +98,15 @@
       "is_interactive": true,
       "radius": 28
     },
+    "HomeCreditSoon.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: «Скоро» — платёж по кредитке, «Провести» (#686)",
+      "page": "screens",
+      "radius": 28
+    },
     "Operations.dc.html": {
       "x": 0,
       "y": 1240,
@@ -373,8 +382,44 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountEditExisting.dc.html": {
+    "CreditEdit.dc.html": {
       "x": 3290,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Кредитка: тип «Кредитка», плитка «Условия карты» (#686)",
+      "page": "screens",
+      "radius": 28
+    },
+    "CreditTerms.dc.html": {
+      "x": 3760,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Кредитка: «Условия карты» — минимальный платёж процентом (#686)",
+      "page": "screens",
+      "radius": 28
+    },
+    "CreditTermsSum.dc.html": {
+      "x": 4230,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Кредитка: «Условия карты» — минимальный платёж суммой (#686)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountsCredit.dc.html": {
+      "x": 4700,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: кредитка — платёж до, полоса «Доступно» (#686)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountEditExisting.dc.html": {
+      "x": 5170,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -383,7 +428,7 @@
       "radius": 28
     },
     "AccountDelete.dc.html": {
-      "x": 3760,
+      "x": 5640,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -392,7 +437,7 @@
       "radius": 28
     },
     "AccountBlocked.dc.html": {
-      "x": 4230,
+      "x": 6110,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -401,7 +446,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 4700,
+      "x": 6580,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -411,7 +456,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 5170,
+      "x": 7050,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -421,7 +466,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 5640,
+      "x": 7520,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -430,7 +475,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 6110,
+      "x": 7990,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3246,6 +3291,7 @@
     "HomeSync.dc.html",
     "UpdateWhatsNew.dc.html",
     "HomeGreeting.dc.html",
+    "HomeCreditSoon.dc.html",
     "Operations.dc.html",
     "OpsScrolled.dc.html",
     "OpsSelect.dc.html",
@@ -3276,6 +3322,10 @@
     "AccountPass.dc.html",
     "AccountPassCheck.dc.html",
     "AccountsPass.dc.html",
+    "CreditEdit.dc.html",
+    "CreditTerms.dc.html",
+    "CreditTermsSum.dc.html",
+    "AccountsCredit.dc.html",
     "AccountEditExisting.dc.html",
     "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
@@ -3628,13 +3678,13 @@
       "text": "Обзор",
       "x": 0,
       "y": -250,
-      "maxW": 2740,
+      "maxW": 3210,
       "w": 240
     },
     "s0": {
       "page": "screens",
       "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
-      "x": 2820,
+      "x": 3290,
       "y": 0,
       "w": 390
     },
@@ -3692,7 +3742,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 6500,
+      "maxW": 8380,
       "w": 240
     },
     "row5": {

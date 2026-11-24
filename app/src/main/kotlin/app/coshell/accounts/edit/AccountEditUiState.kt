@@ -27,6 +27,9 @@ data class AccountEditUiState(
     /** The minimum payment is a sum (`true`) or a percent of the debt. */
     val creditMinSum: Boolean = false,
     val creditMin: String = "",
+    /** Statement day and grace days (#634): optional, both or neither. */
+    val creditStatementDay: String = "",
+    val creditGraceDays: String = "",
     /** Saving was refused: the conditions of a credit card are not complete. */
     val creditError: Boolean = false,
     val cardDigits: String = "",

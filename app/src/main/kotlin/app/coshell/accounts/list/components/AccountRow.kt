@@ -23,10 +23,11 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
         },
     )
     val due = row.credit?.due?.let { stringResource(R.string.account_credit_due, formatDayMonthShort(it)) }
+    val grace = row.credit?.graceUntil?.let { stringResource(R.string.account_credit_grace_until, formatDayMonthShort(it)) }
     val personal = row.personalOf?.let {
         if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
     }
-    val base = listOfNotNull(type, due, personal).joinToString(" · ")
+    val base = listOfNotNull(type, due, grace, personal).joinToString(" · ")
     AccountLine(
         name = row.name,
         color = row.color,

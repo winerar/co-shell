@@ -28,6 +28,7 @@
 - `accounts.credit_limit_minor`, `credit_pay_day`, `credit_min_bp`, `credit_min_minor` (`NULL`, автомиграция 19→20, #686): кредитная карта. Хранится как тип `OTHER` + условия (как `prepaid`: новый тип старая версия не прочтёт).
   Минимальный платёж — `credit_min_bp` (доля долга в сотых процента, 500 = 5 %) **или** `credit_min_minor` (сумма); не заполнено ни то ни другое или нечитаемо — обычный счёт (`creditTermsOf`).
   В синке и бэкапе — необязательные поля `creditLimitMinor`, `creditPayDay`, `creditMinBp`, `creditMinMinor`. Долг — отрицательный баланс; «Доступно» = лимит − долг (`core:domain/credit/CreditCard`).
+- `accounts.credit_statement_day`, `credit_grace_days` (`NULL`, автомиграция 21→22, #634 шаг 2): день выписки и льготный период — **только напоминание**, проценты не считаются; оба или ни одного (половинка отбрасывается в `creditTermsOf`, карта остаётся картой). «Без процентов до» = последняя выписка + льготные дни, пока дата впереди, иначе следующая выписка + дни (`CreditCard.graceUntil`). В синке и бэкапе — необязательные `creditStatementDay`, `creditGraceDays`.
 
 ## Импорт (схема v6)
 - `transactions.import_batch_id` (`NULL` — не импорт, автомиграция 5→6, индекс) — пакет одной загрузки.

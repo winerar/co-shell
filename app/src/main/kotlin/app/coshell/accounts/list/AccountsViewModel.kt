@@ -185,6 +185,7 @@ class AccountsViewModel @Inject constructor(
             limit = moneyFormat.format(status.limit),
             used = (status.debt.amountMinor.toFloat() / status.limit.amountMinor).coerceIn(0f, 1f),
             due = status.dueDate,
+            graceUntil = status.graceUntil,
         )
     }
 }

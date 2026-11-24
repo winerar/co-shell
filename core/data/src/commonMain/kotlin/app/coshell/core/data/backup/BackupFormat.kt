@@ -82,11 +82,13 @@ internal data class AccountDto(
     val creditPayDay: Int? = null,
     val creditMinBp: Int? = null,
     val creditMinMinor: Long? = null,
+    val creditStatementDay: Int? = null,
+    val creditGraceDays: Int? = null,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
         isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits, prepaid,
-        creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor),
+        creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor, creditStatementDay, creditGraceDays),
     )
 }
 
@@ -97,6 +99,8 @@ internal fun Account.toDto() = AccountDto(
     creditPayDay = credit?.payDay,
     creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
     creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
+    creditStatementDay = credit?.statementDay,
+    creditGraceDays = credit?.graceDays,
 )
 
 @Serializable

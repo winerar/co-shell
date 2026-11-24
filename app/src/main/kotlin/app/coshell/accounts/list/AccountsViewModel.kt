@@ -171,6 +171,7 @@ class AccountsViewModel @Inject constructor(
         isNegative = item.balance.isNegative,
         excludedFromTotal = item.account.excludedFromTotal,
         color = item.account.color,
+        localOnly = item.account.localOnly,
         // Labels matter only with other members around.
         personalOf = if (item.account.isShared || others.isEmpty()) null else others[item.account.ownerMemberId].orEmpty(),
         converted = if (item.account.currency == main) null else convert(listOf(item.balance)),

@@ -89,6 +89,8 @@ class AccountEditViewModel @Inject constructor(
                     prepaid = account.prepaid,
                     credit = account.credit != null,
                     shared = account.isShared,
+                    localOnly = account.localOnly,
+                    localOnlyLocked = !account.localOnly,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
@@ -166,6 +168,8 @@ class AccountEditViewModel @Inject constructor(
         _state.update { it.copy(cardDigits = value.filter { c -> c in '0'..'9' }.take(Account.CARD_DIGITS), cardDigitsError = false) }
 
     fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
+
+    fun onLocalOnlyChange(value: Boolean) = _state.update { if (it.localOnlyLocked) it else it.copy(localOnly = value) }
 
     fun save() {
         val current = _state.value

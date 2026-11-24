@@ -43,7 +43,7 @@ internal fun moreSections(actions: MoreActions, draftCount: Int = 0, versionName
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, stringResource(R.string.budgets_menu_hint), actions.onBudgets),
                 MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
-                MoreItem(DesignR.drawable.ic_person_add, R.string.debts_title, stringResource(R.string.debts_menu_hint), actions.onDebts),
+                MoreItem(DesignR.drawable.ic_person_add, R.string.debts_title, stringResource(R.string.debts_menu_hint), actions.onDebts, NewFeatures.DEBTS),
                 MoreItem(DesignR.drawable.ic_edit_note, R.string.notes_title, stringResource(R.string.notes_menu_hint), actions.onNotes),
                 MoreItem(DesignR.drawable.ic_draft, R.string.drafts_title, stringResource(R.string.drafts_menu_hint), actions.onDrafts, count = draftCount.takeIf { it > 0 }),
             ),
@@ -67,13 +67,13 @@ internal fun moreSections(actions: MoreActions, draftCount: Int = 0, versionName
         MoreSection(
             R.string.more_section_app,
             listOf(
-                MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, stringResource(R.string.settings_menu_hint), actions.onSettings),
+                MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, stringResource(R.string.settings_menu_hint), actions.onSettings, NewFeatures.SETTINGS_CLOUD),
                 MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, stringResource(R.string.feedback_menu_hint), actions.onFeedback),
                 MoreItem(
                     DesignR.drawable.ic_info, R.string.about_title,
                     if (availableVersion != null) stringResource(R.string.more_version_available, availableVersion) else stringResource(R.string.more_version_quiet, versionName, build),
-                    actions.onOpenUpdate, fresh = availableVersion != null,
+                    actions.onOpenUpdate, NewFeatures.ABOUT, fresh = availableVersion != null,
                 ),
             ),
         ),

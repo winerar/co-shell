@@ -12,6 +12,8 @@ import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
 import app.coshell.crash.CrashLog
 import app.coshell.crash.CrashRecorder
 import app.coshell.currencies.data.LegacyReportCurrencies
+import app.coshell.backup.auto.AutoBackupScheduler
+import app.coshell.backup.auto.AutoBackupSettings
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
@@ -36,6 +38,8 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var crashLog: CrashLog
     @Inject lateinit var reminderWatch: ReminderWatch
     @Inject lateinit var launcherShortcuts: LauncherShortcuts
+    @Inject lateinit var autoBackupSettings: AutoBackupSettings
+    @Inject lateinit var autoBackupScheduler: AutoBackupScheduler
 
     /** Lives as long as the process; for short one-off startup work only. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -63,6 +67,8 @@ class CoShellApp : Application(), Configuration.Provider {
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
             RecurringPaymentsScheduler.schedule(this@CoShellApp)
+            // The hourly check of the automatic copy (#606); also moves phones off the old once-a-week job.
+            if (autoBackupSettings.config.value.folderUri != null) autoBackupScheduler.ensureChecking()
         }
         // The payment reminder goes away once the payment is handled here or on the other phone (#406).
         appScope.launch { reminderWatch.run() }

@@ -45,8 +45,15 @@ data class AccountEditUiState(
     val cardDigitsError: Boolean = false,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */
     val shared: Boolean = true,
+    /** «Только у меня» (#558): the account and its operations stay on this phone. */
+    val localOnly: Boolean = false,
     /** The family has other members, so «shared / personal» means something. */
     val showSharing: Boolean = false,
+    /**
+     * «Только у меня» can be switched on only while creating (a saved account may already be in the cloud);
+     * switching it off later is always possible (the account and its operations then go to the family).
+     */
+    val localOnlyLocked: Boolean = false,
     /** The account has transactions, so its currency cannot be changed. */
     val currencyLocked: Boolean = false,
     val suggestedCurrencies: List<String> = emptyList(),

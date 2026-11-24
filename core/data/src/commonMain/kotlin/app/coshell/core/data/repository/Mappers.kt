@@ -53,6 +53,7 @@ internal fun AccountEntity.toModel() = Account(
     prepaid = prepaid,
     credit = credit(),
     deposit = depositTermsOf(depositRateBp, depositEnd, depositPayout, depositStart),
+    localOnly = localOnly,
 )
 
 /** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
@@ -103,6 +104,7 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     depositStart = deposit?.startDate?.toString(),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
+    localOnly = localOnly,
 )
 
 internal fun CategoryEntity.toModel() = Category(

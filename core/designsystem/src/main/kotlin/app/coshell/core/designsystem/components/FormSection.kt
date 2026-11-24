@@ -154,7 +154,7 @@ fun CoShellSwitchLine(title: String, subtitle: String, checked: Boolean, onCheck
                 subtitle,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
         }

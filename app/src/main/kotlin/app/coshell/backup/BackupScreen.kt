@@ -30,7 +30,7 @@ import app.coshell.ui.form.ConfirmDialog
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
-/** «Ещё → Резервная копия»: the weekly copy (ring, folder, switch), manual save/restore, the last result, the wipe. */
+/** «Ещё → Резервная копия»: the automatic copy (ring, folder, switch), manual save/restore, the last result, the wipe. */
 @Composable
 fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupUiState = AutoBackupUiState()) {
     Scaffold(
@@ -45,7 +45,7 @@ fun BackupScreen(state: BackupUiState, actions: BackupActions, auto: AutoBackupU
             // Board Backup: the countdown to the next automatic copy first (is the family's data safe?),
             // its folder and switch, then «Вручную» — two tiles.
             BackupHero(auto, Modifier.padding(top = Spacing.s))
-            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto)
+            AutoBackupSection(auto, actions.onChooseAutoFolder, actions.onDisableAuto, actions.onAutoSchedule)
             CoShellSectionLabel(
                 stringResource(R.string.backup_manual),
                 Modifier.padding(start = Spacing.l, end = Spacing.l, top = Spacing.m),

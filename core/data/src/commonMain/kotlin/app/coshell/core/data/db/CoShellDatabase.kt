@@ -20,7 +20,7 @@ import kotlinx.coroutines.IO
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class, DebtEventEntity::class,
     ],
-    version = 24,
+    version = 25,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -46,6 +46,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 23, to = 24), // v24: accounts.deposit_start — the day a deposit was opened (#634)
         AutoMigration(from = 22, to = 23), // v23: accounts.deposit_rate_bp, deposit_end, deposit_payout — deposit conditions (#634)
         AutoMigration(from = 21, to = 22), // v22: accounts.credit_statement_day, credit_grace_days — grace period of a credit card (#634)
+        AutoMigration(from = 24, to = 25), // v25: accounts.local_only — «Только у меня» (#558)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)

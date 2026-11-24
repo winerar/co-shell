@@ -28,7 +28,8 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
     val personal = row.personalOf?.let {
         if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
     }
-    val base = listOfNotNull(type, deposit, due, grace, personal).joinToString(" · ")
+    val mineOnly = if (row.localOnly) stringResource(R.string.account_local_only_label) else null
+    val base = listOfNotNull(type, deposit, due, grace, personal, mineOnly).joinToString(" · ")
     AccountLine(
         name = row.name,
         color = row.color,
@@ -41,5 +42,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
         warn = row.excludedFromTotal,
         below = row.credit?.let { credit -> { CreditMeter(credit) } }
             ?: row.deposit?.takeIf { it.income != null }?.let { dep -> { DepositIncomeLine(dep) } },
+        locked = row.localOnly,
+        lockedDescription = mineOnly,
     )
 }

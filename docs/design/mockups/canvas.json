@@ -462,8 +462,17 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountBlocked.dc.html": {
+    "AccountEditLocal.dc.html": {
       "x": 6580,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счёт: «Только у меня»",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountBlocked.dc.html": {
+      "x": 7050,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -472,7 +481,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 7050,
+      "x": 7520,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -482,7 +491,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 7520,
+      "x": 7990,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -492,7 +501,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 7990,
+      "x": 8460,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -501,7 +510,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 8460,
+      "x": 8930,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3600,6 +3609,7 @@
     "CreditTermsGrace.dc.html",
     "AccountsCreditGrace.dc.html",
     "AccountEditExisting.dc.html",
+    "AccountEditLocal.dc.html",
     "AccountBlocked.dc.html",
     "Colors.dc.html",
     "Categories.dc.html",
@@ -4041,7 +4051,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 8850,
+      "maxW": 9320,
       "w": 240
     },
     "row5": {

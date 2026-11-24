@@ -203,8 +203,18 @@ def account_existing():
             + field('Название', 'Galicia') + field('Валюта', 'ARS', hint='По счёту уже есть операции — валюту изменить нельзя', trail=svg('lock', MUTED, 18))
             + field('Начальный баланс', '−15 000,00', error='Слишком много знаков после запятой для этой валюты', mono=True)
             + '<div style="margin-top: 12px;">' + group([row('Учитывать в общем балансе', 'Выключите для долга или чужих денег', '', switch(True)),
-                                                         row('Общий счёт', 'Выключите для личного — он останется виден всей семье', '', switch(False))]) + '</div>')
+                                                         ]) + '</div>'
+            + note('«Только у меня» включается при создании счёта.'))
     return inner_screen('Счёт', body, acts) + form_footer()
+
+
+def account_local():
+    """«Только у меня» (#558, poll A): a new account in a family — the switch on, the note about transfers."""
+    body = (field('Название', 'Моя копилка') + field('Валюта', 'ARS')
+            + '<div style="margin-top: 12px;">' + group([row('Учитывать в общем балансе', 'Выключите для долга или чужих денег', '', switch(True)),
+                                                         row('Только у меня', 'Другие участники семьи не увидят счёт и операции по нему', '', switch(True))]) + '</div>'
+            + note('Переводы между этим счётом и общими другие участники не увидят.'))
+    return inner_screen('Счёт', body, '') + form_footer()
 
 
 def account_blocked():
@@ -231,6 +241,6 @@ BOARDS = [
     ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
     ('EntryAllAccounts', '5 · Шторка: «Все ›» — все счета, как на «Счетах»', lambda: _entry().all_accounts()),
     ('CategoryBlocked', '7 · Категория: удалить нельзя', category_blocked),
-    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing),
+    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountEditLocal', '9 · Счёт: «Только у меня»', account_local),
     ('AccountBlocked', '9 · Счёт: удалить нельзя', account_blocked),
 ]

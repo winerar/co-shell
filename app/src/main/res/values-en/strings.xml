@@ -137,7 +137,6 @@
     <string name="account_bank_like">Like %1$s</string>
     <string name="account_banks">Banks and apps</string>
     <string name="account_included_in_total_short">Turn off for debts or someone else\'s money</string>
-    <string name="account_shared_short">Turn off for a personal account</string>
     <string name="account_initial_balance_error">Enter the amount in digits</string>
     <string name="account_initial_balance_fraction_error">Too many decimal places</string>
     <string name="account_delete_blocked_title">This account can\'t be deleted</string>
@@ -437,24 +436,41 @@
     <string name="rates_sources">Sources: fawazahmed0/currency-api and</string>
     <string name="rates_sources_daily">Rates update automatically once a day.</string>
 
-    <string name="account_shared">Shared account</string>
-    <string name="account_shared_hint">Turn off for a personal account — everyone still sees it, marked “personal”</string>
+    <string name="account_local_only">Only me</string>
+    <string name="account_local_only_short">Other family members won\'t see this account or its transactions</string>
+    <string name="account_local_only_transfers">Other members won\'t see transfers between this account and shared ones.</string>
+    <string name="account_local_only_off">If you turn this off, other members will see the account and all its transactions.</string>
+    <string name="account_local_only_locked">“Only me” can be turned on only when creating an account.</string>
+    <string name="account_local_only_label">only me</string>
     <string name="account_personal_mine">personal</string>
     <string name="account_selected">Selected</string>
     <string name="account_personal_of">personal · %1$s</string>
 
-    <string name="auto_backup_title">Automatically once a week</string>
+    <string name="auto_backup_title">Auto backup</string>
     <string name="auto_backup_on">Auto backup is on</string>
     <string name="auto_backup_choose">Choose a folder for auto backups</string>
     <string name="auto_backup_folder">Folder: %1$s</string>
-    <string name="auto_backup_off">Choose a folder — a backup will be saved there once a week; the last 8 are kept.</string>
+    <string name="auto_backup_off">Choose a folder — backups will be saved there on their own: daily, weekly or monthly.</string>
     <string name="auto_backup_pending">The first backup will appear soon</string>
-    <string name="auto_backup_last">Last: %1$s · once a week</string>
+    <string name="auto_backup_last">Last: %1$s</string>
     <string name="auto_backup_failed">Couldn\'t save the backup. Choose the folder again — access to it may have been lost</string>
     <string name="auto_backup_off_title">Auto backup is off</string>
     <string name="auto_backup_failed_title">Backup wasn\'t saved</string>
     <string name="auto_backup_folder_change">tap to change</string>
     <string name="auto_backup_folder_hint">on the phone or Google Drive</string>
+    <string name="auto_backup_period_daily">Every day</string>
+    <string name="auto_backup_period_weekly">Once a week</string>
+    <string name="auto_backup_period_monthly">Once a month</string>
+    <string name="auto_backup_month_hint">If the month is shorter, the backup is made on its last day.</string>
+    <string name="auto_backup_time">Time</string>
+    <string name="auto_backup_time_hint">The backup is saved at this time, or a little later if the phone is busy.</string>
+    <string name="auto_backup_keep">Keep</string>
+    <string name="auto_backup_keep_hint">Older backups in the folder are deleted. Backups you save by hand stay.</string>
+    <string name="auto_backup_next">Next: %1$s, %2$s</string>
+    <plurals name="auto_backup_keep_value">
+        <item quantity="one">last %1$d backup</item>
+        <item quantity="other">last %1$d backups</item>
+    </plurals>
     <plurals name="auto_backup_days_left">
         <item quantity="one">day until backup</item>
         <item quantity="other">days until backup</item>

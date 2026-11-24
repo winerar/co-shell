@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
+import app.coshell.access.AccessEntry
+import app.coshell.access.AccessError
+import app.coshell.access.AccessScreen
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditScreen
 import app.coshell.accounts.edit.accountEditStressSample
@@ -55,6 +58,9 @@ class ScreensAccessibilityTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
     @Test fun `home`() = audit("home") { HomeScreen(homeStressSample) }
+
+    // The invitation code screen (#666), with the longest error.
+    @Test fun `access`() = audit("access") { AccessScreen(AccessEntry(error = AccessError.FULL), onSubmit = {}) }
 
     @Test fun `accounts`() = audit("accounts") { AccountsScreen(accountsStressSample, AccountsActions()) }
 

@@ -1,8 +1,11 @@
 package app.coshell.core.data.backup
 
 import app.coshell.core.data.repository.ScheduleCodec
+import app.coshell.core.data.repository.creditTermsOf
+import app.coshell.core.data.repository.depositTermsOf
 import app.coshell.core.data.repository.storedLimitMinor
 import app.coshell.core.model.Account
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
@@ -12,6 +15,9 @@ import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
+import app.coshell.core.model.DebtDirection
+import app.coshell.core.model.DebtEvent
+import app.coshell.core.model.DebtEventKind
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
@@ -42,6 +48,8 @@ internal data class BackupFile(
     val settings: List<SettingDto> = emptyList(),
     /** Since schema v11: operation tags (#129); operations reference them from `labels`. */
     val tags: List<TagDto> = emptyList(),
+    /** Since schema v21: events of debts and loans (#552); optional, no version bump. */
+    val debtEvents: List<DebtEventDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -69,16 +77,44 @@ internal data class AccountDto(
     val sortOrder: Int = 0,
     val excludedFromTotal: Boolean = false,
     val color: Long? = null,
+    val cardDigits: String? = null,
+    val prepaid: Boolean = false,
+    val creditLimitMinor: Long? = null,
+    val creditPayDay: Int? = null,
+    val creditMinBp: Int? = null,
+    val creditMinMinor: Long? = null,
+    val creditStatementDay: Int? = null,
+    val creditGraceDays: Int? = null,
+    val depositRateBp: Int? = null,
+    val depositEnd: String? = null,
+    val depositPayout: String? = null,
+    val depositStart: String? = null,
+    /** «Только у меня» (#558); absent in older copies — shared. */
+    val localOnly: Boolean = false,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
-        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color,
+        isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits, prepaid,
+        creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor, creditStatementDay, creditGraceDays),
+        depositTermsOf(depositRateBp, depositEnd, depositPayout, depositStart),
+        localOnly = localOnly,
     )
 }
 
 internal fun Account.toDto() = AccountDto(
     id, name, currency.value, type.name, initialBalanceMinor, isShared, ownerMemberId, archived, sortOrder,
-    excludedFromTotal, color,
+    excludedFromTotal, color, cardDigits, prepaid,
+    creditLimitMinor = credit?.limitMinor,
+    creditPayDay = credit?.payDay,
+    creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
+    creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
+    creditStatementDay = credit?.statementDay,
+    creditGraceDays = credit?.graceDays,
+    depositRateBp = deposit?.rateBp,
+    depositEnd = deposit?.endDate?.toString(),
+    depositPayout = deposit?.payout?.name,
+    depositStart = deposit?.startDate?.toString(),
+    localOnly = localOnly,
 )
 
 @Serializable
@@ -221,3 +257,29 @@ internal data class TagDto(val id: String, val name: String, val color: Long? = 
 }
 
 internal fun Tag.toDto() = TagDto(id, name, color)
+
+/** One event of a debt (#552); [kind] and [direction] are enum names, [date] — epoch ms UTC, [dueDate] — `YYYY-MM-DD`. */
+@Serializable
+internal data class DebtEventDto(
+    val id: String,
+    val debtId: String,
+    val kind: String,
+    val direction: String,
+    val amount: MoneyDto,
+    val accountId: String? = null,
+    val date: Long,
+    val person: String = "",
+    val dueDate: String? = null,
+    val note: String = "",
+) {
+    fun toModel() = DebtEvent(
+        id, debtId, DebtEventKind.valueOf(kind), DebtDirection.valueOf(direction), amount.toModel(),
+        Instant.fromEpochMilliseconds(date), accountId, person, dueDate?.let(LocalDate::parse), note,
+    )
+}
+
+internal fun DebtEvent.toDto() = DebtEventDto(
+    id, debtId, kind.name, direction.name, MoneyDto(amount.amountMinor, amount.currency.value),
+    accountId, date.toEpochMilliseconds(), person, dueDate?.toString(), note,
+)
+

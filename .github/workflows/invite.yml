@@ -1,0 +1,56 @@
+name: "Приглашения: коды для закрытого теста"
+
+# Codes for the closed test (docs/setup/invite.md, #667). Run by hand: Actions → this workflow → Run workflow.
+# The result is in the run's summary — only people with access to the repository see it.
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Что сделать"
+        type: choice
+        options: ["выдать код", "отозвать код", "показать все коды"]
+        default: "выдать код"
+      name:
+        description: "Выдать: для кого (имя, как вам удобно)"
+        required: false
+      code:
+        description: "Отозвать: код (K7QX-M2PD-9WTA)"
+        required: false
+      devices:
+        description: "Выдать: сколько телефонов (1–10)"
+        required: false
+        default: "3"
+
+concurrency:
+  group: invite
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  codes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      ACTION: ${{ inputs.action }}
+      NAME: ${{ inputs.name }}
+      CODE: ${{ inputs.code }}
+      DEVICES: ${{ inputs.devices }}
+    steps:
+      - name: Check setup
+        if: env.FIREBASE_SERVICE_ACCOUNT == ''
+        run: echo "::error::Секрет FIREBASE_SERVICE_ACCOUNT не задан (docs/setup/sync.md)" && exit 1
+
+      - uses: actions/checkout@v7
+
+      - name: Run
+        run: |
+          pip install --quiet google-auth requests
+          case "$ACTION" in
+            "выдать код")       python3 scripts/invite_codes.py create "$NAME" --max-devices "${DEVICES:-3}" ;;
+            "отозвать код")     python3 scripts/invite_codes.py revoke "$CODE" ;;
+            *)                  python3 scripts/invite_codes.py list ;;
+          esac

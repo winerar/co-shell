@@ -27,7 +27,7 @@ def labeled(demo, text):
 
 # ---- Шапки (TopAppBar → CoShellTopBar) ----
 def top_bar_v2(kind, title, actions=(), scrolled=False):
-    bg = 'background: %s;' % BAR if scrolled else ''
+    bg = 'background: %s;' % PANEL if scrolled else ''
     acts = ''.join(icon_button(a, a) for a in actions)
     if kind == 'tab':
         lead, size = '<span style="width: 8px;"></span>', 28
@@ -89,7 +89,7 @@ def dot(color=LIME, size=8):
 
 def status_chip(text, kind):
     """A status label (Style2): 22 capsule tinted 18 %, the colour only in the dot, the words in ink."""
-    col = {'new': CYAN, 'work': WARN, 'done': OK, 'no': MUTED}[kind]
+    col = {'new': CYAN, 'work': WARN, 'done': OK, 'no': MUTED, 'manual': VIOLET}[kind]
     return ('<span style="height: 22px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; '
             'display: inline-flex; align-items: center; gap: 5px;">%s%s</span>' % (mix(col, 18), INK, dot(col, 6), text))
 

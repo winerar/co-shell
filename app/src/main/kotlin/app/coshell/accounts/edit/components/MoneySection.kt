@@ -21,6 +21,7 @@ import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.model.AccountType
 import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
 
@@ -34,6 +35,8 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
     var currencyOpen by rememberSaveable { mutableStateOf(false) }
     var balanceOpen by rememberSaveable { mutableStateOf(false) }
     var adjustOpen by rememberSaveable { mutableStateOf(false) }
+    var creditOpen by rememberSaveable { mutableStateOf(false) }
+    var depositOpen by rememberSaveable { mutableStateOf(false) }
     CoShellFormSection(stringResource(R.string.account_section_money)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
             CoShellDetailTile(
@@ -48,24 +51,47 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 modifier = Modifier.weight(1f),
                 empty = state.currency.isBlank() || state.currencyLocked,
             )
-            CoShellDetailTile(
-                icon = painterResource(DesignR.drawable.ic_account_balance_wallet),
-                label = stringResource(R.string.account_initial_balance_short),
-                value = state.initialBalance.ifBlank { "0" },
-                onClick = { balanceOpen = true },
-                modifier = Modifier.weight(1f),
-                empty = state.initialBalance.isBlank(),
-                amount = true,
-            )
+            // A saved travel pass has no starting balance to show: its number is «Баланс на карте» below (#645).
+            if (!(state.prepaid && state.canAdjust)) {
+                CoShellDetailTile(
+                    icon = painterResource(DesignR.drawable.ic_account_balance_wallet),
+                    label = stringResource(if (state.prepaid) R.string.account_balance_on_card else R.string.account_initial_balance_short),
+                    value = state.initialBalance.ifBlank { "0" },
+                    onClick = { balanceOpen = true },
+                    modifier = Modifier.weight(1f),
+                    empty = state.initialBalance.isBlank(),
+                    amount = true,
+                )
+            }
         }
         if (state.canAdjust) {
             CoShellDetailTile(
                 icon = painterResource(DesignR.drawable.ic_refresh),
-                label = stringResource(R.string.account_balance_now),
+                label = stringResource(if (state.prepaid) R.string.account_balance_on_card_check else R.string.account_balance_now),
                 value = state.currentBalance,
                 onClick = { adjustOpen = true },
                 modifier = Modifier.fillMaxWidth(),
                 amount = true,
+            )
+        }
+        if (state.credit) {
+            CoShellDetailTile(
+                icon = painterResource(DesignR.drawable.ic_credit_card),
+                label = stringResource(R.string.account_credit_terms),
+                value = creditSummary(state),
+                onClick = { creditOpen = true },
+                modifier = Modifier.fillMaxWidth(),
+                empty = state.creditLimit.isBlank(),
+            )
+        }
+        if (state.type == AccountType.DEPOSIT && !state.credit && !state.prepaid) {
+            CoShellDetailTile(
+                icon = painterResource(DesignR.drawable.ic_savings),
+                label = stringResource(R.string.account_deposit_terms),
+                value = depositSummary(state),
+                onClick = { depositOpen = true },
+                modifier = Modifier.fillMaxWidth(),
+                empty = state.depositRate.isBlank(),
             )
         }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
@@ -75,9 +101,19 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
             CurrencyFields(state, actions.onCurrencyChange)
         }
     }
+    if (depositOpen) {
+        FormSheet(stringResource(R.string.account_deposit_terms), onClosed = { depositOpen = false }) {
+            DepositTermsFields(state, actions)
+        }
+    }
+    if (creditOpen) {
+        FormSheet(stringResource(R.string.account_credit_terms), onClosed = { creditOpen = false }) {
+            CreditTermsFields(state, actions)
+        }
+    }
     if (adjustOpen) {
         FormSheet(
-            stringResource(R.string.account_balance_adjust_title),
+            stringResource(if (state.prepaid) R.string.account_balance_check_title else R.string.account_balance_adjust_title),
             // Closed without «Сохранить баланс» — the typed number is dropped, nothing waits for «Сохранить».
             onClosed = { adjustOpen = false; actions.onActualBalanceChange("") },
             actionLabel = stringResource(R.string.account_balance_save),
@@ -101,6 +137,8 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
 
 @Composable
 private fun moneyError(state: AccountEditUiState): String? = when {
+    state.creditError -> stringResource(R.string.account_credit_error)
+    state.depositError -> stringResource(R.string.account_deposit_error)
     state.currencyError == CurrencyError.INVALID -> stringResource(R.string.account_currency_error)
     state.currencyError == CurrencyError.LOCKED -> stringResource(R.string.account_currency_locked)
     state.balanceError == BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)

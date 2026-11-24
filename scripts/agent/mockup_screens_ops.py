@@ -58,12 +58,12 @@ def bar():
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; '
             'display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
             '<span style="{{pillStyle}}"></span>%s%s%s%s%s</nav>'
-            % (BAR, tab('home', 'home', 'Обзор'), tab('ops', 'list', 'Операции'), plus, tab('rep', 'chart', 'Отчёты'), tab('more', 'more', 'Ещё')))
+            % (PANEL, tab('home', 'home', 'Обзор'), tab('ops', 'list', 'Операции'), plus, tab('rep', 'chart', 'Отчёты'), tab('more', 'more', 'Ещё')))
 
 
 def select_bar():
     return ('<div style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
-            '%s%s</div>' % (BAR, tap('<span style="{{dupSelStyle}}">%sДублировать</span>' % svg('copy', INK, 20), 'dupSel'),
+            '%s%s</div>' % (PANEL, tap('<span style="{{dupSelStyle}}">%sДублировать</span>' % svg('copy', INK, 20), 'dupSel'),
                             tap('<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · {{selCount}}</span>'
                                 % (PINKBG, PINK, svg('trash', PINK, 20)), 'delSel')))
 

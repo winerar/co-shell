@@ -10,6 +10,10 @@ import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.model.TransactionTemplate
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.SaveTransactionUseCase
+import app.coshell.core.domain.ai.NoLanguageModel
+import app.coshell.core.domain.ai.PayeeCategoryAi
+import app.coshell.core.domain.ai.ReceiptAi
+import app.coshell.receipt.inbox.UnreadReceipts
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -22,6 +26,7 @@ import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
 import app.coshell.navigation.TransactionEditDestination
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.undo.SavedEntries
 import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
@@ -56,6 +61,9 @@ abstract class TransactionEditTestBase {
     protected val categories = FakeCategoryRepository()
     protected val transactions = FakeTransactionRepository()
     protected val drafts = InMemoryDraftRepository()
+    protected val entryDraftStore = app.coshell.core.domain.quickentry.InMemoryEntryDraftStore()
+    /** Another «now» for a test that waits (the draft of #323 grows old); the view model reads it through the clock. */
+    protected var nowOverride: Instant? = null
 
     protected suspend fun seed() {
         accounts.saveAccount(Account("card", "Карта", ars, sortOrder = 0))
@@ -79,7 +87,12 @@ abstract class TransactionEditTestBase {
         templateId: String? = null,
         receiptQr: String? = null,
         receiptUnread: Boolean = false,
+        creditCardId: String? = null,
         draftId: String? = null,
+        categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
+        savedEntries: SavedEntries = SavedEntries { _, _ -> },
+        receiptAi: ReceiptAi = ReceiptAi(NoLanguageModel),
+        unreadReceipts: UnreadReceipts = UnreadReceipts.NONE,
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -90,6 +103,7 @@ abstract class TransactionEditTestBase {
                 TransactionEditDestination.ARG_RECEIPT_QR to receiptQr,
                 TransactionEditDestination.ARG_RECEIPT_UNREAD to receiptUnread,
                 TransactionEditDestination.ARG_DRAFT_ID to draftId,
+                TransactionEditDestination.ARG_CREDIT_CARD to creditCardId,
             ),
         ),
         accounts = accounts,
@@ -98,7 +112,7 @@ abstract class TransactionEditTestBase {
         saveTransaction = SaveTransactionUseCase(accounts, categories, transactions),
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
-        clock = object : Clock { override fun now(): Instant = now },
+        clock = object : Clock { override fun now(): Instant = nowOverride ?: now },
         timeZone = zone,
         rates = rates,
         deleteWithUndo = DeleteTransactionWithUndo(transactions, UndoCenter()),
@@ -106,6 +120,11 @@ abstract class TransactionEditTestBase {
         entryTags = fakeEntryTags(),
         entryTip = fakeEntryTip(categories, transactions, tipSettings),
         drafts = drafts,
+        categoryAi = categoryAi,
+        entryDrafts = entryDraftStore,
+        savedEntries = savedEntries,
+        receiptAi = receiptAi,
+        unreadReceipts = unreadReceipts,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

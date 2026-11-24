@@ -1,4 +1,4 @@
-"""python3 -m unittest scripts/ci/test_version_name.py — release version = merges into main (#268)."""
+"""python3 -m unittest scripts/ci/test_version_name.py — release version = YY.M.N (releases of the month)."""
 import os
 import subprocess
 import sys
@@ -12,71 +12,40 @@ SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "version_name.
 
 
 class VersionNameTest(unittest.TestCase):
-    def test_minor_is_merges_minus_offset(self):
-        self.assertEqual(version_name.version_name(0, 0, 37), "0.37")
-        self.assertEqual(version_name.version_name(1, 40, 42), "1.2")
-        self.assertEqual(version_name.version_name(1, 40, 40), "1.0")
+    def test_formats_two_digit_year_and_plain_month(self):
+        self.assertEqual(version_name.version_name(2026, 12, 1), "26.12.1")
+        self.assertEqual(version_name.version_name(2027, 1, 3), "27.1.3")
 
-    def test_minor_never_negative(self):
-        self.assertEqual(version_name.version_name(1, 40, 3), "1.0")
+    def test_number_is_at_least_one(self):
+        self.assertEqual(version_name.version_name(2026, 12, 0), "26.12.1")
 
-    def test_counts_first_parent_merges_of_head(self):
+    def test_counts_merges_of_the_head_month_only(self):
         with tempfile.TemporaryDirectory() as repo:
-            env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t",
-                       GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
-
-            def git(*args):
-                subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True)
-
-            with open(os.path.join(repo, "version.properties"), "w") as f:
-                f.write("# comment\nmajor=0\nminorOffset=1\n")
-            git("init", "-q", "-b", "main")
-            git("add", ".")
-            git("commit", "-q", "-m", "base")
-            for i in range(3):  # three releases: a commit on dev merged into main
-                git("checkout", "-q", "-b", f"dev{i}")
-                git("commit", "-q", "--allow-empty", "-m", f"work {i}")
-                git("checkout", "-q", "main")
-                git("merge", "-q", "--no-ff", f"dev{i}", "-m", f"release {i}")
-            out = subprocess.run([sys.executable, SCRIPT, repo], check=True, capture_output=True, text=True).stdout
-            self.assertEqual(out.strip(), "0.2")
-
-    def test_new_major_starts_at_zero_and_counts_releases_after_it(self):
-        with tempfile.TemporaryDirectory() as repo:
-            env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t",
-                       GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
-
-            def git(*args):
+            def git(when, *args):
+                env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t", GIT_COMMITTER_NAME="t",
+                           GIT_COMMITTER_EMAIL="t@t", GIT_AUTHOR_DATE=when, GIT_COMMITTER_DATE=when)
                 subprocess.run(["git", *args], cwd=repo, env=env, check=True, capture_output=True)
 
             def version():
                 return subprocess.run([sys.executable, SCRIPT, repo], check=True, capture_output=True,
                                       text=True).stdout.strip()
 
-            def release(n, major):
-                git("checkout", "-q", "-b", f"dev{n}")
-                with open(os.path.join(repo, "version.properties"), "w") as f:
-                    f.write(f"major={major}\n")
-                git("add", ".")
-                git("commit", "-q", "--allow-empty", "-m", f"work {n}")
-                git("checkout", "-q", "main")
-                git("merge", "-q", "--no-ff", f"dev{n}", "-m", f"release {n}")
+            def release(n, when):
+                git(when, "checkout", "-q", "-b", f"dev{n}")
+                git(when, "commit", "-q", "--allow-empty", "-m", f"work {n}")
+                git(when, "checkout", "-q", "main")
+                git(when, "merge", "-q", "--no-ff", f"dev{n}", "-m", f"release {n}")
 
-            with open(os.path.join(repo, "version.properties"), "w") as f:
-                f.write("major=0\nminorOffset=0\n")
-            git("init", "-q", "-b", "main")
-            git("add", ".")
-            git("commit", "-q", "-m", "base")
-            release(0, 0)
-            release(1, 0)
-            self.assertEqual(version(), "0.2")
-            release(2, 1)  # the owner raised major: this release is 1.0, no offset to compute
-            self.assertEqual(version(), "1.0")
-            release(3, 1)
-            release(4, 1)
-            self.assertEqual(version(), "1.2")
-            release(5, 2)
-            self.assertEqual(version(), "2.0")
+            git("2026-11-02T10:00:00Z", "init", "-q", "-b", "main")
+            git("2026-11-02T10:00:00Z", "commit", "-q", "--allow-empty", "-m", "base")
+            release(1, "2026-11-30T10:00:00Z")
+            self.assertEqual(version(), "26.11.1")
+            release(2, "2026-12-07T10:00:00Z")
+            self.assertEqual(version(), "26.12.1")
+            release(3, "2026-12-14T10:00:00Z")  # a weekly release or a hotfix: the next number
+            self.assertEqual(version(), "26.12.2")
+            release(4, "2027-01-04T10:00:00Z")
+            self.assertEqual(version(), "27.1.1")
 
 
 if __name__ == "__main__":

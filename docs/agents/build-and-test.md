@@ -44,6 +44,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   сам. Поменял `firestore.rules`, `database.rules.json` или `core:data/remote` — прогони. В обычном `check` этот тест пропускается.
   CI сам гоняет правила при их изменении и публикует их после мержа в `dev` (`ci.md` §«Правила Firebase»):
   задачу владельцу «опубликовать правила» больше не заводить.
+- Worker облачного ИИ (`tools/ai-proxy`) — `node --test tools/ai-proxy/worker.test.mjs` (Node 20+, вручную; в CI пока нет).
 - Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` и то же для `-s scripts/ci` (шаг в CI).
 - ViewModel с `flowOn(Dispatchers.Default)` в тесте: поток доезжает после `resetMain` и роняет **следующий** тест
   (`UncaughtExceptionsBeforeTest`). Делай контекст подменяемым — `internal var work = Dispatchers.Default`, `state by lazy`
@@ -58,7 +59,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   образцах из `*Previews.kt` (`internal val …PreviewSample`), обе темы; эталоны — `app/src/test/screenshots/`.
   Часы Compose стоят и проматываются на 3 с (каскад появления блоков доходит до конца). `agent.sh shots` пишет оба модуля.
 - **Локализация** — `TranslationsTest` и `HardcodedTextTest` (`app/.../language/`): падают на непереведённую строку и текст в коде
-  (`glossary.md` §«Языки»); lint `HardcodedText`, `MissingTranslation`, `ExtraTranslation`, `MissingQuantity` — ошибки. Robolectric-тесту с русским текстом — `ru` в `qualifiers`.
+  (`glossary.md` §«Языки»); lint `HardcodedText`, `ExtraTranslation`, `MissingQuantity` — ошибки (`MissingTranslation` выключен до публикации: непереведённое ведёт `translations-pending.txt`, `agent.sh l10n`). Robolectric-тесту с русским текстом — `ru` в `qualifiers`.
 - **Золотые правила** — `ProjectRulesTest` (`app/.../rules/`): чистые `core:model`/`domain`, деньги без плавающей точки.
 - **Доступность** — `ScreensAccessibilityTest` (`app/.../accessibility/`, #380): на главных экранах и редакторах цель нажатия ≥ 48 dp и подпись у всего, что нажимается; `accessibility-baseline.txt` пуст — новое нарушение ронит тест. Один экран на метод теста (смена содержимого внутри композиции оставляет старое дерево на кадр).
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.

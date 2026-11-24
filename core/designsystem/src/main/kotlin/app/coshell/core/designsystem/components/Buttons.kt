@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.tactile
-import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.R
@@ -93,7 +92,7 @@ private fun tonalButtonColors(): ButtonColors {
     return ButtonDefaults.buttonColors(containerColor = colors.secondaryContainer, contentColor = colors.onSecondaryContainer)
 }
 
-/** Outlined pill button — secondary actions. [color] tints the label and the border (the family's violet). */
+/** Outlined pill button — secondary actions. [color] tints the label and the border; by default the theme's second colour (#442 Б). */
 @Composable
 fun CoShellOutlinedButton(
     onClick: () -> Unit,
@@ -103,14 +102,14 @@ fun CoShellOutlinedButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
+    val tint = color ?: secondaryInk() // secondary actions speak in the second colour (#442 Б)
     NoRipple {
         OutlinedButton(
             onClick = onClick,
             modifier = modifier.heightIn(min = Sizes.button).tactile(source, Tactile.Control, PillShape, enabled).smoothResize(),
             enabled = enabled,
-            colors = color?.let { ButtonDefaults.outlinedButtonColors(contentColor = it) } ?: ButtonDefaults.outlinedButtonColors(),
-            border = color?.let { BorderStroke(1.dp, it.copy(alpha = if (enabled) OUTLINE_TINT_ALPHA else DISABLED_ALPHA)) }
-                ?: ButtonDefaults.outlinedButtonBorder(enabled),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = tint),
+            border = BorderStroke(1.dp, tint.copy(alpha = if (enabled) OUTLINE_TINT_ALPHA else DISABLED_ALPHA)),
             interactionSource = source,
             content = content,
         )

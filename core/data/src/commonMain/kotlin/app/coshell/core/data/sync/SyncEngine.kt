@@ -102,7 +102,9 @@ class SyncEngine(
         // Tags (#129) likewise, after the settings: the rules learnt `tag` later than `setting`.
         val settings = pending.settings.map(SyncCodec::encode)
         val tags = pending.tags.map(SyncCodec::encode)
-        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK)).forEach { chunk ->
+        // Debts (#552) last of all, for the same reason: the rules learn `debtEvent` after `tag`.
+        val debts = pending.debtEvents.map(SyncCodec::encode)
+        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK) + debts.chunked(PUSH_CHUNK)).forEach { chunk ->
             try {
                 remote.push(chunk.withExtras())
             } catch (e: ApiException) {
@@ -111,7 +113,7 @@ class SyncEngine(
             }
             dao.clearSent(chunk)
         }
-        return records.size + settings.size + tags.size
+        return records.size + settings.size + tags.size + debts.size
     }
 
     /** Puts back the fields of a newer version this phone saved on pull (#340); own fields win. */
@@ -141,6 +143,7 @@ class SyncEngine(
             templates = of(SyncKind.TEMPLATE, SyncCodec::template, SyncCodec::encode),
             settings = of(SyncKind.SETTING, SyncCodec::setting, SyncCodec::encode),
             tags = of(SyncKind.TAG, SyncCodec::tag, SyncCodec::encode),
+            debtEvents = of(SyncKind.DEBT_EVENT, SyncCodec::debtEvent, SyncCodec::encode),
             extras = extras,
         )
     }

@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
@@ -28,6 +27,7 @@ import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.model.Family
 import app.coshell.core.model.Member
 import app.coshell.core.designsystem.R as DesignR
 
@@ -51,7 +51,7 @@ internal fun FamilyHero(members: List<Member>, status: String, freshness: SyncFr
                         style = ScreenTitleStyle,
                     )
                     Text(
-                        pluralStringResource(R.plurals.family_members_count, members.size, members.size),
+                        stringResource(R.string.family_members_of, members.size, Family.MAX_MEMBERS),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

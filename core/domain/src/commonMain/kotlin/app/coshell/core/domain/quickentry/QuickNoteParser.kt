@@ -26,10 +26,25 @@ object QuickNoteParser {
         0 to listOf("сегодня", "hoy", "today"),
     ).map { (days, words) -> days to Regex(WORDS.format(words.joinToString("|")), RegexOption.IGNORE_CASE) }
     private val ACCOUNTS = listOf(
-        AccountWord.CARD to Regex(WORDS.format("карта|карте|картой|карту|tarjeta|card"), RegexOption.IGNORE_CASE),
-        AccountWord.CASH to Regex(WORDS.format("наличные|наличными|наличкой|нал|efectivo|cash"), RegexOption.IGNORE_CASE),
+        AccountWord.CARD to Regex(
+            WORDS.format("с карты|по карте|карта|карты|карте|картой|карту|карточка|карточкой|карточки|карточку|безнал|безналом|безналу|безналичные|безналичными|" +
+                    "дебетовой|tarjeta|debito|débito|credito|crédito|card"),
+            RegexOption.IGNORE_CASE,
+        ),
+        AccountWord.CASH to Regex(
+            WORDS.format("наличные|наличными|наличкой|наличка|налички|наличку|налом|нала|налу|нал|наликами|наликом|налик|" +
+                    "кэшем|кэша|кэш|кешем|кеша|кеш|кешом|кэшом|en efectivo|efectivo|al contado|contado|cash"),
+            RegexOption.IGNORE_CASE,
+        ),
     )
-    private val FILLER = Regex("(^|\\s)(по|за)\\s*$", RegexOption.IGNORE_CASE)
+    /** A dangling preposition left at the end once the amount and the account word are gone («такси по», «кофе за», «обед с»). */
+    private val FILLER = Regex("(^|\\s)(по|за|с|со|на|в|из|con|en|de|with|by)\\s*$", RegexOption.IGNORE_CASE)
+    /** Words in front that say «I spent» and nothing about what (#638): «купил хлеб» → «хлеб», «pagué la luz» → «la luz». */
+    private val LEADING = Regex(
+        "^(купил|купила|купили|оплатил|оплатила|оплатили|заплатил|заплатила|заплатили|потратил|потратила|потратили|потрачено|" +
+            "трата|расход|покупка|compré|compre|pagué|pague|gasté|gaste|bought|paid|spent)(\\s+(на|за|в|в магазине|en|por))?\\s+",
+        RegexOption.IGNORE_CASE,
+    )
     private const val EDGE = " \t-–—:·,;|"
 
     fun parse(
@@ -44,8 +59,15 @@ object QuickNoteParser {
         for ((days, regex) in DAYS) if (regex.containsMatchIn(rest)) { daysAgo = days; rest = rest.replace(regex, " "); break }
         var account: AccountWord? = null
         for ((word, regex) in ACCOUNTS) if (regex.containsMatchIn(rest)) { account = word; rest = rest.replace(regex, " "); break }
-        val title = rest.replace(Regex("\\s+"), " ").trim { it in EDGE }.replace(FILLER, "").trim { it in EDGE }
+        val title = cleanTitle(rest)
         return QuickNote(found.money, found.currencyFound, title, daysAgo, account)
+    }
+
+    /** Spaces squeezed, edges trimmed, «I spent» words in front and a dangling preposition at the end dropped. */
+    internal fun cleanTitle(text: String): String {
+        val squeezed = text.replace(Regex("\\s+"), " ").trim { it in EDGE }
+        val noVerb = squeezed.replace(LEADING, "").ifBlank { squeezed }
+        return noVerb.replace(FILLER, "").trim { it in EDGE }
     }
 
     /** «30к» → «30000», «1,5к» → «1500» (digits only, no floating point). */

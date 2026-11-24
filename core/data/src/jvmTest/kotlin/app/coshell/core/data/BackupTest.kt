@@ -9,6 +9,11 @@ import app.coshell.core.data.repository.RoomTransactionRepository
 import app.coshell.core.data.repository.WriteStamper
 import app.coshell.core.domain.BackupImportResult
 import app.coshell.core.model.Account
+import app.coshell.core.model.CreditTerms
+import app.coshell.core.model.DepositPayout
+import app.coshell.core.model.DepositTerms
+import kotlinx.datetime.LocalDate
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
@@ -43,8 +48,9 @@ class BackupTest {
     @Test
     fun `export then import into an empty database restores everything`() = runTest {
         val source = Repos()
-        source.accounts.saveAccount(Account("usd", "Bybit", usd, AccountType.CRYPTO, initialBalanceMinor = 10_00, color = 0xFF00E5C0))
-        source.accounts.saveAccount(Account("rub", "Тинькофф", rub, excludedFromTotal = true))
+        source.accounts.saveAccount(Account("usd", "Bybit", usd, AccountType.CRYPTO, initialBalanceMinor = 10_00, color = 0xFF00E5C0, prepaid = true, credit = CreditTerms(500_000_00, 15, MinPayment.Percent(500))))
+        source.accounts.saveAccount(Account("dep", "Вклад", usd, AccountType.DEPOSIT, deposit = DepositTerms(800, LocalDate(2027, 3, 15), DepositPayout.CAPITALIZED, LocalDate(2026, 3, 15))))
+        source.accounts.saveAccount(Account("rub", "Тинькофф", rub, excludedFromTotal = true, cardDigits = "4321", credit = CreditTerms(300_000_00, 31, MinPayment.Fixed(9_000_00), statementDay = 25, graceDays = 25)))
         source.categories.saveCategory(Category("kids", "Дети", CategoryType.EXPENSE, icon = "kids", color = 0xFF9C27B0))
         val transfer = Transaction(
             "t1", TransactionType.TRANSFER, "rub", Money(150_000_00, rub), Instant.parse("2026-10-14T11:39:39Z"),
@@ -70,7 +76,7 @@ class BackupTest {
 
         val target = Repos()
         val result = target.backup.importJson(json)
-        assertEquals(BackupImportResult.Imported(accounts = 2, categories = 1, transactions = 2, budgets = 1), result)
+        assertEquals(BackupImportResult.Imported(accounts = 3, categories = 1, transactions = 2, budgets = 1), result)
         assertEquals(
             source.accounts.observeAccountsWithBalance().first(),
             target.accounts.observeAccountsWithBalance().first(),

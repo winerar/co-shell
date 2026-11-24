@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.transactions.edit.ReceiptAiMode
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.horizontalScroll
@@ -42,6 +43,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.transactions.edit.TransactionEditUiState
+import app.coshell.transactions.edit.showsPasteRow
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.ui.form.DateChips
@@ -57,7 +59,9 @@ import app.coshell.ui.format.formatDayMonth
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+        state.unsaved?.takeIf { state.isNew }?.let { UnsavedPlate(it, actions.onUnsavedContinue, actions.onUnsavedDiscard) }
         if (state.showsTypeSwitch) TypeBar(state, actions)
+        if (state.showsPasteRow) PasteRow(state, actions)
         Header(state, actions)
         AccountRibbonBlock(state, actions)
         Column(
@@ -81,7 +85,18 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     }
     state.tip?.let { TipSheet(state, it, actions) }
     state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
-    if (state.receiptUnread) ReceiptUnreadDialog(actions.onReceiptUnreadManual, actions.onReceiptUnreadSend)
+    if (state.receiptUnread) {
+        ReceiptUnreadDialog(
+            mode = state.receiptAi,
+            failed = state.receiptAiFailed,
+            onManual = actions.onReceiptUnreadManual,
+            onSendSample = actions.onReceiptUnreadSend,
+            onRead = actions.onReceiptAiRead,
+            onEnableAi = actions.onReceiptAiEnable,
+        )
+    }
+    if (state.receiptReading) ReceiptReadingDialog(state.receiptAi == ReceiptAiMode.CLOUD, actions.onReceiptAiCancel)
+    state.receiptAccountAsk?.let { ReceiptAccountSheet(state, it, actions) }
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }
 

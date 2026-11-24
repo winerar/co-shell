@@ -27,6 +27,7 @@
 | `doc <файл> [раздел]` (`section.sh`) | один раздел Markdown с номерами строк; без раздела — оглавление |
 | `changes` | коммиты и файлы ветки относительно `dev`, незакоммиченное |
 | `sync` (`sync-dev.sh`) | влить `origin/dev`: «OK» или конфликтующие файлы с подсказками (STATUS, схемы Room); на хотфикс-ветке отказ |
+| `invite [имя]` | коды приглашения закрытого теста: как выдать/отозвать (workflow `invite.yml`, `scripts/invite_codes.py`, `docs/setup/invite.md`), с именем — готовая команда `gh` |
 | `hotfix` (`hotfix.sh`) | срочный фикс сбоя: ветка сессии → `origin/main` (только чистая), напоминание шагов — `hotfix.md` |
 | `push` (`push.sh`) | push с повтором при сетевых ошибках (2, 4, 8, 16 с) **в ветку, которую локальная отслеживает на origin** (иное имя локальной ветки не плодит `origin/<имя>`, #460); `main`/`dev` не пушит; тест `scripts/agent/test_push.py` |
 | `stamp` (`stamp-status.sh`) | STATUS: «Обновлено» = сегодня, «всего N» = `test-count.sh` |
@@ -51,12 +52,14 @@
 | `render <доски…>` (`render-mockups.js`) | PNG досок без холста в scratchpad (упрощённый рантайм) |
 | `poll <spec.json>` (`poll-page.py` + `poll-template.html`) | опрос владельца по макетам: варианты-радио с превью досок, «рекомендую», поле правок; `Доска@light` — та же доска в светлой теме; `--img <dir>` — готовые PNG вместо досок холста (иконка, палитры); ответы — в БД артефакта (`workflow.md` §«Визуальные изменения») |
 | `python3 scripts/agent/alert_colors.py [--html dir]` | цвет внимания (карточки `Warning`) под каждую из 9 тем: оттенок, далёкий от цветов темы, текст ≥ 4,5; `--html` — превью для опроса |
+| `python3 scripts/agent/themes_493_inks.py` | чернила светлой темы (#493/#442): глубокий оттенок основного ≥ 4,5, обводка ≥ 3, текст с оттенком; печатает аудит контраста |
 | `python3 scripts/agent/palette-distinct.py` | различимость цветов категорий (ΔE2000, обе темы), предложение набора; данные для досок #105 |
 | `flows` (`gen-flows-board.py`) | только доска «Воркфлоу» (таблица `ROWS`); высоту в `canvas.json` ставит `mockups` |
 | `bankcolors [--sheet f.png]` (`bank-colors.py`) | цвета банков из `BankColors.kt` против иконок сервисов (фавикон Google/DuckDuckGo → частый насыщенный цвет); таблица + контактный лист расхождений, **код не правит**; нужны сеть и Pillow; тест `test_bank_colors.py` (#505) |
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |
+| `l10n [--write]` (`l10n.py`) | непереведённые тексты (пауза переводов до публикации, 2026-11-24): ключи есть в `values`, нет в `values-en`/`values-es`; `--write` обновляет `translations-pending.txt` — делать после добавления русской строки |
 | `stability` (`compose-stability.py`) | отчёты компилятора Compose для `app` (`--rerun`, ~1,5 мин) → падает на нестабильном классе состояния (`*UiState*`, `*State`) (#383) |
 | `aibench` | APK замера моделей на телефоне (`tools/aibench`, отдельный Gradle-проект вне `check`; на телефон — workflow `aibench.yml`, пре-релиз `aibench-N`) (#587) |
 | `python3 scripts/agent/ai_eval.py <модель.gguf>… [--tasks …] [--fewshot N]` | точность малых моделей на ПК по `docs/samples/ai/eval.json` (категория, заметки, голос, чеки); нужен `pip install llama-cpp-python`; `docs/research/on-device-ai.md` |

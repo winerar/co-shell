@@ -61,7 +61,7 @@ def minis(v):
 
 
 def bar_row(v, icon, color, lbl, value, share, frac, ghost=None, badge_html=''):
-    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), MUTED2) if ghost else '')
+    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), VIOLET) if ghost else '')
     text = ('<div style="display: flex; align-items: center; gap: 6px; font-size: 14px; position: relative;"><span style="flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; '
             'text-overflow: ellipsis;">%s</span>%s<span style="%s">%s</span><span style="color: %s; white-space: nowrap;">· %s</span></div>' % (lbl, badge_html, MONO, value, MUTED, share))
     if v == 'A':
@@ -194,6 +194,22 @@ def scan_frame(v):
     return col(frame, cap('камера под рамкой; только углы, цвет — неон темы; рядом — «Ввести вручную» и фонарик'))
 
 
+def heat_cell(v, d, lv, today=False, sel=False, quiet=False):
+    bg = 'transparent' if quiet else (mix(LIME, [0, 18, 38, 62, 100][lv]) if lv else mix(CYAN, 10))
+    ring = ('box-shadow: inset 0 0 0 2px %s;' % INK) if sel else (('box-shadow: inset 0 0 0 1.5px %s;' % INK) if today else '')
+    return ('<span style="height: 40px; border-radius: 16px; background: %s; %s display: flex; align-items: center; justify-content: center; font-size: 14px; color: %s; '
+            'opacity: %s;">%d</span>' % (bg, ring, MUTED if quiet else INK, '0.55' if quiet else '1', d))
+
+
+def heat(v):
+    levels = [0, 2, 1, 3, 0, 4, 2, 1, 0, 3, 2, 1, 4, 0]
+    cells = ''.join(heat_cell(v, i + 1, lv, today=i == 12, sel=i == 5, quiet=i == 13) for i, lv in enumerate(levels))
+    legend = ''.join('<span style="width: 18px; height: 18px; border-radius: 8px; background: %s;"></span>' % mix(LIME, p) for p in (18, 38, 62, 100))
+    return col('<div style="display: grid; grid-template-columns: repeat(7, 40px); gap: 4px; width: 304px;">%s</div>' % cells,
+               '<div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;"><span>меньше</span>%s<span>больше</span></div>' % (MUTED, legend),
+               cap('Карточка «Календарь трат»: ярче день — больше потрачено (квартили), сегодня — кольцо, выбранный — толще, будущие — тихие'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -208,5 +224,6 @@ DATA = [
     ('Готово', done_marks, 'CoShellCheckMark(size, color, over) · CoShellArrowChip() · CoShellSuccessBurst(content) — «Обновлено», доска Update'),
     ('Переворот карточки', flip_card, 'CoShellFlipCard(front, back, flipped, onFlip, flipLabel) — карточка-герой с оборотом (#519), доски Flip519*'),
     ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
+    ('Календарь трат', heat, 'CoShellHeatGrid(weekdays, leadingBlanks, cells: HeatCell, selected, onSelect) · CoShellHeatLegend(lessLabel, moreLabel, trailing) — доски CalTabA (#553)'),
     ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
 ]

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type_prepaid">Проездной</string>
+    <string name="account_balance_on_card">Баланс на карте</string>
+    <string name="account_balance_on_card_check">Баланс на карте · Сверить</string>
+    <string name="account_balance_check_title">Сверить баланс</string>
+    <string name="account_balance_on_card_hint">Сейчас: %1$s. Введите, сколько на карте.</string>
+    <string name="account_prepaid_total_hint">Выключено: пополнение уже записано расходом</string>
+</resources>

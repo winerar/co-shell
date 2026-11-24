@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recap_title">%1$s recap</string>
+    <string name="recap_percent">%1$d %%</string>
+    <string name="recap_empty">No entries this month.</string>
+    <string name="recap_progress">Story %1$d of %2$d. Tap to move on.</string>
+    <string name="recap_top_title">Most went to “%1$s”</string>
+    <string name="recap_top_donut">Category shares of the month\'s spending</string>
+    <string name="recap_vs_lighter">A month %1$d %% lighter than the last</string>
+    <string name="recap_vs_heavier">A month %1$d %% heavier than the last</string>
+    <string name="recap_vs_same">About the same as last month</string>
+    <string name="recap_previous">Last month</string>
+    <string name="recap_this">This month</string>
+    <string name="recap_weeks_title">Priciest week: %1$s</string>
+    <string name="recap_weeks_caption">Spending by week of the month</string>
+    <string name="recap_new_title">New category of the month</string>
+    <string name="recap_new_text">There was no spending in it before.</string>
+    <string name="recap_weekend_more">Weekends cost more than weekdays</string>
+    <string name="recap_weekend_less">Weekends are calmer than weekdays</string>
+    <string name="recap_weekend_caption">Average spending per day with entries</string>
+    <string name="recap_weekdays">Weekdays</string>
+    <string name="recap_weekend">Weekends</string>
+    <string name="recap_days">Days with entries: %1$d</string>
+    <string name="recap_details">Details</string>
+    <string name="recap_phrase_good_start">A good start</string>
+    <string name="recap_phrase_first_month">First month recorded</string>
+    <string name="recap_phrase_lighter">A month %1$d %% lighter than the last</string>
+    <string name="recap_phrase_limits_kept">All limits in check</string>
+    <string name="recap_phrase_streak">Days in a row with entries: %1$d</string>
+    <string name="recap_phrase_same">About the same as last month</string>
+    <string name="recap_phrase_saved">%1$d %% of income left</string>
+    <string name="recap_phrase_busy">A busy month, but everything is recorded</string>
+    <string name="recap_share">Share the recap</string>
+    <plurals name="recap_streak_title">
+        <item quantity="one">%1$d day in a row with entries</item>
+        <item quantity="other">%1$d days in a row with entries</item>
+    </plurals>
+    <string name="recap_streak_caption">The longest streak of the month</string>
+    <string name="recap_share_title">Share the recap</string>
+    <string name="recap_share_hidden">Without amounts</string>
+    <string name="recap_share_hidden_hint">Percents and words — safer for a chat</string>
+    <string name="recap_share_shown">With amounts</string>
+    <string name="recap_share_shown_hint">As on the screen</string>
+</resources>

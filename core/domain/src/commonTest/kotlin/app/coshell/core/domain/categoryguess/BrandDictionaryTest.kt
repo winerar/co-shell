@@ -34,6 +34,33 @@ class BrandDictionaryTest {
     }
 
     @Test
+    fun `russia and cis brands and everyday words are known`() {
+        assertEquals("food", icon("Yerevan City"))
+        assertEquals("food", icon("Magnum"))
+        assertEquals("food", icon("Евроопт"))
+        assertEquals("home", icon("Wildberries"))
+        assertEquals("restaurant", icon("кофе"))
+        assertEquals("transport", icon("бензин"))
+        assertEquals("restaurant", icon("almuerzo"))
+        assertEquals("taxi", icon("такси"))
+    }
+
+    @Test
+    fun `misspelled or transliterated names are matched loosely`() {
+        assertEquals("food", icon("карфур"))
+        assertEquals("food", icon("carrefor"))
+        assertEquals("health", icon("в аптеке"))
+        assertEquals("transport", icon("заправке"))
+    }
+
+    @Test
+    fun `phrases that are not purchases stay unknown`() {
+        assertNull(icon("тест заметки"))
+        assertNull(icon("позвонить маме"))
+        assertNull(icon("hola"))
+    }
+
+    @Test
     fun `bank noise and digits do not matter`() {
         assertEquals("food", icon("MERPAGO*KIOSCO 123"))
         assertEquals("taxi", icon("MP*UBER TRIP 8841"))

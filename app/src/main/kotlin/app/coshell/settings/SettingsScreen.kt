@@ -15,6 +15,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.ai.AiAddonStage
 import app.coshell.ai.AiAddonViewModel
+import app.coshell.ai.cloud.CloudAiStage
+import app.coshell.ai.cloud.CloudAiViewModel
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.motion.LocalThemeReveal
@@ -41,6 +43,7 @@ data class SettingsActions(
     val onCurrencies: () -> Unit = {},
     val onBackup: () -> Unit = {},
     val onAiAddon: () -> Unit = {},
+    val onCloudAi: () -> Unit = {},
     val onThemeMode: (ThemeMode) -> Unit = {},
     val onShake: (Boolean) -> Unit = {},
     val onHaptics: (Boolean) -> Unit = {},
@@ -65,6 +68,8 @@ data class SettingsState(
     val hints: Boolean = true,
     /** «ИИ на телефоне» on the «Умные функции» card (#587). */
     val ai: AiAddonStage = AiAddonStage.OFF,
+    /** «Облачный разбор» on the same card (#635): `null` — this build has no Worker, the row is hidden; else on or off. */
+    val cloud: Boolean? = null,
 )
 
 @Composable
@@ -77,7 +82,9 @@ fun SettingsRoute(
     accounts: SettingsAccountsViewModel = hiltViewModel(),
     hints: HintsViewModel = hiltViewModel(),
     ai: AiAddonViewModel = hiltViewModel(),
+    cloud: CloudAiViewModel = hiltViewModel(),
 ) {
+    val cloudState by cloud.state.collectAsStateWithLifecycle()
     val aiState by ai.state.collectAsStateWithLifecycle()
     val hintsOn by hints.enabled.collectAsStateWithLifecycle()
     val mode by theme.mode.collectAsStateWithLifecycle()
@@ -94,6 +101,7 @@ fun SettingsRoute(
         SettingsState(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
             options.weekStart, options.syncWifiOnly, hintsOn, aiState.stage,
+            cloud = if (cloudState.configured) cloudState.stage == CloudAiStage.ON else null,
         ),
         actions.copy(
             onThemeMode = { m -> if (m != mode) reveal.change { theme.setMode(m) } },

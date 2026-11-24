@@ -40,7 +40,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 /**
  * Short question: icon, [title] as the question, [text] — what happens, and two pills «Отмена · [confirmLabel]»
  * (one when [dismissLabel] is null). [destructive] paints the icon and the confirm pill red and defaults the
- * icon to the bin. A tap outside or «назад» run [onDismiss].
+ * icon to the bin. A tap outside or «назад» run [onDismiss]. [extraLabel] — a third action (#593, board `AiRecOn`): the three pills
+ * stack, the main one first, it may carry [confirmIcon]; [progress] — a running line under the text while the work goes on.
  */
 @Composable
 fun CoShellAlertDialog(
@@ -53,6 +54,10 @@ fun CoShellAlertDialog(
     onDismissClick: () -> Unit = onDismiss,
     destructive: Boolean = false,
     @DrawableRes icon: Int? = if (destructive) R.drawable.ic_delete else null,
+    extraLabel: String? = null,
+    onExtra: () -> Unit = {},
+    @DrawableRes confirmIcon: Int? = null,
+    progress: Boolean = false,
 ) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         CoShellConfirmCard(
@@ -65,6 +70,10 @@ fun CoShellAlertDialog(
             destructive = destructive,
             icon = icon,
             modifier = Modifier.padding(horizontal = Spacing.l + Spacing.xs, vertical = Spacing.l),
+            extraLabel = extraLabel,
+            onExtra = onExtra,
+            confirmIcon = confirmIcon,
+            progress = progress,
         )
     }
 }
@@ -81,6 +90,10 @@ fun CoShellConfirmCard(
     onDismissClick: () -> Unit = {},
     destructive: Boolean = false,
     @DrawableRes icon: Int? = if (destructive) R.drawable.ic_delete else null,
+    extraLabel: String? = null,
+    onExtra: () -> Unit = {},
+    @DrawableRes confirmIcon: Int? = null,
+    progress: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
     Surface(
@@ -111,12 +124,14 @@ fun CoShellConfirmCard(
                         modifier = Modifier.padding(top = Spacing.s),
                     )
                 }
+                if (progress) CoShellLinearProgress(Modifier.fillMaxWidth().padding(top = Spacing.l))
             }
             // Side by side while each button is wide enough for its words; on a narrow screen or with a big font —
             // one under the other (the main action first), so no label breaks into letters.
             BoxWithConstraints(Modifier.fillMaxWidth().padding(top = Spacing.l + Spacing.xs)) {
                 val gap = Spacing.s + Spacing.xxs
-                val stacked = dismissLabel != null &&
+                // A third action always stacks: three pills side by side would break their words.
+                val stacked = extraLabel != null || dismissLabel != null &&
                     (maxWidth - gap) / 2 < BUTTON_MIN_WIDTH * LocalDensity.current.fontScale.coerceAtLeast(1f)
                 val confirm: @Composable (Modifier) -> Unit = { m ->
                     CoShellButton(
@@ -128,7 +143,10 @@ fun CoShellConfirmCard(
                             coShellButtonColors()
                         },
                         modifier = m,
-                    ) { Text(confirmLabel) }
+                    ) {
+                        confirmIcon?.let { Icon(painterResource(it), contentDescription = null, Modifier.padding(end = Spacing.s).size(Sizes.tileIcon)) }
+                        Text(confirmLabel)
+                    }
                 }
                 val dismiss: @Composable (Modifier) -> Unit = { m ->
                     dismissLabel?.let { label -> CoShellOutlinedButton(onClick = onDismissClick, modifier = m) { Text(label) } }
@@ -137,6 +155,9 @@ fun CoShellConfirmCard(
                     Column(verticalArrangement = Arrangement.spacedBy(gap)) {
                         confirm(Modifier.fillMaxWidth().heightIn(min = Sizes.button))
                         dismiss(Modifier.fillMaxWidth().heightIn(min = Sizes.button))
+                        extraLabel?.let { label ->
+                            CoShellOutlinedButton(onClick = onExtra, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.button)) { Text(label) }
+                        }
                     }
                 } else {
                     // Equal height of both buttons, growing with a long label instead of cutting it.

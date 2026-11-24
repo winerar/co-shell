@@ -4,6 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.TransactionFilter
+import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.tags.TagRepository
+import app.coshell.transactions.list.buildTransactionDays
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
 import app.coshell.core.domain.budgets.budgetPeriodOf
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
@@ -48,11 +57,13 @@ class ReportsViewModel @Inject constructor(
     accounts: AccountRepository,
     rates: ExchangeRateRepository,
     otherMembers: OtherMembers,
+    transactions: TransactionRepository,
+    tags: TagRepository,
     reportCurrencies: ReportCurrencySettings,
     monthStart: MonthStartSettings,
-    moneyFormat: MoneyFormat,
+    private val moneyFormat: MoneyFormat,
     clock: Clock,
-    timeZone: TimeZone,
+    private val timeZone: TimeZone,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
 ) : ViewModel() {
 
@@ -112,18 +123,57 @@ class ReportsViewModel @Inject constructor(
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),
                 capital = buildCapital(input, accountList, balanceDays, book, format),
+                calendar = buildCalendar(input, format),
             )
         }
     }
 
+    /** The tapped day of «Календарь трат» (#553); dropped when the month changes. */
+    private val selectedDay = MutableStateFlow<LocalDate?>(null)
+
+    /** Operations of the tapped day, rows as in «Операции». */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val dayOps = selectedDay.flatMapLatest { date ->
+        if (date == null) return@flatMapLatest flowOf(null)
+        val from = date.atStartOfDayIn(timeZone)
+        val to = date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
+        combine(
+            transactions.observeTransactions(TransactionFilter(from = from, to = to)),
+            accounts.observeAccounts(includeArchived = true),
+            categories.observeCategories(includeArchived = true),
+            otherMembers.names(),
+            tags.observeTags(),
+        ) { list, accountList, categoryList, authors, tagList ->
+            buildTransactionDays(
+                transactions = list,
+                accountsById = accountList.associateBy { it.id },
+                categoriesById = categoryList.associateBy { it.id },
+                moneyFormat = moneyFormat,
+                timeZone = timeZone,
+                today = today,
+                authors = authors,
+                tagsById = tagList.associateBy { it.id },
+            ).firstOrNull()
+        }
+    }
+
     val state: StateFlow<ReportsUiState> by lazy {
-        data.flowOn(work).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), ReportsUiState(isLoading = true))
+        combine(data, selectedDay, dayOps) { base, picked, ops ->
+            // The tapped day counts only while its month is the one shown.
+            val shown = picked?.takeIf { day -> base.calendar?.cells?.any { it.date == day } == true }
+            base.copy(selectedDay = shown, dayOps = ops.takeIf { shown != null })
+        }.flowOn(work).stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), ReportsUiState(isLoading = true))
     }
 
     /** ‹ and ›: the period of the same kind before or after. */
     fun onShift(by: Int) {
         val shown = state.value.period ?: return
         choice.value = choice.value.copy(period = shown.shift(by, state.value.startDay))
+    }
+
+    /** A tap on a day of «Календарь трат»: its operations show under the grid; the same day again hides them. */
+    fun onDay(day: LocalDate) {
+        selectedDay.value = day.takeIf { it != selectedDay.value }
     }
 
     /** «Показать» in «Период и валюта». */

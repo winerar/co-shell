@@ -10,7 +10,7 @@ def icon_btn(v, icon, color=INK):
 def top_bar(v, kind, title, actions=(), scrolled=False):
     lead = {'tab': '', 'screen': icon_btn(v, 'back'), 'selection': icon_btn(v, 'close')}[kind]
     size = 28 if kind == 'tab' else 20
-    bg = 'background: %s;' % BAR if scrolled else ''
+    bg = 'background: %s;' % PANEL if scrolled else ''
     t = ('<span style="flex-grow: 1; min-width: 0; font-size: %dpx; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; %s">%s</span>'
          % (size, 'text-align: center;' if v == 'B' and kind == 'screen' else '', title))
     acts = ''.join(icon_btn(v, a) for a in actions) or ('<span style="width: 40px;"></span>' if v == 'B' and kind == 'screen' else '')

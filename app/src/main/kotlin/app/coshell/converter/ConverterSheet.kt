@@ -2,6 +2,7 @@ package app.coshell.converter
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.converter.components.ConverterAll
 import app.coshell.converter.components.ConverterPair
+import app.coshell.core.designsystem.amount.LocalAmountsHidden
 import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.components.CoShellModalSheetLayout
 import app.coshell.core.designsystem.components.keypad.CoShellKeypad
@@ -35,9 +37,15 @@ internal data class ConverterActions(
 /**
  * The converter (#319, boards `Conv2*`): «Пара» (default) or «Все валюты», the button before the × switches; the number is typed on
  * the own keypad below, «Готово» closes. The inside of the sheet — its window is the navigation dialog.
+ * Its numbers are not the person's money, so hidden sums (#145) stay shown here (#601).
  */
 @Composable
 internal fun ConverterSheetBody(state: ConverterUiState, actions: ConverterActions, onClose: () -> Unit) {
+    CompositionLocalProvider(LocalAmountsHidden provides false) { ConverterSheetContent(state, actions, onClose) }
+}
+
+@Composable
+private fun ConverterSheetContent(state: ConverterUiState, actions: ConverterActions, onClose: () -> Unit) {
     var picking by remember { mutableStateOf<ConverterSide?>(null) }
     val pair = state.mode == ConverterMode.PAIR
     CoShellModalSheetLayout(

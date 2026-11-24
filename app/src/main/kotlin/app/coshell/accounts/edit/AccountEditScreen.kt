@@ -22,13 +22,14 @@ import app.coshell.accounts.edit.components.AccountTypeSection
 import app.coshell.accounts.edit.components.BalanceSavedPill
 import app.coshell.accounts.edit.components.BankPresets
 import app.coshell.accounts.edit.components.MoneySection
+import app.coshell.accounts.edit.components.ReceiptDigitsSection
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellFormSection
+import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSwitchLine
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditTitleActions
 import app.coshell.ui.form.IconColorSheet
@@ -40,7 +41,6 @@ import app.coshell.ui.sheet.EditSheetLayout
  */
 @Composable
 fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
-    var confirmDelete by rememberSaveable { mutableStateOf(false) }
     var colorsOpen by rememberSaveable { mutableStateOf(false) }
 
     Box {
@@ -48,7 +48,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             title = stringResource(if (state.isNew) R.string.account_edit_title_new else R.string.account_edit_title),
             onSave = actions.onSave,
             saveEnabled = !state.isLoading,
-            titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
+            titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived, actions.onDelete) },
         ) {
             if (state.isLoading) return@EditSheetLayout
             val colorLabel = stringResource(R.string.category_color)
@@ -72,22 +72,32 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     )
                 }
                 MoneySection(state, actions)
-                AccountTypeSection(state.type, actions.onTypeChange)
+                AccountTypeSection(state.type, state.prepaid, state.credit, actions.onTypeChange, actions.onPrepaidSelect, actions.onCreditSelect)
+                ReceiptDigitsSection(state, actions)
                 AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
                 CoShellFormSection(stringResource(R.string.account_section_balance)) {
                     CoShellSwitchLine(
                         title = stringResource(R.string.account_included_in_total),
-                        subtitle = stringResource(R.string.account_included_in_total_short),
+                        subtitle = stringResource(if (state.prepaid) R.string.account_prepaid_total_hint else R.string.account_included_in_total_short),
                         checked = state.includedInTotal,
                         onCheckedChange = actions.onIncludedInTotalChange,
                     )
-                    if (state.showSharing) {
-                        CoShellSwitchLine(
-                            title = stringResource(R.string.account_shared),
-                            subtitle = stringResource(R.string.account_shared_short),
-                            checked = state.shared,
-                            onCheckedChange = actions.onSharedChange,
-                        )
+                    if (state.showSharing || state.localOnly) {
+                        if (state.localOnlyLocked) {
+                            CoShellHint(stringResource(R.string.account_local_only_locked))
+                        } else {
+                            CoShellSwitchLine(
+                                title = stringResource(R.string.account_local_only),
+                                subtitle = stringResource(R.string.account_local_only_short),
+                                checked = state.localOnly,
+                                onCheckedChange = actions.onLocalOnlyChange,
+                            )
+                            if (state.localOnly) {
+                                CoShellHint(stringResource(R.string.account_local_only_transfers))
+                            } else if (!state.isNew) {
+                                CoShellHint(stringResource(R.string.account_local_only_off))
+                            }
+                        }
                     }
                 }
             }
@@ -105,17 +115,6 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             showIcons = false,
             allowNone = true,
             extra = { BankPresets(state.color, actions.onColorChange) },
-        )
-    }
-    if (confirmDelete) {
-        ConfirmDeleteDialog(
-            title = R.string.account_delete_confirm_title,
-            text = R.string.account_delete_confirm_text,
-            onConfirm = {
-                confirmDelete = false
-                actions.onDelete()
-            },
-            onDismiss = { confirmDelete = false },
         )
     }
     if (state.deleteBlocked) {

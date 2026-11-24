@@ -3,10 +3,12 @@ drafts only on this phone = «А», a draft opens the usual entry sheet = «А»
 
 Notes: one card with the lines, «Обработать · N» turns every line into a draft and empties the note. Drafts: a list with a check mark each
 (ready ones are ticked), a grey caption of where the category came from, marks «Нужна сумма» / «Выберите категорию» on the unready,
-«Записать N» posts the ticked ones. The row «Черновики · N» lives on «Обзор» and in «Ещё → Деньги».
+«Записать N» posts the ticked ones; any row can be ticked, then «Удалить · N» stands beside «Записать» (#628, poll 2026-11-23 «А»).
+A category from the AI carries «бета» (#643 «А»). The row «Быстрые заметки» is always on «Обзор» (#641 «Б»), drafts are also in «Ещё → Деньги».
 ROW — (key, row title, sticky text); BOARDS — (name, title, fn, key).
 """
 from mockup_bricks import *  # noqa: F401,F403
+from mockup_catalog_bricks import status_chip
 from mockup_screens_main import balance_hero, tiles, tile, recent_card, RECENT, SEARCH_BTN, converter_card
 import mockup_screens_fb_menu as menu
 
@@ -21,11 +23,18 @@ DRAFTS = [('Кофе', 'Galicia · сегодня', '−3 500', 'Кафе', 'his
           ('Хлеб', 'Наличные · сегодня', '−850', 'Продукты', 'dict'), ('Аптека', 'Galicia · вчера', '−4 200', 'Здоровье', 'spark')]
 
 
+# The category's small badge in the caption (`CategoryBadge`, size `Sizes.categoryMini` 18 dp; poll 2026-11-24 «А»).
+CAT_LOOK = {'Кафе': ('cafe', WARN), 'Такси': ('taxi', CYAN), 'Продукты': ('cart', LIME), 'Здоровье': ('pill', PINK)}
+
+
 def caption(text, src):
     """The grey «by past entries / by name / by AI» caption of an auto-picked category (`CategorySource`); the spark marks «made by AI»."""
     spark = svg('spark', LIME, 12, 2) if src == 'spark' else ''
     word = {'hist': 'по прошлым операциям', 'dict': 'по названию', 'spark': 'предложено ИИ'}[src]
-    return ('<span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: %s;">%s%s · %s</span>' % (MUTED, spark, text, word))
+    beta = '<span style="margin-left: 4px;">%s</span>' % status_chip('бета', 'manual') if src == 'spark' else ''
+    icon, color = CAT_LOOK.get(text, ('folder', LIME))
+    return ('<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s<span style="display: flex; align-items: center; gap: 4px;">%s%s · %s%s</span></span>'
+            % (MUTED, dot_icon(icon, color, 18), spark, text, word, beta))
 
 
 def mark(text):
@@ -43,13 +52,13 @@ def tick(on):
 
 
 def draft(title, sub, amt, cat=None, src='hist', on=True, need=None):
-    """One draft row (`DraftRow`): tick, title, account · day, then the category caption or the mark of what is missing; amount on the right."""
+    """One draft row (`DraftRow`): tick, title, mini badge of the account + account · day, then the category caption or the mark of what is missing; amount on the right."""
     under = mark(need) if need else caption(cat, src)
     money = amount(amt, '', INK, 15) if amt else '<span style="font-size: 15px; color: %s;">—</span>' % MUTED
     return ('<div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 6px 16px; {{div}}">%s<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">'
             '<span style="display: flex; align-items: center; gap: 8px;"><span style="flex-grow: 1; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>%s</span>'
-            '<span style="font-size: 13px; color: %s; white-space: nowrap;">%s</span>%s</span></div>'
-            % (tick(on), title, money, MUTED, sub, under))
+            '<span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: %s; white-space: nowrap;">%s<span>%s</span></span>%s</span></div>'
+            % (tick(on), title, money, MUTED, mini_badge(ROW_ACCOUNTS.get(sub.split(' · ')[0])), sub, under))
 
 
 def footer(inner):
@@ -122,11 +131,28 @@ def drafts_posted():
     return inner_screen('Черновики', body) + footer(button('Записать · 2', 'primary', 'check', 0)) + snackbar('Записано: 2', 'Отменить', 96)
 
 
-def strip():
-    """`DraftsStrip`: a card under the balance, shown only while drafts wait."""
-    return card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><span style="font-size: 16px; font-weight: 600;">Черновики · 5</span>'
-                '<span style="display: block; font-size: 13px; color: %s;">Проверьте и запишите</span></span>%s</div>' % (tile_icon('draft', CYAN), MUTED, chevron()),
+def strip(drafts=5):
+    """`DraftsStrip` (#641 «Б»): «Быстрые заметки» under the balance, always; «Записать» opens the note, the row — the drafts while any wait."""
+    sub = 'Траты строками · черновиков: %d' % drafts if drafts else 'Траты строками: кофе 3500'
+    write = ('<span style="height: 40px; padding: 0 16px; border-radius: 999px; background: %s; color: %s; font-weight: 600; font-size: 15px; display: flex; '
+             'align-items: center;">Записать</span>' % (LIME, ONLIME))
+    return card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><span style="font-size: 16px; font-weight: 600;">Быстрые заметки</span>'
+                '<span style="display: block; font-size: 13px; color: %s;">%s</span></span>%s</div>' % (tile_icon('note', CYAN), MUTED, sub, write),
                 pad='10px 14px', extra='margin-top: 10px;')
+
+
+def drafts_delete():
+    rows = [draft(*DRAFTS[0], on=False), draft('Тест заметки', 'Galicia · сегодня', '', on=True, need='Нужна сумма'),
+            draft(*DRAFTS[1], on=False), draft('Позвонить маме', 'Galicia · сегодня', '', on=True, need='Нужна сумма')]
+    body = drafts_body(rows, '4 черновика · готовы 2', 'Нажмите на строку, чтобы дописать сумму или выбрать категорию.')
+    two = ('<div style="display: flex; gap: 12px;"><span style="flex: 1;">%s</span><span style="flex: 1;">%s</span></div>'
+           % (button('Удалить · 2', 'outline', None, 0), button('Записать', 'primary', None, 0, True)))
+    return inner_screen('Черновики · 4', body) + footer(two)
+
+
+def home_notes():
+    body = balance_hero() + strip(0) + tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Без категории', '14', 'операций')) + converter_card() + recent_card(RECENT)
+    return tab_screen('Обзор', body, 'home', SEARCH_BTN)
 
 
 def home_drafts():
@@ -152,6 +178,8 @@ BOARDS = [  # name, title, fn, row key (the functions already return a whole boa
     ('Notes586Long', 'Черновики: длинный список', drafts_long, 'notes'),
     ('Notes586Posted', 'Черновики: записано, «Отменить»', drafts_posted, 'notes'),
     ('Notes586Empty2', 'Черновики: пусто', drafts_empty, 'notes'),
-    ('Notes586Home', 'Обзор: строка «Черновики»', home_drafts, 'notes'),
+    ('Notes628Delete', 'Черновики: отмечены ненужные, «Удалить · N»', drafts_delete, 'notes'),
+    ('Notes586Home', 'Обзор: «Быстрые заметки» с черновиками', home_drafts, 'notes'),
+    ('Notes641Home', 'Обзор: «Быстрые заметки» без черновиков', home_notes, 'notes'),
     ('Notes586More', 'Ещё: заметки и черновики', more_drafts, 'notes'),
 ]

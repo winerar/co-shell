@@ -3,6 +3,7 @@ package app.coshell.accounts.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.domain.AccountRepository
@@ -13,12 +14,15 @@ import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.DepositPayout
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.MoneyParser
 import app.coshell.navigation.AccountEditDestination
+import app.coshell.undo.UndoCenter
+import app.coshell.undo.UndoOffer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +44,7 @@ class AccountEditViewModel @Inject constructor(
     private val ids: IdGenerator,
     private val moneyFormat: MoneyFormat,
     private val adjustBalance: AdjustBalanceUseCase,
+    private val undo: UndoCenter,
     private val otherMembers: OtherMembers = OtherMembers { flowOf(emptyMap()) },
     private val reportCurrencies: ReportCurrencySettings = DefaultReportCurrencies,
 ) : ViewModel() {
@@ -80,12 +85,18 @@ class AccountEditViewModel @Inject constructor(
                     archived = account.archived,
                     includedInTotal = !account.excludedFromTotal,
                     color = account.color,
+                    cardDigits = account.cardDigits.orEmpty(),
+                    prepaid = account.prepaid,
+                    credit = account.credit != null,
                     shared = account.isShared,
+                    localOnly = account.localOnly,
+                    localOnlyLocked = !account.localOnly,
                     showSharing = showSharing,
                     currencyLocked = saveAccount.isCurrencyLocked(account.id),
                     suggestedCurrencies = suggested,
                     currentBalance = balance?.let(moneyFormat::format).orEmpty(),
-                )
+                ).let { s -> account.credit?.let { c -> s.withCreditTerms(c, account.currency, moneyFormat) } ?: s }
+                    .let { s -> account.deposit?.let(s::withDepositTerms) ?: s }
             }
         }
     }
@@ -96,7 +107,24 @@ class AccountEditViewModel @Inject constructor(
         if (it.currencyLocked) it else it.copy(currency = value.trim().uppercase(), currencyError = null)
     }
 
-    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value) }
+    fun onTypeChange(value: AccountType) = _state.update { it.copy(type = value, prepaid = false, credit = false, creditError = false) }
+
+    /** «Кредитка» (#686): stored as «Другое» + conditions; a credit card is not a travel pass. */
+    fun onCreditSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = false, credit = true) }
+
+    fun onCreditLimitChange(value: String) = _state.update { it.copy(creditLimit = value, creditError = false) }
+    fun onCreditPayDayChange(value: String) = _state.update { it.copy(creditPayDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
+    fun onCreditMinSumChange(sum: Boolean) = _state.update { if (it.creditMinSum == sum) it else it.copy(creditMinSum = sum, creditMin = "", creditError = false) }
+    fun onDepositRateChange(value: String) = _state.update { it.copy(depositRate = value, depositError = false) }
+    fun onDepositEndChange(value: String) = _state.update { it.copy(depositEnd = value, depositError = false) }
+    fun onDepositStartChange(value: String) = _state.update { it.copy(depositStart = value, depositError = false) }
+    fun onDepositPayoutChange(value: DepositPayout) = _state.update { it.copy(depositPayout = value) }
+    fun onCreditStatementDayChange(value: String) = _state.update { it.copy(creditStatementDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
+    fun onCreditGraceDaysChange(value: String) = _state.update { it.copy(creditGraceDays = value.filter { c -> c in '0'..'9' }.take(3), creditError = false) }
+    fun onCreditMinChange(value: String) = _state.update { it.copy(creditMin = value, creditError = false) }
+
+    /** «Проездной» (#645): a type of its own for the person, stored as «Другое» + a flag; the top-up is an expense, so the account is out of the total. */
+    fun onPrepaidSelect() = _state.update { it.copy(type = AccountType.OTHER, prepaid = true, credit = false, includedInTotal = false) }
 
     fun onInitialBalanceChange(value: String) = _state.update { it.copy(initialBalance = value, balanceError = null) }
 
@@ -135,7 +163,13 @@ class AccountEditViewModel @Inject constructor(
 
     fun onColorChange(value: Long?) = _state.update { it.copy(color = value) }
 
+    /** «Для чеков» (#577): only digits, at most [Account.CARD_DIGITS] of them. */
+    fun onCardDigitsChange(value: String) =
+        _state.update { it.copy(cardDigits = value.filter { c -> c in '0'..'9' }.take(Account.CARD_DIGITS), cardDigitsError = false) }
+
     fun onSharedChange(value: Boolean) = _state.update { it.copy(shared = value) }
+
+    fun onLocalOnlyChange(value: Boolean) = _state.update { if (it.localOnlyLocked) it else it.copy(localOnly = value) }
 
     fun save() {
         val current = _state.value
@@ -176,7 +210,11 @@ class AccountEditViewModel @Inject constructor(
         val account = existing ?: return
         viewModelScope.launch {
             when (deleteAccount(account.id)) {
-                DeleteAccountUseCase.Result.DELETED -> _state.update { it.copy(isDone = true) }
+                DeleteAccountUseCase.Result.DELETED -> {
+                    // No «Are you sure?» (#194): gone at once, «Отменить» saves the same account again.
+                    undo.offer(UndoOffer(R.string.account_deleted) { accounts.saveAccount(account) })
+                    _state.update { it.copy(isDone = true) }
+                }
                 DeleteAccountUseCase.Result.HAS_TRANSACTIONS -> _state.update { it.copy(deleteBlocked = true) }
             }
         }
@@ -185,48 +223,14 @@ class AccountEditViewModel @Inject constructor(
     fun dismissDeleteBlocked() = _state.update { it.copy(deleteBlocked = false) }
 
     /** Validates the form; on errors updates the state and returns null. */
-    private fun buildAccount(form: AccountEditUiState): Account? {
-        val name = form.name.trim()
-        val currency = CurrencyCode.parseOrNull(form.currency)
-        var balanceError: BalanceError? = null
-        val balanceMinor = when {
-            currency == null -> null
-            form.initialBalance.isBlank() -> 0L
-            else -> when (val parsed = MoneyParser.parse(form.initialBalance, currency)) {
-                is MoneyParser.Result.Success -> parsed.money.amountMinor
-                is MoneyParser.Result.Error -> {
-                    balanceError = if (parsed.reason == MoneyParser.Reason.TOO_MANY_FRACTION_DIGITS) {
-                        BalanceError.TOO_MANY_FRACTION_DIGITS
-                    } else {
-                        BalanceError.INVALID
-                    }
-                    null
-                }
+    private fun buildAccount(form: AccountEditUiState): Account? =
+        when (val result = buildAccount(form, existing) { ids.newId() }) {
+            is AccountFormResult.Valid -> result.account
+            is AccountFormResult.Invalid -> {
+                _state.update(result.showErrors)
+                null
             }
         }
-        if (name.isEmpty() || currency == null || balanceMinor == null) {
-            _state.update {
-                it.copy(
-                    nameError = name.isEmpty(),
-                    currencyError = if (currency == null) CurrencyError.INVALID else null,
-                    balanceError = balanceError,
-                )
-            }
-            return null
-        }
-        val base = existing ?: Account(id = ids.newId(), name = name, currency = currency)
-        return base.copy(
-            name = name,
-            currency = currency,
-            type = form.type,
-            initialBalanceMinor = balanceMinor,
-            excludedFromTotal = !form.includedInTotal,
-            color = form.color,
-            isShared = form.shared,
-            // The repository makes the current member the owner of a new personal account.
-            ownerMemberId = if (form.shared) null else base.ownerMemberId,
-        )
-    }
 
     private sealed interface ParsedActual {
         data object None : ParsedActual
@@ -240,9 +244,7 @@ class AccountEditViewModel @Inject constructor(
         if (text.isBlank()) return ParsedActual.None
         return when (val parsed = MoneyParser.parse(text, currency)) {
             is MoneyParser.Result.Success -> ParsedActual.Amount(parsed.money)
-            is MoneyParser.Result.Error -> ParsedActual.Bad(
-                if (parsed.reason == MoneyParser.Reason.TOO_MANY_FRACTION_DIGITS) BalanceError.TOO_MANY_FRACTION_DIGITS else BalanceError.INVALID,
-            )
+            is MoneyParser.Result.Error -> ParsedActual.Bad(parsed.toBalanceError())
         }
     }
 

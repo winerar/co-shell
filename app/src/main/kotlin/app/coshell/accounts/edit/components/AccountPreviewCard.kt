@@ -17,7 +17,7 @@ import app.coshell.accounts.labelRes
 internal fun AccountPreviewCard(state: AccountEditUiState, modifier: Modifier = Modifier) {
     CoShellAccountCard(
         name = state.name.ifBlank { stringResource(R.string.account_edit_title_new) },
-        kind = stringResource(state.type.labelRes),
+        kind = stringResource(when { state.prepaid -> R.string.account_type_prepaid; state.credit -> R.string.account_type_credit_full; else -> state.type.labelRes }),
         balance = listOf(state.initialBalance.ifBlank { "0" }, state.currency).filter { it.isNotBlank() }.joinToString(" "),
         color = state.color,
         modifier = modifier,

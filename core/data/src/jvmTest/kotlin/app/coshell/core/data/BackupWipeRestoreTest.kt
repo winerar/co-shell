@@ -16,6 +16,8 @@ import app.coshell.core.domain.BackupImportResult
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.WipeAllDataUseCase
 import app.coshell.core.model.Account
+import app.coshell.core.model.CreditTerms
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
@@ -99,7 +101,11 @@ class BackupWipeRestoreTest {
         seed() // a real phone starts with the default categories
         accounts.saveAccount(Account("galicia", "Galicia", ars, AccountType.CARD, initialBalanceMinor = 120_000_00))
         accounts.saveAccount(Account("bybit", "Bybit", usdt, AccountType.CRYPTO, color = 0xFF00E5C0))
-        accounts.saveAccount(Account("cash", "Наличные $", usd, excludedFromTotal = true))
+        accounts.saveAccount(Account("cash", "Наличные $", usd, excludedFromTotal = true, cardDigits = "3900", prepaid = true, credit = CreditTerms(1_000_00, 5, MinPayment.Percent(1_000))))
+        accounts.saveAccount(Account("piggy", "Копилка", ars, AccountType.OTHER, localOnly = true)) // «Только у меня» (#558)
+        transactions.saveTransaction(
+            Transaction("t-piggy", TransactionType.INCOME, "piggy", Money(5_000_00, ars), Instant.parse("2026-11-02T08:00:00Z")),
+        )
         categories.saveCategory(Category("kids", "Дети", CategoryType.EXPENSE, icon = "kids", color = 0xFF9C27B0))
         tags.saveTag(Tag("trip", "Барилоче", 0xFF9D7BFF))
         transactions.saveTransaction(

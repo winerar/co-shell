@@ -1,15 +1,19 @@
 package app.coshell
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import app.coshell.shortcuts.LauncherShortcuts
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
 import app.coshell.crash.CrashLog
 import app.coshell.crash.CrashRecorder
 import app.coshell.currencies.data.LegacyReportCurrencies
+import app.coshell.backup.auto.AutoBackupScheduler
+import app.coshell.backup.auto.AutoBackupSettings
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
@@ -33,6 +37,9 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var workerFactory: HiltWorkerFactory
     @Inject lateinit var crashLog: CrashLog
     @Inject lateinit var reminderWatch: ReminderWatch
+    @Inject lateinit var launcherShortcuts: LauncherShortcuts
+    @Inject lateinit var autoBackupSettings: AutoBackupSettings
+    @Inject lateinit var autoBackupScheduler: AutoBackupScheduler
 
     /** Lives as long as the process; for short one-off startup work only. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -47,6 +54,8 @@ class CoShellApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         CrashRecorder(crashLog, Clock.System, BuildConfig.VERSION_CODE).install()
+        // The one-time 1.0 greeting is gone: its notification channel should not linger in the system settings.
+        getSystemService(NotificationManager::class.java)?.deleteNotificationChannel(RETIRED_GREETING_CHANNEL)
         appScope.launch {
             legacyReportCurrencies.moveToFamilySettings()
             // In a family the categories come from the server: seeding an empty phone right after
@@ -58,8 +67,15 @@ class CoShellApp : Application(), Configuration.Provider {
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
             RecurringPaymentsScheduler.schedule(this@CoShellApp)
+            // The hourly check of the automatic copy (#606); also moves phones off the old once-a-week job.
+            if (autoBackupSettings.config.value.folderUri != null) autoBackupScheduler.ensureChecking()
         }
         // The payment reminder goes away once the payment is handled here or on the other phone (#406).
         appScope.launch { reminderWatch.run() }
+        // Launcher shortcuts: the three types and the two frequent templates (#555).
+        appScope.launch { launcherShortcuts.run() }
     }
 }
+
+/** Channel of the removed one-time 1.0 greeting (`greeting/`), deleted on start. */
+private const val RETIRED_GREETING_CHANNEL = "greeting"

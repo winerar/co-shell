@@ -42,6 +42,7 @@ jobs:
       FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       FIREBASE_DATABASE_URL: ${{ vars.FIREBASE_DATABASE_URL }}
+      AI_PROXY_URL: ${{ vars.AI_PROXY_URL }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -142,7 +143,7 @@ jobs:
 
       # main: debug and signed release in ONE Gradle call — with the configuration cache their tasks run
       # in parallel (two calls ran them one after another: 2:00 + 3:47, run 318).
-      # Version name 0.N: N = merges into main, i.e. releases (#268); like BUILD_NUMBER, only on main.
+      # Version name YY.M.N: N = releases (merges into main) of the month (#268); like BUILD_NUMBER, only on main.
       - name: Version name (main)
         if: github.ref == 'refs/heads/main'
         run: echo "VERSION_NAME=$(python3 scripts/ci/version_name.py)" | tee -a "$GITHUB_ENV"
@@ -160,6 +161,8 @@ jobs:
           if [ "$SELF_UPDATE" = true ]; then
             export RELEASE_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
             export UPDATE_BASE_URL="https://github.com/$RELEASES_REPO/releases/latest/download"
+            # The invitation gate of the closed test (#666): off until the repository variable ACCESS_GATE is true (docs/setup/invite.md).
+            export ACCESS_GATE="${{ vars.ACCESS_GATE }}"
             echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
             tasks+=(assembleRelease)
           fi
@@ -198,6 +201,24 @@ jobs:
             --title "Сборка ${{ github.run_number }}" \
             --notes-file <(python3 -c 'import json; print(json.load(open("update-files/version.json"))["notes"])') \
             --latest
+
+      # The landing with the download button (#660): static pages on GitHub Pages of the releases repo, branch `gh-pages`.
+      # Off until the repository variable LANDING is true and Pages is switched on there (docs/setup/landing.md).
+      - name: Publish landing
+        if: env.SELF_UPDATE == 'true' && vars.LANDING == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          python3 scripts/make_landing.py update-files/version.json landing-out
+          git clone --quiet --depth 1 --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/$RELEASES_REPO.git" landing-repo 2>/dev/null \
+            || { git init --quiet landing-repo && git -C landing-repo checkout --quiet -b gh-pages \
+                 && git -C landing-repo remote add origin "https://x-access-token:${GH_TOKEN}@github.com/$RELEASES_REPO.git"; }
+          find landing-repo -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r landing-out/. landing-repo/
+          git -C landing-repo add -A
+          git -C landing-repo -c user.name="co-shell bot" -c user.email="bot@users.noreply.github.com" \
+            commit --quiet -m "Landing for build ${{ github.run_number }}" || echo "Landing unchanged"
+          git -C landing-repo push --quiet origin gh-pages
 
       # Every merge to main becomes a release with a fixed file name, so the newest APK is always at
       # https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk

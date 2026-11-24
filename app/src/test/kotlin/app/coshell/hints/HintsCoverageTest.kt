@@ -1,6 +1,7 @@
 package app.coshell.hints
 
 import app.coshell.core.domain.hints.HintId
+import app.coshell.language.TranslationPending
 import java.io.File
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -24,7 +25,7 @@ class HintsCoverageTest {
         val missing = mutableListOf<String>()
         for (dir in listOf("values", "values-en", "values-es")) {
             val text = File(res, "$dir/strings_hints.xml").readText()
-            used.filter { "name=\"hint_${it.key}\"" !in text }
+            used.filter { "name=\"hint_${it.key}\"" !in text && (dir == "values" || "hint_${it.key}" !in TranslationPending.keys) }
                 .forEach { missing += "$dir:${it.key}" }
         }
         assertTrue("No text for: $missing", missing.isEmpty())

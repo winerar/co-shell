@@ -96,8 +96,8 @@ fun ComponentsCatalog() {
             }
             CoShellSectionLabel("Деньги")
             CoShellRowGroup {
-                row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[8]), "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
-                row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[13]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
+                row { CoShellMenuRow(R.drawable.ic_category, "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
+                row { CoShellMenuRow(R.drawable.ic_currency_exchange, "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
             }
         }
     }

@@ -1,6 +1,7 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.domain.quickentry.ReceiptPrefills
+import app.coshell.core.domain.ai.ReceiptAi
 import app.coshell.core.domain.receipts.AfipQrFormat
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptNote
@@ -15,7 +16,13 @@ import kotlinx.datetime.LocalDate
  * ([document] — a receipt file or text, «Из чека · Teleshka») for the quiet source line, [key] marks the saved operation,
  * [duplicate] is the live operation of the same receipt (the «Этот чек уже записан» window).
  */
-data class ScanUi(val seller: String, val key: String, val duplicate: ScanDuplicate? = null, val document: Boolean = false)
+data class ScanUi(val seller: String, val key: String, val duplicate: ScanDuplicate? = null, val document: Boolean = false, val ai: Boolean = false)
+
+/**
+ * «Какой это счёт?» (#577): the receipt prints the last [digits] of a card or an account no account has yet; [target] — they are
+ * the receiving side of a transfer. The answer is saved in the account (`Account.cardDigits`), so the next receipt finds it alone.
+ */
+data class ReceiptAccountAsk(val digits: String, val target: Boolean = false)
 
 /** What the window shows about the operation already made from the receipt; the amount is formatted, the date is not. */
 data class ScanDuplicate(val date: LocalDate, val amount: String, val category: String?)
@@ -48,6 +55,38 @@ internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: M
             key = prefill.dedupeKey,
             duplicate = scan?.duplicate,
             document = receipt.format != AfipQrFormat.id,
+            ai = receipt.format == ReceiptAi.FORMAT,
         ),
+    )
+}
+
+/**
+ * A receipt «Перевод между своими счетами» (#646): the sheet opens as «Перевод» with the day and the sums; the accounts follow
+ * from the card digits ([ReceiptAccounts]). When the other account is in another currency, its sum goes to «Сумма зачисления».
+ * Never an expense: a transfer is not spending.
+ */
+internal fun TransactionEditUiState.withReceiptTransfer(
+    receipt: Receipt,
+    moneyFormat: MoneyFormat,
+    duplicate: ScanDuplicate?,
+): TransactionEditUiState {
+    val toTotal = receipt.transfer?.toTotal
+    return copy(
+        isNew = true,
+        type = TransactionType.TRANSFER,
+        refund = false,
+        amount = moneyFormat.formatForEditing(receipt.total),
+        amountSuggested = false,
+        suggestedRateDate = null,
+        amountError = null,
+        toAmount = if (toTotal != null && toTotal.currency != receipt.total.currency) moneyFormat.formatForEditing(toTotal) else "",
+        toAmountError = null,
+        receiptEnabled = false,
+        receiptAmount = "",
+        receiptAmountError = null,
+        receiptCurrencyError = null,
+        keypadTarget = KeypadTarget.AMOUNT,
+        date = receipt.date,
+        scan = ScanUi(seller = receipt.merchant, key = receipt.key, duplicate = duplicate, document = true),
     )
 }

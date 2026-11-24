@@ -4,8 +4,6 @@ import app.coshell.converter.ConverterEntry
 import app.coshell.core.domain.hints.FirstStepsState
 import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.FirstStepsRow
-import app.coshell.hints.FirstStepsSheet
-import app.coshell.hints.HintsViewModel
 import app.coshell.hints.CoachHint
 import app.coshell.hints.LocalHintHost
 import app.coshell.hints.StepsFinale
@@ -13,7 +11,6 @@ import app.coshell.hints.WordHint
 import app.coshell.home.components.DraftsStrip
 import app.coshell.home.components.EmptyTotalCard
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +19,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.remember
 import app.coshell.core.domain.settings.HomeLayout
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.setValue
@@ -35,16 +31,12 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.lazy.itemsIndexed
 import app.coshell.core.domain.settings.HomeCard
 import app.coshell.settings.LocalScreenOptions
-import app.coshell.settings.ScreenOptionsViewModel
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.motion.listItemMotion
@@ -52,7 +44,6 @@ import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.budget.HomeBudget
-import app.coshell.home.budget.HomeBudgetViewModel
 import app.coshell.home.components.HomeTiles
 import app.coshell.home.components.HotBudgets
 import app.coshell.home.components.MonthReviewCard
@@ -60,102 +51,23 @@ import app.coshell.home.components.RecentCard
 import app.coshell.home.components.SyncBanner
 import app.coshell.home.components.VersionGateBanner
 import app.coshell.home.components.VersionGateBannerState
-import app.coshell.gate.LocalInputLock
 import app.coshell.home.components.SyncBannerActions
 import app.coshell.home.components.TotalCard
 import app.coshell.home.sync.SyncBannerState
-import app.coshell.home.sync.SyncBannerViewModel
 import app.coshell.reports.review.MonthReviewUiState
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import app.coshell.home.sync.SyncDot
+import app.coshell.home.sync.SyncDotState
+import app.coshell.home.upcoming.CreditPaymentRow
+import app.coshell.home.upcoming.DebtDueRow
+import app.coshell.home.upcoming.DepositEndRow
 import app.coshell.home.upcoming.UpcomingCard
 import app.coshell.home.upcoming.UpcomingRow
-import app.coshell.home.upcoming.UpcomingViewModel
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
-
-/** Everything «Обзор» can open: «Операции», the rates screen, an operation, a new account. */
-data class HomeActions(
-    val onTransactions: () -> Unit = {},
-    val onRates: () -> Unit = {},
-    val onConverter: () -> Unit = {},
-    /** «Без категории» → «Операции» with the «Без категории · Этот месяц» filter. */
-    val onUncategorized: () -> Unit = {},
-    val onTransactionClick: (String) -> Unit = {},
-    val onAddAccount: () -> Unit = {},
-    /** «Все счета ›» on the balance card → «Счета». */
-    val onAccounts: () -> Unit = {},
-    /** Sync banner: «Войти» → «Семья», «Отзыв» → feedback with the error code typed in. */
-    val onFamily: () -> Unit = {},
-    val onFeedback: (prefill: String) -> Unit = {},
-    /** The budget tile → «Бюджеты»; an envelope of «Горит в бюджете» → its screen in the current budget month. */
-    val onBudgets: () -> Unit = {},
-    val onBudget: (categoryId: String, month: YearMonth) -> Unit = { _, _ -> },
-    /** «Итог октября» → its screen (#236). */
-    val onReview: (month: YearMonth) -> Unit = {},
-    /** «Провести» in «Скоро» → the entry sheet filled from the template on the payment's day (#143). */
-    val onPostPayment: (templateId: String, date: LocalDate) -> Unit = { _, _ -> },
-    /** «Все N ›» in «Скоро» → «Регулярные платежи» (#403). */
-    val onRecurring: () -> Unit = {},
-    /** «Черновики · N» under the balance → «Черновики» (#586). */
-    val onDrafts: () -> Unit = {},
-)
-
-@Composable
-fun HomeRoute(
-    actions: HomeActions,
-    viewModel: HomeViewModel = hiltViewModel(),
-    syncViewModel: SyncBannerViewModel = hiltViewModel(),
-    budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
-    upcomingViewModel: UpcomingViewModel = hiltViewModel(),
-    screenOptions: ScreenOptionsViewModel = hiltViewModel(),
-    hintsViewModel: HintsViewModel = hiltViewModel(),
-    draftsCount: DraftsCountViewModel = hiltViewModel(),
-    gate: VersionGateBannerState? = null,
-    onUpdate: () -> Unit = {},
-) {
-    val drafts by draftsCount.count.collectAsStateWithLifecycle()
-    val lock = LocalInputLock.current
-    val steps by hintsViewModel.steps.collectAsStateWithLifecycle()
-    val finale by hintsViewModel.finale.collectAsStateWithLifecycle()
-    var stepsOpen by rememberSaveable { mutableStateOf(false) }
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val budget by budgetViewModel.state.collectAsStateWithLifecycle()
-    val sync by syncViewModel.state.collectAsStateWithLifecycle()
-    val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
-    val upcomingTotal by upcomingViewModel.total.collectAsStateWithLifecycle()
-    val syncActions = SyncBannerActions(
-        onRetry = syncViewModel::retry,
-        onSignIn = actions.onFamily,
-        onFeedback = actions.onFeedback,
-        onDismiss = syncViewModel::dismiss,
-    )
-    // Both counts in before the blocks show: the budget tile takes the place of «Без категории».
-    HomeScreen(
-        if (budget == null) HomeUiState(isLoading = true) else state,
-        actions,
-        sync,
-        syncActions,
-        budget?.budget,
-        review = budget?.review,
-        onHideReview = budgetViewModel::hideReview,
-        upcoming = upcoming,
-        upcomingTotal = upcomingTotal,
-        onPostAll = lock.guard1 { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
-        onSkipAll = lock.guard1(upcomingViewModel::skipAll),
-        gate = gate,
-        onUpdate = onUpdate,
-        onLayoutChange = { layout -> screenOptions.change { it.copy(home = layout) } },
-        firstSteps = steps,
-        onFirstSteps = { stepsOpen = true },
-        finale = finale,
-        onFinale = hintsViewModel::dismissFinale,
-        draftCount = drafts,
-    )
-    if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
-}
 
 /**
  * «Обзор» (boards `Home`, `HomeAttention`, `BudHome`, `Mon236A`, `Rec143HomeA`): hero card with the total, «Итог месяца» in the
@@ -173,6 +85,9 @@ fun HomeScreen(
     onHideReview: (YearMonth) -> Unit = {},
     upcoming: List<UpcomingRow> = emptyList(),
     upcomingTotal: Int = upcoming.size,
+    creditPayments: List<CreditPaymentRow> = emptyList(),
+    debtDue: List<DebtDueRow> = emptyList(),
+    depositEnds: List<DepositEndRow> = emptyList(),
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
@@ -183,6 +98,7 @@ fun HomeScreen(
     finale: Boolean = false,
     onFinale: () -> Unit = {},
     draftCount: Int = 0,
+    syncDot: SyncDotState? = null,
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -193,16 +109,21 @@ fun HomeScreen(
     val cards = LocalScreenOptions.current.home.visible.filter { card ->
         when (card) {
             HomeCard.REVIEW -> review?.month != null
-            HomeCard.UPCOMING -> upcoming.isNotEmpty()
+            HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty() || depositEnds.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
     }
     Scaffold(
-        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) { EyeButton() } },
+        topBar = {
+            TabTopBar(stringResource(R.string.nav_home), scroll) {
+                syncDot?.let { SyncDot(it, actions.onFamily) }
+                EyeButton()
+            }
+        },
         bottomBar = {
             if (editing) {
-                Box(Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(Spacing.l)) {
+                Box(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {
                     CoShellButton(onClick = { editing = false }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.keypad_done)) }
                 }
             }
@@ -241,7 +162,7 @@ fun HomeScreen(
             item { Box(Modifier.staggeredEntrance(0)) { TotalCard(state, actions.onAccounts) } }
             firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
             if (finale) item(key = "steps-finale") { StepsFinale(onFinale, listItemMotion()) }
-            if (draftCount > 0) item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, listItemMotion()) }
+            item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, actions.onNotes, listItemMotion()) }
             if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
@@ -251,8 +172,8 @@ fun HomeScreen(
                         HomeCard.REVIEW -> review?.month?.let { month ->
                             MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
                         }
-                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty()) {
-                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll)
+                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty() || depositEnds.isNotEmpty()) {
+                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll, creditPayments, actions.onPostCredit, debtDue, actions.onOpenDebt, depositEnds, actions.onOpenAccount)
                         }
                         HomeCard.TILES -> HomeTiles(
                             state,

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type_prepaid">Travel pass</string>
+    <string name="account_balance_on_card">Card balance</string>
+    <string name="account_balance_on_card_check">Card balance · Check</string>
+    <string name="account_balance_check_title">Check balance</string>
+    <string name="account_balance_on_card_hint">Now: %1$s. Enter how much is on the card.</string>
+    <string name="account_prepaid_total_hint">Off: the top-up is already recorded as spending</string>
+</resources>

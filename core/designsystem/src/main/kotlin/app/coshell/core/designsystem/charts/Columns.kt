@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.charts
 
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -80,6 +81,8 @@ fun CoShellColumns(
         horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
         columns.forEachIndexed { index, column ->
+            // A default description hides its sum with the label (#600); a given one is the caller's to mask.
+            val spoken = column.description ?: "${column.label}: ${shownAmount(column.valueLabel)}"
             val click = onSelect?.let { select -> Modifier.tactileClickable(onClick = { select(index) }) } ?: Modifier
             ColumnBar(
                 column,
@@ -87,7 +90,7 @@ fun CoShellColumns(
                 height = height,
                 entrance = { entrance.value },
                 modifier = Modifier.weight(1f).then(click).semantics(mergeDescendants = true) {
-                    contentDescription = column.description ?: "${column.label}: ${column.valueLabel}"
+                    contentDescription = spoken
                     this.selected = index == selected
                 },
             )
@@ -101,7 +104,7 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
     val quiet = if (LocalDarkTheme.current) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.surfaceContainerHighest
     val fill = if (on) progressColors().indicator else quiet
     val edge = if (on) fillEdge(fill, MaterialTheme.colorScheme.surfaceContainerHighest) else null
-    val ghostColor = MaterialTheme.colorScheme.outline
+    val ghostColor = secondaryInk() // the past period — the second colour (#442 Б)
     val ink = if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
     val shown = animateFloatAsState(column.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "column")
     // The texts are drawn but not read one by one: the column's description on [modifier] says it all.

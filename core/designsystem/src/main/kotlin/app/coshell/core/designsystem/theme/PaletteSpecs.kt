@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 // The colours of each CoShellPalette (1.0 themes, owner's choice 2026-11-16, #354/#385). Generated from
 // scripts/agent/themes_1_0.py — change both together; that script audits every pair in both themes. Schemes: ColorSchemes.kt.
+// inkLight — the deep shade of the primary for the light theme (owner's poll 2026-11-23, #493 Б): ≥ 4.5:1 on the light card,
+// scripts/agent/themes_493_inks.py; soft — a pastel theme (Мате, Сакура, Лотос: #493 «нежные — А», no extra brightness).
 // warning* — the theme's attention colour (owner's poll 2026-11-20, Б: the hue farthest from the theme's own colours), scripts/agent/alert_colors.py.
 
 // Лайм — неон, кислотный лайм + фиолетовый
@@ -22,6 +24,7 @@ internal val LimeSpec = PaletteSpec(
     warningLight = Color(0xFF05724D),
     backgroundDark = Color(0xFF050805),
     backgroundLight = Color(0xFFF7FFEA),
+    inkLight = Color(0xFF587E05),
 )
 
 // Гранат — неон, рубиновый + бирюзовый
@@ -40,6 +43,7 @@ internal val GarnetSpec = PaletteSpec(
     warningLight = Color(0xFF8136B1),
     backgroundDark = Color(0xFF12060A),
     backgroundLight = Color(0xFFFFF4F6),
+    inkLight = Color(0xFFD0024E),
 )
 
 // Банан — неон, жёлтый + индиго
@@ -58,6 +62,7 @@ internal val BananaSpec = PaletteSpec(
     warningLight = Color(0xFF076E7C),
     backgroundDark = Color(0xFF0A0903),
     backgroundLight = Color(0xFFFFFBE5),
+    inkLight = Color(0xFF837202),
 )
 
 // Мате — пастель, травяной + медный
@@ -76,6 +81,8 @@ internal val MateSpec = PaletteSpec(
     warningLight = Color(0xFF4F53D1),
     backgroundDark = Color(0xFF0B0D08),
     backgroundLight = Color(0xFFF6F8EC),
+    inkLight = Color(0xFF5A7A2D),
+    soft = true,
 )
 
 // Эспрессо — неон, кофейный + электрик
@@ -94,6 +101,7 @@ internal val EspressoSpec = PaletteSpec(
     warningLight = Color(0xFF8837B1),
     backgroundDark = Color(0xFF110B08),
     backgroundLight = Color(0xFFFBF6F0),
+    inkLight = Color(0xFF9C5925),
 )
 
 // Квас — неон, янтарь + бирюза
@@ -112,6 +120,7 @@ internal val KvasSpec = PaletteSpec(
     warningLight = Color(0xFF7644C5),
     backgroundDark = Color(0xFF0D0904),
     backgroundLight = Color(0xFFFFF8EB),
+    inkLight = Color(0xFF956405),
 )
 
 // Сакура — пастель, розовый + листва
@@ -130,6 +139,8 @@ internal val SakuraSpec = PaletteSpec(
     warningLight = Color(0xFF815C04),
     backgroundDark = Color(0xFF120A0E),
     backgroundLight = Color(0xFFFFF5F8),
+    inkLight = Color(0xFF9E5A75),
+    soft = true,
 )
 
 // Василёк — неон, синий + пшеничный
@@ -148,6 +159,7 @@ internal val CornflowerSpec = PaletteSpec(
     warningLight = Color(0xFF026771),
     backgroundDark = Color(0xFF060912),
     backgroundLight = Color(0xFFF4F7FF),
+    inkLight = Color(0xFF3763D1),
 )
 
 // Лотос — пастель, сиреневый + лист лотоса
@@ -166,4 +178,6 @@ internal val LotusSpec = PaletteSpec(
     warningLight = Color(0xFF915303),
     backgroundDark = Color(0xFF0E0814),
     backgroundLight = Color(0xFFFBF5FF),
+    inkLight = Color(0xFF7B62A7),
+    soft = true,
 )

@@ -1,6 +1,5 @@
 package app.coshell.reports.capital
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.accounts.list.components.AccountGroup
 import app.coshell.accounts.list.components.AccountRow
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.CoShellLine
 import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.components.underBars
@@ -35,6 +34,7 @@ import app.coshell.core.designsystem.theme.AmountHeadlineStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.list.ChipScrollRow
 import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.format.formatMonth
 import app.coshell.ui.format.formatMonthShort
@@ -117,7 +117,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
             }
             Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
                 Text(
-                    state.value,
+                    shownAmount(state.value),
                     style = AmountHeadlineStyle,
                     maxLines = 1,
                 )
@@ -129,7 +129,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
                 )
                 state.change?.let {
                     Text(
-                        stringResource(R.string.capital_month_change, it),
+                        stringResource(R.string.capital_month_change, shownAmount(it)),
                         style = MaterialTheme.typography.bodySmall,
                         color = if (state.falling) LocalAmountPalette.current.expense else LocalStatusPalette.current.success,
                         maxLines = 1,
@@ -137,7 +137,7 @@ private fun Head(state: CapitalMonthUiState, onMonth: (YearMonth) -> Unit) {
                     )
                 }
             }
-            val description = state.points.joinToString(", ") { "${formatMonthYear(it.month)} ${it.value}" }
+            val description = state.points.map { "${formatMonthYear(it.month)} ${shownAmount(it.value)}" }.joinToString(", ")
             CoShellLine(
                 points = state.points.map { LinePoint(formatMonthShort(it.month).take(1), it.minor) },
                 description = stringResource(R.string.reports_capital_description, description),
@@ -157,7 +157,7 @@ private fun OrderChips(order: CapitalOrder, onOrder: (CapitalOrder) -> Unit) {
         CapitalOrder.CHANGE to R.string.capital_month_order_change,
     )
     // Three chips may not fit 320 dp in every language: the row scrolls.
-    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+    ChipScrollRow {
         labels.forEach { (value, label) ->
             CoShellFilterChip(selected = order == value, onClick = { onOrder(value) }, label = { Text(stringResource(label)) })
         }

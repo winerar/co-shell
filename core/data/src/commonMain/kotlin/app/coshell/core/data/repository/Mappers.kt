@@ -3,6 +3,7 @@ package app.coshell.core.data.repository
 import app.coshell.core.data.db.AccountEntity
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
+import app.coshell.core.data.db.DebtEventEntity
 import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
@@ -10,13 +11,21 @@ import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
+import app.coshell.core.model.CreditTerms
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.DebtDirection
+import app.coshell.core.model.DepositPayout
+import app.coshell.core.model.DepositTerms
+import app.coshell.core.model.DebtEvent
+import app.coshell.core.model.DebtEventKind
 import app.coshell.core.model.Money
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -40,7 +49,34 @@ internal fun AccountEntity.toModel() = Account(
     sortOrder = sortOrder,
     excludedFromTotal = excludedFromTotal,
     color = color,
+    cardDigits = cardDigits,
+    prepaid = prepaid,
+    credit = credit(),
+    deposit = depositTermsOf(depositRateBp, depositEnd, depositPayout, depositStart),
+    localOnly = localOnly,
 )
+
+/** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
+private fun AccountEntity.credit(): CreditTerms? = creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor, creditStatementDay, creditGraceDays)
+
+internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMinor: Long?, statementDay: Int? = null, graceDays: Int? = null): CreditTerms? {
+    val limit = limitMinor ?: return null
+    val day = payDay ?: return null
+    val min = minBp?.let { MinPayment.Percent(it) } ?: minMinor?.let { MinPayment.Fixed(it) } ?: return null
+    // A half-written grace period (one of the two) is dropped, the card stays a card.
+    val grace = if (statementDay != null && graceDays != null) statementDay to graceDays else null
+    return runCatching { CreditTerms(limit, day, min, grace?.first, grace?.second) }.getOrNull()
+}
+
+/** The conditions of a stored deposit; anything unreadable (a payout of a newer version, half a row) is a deposit without conditions. */
+internal fun depositTermsOf(rateBp: Int?, end: String?, payout: String?, start: String? = null): DepositTerms? {
+    val rate = rateBp ?: return null
+    val day = end?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return null
+    val how = payout?.let { name -> DepositPayout.entries.firstOrNull { it.name == name } } ?: return null
+    // An unreadable opening day only loses the whole-term income, the conditions stay.
+    val opened = start?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+    return runCatching { DepositTerms(rate, day, how, opened) }.getOrNull() ?: runCatching { DepositTerms(rate, day, how) }.getOrNull()
+}
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     id = id,
@@ -54,8 +90,21 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     sortOrder = sortOrder,
     excludedFromTotal = excludedFromTotal,
     color = color,
+    cardDigits = cardDigits,
+    prepaid = prepaid,
+    creditLimitMinor = credit?.limitMinor,
+    creditPayDay = credit?.payDay,
+    creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
+    creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
+    creditStatementDay = credit?.statementDay,
+    creditGraceDays = credit?.graceDays,
+    depositRateBp = deposit?.rateBp,
+    depositEnd = deposit?.endDate?.toString(),
+    depositPayout = deposit?.payout?.name,
+    depositStart = deposit?.startDate?.toString(),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
+    localOnly = localOnly,
 )
 
 internal fun CategoryEntity.toModel() = Category(
@@ -194,3 +243,33 @@ internal fun Tag.toEntity(stamp: Stamp) = TagEntity(id = id, name = name, color 
 
 /** `transactions.labels` (a JSON array of strings) as a list. */
 internal fun decodeLabels(json: String): List<String> = Json.decodeFromString(labelsSerializer, json)
+
+internal fun DebtEventEntity.toModel() = DebtEvent(
+    id = id,
+    debtId = debtId,
+    kind = DebtEventKind.valueOf(kind),
+    direction = DebtDirection.valueOf(direction),
+    amount = Money(amountMinor, CurrencyCode(currency)),
+    date = Instant.fromEpochMilliseconds(date),
+    accountId = accountId,
+    person = person,
+    dueDate = dueDate?.let(LocalDate::parse),
+    note = note,
+)
+
+internal fun DebtEvent.toEntity(stamp: Stamp) = DebtEventEntity(
+    id = id,
+    debtId = debtId,
+    kind = kind.name,
+    direction = direction.name,
+    amountMinor = amount.amountMinor,
+    currency = amount.currency.value,
+    accountId = accountId,
+    date = date.toEpochMilliseconds(),
+    person = person,
+    dueDate = dueDate?.toString(),
+    note = note,
+    updatedAt = stamp.now,
+    updatedBy = stamp.by,
+)
+

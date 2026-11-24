@@ -1,6 +1,7 @@
 package app.coshell.accounts.edit
 
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.DepositPayout
 
 data class AccountEditUiState(
     val isLoading: Boolean = false,
@@ -16,10 +17,43 @@ data class AccountEditUiState(
     val includedInTotal: Boolean = true,
     /** Colour of the account's card (category palette), `null` — no colour. */
     val color: Long? = null,
+    /** Last digits of the card or account as typed («Для чеков», #577); empty — not linked. */
+    /** A travel pass (#645): shown as the «Проездной» type, the balance on the card is checked by hand. */
+    val prepaid: Boolean = false,
+    /** A credit card (#686): the «Кредитка» type and its conditions as typed in «Условия карты». */
+    val credit: Boolean = false,
+    val creditLimit: String = "",
+    /** Day of the month the payment is due. */
+    val creditPayDay: String = "",
+    /** The minimum payment is a sum (`true`) or a percent of the debt. */
+    val creditMinSum: Boolean = false,
+    val creditMin: String = "",
+    /** Statement day and grace days (#634): optional, both or neither. */
+    val creditStatementDay: String = "",
+    val creditGraceDays: String = "",
+    /** A deposit's conditions as typed in «Условия вклада» (#634): the yearly rate, the closing day (`YYYY-MM-DD`) and how the interest is paid. */
+    val depositRate: String = "",
+    val depositEnd: String = "",
+    val depositPayout: DepositPayout = DepositPayout.AT_END,
+    /** The day the deposit was opened (`YYYY-MM-DD`), optional: «в конце срока» then counts the whole term. */
+    val depositStart: String = "",
+    /** Saving was refused: the rate or the closing day of a deposit is missing or wrong. */
+    val depositError: Boolean = false,
+    /** Saving was refused: the conditions of a credit card are not complete. */
+    val creditError: Boolean = false,
+    val cardDigits: String = "",
+    val cardDigitsError: Boolean = false,
     /** Shared by the family; off — personal account of its owner (still visible to everyone). */
     val shared: Boolean = true,
+    /** «Только у меня» (#558): the account and its operations stay on this phone. */
+    val localOnly: Boolean = false,
     /** The family has other members, so «shared / personal» means something. */
     val showSharing: Boolean = false,
+    /**
+     * «Только у меня» can be switched on only while creating (a saved account may already be in the cloud);
+     * switching it off later is always possible (the account and its operations then go to the family).
+     */
+    val localOnlyLocked: Boolean = false,
     /** The account has transactions, so its currency cannot be changed. */
     val currencyLocked: Boolean = false,
     val suggestedCurrencies: List<String> = emptyList(),

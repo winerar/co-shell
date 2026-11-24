@@ -58,7 +58,8 @@
 
 ## 6. Правила проекта (золотые правила `AGENTS.md`)
 - [x] **[есть, #377]** `ProjectRulesTest`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
-- [x] **[есть, #377]** Lint `HardcodedText`/`MissingTranslation`/`ExtraTranslation`/`MissingQuantity` — ошибкой; литералы в `Text(…)` —
+- [ ] **[перед публикацией, 2026-11-24]** Переводы en/es догнать: `agent.sh l10n` показывает пусто, `translations-pending.txt` пуст, `PUBLISHING=1` тест зелёный; вернуть lint `MissingTranslation` ошибкой (`app/build.gradle.kts`) и правило «во всех языках в одном коммите».
+- [x] **[есть, #377]** Lint `HardcodedText`/`ExtraTranslation`/`MissingQuantity` — ошибкой (`MissingTranslation` выключен на паузе); литералы в `Text(…)` —
   `HardcodedTextTest`; каждая строка во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`) — `TranslationsTest`.
 - [x] **[агент, 2026-11-16]** Тексты ru/en/es прогнаны по словарю (транзакция, папка, чек, конверт, бэкап, черновик, отправитель, жаргон, Firebase/GitHub): единственное — «чек/receipt/recibo» в строках шаблона с другой валютой → «Сумма покупки» (`template_foreign_*`). «Папка» осталась только про папку для файлов (копии) — это верно.
 - [ ] Размеры файлов и документация — `session-end.sh` зелёный; `STATUS`, `ROADMAP`, `feature-map.md` актуальны.
@@ -82,6 +83,7 @@
 - [~] **[агент, 2026-11-16]** Синк на двоих: `core.data.sync.*` зелёные (движок, конфликты LWW, `VersionGateSyncTest`, `NewerFieldsSyncTest`, квоты). Правила Firebase (`firebase/rules-test`) — только в CI (нужен эмулятор).
 
 ## 10. Выпуск
-- [x] `version.properties`: `major=1` → релиз с ним выходит как `1.0`, дальше `1.1`… сам (`ci.md` §«Номер версии», 2026-11-18).
+- [x] Версия — календарная `ГГ.М.N`, считается сама (`ci.md` §«Номер версии», 2026-11-24; до этого `1.N`).
 - [x] `docs/whats-new.md` — раздел «1.0» для семьи (2026-11-18); подпись ключа та же (обновление без переустановки).
+- [ ] Каждое новое место в «Ещё» из верхнего раздела `whats-new.md` — с меткой «новое»: ключ в `newmark/NewFeatures` + `MoreItem.newKey` (`MoreNewMarksTest`); новое внутри раздела — ключ на его строке («Настройки» — облачный разбор). Ключ старше месяца — убрать.
 - [ ] Чек-листы владельца #220 и #214 отмечены; после релиза — самообновление на обоих телефонах.

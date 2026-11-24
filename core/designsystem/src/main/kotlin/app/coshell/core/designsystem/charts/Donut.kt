@@ -75,9 +75,13 @@ fun CoShellDonut(
                 }
             }
         }
-        content()
+        // The centre stays inside the hole: a long amount shrinks or wraps there instead of running over the ring (#554).
+        Box(Modifier.size((size - thickness * 2) * HOLE_SHARE), contentAlignment = Alignment.Center, content = content)
     }
 }
+
+/** Part of the hole's diameter the centre may use: a line of text across the middle keeps clear of the ring. */
+private const val HOLE_SHARE = 0.84f
 
 /** Outline of one ring slice ([start], [sweep] in degrees, ring [stroke] wide), drawn inside it with a [width] line. */
 private fun DrawScope.drawSliceEdge(color: Color, start: Float, sweep: Float, stroke: Float, width: Float) {

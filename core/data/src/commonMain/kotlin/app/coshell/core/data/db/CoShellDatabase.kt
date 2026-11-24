@@ -18,9 +18,9 @@ import kotlinx.coroutines.IO
     entities = [
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
-        SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class,
+        SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class, DebtEventEntity::class,
     ],
-    version = 17,
+    version = 25,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -39,6 +39,14 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 14, to = 15), // v15: transactions.receipt_key — scanned receipt (#526)
         AutoMigration(from = 15, to = 16), // v16: budgets.zero_limit — a zero limit (#576)
         AutoMigration(from = 16, to = 17), // v17: drafts — quick notes, device-only (#586)
+        AutoMigration(from = 17, to = 18), // v18: accounts.card_digits — a bank receipt finds its account (#577)
+        AutoMigration(from = 18, to = 19), // v19: accounts.prepaid — a travel pass (#645)
+        AutoMigration(from = 19, to = 20), // v20: accounts.credit_* — a credit card (#686)
+        AutoMigration(from = 20, to = 21), // v21: debt_events — debts and loans (#552)
+        AutoMigration(from = 23, to = 24), // v24: accounts.deposit_start — the day a deposit was opened (#634)
+        AutoMigration(from = 22, to = 23), // v23: accounts.deposit_rate_bp, deposit_end, deposit_payout — deposit conditions (#634)
+        AutoMigration(from = 21, to = 22), // v22: accounts.credit_statement_day, credit_grace_days — grace period of a credit card (#634)
+        AutoMigration(from = 24, to = 25), // v25: accounts.local_only — «Только у меня» (#558)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
@@ -50,6 +58,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun templateDao(): TemplateDao
     abstract fun settingDao(): SettingDao
     abstract fun tagDao(): TagDao
+    abstract fun debtDao(): DebtDao
     abstract fun backupDao(): BackupDao
     abstract fun rateDao(): RateDao
     abstract fun syncDao(): SyncDao

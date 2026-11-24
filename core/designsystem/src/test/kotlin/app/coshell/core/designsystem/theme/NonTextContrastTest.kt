@@ -2,6 +2,7 @@ package app.coshell.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.lerp
 import app.coshell.core.designsystem.category.CategoryPalette
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -64,9 +65,17 @@ class NonTextContrastTest {
         text("error on background", s.error, s.background)
         t.heroStops.forEach { text("neon accent text inside the hero card", if (dark) accentInkFor(s, dark) else t.hero.content, it) }
 
+        // The top and bottom capsules (#493 Б: a tone of the primary in the light neon themes).
+        text("title on the top capsule", s.onSurface, t.panel)
+        // The second colour (#442 Б): section headers and links, menu icons on their tone, the past-period mark on a bar track.
+        text("section header in the second colour on background", s.secondary, s.background)
+        text("link in the second colour on surface", s.secondary, s.surface)
+        shape("menu icon on its second-colour tone", s.secondary, lerp(s.surface, s.secondary, 0.18f))
+        shape("past-period mark on a bar track", s.secondary, s.surfaceContainerHighest)
+
         // Icons and marks.
-        shape("tab icon on the bar", s.onSurfaceVariant, s.surfaceContainerHigh)
-        shape("badge on the bar", s.tertiary, s.surfaceContainerHigh)
+        shape("tab icon on the bar", s.onSurfaceVariant, t.panel)
+        shape("badge on the bar", edged(s.tertiary, t.panel), t.panel)
         shape("day dot on surface", s.tertiary, s.surface)
         shape("progress on surface", edged(progressColorsFor(s, dark).indicator, s.surface), s.surface)
 
@@ -74,7 +83,7 @@ class NonTextContrastTest {
         val sel = selectionColorsFor(s, dark)
         shape("segment pill on its track", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
         shape("chip and label pill on its track", edged(sel.fill, s.surfaceContainer), s.surfaceContainer)
-        shape("tab pill on the bar", edged(sel.fill, s.surfaceContainerHigh), s.surfaceContainerHigh)
+        shape("tab pill on the bar", edged(sel.fill, t.panel), t.panel)
         shape("selected day on surface", edged(sel.fill, s.surface), s.surface)
         text("selected label on its pill", sel.content, sel.fill)
         shape("checkbox and radio outline on surface", s.outline, s.surface)

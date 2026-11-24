@@ -52,6 +52,10 @@ data class CapitalMonthDestination(
     val currency: String,
 )
 
+/** «Итоги октября» (#554): stories of [year]-[month]; the card on «Обзор» opens them, the last story — [MonthReviewDestination]. */
+@Serializable
+data class MonthRecapDestination(val year: Int, val month: Int)
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)
@@ -170,6 +174,10 @@ data object ReportCurrenciesDestination
 @Serializable
 data object AiAddonDestination
 
+/** «Ещё → Настройки → Умные функции → Облачный разбор» (#635). */
+@Serializable
+data object CloudAiDestination
+
 /**
  * Category editor. `categoryId == null` creates a new category of [type] (a [CategoryType] name),
  * optionally inside folder [parentId]; [asFolder] opens it as a new folder.
@@ -217,9 +225,12 @@ data class TransactionEditDestination(
     val receiptUnread: Boolean = false,
     /** A draft of a quick note (#586): the sheet opens filled from it; once saved, the draft is gone. */
     val draftId: String? = null,
+    /** «Провести» a credit card payment (#686): a new transfer into this card for the minimum payment; the source account is chosen. */
+    val creditCardId: String? = null,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
+        const val ARG_CREDIT_CARD = "creditCardId"
         const val ARG_TRANSACTION_ID = "transactionId"
         const val ARG_TYPE = "type"
         const val ARG_COPY_FROM = "copyFrom"
@@ -281,5 +292,22 @@ data class BudgetEditDestination(val categoryId: String? = null, val year: Int, 
         const val ARG_CATEGORY_ID = "categoryId"
         const val ARG_YEAR = "year"
         const val ARG_MONTH = "month"
+    }
+}
+
+/** «Долги» (#552): «Мне должны» and «Я должен». */
+@Serializable
+data object DebtsDestination
+
+/** The new-debt sheet (#552). */
+@Serializable
+data object DebtNewDestination
+
+/** One debt's card (#552): returns, «Вернули часть», «Закрыть долг». */
+@Serializable
+data class DebtDetailDestination(val debtId: String) {
+    companion object {
+        /** SavedStateHandle key of [debtId]; must match the property name. */
+        const val ARG_DEBT_ID = "debtId"
     }
 }

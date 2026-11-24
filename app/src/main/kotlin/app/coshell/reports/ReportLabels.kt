@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.reports.ReportsUiState.Comparison
@@ -28,22 +29,31 @@ internal fun ghostCaption(period: ReportPeriod, startDay: Int): String =
 
 /** «за 11 дней · в прошлом месяце к 11-му было 820» or «в прошлом месяце — 820». */
 @Composable
-internal fun comparisonText(comparison: Comparison): String = when (comparison) {
-    is Comparison.SoFar -> {
-        val days = pluralStringResource(R.plurals.reports_days, comparison.days, comparison.days)
-        val previous = when (comparison.kind) {
-            ReportPeriodKind.MONTH -> stringResource(R.string.reports_so_far_month, comparison.previousDay, comparison.previous)
-            ReportPeriodKind.QUARTER -> stringResource(R.string.reports_so_far_quarter, comparison.previous)
-            ReportPeriodKind.YEAR -> stringResource(R.string.reports_so_far_year, comparison.previous)
-            ReportPeriodKind.CUSTOM -> stringResource(R.string.reports_so_far_custom, comparison.previous)
+internal fun comparisonText(comparison: Comparison): String {
+    // The sum of the period before hides with the others (#600); a bare number is masked whole.
+    val sum = shownAmount(
+        when (comparison) {
+            is Comparison.SoFar -> comparison.previous
+            is Comparison.Whole -> comparison.previous
+        },
+    )
+    return when (comparison) {
+        is Comparison.SoFar -> {
+            val days = pluralStringResource(R.plurals.reports_days, comparison.days, comparison.days)
+            val previous = when (comparison.kind) {
+                ReportPeriodKind.MONTH -> stringResource(R.string.reports_so_far_month, comparison.previousDay, sum)
+                ReportPeriodKind.QUARTER -> stringResource(R.string.reports_so_far_quarter, sum)
+                ReportPeriodKind.YEAR -> stringResource(R.string.reports_so_far_year, sum)
+                ReportPeriodKind.CUSTOM -> stringResource(R.string.reports_so_far_custom, sum)
+            }
+            "$days · $previous"
         }
-        "$days · $previous"
-    }
-    is Comparison.Whole -> when (comparison.kind) {
-        ReportPeriodKind.MONTH -> stringResource(R.string.reports_whole_month, comparison.previous)
-        ReportPeriodKind.QUARTER -> stringResource(R.string.reports_whole_quarter, comparison.previous)
-        ReportPeriodKind.YEAR -> stringResource(R.string.reports_whole_year, comparison.previous)
-        ReportPeriodKind.CUSTOM -> stringResource(R.string.reports_whole_custom, comparison.previous)
+        is Comparison.Whole -> when (comparison.kind) {
+            ReportPeriodKind.MONTH -> stringResource(R.string.reports_whole_month, sum)
+            ReportPeriodKind.QUARTER -> stringResource(R.string.reports_whole_quarter, sum)
+            ReportPeriodKind.YEAR -> stringResource(R.string.reports_whole_year, sum)
+            ReportPeriodKind.CUSTOM -> stringResource(R.string.reports_whole_custom, sum)
+        }
     }
 }
 

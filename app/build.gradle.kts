@@ -22,6 +22,8 @@ android {
         // Release builds: 0.N, N = releases so far (scripts/ci/version_name.py, only on main); others — "0.0".
         versionName = providers.environmentVariable("VERSION_NAME").orNull ?: "0.0"
         buildConfigField("String", "UPDATE_BASE_URL", "\"\"")
+        // The invitation gate of the closed test (#666): only release builds with `ACCESS_GATE=true` from CI ask for a code.
+        buildConfigField("boolean", "ACCESS_GATE", "false")
         // Feedback form → Firestore (docs/setup/feedback.md). Not secrets: the Web API key is public
         // by design, access is limited by Firestore rules. Empty locally → the form says "not configured".
         buildConfigField("String", "FIREBASE_PROJECT_ID", "\"${env("FIREBASE_PROJECT_ID")}\"")
@@ -31,6 +33,8 @@ android {
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${env("GOOGLE_WEB_CLIENT_ID")}\"")
         // Realtime Database for the instant-sync bell; empty → <project>-default-rtdb.firebaseio.com.
         buildConfigField("String", "FIREBASE_DATABASE_URL", "\"${env("FIREBASE_DATABASE_URL")}\"")
+        // Cloud note parsing (#635, tools/ai-proxy): address of the Cloudflare Worker; empty → the cloud model is unavailable.
+        buildConfigField("String", "AI_PROXY_URL", "\"${env("AI_PROXY_URL")}\"")
     }
 
     androidResources {
@@ -79,6 +83,7 @@ android {
             // Only release builds update themselves; the URL comes from CI (public releases repo).
             val updateUrl = providers.environmentVariable("UPDATE_BASE_URL").orNull.orEmpty()
             buildConfigField("String", "UPDATE_BASE_URL", "\"$updateUrl\"")
+            buildConfigField("boolean", "ACCESS_GATE", (providers.environmentVariable("ACCESS_GATE").orNull == "true").toString())
         }
     }
 
@@ -106,8 +111,10 @@ android {
         // Full lint runs in `check` on every PR; skipping lintVital keeps `assembleRelease` fast on main.
         checkReleaseBuilds = false
         ignoreTestSources = true // tests are not shipped; saves the lintAnalyze*Test tasks
-        // Golden rule 9 (#377): text only in resources, in every language of AppLanguage.SUPPORTED.
-        error += setOf("HardcodedText", "MissingTranslation", "ExtraTranslation", "MissingQuantity")
+        // Golden rule 9 (#377): text only in resources. Translations are paused until publication (owner 2026-11-24):
+        // MissingTranslation is off; TranslationsTest checks the pending list instead (translations-pending.txt).
+        error += setOf("HardcodedText", "ExtraTranslation", "MissingQuantity")
+        disable += "MissingTranslation"
     }
 }
 

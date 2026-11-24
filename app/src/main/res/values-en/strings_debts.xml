@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debts_title">Debts</string>
+    <string name="debts_tab_lent">Owed to me</string>
+    <string name="debts_tab_borrowed">I owe</string>
+    <string name="debts_total_lent">Owed to me: %1$s</string>
+    <string name="debts_total_borrowed">I owe: %1$s</string>
+    <string name="debts_tab_empty_lent">Nobody owes you yet.</string>
+    <string name="debts_tab_empty_borrowed">You don\'t owe anyone yet.</string>
+    <string name="debts_empty">No debts yet. Tap “+” to add the first one.</string>
+    <string name="debts_add">New debt</string>
+    <string name="debts_left_of">%1$s left of %2$s</string>
+    <string name="debts_due_date">by %1$s</string>
+    <string name="debts_no_due">no due date</string>
+    <string name="debts_due_today">due today</string>
+    <plurals name="debts_due_in">
+        <item quantity="one">in %1$d day</item>
+        <item quantity="other">in %1$d days</item>
+    </plurals>
+    <plurals name="debts_late">
+        <item quantity="one">%1$d day overdue</item>
+        <item quantity="other">%1$d days overdue</item>
+    </plurals>
+    <string name="debts_closed_show">Closed: %1$d</string>
+    <string name="debts_closed_hide">Hide closed</string>
+    <string name="debts_closed_label">closed</string>
+    <string name="debts_new_title">New debt</string>
+    <string name="debts_new_hint">The amount changes the account balance but is not counted as spending or income.</string>
+    <string name="debts_field_person">Who</string>
+    <string name="debts_field_amount">Amount</string>
+    <string name="debts_field_account_lent">From account</string>
+    <string name="debts_field_account_borrowed">To account</string>
+    <string name="debts_field_due">Return by</string>
+    <string name="debts_field_note">Note</string>
+    <string name="debts_due_none">Not set</string>
+    <string name="debts_error_person">Enter a name</string>
+    <string name="debts_error_amount">Enter an amount above zero</string>
+    <string name="debts_error_account">Choose an account</string>
+    <string name="debts_error_too_much">More than is left to return</string>
+    <string name="debts_error_closed">This debt is already closed</string>
+    <string name="debts_detail_summary">Total %1$s · returned %2$s</string>
+    <string name="debts_detail_returns">Returns</string>
+    <string name="debts_return">Part returned</string>
+    <string name="debts_return_account_lent">To account</string>
+    <string name="debts_return_account_borrowed">From account</string>
+    <string name="debts_return_save">Save</string>
+    <string name="debts_close">Close debt</string>
+    <string name="debts_close_title">Close the debt?</string>
+    <string name="debts_close_text">The remaining %1$s is written off; no money moves between accounts.</string>
+    <string name="debts_delete_title">Delete the debt?</string>
+    <string name="debts_delete_text">The debt and all returns are deleted; account balances go back as they were.</string>
+    <string name="debts_menu_hint">Who owes you and whom you owe</string>
+    <string name="debts_soon_lent">%1$s will return</string>
+    <string name="debts_soon_borrowed">You return to %1$s</string>
+    <string name="debts_soon_amount_in" translatable="false">+%1$s</string>
+    <string name="debts_soon_amount_out" translatable="false">−%1$s</string>
+</resources>

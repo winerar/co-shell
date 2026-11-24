@@ -43,8 +43,8 @@
 - **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
   `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.
-  `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, color, title, onClick, subtitle)`
-  (#155): иконка в квадрате 32 dp с заливкой цвета (`MenuIcon`; квадрат — раздел, круг — категория), шеврон; группы «Ещё»;
+  `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, title, onClick, subtitle)`
+  (#155): иконка второго цвета в круге его тона 18 % (`MenuIcon`, #442 Б — у всех строк один цвет), шеврон; группы «Ещё»;
   `mark` — сразу за заголовком: метка «новое» = `CoShellStatusChip(…, StatusTone.Fresh)` (неон палитры в точке, доска Style2, #335).
 - **Модальные окна (#345, вариант В)** — вопрос: `CoShellAlertDialog` — карточка по центру (иконка в квадрате, вопрос,
   последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`; длинный текст прокручивается над кнопками, кнопки не сжимаются — `ConfirmCardOverflowTest`).
@@ -65,6 +65,7 @@
   `CoShellTagDot(color)` — точка в строках выбора; цвет без выбора — `CategoryPalette.forKey(id)`.
   Тег-переключатель — `CoShellTagChip(name, color, selected, onClick, removeLabel)` (34 dp; вкл — заливка цвета тега, «✕» — в
   выбранных), `CoShellTagMoreChip(label)` — пунктирная «Все N» (#293, строка в шторке ввода и шторка «Теги»).
+- **Веер над «+»** — `CoShellActionFan(actions, enabled) { «+» }`, `FanAction(icon, label, onSelect)` (#623, доски `HomeHoldFan`, `CompChoice`): удержание раскрывает на дуге круглые кнопки (`Sizes.fanButton` 56, `fanRadius` 120), ведут палец и отпускают — действие, мимо — закрыть; короткое нажатие как раньше. Геометрия — `ActionFanGeometry`; цели — `navigation/FanTarget`.
 - **Кнопка добавления** — `CoShellAddFab(label, onClick)`: **круглая «+» 56 dp без текста**, внизу справа (`Scaffold(floatingActionButton)`),
   одна на экран-список; `label` — только имя для озвучки («Новый счёт»). Под списком — `Sizes.fabClearance`. Ни «+» в шапке, ни строки
   «добавить» в списке, ни пунктира (выбор владельца 2026-11-16, #408; такой стиль — для всех будущих кнопок добавления; `AddButtonRuleTest`).
@@ -105,7 +106,8 @@
   - `CoShellBarRow(label, value, fraction, color, share, ghost, ghostDescription, leading, onClick)` — полоса категории, серая черта — прошлый период.
   - `CoShellColumns(List<ChartColumn>, selected, average, onSelect)` — столбцы по месяцам: выбранный — акцент, число над столбцом,
     призрак — пунктирный контур, `average` — пунктир поперёк; TalkBack — `ChartColumn.description`.
-  - `CoShellDonut(slices, description) { центр }` — кольцо ≤ `DONUT_MAX_SLICES` + «Другое» (хвост группирует вызывающий), дуги — `donutArcs`.
+  - `CoShellDonut(slices, description) { центр }` — кольцо ≤ `DONUT_MAX_SLICES` + «Другое» (хвост группирует вызывающий), дуги — `donutArcs`; центр ограничен отверстием (84 % его диаметра): длинная сумма ужимается, а не наезжает на кольцо (#554).
+  - `CoShellHeatGrid(weekdays, leadingBlanks, cells: List<HeatCell>, selected, onSelect)` + `CoShellHeatLegend(less, more, trailing)` — «Календарь трат» (#553, доска `RepCalendar`, эталоны `heat_*`): ячейка 48 dp, уровень 0–4 — доля неона темы (`fillEdge`), сегодня — кольцо `themeEdge()`, выбранный — толще, будущие — тихие.
   - **«Пуля» бюджета** — `CoShellBullet(fraction, tone, mark)`: заполнение = потрачено/лимит, черта = темп на сегодня;
     `BulletTone` NORMAL/WARNING/DANGER/IDLE, цвет для текста того же состояния — `bulletColor`; высоты `Sizes.bullet*`.
   Дорожка нейтральная в обеих темах. Остальные графики — #168.

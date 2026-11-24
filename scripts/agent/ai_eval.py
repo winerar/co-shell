@@ -77,16 +77,18 @@ def task_category(llm, gold, limit):
 
 
 def task_notes(llm, gold, limit, label='notes'):
-    sch = schema({'amount': {'type': 'string'}, 'title': {'type': 'string'}, 'day': {'type': 'integer'}})
+    sch = schema({'amount': {'type': 'string'}, 'title': {'type': 'string'}, 'day': {'type': 'integer'},
+                  'pay': {'type': 'string', 'enum': ['cash', 'card', 'none']}})
     ok = amt = n = 0
     for c in gold[label][:limit]:
         text = c['line'] if label == 'notes' else c['phrase']
         out, dt, tk = ask(llm, 'Today is %s. Parse one spending note. amount = the amount as digits with a dot for decimals, no spaces, in the units written (3 500 -> 3500, 6,99 usd -> 6.99, \"к\"/k = thousand: 30к -> 30000, '
-                          '"три пятьсот" -> 3500, "two thousand five hundred" -> 2500); title = short thing bought, same language; day = 0 today, -1 yesterday, -2 day before yesterday.\n'
-                          'Example: "кофе 1 200 карта" -> {"amount": "1200", "title": "кофе", "day": 0}\nNote: "%s"' % (TODAY, text), sch)
+                          '"три пятьсот" -> 3500, "two thousand five hundred" -> 2500); title = short thing bought, same language; day = 0 today, -1 yesterday, -2 day before yesterday; '
+                          'pay = cash if the note says cash (нал, налик, кэш, кеш, efectivo), card if it says card (карта, безнал, tarjeta), else none.\n'
+                          'Example: "кофе 1 200 карта" -> {"amount": "1200", "title": "кофе", "day": 0, "pay": "card"}\nNote: "%s"' % (TODAY, text), sch)
         a = minor(out.get('amount', '')) == c['amount_minor']
         t = str(c['title']).split()[0].lower() in str(out.get('title', '')).lower()
-        d = out.get('day', 0) == c.get('day', 0)
+        d = out.get('day', 0) == c.get('day', 0) and ('pay' not in c or out.get('pay', 'none') == c['pay'])
         amt += a
         ok += a and t and d
         n += 1

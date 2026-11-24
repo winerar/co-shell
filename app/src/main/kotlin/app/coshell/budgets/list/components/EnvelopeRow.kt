@@ -20,6 +20,7 @@ import app.coshell.R
 import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
 import app.coshell.core.designsystem.amount.fitAmountAutoSize
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.charts.CoShellBullet
@@ -105,8 +106,8 @@ private fun SpentOfLimit(spent: String, limit: String) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Text(
         buildAnnotatedString {
-            append(spent)
-            withStyle(SpanStyle(color = muted)) { append(" / $limit") }
+            append(shownAmount(spent))
+            withStyle(SpanStyle(color = muted)) { append(" / " + shownAmount(limit)) }
         },
         style = RateSmallStyle,
         maxLines = 1,
@@ -122,7 +123,7 @@ private val MinAmountSize = 10.sp
 private fun subtitle(envelope: Envelope): String? {
     val parts = listOfNotNull(
         envelope.folderSize?.let { pluralStringResource(R.plurals.budgets_folder, it, it) },
-        envelope.carried?.let { stringResource(R.string.budgets_carried, it) },
+        envelope.carried?.let { shownAmount(stringResource(R.string.budgets_carried, it)) },
     )
     return parts.joinToString(" · ").ifEmpty { null }
 }
@@ -132,14 +133,14 @@ internal fun captionText(caption: Caption): String = rawCaption(caption).sentenc
 
 @Composable
 private fun rawCaption(caption: Caption): String = when (caption) {
-    is Caption.Left -> caption.perDay?.let { stringResource(R.string.budgets_caption_left_per_day, caption.left, it) }
-        ?: stringResource(R.string.budgets_caption_left, caption.left)
+    is Caption.Left -> caption.perDay?.let { stringResource(R.string.budgets_caption_left_per_day, shownAmount(caption.left), shownAmount(it)) }
+        ?: stringResource(R.string.budgets_caption_left, shownAmount(caption.left))
     is Caption.Ahead -> if (caption.days > 0) {
-        pluralStringResource(R.plurals.budgets_caption_ahead, caption.days, caption.days, caption.left)
+        pluralStringResource(R.plurals.budgets_caption_ahead, caption.days, caption.days, shownAmount(caption.left))
     } else {
-        stringResource(R.string.budgets_caption_ahead_last, caption.left)
+        stringResource(R.string.budgets_caption_ahead_last, shownAmount(caption.left))
     }
-    is Caption.Over -> stringResource(R.string.budgets_caption_over, caption.over)
+    is Caption.Over -> stringResource(R.string.budgets_caption_over, shownAmount(caption.over))
     Caption.Idle -> stringResource(R.string.budgets_caption_idle)
     Caption.Paid -> stringResource(R.string.budgets_caption_paid)
 }

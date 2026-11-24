@@ -3,6 +3,7 @@ package app.coshell.core.domain.quickentry
 import app.coshell.core.model.CurrencyCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.assertNull
 
 /** Quick notes read by rules (#586): the gold lines of `docs/samples/ai/eval.json` plus the edge cases. */
@@ -82,5 +83,54 @@ class QuickNoteParserTest {
     fun `a line without an amount is left for the model`() {
         assertNull(QuickNoteParser.parse("купил хлеб", ars))
         assertNull(QuickNoteParser.parse("", ars))
+    }
+
+    @Test
+    fun `a currency named by a word is read and dropped from the title`() {
+        val amd = CurrencyCode("AMD")
+        fun read(line: String) = QuickNoteParser.parse(line, amd, setOf(amd, ars))!!
+        assertEquals(CurrencyCode("ARS"), read("кофе 3500 песо").money.currency)
+        assertEquals("кофе", read("кофе 3500 песо").title)
+        assertEquals(CurrencyCode("USD"), read("обед 15 долларов").money.currency)
+        assertEquals(CurrencyCode("RUB"), read("метро 70 рублей").money.currency)
+        assertEquals(CurrencyCode("RUB"), read("метро 70 руб.").money.currency)
+        assertEquals(amd, read("такси 1500 драм").money.currency)
+        assertEquals(CurrencyCode("EUR"), read("museo 20 euros").money.currency)
+        assertEquals(false, read("кофе 3500").currencyFound)
+    }
+
+    @Test
+    fun `payment words pick the kind of account`() {
+        assertEquals(AccountWord.CASH, QuickNoteParser.parse("такси 2000 нал", ars)!!.account)
+        assertEquals(AccountWord.CASH, QuickNoteParser.parse("хлеб 500 налом", ars)!!.account)
+        assertEquals(AccountWord.CARD, QuickNoteParser.parse("кофе 3500 с карты", ars)!!.account)
+        assertEquals("кофе", QuickNoteParser.parse("кофе 3500 с карты", ars)!!.title)
+        assertEquals(AccountWord.CARD, QuickNoteParser.parse("super 12000 débito", ars)!!.account)
+    }
+
+    @Test
+    fun `slang for cash and card is understood and leaves the title clean`() {
+        val cash = listOf("шаурма 4к нал", "такси 2000 кэшем", "рынок 3000 кешем", "хлеб 500 наликом", "сигареты 2500 налички",
+            "вода 800 за кэш", "verdulería 5000 en efectivo", "feria 3000 al contado", "taxi 12 cash")
+        cash.forEach { line ->
+            val note = QuickNoteParser.parse(line, ars)!!
+            assertEquals(AccountWord.CASH, note.account, line)
+            assertTrue(note.title.none { it.isDigit() } && note.title.split(' ').size == 1, line + " -> " + note.title)
+        }
+        val card = listOf("аптека 4200 безнал", "обед 9000 по безналу", "кино 7000 карточкой", "super 15000 con tarjeta", "uber 9 card")
+        card.forEach { line ->
+            val note = QuickNoteParser.parse(line, ars)!!
+            assertEquals(AccountWord.CARD, note.account, line)
+            assertTrue(note.title.split(' ').size == 1, line + " -> " + note.title)
+        }
+        assertEquals(null, QuickNoteParser.parse("кофе 3500", ars)!!.account)
+    }
+
+    @Test
+    fun `words that only say I spent are dropped`() {
+        assertEquals("хлеб", QuickNoteParser.parse("купил хлеб 500", ars)!!.title)
+        assertEquals("продукты", QuickNoteParser.parse("потратил на продукты 8000", ars)!!.title)
+        assertEquals("la luz", QuickNoteParser.parse("pagué la luz 30000", ars)!!.title)
+        assertEquals("купил", QuickNoteParser.parse("купил 500", ars)!!.title)
     }
 }

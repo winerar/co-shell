@@ -31,6 +31,24 @@ data class AccountEntity(
     @ColumnInfo(name = "updated_by") val updatedBy: String?,
     val deleted: Boolean = false,
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+    @ColumnInfo(name = "card_digits") val cardDigits: String? = null,
+    @ColumnInfo(defaultValue = "0") val prepaid: Boolean = false,
+    @ColumnInfo(name = "credit_limit_minor") val creditLimitMinor: Long? = null,
+    @ColumnInfo(name = "credit_pay_day") val creditPayDay: Int? = null,
+    /** Minimum payment as a share of the debt in basis points (500 = 5 %); `null` — see [creditMinMinor]. */
+    @ColumnInfo(name = "credit_min_bp") val creditMinBp: Int? = null,
+    @ColumnInfo(name = "credit_min_minor") val creditMinMinor: Long? = null,
+    /** Statement day and grace days (#634, v22): a reminder only, both or neither. */
+    @ColumnInfo(name = "credit_statement_day") val creditStatementDay: Int? = null,
+    @ColumnInfo(name = "credit_grace_days") val creditGraceDays: Int? = null,
+    /** A deposit's conditions (#634, v23): yearly rate in basis points, the closing day `YYYY-MM-DD` and the payout name; all three or none. */
+    @ColumnInfo(name = "deposit_rate_bp") val depositRateBp: Int? = null,
+    @ColumnInfo(name = "deposit_end") val depositEnd: String? = null,
+    @ColumnInfo(name = "deposit_payout") val depositPayout: String? = null,
+    /** The day the deposit was opened (#634, v24): optional, `YYYY-MM-DD`; lets «в конце срока» count the whole term. */
+    @ColumnInfo(name = "deposit_start") val depositStart: String? = null,
+    /** «Только у меня» (#558, v25): the row and its operations never leave the phone; not in the sync JSON. */
+    @Transient @ColumnInfo(name = "local_only", defaultValue = "0") val localOnly: Boolean = false,
 )
 
 @Serializable
@@ -184,3 +202,28 @@ data class BalanceDelta(
     @ColumnInfo(name = "account_id") val accountId: String,
     @ColumnInfo(name = "delta_minor") val deltaMinor: Long,
 )
+
+/**
+ * One event of a debt (#552, `DebtEvent`): issued, returned in part, closed. Synced (`kind` = `debtEvent`), in the backup, wiped by «Стереть всё».
+ * Events are only added or soft-deleted, so two phones never overwrite one another. `date` — epoch ms UTC, `due_date` — `YYYY-MM-DD`.
+ */
+@Serializable
+@Entity(tableName = "debt_events")
+data class DebtEventEntity(
+    @PrimaryKey val id: String,
+    @ColumnInfo(name = "debt_id") val debtId: String,
+    val kind: String,
+    val direction: String,
+    @ColumnInfo(name = "amount_minor") val amountMinor: Long,
+    val currency: String,
+    @ColumnInfo(name = "account_id") val accountId: String? = null,
+    val date: Long,
+    val person: String = "",
+    @ColumnInfo(name = "due_date") val dueDate: String? = null,
+    val note: String = "",
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)
+

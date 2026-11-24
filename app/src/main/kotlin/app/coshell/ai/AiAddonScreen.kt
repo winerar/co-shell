@@ -17,11 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.category.IconBadge
-import app.coshell.core.designsystem.components.CardTone
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellButton
-import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellLinearProgress
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMessage
@@ -29,13 +26,16 @@ import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellStatusChip
-import app.coshell.core.designsystem.components.LocalBottomBarInset
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.StatusTone
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.ai.AiFactRow
+import app.coshell.ui.ai.AiStatusCard
+import app.coshell.ui.ai.BetaMark
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import java.text.NumberFormat
 
@@ -56,8 +56,8 @@ data class AiAddonActions(
 @Composable
 fun AiAddonScreen(state: AiAddonUiState, actions: AiAddonActions) {
     Scaffold(
-        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack) },
-        bottomBar = { MainAction(state, actions, Modifier.padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m)) },
+        topBar = { ScreenTopBar(stringResource(R.string.ai_title), onBack = actions.onBack, mark = { BetaMark() }) },
+        bottomBar = { MainAction(state, actions, Modifier.aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m)) },
     ) { padding ->
         Column(
             Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()).verticalScroll(rememberScrollState())
@@ -97,22 +97,13 @@ private fun StatusCard(state: AiAddonUiState) {
         AiAddonStage.ON -> R.string.ai_on_title to R.string.ai_on_text
         AiAddonStage.UNSUPPORTED -> R.string.ai_weak_title to R.string.ai_weak_text
     }
-    CoShellCard(Modifier.fillMaxWidth(), tone = CardTone.Hero) {
-        Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            IconBadge(DesignR.drawable.ic_spark, LocalHeroPalette.current.amount)
-            Text(stringResource(title), style = MaterialTheme.typography.headlineSmall, color = LocalHeroPalette.current.content)
-            Text(
-                if (state.stage == AiAddonStage.UNSUPPORTED) stringResource(text, state.memoryGb) else stringResource(text),
-                style = MaterialTheme.typography.bodyMedium,
-                color = LocalHeroPalette.current.hint,
-            )
-            when (state.stage) {
-                AiAddonStage.OFF -> CoShellStatusChip(stringResource(R.string.ai_off_chip), StatusTone.Done)
-                AiAddonStage.STEP_ADDON -> if (state.progress == null) CoShellStatusChip(stringResource(R.string.ai_step1_chip), StatusTone.Work) else Bar(state)
-                AiAddonStage.STEP_MODEL -> Bar(state)
-                AiAddonStage.ON -> CoShellStatusChip(stringResource(R.string.ai_on_chip), StatusTone.Done)
-                AiAddonStage.UNSUPPORTED -> Unit
-            }
+    AiStatusCard(stringResource(title), if (state.stage == AiAddonStage.UNSUPPORTED) stringResource(text, state.memoryGb) else stringResource(text)) {
+        when (state.stage) {
+            AiAddonStage.OFF -> CoShellStatusChip(stringResource(R.string.ai_off_chip), StatusTone.Done)
+            AiAddonStage.STEP_ADDON -> if (state.progress == null) CoShellStatusChip(stringResource(R.string.ai_step1_chip), StatusTone.Work) else Bar(state)
+            AiAddonStage.STEP_MODEL -> Bar(state)
+            AiAddonStage.ON -> CoShellStatusChip(stringResource(R.string.ai_on_chip), StatusTone.Done)
+            AiAddonStage.UNSUPPORTED -> Unit
         }
     }
 }
@@ -121,10 +112,15 @@ private fun StatusCard(state: AiAddonUiState) {
 private fun Bar(state: AiAddonUiState) {
     val fraction = state.progress
     if (fraction == null) CoShellLinearProgress() else CoShellLinearProgress({ fraction })
-    if (state.stage == AiAddonStage.STEP_MODEL && state.totalMb > 0) {
+    if (state.totalMb > 0) {
         val number = NumberFormat.getIntegerInstance()
         Text(
             stringResource(R.string.ai_progress, number.format(state.doneMb), number.format(state.totalMb), ((fraction ?: 0f) * 100).toInt()),
+            style = MaterialTheme.typography.bodySmall,
+            color = LocalHeroPalette.current.hint,
+        )
+        Text(
+            stringResource(R.string.ai_left, number.format(state.leftMb)),
             style = MaterialTheme.typography.bodySmall,
             color = LocalHeroPalette.current.hint,
         )
@@ -154,12 +150,11 @@ private fun StepRow(@StringRes title: Int, state: StepState, @StringRes subtitle
         StepState.WAIT -> DesignR.drawable.ic_cloud_download
     }
     val color = if (state == StepState.WAIT) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
-    CoShellListRow(title = stringResource(title), subtitle = stringResource(subtitle), leading = { MenuIcon(icon, color) })
+    CoShellListRow(title = stringResource(title), subtitle = stringResource(subtitle), leading = { MenuIcon(icon) })
 }
 
 @Composable
-private fun FactRow(icon: Int, @StringRes title: Int, @StringRes text: Int) =
-    CoShellListRow(title = stringResource(title), subtitle = stringResource(text), leading = { MenuIcon(icon, MaterialTheme.colorScheme.secondary) })
+private fun FactRow(icon: Int, @StringRes title: Int, @StringRes text: Int) = AiFactRow(icon, stringResource(title), stringResource(text))
 
 @Composable
 private fun WhereItWorks() {

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import app.coshell.core.designsystem.theme.panelColor
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -65,7 +66,7 @@ fun CoShellTopBar(
     raised: Boolean = false,
 ) {
     val scheme = MaterialTheme.colorScheme
-    val fill = if (raised) scheme.surfaceContainerHighest else scheme.surfaceContainerHigh
+    val fill = if (raised) scheme.surfaceContainerHighest else panelColor()
     // A narrow floating capsule, like the bottom bar (poll 2026-11-16 #441 «Б»): nothing behind it but the screen.
     Box(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Sizes.panelInset, vertical = Spacing.s)) {
         TopAppBar(

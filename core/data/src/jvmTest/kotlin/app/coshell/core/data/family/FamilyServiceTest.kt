@@ -14,6 +14,8 @@ import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.days
 import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Family
+import app.coshell.core.model.Member
 import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -78,13 +80,114 @@ class FamilyServiceTest {
     }
 
     @Test
-    fun `stranger without invite cannot create a second family`() = runTest {
+    fun `stranger without invite has no access but may create their own family`() = runTest {
         TestPhone().family.run { signIn("owner"); createFamily() }
         val stranger = TestPhone()
         stranger.family.signIn("stranger")
-        assertFalse(stranger.family.createFamily())
         assertEquals(FamilyState.NoAccess("stranger@gmail.com"), stranger.family.state.value)
         assertNull(stranger.family.sync())
+        assertTrue(stranger.family.createFamily())
+        assertEquals(2, familyServer.families.size)
+        val own = (stranger.family.state.value as FamilyState.Joined).family
+        assertEquals(listOf("stranger"), own.members.map { it.uid })
+        assertTrue(own.id.length >= 20 && own.id != "main", "new families get a long random id")
+    }
+
+    @Test
+    fun `member of the old main family gets a pointer and stays in it`() = runTest {
+        familyServer.family = Family("main", "owner", listOf(Member("owner", "Owner", "owner@gmail.com")))
+        val owner = TestPhone()
+        owner.family.signIn("owner")
+        assertEquals("main", (owner.family.state.value as FamilyState.Joined).family.id)
+        assertEquals("main", familyServer.pointers["owner"])
+    }
+
+    @Test
+    fun `joining uses up the invitation`() = runTest {
+        TestPhone().family.run { signIn("owner"); createFamily(); invite("wife@gmail.com") }
+        val wife = TestPhone()
+        wife.family.signIn("wife"); wife.family.join(keepLocalData = true)
+        assertTrue(familyServer.invites.isEmpty())
+    }
+
+    private suspend fun ownerWithWife(): Pair<TestPhone, TestPhone> {
+        val owner = TestPhone()
+        owner.family.signIn("owner"); owner.family.createFamily(); owner.family.invite("wife@gmail.com")
+        val wife = TestPhone()
+        wife.accounts.saveAccount(Account("own-acc", "Свой", usd))
+        wife.family.signIn("wife"); wife.family.join(keepLocalData = true); wife.family.sync()
+        return owner to wife
+    }
+
+    @Test
+    fun `a member leaves and keeps the data, but the owner cannot leave`() = runTest {
+        val (owner, wife) = ownerWithWife()
+        assertFailsWith<IllegalStateException> { owner.family.leave() }
+
+        wife.family.leave()
+        assertEquals(FamilyState.NoAccess("wife@gmail.com"), wife.family.state.value)
+        assertNull(wife.family.sync())
+        assertNotNull(wife.accounts.getAccount("own-acc"))
+        assertNull(familyServer.pointers["wife"])
+        assertEquals(listOf("owner"), familyServer.family!!.members.map { it.uid })
+        assertEquals("", wife.db.syncDao().state(SyncEngine.CURSOR).orEmpty(), "the pull cursor belongs to the old family")
+    }
+
+    @Test
+    fun `the owner removes a member, whose phone learns it and may start its own family`() = runTest {
+        val (owner, wife) = ownerWithWife()
+        assertFailsWith<IllegalStateException> { wife.family.removeMember("owner") }
+
+        owner.family.removeMember("wife")
+        assertEquals(listOf("owner"), owner.family.joined!!.members.map { it.uid })
+
+        wife.family.refresh()
+        assertEquals(FamilyState.Removed("wife@gmail.com"), wife.family.state.value)
+        assertNull(wife.family.sync())
+        assertNotNull(wife.accounts.getAccount("own-acc"))
+        assertTrue(wife.family.createFamily())
+        assertIs<FamilyState.Joined>(wife.family.state.value)
+        assertEquals(2, familyServer.families.size)
+    }
+
+    @Test
+    fun `a removed person who signs out leaves no pointer behind`() = runTest {
+        val (owner, wife) = ownerWithWife()
+        owner.family.removeMember("wife")
+        wife.family.refresh()
+        wife.family.signOut()
+        assertNull(familyServer.pointers["wife"])
+        wife.family.signIn("wife")
+        assertEquals(FamilyState.NoAccess("wife@gmail.com"), wife.family.state.value)
+    }
+
+    @Test
+    fun `the owner deletes the family and the others see they were removed`() = runTest {
+        val (owner, wife) = ownerWithWife()
+        assertFailsWith<IllegalStateException> { wife.family.deleteFamily() }
+
+        owner.family.deleteFamily()
+        assertTrue(familyServer.families.isEmpty())
+        assertEquals(FamilyState.NoAccess("owner@gmail.com"), owner.family.state.value)
+        wife.family.refresh()
+        assertEquals(FamilyState.Removed("wife@gmail.com"), wife.family.state.value)
+        assertNotNull(wife.accounts.getAccount("own-acc"))
+    }
+
+    @Test
+    fun `deleting the account removes the cloud side and keeps the data on the phone`() = runTest {
+        val (owner, wife) = ownerWithWife()
+        wife.accounts.saveAccount(Account("cash", "Наличные", usd))
+        wife.family.deleteAccount()
+        assertTrue(wife.auth.accountDeleted)
+        assertEquals(FamilyState.SignedOut, wife.family.state.value)
+        assertNull(familyServer.pointers["wife"])
+        assertEquals(listOf("owner"), familyServer.family!!.members.map { it.uid })
+        assertNotNull(wife.accounts.getAccount("cash"))
+
+        owner.family.deleteAccount()
+        assertTrue(familyServer.families.isEmpty())
+        assertTrue(owner.auth.accountDeleted)
     }
 
     @Test

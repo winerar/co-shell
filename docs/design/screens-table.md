@@ -10,6 +10,7 @@
 | Обзор: бюджеты | BudHome | home_budget | ✓ | ✓ |
 | Обзор: «Скоро» | Rec143HomeA | recurring_home | ✓ | ✓ |
 | Обзор: итог месяца | Mon236A | home_review | ✓ | ✓ |
+| Итоги месяца: истории | Rec554Top | month_recap | ✓ | ✓ |
 | Итог месяца | Mon236Screen | month_review | ✓ | ✓ |
 | Итог месяца: лимиты | Mon236Limits | month_review_limits | ✓ | ✓ |
 | Операции | Operations | transactions | ✓ | ✓ |
@@ -18,6 +19,8 @@
 | Шторка: возврат | Fb208C | entry_refund | ✓ | ✓ |
 | Шторка: теги | Fb129A | entry_tags | ✓ | ✓ |
 | Шторка: QR чека | Qr526Filled | entry_scan | ✓ | ✓ |
+| Шторка: категория предложена ИИ | EntryGuessAi | — | — | — |
+| Шторка: категория по истории | EntryGuessHist | — | — | — |
 | Шторка: «Провести» | Rec143Post | recurring_post | ✓ | ✓ |
 | Счета | Accounts | accounts | ✓ | ✓ |
 | Счета: пусто | AccountsEmpty | accounts_empty | ✓ | ✓ |
@@ -29,6 +32,15 @@
 | Конвертер: все валюты | Conv2AllType | converter_all | ✓ | ✓ |
 | Валюты отчётов | ReportCurrencies | report_currencies | ✓ | ✓ |
 | Семья | Family | family | ✓ | ✓ |
+| Семья: заполнена (10 из 10) | FamilyFull | — | — | — |
+| Семья: участник | FamilyMemberSheet | — | — | — |
+| Семья: исключить? | FamilyRemoveConfirm | — | — | — |
+| Семья: выйти? | FamilyLeave | — | — | — |
+| Семья: удалить семью? | FamilyDelete | — | — | — |
+| Семья: удалить аккаунт? | FamilyDeleteAccount | — | — | — |
+| Семья: вас убрали | FamilyRemoved | — | — | — |
+| Код приглашения | AccessGate | — | — | — |
+| Доступ закрыт | AccessLocked | — | — | — |
 | Настройки | Set1Root | settings | ✓ | ✓ |
 | Внешний вид | Set1Look | appearance | ✓ | ✓ |
 | Конфиденциальность | Priv145Settings | privacy | ✓ | ✓ |
@@ -47,8 +59,16 @@
 | Настройки: данные и копия | Set1Data | settings_data | ✓ | ✓ |
 | ИИ на телефоне | AiOff | ai_addon | ✓ | ✓ |
 | ИИ на телефоне: шаги | AiStep2 | ai_addon_loading | ✓ | ✓ |
+| ИИ на телефоне: скачивание дополнения | AiStep1Load | ai_addon_addon_loading | — | ✓ |
 | ИИ на телефоне: включён | AiOn | ai_addon_on | ✓ | ✓ |
 | ИИ на телефоне: слабый телефон | AiWeak | ai_addon_weak | ✓ | ✓ |
+| Облачный разбор | CloudOff | cloud_ai | ✓ | ✓ |
+| Облачный разбор: включён | CloudOn | cloud_ai_on | ✓ | ✓ |
+| Облачный разбор: вопрос | CloudConsent | cloud_ai_consent | ✓ | ✓ |
+| Облачный разбор: нужен вход | CloudNoLogin | cloud_ai_nologin | ✓ | ✓ |
+| Быстрые заметки: облако | CloudNotes | — | — | — |
+| Быстрые заметки: читает облако | CloudBusy | — | — | — |
+| Черновики: лимит облака | CloudLimit | — | — | — |
 | Резервная копия | Backup | backup | ✓ | ✓ |
 | Копия: автоматическая | BackupAuto | backup_auto | ✓ | ✓ |
 | Ещё | More | more | ✓ | ✓ |
@@ -65,6 +85,11 @@
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
+| Долги | DebtList | debts | ✓ | ✓ |
+| Долги: пусто | DebtEmpty | debts_empty | ✓ | ✓ |
+| Долг: новый | DebtNew | — | — | — |
+| Долг: карточка | DebtDetail | — | — | — |
+| Долг: вернули часть | DebtReturn | — | — | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -73,6 +98,24 @@
 
 ## Без полного набора эталонов
 
+- Шторка: категория предложена ИИ (нет эталона: light, dark)
+- Шторка: категория по истории (нет эталона: light, dark)
+- Семья: заполнена (10 из 10) (нет эталона: light, dark)
+- Семья: участник (нет эталона: light, dark)
+- Семья: исключить? (нет эталона: light, dark)
+- Семья: выйти? (нет эталона: light, dark)
+- Семья: удалить семью? (нет эталона: light, dark)
+- Семья: удалить аккаунт? (нет эталона: light, dark)
+- Семья: вас убрали (нет эталона: light, dark)
+- Код приглашения (нет эталона: light, dark)
+- Доступ закрыт (нет эталона: light, dark)
+- ИИ на телефоне: скачивание дополнения (ai_addon_addon_loading: light)
+- Быстрые заметки: облако (нет эталона: light, dark)
+- Быстрые заметки: читает облако (нет эталона: light, dark)
+- Черновики: лимит облака (нет эталона: light, dark)
+- Долг: новый (нет эталона: light, dark)
+- Долг: карточка (нет эталона: light, dark)
+- Долг: вернули часть (нет эталона: light, dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

@@ -12,6 +12,11 @@ sealed interface FamilyState {
     data class Checking(val email: String) : FamilyState
     /** Signed in, but neither a member nor invited (issue #34: «нет доступа»). */
     data class NoAccess(val email: String) : FamilyState
+    /**
+     * Was in a family and is not any more: removed by the owner, or the family was deleted. The data on the phone
+     * stays; the person may create their own family or sign out (#653).
+     */
+    data class Removed(val email: String) : FamilyState
     data class Invited(val email: String, val invite: Invite) : FamilyState
     data class Joined(val family: Family, val me: Member) : FamilyState
     /** Could not reach the server while checking; [email] is the signed-in account. */

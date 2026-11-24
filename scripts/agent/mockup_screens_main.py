@@ -119,7 +119,7 @@ def ops_list(selected=(), snack=False):
         bar = ('<div style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
                '<span style="flex: 1; height: 48px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px; color: %s; font-size: 15px;">%sДублировать</span>'
                '<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · %d</span></div>'
-               % (BAR, '#5C6757', svg('copy', '#5C6757', 20), PINKBG, PINK, svg('trash', PINK, 20), len(selected)))
+               % (PANEL, '#5C6757', svg('copy', '#5C6757', 20), PINKBG, PINK, svg('trash', PINK, 20), len(selected)))
         return top + '<div style="padding: 0 16px;">%s%s</div>' % (ops_head(), lst) + bar
     body = ops_head([chip('Расходы ✕', True), chip('Счёт ▾'), chip('Ноябрь ▾')]) + lst
     return tab_screen('Операции', body, 'ops', loupe()) + (snackbar('Удалено операций: 3') if snack else '')
@@ -203,19 +203,24 @@ def account_existing():
             + field('Название', 'Galicia') + field('Валюта', 'ARS', hint='По счёту уже есть операции — валюту изменить нельзя', trail=svg('lock', MUTED, 18))
             + field('Начальный баланс', '−15 000,00', error='Слишком много знаков после запятой для этой валюты', mono=True)
             + '<div style="margin-top: 12px;">' + group([row('Учитывать в общем балансе', 'Выключите для долга или чужих денег', '', switch(True)),
-                                                         row('Общий счёт', 'Выключите для личного — он останется виден всей семье', '', switch(False))]) + '</div>')
+                                                         ]) + '</div>'
+            + note('«Только у меня» включается при создании счёта.'))
     return inner_screen('Счёт', body, acts) + form_footer()
+
+
+def account_local():
+    """«Только у меня» (#558, poll A): a new account in a family — the switch on, the note about transfers."""
+    body = (field('Название', 'Моя копилка') + field('Валюта', 'ARS')
+            + '<div style="margin-top: 12px;">' + group([row('Учитывать в общем балансе', 'Выключите для долга или чужих денег', '', switch(True)),
+                                                         row('Только у меня', 'Другие участники семьи не увидят счёт и операции по нему', '', switch(True))]) + '</div>'
+            + note('Переводы между этим счётом и общими другие участники не увидят.'))
+    return inner_screen('Счёт', body, '') + form_footer()
 
 
 def account_blocked():
     return (inner_screen('Счёт', field('Название', 'Galicia') + field('Валюта', 'ARS')) + scrim()
             + dialog('Счёт нельзя удалить', 'По счёту есть операции. Отправьте его в архив: история и баланс сохранятся, а в списках выбора он больше не появится.',
                      [('Отмена', 'text'), ('В архив', 'primary')]))
-
-
-def account_delete():
-    return (inner_screen('Счёт', field('Название', 'Старая карта') + field('Валюта', 'USD')) + scrim()
-            + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]))
 
 
 def _entry():
@@ -231,10 +236,11 @@ BOARDS = [
     ('OpsSelect', '2 · Операции: выбор нескольких', lambda: ops_list((0, 1, 3))), ('OpsUndo', '2 · Операции: удалено, «Отменить»', lambda: ops_list(snack=True)),
     ('AccountsEmpty', '3 · Счета: пусто', accounts_empty), ('AccountsSearch', '3 · Счета: поиск', accounts_search),
     ('EntryTransfer', '5 · Шторка: перевод между валютами', lambda: _entry().transfer()), ('EntryReceipt', '5 · Шторка: чек в другой валюте', lambda: _entry().receipt()),
+    ('EntryGuessHist', '5 · Шторка: категория по прошлым операциям', lambda: _entry().guess('hist')), ('EntryGuessAi', '5 · Шторка: категория предложена ИИ', lambda: _entry().guess('ai')),
     ('EntryEdit', '5 · Шторка: правка операции', lambda: _entry().edit()), ('EntryError', '5 · Шторка: не выбрана категория', lambda: _entry().error()),
     ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
     ('EntryAllAccounts', '5 · Шторка: «Все ›» — все счета, как на «Счетах»', lambda: _entry().all_accounts()),
     ('CategoryBlocked', '7 · Категория: удалить нельзя', category_blocked),
-    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountDelete', '9 · Счёт: удалить?', account_delete),
+    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountEditLocal', '9 · Счёт: «Только у меня»', account_local),
     ('AccountBlocked', '9 · Счёт: удалить нельзя', account_blocked),
 ]

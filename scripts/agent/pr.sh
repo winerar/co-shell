@@ -31,14 +31,19 @@ skip='^(Stamp STATUS|Docs: STATUS|Trim STATUS|Update STATUS|Merge )'
 title=$(git log --no-merges --reverse --format=%s origin/dev..HEAD | grep -vE "$skip" | head -1)
 fixes=$(git log --format=%B origin/dev..HEAD | grep -oiE '^(fixes|closes|resolves) #[0-9]+' | sed -E 's/^[a-zA-Z]+/Fixes/' | sort -u)
 refs=$(git log --format=%s origin/dev..HEAD | grep -oE '#[0-9]+' | sort -u | tr '\n' ' ')
+open=""
+for r in $refs; do grep -qx "Fixes $r" <<<"$fixes" || open="$open $r"; done
+# The board moves by these lines (scripts/ci/task_status.py): Fixes → closed at merge, any other #N → «В работе»
+# while the PR is ready, then back to «Очередь». An issue finished here without «Fixes» stays open forever.
+[ -z "$open" ] || echo "⚠ задачи без «Fixes»:$open — готова целиком → строка «Fixes #N» в описании; часть → «Refs #N» (вернётся в «Очередь»)"
 echo
 echo "== PR: ${num:+#$num}${num:-не найден в поиске (индекс отстаёт ~1 мин) → MCP list_pull_requests head "winerar:$branch"; нет и там → create_pull_request (base dev, draft: true), затем шаг 1}"
 echo "title: ${title:-<одной строкой: что изменилось>}"
 echo "body:"
 echo "## Что"
 git log --no-merges --reverse --format='- %s' origin/dev..HEAD | grep -vE "^- ($skip)" | head -20
-[ -z "$refs" ] || echo "Связано: $refs"
 [ -z "$fixes" ] || echo "$fixes"
+for r in $open; do echo "Refs $r   ← или Fixes $r, если задача готова"; done
 echo "<строки атрибуции из system-reminder>"
 cat <<TXT
 

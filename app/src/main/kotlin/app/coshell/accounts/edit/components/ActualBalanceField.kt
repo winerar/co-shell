@@ -16,7 +16,7 @@ internal fun ActualBalanceField(state: AccountEditUiState, onValueChange: (Strin
     CoShellAmountField(
         value = state.actualBalance,
         onValueChange = onValueChange,
-        label = stringResource(R.string.account_balance_actual),
+        label = stringResource(if (state.prepaid) R.string.account_balance_on_card else R.string.account_balance_actual),
         currency = state.currency,
         error = when (state.actualBalanceError) {
             BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)
@@ -24,6 +24,6 @@ internal fun ActualBalanceField(state: AccountEditUiState, onValueChange: (Strin
             null -> null
         },
         hint = state.adjustment?.let { stringResource(R.string.account_balance_adjust_hint, it) }
-            ?: stringResource(R.string.account_balance_now_hint, state.currentBalance),
+            ?: stringResource(if (state.prepaid) R.string.account_balance_on_card_hint else R.string.account_balance_now_hint, state.currentBalance),
     )
 }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
+import app.coshell.core.domain.debts.DebtBook
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,11 +29,13 @@ import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.CoShellSectionLabel
 import app.coshell.core.designsystem.components.CoShellSectionLink
+import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.recurring.SOON_DAYS
 import app.coshell.recurring.PaymentAmount
 import app.coshell.recurring.PaymentWhen
 import app.coshell.templates.components.TemplateBadge
+import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.ui.format.formatWeekdayDayMonthShort
 import kotlinx.datetime.LocalDate
 
@@ -51,6 +55,12 @@ internal fun UpcomingCard(
     modifier: Modifier = Modifier,
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (templateId: String) -> Unit = {},
+    credit: List<CreditPaymentRow> = emptyList(),
+    onPostCredit: (accountId: String) -> Unit = {},
+    debts: List<DebtDueRow> = emptyList(),
+    onOpenDebt: (debtId: String) -> Unit = {},
+    deposits: List<DepositEndRow> = emptyList(),
+    onOpenAccount: (accountId: String) -> Unit = {},
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth().padding(start = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -63,6 +73,24 @@ internal fun UpcomingCard(
                     if (index > 0) CoShellDivider()
                     UpcomingRowItem(row, onPost)
                     if (row.bulk) MissedActions(row, { onPostAll(row) }, { onSkipAll(row.item.id) })
+                }
+            }
+            credit.forEachIndexed { index, row ->
+                key("credit-" + row.accountId) {
+                    if (rows.isNotEmpty() || index > 0) CoShellDivider()
+                    CreditPaymentItem(row, onPostCredit)
+                }
+            }
+            deposits.forEachIndexed { index, row ->
+                key("deposit-" + row.accountId) {
+                    if (rows.isNotEmpty() || credit.isNotEmpty() || index > 0) CoShellDivider()
+                    DepositEndItem(row, onOpenAccount)
+                }
+            }
+            debts.forEachIndexed { index, row ->
+                key("debt-" + row.debtId) {
+                    if (rows.isNotEmpty() || credit.isNotEmpty() || deposits.isNotEmpty() || index > 0) CoShellDivider()
+                    DebtDueItem(row, onOpenDebt)
                 }
             }
         }
@@ -119,3 +147,67 @@ private fun MissedActions(row: UpcomingRow, onPostAll: () -> Unit, onSkipAll: ()
         }
     }
 }
+
+/** The payment of a credit card (#686): the card's badge, «Платёж по кредитке», its day and the minimum; «Провести» opens the transfer. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun CreditPaymentItem(row: CreditPaymentRow, onPost: (String) -> Unit) {
+    CoShellListRow(
+        title = { Text(stringResource(R.string.credit_payment_title), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+                verticalArrangement = Arrangement.spacedBy(Spacing.xxs),
+                itemVerticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.credit_payment_when, row.name, formatWeekdayDayMonthShort(row.due)))
+                Text(stringResource(R.string.credit_payment_minimum, row.minimum))
+                row.graceUntil?.let { Text(stringResource(R.string.account_credit_grace_until, formatDayMonthShort(it))) }
+            }
+        },
+        leading = { AccountBadge(row.name, row.color) },
+        trailing = {
+            val label = stringResource(R.string.credit_payment_post_a11y, row.name)
+            CoShellButton(
+                onClick = { onPost(row.accountId) },
+                tone = ButtonTone.Tonal,
+                contentPadding = PaddingValues(horizontal = Spacing.l),
+                modifier = Modifier.semantics { contentDescription = label },
+            ) { Text(stringResource(R.string.recurring_post)) }
+        },
+    )
+}
+
+/** A debt's return day (#552): who, when (in words, never red) and what is left; a tap opens the debt's card. */
+@Composable
+private fun DebtDueItem(row: DebtDueRow, onOpen: (String) -> Unit) {
+    val whenText = when (row.stage) {
+        DebtBook.Stage.TODAY -> stringResource(R.string.debts_due_today)
+        DebtBook.Stage.LATE -> pluralStringResource(R.plurals.debts_late, row.days, row.days)
+        else -> pluralStringResource(R.plurals.debts_due_in, row.days, row.days)
+    }
+    CoShellListRow(
+        title = { Text(stringResource(if (row.lent) R.string.debts_soon_lent else R.string.debts_soon_borrowed, row.person), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = { Text(whenText) },
+        trailing = { Text(stringResource(if (row.lent) R.string.debts_soon_amount_in else R.string.debts_soon_amount_out, row.left)) },
+        onClick = { onOpen(row.debtId) },
+    )
+}
+
+/** A deposit that closes soon (#634, step 3): its badge, «Вклад закрывается», the day and the expected income; a tap opens the account. */
+@Composable
+private fun DepositEndItem(row: DepositEndRow, onOpen: (String) -> Unit) {
+    CoShellListRow(
+        title = { Text(stringResource(R.string.deposit_soon_title), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = {
+            Column {
+                Text(stringResource(R.string.deposit_soon_when, row.name, formatDayMonthShort(row.end)))
+                Text(stringResource(R.string.deposit_soon_hint))
+            }
+        },
+        leading = { AccountBadge(row.name, row.color) },
+        trailing = { Text(stringResource(R.string.debts_soon_amount_in, row.income)) },
+        onClick = { onOpen(row.accountId) },
+    )
+}
+

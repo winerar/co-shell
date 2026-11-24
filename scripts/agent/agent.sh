@@ -24,6 +24,7 @@ usage() {
     tasks [статус…]       задачи с доски по колонкам (next, in-progress, needs-owner, triage, backlog)
     issue <N> [строк]     одна задача: заголовок, метки, описание (дешевле MCP)
     sync                  влить origin/dev в текущую ветку, показать конфликты
+    invite [имя]          коды приглашения для закрытого теста: как выдать/отозвать (docs/setup/invite.md), с именем — готовая команда gh
     hotfix                срочный фикс сбоя: ветка от origin/main, PR в main (docs/agents/hotfix.md)
     push                  push текущей ветки с повтором при сетевых ошибках (2–16 с)
     stamp                 STATUS: «Обновлено» = сегодня, «всего N» тестов из последнего прогона
@@ -40,6 +41,7 @@ usage() {
                           (модули: model, domain, data, ds — designsystem, app)
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
+    l10n [--write]        непереведённые тексты (пауза переводов до публикации): список, --write — обновить translations-pending.txt
     stability             отчёты компилятора Compose (app, ~1,5 мин) → нет нестабильных классов состояний (#383)
     bankcolors [--sheet f.png]  сверить цвета банков в BankColors.kt с иконками сервисов (сеть, Pillow; #505)
     shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem и экраны app) после
@@ -70,6 +72,12 @@ case "$cmd" in
     tasks) exec "$here/tasks.sh" "$@" ;;
     issue) exec "$here/issue.sh" "$@" ;;
     sync) exec "$here/sync-dev.sh" "$@" ;;
+    invite)
+        echo "Коды приглашения — кнопка в GitHub: Actions → «Приглашения: коды для закрытого теста» → Run workflow."
+        echo "  выдать:   action = «выдать код», name = кому, devices = сколько телефонов (3 по умолчанию) — код в сводке запуска"
+        echo "  отозвать: action = «отозвать код», code = K7QX-M2PD-9WTA;  все коды: action = «показать все коды»"
+        [ $# -gt 0 ] && echo "  из консоли владельца: gh workflow run invite.yml -f action='выдать код' -f name='$*'"
+        echo "Подробно: docs/setup/invite.md" ;;
     hotfix) exec "$here/hotfix.sh" "$@" ;;
     push) exec "$here/push.sh" "$@" ;;
     stamp) exec "$here/stamp-status.sh" "$@" ;;
@@ -99,6 +107,7 @@ case "$cmd" in
         [ $status -eq 0 ] && echo "OK: $task" || echo "FAILED (exit $status)"
         exit $status ;;
     gradle) exec "$here/gradle.sh" "$@" ;;
+    l10n) exec python3 "$here/l10n.py" "$@" ;;
     stability)
         # --rerun: the build cache restores classes but not the reports (performance.md).
         rm -rf app/build/compose_reports

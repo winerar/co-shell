@@ -19,8 +19,11 @@ import kotlinx.serialization.json.put
  */
 class FirestoreRemoteStore(
     private val client: FirestoreClient,
-    private val familyId: String,
+    private val currentFamily: () -> String,
 ) : RemoteStore {
+    constructor(client: FirestoreClient, familyId: String) : this(client, { familyId })
+
+    private val familyId get() = currentFamily()
     private val collection get() = "families/$familyId/records"
 
     override suspend fun pull(cursor: String?): List<RemoteRecord> {

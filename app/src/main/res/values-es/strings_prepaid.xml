@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type_prepaid">Transporte</string>
+    <string name="account_balance_on_card">Saldo en la tarjeta</string>
+    <string name="account_balance_on_card_check">Saldo en la tarjeta · Comprobar</string>
+    <string name="account_balance_check_title">Comprobar saldo</string>
+    <string name="account_balance_on_card_hint">Ahora: %1$s. Escribe cuánto hay en la tarjeta.</string>
+    <string name="account_prepaid_total_hint">Desactivado: la recarga ya está anotada como gasto</string>
+</resources>

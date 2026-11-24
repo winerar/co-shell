@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.components.drawFillEdge
 import app.coshell.core.designsystem.components.fillEdge
 import androidx.compose.runtime.getValue
@@ -32,7 +33,7 @@ fun CoShellMeter(
     color: Color,
     modifier: Modifier = Modifier,
     mark: Float? = null,
-    markColor: Color = MaterialTheme.colorScheme.onSurface,
+    markColor: Color = secondaryInk(),
     grow: Boolean = false,
 ) {
     val track = MaterialTheme.colorScheme.surfaceContainerHighest

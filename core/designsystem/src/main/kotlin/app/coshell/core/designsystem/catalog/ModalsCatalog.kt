@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.components.CoShellConfirmCard
 import app.coshell.core.designsystem.components.CoShellDayGrid
 import app.coshell.core.designsystem.components.CoShellHint
@@ -46,6 +47,28 @@ fun ModalsCatalog() {
         }
     }
 }
+
+/** The question card with three actions (#593, `extraLabel`, `confirmIcon`): its own reference. The running line (`progress`) loops forever, so it is not shot. */
+@Composable
+internal fun ConfirmStackCatalog() {
+    Column(Modifier.padding(vertical = Spacing.l)) {
+        CoShellConfirmCard(
+            title = "Не удалось прочитать чек",
+            text = "Такого формата мы ещё не знаем. Облачный ИИ прочитает чек, а вы проверите поля.",
+            confirmLabel = "Прочитать с ИИ",
+            onConfirm = {},
+            dismissLabel = "Отправить образец",
+            extraLabel = "Ввести вручную",
+            confirmIcon = R.drawable.ic_spark,
+            icon = R.drawable.ic_receipt_long,
+            modifier = Modifier.padding(horizontal = Spacing.l + Spacing.xs),
+        )
+    }
+}
+
+@Preview(name = "Confirm stack · dark", showBackground = true)
+@Composable
+private fun ConfirmStackDarkPreview() = CoShellTheme(darkTheme = true) { Surface { ConfirmStackCatalog() } }
 
 @Preview(name = "Modals · dark", showBackground = true)
 @Composable

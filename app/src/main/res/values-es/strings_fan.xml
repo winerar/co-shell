@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fan_receipt">QR del ticket</string>
+    <string name="fan_notes">Nota</string>
+    <string name="fan_template">Plantilla</string>
+</resources>

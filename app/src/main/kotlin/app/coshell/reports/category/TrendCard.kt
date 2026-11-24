@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.ChartColumn
 import app.coshell.core.designsystem.charts.CoShellColumns
 import app.coshell.core.designsystem.components.CoShellCard
@@ -46,7 +47,7 @@ internal fun TrendCard(trend: Trend, onMonth: (YearMonth) -> Unit, modifier: Mod
                 label = formatMonthShort(column.month),
                 valueLabel = column.value,
                 fraction = column.fraction,
-                description = stringResource(R.string.reports_months_description, formatMonthYear(column.month), column.value),
+                description = stringResource(R.string.reports_months_description, formatMonthYear(column.month), shownAmount(column.value)),
             )
         }
         CoShellColumns(
@@ -57,10 +58,10 @@ internal fun TrendCard(trend: Trend, onMonth: (YearMonth) -> Unit, modifier: Mod
             onSelect = { onMonth(trend.columns[it].month) },
         )
         val averages = listOfNotNull(
-            trend.recent?.let { stringResource(R.string.report_trend_months, trend.recentMonths, it) },
+            trend.recent?.let { stringResource(R.string.report_trend_months, trend.recentMonths, shownAmount(it)) },
             trend.long?.let {
-                if (trend.longMonths >= LONG_USUAL_MONTHS) stringResource(R.string.report_trend_year, it)
-                else stringResource(R.string.report_trend_months, trend.longMonths, it)
+                if (trend.longMonths >= LONG_USUAL_MONTHS) stringResource(R.string.report_trend_year, shownAmount(it))
+                else stringResource(R.string.report_trend_months, trend.longMonths, shownAmount(it))
             },
         )
         if (averages.isNotEmpty()) {

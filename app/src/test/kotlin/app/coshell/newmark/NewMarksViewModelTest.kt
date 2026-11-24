@@ -20,8 +20,8 @@ class NewMarksViewModelTest {
     private fun viewModel(wasUpdated: Boolean = true) = NewMarksViewModel(NewMarks(store, clock, wasUpdated))
 
     @Test
-    fun `after an update the recurring row is new`() {
-        assertEquals(setOf(NewFeatures.RECURRING), viewModel().current.value)
+    fun `after an update every new place is marked`() {
+        assertEquals(NewFeatures.all.toSet(), viewModel().current.value)
     }
 
     @Test
@@ -32,14 +32,14 @@ class NewMarksViewModelTest {
     @Test
     fun `opening the row removes the mark now and on the next start`() {
         viewModel().opened(NewFeatures.RECURRING)
-        assertEquals(emptySet<String>(), viewModel().current.value)
+        assertEquals(NewFeatures.all.toSet() - NewFeatures.RECURRING, viewModel().current.value)
     }
 
     @Test
     fun `the mark goes away on screen at once`() {
         val vm = viewModel()
         vm.opened(NewFeatures.RECURRING)
-        assertEquals(emptySet<String>(), vm.current.value)
+        assertEquals(NewFeatures.all.toSet() - NewFeatures.RECURRING, vm.current.value)
     }
 }
 

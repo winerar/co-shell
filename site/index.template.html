@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{LEAD}}">
+<style>
+:root{--bg:#fff;--ink:#16200c;--muted:#566049;--line:#c9d1bd;--card:#f1ffd6;--prim:#b8ff2e;--onprim:#0e1f00;--edge:#476b00;--acc:#5b1fa8;--disc:#efe7fb}
+@media (prefers-color-scheme:dark){:root{--bg:#0a0f06;--ink:#f1f5ea;--muted:#a9b39c;--line:#44503a;--card:#17210f;--edge:#d9ff8a;--acc:#c27bff;--disc:#2c2140}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);max-width:720px;margin:0 auto}
+header b{font-size:18px}.logo{width:28px;height:28px;border-radius:9px;background:var(--prim);box-shadow:inset 0 0 0 1.5px var(--edge)}
+nav{margin-left:auto;font-size:13px;color:var(--muted)}nav a{color:var(--acc);text-decoration:none;margin-left:8px}nav b{margin-left:8px;font-size:13px}
+main{max-width:720px;margin:0 auto;padding:28px 20px 48px}
+h1{font-size:30px;line-height:1.15;margin:0}.lead{color:var(--muted);margin:10px 0 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:999px;margin-top:22px;background:var(--prim);color:var(--onprim);box-shadow:inset 0 0 0 1.5px var(--edge);font-weight:700;font-size:17px;text-decoration:none}
+.meta{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.meta code{font-size:11px;word-break:break-all}
+details{margin-top:6px;font-size:12px;color:var(--muted);text-align:center}
+.card{margin-top:26px;padding:14px 16px;border-radius:20px;background:var(--card);border:1px solid var(--line)}.card p{margin:4px 0 0;color:var(--muted);font-size:14px}
+h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:26px 0 0}
+ol{list-style:none;padding:0;margin:0;counter-reset:s}li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin-top:12px}
+li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--disc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+footer{margin-top:28px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><span class="logo"></span><b>Co-Shell</b><nav>{{LANGS}}</nav></header>
+<main>
+<h1>{{H1}}</h1>
+<p class="lead">{{LEAD}}</p>
+<a class="btn" href="{{APK_URL}}" download>{{DOWNLOAD}} · {{SIZE_MB}} {{MB}}</a>
+<p class="meta">{{META}}</p>
+<details><summary>{{SHA_LABEL}}</summary><code>{{SHA256}}</code></details>
+<div class="card"><b>{{INVITE_TITLE}}</b><p>{{INVITE_TEXT}}</p></div>
+<h2>{{STEPS_TITLE}}</h2>
+<ol><li>{{STEP1}}</li><li>{{STEP2}}</li><li>{{STEP3}}</li></ol>
+<footer>{{FOOTER}}</footer>
+</main>
+</body>
+</html>

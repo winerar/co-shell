@@ -1,7 +1,5 @@
 package app.coshell.core.designsystem.screenshots
 
-import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ChartsCatalog
+import app.coshell.core.designsystem.catalog.HeatCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.PinSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
+import app.coshell.core.designsystem.catalog.ConfirmStackCatalog
 import app.coshell.core.designsystem.catalog.ModalsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
@@ -56,6 +56,13 @@ class CatalogScreenshotTest {
 
     @Test
     fun `charts light`() = shot("charts_light") { ChartsCatalog() }
+
+    /** #553: the spending calendar. */
+    @Test
+    fun `heat dark`() = shot("heat_dark", dark = true) { HeatCatalog() }
+
+    @Test
+    fun `heat light`() = shot("heat_light") { HeatCatalog() }
 
     @Test
     fun `tokens light`() = shot("tokens_light") { TokensCatalog() }
@@ -113,6 +120,12 @@ class CatalogScreenshotTest {
     fun `modals light`() = shot("modals_light") { ModalsCatalog() }
 
     @Test
+    fun `confirm stack dark`() = shot("confirm_stack_dark", dark = true) { ConfirmStackCatalog() }
+
+    @Test
+    fun `confirm stack light`() = shot("confirm_stack_light") { ConfirmStackCatalog() }
+
+    @Test
     fun `check marks dark`() = shot("check_marks_dark", dark = true) { CheckMarkSample() }
 
     @Test
@@ -168,8 +181,8 @@ private fun RowGroupSample() {
 @Composable
 private fun MenuRowsSample() {
     CoShellRowGroup(Modifier.padding(Spacing.l)) {
-        row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Папки, иконки и цвета") }
-        row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
-        row { CoShellMenuRow(R.drawable.ic_contrast, categoryColor(CategoryPalette.colors[2]), "Внешний вид", {}, subtitle = "Вольт · тёмная") }
+        row { CoShellMenuRow(R.drawable.ic_category, "Категории", {}, subtitle = "Папки, иконки и цвета") }
+        row { CoShellMenuRow(R.drawable.ic_currency_exchange, "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
+        row { CoShellMenuRow(R.drawable.ic_contrast, "Внешний вид", {}, subtitle = "Вольт · тёмная") }
     }
 }

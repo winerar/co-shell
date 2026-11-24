@@ -1,6 +1,7 @@
 package app.coshell.core.domain.receipts
 
 import app.coshell.core.domain.quickentry.AmountInText
+import app.coshell.core.model.Account
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Money
 import kotlinx.datetime.LocalDate
@@ -16,6 +17,7 @@ object TbankFormat : ReceiptFormat {
     private val DATE = Regex("""^\s*(\d{1,2})\.(\d{1,2})\.(\d{4})\s+\d{1,2}:\d{2}""")
     private val AMOUNT = Regex("""^\s*Сумма\s+(.+?)\s*$""")
     private val OPERATION = Regex("""^\s*Идентификатор операции\s+([A-Za-z0-9]{8,64})\s*$""")
+    private val DEBIT = Regex("""^\s*Сч[её]т списания\s+(\S+)\s*$""")
     private val RECIPIENT = Regex("""^\s*Получатель\s+(.+?)\s*$""")
 
     override fun read(text: String): Receipt? {
@@ -27,7 +29,8 @@ object TbankFormat : ReceiptFormat {
         val total = lines.firstNotNullOfOrNull { l -> AMOUNT.find(l)?.let { money(it.groupValues[1]) } } ?: return null
         val operation = lines.firstNotNullOfOrNull { OPERATION.find(it)?.groupValues?.get(1) } ?: return null
         val merchant = lines.firstNotNullOfOrNull { RECIPIENT.find(it)?.groupValues?.get(1) } ?: "T-Bank"
-        return Receipt(total = total, date = date, merchant = merchant, key = "$id:$operation", format = id)
+        val debit = lines.firstNotNullOfOrNull { DEBIT.find(it)?.groupValues?.get(1) }?.let(Account::digitsOf)
+        return Receipt(total = total, date = date, merchant = merchant, key = "$id:$operation", format = id, debitDigits = debit)
     }
 
     private fun money(text: String): Money? =

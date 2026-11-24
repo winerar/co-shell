@@ -7,12 +7,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 
 /**
- * Light theme of a palette: tinted white background, the neon primary as a fill with dark ink (buttons,
- * selected tab, FAB, switches, selected day); selected chips and segments sit on a pale wash of the accent
- * (`secondaryContainer`). Neon on white is unreadable as text, so text accents take [accentInk] — the ink.
+ * Light theme of a palette: white page, the neon primary as a fill with dark ink (buttons, selected tab, FAB, switches,
+ * selected day); selected chips and segments sit on a pale wash of the accent (`secondaryContainer`). Neon on white is
+ * unreadable as text, so text accents take [accentInk] — the palette's deep shade (`primaryFixedDim`, #493).
  */
 internal fun lightSchemeOf(p: PaletteSpec): ColorScheme {
-    val n = lightNeutrals(p.backgroundLight, p.primary, p.accentLight)
+    val n = lightNeutrals(p)
     return lightColorScheme(
         primary = p.primary,
         onPrimary = p.onPrimary,
@@ -61,7 +61,7 @@ internal fun darkSchemeOf(p: PaletteSpec): ColorScheme {
         onPrimary = p.onPrimary,
         primaryContainer = p.primary,
         onPrimaryContainer = p.onPrimary,
-        inversePrimary = lightNeutrals(p.backgroundLight, p.primary, p.accentLight).text,
+        inversePrimary = lightNeutrals(p).text,
         primaryFixedDim = n.inkPrimary,
         secondary = p.accentDark,
         onSecondary = lerp(p.accentDark, Color.Black, 0.82f),

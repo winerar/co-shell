@@ -12,12 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.ai.AiAddonStage
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -26,6 +25,7 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.RowGroupScope
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.ai.BetaMark
 import app.coshell.core.domain.settings.WeekStart
 import app.coshell.theme.components.ThemeModePicker
 import app.coshell.theme.components.labelRes
@@ -100,7 +100,7 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
         }
     }
 
-/** «Умные функции»: the one row «ИИ на телефоне» with its state (#587, board `Set1Root`); the screen is `ai/AiAddonScreen`. */
+/** «Умные функции»: the rows «ИИ на телефоне» (#587) and «Облачный разбор» (#635, when this build has the Worker) with their state (board `Set1Root`); the screens are `ai/AiAddonScreen`, `ai/cloud/CloudAiScreen`. */
 @Composable
 internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
     GroupCard(DesignR.drawable.ic_spark, 6, R.string.settings_smart_title, onAll = null) {
@@ -109,7 +109,15 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
             AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL -> R.string.ai_settings_loading
             AiAddonStage.ON -> R.string.ai_settings_on
         }
-        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon) }
+        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon, beta = true) }
+        state.cloud?.let { on ->
+            row {
+                ValueRow(
+                    stringResource(R.string.cloud_title), stringResource(if (on) R.string.cloud_settings_on else R.string.cloud_settings_off),
+                    actions.onCloudAi, beta = true,
+                )
+            }
+        }
     }
 
 /** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */
@@ -131,7 +139,7 @@ internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
 private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int, onAll: (() -> Unit)?, rows: RowGroupScope.() -> Unit) {
     Column(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.m, bottom = Spacing.s)) {
         Row(Modifier.padding(horizontal = Spacing.xs, vertical = Spacing.s), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            MenuIcon(icon, categoryColor(CategoryPalette.colors[color]))
+            MenuIcon(icon)
             CoShellSectionLabel(stringResource(title).uppercase(), Modifier.weight(1f))
             if (onAll != null) CoShellSectionLink(stringResource(R.string.settings_group_all), onClick = onAll)
         }
@@ -141,9 +149,14 @@ private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int,
 
 /** A setting shown by its value: tap opens where it is chosen. */
 @Composable
-private fun ValueRow(title: String, value: String, onClick: () -> Unit) = CoShellListRow(
-    title = title,
-    subtitle = value,
+private fun ValueRow(title: String, value: String, onClick: () -> Unit, beta: Boolean = false) = CoShellListRow(
+    title = {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+            Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+            if (beta) BetaMark()
+        }
+    },
+    supporting = { Text(value, maxLines = Int.MAX_VALUE, overflow = TextOverflow.Ellipsis) },
     trailing = { Icon(painterResource(DesignR.drawable.ic_chevron_right), contentDescription = null) },
     onClick = onClick,
     dense = true,

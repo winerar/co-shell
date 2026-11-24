@@ -33,7 +33,6 @@
       "Read(./app/build/**)",
       "Read(./core/*/build/**)",
       "Read(./docs/design/mockups/**)",
-      "Read(./**/*.png)",
       "Read(./.gradle/**)",
       "Read(./gradle/wrapper/**)"
     ]

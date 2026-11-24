@@ -13,7 +13,6 @@
     <string name="drafts_title">Drafts</string>
     <string name="drafts_title_count">Drafts · %1$d</string>
     <string name="drafts_menu_hint">From notes: check and add</string>
-    <string name="drafts_strip_hint">Check and add</string>
     <string name="drafts_summary">Drafts: %1$d · ready: %2$d</string>
     <string name="drafts_hint_ready">Tap a row to edit it.</string>
     <string name="drafts_hint_unready">Tap a row to add the amount or choose a category.</string>
@@ -31,4 +30,12 @@
     <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
     <string name="drafts_empty">No drafts. Write expenses in “Quick notes” and they will appear here.</string>
     <string name="drafts_empty_action">Quick notes</string>
+    <plurals name="notes_skipped">
+        <item quantity="one">%1$d line does not look like spending, so it stayed in the note.</item>
+        <item quantity="other">%1$d lines do not look like spending, so they stayed in the note.</item>
+    </plurals>
+    <string name="drafts_delete">Delete · %1$d</string>
+    <string name="drafts_deleted">Drafts deleted: %1$d</string>
+    <string name="notes_strip_drafts">Spending as lines · drafts: %1$d</string>
+    <string name="notes_strip_write">Write</string>
 </resources>

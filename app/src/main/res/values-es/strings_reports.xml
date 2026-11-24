@@ -141,4 +141,27 @@
     <string name="capital_month_change">%1$s en el mes</string>
     <string name="capital_month_search">Buscar cuenta · %1$d</string>
     <string name="capital_month_order_change">Por cambio</string>
+    <string name="reports_tab_overview">Resumen</string>
+    <string name="reports_tab_calendar">Calendario</string>
+    <string name="reports_calendar_title">Calendario de gastos</string>
+    <string name="reports_calendar_cue">toca un día</string>
+    <string name="reports_calendar_less">menos</string>
+    <string name="reports_calendar_more">más</string>
+    <plurals name="reports_calendar_nospend">
+        <item quantity="one">sin gastos: %d día</item>
+        <item quantity="many">sin gastos: %d días</item>
+        <item quantity="other">sin gastos: %d días</item>
+    </plurals>
+    <string name="reports_calendar_day_spent">%1$s, gastado %2$s %3$s</string>
+    <string name="reports_calendar_day_none">%1$s, sin gastos</string>
+    <string name="reports_calendar_day_title">%1$s · movimientos: %2$d</string>
+    <string name="reports_calendar_empty">Este mes aún no hay gastos. Toca «+» para anotar el primero.</string>
+    <string name="reports_calendar_day_empty">Ese día no hay movimientos.</string>
+    <string name="reports_weekday_1">L</string>
+    <string name="reports_weekday_2">M</string>
+    <string name="reports_weekday_3">X</string>
+    <string name="reports_weekday_4">J</string>
+    <string name="reports_weekday_5">V</string>
+    <string name="reports_weekday_6">S</string>
+    <string name="reports_weekday_7">D</string>
 </resources>

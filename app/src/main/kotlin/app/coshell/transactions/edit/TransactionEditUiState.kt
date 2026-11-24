@@ -59,6 +59,8 @@ data class TransactionEditUiState(
     val categoryGuessed: Boolean = false,
     /** What the guess came from: «по прошлым операциям» ([CategoryGuess.Source.HISTORY]) or «по словарю» (a brand never seen before); `null` when not guessed. */
     val categoryGuessSource: app.coshell.core.domain.categoryguess.CategoryGuess.Source? = null,
+    /** The model chose the category (#594, «предложено ИИ» with the spark): set together with [categoryGuessed], gone after a manual pick. */
+    val categoryByAi: Boolean = false,
     /** Saved or deleted: the screen should close. */
     val isDone: Boolean = false,
     /** Which part of the two-step sheet is shown: a new operation starts on the account. */
@@ -75,6 +77,18 @@ data class TransactionEditUiState(
     val scan: ScanUi? = null,
     /** A shared receipt was not recognised (#561, board «RcUnreadA»): «Ввести вручную» or «Отправить образец». */
     val receiptUnread: Boolean = false,
+    /** What «Не удалось прочитать чек» offers (#593): read with the model on the phone or in the cloud, or turn a model on. */
+    val receiptAi: ReceiptAiMode = ReceiptAiMode.NONE,
+    /** The model is reading the receipt: «Читаю чек…» with «Отменить». */
+    val receiptReading: Boolean = false,
+    /** The model found no total printed in the receipt: the window comes back without «Прочитать с ИИ». */
+    val receiptAiFailed: Boolean = false,
+    /** The draft of the last closed sheet offered on top of this new one (#323): «Продолжить» / «✕». */
+    val unsaved: UnsavedUi? = null,
+    /** A bank receipt names a card the app does not know yet (#577, board «ReceiptWhichAccount»): «Какой это счёт?». */
+    val receiptAccountAsk: ReceiptAccountAsk? = null,
+    /** «Вставить из буфера» found no amount in the text (#321): the pill under the row. */
+    val clipboardNone: Boolean = false,
     /** «Сохранить как шаблон» succeeded: the dialog closes and the header shows the new template's name. */
     val savedTemplateName: String? = null,
     /** «Сохранить как шаблон» was refused: the operation's account or category is archived or gone. */
@@ -148,3 +162,9 @@ internal fun TransactionEditUiState.EntryStep.afterAccount(isTransfer: Boolean):
     isTransfer -> TransactionEditUiState.EntryStep.TO_ACCOUNT
     else -> TransactionEditUiState.EntryStep.DETAILS
 }
+
+/**
+ * «Прочитать с ИИ» in «Не удалось прочитать чек» (#593, boards `AiRecOn`/`AiRecOff`): [NONE] — nothing to read (an empty share), the old window;
+ * [OFF] — no model is on, the window offers to turn one on; [PHONE] / [CLOUD] — the model that will read it (the text says whether it leaves the phone).
+ */
+enum class ReceiptAiMode { NONE, OFF, PHONE, CLOUD }

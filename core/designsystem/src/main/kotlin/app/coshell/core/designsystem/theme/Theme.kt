@@ -79,6 +79,7 @@ fun CoShellTheme(
         LocalStatusPalette provides status,
         LocalDarkTheme provides darkTheme,
         LocalHeroPalette provides hero,
+        LocalPanelColor provides colors.panel,
         LocalTactileLight provides tactileLight,
         LocalRippleConfiguration provides ripple,
     ) {
@@ -99,6 +100,8 @@ internal data class ThemeColors(
     val status: StatusPalette,
     val hero: HeroPalette,
     val heroStops: List<Color>,
+    /** Top and bottom capsules — [panelColor]. */
+    val panel: Color,
 )
 
 internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors {
@@ -120,6 +123,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
                 warning = readableOn(p.warningDark, stops, Color.White),
             ),
             heroStops = stops,
+            panel = panelOf(p, dark = true, scheme = scheme),
         )
     } else {
         val scheme = lightSchemeOf(p)
@@ -138,6 +142,7 @@ internal fun themeColorsFor(palette: CoShellPalette, dark: Boolean): ThemeColors
                 warning = readableOn(lerp(p.warningLight, Color.Black, HERO_ALERT_SHIFT_LIGHT), stops, Color.Black),
             ),
             heroStops = stops,
+            panel = panelOf(p, dark = false, scheme = scheme),
         )
     }
 }
@@ -150,14 +155,12 @@ internal fun heroDarkStops(p: PaletteSpec): List<Color> = listOf(
 )
 
 /**
- * Light hero gradient (owner 2026-11-16, «Б»: more of the theme's colour): the primary itself, a lighter primary, a light
- * accent — dark ink reads on each (`ColorContrastTest`).
+ * Light hero gradient. Neon themes (#493 Б, owner's poll 2026-11-23): a saturated gradient up to the pure neon. Soft themes keep the
+ * gentle one (owner 2026-11-16, «Б»): the primary, a lighter primary, a light accent. Dark ink reads on each stop (`ColorContrastTest`).
  */
-internal fun heroLightStops(p: PaletteSpec): List<Color> = listOf(
-    p.primary,
-    lerp(p.primary, Color.White, 0.3f),
-    lerp(p.accentDark, Color.White, 0.2f),
-)
+internal fun heroLightStops(p: PaletteSpec): List<Color> =
+    if (p.soft) listOf(p.primary, lerp(p.primary, Color.White, 0.3f), lerp(p.accentDark, Color.White, 0.2f))
+    else listOf(lerp(p.primary, Color.White, 0.45f), lerp(p.primary, Color.White, 0.15f), p.primary)
 
 /**
  * [color] moved towards [toward] in 5 % steps until it reads (≥ 4.6:1) on every one of [backgrounds] — the neon amount

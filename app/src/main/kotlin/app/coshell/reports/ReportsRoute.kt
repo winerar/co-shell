@@ -22,6 +22,8 @@ fun ReportsRoute(
     onMember: (MemberPreset) -> Unit = {},
     /** A point of «Капитал» (#373): the accounts at that month end. */
     onCapital: (CapitalMonthDestination) -> Unit = {},
+    /** A row of the day tapped in «Календарь трат» (#553): the operation opens in its sheet. */
+    onTransaction: (String) -> Unit = {},
     viewModel: ReportsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -31,6 +33,8 @@ fun ReportsRoute(
             onShift = viewModel::onShift,
             onApply = { viewModel.onApply(it.period, it.currency, it.compare) },
             onMonth = viewModel::onMonth,
+            onDay = viewModel::onDay,
+            onTransaction = onTransaction,
             onAllCategories = onAllCategories,
             onCategory = { id -> state.drillTo(id)?.let(onCategory) },
             onMember = { id -> state.membersOperations(id)?.let(onMember) },

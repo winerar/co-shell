@@ -8,6 +8,7 @@ ReportsDestination	RepA
 ReportCategoriesDestination	RepAll
 ReportCategoryDestination	RepDrill
 CapitalMonthDestination	Rp189NwDrill
+MonthRecapDestination	Rec554Top
 MonthReviewDestination	Mon236Screen
 MonthReviewLimitsDestination	Mon236Limits
 AccountEditDestination	AccountEdit
@@ -50,5 +51,9 @@ BudgetsDestination	BudA
 BudgetDetailDestination	BudDetail
 BudgetEditDestination	BudEdit
 AiAddonDestination	AiOff
+CloudAiDestination	CloudOff
 NotesDestination	Notes586Input
 DraftsDestination	Notes586Drafts
+DebtsDestination	DebtList
+DebtNewDestination	DebtNew
+DebtDetailDestination	DebtDetail

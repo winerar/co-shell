@@ -80,16 +80,17 @@ def home_with(actions, top_extra=''):
 
 
 def sync_dot(color, text):
-    return ('<span style="display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; background: %s; font-size: 12px; color: %s;">'
-            '<span style="width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>%s</span>' % (CHIP, INK2, color, text))
+    """The approved status label (Style2, `CoShellStatusChip`): 22 capsule tinted 18 %, colour in the dot, words in ink."""
+    return ('<span style="display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: %s; font-size: 11px; font-weight: 600; color: %s;">'
+            '<span style="width: 6px; height: 6px; border-radius: 50%%; background: %s;"></span>%s</span>' % (mix(color, 18), INK, color, text))
 
 
 def idea6a():
-    return home_with(sync_dot(OK, 'синхронно') + icon_button('search', 'Поиск'))
+    return home_with(sync_dot(OK, 'Синхронно') + icon_button('search', 'Поиск'))
 
 
 def idea6a2():
-    return home_with(sync_dot(WARN, 'ждут: 3') + icon_button('search', 'Поиск'))
+    return home_with(sync_dot(WARN, 'Ждут: 3') + icon_button('search', 'Поиск'))
 
 
 # ---- 7 · undo instead of dialogs --------------------------------------------------------------------------------
@@ -194,7 +195,7 @@ BOARDS = [  # name, title, fn, proposal number — owner's picks (#159, 2026-11-
     ('Idea3B', '3Б · Строка «Обычно здесь» над сеткой (выбрано)', idea3b, 3),
     ('Idea4A', '4А · Итог под фильтрами (выбрано)', idea4a, 4),
     ('Idea5A', '5А · Полоса долей и легенда (выбрано)', idea5a, 5),
-    ('Idea6A', '6А · Точка «синхронно» (выбрано)', idea6a, 6), ('Idea6A2', '6А · …и «ждут отправки»', idea6a2, 6),
+    ('Idea6A', '6А · Точка «Синхронно» (выбрано)', idea6a, 6), ('Idea6A2', '6А · …и «Ждут: N»', idea6a2, 6),
     ('Idea7A', '7А · Удалено сразу, снэкбар «Отменить» (выбрано)', idea7a, 7),
     ('Idea8A', '8А · Заливка, подпись внутри (выбрано)', idea8a, 8),
     ('Idea9A', '9А · Группа строк в одной карточке (выбрано)', idea9a, 9),

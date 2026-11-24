@@ -4,6 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
+import app.coshell.core.domain.TransactionFilter
+import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.domain.credit.SOON_CREDIT_DAYS
+import app.coshell.core.domain.debts.DebtBook
+import app.coshell.core.domain.debts.DebtRepository
+import app.coshell.core.domain.debts.InMemoryDebtRepository
+import app.coshell.core.domain.credit.creditPaymentsDue
+import app.coshell.core.model.TransactionType
 import app.coshell.core.domain.recurring.MissedPaymentsUseCase
 import app.coshell.core.domain.templates.TemplateRepository
 import app.coshell.core.model.MoneyFormat
@@ -11,7 +20,10 @@ import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Clock
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -21,6 +33,7 @@ import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.todayIn
 
 /**
@@ -31,12 +44,14 @@ import kotlinx.datetime.todayIn
 class UpcomingViewModel @Inject constructor(
     templates: TemplateRepository,
     accounts: AccountRepository,
+    transactions: TransactionRepository,
     categories: CategoryRepository,
     moneyFormat: MoneyFormat,
     clock: Clock,
     private val timeZone: TimeZone,
     private val missed: MissedPaymentsUseCase,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    debts: DebtRepository = InMemoryDebtRepository(),
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
@@ -49,6 +64,41 @@ class UpcomingViewModel @Inject constructor(
     ) { list, accountList, categoryList, days ->
         buildUpcomingRows(list, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, moneyFormat, today, days)
     }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /**
+     * Credit card payments of the same days (#686): a card with a debt, its payment day within the window, not paid yet this cycle.
+     * Only transfers into the cards since the earliest cycle start are read — a bounded period, not the whole history.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val credit: StateFlow<List<CreditPaymentRow>> = accounts.observeAccountsWithBalance()
+        .flatMapLatest { list ->
+            val cards = list.filter { it.account.credit != null && !it.account.archived }
+            if (cards.isEmpty()) {
+                flowOf(emptyList())
+            } else {
+                val since = cards.minOf { CreditCard.previousDue(it.account.credit!!.payDay, CreditCard.dueDate(it.account.credit!!.payDay, today)) }
+                val filter = TransactionFilter(
+                    accountIds = cards.map { it.account.id }.toSet(),
+                    from = since.atStartOfDayIn(timeZone),
+                    type = TransactionType.TRANSFER,
+                )
+                transactions.observeTransactions(filter).map { buildCreditRows(creditPaymentsDue(list, it, today, timeZone), moneyFormat, today) }
+            }
+        }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Deposits that close within the window with their expected income (#634, step 3). */
+    val deposits: StateFlow<List<DepositEndRow>> = accounts.observeAccountsWithBalance()
+        .map { buildDepositRows(it, moneyFormat, today, SOON_CREDIT_DAYS) }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Debts to be returned within [DebtBook.REMIND_DAYS] days, today or already late (#552) — in the same card. */
+    val debtDue: StateFlow<List<DebtDueRow>> = debts.observeEvents()
+        .map { buildDebtRows(DebtBook.due(DebtBook.of(it), today), moneyFormat) }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 

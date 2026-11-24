@@ -3,13 +3,16 @@ package app.coshell.accounts.edit
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
+import app.coshell.R
 import app.coshell.core.domain.AdjustBalanceUseCase
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
 import app.coshell.core.domain.SaveAccountUseCase
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.CreditTerms
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.MinPayment
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
@@ -21,6 +24,7 @@ import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
+import app.coshell.undo.UndoCenter
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -38,6 +42,7 @@ class AccountEditViewModelTest {
     private val accounts = FakeAccountRepository()
     private val transactions = FakeTransactionRepository()
     private val categories = FakeCategoryRepository()
+    private val undo = UndoCenter()
 
     private fun viewModel(accountId: String? = null) = AccountEditViewModel(
         savedStateHandle = SavedStateHandle(mapOf(AccountEditDestination.ARG_ACCOUNT_ID to accountId)),
@@ -47,6 +52,7 @@ class AccountEditViewModelTest {
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
         adjustBalance = AdjustBalanceUseCase(accounts, transactions, EnsureAdjustmentCategoriesUseCase(categories), IdGenerator { "adj" }),
+        undo = undo,
     )
 
     @Test
@@ -66,6 +72,143 @@ class AccountEditViewModelTest {
             Account("new", "Наличные", usd, AccountType.CASH, initialBalanceMinor = 125_050),
             accounts.getAccount("new"),
         )
+    }
+
+    @Test
+    fun `card digits are kept as four numbers and saved with the account`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Карта")
+        vm.onCardDigitsChange("40 83**3900-77")
+        assertEquals("4083", vm.state.value.cardDigits)
+        vm.onCardDigitsChange("3900")
+        vm.save()
+
+        assertTrue(vm.state.value.isDone)
+        assertEquals("3900", accounts.getAccount("new")!!.cardDigits)
+    }
+
+    @Test
+    fun `fewer than four digits are refused and an empty field unlinks the account`() = runTest {
+        accounts.saveAccount(Account("a", "Карта", ars, cardDigits = "3900"))
+        val vm = viewModel("a")
+        assertEquals("3900", vm.state.value.cardDigits)
+
+        vm.onCardDigitsChange("39")
+        vm.save()
+        assertTrue(vm.state.value.cardDigitsError)
+        assertFalse(vm.state.value.isDone)
+
+        vm.onCardDigitsChange("")
+        assertFalse(vm.state.value.cardDigitsError)
+        vm.save()
+        assertTrue(vm.state.value.isDone)
+        assertNull(accounts.getAccount("a")!!.cardDigits)
+    }
+
+    @Test
+    fun `a travel pass is saved as another account out of the total and another type clears it`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("SUBE")
+        vm.onPrepaidSelect()
+        assertTrue(vm.state.value.prepaid)
+        assertEquals(AccountType.OTHER, vm.state.value.type)
+        assertFalse(vm.state.value.includedInTotal)
+        vm.onInitialBalanceChange("2 400")
+        vm.save()
+
+        val saved = accounts.getAccount("new")!!
+        assertTrue(saved.prepaid)
+        assertEquals(AccountType.OTHER, saved.type)
+        assertTrue(saved.excludedFromTotal)
+        assertEquals(240_000, saved.initialBalanceMinor)
+
+        val again = viewModel("new")
+        assertTrue(again.state.value.prepaid)
+        again.onTypeChange(AccountType.CARD)
+        assertFalse(again.state.value.prepaid)
+        again.save()
+        assertFalse(accounts.getAccount("new")!!.prepaid)
+    }
+
+    @Test
+    fun `a credit card keeps its conditions and another type drops them`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Кредитка")
+        vm.onCurrencyChange("amd")
+        vm.onCreditSelect()
+        assertTrue(vm.state.value.credit)
+        assertEquals(AccountType.OTHER, vm.state.value.type)
+        vm.onCreditLimitChange("500 000")
+        vm.onCreditPayDayChange("1x5")
+        assertEquals("15", vm.state.value.creditPayDay)
+        vm.onCreditMinSumChange(true)
+        vm.onCreditMinChange("9 000")
+        vm.save()
+
+        val saved = accounts.getAccount("new")!!
+        assertEquals(CreditTerms(500_000_00, 15, MinPayment.Fixed(9_000_00)), saved.credit)
+
+        val again = viewModel("new")
+        assertTrue(again.state.value.credit)
+        assertEquals("15", again.state.value.creditPayDay)
+        again.onTypeChange(AccountType.CARD)
+        again.save()
+        assertNull(accounts.getAccount("new")!!.credit)
+    }
+
+    @Test
+    fun `a credit card without full conditions is not saved`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Кредитка")
+        vm.onCreditSelect()
+        vm.onCreditLimitChange("500 000")
+        vm.save()
+
+        assertTrue(vm.state.value.creditError)
+        assertFalse(vm.state.value.isDone)
+        assertNull(accounts.getAccount("new"))
+        vm.onCreditPayDayChange("15")
+        assertFalse(vm.state.value.creditError)
+    }
+
+    @Test
+    fun `a travel pass and a credit card exclude each other`() = runTest {
+        val vm = viewModel()
+        vm.onCreditSelect()
+        vm.onPrepaidSelect()
+        assertTrue(vm.state.value.prepaid)
+        assertFalse(vm.state.value.credit)
+        vm.onCreditSelect()
+        assertTrue(vm.state.value.credit)
+        assertFalse(vm.state.value.prepaid)
+    }
+
+    @Test
+    fun `local-only mark can be set when creating an account`() = runTest {
+        val vm = viewModel()
+        vm.onNameChange("Копилка")
+        vm.onLocalOnlyChange(true)
+        vm.save()
+
+        assertTrue(accounts.getAccount("new")!!.localOnly)
+    }
+
+    @Test
+    fun `local-only mark cannot be switched on for a saved account but can be switched off`() = runTest {
+        accounts.saveAccount(Account("shared", "Общий", ars))
+        accounts.saveAccount(Account("mine", "Копилка", ars, localOnly = true))
+
+        val shared = viewModel("shared")
+        assertTrue(shared.state.value.localOnlyLocked)
+        shared.onLocalOnlyChange(true)
+        assertFalse(shared.state.value.localOnly)
+
+        val mine = viewModel("mine")
+        assertFalse(mine.state.value.localOnlyLocked)
+        assertTrue(mine.state.value.localOnly)
+        mine.onLocalOnlyChange(false)
+        mine.save()
+        assertFalse(accounts.getAccount("mine")!!.localOnly)
     }
 
     @Test
@@ -180,12 +323,28 @@ class AccountEditViewModelTest {
     }
 
     @Test
-    fun `unused account is deleted`() = runTest {
-        accounts.saveAccount(Account("a", "Карта", ars))
+    fun `unused account is deleted at once and the undo offer brings it back`() = runTest {
+        val card = Account("a", "Карта", ars, color = 0xFF112233)
+        accounts.saveAccount(card)
         val vm = viewModel("a")
         vm.delete()
         assertTrue(vm.state.value.isDone)
         assertNull(accounts.getAccount("a"))
+
+        val offer = undo.latest!!
+        assertEquals(R.string.account_deleted, offer.message)
+        offer.undo()
+        assertEquals(card, accounts.getAccount("a"))
+    }
+
+    @Test
+    fun `a blocked delete offers no undo`() = runTest {
+        accounts.saveAccount(Account("a", "Карта", ars))
+        transactions.saveTransaction(
+            Transaction("t", TransactionType.EXPENSE, "a", Money(100, ars), Instant.fromEpochSeconds(0)),
+        )
+        viewModel("a").delete()
+        assertNull(undo.latest)
     }
 
     @Test

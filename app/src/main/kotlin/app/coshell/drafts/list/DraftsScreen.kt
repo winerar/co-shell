@@ -1,6 +1,8 @@
 package app.coshell.drafts.list
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,9 +19,11 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellEmptyState
 import app.coshell.core.designsystem.components.CoShellHint
-import app.coshell.core.designsystem.components.LocalBottomBarInset
+import app.coshell.core.designsystem.components.CoShellMessage
+import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
@@ -30,6 +34,8 @@ data class DraftsActions(
     val onEdit: (String) -> Unit = {},
     val onToggle: (String) -> Unit = {},
     val onPost: () -> Unit = {},
+    /** «Удалить · N» — the ticked drafts (#628). */
+    val onDelete: () -> Unit = {},
     /** The empty screen's «Быстрые заметки». */
     val onNotes: () -> Unit = {},
 )
@@ -48,11 +54,18 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
         bottomBar = {
             if (state.rows.isNotEmpty()) {
                 val label = if (state.postCount > 0) stringResource(R.string.drafts_post, state.postCount) else stringResource(R.string.drafts_post_none)
-                CoShellButton(
-                    onClick = actions.onPost,
-                    enabled = state.postCount > 0,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = LocalBottomBarInset.current).padding(horizontal = Spacing.l, vertical = Spacing.m),
-                ) { Text(label) }
+                // Board `NbDrA` (poll 2026-11-23, #628 «А»): «Удалить · N» appears beside «Записать» once anything is ticked.
+                Row(
+                    Modifier.fillMaxWidth().aboveBottomBars().padding(horizontal = Spacing.l, vertical = Spacing.m),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.m),
+                ) {
+                    if (state.deleteCount > 0) {
+                        CoShellOutlinedButton(onClick = actions.onDelete, modifier = Modifier.weight(1f)) {
+                            Text(stringResource(R.string.drafts_delete, state.deleteCount), maxLines = 1)
+                        }
+                    }
+                    CoShellButton(onClick = actions.onPost, enabled = state.postCount > 0, modifier = Modifier.weight(1f)) { Text(label, maxLines = 1) }
+                }
             }
         },
     ) { padding ->
@@ -68,6 +81,11 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
             return@Scaffold
         }
         LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Spacing.l))) {
+            if (state.cloudLimited) {
+                item(key = "cloud", contentType = "message") {
+                    CoShellMessage(stringResource(R.string.cloud_limit_message), isError = false, modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs))
+                }
+            }
             item(key = "summary", contentType = "hint") {
                 CoShellHint(
                     stringResource(R.string.drafts_summary, state.rows.size, state.readyCount),

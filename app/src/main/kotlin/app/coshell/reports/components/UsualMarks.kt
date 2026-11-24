@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.charts.CoShellChangePill
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.reports.ReportsUiState.Mark
@@ -38,7 +39,7 @@ internal fun markDescription(mark: Mark): String = when {
 internal fun markLine(mark: Mark): String {
     if (mark.percent == null) return stringResource(R.string.report_mark_new_line)
     val direction = stringResource(if (mark.up) R.string.report_mark_above else R.string.report_mark_below)
-    val usual = mark.byDay?.let { stringResource(R.string.report_mark_usual_by, it, mark.expected) }
-        ?: stringResource(R.string.report_mark_usual, mark.expected)
+    val usual = mark.byDay?.let { stringResource(R.string.report_mark_usual_by, it, shownAmount(mark.expected)) }
+        ?: stringResource(R.string.report_mark_usual, shownAmount(mark.expected))
     return "$direction · $usual"
 }

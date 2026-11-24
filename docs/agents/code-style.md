@@ -2,8 +2,8 @@
 
 ## Kotlin
 - Официальный стиль Kotlin (`kotlin.code.style=official`), отступ 4 пробела, trailing commas.
-- Код, идентификаторы и комментарии — на английском. Строки UI — только в `strings*.xml`, **сразу на всех языках**
-  (`values` — русский, `values-en`, `values-es`; правила — `glossary.md`). Литерал с текстом в `Text(…)`, `title =`, `contentDescription =`
+- Код, идентификаторы и комментарии — на английском. Строки UI — только в `strings*.xml`; **до публикации — только русский** (`values`), en/es догоняем одним проходом
+  (`values-en`, `values-es`; пауза и список — `glossary.md`, `agent.sh l10n`). Литерал с текстом в `Text(…)`, `title =`, `contentDescription =`
   и любой кириллический литерал в коде роняют `HardcodedTextTest` (исключения-данные — его `ALLOWED`, с причиной).
 - Неизменяемые данные: `val`, `data class`, `List` вместо `MutableList` в публичных API.
 - Ошибки ввода — через sealed `Result`, а не исключения. Исключения — для нарушенных инвариантов
@@ -33,7 +33,7 @@ Screen <---- StateFlow<UiState> ---- ViewModel
 - Edge-to-edge: внешний `Scaffold` (`CoShellNavHost`) поглощает только нижний отступ; строку
   статуса обрабатывает `Scaffold` экрана (через `padding` или `TopAppBar`). Нижнюю капсулу внешний `Scaffold` не вычитает из
   экрана: прокручиваемое тело — `contentPadding = underBars(padding, …)` (или `.verticalScroll(..).padding(underBars(padding))`),
-  никогда `.padding(padding)` на самом списке; своя кнопка внизу в `bottomBar` — с `padding(bottom = LocalBottomBarInset.current)`.
+  никогда `.padding(padding)` на самом списке; своя кнопка внизу в `bottomBar` — `Modifier.aboveBottomBars()` (`ui/bar/BottomButtonPadding.kt`: капсула на вкладках + полоса системных кнопок на внутренних экранах, #640).
 
 ## Иконки
 - Только **Material Symbols Outlined, weight 300** (тонкие контурные), без заливки — и в выбранном состоянии тоже.

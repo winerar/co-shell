@@ -1,5 +1,6 @@
 """«Компоненты v3» — existing choice components (#367, part 1 of 3), each as a function of the rule set v."""
 from mockup_catalog_kit import *  # noqa: F401,F403
+import mockup_screens_fb_qr526 as qr526  # noqa: E402
 
 
 def seg(v, labels, chosen, disabled=False):
@@ -129,7 +130,24 @@ def account_ribbon(v):
     return col(flexrow(cells, more, gap=10, wrap=False), cap('последний использованный выбран; «Все ›» — сетка счетов; обводка выбранного — цвет темы, не чёрный/белый'))
 
 
+def action_fan(v):
+    """CoShellActionFan (#623, poll «А», board `EwHoldA`): hold «+» — round buttons open on an arc over it; lead the finger to one and let go."""
+    def item(cx, cy, icon, label, on=False):
+        circle = ('<span style="position: absolute; left: %dpx; top: %dpx; width: 56px; height: 56px; border-radius: 50%%; display: flex; align-items: center; justify-content: center; %s">%s</span>'
+                  % (cx - 28, cy - 28, ('background: %s; box-shadow: inset 0 0 0 2px %s;' % (LIME, ONLIME)) if on else ('background: %s; border: 1px solid %s;' % (CHIP, OUTLINE)),
+                     (qr526.QR % (ONLIME if on else INK)) if icon == 'qr' else svg(icon, ONLIME if on else INK, 24, 1.8)))
+        cap_ = ('<span style="position: absolute; left: %dpx; top: %dpx; width: 88px; text-align: center; font-size: 12px;"><span style="padding: 2px 8px; border-radius: 999px; background: %s; color: %s;">%s</span></span>'
+                % (cx - 44, cy + 32, CHIP, INK, label))
+        return circle + cap_
+    plus = ('<span style="position: absolute; left: 126px; top: 126px; width: 48px; height: 48px; border-radius: 50%%; background: %s; color: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
+            % (LIME, ONLIME, svg('plus', ONLIME, 24, 2.2)))
+    arc = ''.join([item(73, 58, 'qr', 'QR чека'), item(150, 30, 'note', 'Заметка', True), item(227, 58, 'list', 'Шаблон')])
+    return col('<div style="position: relative; width: 300px; height: 190px;">%s%s</div>' % (arc, plus),
+               cap('удержали «+» — три кнопки веером; не отпуская, ведут палец к нужной и отпускают; мимо — закроется; короткое нажатие — новая операция'))
+
+
 CHOICE = [
+    ('Веер над «+»', action_fan, 'CoShellActionFan(actions, enabled) { «+» } · FanAction(icon, label, onSelect)'),
     ('Лента счетов', account_ribbon, 'CoShellAccountRibbon(accounts, selectedId, onSelect, onAll)'),
     ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),

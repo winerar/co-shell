@@ -10,6 +10,14 @@ import app.coshell.ai.AiDownloadService
 import app.coshell.ai.BoundAddonControl
 import app.coshell.ai.DeviceMemory
 import app.coshell.ai.SystemDeviceMemory
+import app.coshell.ai.cloud.CloudLanguageModel
+import app.coshell.ai.cloud.PrefsCloudAiSettings
+import app.coshell.core.data.auth.AuthGateway
+import app.coshell.family.data.UrlConnectionHttpClient
+import app.coshell.core.domain.ai.CloudAiSettings
+import app.coshell.core.domain.ai.PayeeCategoryAi
+import app.coshell.core.domain.ai.ReceiptAi
+import app.coshell.core.domain.ai.RoutedLanguageModel
 import app.coshell.ai.ReleaseAddonPackage
 import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.update.data.CacheApkDownloader
@@ -21,7 +29,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,5 +66,37 @@ object AiModule {
 
     @Provides
     @Singleton
-    fun provideLanguageModel(@ApplicationContext context: Context): LanguageModel = AddonLanguageModel(context)
+    fun provideAddonLanguageModel(@ApplicationContext context: Context) = AddonLanguageModel(context)
+
+    @Provides
+    fun provideCloudAiSettings(impl: PrefsCloudAiSettings): CloudAiSettings = impl
+
+    /** Cloud (#635, only when the person allowed it) → the phone → rules. `AI_PROXY_URL` is empty in builds without the Worker. */
+    @Provides
+    fun providePayeeCategoryAi(model: LanguageModel): PayeeCategoryAi = PayeeCategoryAi(model)
+
+    /** «Прочитать с ИИ» for a receipt no format knows (#593): the same routed model. */
+    @Provides
+    fun provideReceiptAi(model: LanguageModel): ReceiptAi = ReceiptAi(model)
+
+    @Provides
+    @Named("aiProxyUrl")
+    fun provideAiProxyUrl(): String = BuildConfig.AI_PROXY_URL
+
+    @Provides
+    @Singleton
+    fun provideLanguageModel(
+        addon: AddonLanguageModel,
+        auth: AuthGateway,
+        settings: PrefsCloudAiSettings,
+        clock: Clock,
+        @Named("aiProxyUrl") proxyUrl: String,
+    ): LanguageModel = RoutedLanguageModel(
+        cloud = CloudLanguageModel(
+            UrlConnectionHttpClient(timeoutMs = 40_000), auth, proxyUrl, { auth.session.value != null },
+            onQuota = { left, limit -> settings.recordQuota(left, limit, clock.now().toEpochMilliseconds() / 86_400_000L) },
+        ),
+        phone = addon,
+        settings = settings,
+    )
 }

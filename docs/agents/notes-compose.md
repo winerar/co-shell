@@ -3,6 +3,8 @@
 Грабли Compose, Material 3 и компилятора Compose, найденные в работе (вынесено из `notes.md`).
 Формат тот же: `- (дата) факт — что из этого следует`.
 
+- (11-23, #624) Свой хост снэкбара вместо Material `SnackbarHost` должен **сам** вызывать `dismiss()` по таймеру: тайм-аут живёт в `SnackbarHost`, а `showSnackbar` ждёт вечно (`CoShellSnackbarHost`, `SnackbarTimeoutTest`).
+- (11-23, #640) Внешний `Scaffold` с нижней панелью отдаёт `bottom = 0`, когда панель уехала (внутренние экраны): полосу системных кнопок никто не вычитает — кнопке внизу нужен `navigationBarsPadding` (`aboveBottomBars()`).
 - (11-12) Compose `lerp(Color, Color, t)` смешивает в **Oklab**, не в sRGB — подбирать цвета/контраст заранее скриптом с Oklab (как в #249), иначе числа не сойдутся с `ColorContrastTest`. (11-13, #271) Тёмный герой — узкое место новых палитр: яркий `primary` (Лимон) валит подсказку → темнее `backgroundDark`.
 - (11-10) `Modifier.drawBehind` на `NavigationBar`/`Surface` рисует **под** их фоном — фон закрасит рисунок.
   Фон ставить своим `background()` перед `drawBehind`, а `containerColor = Transparent` (так пилюля вкладки).
@@ -42,3 +44,4 @@
 - (11-16, #379) Сумма во фразе («потрачено X из Y», прогноз, подписи конвертов) — через `breakableBeforeCurrency()` (`ui/format/SentenceAmount.kt`): `MoneyFormat` склеивает «число USD» неразрывным пробелом, и при 320 dp × 2,0 это слово шире строки — движок рвал код валюты («US/D»). Отдельная сумма (`AmountText`) остаётся склеенной.
 - (11-20) Окно-карточка (`Dialog` + `Column`) без прокрутки: не влезло по высоте — последний ребёнок (кнопка) получает остаток и сжимается в полоску («Понятно» в «Обновлено до N»). Тело — `Column(Modifier.weight(1f, fill = false).verticalScroll(…))`, кнопка под ним; стресс — `UpdatedCardStressScreenshotTest`, `ConfirmCardOverflowTest` (проверяют высоту кнопки ≥ `Sizes.button`).
 - (11-20, #145) Шторки и диалоги (`dialog<…>`, `Dialog`) — **отдельные окна** над окном активности: композабл «поверх всего» (экран PIN) их не закрывает. Скрыть приложение целиком — убрать его из композиции, состояние сохранить `rememberSaveableStateHolder` (`PrivacyHost`; стек навигации и ViewModel шторки возвращаются, `PrivacyHostTest`).
+- (11-23, #379) «Черновики» на es ×1,3 / 320 dp: `Row` с `weight(1f)` у названия оставлял «К…» рядом с суммой. Строка «название + сумма» — `FlowRow` (название целиком, сумма в `Box(weight(1f), CenterEnd)` уходит под него); находит стресс-эталон `drafts_stress_*` (`ScreensLocaleStressScreenshotTest`: заметки и черновики добавлены).

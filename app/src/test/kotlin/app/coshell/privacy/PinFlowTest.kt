@@ -71,6 +71,39 @@ class PinFlowTest {
     }
 
     @Test
+    fun `a forgotten pin is replaced after the phone confirms it is the owner`() = runTest(StandardTestDispatcher()) {
+        val settings = FakeSettings().apply { stored = StoredPin("salt", "salt:1111"); tries = PinAttempts(failed = 3) }
+        settings.state.value = PrivacyOptions(pinEnabled = true)
+        val center = center(settings)
+        runCurrent()
+        assertTrue(center.locked.value)
+        val flow = PinFlow(center, backgroundScope, PinStep.ENTER, PinGoal.UNLOCK)
+        // «Забыли PIN?» → the phone's own lock confirmed → the lock screen starts a new PIN (LockViewModel.deviceConfirmed).
+        flow.restart(PinStep.CREATE, PinGoal.SET)
+        flow.type("2468")
+        assertEquals(PinStep.REPEAT, flow.state.value.step)
+        flow.type("2468")
+        runCurrent()
+        assertTrue(flow.state.value.done)
+        assertEquals(StoredPin("salt", "salt:2468"), settings.stored)
+        assertTrue(settings.state.value.pinEnabled)
+        assertFalse(center.locked.value)
+
+        // The old PIN no longer opens anything: the next start is locked again, check both.
+        val next = center(settings)
+        runCurrent()
+        assertTrue(next.locked.value)
+        val again = PinFlow(next, backgroundScope, PinStep.ENTER, PinGoal.UNLOCK)
+        again.type("1111")
+        runCurrent()
+        assertEquals(PinNote.WRONG, again.state.value.note)
+        assertTrue(next.locked.value)
+        again.type("2468")
+        runCurrent()
+        assertFalse(next.locked.value)
+    }
+
+    @Test
     fun `the lock opens with the right pin and waits after five wrong ones`() = runTest(StandardTestDispatcher()) {
         val settings = FakeSettings().apply { stored = StoredPin("salt", "salt:1111") }
         settings.state.value = PrivacyOptions(pinEnabled = true)

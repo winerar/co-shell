@@ -178,6 +178,12 @@ def hero_card(inner, pad='16px', radius=24, extra=''):
             % (radius, HERO_BG, pad, extra, inner))
 
 
+def story_card(inner, pad='20px', radius=24, extra=''):
+    """A full-screen story (`CardTone.Story`, #554, poll 2026-11-24 «А · Мягкий спуск»): 42 → 18 → 8 % of the primary over the card."""
+    return ('<div style="border-radius: %dpx; background: linear-gradient(180deg, #507016, #25340C, #131C08); overflow: hidden; padding: %s; %s">%s</div>'
+            % (radius, pad, extra, inner))
+
+
 def group(rows):
     out = []
     for i, r in enumerate(rows):

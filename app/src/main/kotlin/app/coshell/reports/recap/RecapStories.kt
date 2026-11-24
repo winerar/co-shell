@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.categoryColor
@@ -37,7 +38,13 @@ internal fun TopStory(state: MonthRecapUiState, modifier: Modifier) {
             state.top.map { DonutSlice(it.value, categoryColor(it.category.color)) },
             stringResource(R.string.recap_top_donut),
             Modifier.align(Alignment.CenterHorizontally),
-        ) { AmountText("${state.spent} ${state.currency}", AmountTitleStyle) }
+        ) {
+            // The number on its own line and the currency under it: «1 140 USD» in one line ran over the ring.
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                AmountText(state.spent, AmountTitleStyle, minFontSize = MinCenterAmount)
+                Text(state.currency, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
         state.top.forEach {
             CoShellBarRow(
                 categoryName(it.category.name), it.amount, it.percent / PERCENT_SCALE, categoryColor(it.category.color),
@@ -153,5 +160,8 @@ private fun phraseText(state: MonthRecapUiState): String = when (state.phrase) {
 private fun Caption(text: String) = Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
 private const val SAME = 3
+
+/** The smallest the amount in the donut centre may shrink to. */
+private val MinCenterAmount = 12.sp
 private const val PERCENT_SCALE = 100f
 private const val PERCENT_FULL = 100f

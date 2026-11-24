@@ -101,8 +101,11 @@ def components():
                 'group(rows) / row(...) → CoShellRowGroup · CoShellListRow · tx → CoShellListRow + CategoryBadge · acc_row → CoShellListRow + AccountBadge · money · group_head → CoShellExpandable · label → CoShellSectionLabel · card → CoShellCard'),
         section('Плитки и герои', stack(m.balance_hero(), m.tiles(m.tile('Траты за ноябрь', '1 240,50', 'USD'), m.tile('Внимание', '2', 'нет курса VES', WARN, True)),
                                         grid([nav_tile('folder', 'Категории', '34 · 6 папок', LIME, LIMEBG), nav_tile('rate', 'Курсы', 'сегодня', CYAN, CYANBG)], 2),
-                                        big_total('Всего в общем балансе', '9 640', 'USD')),
-                'balance_hero · tile → CoShellTile · nav_tile → CoShellTile · big_total → RollingAmountText'),
+                                        big_total('Всего в общем балансе', '9 640', 'USD'),
+                                        story_card('<div style="font-size: 15px; font-weight: 700;">История на весь экран</div>'
+                                                   '<div style="margin-top: 4px; font-size: 12px; color: %s;">цвет темы сверху растворяется книзу</div>' % MUTED,
+                                                   pad='14px', extra='min-height: 110px;')),
+                'balance_hero · tile → CoShellTile · nav_tile → CoShellTile · big_total → RollingAmountText · story_card → CoShellCard(tone = CardTone.Story) («Итоги месяца», #554)'),
         section('Уведомления', stack(message('Копия сохранена.', 'ok'), message('Не удалось загрузить курсы.', 'error'), message('Курсы ещё не загружались.', 'warn'),
                                      message('Сначала сохраним копию.', 'info', 'Перед стиранием'), frame(snackbar('Операция удалена', bottom=12) + toast('Сохранено', 76), 136),
                                      notice_long('Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.'),

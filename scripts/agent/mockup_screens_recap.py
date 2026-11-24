@@ -24,7 +24,7 @@ def bars(at):
 def story(at, title, body, caption=''):
     cap = '<div style="margin-top: 12px; font-size: 14px; color: %s;">%s</div>' % (HERO_HINT, caption) if caption else ''
     inner = '<div style="font-size: 20px; font-weight: 700; line-height: 1.25;">%s</div><div style="margin-top: 16px;">%s</div>%s' % (title, body, cap)
-    return inner_screen('Итоги октября', bars(at) + hero_card(inner, pad='20px', extra='margin-top: 12px; min-height: 520px;'))
+    return inner_screen('Итоги октября', bars(at) + story_card(inner, pad='20px', extra='margin-top: 12px; min-height: 520px;'))
 
 
 def top():
@@ -68,7 +68,7 @@ def share_final():
     """Share icon in the top bar of every story (not only the last): one tap → picture of the card in the system «Поделиться»."""
     inner = ('<div style="font-size: 20px; font-weight: 700; line-height: 1.25;">Месяц легче прошлого на 14 %%</div>'
              '<div style="margin-top: 16px;">%s</div><div style="margin-top: 12px; font-size: 14px; color: %s;">Дней с записями: 22</div>' % (button('Подробнее'), HERO_HINT))
-    return share_screen(bars(5) + hero_card(inner, pad='20px', extra='margin-top: 12px; min-height: 520px;'))
+    return share_screen(bars(5) + story_card(inner, pad='20px', extra='margin-top: 12px; min-height: 520px;'))
 
 
 def share_image():
@@ -80,7 +80,7 @@ def share_image():
                 ''.join('<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;"><span style="width: 14px; height: 14px; border-radius: 50%%; background: %s;"></span>'
                         '<span style="flex: 1; font-size: 16px;">%s</span><span style="font-size: 15px; color: %s;">%d %%</span></div>' % (c, n, HERO_HINT, round(v * 100 / 1140)) for n, v, c in CATS),
                 mark))
-    return '<div style="padding: 40px 16px;">%s</div>' % hero_card(inner, pad='24px', extra='min-height: 700px;')
+    return '<div style="padding: 40px 16px;">%s</div>' % story_card(inner, pad='24px', extra='min-height: 700px;')
 
 
 def share_choice():

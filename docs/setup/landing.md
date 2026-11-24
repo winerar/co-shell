@@ -5,6 +5,7 @@
 По умолчанию публикация **выключена**.
 
 ## Включить (один раз)
+Общий порядок вместе с кодами — `closed-test.md`.
 1. В репозитории `co-shell-releases`: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `gh-pages` / `(root)` → Save.**
    (Ветка `gh-pages` появится после первой публикации — шаг 2 можно сделать раньше и вернуться.)
 2. В `co-shell` → Settings → Secrets and variables → Actions → Variables → **New repository variable**: `LANDING` = `true`.

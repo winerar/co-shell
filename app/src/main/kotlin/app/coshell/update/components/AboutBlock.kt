@@ -1,5 +1,7 @@
 package app.coshell.update.components
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +17,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
+import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -53,11 +57,25 @@ internal fun AboutBlock(modifier: Modifier = Modifier) {
         }
         CoShellSectionLabel(stringResource(R.string.about_principles))
         CoShellRowGroup {
-            row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, stringResource(R.string.about_principle_family), {}, subtitle = stringResource(R.string.about_principle_family_hint)) }
-            row { CoShellMenuRow(DesignR.drawable.ic_currency_exchange, stringResource(R.string.about_principle_offline), {}, subtitle = stringResource(R.string.about_principle_offline_hint)) }
-            row { CoShellMenuRow(DesignR.drawable.ic_shield_lock, stringResource(R.string.about_principle_data), {}, subtitle = stringResource(R.string.about_principle_data_hint)) }
+            row { Principle(DesignR.drawable.ic_account_balance_wallet, R.string.about_principle_family, R.string.about_principle_family_hint) }
+            row { Principle(DesignR.drawable.ic_currency_exchange, R.string.about_principle_offline, R.string.about_principle_offline_hint) }
+            row { Principle(DesignR.drawable.ic_shield_lock, R.string.about_principle_data, R.string.about_principle_data_hint) }
         }
     }
+}
+
+/**
+ * A principle is read, not opened (board AboutLatest: no chevron): the whole hint is shown on as many lines as it needs.
+ * As a menu row it had a chevron that did nothing and cut the hint to one line (#721).
+ */
+@Composable
+private fun Principle(@DrawableRes icon: Int, @StringRes title: Int, @StringRes hint: Int) {
+    CoShellListRow(
+        title = stringResource(title),
+        subtitle = stringResource(hint),
+        leading = { MenuIcon(icon) },
+        dense = true,
+    )
 }
 
 @Composable

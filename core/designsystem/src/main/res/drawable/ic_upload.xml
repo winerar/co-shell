@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Material Icons: file_upload (Apache 2.0) -->
+<!-- Material Symbols Outlined, weight 300: upload (Apache 2.0) -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:fillColor="@android:color/white"
-        android:pathData="M5,20h14v-2H5v2zM5,10h4v6h6v-6h4l-7,-7 -7,7z" />
+    android:autoMirrored="false"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M457.31-323.39v-368.69l-110.39 110-32.61-32.23L480-780l165.69 165.69-32.61 32.23-110.39-110v368.69h-45.38ZM237.69-180q-23.53 0-40.61-17.08T180-237.69V-363h45.39v125.31q0 4.61 3.84 8.46 3.85 3.84 8.46 3.84h484.62q4.61 0 8.46-3.84 3.84-3.85 3.84-8.46V-363H780v125.31q0 23.53-17.08 40.61T722.31-180H237.69Z" />
+    </group>
 </vector>

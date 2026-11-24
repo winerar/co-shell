@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Acerca de la app</string>
+    <string name="about_description">Un presupuesto para toda la familia. Anota los gastos en un par de toques y mira adónde va el dinero.</string>
+    <string name="about_principles">Principios</string>
+    <string name="about_principle_family">Un presupuesto para todos</string>
+    <string name="about_principle_family_hint">Tantos miembros y monedas como necesites</string>
+    <string name="about_principle_offline">Funciona sin internet</string>
+    <string name="about_principle_offline_hint">Los movimientos se guardan en el teléfono y se envían cuando vuelve la red</string>
+    <string name="about_principle_data">Tus datos son tuyos</string>
+    <string name="about_principle_data_hint">Guarda una copia de seguridad como archivo o borra todo en un solo paso</string>
+    <string name="about_feedback">Enviar comentarios</string>
+</resources>

@@ -33,6 +33,7 @@ enum class SyncKind(val wire: String) {
     TEMPLATE("template"),
     SETTING("setting"),
     TAG("tag"),
+    DEBT_EVENT("debtEvent"),
     ;
 
     companion object {

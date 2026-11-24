@@ -257,6 +257,9 @@
     <string name="shake_to_add_hint">Con la app abierta</string>
     <string name="transaction_deleted">Movimiento eliminado</string>
     <string name="transactions_deleted_many">Movimientos eliminados: %d</string>
+    <string name="entry_saved">Guardado · %1$s</string>
+    <string name="entry_undone">Deshecho · %1$s</string>
+    <string name="action_restore">Restaurar</string>
     <string name="transactions_selected">%d seleccionados</string>
     <string name="transactions_selection_clear">Anular selección</string>
     <string name="transactions_delete_selected">Eliminar · %d</string>
@@ -345,7 +348,6 @@
     <string name="feedback_file_remove">Quitar archivo</string>
     <string name="feedback_error_not_configured">En esta compilación el envío no está configurado.</string>
     <string name="feedback_error_failed">No se envió. Revisa internet — el texto está guardado.</string>
-    <string name="update_title">Actualización</string>
     <string name="version_label">Versión %1$s · compilación %2$d</string>
     <string name="update_checked_now">Comprobado ahora mismo</string>
     <string name="update_version_now">Actual</string>

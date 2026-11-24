@@ -89,3 +89,10 @@
   `WipeDao.wipeAll` («Стереть всё») очищает её, «Заменить данными семьи» — нет (счёт/категория могли исчезнуть: черновик покажет «Выберите счёт»).
 - Готов (`core:domain/drafts/DraftCheck`) = есть сумма > 0, живой счёт той же валюты, живая категория расходов. «Записать» (`PostDraftsUseCase`) проводит готовые
   расходом (заметка = название), остальные остаются. Текст заметки — не в базе: `app/.../drafts/NoteStore` (SharedPreferences).
+
+## Долги и займы (схема v21, #552)
+- `debt_events` (автомиграция 20→21): журнал событий, **только добавляются** или мягко удаляются (две телефона не перезаписывают друг друга). `debt_id` — один долг, `kind` (`ISSUE`/`RETURN`/`CLOSE`), `direction` (`LENT` «мне должны» / `BORROWED` «я должен»),
+  `amount_minor` + `currency`, `account_id` (`NULL` у `CLOSE`), `date` (мс UTC), `person`, `due_date` (`YYYY-MM-DD`) и `note` — у `ISSUE`. Долг собирает `core:domain/debts/DebtBook.of(events)`.
+- Синк (`kind` = `debtEvent`, **последним пакетом** после `tag`; правило Firestore добавлено), бэкап (необязательное `debtEvents`, версию файла не повышаем), «Стереть всё» — да (мягко).
+- **Баланс:** выдача и возврат двигают счёт, но не расход и не доход: `observeBalanceDeltas` и `observeBalanceDays` добавляют ветку `UNION ALL` по `debt_events` (`LENT` + `ISSUE` и `BORROWED` + `RETURN` — минус; наоборот — плюс). В отчёты (`ReportDao.observeDays`) события не попадают.
+- Тесты: `DebtDataTest` (баланс, синк двух телефонов, круг «копия → стереть → восстановить»), `core:domain/debts/DebtsTest`.

@@ -253,6 +253,9 @@
     <string name="shake_to_add_hint">While the app is open</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="transactions_deleted_many">Transactions deleted: %d</string>
+    <string name="entry_saved">Saved · %1$s</string>
+    <string name="entry_undone">Undone · %1$s</string>
+    <string name="action_restore">Restore</string>
     <string name="transactions_selected">%d selected</string>
     <string name="transactions_selection_clear">Clear selection</string>
     <string name="transactions_delete_selected">Delete · %d</string>
@@ -341,7 +344,6 @@
     <string name="feedback_file_remove">Remove file</string>
     <string name="feedback_error_not_configured">Sending isn\'t set up in this build.</string>
     <string name="feedback_error_failed">Not sent. Check your internet — your text is saved.</string>
-    <string name="update_title">Update</string>
     <string name="version_label">Version %1$s · build %2$d</string>
     <string name="update_checked_now">Just checked</string>
     <string name="update_version_now">Current</string>

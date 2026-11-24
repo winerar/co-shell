@@ -264,6 +264,9 @@
     <string name="shake_to_add_hint">Когда приложение открыто</string>
     <string name="transaction_deleted">Операция удалена</string>
     <string name="transactions_deleted_many">Удалено операций: %d</string>
+    <string name="entry_saved">Сохранено · %1$s</string>
+    <string name="entry_undone">Отменено · %1$s</string>
+    <string name="action_restore">Вернуть</string>
     <string name="transactions_selected">Выбрано %d</string>
     <string name="transactions_selection_clear">Отменить выбор</string>
     <string name="transactions_delete_selected">Удалить · %d</string>
@@ -279,7 +282,6 @@
     <string name="more_version_quiet">Версия %1$s · сборка %2$d · актуальная</string>
     <string name="more_section_family_data">Семья и данные</string>
     <string name="more_section_app">Приложение</string>
-    <string name="more_version_title" translatable="false">Co-Shell</string>
     <string name="more_version_available">Вышла версия %1$s</string>
     <string name="theme_title">Тема</string>
     <string name="theme_system">Системная</string>
@@ -355,7 +357,6 @@
     <string name="feedback_file_remove">Убрать файл</string>
     <string name="feedback_error_not_configured">В этой сборке отправка не настроена.</string>
     <string name="feedback_error_failed">Не отправилось. Проверьте интернет — текст сохранён.</string>
-    <string name="update_title">Обновление</string>
     <string name="version_label">Версия %1$s · сборка %2$d</string>
     <string name="update_checked_now">Проверили только что</string>
     <string name="update_version_now">Сейчас</string>

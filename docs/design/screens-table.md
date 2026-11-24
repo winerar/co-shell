@@ -85,6 +85,11 @@
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
+| Долги | DebtList | debts | ✓ | ✓ |
+| Долги: пусто | DebtEmpty | debts_empty | ✓ | ✓ |
+| Долг: новый | DebtNew | — | — | — |
+| Долг: карточка | DebtDetail | — | — | — |
+| Долг: вернули часть | DebtReturn | — | — | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -108,6 +113,9 @@
 - Быстрые заметки: облако (нет эталона: light, dark)
 - Быстрые заметки: читает облако (нет эталона: light, dark)
 - Черновики: лимит облака (нет эталона: light, dark)
+- Долг: новый (нет эталона: light, dark)
+- Долг: карточка (нет эталона: light, dark)
+- Долг: вернули часть (нет эталона: light, dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

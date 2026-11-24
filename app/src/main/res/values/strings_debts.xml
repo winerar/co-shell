@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debts_title">Долги</string>
+    <string name="debts_tab_lent">Мне должны</string>
+    <string name="debts_tab_borrowed">Я должен</string>
+    <string name="debts_total_lent">Мне должны: %1$s</string>
+    <string name="debts_total_borrowed">Я должен: %1$s</string>
+    <string name="debts_tab_empty_lent">Вам пока никто не должен.</string>
+    <string name="debts_tab_empty_borrowed">Вы пока никому не должны.</string>
+    <string name="debts_empty">Долгов пока нет. Нажмите «+», чтобы записать первый.</string>
+    <string name="debts_add">Новый долг</string>
+    <string name="debts_left_of">Осталось %1$s из %2$s</string>
+    <string name="debts_due_date">до %1$s</string>
+    <string name="debts_no_due">срок не задан</string>
+    <string name="debts_due_today">срок сегодня</string>
+    <plurals name="debts_due_in">
+        <item quantity="one">через %1$d день</item>
+        <item quantity="few">через %1$d дня</item>
+        <item quantity="many">через %1$d дней</item>
+        <item quantity="other">через %1$d дня</item>
+    </plurals>
+    <plurals name="debts_late">
+        <item quantity="one">срок прошёл %1$d день назад</item>
+        <item quantity="few">срок прошёл %1$d дня назад</item>
+        <item quantity="many">срок прошёл %1$d дней назад</item>
+        <item quantity="other">срок прошёл %1$d дня назад</item>
+    </plurals>
+    <string name="debts_closed_show">Закрытые: %1$d</string>
+    <string name="debts_closed_hide">Скрыть закрытые</string>
+    <string name="debts_closed_label">закрыт</string>
+    <string name="debts_new_title">Новый долг</string>
+    <string name="debts_new_hint">Сумма изменит баланс счёта, но не попадёт в расходы и доходы.</string>
+    <string name="debts_field_person">Кто</string>
+    <string name="debts_field_amount">Сумма</string>
+    <string name="debts_field_account_lent">С какого счёта</string>
+    <string name="debts_field_account_borrowed">На какой счёт</string>
+    <string name="debts_field_due">Срок возврата</string>
+    <string name="debts_field_note">Заметка</string>
+    <string name="debts_due_none">Не задан</string>
+    <string name="debts_error_person">Введите имя</string>
+    <string name="debts_error_amount">Введите сумму больше нуля</string>
+    <string name="debts_error_account">Выберите счёт</string>
+    <string name="debts_error_too_much">Больше, чем осталось вернуть</string>
+    <string name="debts_error_closed">Долг уже закрыт</string>
+    <string name="debts_detail_summary">Всего %1$s · возвращено %2$s</string>
+    <string name="debts_detail_returns">Возвраты</string>
+    <string name="debts_return">Вернули часть</string>
+    <string name="debts_return_account_lent">На какой счёт</string>
+    <string name="debts_return_account_borrowed">С какого счёта</string>
+    <string name="debts_return_save">Записать</string>
+    <string name="debts_close">Закрыть долг</string>
+    <string name="debts_close_title">Закрыть долг?</string>
+    <string name="debts_close_text">Остаток %1$s спишется, деньги по счетам не двигаются.</string>
+    <string name="debts_delete_title">Удалить долг?</string>
+    <string name="debts_delete_text">Долг и все возвраты удалятся, балансы счетов вернутся как были.</string>
+    <string name="debts_menu_hint">Кто вам должен и кому должны вы</string>
+    <string name="debts_soon_lent">%1$s вернёт</string>
+    <string name="debts_soon_borrowed">Вы вернёте: %1$s</string>
+    <string name="debts_soon_amount_in" translatable="false">+%1$s</string>
+    <string name="debts_soon_amount_out" translatable="false">−%1$s</string>
+</resources>

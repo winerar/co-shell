@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">About the app</string>
+    <string name="about_description">A budget for the whole family. Log spending in a couple of taps and see where the money goes.</string>
+    <string name="about_principles">Principles</string>
+    <string name="about_principle_family">One budget for everyone</string>
+    <string name="about_principle_family_hint">As many members and currencies as you need</string>
+    <string name="about_principle_offline">Works offline</string>
+    <string name="about_principle_offline_hint">Entries are saved on your phone and sent when the network is back</string>
+    <string name="about_principle_data">Your data stays with you</string>
+    <string name="about_principle_data_hint">Save a backup as a file, or erase everything in one step</string>
+    <string name="about_feedback">Send feedback</string>
+</resources>

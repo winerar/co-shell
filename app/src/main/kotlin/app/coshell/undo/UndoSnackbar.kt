@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import app.coshell.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
@@ -31,8 +30,8 @@ fun UndoSnackbarEffect(host: SnackbarHostState, viewModel: UndoViewModel = hiltV
         viewModel.center.offers.collectLatest { offer ->
             val result = host.showSnackbar(
                 message = resources.getString(offer.message, *offer.args.toTypedArray()),
-                actionLabel = resources.getString(R.string.action_undo),
-                duration = SnackbarDuration.Long,
+                actionLabel = resources.getString(offer.actionLabel),
+                duration = if (offer.short) SnackbarDuration.Short else SnackbarDuration.Long,
             )
             if (result == SnackbarResult.ActionPerformed) viewModel.undo(offer)
         }

@@ -61,6 +61,7 @@ import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.upcoming.CreditPaymentRow
+import app.coshell.home.upcoming.DebtDueRow
 import app.coshell.home.upcoming.UpcomingCard
 import app.coshell.home.upcoming.UpcomingRow
 import kotlinx.datetime.YearMonth
@@ -82,6 +83,7 @@ fun HomeScreen(
     upcoming: List<UpcomingRow> = emptyList(),
     upcomingTotal: Int = upcoming.size,
     creditPayments: List<CreditPaymentRow> = emptyList(),
+    debtDue: List<DebtDueRow> = emptyList(),
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
@@ -102,7 +104,7 @@ fun HomeScreen(
     val cards = LocalScreenOptions.current.home.visible.filter { card ->
         when (card) {
             HomeCard.REVIEW -> review?.month != null
-            HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty()
+            HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
@@ -160,8 +162,8 @@ fun HomeScreen(
                         HomeCard.REVIEW -> review?.month?.let { month ->
                             MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
                         }
-                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty() || creditPayments.isNotEmpty()) {
-                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll, creditPayments, actions.onPostCredit)
+                        HomeCard.UPCOMING -> if (upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty()) {
+                            UpcomingCard(upcoming, upcomingTotal, actions.onPostPayment, actions.onRecurring, entrance, onPostAll, onSkipAll, creditPayments, actions.onPostCredit, debtDue, actions.onOpenDebt)
                         }
                         HomeCard.TILES -> HomeTiles(
                             state,

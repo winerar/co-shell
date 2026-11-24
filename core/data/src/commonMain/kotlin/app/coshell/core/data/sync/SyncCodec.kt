@@ -5,6 +5,7 @@ import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.ManualRateEntity
 import app.coshell.core.data.db.SettingEntity
+import app.coshell.core.data.db.DebtEventEntity
 import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
@@ -40,6 +41,9 @@ object SyncCodec {
     fun encode(e: TagEntity) =
         SyncRecord(SyncKind.TAG, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
 
+    fun encode(e: DebtEventEntity) =
+        SyncRecord(SyncKind.DEBT_EVENT, e.id, e.updatedAt, e.updatedBy, e.deleted, SyncPayload.stamp(json.encodeToString(e)))
+
     // Decoded rows come from the server, so they are not pending.
     fun account(r: SyncRecord) = json.decodeFromString<AccountEntity>(r.json).copy(pendingSync = false)
     fun category(r: SyncRecord) = json.decodeFromString<CategoryEntity>(r.json).copy(pendingSync = false)
@@ -49,4 +53,5 @@ object SyncCodec {
     fun template(r: SyncRecord) = json.decodeFromString<TemplateEntity>(r.json).copy(pendingSync = false)
     fun setting(r: SyncRecord) = json.decodeFromString<SettingEntity>(r.json).copy(pendingSync = false)
     fun tag(r: SyncRecord) = json.decodeFromString<TagEntity>(r.json).copy(pendingSync = false)
+    fun debtEvent(r: SyncRecord) = json.decodeFromString<DebtEventEntity>(r.json).copy(pendingSync = false)
 }

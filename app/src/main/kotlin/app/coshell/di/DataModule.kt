@@ -8,7 +8,12 @@ import app.coshell.core.data.db.CoShellDatabase
 import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
+import app.coshell.core.data.repository.RoomDebtRepository
 import app.coshell.core.data.repository.RoomTagRepository
+import app.coshell.core.domain.debts.CloseDebtUseCase
+import app.coshell.core.domain.debts.DebtRepository
+import app.coshell.core.domain.debts.IssueDebtUseCase
+import app.coshell.core.domain.debts.ReturnDebtUseCase
 import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomDataWipeRepository
@@ -129,6 +134,20 @@ object DataModule {
     @Provides @Singleton
     fun provideTagRepository(db: CoShellDatabase, stamper: WriteStamper): TagRepository =
         RoomTagRepository(db.tagDao(), stamper)
+
+    @Provides
+    @Singleton
+    fun provideDebtRepository(db: CoShellDatabase, stamper: WriteStamper): DebtRepository =
+        RoomDebtRepository(db.debtDao(), stamper)
+
+    @Provides
+    fun provideIssueDebt(debts: DebtRepository, accounts: AccountRepository, ids: IdGenerator) = IssueDebtUseCase(debts, accounts, ids)
+
+    @Provides
+    fun provideReturnDebt(debts: DebtRepository, accounts: AccountRepository, ids: IdGenerator) = ReturnDebtUseCase(debts, accounts, ids)
+
+    @Provides
+    fun provideCloseDebt(debts: DebtRepository, ids: IdGenerator) = CloseDebtUseCase(debts, ids)
 
     @Provides
     fun provideSaveTag(tags: TagRepository, ids: IdGenerator) = SaveTagUseCase(tags, ids)

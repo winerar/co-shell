@@ -12,12 +12,11 @@ import app.coshell.more.MoreScreen
 import app.coshell.more.MoreState
 import app.coshell.newmark.NewMarksViewModel
 
-/** «Ещё»: where each row leads, the «новое» pills and the version (card on top only while an update is out). */
+/** «Ещё»: where each row leads, the «новое» pills and «О приложении» with the version. */
 @Composable
 internal fun MoreRoute(
     navController: NavHostController,
     availableVersion: String?,
-    onStartUpdate: () -> Unit,
     newMarks: NewMarksViewModel = hiltViewModel(),
     draftsCount: DraftsCountViewModel = hiltViewModel(),
 ) {
@@ -39,9 +38,9 @@ internal fun MoreRoute(
             onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
+            onDebts = { navController.navigate(DebtsDestination) { launchSingleTop = true } },
             onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
-            onStartUpdate = onStartUpdate,
             onOpenedNew = newMarks::opened,
         ),
         state = MoreState(

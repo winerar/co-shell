@@ -294,3 +294,20 @@ data class BudgetEditDestination(val categoryId: String? = null, val year: Int, 
         const val ARG_MONTH = "month"
     }
 }
+
+/** «Долги» (#552): «Мне должны» and «Я должен». */
+@Serializable
+data object DebtsDestination
+
+/** The new-debt sheet (#552). */
+@Serializable
+data object DebtNewDestination
+
+/** One debt's card (#552): returns, «Вернули часть», «Закрыть долг». */
+@Serializable
+data class DebtDetailDestination(val debtId: String) {
+    companion object {
+        /** SavedStateHandle key of [debtId]; must match the property name. */
+        const val ARG_DEBT_ID = "debtId"
+    }
+}

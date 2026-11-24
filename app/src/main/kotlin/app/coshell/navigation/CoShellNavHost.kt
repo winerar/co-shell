@@ -55,6 +55,14 @@ import app.coshell.importer.wallet.WalletImportRoute
 import app.coshell.rates.list.RatesRoute
 import app.coshell.shake.ShakeEffect
 import app.coshell.shake.ShakeSettingsViewModel
+import app.coshell.shake.ShakeUndoViewModel
+import app.coshell.core.domain.shake.ShakeIntent
+import app.coshell.core.domain.shake.ShakeIntents
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import app.coshell.debts.edit.DebtDetailRoute
+import app.coshell.debts.edit.DebtNewRoute
+import app.coshell.debts.list.DebtsRoute
 import app.coshell.drafts.list.DraftsRoute
 import app.coshell.drafts.notes.NotesRoute
 import app.coshell.recurring.list.RecurringListRoute
@@ -79,10 +87,14 @@ import app.coshell.home.components.VersionGateBannerState
 import app.coshell.update.components.megabytes
 import kotlinx.datetime.number
 
+/** A short pause after the «Сохранено» snackbar leaves, before the shake card comes (they never share the screen). */
+private const val SHAKE_HINT_PAUSE_MS = 600L
+
 @Composable
 fun CoShellNavHost(
     navController: NavHostController = rememberNavController(),
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
+    shakeUndo: ShakeUndoViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
     greeting: GreetingViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
@@ -130,12 +142,27 @@ fun CoShellNavHost(
     val onReports = backStackEntry?.destination.isOn(TopLevel.REPORTS)
     LaunchedEffect(onReports) { if (onReports) hintHost?.reportsOpened() }
 
-    // Shake → the receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet), only on the tabs: never interrupts a form or another screen.
+    // Shake: within 4 s after a new operation was saved it takes the save back (#325, «Отменено · Вернуть»); otherwise → the
+    // receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet). Only on the tabs: never interrupts a form or another screen.
     val shakeEnabled by shakeSettings.enabled.collectAsStateWithLifecycle()
     ShakeEffect(
         enabled = shakeEnabled && onTab,
-        onShake = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
+        onShake = lock.guard {
+            if (shakeUndo.intent() == ShakeIntent.UNDO_LAST_SAVE) {
+                shakeUndo.undoLast()
+            } else {
+                navController.navigate(ReceiptScanDestination) { launchSingleTop = true }
+            }
+        },
     )
+    // «Ошиблись? Встряхните…» — one card after the first saved operation, when its snackbar is gone (#325, `hints.md`).
+    LaunchedEffect(shakeEnabled, hintHost) {
+        if (!shakeEnabled || hintHost == null) return@LaunchedEffect
+        shakeUndo.saves.collectLatest {
+            delay(ShakeIntents.UNDO_WINDOW.inWholeMilliseconds + SHAKE_HINT_PAUSE_MS)
+            hintHost.offer(mapOf(HintId.SHAKE_UNDO to R.string.hint_shake_undo))
+        }
+    }
 
     MainShell(
         navController = navController,
@@ -218,6 +245,7 @@ fun CoShellNavHost(
                     onPostCredit = { cardId ->
                         navController.navigate(TransactionEditDestination(type = "TRANSFER", creditCardId = cardId)) { launchSingleTop = true }
                     },
+                    onOpenDebt = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                     onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
@@ -309,6 +337,19 @@ fun CoShellNavHost(
                 onNotes = { navController.navigate(NotesDestination) { popUpTo<DraftsDestination> { inclusive = true }; launchSingleTop = true } },
             )
         }
+        screen<DebtsDestination> {
+            DebtsRoute(
+                onBack = { navController.popBackStack() },
+                onAdd = { navController.navigate(DebtNewDestination) { launchSingleTop = true } },
+                onOpen = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
+            )
+        }
+        dialog<DebtNewDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close -> DebtNewRoute(onDone = close) }
+        }
+        dialog<DebtDetailDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close -> DebtDetailRoute(onDone = close) }
+        }
         screen<RecurringListDestination> {
             RecurringListRoute(
                 onBack = { navController.popBackStack() },
@@ -364,10 +405,6 @@ fun CoShellNavHost(
             MoreRoute(
                 navController = navController,
                 availableVersion = updateAvailable?.versionName,
-                onStartUpdate = {
-                    updateAvailable?.let(updates::startUpdate)
-                    navController.navigate(UpdateDestination)
-                },
             )
         }
         settingsGraph(navController)
@@ -375,6 +412,7 @@ fun CoShellNavHost(
             UpdateRoute(
                 onBack = { navController.popBackStack() },
                 onPastReleases = { navController.navigate(PastReleasesDestination) { launchSingleTop = true } },
+                onFeedback = { navController.navigate(FeedbackDestination()) },
             )
         }
         screen<PastReleasesDestination> {

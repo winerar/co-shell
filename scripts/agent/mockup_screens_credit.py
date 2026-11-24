@@ -54,7 +54,7 @@ def terms_grace():
 
 def list_grace():
     """The row says the interest-free day beside the payment day; the meter stays."""
-    card = ('Ameria · кредитка', 'AM', P.COLOR, '#FFFFFF', 'Платёж до 15 дек · без процентов до 19 дек', '−180 000', 'AMD', '−460')
+    card = ('Ameria · кредитка', 'AM', P.COLOR, '#FFFFFF', 'Кредитная карта · платёж до 15 дек · без процентов до 19 дек', '−180 000', 'AMD', '−460')
     other = acc_row(('Galicia', 'GA', '#F26E22', '#1A0A00', 'Карта', '1 250 000', 'ARS', '1 000'))
     row_ = acc_row(card) + '<div style="padding: 0 16px 14px;">%s</div>' % P.meter()
     body = big_total('Всего в общем балансе · 2 счёта', '540', 'USD') + group_head('Карты', 2, '540') + group([other, row_])

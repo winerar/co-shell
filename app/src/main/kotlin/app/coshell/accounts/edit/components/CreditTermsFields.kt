@@ -66,6 +66,21 @@ internal fun CreditTermsFields(state: AccountEditUiState, actions: AccountEditAc
             )
         }
         CoShellHint(stringResource(R.string.account_credit_min_hint))
+        // Grace period (#634, board `CreditTermsGrace`): a reminder of the interest-free day; both fields or none.
+        CoShellTextField(
+            value = state.creditStatementDay,
+            onValueChange = actions.onCreditStatementDayChange,
+            label = stringResource(R.string.account_credit_statement_day),
+            hint = stringResource(R.string.account_credit_optional),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+        )
+        CoShellTextField(
+            value = state.creditGraceDays,
+            onValueChange = actions.onCreditGraceDaysChange,
+            label = stringResource(R.string.account_credit_grace_days),
+            hint = stringResource(R.string.account_credit_grace_hint),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+        )
     }
 }
 

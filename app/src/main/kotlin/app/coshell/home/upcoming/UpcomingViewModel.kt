@@ -83,7 +83,7 @@ class UpcomingViewModel @Inject constructor(
                     from = since.atStartOfDayIn(timeZone),
                     type = TransactionType.TRANSFER,
                 )
-                transactions.observeTransactions(filter).map { buildCreditRows(creditPaymentsDue(list, it, today, timeZone), moneyFormat) }
+                transactions.observeTransactions(filter).map { buildCreditRows(creditPaymentsDue(list, it, today, timeZone), moneyFormat, today) }
             }
         }
         .offMain()

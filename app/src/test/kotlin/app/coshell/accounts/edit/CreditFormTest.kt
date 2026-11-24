@@ -22,6 +22,16 @@ class CreditFormTest {
     }
 
     @Test
+    fun `the grace period is optional but both fields go together`() {
+        val base = CreditTerms(500_000_00, 15, MinPayment.Percent(500))
+        assertEquals(base.copy(statementDay = 25, graceDays = 25), parseCreditTerms(form().copy(creditStatementDay = "25", creditGraceDays = "25"), amd))
+        assertNull(parseCreditTerms(form().copy(creditStatementDay = "25"), amd))
+        assertNull(parseCreditTerms(form().copy(creditGraceDays = "25"), amd))
+        assertNull(parseCreditTerms(form().copy(creditStatementDay = "32", creditGraceDays = "25"), amd))
+        assertNull(parseCreditTerms(form().copy(creditStatementDay = "25", creditGraceDays = "0"), amd))
+    }
+
+    @Test
     fun `missing or wrong conditions give nothing`() {
         assertNull(parseCreditTerms(form(limit = ""), amd))
         assertNull(parseCreditTerms(form(limit = "0"), amd))

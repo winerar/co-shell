@@ -53,13 +53,15 @@ internal fun AccountEntity.toModel() = Account(
 )
 
 /** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
-private fun AccountEntity.credit(): CreditTerms? = creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor)
+private fun AccountEntity.credit(): CreditTerms? = creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor, creditStatementDay, creditGraceDays)
 
-internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMinor: Long?): CreditTerms? {
+internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMinor: Long?, statementDay: Int? = null, graceDays: Int? = null): CreditTerms? {
     val limit = limitMinor ?: return null
     val day = payDay ?: return null
     val min = minBp?.let { MinPayment.Percent(it) } ?: minMinor?.let { MinPayment.Fixed(it) } ?: return null
-    return runCatching { CreditTerms(limit, day, min) }.getOrNull()
+    // A half-written grace period (one of the two) is dropped, the card stays a card.
+    val grace = if (statementDay != null && graceDays != null) statementDay to graceDays else null
+    return runCatching { CreditTerms(limit, day, min, grace?.first, grace?.second) }.getOrNull()
 }
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
@@ -80,6 +82,8 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     creditPayDay = credit?.payDay,
     creditMinBp = (credit?.minPayment as? MinPayment.Percent)?.basisPoints,
     creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
+    creditStatementDay = credit?.statementDay,
+    creditGraceDays = credit?.graceDays,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

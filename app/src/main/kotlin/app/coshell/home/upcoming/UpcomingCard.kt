@@ -35,6 +35,7 @@ import app.coshell.core.domain.recurring.SOON_DAYS
 import app.coshell.recurring.PaymentAmount
 import app.coshell.recurring.PaymentWhen
 import app.coshell.templates.components.TemplateBadge
+import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.ui.format.formatWeekdayDayMonthShort
 import kotlinx.datetime.LocalDate
 
@@ -153,6 +154,7 @@ private fun CreditPaymentItem(row: CreditPaymentRow, onPost: (String) -> Unit) {
             ) {
                 Text(stringResource(R.string.credit_payment_when, row.name, formatWeekdayDayMonthShort(row.due)))
                 Text(stringResource(R.string.credit_payment_minimum, row.minimum))
+                row.graceUntil?.let { Text(stringResource(R.string.account_credit_grace_until, formatDayMonthShort(it))) }
             }
         },
         leading = { AccountBadge(row.name, row.color) },

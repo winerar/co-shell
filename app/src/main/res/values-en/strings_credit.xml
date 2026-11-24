@@ -21,4 +21,9 @@
     <string name="credit_payment_minimum">minimum %1$s</string>
     <string name="credit_payment_post_a11y">Record the payment on card %1$s</string>
     <string name="account_credit_beta_hint">New feature: check “available” and the payment against the bank statement.</string>
+    <string name="account_credit_statement_day">Statement day (day of month)</string>
+    <string name="account_credit_grace_days">Grace period, days</string>
+    <string name="account_credit_optional">Optional</string>
+    <string name="account_credit_grace_hint">Optional: we show the day up to which there is no interest</string>
+    <string name="account_credit_grace_until">no interest until %1$s</string>
 </resources>

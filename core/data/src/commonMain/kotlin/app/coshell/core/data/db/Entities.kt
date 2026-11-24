@@ -38,6 +38,9 @@ data class AccountEntity(
     /** Minimum payment as a share of the debt in basis points (500 = 5 %); `null` — see [creditMinMinor]. */
     @ColumnInfo(name = "credit_min_bp") val creditMinBp: Int? = null,
     @ColumnInfo(name = "credit_min_minor") val creditMinMinor: Long? = null,
+    /** Statement day and grace days (#634, v22): a reminder only, both or neither. */
+    @ColumnInfo(name = "credit_statement_day") val creditStatementDay: Int? = null,
+    @ColumnInfo(name = "credit_grace_days") val creditGraceDays: Int? = null,
 )
 
 @Serializable

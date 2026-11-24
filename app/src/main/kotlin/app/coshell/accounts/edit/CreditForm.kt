@@ -17,7 +17,13 @@ internal fun parseCreditTerms(form: AccountEditUiState, currency: CurrencyCode):
     } else {
         MinPayment.Percent(parsePercentBasisPoints(form.creditMin) ?: return null)
     }
-    return CreditTerms(limit.amountMinor, day, min)
+    // The grace period is optional: both fields empty is fine, one of them alone or a wrong number refuses the save.
+    val statementText = form.creditStatementDay.trim()
+    val graceText = form.creditGraceDays.trim()
+    if (statementText.isEmpty() && graceText.isEmpty()) return CreditTerms(limit.amountMinor, day, min)
+    val statement = statementText.toIntOrNull()?.takeIf { it in 1..31 } ?: return null
+    val grace = graceText.toIntOrNull()?.takeIf { it in 1..365 } ?: return null
+    return CreditTerms(limit.amountMinor, day, min, statement, grace)
 }
 
 /** «5», «5,5», «5.25» → 500, 550, 525 basis points; `null` for anything else, for zero and above 100. */
@@ -41,6 +47,8 @@ internal fun AccountEditUiState.withCreditTerms(terms: CreditTerms, currency: Cu
         credit = true,
         creditLimit = moneyFormat.formatForEditing(Money(terms.limitMinor, currency)),
         creditPayDay = terms.payDay.toString(),
+        creditStatementDay = terms.statementDay?.toString().orEmpty(),
+        creditGraceDays = terms.graceDays?.toString().orEmpty(),
         creditMinSum = sum != null,
         creditMin = sum?.let { moneyFormat.formatForEditing(Money(it.minor, currency)) }
             ?: percentText((terms.minPayment as MinPayment.Percent).basisPoints),

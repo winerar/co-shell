@@ -2,11 +2,20 @@ package app.coshell.core.model
 
 /**
  * Conditions of a credit card (#686): the [limitMinor] in minor units of the account currency, the [payDay] of the month the
- * payment is due (a day past the end of a short month means its last day) and the [minPayment] rule. Interest and the grace
- * period are not here yet (the second step).
+ * payment is due (a day past the end of a short month means its last day) and the [minPayment] rule. The grace period is a
+ * reminder only (#634, step 2): the [statementDay] and the [graceDays] after it, both or neither; no interest is counted.
  */
-data class CreditTerms(val limitMinor: Long, val payDay: Int, val minPayment: MinPayment) {
+data class CreditTerms(
+    val limitMinor: Long,
+    val payDay: Int,
+    val minPayment: MinPayment,
+    val statementDay: Int? = null,
+    val graceDays: Int? = null,
+) {
     init {
+        require((statementDay == null) == (graceDays == null)) { "Statement day and grace days go together" }
+        statementDay?.let { require(it in 1..31) { "Statement day must be a day of the month" } }
+        graceDays?.let { require(it in 1..365) { "Grace period must be 1 to 365 days" } }
         require(limitMinor > 0) { "Credit limit must be positive" }
         require(payDay in 1..31) { "Pay day must be a day of the month" }
     }

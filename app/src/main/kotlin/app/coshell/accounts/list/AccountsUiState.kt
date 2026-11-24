@@ -41,7 +41,7 @@ data class AccountsUiState(
         internal val money: Money? = null,
     ) {
         /** [used] is the share of the limit spent (0–1) for the meter; [due] — `null` while there is no debt. */
-        data class Credit(val available: String, val limit: String, val used: Float, val due: LocalDate?)
+        data class Credit(val available: String, val limit: String, val used: Float, val due: LocalDate?, val graceUntil: LocalDate? = null)
     }
 
     /** A foldable group of the list with its total; [key] is stable across recompositions. */

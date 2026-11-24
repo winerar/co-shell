@@ -21,4 +21,9 @@
     <string name="credit_payment_minimum">минимум %1$s</string>
     <string name="credit_payment_post_a11y">Провести платёж по карте %1$s</string>
     <string name="account_credit_beta_hint">Новая функция: сверьте «Доступно» и платёж с выпиской банка.</string>
+    <string name="account_credit_statement_day">День выписки (число месяца)</string>
+    <string name="account_credit_grace_days">Льготный период, дней</string>
+    <string name="account_credit_optional">Не обязательно</string>
+    <string name="account_credit_grace_hint">Не обязательно: покажем, до какого числа без процентов</string>
+    <string name="account_credit_grace_until">без процентов до %1$s</string>
 </resources>

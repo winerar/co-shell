@@ -18,6 +18,8 @@ data class CreditStatus(
     val available: Money,
     val dueDate: LocalDate?,
     val minPayment: Money?,
+    /** The last day without interest (#634): the last statement plus the grace days, or the next one's when that has passed; `null` — no grace period set or no debt. */
+    val graceUntil: LocalDate? = null,
 )
 
 object CreditCard {
@@ -28,7 +30,17 @@ object CreditCard {
         val debt = Money(if (balance.amountMinor < 0) -balance.amountMinor else 0L, currency)
         val available = Money((terms.limitMinor - debt.amountMinor).coerceAtLeast(0L), currency)
         val has = debt.amountMinor > 0
-        return CreditStatus(limit, debt, available, if (has) dueDate(terms.payDay, today) else null, if (has) minimum(terms.minPayment, debt) else null)
+        return CreditStatus(limit, debt, available, if (has) dueDate(terms.payDay, today) else null, if (has) minimum(terms.minPayment, debt) else null, if (has) graceUntil(terms, today) else null)
+    }
+
+    /** The last day without interest: the latest statement on or before [today] plus the grace days while that is still ahead, else the next statement's. */
+    fun graceUntil(terms: CreditTerms, today: LocalDate): LocalDate? {
+        val day = terms.statementDay ?: return null
+        val grace = terms.graceDays ?: return null
+        val next = dueDate(day, today)
+        val last = if (next == today) today else previousDue(day, next)
+        val fromLast = last.plus(DatePeriod(days = grace))
+        return if (fromLast >= today) fromLast else next.plus(DatePeriod(days = grace))
     }
 
     /** The minimum payment of a [debt]: a share of it (at least one minor unit) or the fixed sum, never more than the debt itself. */

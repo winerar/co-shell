@@ -72,4 +72,35 @@ class CreditCardTest {
         assertFailsWith<IllegalArgumentException> { MinPayment.Percent(0) }
         assertFailsWith<IllegalArgumentException> { MinPayment.Fixed(0) }
     }
+
+    private val grace = CreditTerms(500_000_00, 15, MinPayment.Percent(500), statementDay = 25, graceDays = 25)
+
+    @Test
+    fun `the interest-free day is the last statement plus the grace days while it is ahead`() {
+        // The statement was on 25 Oct, 25 days later is 19 Nov: still ahead on 10 Nov.
+        assertEquals(LocalDate(2026, 11, 19), CreditCard.graceUntil(grace, LocalDate(2026, 11, 10)))
+        assertEquals(LocalDate(2026, 11, 19), CreditCard.graceUntil(grace, LocalDate(2026, 11, 19)))
+    }
+
+    @Test
+    fun `after that day the next statement starts a new grace period`() {
+        // 25 Nov statement + 25 days = 20 Dec.
+        assertEquals(LocalDate(2026, 12, 20), CreditCard.graceUntil(grace, LocalDate(2026, 11, 20)))
+        // On the statement day itself the new period counts.
+        assertEquals(LocalDate(2026, 12, 20), CreditCard.graceUntil(grace, LocalDate(2026, 11, 25)))
+    }
+
+    @Test
+    fun `no grace period or no debt means no date`() {
+        assertNull(CreditCard.graceUntil(percent, LocalDate(2026, 11, 10)))
+        assertNull(CreditCard.status(grace, money(0), LocalDate(2026, 11, 10)).graceUntil)
+        assertEquals(LocalDate(2026, 11, 19), CreditCard.status(grace, money(-1_000), LocalDate(2026, 11, 10)).graceUntil)
+    }
+
+    @Test
+    fun `statement day and grace days go together`() {
+        assertFailsWith<IllegalArgumentException> { CreditTerms(1, 15, MinPayment.Percent(500), statementDay = 25) }
+        assertFailsWith<IllegalArgumentException> { CreditTerms(1, 15, MinPayment.Percent(500), statementDay = 0, graceDays = 5) }
+        assertFailsWith<IllegalArgumentException> { CreditTerms(1, 15, MinPayment.Percent(500), statementDay = 25, graceDays = 400) }
+    }
 }

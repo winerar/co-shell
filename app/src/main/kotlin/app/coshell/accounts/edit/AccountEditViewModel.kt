@@ -107,6 +107,8 @@ class AccountEditViewModel @Inject constructor(
     fun onCreditLimitChange(value: String) = _state.update { it.copy(creditLimit = value, creditError = false) }
     fun onCreditPayDayChange(value: String) = _state.update { it.copy(creditPayDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
     fun onCreditMinSumChange(sum: Boolean) = _state.update { if (it.creditMinSum == sum) it else it.copy(creditMinSum = sum, creditMin = "", creditError = false) }
+    fun onCreditStatementDayChange(value: String) = _state.update { it.copy(creditStatementDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
+    fun onCreditGraceDaysChange(value: String) = _state.update { it.copy(creditGraceDays = value.filter { c -> c in '0'..'9' }.take(3), creditError = false) }
     fun onCreditMinChange(value: String) = _state.update { it.copy(creditMin = value, creditError = false) }
 
     /** «Проездной» (#645): a type of its own for the person, stored as «Другое» + a flag; the top-up is an expense, so the account is out of the total. */

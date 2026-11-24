@@ -107,8 +107,17 @@
       "page": "screens",
       "radius": 28
     },
-    "HomeHoldFan.dc.html": {
+    "HomeCreditGrace.dc.html": {
       "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Обзор: платёж и льготный период (#634)",
+      "page": "screens",
+      "radius": 28
+    },
+    "HomeHoldFan.dc.html": {
+      "x": 3760,
       "y": 0,
       "w": 390,
       "h": 844,
@@ -436,8 +445,26 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountEditExisting.dc.html": {
+    "CreditTermsGrace.dc.html": {
       "x": 5170,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Кредитка: условия с льготным периодом (#634)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountsCreditGrace.dc.html": {
+      "x": 5640,
+      "y": 4960,
+      "w": 390,
+      "h": 844,
+      "title": "Счета: кредитка, «без процентов до» (#634)",
+      "page": "screens",
+      "radius": 28
+    },
+    "AccountEditExisting.dc.html": {
+      "x": 6110,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -446,7 +473,7 @@
       "radius": 28
     },
     "AccountDelete.dc.html": {
-      "x": 5640,
+      "x": 6580,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -455,7 +482,7 @@
       "radius": 28
     },
     "AccountBlocked.dc.html": {
-      "x": 6110,
+      "x": 7050,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -464,7 +491,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 6580,
+      "x": 7520,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -474,7 +501,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 7050,
+      "x": 7990,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -484,7 +511,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 7520,
+      "x": 8460,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -493,7 +520,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 7990,
+      "x": 8930,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3427,6 +3454,7 @@
     "UpdateWhatsNew.dc.html",
     "HomeGreeting.dc.html",
     "HomeCreditSoon.dc.html",
+    "HomeCreditGrace.dc.html",
     "HomeHoldFan.dc.html",
     "Operations.dc.html",
     "OpsScrolled.dc.html",
@@ -3463,6 +3491,8 @@
     "CreditTerms.dc.html",
     "CreditTermsSum.dc.html",
     "AccountsCredit.dc.html",
+    "CreditTermsGrace.dc.html",
+    "AccountsCreditGrace.dc.html",
     "AccountEditExisting.dc.html",
     "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
@@ -3828,13 +3858,13 @@
       "text": "Обзор",
       "x": 0,
       "y": -250,
-      "maxW": 3680,
+      "maxW": 4150,
       "w": 240
     },
     "s0": {
       "page": "screens",
       "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
-      "x": 3760,
+      "x": 4230,
       "y": 0,
       "w": 390
     },
@@ -3892,7 +3922,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 8380,
+      "maxW": 9320,
       "w": 240
     },
     "row5": {

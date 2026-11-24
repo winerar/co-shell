@@ -60,6 +60,8 @@ import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
+import app.coshell.home.sync.SyncDot
+import app.coshell.home.sync.SyncDotState
 import app.coshell.home.upcoming.CreditPaymentRow
 import app.coshell.home.upcoming.DebtDueRow
 import app.coshell.home.upcoming.UpcomingCard
@@ -94,6 +96,7 @@ fun HomeScreen(
     finale: Boolean = false,
     onFinale: () -> Unit = {},
     draftCount: Int = 0,
+    syncDot: SyncDotState? = null,
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -110,7 +113,12 @@ fun HomeScreen(
         }
     }
     Scaffold(
-        topBar = { TabTopBar(stringResource(R.string.nav_home), scroll) { EyeButton() } },
+        topBar = {
+            TabTopBar(stringResource(R.string.nav_home), scroll) {
+                syncDot?.let { SyncDot(it, actions.onFamily) }
+                EyeButton()
+            }
+        },
         bottomBar = {
             if (editing) {
                 Box(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {

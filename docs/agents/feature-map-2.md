@@ -10,7 +10,7 @@
 Общий баланс «Обзора» — `core:domain/rates/BalanceTotals.kt` + `home/` (карточка — `home/components/TotalCard`);
 траты/доход месяца и траты по дням — `core:domain/rates/MonthSpending.kt`, состояние «Обзора» — `home/HomeState.kt`,
 две плитки (траты за месяц; «Внимание» при проблеме с курсом, иначе «Бюджет · N дней» при лимитах, иначе «Без категории») — `home/components/HomeTiles`; бюджет на «Обзоре» (#184, `BudHome`) — `home/budget/` (`HomeBudget` — итог месяца и «горящие» конверты, свой ViewModel), плитка `components/BudgetTile`, блок `components/HotBudgets`; последние операции — `home/components/RecentCard` (строки — из `transactions/list`).
-Плашка ошибки синка — `home/sync/` (ViewModel, правила показа) + `home/components/SyncBanner`; причина — `core:data/sync/SyncIssue`.
+Плашка ошибки синка — `home/sync/` (ViewModel, правила показа) + `home/components/SyncBanner`; причина — `core:data/sync/SyncIssue`. Тихая метка у заголовка «Обзора» (#193, доски `Idea6A`/`Idea6A2`): «Синхронно» / «Ждут: N» (`CoShellStatusChip`), только в семье (`SyncDotRules`, `SyncBannerViewModel.dot`), нажатие — «Семья».
 «Резервная копия» — `app/.../backup/` (герой-кольцо `components/BackupHero`, автокопия `auto/`, правила `AutoBackupPolicy`).
 «Стереть все данные» — `app/.../wipe/` (экран, копия `WipeBackup`) + `core:domain/DataWipe.kt` + `core:data/db/WipeDao`.
 Общие форматтеры — `app/.../ui/format/` (`formatRate`, `formatDayMonth`); выбор даты `DateChips` — `ui/form/`. Ленты цвета и иконок, ячейки выбора, сумма на клавиатуре, шапка, меню, календари — компоненты `core:designsystem` (`Strips.kt`, `AmountSlot.kt`, `TopBar.kt`, `DropdownMenu.kt`, `DatePickers.kt`; #367).

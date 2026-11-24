@@ -4,3 +4,5 @@
 # Before publication this file must be empty (TranslationsTest `nothing is left untranslated`, enabled by PUBLISHING).
 account_deleted
 category_deleted
+sync_dot_ok
+sync_dot_pending

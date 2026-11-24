@@ -577,6 +577,8 @@
         <item quantity="other">%1$d изменения ждут на телефоне.</item>
     </plurals>
     <string name="sync_banner_last">Последняя синхронизация: %1$s</string>
+    <string name="sync_dot_ok">Синхронно</string>
+    <string name="sync_dot_pending">Ждут: %1$d</string>
     <string name="sync_banner_retry">Повторить</string>
     <string name="sync_banner_sign_in">Войти</string>
     <string name="sync_banner_feedback">Отзыв</string>

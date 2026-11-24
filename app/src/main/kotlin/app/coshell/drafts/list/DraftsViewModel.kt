@@ -78,6 +78,9 @@ class DraftsViewModel @Inject constructor(
                     categoryName = draft.categoryId?.let { categoryMap[it]?.name },
                     source = draft.categorySource,
                     checked = (missing == null) != (draft.id in flip),
+                    accountColor = draft.accountId?.let { accountMap[it]?.color },
+                    categoryIcon = draft.categoryId?.let { categoryMap[it]?.icon },
+                    categoryColor = draft.categoryId?.let { categoryMap[it]?.color },
                 )
             },
         )

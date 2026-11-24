@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -49,16 +47,15 @@ internal fun AboutHead(versionName: String, build: Int, modifier: Modifier = Mod
 
 @Composable
 internal fun AboutBlock(modifier: Modifier = Modifier) {
-    val c = CategoryPalette.colors
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         CoShellCard {
             Text(stringResource(R.string.about_description), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(Spacing.m))
         }
         CoShellSectionLabel(stringResource(R.string.about_principles))
         CoShellRowGroup {
-            row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, categoryColor(c[0]), stringResource(R.string.about_principle_family), {}, subtitle = stringResource(R.string.about_principle_family_hint)) }
-            row { CoShellMenuRow(DesignR.drawable.ic_currency_exchange, categoryColor(c[4]), stringResource(R.string.about_principle_offline), {}, subtitle = stringResource(R.string.about_principle_offline_hint)) }
-            row { CoShellMenuRow(DesignR.drawable.ic_shield_lock, categoryColor(c[12]), stringResource(R.string.about_principle_data), {}, subtitle = stringResource(R.string.about_principle_data_hint)) }
+            row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, stringResource(R.string.about_principle_family), {}, subtitle = stringResource(R.string.about_principle_family_hint)) }
+            row { CoShellMenuRow(DesignR.drawable.ic_currency_exchange, stringResource(R.string.about_principle_offline), {}, subtitle = stringResource(R.string.about_principle_offline_hint)) }
+            row { CoShellMenuRow(DesignR.drawable.ic_shield_lock, stringResource(R.string.about_principle_data), {}, subtitle = stringResource(R.string.about_principle_data_hint)) }
         }
     }
 }
@@ -66,6 +63,6 @@ internal fun AboutBlock(modifier: Modifier = Modifier) {
 @Composable
 internal fun AboutLinks(onFeedback: () -> Unit, modifier: Modifier = Modifier) {
     CoShellRowGroup(modifier) {
-        row { CoShellMenuRow(DesignR.drawable.ic_feedback, categoryColor(CategoryPalette.colors[1]), stringResource(R.string.about_feedback), onFeedback, subtitle = stringResource(R.string.feedback_menu_hint)) }
+        row { CoShellMenuRow(DesignR.drawable.ic_feedback, stringResource(R.string.about_feedback), onFeedback, subtitle = stringResource(R.string.feedback_menu_hint)) }
     }
 }

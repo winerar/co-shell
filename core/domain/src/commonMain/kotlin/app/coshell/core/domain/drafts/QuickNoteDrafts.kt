@@ -18,7 +18,7 @@ import app.coshell.core.model.TransactionType
 
 /**
  * Turns the text of a quick note into drafts (#586): [lines] splits it, [build] reads each line by rules ([QuickNoteParser]),
- * picks the account (a word of its name — «сбер», #632; the model's choice, #635; the word «карта»/«нал»; the currency the order of the number
+ * picks the account (a word of its name — «сбер», #632; the model's choice, #635; the word «карта»/«нал», no word at all meaning cash; the currency the order of the number
  * suggests — «кофе 5» is dollars, [CurrencyGuess]; an account in the [Context.local] currency of the country the phone is in — #633; else the one used last) and the category ([CategoryGuess]: past entries, then the brand dictionary,
  * then the model's [NoteHint]). A line without a number becomes a draft without an amount («Нужна сумма») if something says it is
  * a purchase; a line nothing recognises, or one the model calls «not an expense», is [isNoise] and stays in the note (#630).
@@ -132,8 +132,8 @@ object QuickNoteDrafts {
 
     /**
      * The account for a line: of the currency it names (if any; else the [Context.local] one, when there is such an account), of the
-     * kind its word names (if any account is), the one used most recently; with no history the first in the list. `null` — nothing in
-     * the named currency, the person chooses.
+     * kind its word names — a line that says nothing about paying is cash (owner 2026-11-24: «кофе 3500» → наличные), if any account
+     * is, the one used most recently; with no history the first in the list. `null` — nothing in the named currency, the person chooses.
      */
     internal fun pickAccount(word: AccountWord?, currency: CurrencyCode?, ctx: Context): Account? {
         val live = ctx.accounts.filter { !it.archived }
@@ -141,15 +141,19 @@ object QuickNoteDrafts {
         val byUse = live.sortedBy { a -> used.indexOf(a.id).let { if (it < 0) Int.MAX_VALUE else it } }
         val kind = when (word) {
             AccountWord.CARD -> AccountType.CARD
-            AccountWord.CASH -> AccountType.CASH
-            null -> null
+            AccountWord.CASH, null -> AccountType.CASH
         }
         if (currency != null) {
             val named = byUse.filter { it.currency == currency }
             return named.firstOrNull { it.type == kind } ?: named.firstOrNull()
         }
         val local = ctx.local?.let { code -> byUse.filter { it.currency == code } }.orEmpty()
-        if (kind != null) (local.firstOrNull { it.type == kind } ?: byUse.firstOrNull { it.type == kind })?.let { return it }
+        if (word == null) {
+            // Nothing said: cash, but only in the currency the line would get anyway — never dollars cash for a peso coffee.
+            val usual = local.firstOrNull() ?: byUse.firstOrNull() ?: return null
+            return byUse.firstOrNull { it.type == kind && it.currency == usual.currency } ?: usual
+        }
+        (local.firstOrNull { it.type == kind } ?: byUse.firstOrNull { it.type == kind })?.let { return it }
         return local.firstOrNull() ?: byUse.firstOrNull()
     }
 }

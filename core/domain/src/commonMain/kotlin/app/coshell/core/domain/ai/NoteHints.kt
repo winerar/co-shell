@@ -47,6 +47,7 @@ class NoteHints(private val model: LanguageModel) {
         if (accounts.isNotEmpty()) {
             appendLine("Accounts (name · currency · kind): " + accounts.joinToString(" | "))
             appendLine("If a note says or clearly implies how it was paid (a card, cash, a bank, an app, a person's card, a currency), give the best matching account exactly as written in the list as \"account\"; if it says nothing, leave it out.")
+            appendLine("Slang: нал, налик, наличка, кэш, кеш, efectivo, contado mean cash; безнал, карточка, tarjeta, débito mean a card; an abbreviation may be a bank or app name (мп = Mercado Pago).")
         }
         appendLine("For each numbered note give a short title (the shop or thing, no amount, no date) and the best category from the list, or null.")
         appendLine("If a note is not about spending money (a reminder, a test, a random phrase), give \"expense\":false and nothing else.")

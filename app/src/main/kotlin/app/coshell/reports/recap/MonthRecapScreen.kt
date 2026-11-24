@@ -86,7 +86,7 @@ fun MonthRecapScreen(
             val description = stringResource(R.string.recap_progress, at + 1, state.cards.size)
             CoShellCard(
                 Modifier.fillMaxWidth().padding(top = Spacing.m).semantics { contentDescription = description },
-                tone = CardTone.Hero,
+                tone = CardTone.Story,
                 onClick = { index = if (at < last) at + 1 else 0 },
             ) {
                 AnimatedContent(at, transitionSpec = { storyTransition(last) }, label = "story") { shown ->

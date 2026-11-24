@@ -5,19 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.motion.Tactile
 import app.coshell.core.designsystem.motion.smoothResize
 import app.coshell.core.designsystem.motion.tactile
+import app.coshell.core.designsystem.theme.HeroPalette
 import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.theme.contrastRatio
 import app.coshell.core.designsystem.theme.LocalDarkTheme
 import app.coshell.core.designsystem.theme.LocalHeroPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
@@ -37,6 +42,12 @@ enum class CardTone {
     /** The one main block of a screen: the palette's gradient without a border (`LocalHeroPalette`, #62, #249). */
     Hero,
 
+    /**
+     * A full-screen story («Итоги месяца», #554, poll 2026-11-24 «А · Мягкий спуск»): the theme colour at the top fading into the
+     * card colour below ([storyStops]), without a border; text and bars inside as on [Hero]. A hero that big tires the eye.
+     */
+    Story,
+
     /** Needs attention: a wash and a border of the warning colour (`LocalStatusPalette.warning`). */
     Warning,
 
@@ -47,7 +58,7 @@ enum class CardTone {
 /** The colour of a washed [tone]'s wash, border and heading; `null` — [CardTone.Primary] and [CardTone.Hero] have none. */
 @Composable
 internal fun cardToneColor(tone: CardTone): Color? = when (tone) {
-    CardTone.Primary, CardTone.Hero -> null
+    CardTone.Primary, CardTone.Hero, CardTone.Story -> null
     CardTone.Secondary -> MaterialTheme.colorScheme.secondary
     CardTone.Warning -> LocalStatusPalette.current.warning
     CardTone.Danger -> MaterialTheme.colorScheme.error
@@ -69,8 +80,13 @@ fun CoShellCard(
 ) {
     val shape = MaterialTheme.shapes.large
     val hero = LocalHeroPalette.current
-    val accent = tone == CardTone.Hero
-    val fill = if (accent) hero.brush else null
+    val scheme = MaterialTheme.colorScheme
+    val fill = when (tone) {
+        CardTone.Hero -> hero.brush
+        CardTone.Story -> remember(scheme, hero) { Brush.verticalGradient(storyStops(scheme, hero)) }
+        else -> null
+    }
+    val accent = fill != null
     val tint = cardToneColor(tone)
     val border = when {
         fill != null -> BorderStroke(0.dp, Color.Transparent)
@@ -101,6 +117,26 @@ fun CoShellCard(
         OutlinedCard(modifier = modifier.then(filled).smoothResize(), shape = shape, colors = colors, border = border, content = body)
     }
 }
+
+/**
+ * The [CardTone.Story] gradient, top to bottom: the card colour with up to 42 %, 18 % and 8 % of the theme's primary. Where the
+ * hero's text or hints would read below 4.5 on the top (a neon over graphite turns light), all three shares step down
+ * together until they read — as `readableOn` does for the hero amount (`StoryToneTest`).
+ */
+internal fun storyStops(scheme: ColorScheme, hero: HeroPalette): List<Color> {
+    var k = 1f
+    fun stops() = STORY_SHARES.map { lerp(scheme.surface, scheme.primary, it * k) }
+    while (k > 0f && stops().any { minOf(contrastRatio(hero.content, it), contrastRatio(hero.hint, it)) < STORY_READABLE }) {
+        k -= STORY_STEP
+    }
+    return stops()
+}
+
+private val STORY_SHARES = listOf(0.42f, 0.18f, 0.08f)
+
+/** A hair above 4.5, as the theme's own `readableOn`: rounding in the tests must not drop it below. */
+private const val STORY_READABLE = 4.6f
+private const val STORY_STEP = 0.05f
 
 /** Strength of a washed [CardTone]: enough to tell the card apart, text keeps its contrast (`NonTextContrastTest`). */
 private const val TINT_ALPHA = 0.12f

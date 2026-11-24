@@ -65,7 +65,7 @@ internal fun RecapPictureCapture(card: RecapCard, state: MonthRecapUiState, amou
                     }
                     .recordInto(layer, IntSize(PICTURE_WIDTH, PICTURE_HEIGHT)),
             ) {
-                CoShellCard(Modifier.fillMaxSize().padding(Spacing.l), tone = CardTone.Hero) {
+                CoShellCard(Modifier.fillMaxSize().padding(Spacing.l), tone = CardTone.Story) {
                     Column(Modifier.fillMaxSize().padding(Spacing.l)) {
                         Story(card, state, onDetails = {}, forPicture = true, modifier = Modifier.weight(1f))
                         Text(

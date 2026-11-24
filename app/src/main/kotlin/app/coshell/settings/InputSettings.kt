@@ -14,8 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -61,7 +59,7 @@ fun InputSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellSwitchRow(
-                        leading = { MenuIcon(DesignR.drawable.ic_mobile_vibrate, categoryColor(CategoryPalette.colors[8])) },
+                        leading = { MenuIcon(DesignR.drawable.ic_mobile_vibrate) },
                         title = stringResource(R.string.shake_to_add_title),
                         subtitle = stringResource(R.string.shake_to_add_hint),
                         checked = shakeEnabled,
@@ -91,7 +89,7 @@ fun InputSettingsScreen(
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s)) {
                     row {
                         CoShellMenuRow(
-                            DesignR.drawable.ic_account_balance_wallet, categoryColor(CategoryPalette.colors[0]),
+                            DesignR.drawable.ic_account_balance_wallet,
                             stringResource(R.string.settings_input_account),
                             { picking = true },
                             subtitle = chosen?.let { "${it.name} · ${it.currency}" } ?: stringResource(R.string.settings_input_account_gone),

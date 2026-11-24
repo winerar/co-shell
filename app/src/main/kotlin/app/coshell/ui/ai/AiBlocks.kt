@@ -37,4 +37,4 @@ fun AiStatusCard(title: String, text: String, modifier: Modifier = Modifier, ext
 /** A fact or a «where it works» row of the AI screens: a round icon, a title and a grey line. */
 @Composable
 fun AiFactRow(icon: Int, title: String, text: String) =
-    CoShellListRow(title = title, subtitle = text, leading = { MenuIcon(icon, MaterialTheme.colorScheme.secondary) })
+    CoShellListRow(title = title, subtitle = text, leading = { MenuIcon(icon) })

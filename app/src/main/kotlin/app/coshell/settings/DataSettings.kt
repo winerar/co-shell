@@ -16,14 +16,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.importer.wallet.components.ImportColors
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
@@ -62,9 +60,9 @@ fun DataSettingsScreen(
         item { SectionTitle(stringResource(R.string.settings_data_section)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
-                row { CoShellMenuRow(DesignR.drawable.ic_settings_backup_restore, categoryColor(c[5]), stringResource(R.string.backup_title), onBackup) }
-                row { CoShellMenuRow(DesignR.drawable.ic_upload, categoryColor(c[18]), stringResource(R.string.export_title), onExport, subtitle = stringResource(R.string.export_menu_hint)) }
-                row { CoShellMenuRow(DesignR.drawable.ic_download, categoryColor(c[ImportColors.MENU]), stringResource(R.string.import_title), onImport) }
+                row { CoShellMenuRow(DesignR.drawable.ic_settings_backup_restore, stringResource(R.string.backup_title), onBackup) }
+                row { CoShellMenuRow(DesignR.drawable.ic_upload, stringResource(R.string.export_title), onExport, subtitle = stringResource(R.string.export_menu_hint)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_download, stringResource(R.string.import_title), onImport) }
             }
         }
         item { SectionTitle(stringResource(R.string.settings_data_network)) }
@@ -81,7 +79,7 @@ fun DataSettingsScreen(
         item { SectionTitle(stringResource(R.string.settings_data_careful)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
-                row { CoShellMenuRow(DesignR.drawable.ic_delete, categoryColor(c[0]), stringResource(R.string.wipe_title), onWipe) }
+                row { CoShellMenuRow(DesignR.drawable.ic_delete, stringResource(R.string.wipe_title), onWipe) }
             }
         }
     }

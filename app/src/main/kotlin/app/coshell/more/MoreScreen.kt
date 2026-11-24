@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -105,7 +104,6 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                         row {
                             CoShellMenuRow(
                                 icon = item.icon,
-                                color = categoryColor(item.color),
                                 title = stringResource(item.title),
                                 subtitle = item.subtitle,
                                 onClick = {

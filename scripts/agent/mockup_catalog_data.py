@@ -61,7 +61,7 @@ def minis(v):
 
 
 def bar_row(v, icon, color, lbl, value, share, frac, ghost=None, badge_html=''):
-    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), MUTED2) if ghost else '')
+    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), VIOLET) if ghost else '')
     text = ('<div style="display: flex; align-items: center; gap: 6px; font-size: 14px; position: relative;"><span style="flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; '
             'text-overflow: ellipsis;">%s</span>%s<span style="%s">%s</span><span style="color: %s; white-space: nowrap;">· %s</span></div>' % (lbl, badge_html, MONO, value, MUTED, share))
     if v == 'A':

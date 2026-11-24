@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.charts
 
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -138,10 +139,10 @@ private fun ValueAndShare(value: String, share: String?) {
     )
 }
 
-/** The bar itself: the shared [CoShellMeter] on its track; the ghost is its mark, in the outline colour. */
+/** The bar itself: the shared [CoShellMeter] on its track; the ghost (past period) is its mark, in the second colour (#442 Б). */
 @Composable
 private fun ChartBar(fraction: Float, color: Color, ghost: Float?, modifier: Modifier) {
-    CoShellMeter(fraction, color, modifier, mark = ghost, markColor = MaterialTheme.colorScheme.outline, grow = true)
+    CoShellMeter(fraction, color, modifier, mark = ghost, markColor = secondaryInk(), grow = true)
 }
 
 private val LABEL_MIN_WIDTH = 96.dp

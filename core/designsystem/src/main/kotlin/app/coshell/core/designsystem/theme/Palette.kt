@@ -73,4 +73,8 @@ internal data class PaletteSpec(
     val warningLight: Color,
     val backgroundDark: Color,
     val backgroundLight: Color,
+    /** Light theme: the deep shade of [primary] instead of black — headings, [accentInk], edges (#493 Б, ≥ 4.5:1 on the card). */
+    val inkLight: Color,
+    /** A pastel theme (Мате, Сакура, Лотос): keeps its softness in the light theme — only inks change (#493, «нежные — А»). */
+    val soft: Boolean = false,
 )

@@ -6,12 +6,20 @@ tab title 28, inner title 22, bottom bar 64. «Единый стиль» (owner'
 radii 28 sheet · 24 card · 16 field · capsule, every button 48 (icon button — a 48 circle on the track), chosen =
 neon + 2 px ink frame + bold, icon holders — a circle tinted 18 %, bars 8.
 """
+import re
+
 BG, CARD, FIELD, BAR, CHIP, LINE, DIV, LINE2 = '#050805', '#10160D', '#121810', '#161D12', '#1B2317', '#222B1E', '#1B2317', '#2E382A'
 SHEET, KEY, KEY2 = '#11170E', '#1F271B', '#2A3326'
 INK, INK2, MUTED, MUTED2 = '#EEF5E6', '#C9D3C2', '#9AA594', '#7D8A76'
 LIME, ONLIME, LIMEPILL = '#B8FF2E', '#0E1F00', '#3A4A1E'
 CYAN, VIOLET, VIOLETPILL, VIOLETINK, PINK, PINKBG, YELLOW = '#00F0FF', '#B266FF', '#2A2240', '#E6D6FF', '#FF5C7F', '#2B0F17', '#FFE600'
 WARN, WARNBG, WARNLINE, OK = '#FFB547', '#2A1E08', '#5A3F10', '#5CFFB0'
+# Top and bottom capsules (`panelColor()`, #493 Б): BAR by a hair, so mockup_theme paints it as role Cap — tone of the primary
+# in light neon themes, of the accent in soft ones.
+PANEL = '#161D13'
+# Text in the neon on the hero card (the main amount): LIME by a hair -> role Ha: neon in the dark, the body text in the light (code:
+# `HeroPalette.amount` = onSurface) — the light hero is the neon itself, so neon / deep-ink text would not read on it.
+HERO_AMT = '#B8FF2F'
 MONO = "font-family: 'JetBrains Mono', monospace;"
 # Hero card (#249, `CoShellCard(accent)`): palette gradient, no border; mockup_theme.py repaints the stops per palette/theme.
 OUTLINE = MUTED2  # colorScheme.outline — frames that must read ≥ 3:1 (#385)
@@ -86,7 +94,7 @@ CAPSULE = ('<div style="margin: 8px 32px; height: 56px; box-sizing: border-box; 
 def capsule(inner, fill=None, lead=20):
     """Top bar of every screen (poll 2026-11-16 #441 «Б», `CoShellTopBar`): a narrow floating capsule, 56 high, 32 from the edges,
     on the screen's background; nothing behind it. A hairline edge shows only where the fill melts into the screen (light themes, `mockup_theme.py`)."""
-    return CAPSULE % (fill or BAR, lead, '', inner)
+    return CAPSULE % (fill or PANEL, lead, '', inner)
 
 
 def tab_head(title, actions='', sub=None):
@@ -148,13 +156,13 @@ def nav(active, dot_more=False):
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
-            % BAR + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('rep', 'chart', 'Отчёты') + tab('more', 'more', 'Ещё') + '</nav>')
+            % PANEL + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('rep', 'chart', 'Отчёты') + tab('more', 'more', 'Ещё') + '</nav>')
 
 
 def label(text, accent=False, top=18):
     if accent:
         return ('<div style="margin: %dpx 4px 8px; font-size: 13px; font-weight: 600; color: %s; letter-spacing: 0.04em; text-transform: uppercase;">%s</div>'
-                % (top, LIME, text))
+                % (top, VIOLET, text))  # section headers — the second colour (#442 Б)
     return '<div style="margin: %dpx 4px 8px; font-size: 13px; font-weight: 600; color: %s;">%s</div>' % (top, MUTED, text)
 
 
@@ -165,6 +173,7 @@ def card(inner, pad='0', radius=24, extra=''):
 
 def hero_card(inner, pad='16px', radius=24, extra=''):
     """The one main block of a screen: gradient of the palette; inside — INK text, HERO_HINT greys, LIME amount."""
+    inner = re.sub(r'(color\s*:\s*)%s' % LIME, r'\g<1>' + HERO_AMT, inner)
     return ('<div style="border-radius: %dpx; background: %s; overflow: hidden; padding: %s; %s">%s</div>'
             % (radius, HERO_BG, pad, extra, inner))
 
@@ -251,13 +260,13 @@ def day(title, total, cur, color=PINK):
 def button(text, kind='primary', icon=None, mt=12, disabled=False):
     styles = {
         'primary': 'border: none; background: %s; color: %s; font-weight: 600;' % (LIME, ONLIME),
-        'outline': 'border: 1px solid %s; background: transparent; color: %s;' % (OUTLINE, INK),
+        'outline': 'border: 1px solid %s; background: transparent; color: %s;' % (mix(VIOLET, 40), VIOLET),  # second colour, #442 Б
         'danger': 'border: none; background: %s; color: %s; font-weight: 600;' % (PINKBG, PINK),
         'violet': 'border: none; background: %s; color: %s; font-weight: 600;' % (VIOLETPILL, VIOLETINK),
-        'text': 'border: none; background: transparent; color: %s; font-weight: 600;' % LIME,
+        'text': 'border: none; background: transparent; color: %s; font-weight: 600;' % VIOLET,  # secondaryInk()
     }
     st = styles[kind] + (' opacity: 0.4;' if disabled else '')
-    ic = svg(icon, ONLIME if kind == 'primary' else (PINK if kind == 'danger' else INK), 20) if icon else ''
+    ic = svg(icon, ONLIME if kind == 'primary' else (PINK if kind == 'danger' else VIOLET if kind in ('outline', 'text') else INK), 20) if icon else ''
     return ('<button type="button" style="margin-top: %dpx; width: 100%%; height: 48px; border-radius: 999px; font-size: 15px; %s display: flex; '
             'align-items: center; justify-content: center; gap: 8px;">%s%s</button>' % (mt, st, ic, text))
 

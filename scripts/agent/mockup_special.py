@@ -2,15 +2,21 @@
 from mockup_bricks import *  # noqa: F401,F403
 
 # Palette swatches are written without «#» so mockup_theme.py leaves them alone (they must not follow the theme).
-PALETTES = [('Вольт', 'B8FF2E', 'B266FF', '00F0FF', 'кислотный лайм и циан'), ('Мохито', '91E668', 'A77BFF', '38D9FF', 'мягкий лайм и фиолет'),
-            ('Манго', 'FF8A3D', 'FF3D7F', 'FFC93C', 'тёплый закат: манго и малина'), ('Ультра', '3D7BFF', 'FF2BD6', '91E668', 'электрик и маджента'),
-            ('Лагуна', '2EE6C5', 'FF6B5C', 'FFD27A', 'бирюза и коралл'), ('Сакура', 'FF7AB8', '7CF2C4', 'B9A4FF', 'розовый и мята')]
+def _palettes():
+    """The 9 themes of PaletteSpecs.kt (#354): name, primary, second colour, income, hint from the spec's comment."""
+    import re
+    from mockup_theme import SPECS_KT, palette_specs
+    hints = dict(re.findall(r'^// (\S+) — (?:неон|пастель), (.+)$', open(SPECS_KT, encoding='utf-8').read(), re.M))
+    return [(n, p['primary'], p['accentDark'], p['incomeDark'], hints.get(n, '')) for n, p in palette_specs().items()]
+
+
+PALETTES = _palettes()
 
 SCRIPT = '''
   renderVals() {
     var s = {};
     try { s = JSON.parse(window.localStorage.getItem('coshell-mock-theme') || '{}') || {}; } catch (e) { s = {}; }
-    var dark = s.dark !== false, pal = s.pal || 'Вольт', self = this;
+    var dark = s.dark !== false, pal = s.pal && s.pal !== 'Вольт' ? s.pal : 'Лайм', self = this;
     var save = function (o) {
       var n = { dark: dark, pal: pal };
       for (var k in o) n[k] = o[k];
@@ -37,7 +43,7 @@ SCRIPT = '''
 ''' % repr([list(p) for p in PALETTES]).replace("'", '"')
 
 PALETTE_GRID = '''<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
-    <sc-for list="{{palettes}}" as="p" hint-placeholder-count="6">
+    <sc-for list="{{palettes}}" as="p" hint-placeholder-count="9">
       <button type="button" onClick="{{p.pick}}" style="padding: 12px; border-radius: 16px; background: #10160D; border: {{p.border}}; color: #EEF5E6; text-align: left; display: flex; flex-direction: column; gap: 8px; cursor: pointer;">
         <span style="display: flex; gap: 4px;"><span style="width: 26px; height: 26px; border-radius: 50%; background: {{p.a}};"></span><span style="width: 26px; height: 26px; border-radius: 50%; background: {{p.b}};"></span><span style="width: 26px; height: 26px; border-radius: 50%; background: {{p.c}};"></span></span>
         <span style="font-size: 15px; font-weight: 600;">{{p.name}}</span>

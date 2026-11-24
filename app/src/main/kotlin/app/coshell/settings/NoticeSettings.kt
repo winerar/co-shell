@@ -19,8 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -90,7 +88,7 @@ fun NoticeSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellSwitchRow(
-                        leading = { MenuIcon(DesignR.drawable.ic_refresh, categoryColor(CategoryPalette.colors[14])) },
+                        leading = { MenuIcon(DesignR.drawable.ic_refresh) },
                         title = stringResource(R.string.reminders_title),
                         subtitle = stringResource(R.string.reminders_hint),
                         checked = remindersEnabled,
@@ -121,7 +119,7 @@ fun NoticeSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellSwitchRow(
-                        leading = { MenuIcon(DesignR.drawable.ic_group, categoryColor(CategoryPalette.colors[8])) },
+                        leading = { MenuIcon(DesignR.drawable.ic_group) },
                         title = stringResource(R.string.settings_notices_partner),
                         subtitle = stringResource(R.string.settings_notices_partner_hint),
                         checked = partnerSpend,
@@ -131,7 +129,7 @@ fun NoticeSettingsScreen(
                 if (partnerSpend) {
                     row {
                         CoShellMenuRow(
-                            DesignR.drawable.ic_payments, categoryColor(CategoryPalette.colors[13]),
+                            DesignR.drawable.ic_payments,
                             stringResource(R.string.settings_notices_min), { pickingMin = true },
                             subtitle = if (partnerMin == 0) stringResource(R.string.settings_notices_min_any) else "$partnerMin $mainCurrency",
                         )

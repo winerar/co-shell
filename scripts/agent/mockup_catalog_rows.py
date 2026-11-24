@@ -4,8 +4,8 @@ from mockup_catalog_choice import seg, pill, radio
 
 
 def menu_rows(v):
-    items = [('folder', LIME, 'Категории', '24 категории · 6 папок', ''), ('rate', CYAN, 'Курсы валют', 'сегодня', ''),
-             ('gift', VIOLET, 'Что нового', '', dot(LIME)), ('user', WARN, 'Очень длинное название раздела меню', 'и длинная подпись', '')]
+    items = [('folder', VIOLET, 'Категории', '24 категории · 6 папок', ''), ('rate', VIOLET, 'Курсы валют', 'сегодня', ''),
+             ('gift', VIOLET, 'Что нового', '', dot(LIME)), ('user', VIOLET, 'Очень длинное название раздела меню', 'и длинная подпись', '')]  # one second colour, #442 Б
     rows_ = [row(t, s, holder(v, ic, c, 36), (tr + ' ' if tr else '') + chevron(), min_h=56) for ic, c, t, s, tr in items]
     if v == 'A':
         body = card(''.join(x.replace('{{div}}', 'border-top: 1px solid %s;' % DIV if i else '') for i, x in enumerate(rows_)), radius=24)

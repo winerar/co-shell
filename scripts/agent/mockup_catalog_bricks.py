@@ -27,7 +27,7 @@ def labeled(demo, text):
 
 # ---- Шапки (TopAppBar → CoShellTopBar) ----
 def top_bar_v2(kind, title, actions=(), scrolled=False):
-    bg = 'background: %s;' % BAR if scrolled else ''
+    bg = 'background: %s;' % PANEL if scrolled else ''
     acts = ''.join(icon_button(a, a) for a in actions)
     if kind == 'tab':
         lead, size = '<span style="width: 8px;"></span>', 28

@@ -29,8 +29,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellMenuRow
@@ -89,7 +87,7 @@ fun HomeSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellMenuRow(
-                        DesignR.drawable.ic_calendar_today, categoryColor(CategoryPalette.colors[8]),
+                        DesignR.drawable.ic_calendar_today,
                         stringResource(R.string.settings_home_details_title), onDetails,
                         subtitle = stringResource(R.string.settings_home_details_hint, options.soonDays, options.recentCount),
                     )
@@ -101,7 +99,7 @@ fun HomeSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellMenuRow(
-                        DesignR.drawable.ic_account_balance_wallet, categoryColor(CategoryPalette.colors[5]),
+                        DesignR.drawable.ic_account_balance_wallet,
                         stringResource(R.string.settings_balance_title), onBalance,
                         subtitle = if (excludedAccounts == 0) stringResource(R.string.settings_balance_all) else stringResource(R.string.settings_balance_except, excludedAccounts),
                     )
@@ -205,10 +203,10 @@ fun HomeDetailsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Screen
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s)) {
                 row {
-                    CoShellMenuRow(DesignR.drawable.ic_payments, categoryColor(CategoryPalette.colors[8]), stringResource(R.string.settings_home_tile_first), { picking = 0 }, subtitle = stringResource(options.tileFirst.titleRes))
+                    CoShellMenuRow(DesignR.drawable.ic_payments, stringResource(R.string.settings_home_tile_first), { picking = 0 }, subtitle = stringResource(options.tileFirst.titleRes))
                 }
                 row {
-                    CoShellMenuRow(DesignR.drawable.ic_bar_chart, categoryColor(CategoryPalette.colors[13]), stringResource(R.string.settings_home_tile_second), { picking = 1 }, subtitle = stringResource(options.tileSecond.titleRes))
+                    CoShellMenuRow(DesignR.drawable.ic_bar_chart, stringResource(R.string.settings_home_tile_second), { picking = 1 }, subtitle = stringResource(options.tileSecond.titleRes))
                 }
             }
         }

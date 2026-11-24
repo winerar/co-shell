@@ -63,9 +63,10 @@ def label_grid(labels, sel, cols=4):
 
 
 # ---- Строки, формы, шторки ----
-def menu_icon(icon, color):
-    return '<span style="width: 32px; height: 32px; flex: none; border-radius: 8px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (
-        mix(color, 20), svg(icon, color, 18))
+def menu_icon(icon, color=None):
+    """MenuIcon: a 32 circle on the 18 % tone of the second colour, the glyph in it (#442 Б) — `color` is ignored, kept for old callers."""
+    return '<span style="width: 32px; height: 32px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (
+        mix(VIOLET, 18), svg(icon, VIOLET, 18))
 
 
 def menu_row(icon, color, title, sub='', trail=None):
@@ -157,7 +158,7 @@ def mini_bars(values, elapsed, hi=None, color=LIME):
 
 
 def bar_row(icon, color, lbl, value, share, frac, ghost=None, badge_html=''):
-    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), MUTED2) if ghost else '')
+    g = ('<span style="position: absolute; left: %d%%; top: -3px; bottom: -3px; width: 2px; background: %s;"></span>' % (round(ghost * 100), VIOLET) if ghost else '')
     return ('<div style="display: flex; gap: 10px; align-items: center;">%s<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">'
             '<div style="display: flex; align-items: center; gap: 6px; font-size: 14px;"><span style="flex-grow: 1;">%s</span>%s<span style="%s">%s</span>'
             '<span style="color: %s;">· %s</span></div><div style="position: relative; height: 8px;"><div style="width: %d%%; height: 100%%; border-radius: 4px; background: %s;">'

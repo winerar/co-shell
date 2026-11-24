@@ -32,7 +32,7 @@ def nav_tabs(active, tabs=(('home', 'home', 'Обзор'), ('ops', 'list', 'Оп
     cells = [tab(*t) for t in tabs]
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
             'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
-            '%s%s%s</nav>' % (BAR, ''.join(cells[:2]), plus, ''.join(cells[2:])))
+            '%s%s%s</nav>' % (PANEL, ''.join(cells[:2]), plus, ''.join(cells[2:])))
 
 
 def tab_page(title, body, active, tabs=None, actions=''):

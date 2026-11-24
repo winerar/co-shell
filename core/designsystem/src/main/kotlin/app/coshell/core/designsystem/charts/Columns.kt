@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.charts
 
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -103,7 +104,7 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
     val quiet = if (LocalDarkTheme.current) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.surfaceContainerHighest
     val fill = if (on) progressColors().indicator else quiet
     val edge = if (on) fillEdge(fill, MaterialTheme.colorScheme.surfaceContainerHighest) else null
-    val ghostColor = MaterialTheme.colorScheme.outline
+    val ghostColor = secondaryInk() // the past period — the second colour (#442 Б)
     val ink = if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
     val shown = animateFloatAsState(column.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "column")
     // The texts are drawn but not read one by one: the column's description on [modifier] says it all.

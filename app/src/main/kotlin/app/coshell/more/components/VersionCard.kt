@@ -17,8 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.MenuIcon
@@ -28,7 +26,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * Top of «Ещё» while a newer build is out (poll 2026-11-20, Б; board MoreBUpdate): the card wears the palette's accent
+ * Top of «Ещё» while a newer build is out (poll 2026-11-20, Б; board MoreBUpdate): the card shows the download icon
  * and «Обновить» (starts the download right away, like the pill); a tap elsewhere
  * opens «Обновление» (what's new, manual install, the log).
  */
@@ -41,7 +39,6 @@ internal fun VersionCard(
     onUpdate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val accent = MaterialTheme.colorScheme.primary
     val available = availableVersion != null
     CoShellCard(modifier = modifier, onClick = onOpen) {
         Row(
@@ -50,9 +47,9 @@ internal fun VersionCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (available) {
-                MenuIcon(DesignR.drawable.ic_download, accent)
+                MenuIcon(DesignR.drawable.ic_download)
             } else {
-                MenuIcon(DesignR.drawable.ic_deployed_code_update, categoryColor(CategoryPalette.colors[VERSION_COLOR]))
+                MenuIcon(DesignR.drawable.ic_deployed_code_update)
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
                 Text(
@@ -87,7 +84,6 @@ internal fun VersionCard(
 }
 
 /** Lime-green of the palette, as «Категории»: the app's own colour. */
-private const val VERSION_COLOR = 8
 
 /** Bottom of «Ещё» when the app is up to date (board MoreBEnd): one quiet line; a tap opens «Обновление» (log, past versions). */
 @Composable

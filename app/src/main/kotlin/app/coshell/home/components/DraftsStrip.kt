@@ -7,8 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellMenuRow
@@ -24,7 +22,6 @@ internal fun DraftsStrip(count: Int, onDrafts: () -> Unit, onNotes: () -> Unit, 
     CoShellCard(modifier.fillMaxWidth()) {
         CoShellMenuRow(
             icon = DesignR.drawable.ic_edit_note,
-            color = categoryColor(CategoryPalette.colors[STRIP_COLOR]),
             title = stringResource(R.string.notes_title),
             subtitle = if (count > 0) stringResource(R.string.notes_strip_drafts, count) else stringResource(R.string.notes_menu_hint),
             onClick = if (count > 0) onDrafts else onNotes,
@@ -33,7 +30,6 @@ internal fun DraftsStrip(count: Int, onDrafts: () -> Unit, onNotes: () -> Unit, 
     }
 }
 
-private const val STRIP_COLOR = 13
 
 @Preview(showBackground = true)
 @Composable

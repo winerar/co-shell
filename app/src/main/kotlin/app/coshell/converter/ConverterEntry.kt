@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.R as DesignR
@@ -17,6 +15,6 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 fun ConverterEntry(onClick: () -> Unit, modifier: Modifier = Modifier, hint: String = stringResource(R.string.converter_hint)) {
     CoShellCard(modifier) {
-        CoShellMenuRow(DesignR.drawable.ic_sync_alt, categoryColor(CategoryPalette.colors[4]), stringResource(R.string.converter_title), onClick, subtitle = hint)
+        CoShellMenuRow(DesignR.drawable.ic_sync_alt, stringResource(R.string.converter_title), onClick, subtitle = hint)
     }
 }

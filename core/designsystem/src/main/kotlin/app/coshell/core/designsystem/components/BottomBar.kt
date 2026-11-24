@@ -1,6 +1,7 @@
 package app.coshell.core.designsystem.components
 
 import androidx.compose.foundation.border
+import app.coshell.core.designsystem.theme.panelColor
 import app.coshell.core.designsystem.theme.selectionColors
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -135,8 +136,9 @@ private fun BottomBarContent(
     val scheme = MaterialTheme.colorScheme
     // One pill flows between tabs (TabPill.kt) instead of one per tab.
     val sel = selectionColors()
+    val panel = panelColor()
     val pillColor = sel.fill
-    val pillEdge = fillEdge(pillColor, scheme.surfaceContainerHigh)
+    val pillEdge = fillEdge(pillColor, panel)
     val pill = rememberTabPillState()
     AnimateTabPill(pill, tabs.indexOfFirst { it.selected }, drag)
     // A floating capsule over the screen's background, clear of the system navigation bar.
@@ -155,7 +157,7 @@ private fun BottomBarContent(
                 .fillMaxWidth()
                 .height(Sizes.bottomBarHeight)
                 .clip(PillShape)
-                .background(scheme.surfaceContainerHigh)
+                .background(panel)
                 .border(Sizes.hairline, scheme.outlineVariant, PillShape)
                 .tabPill(pill, pillColor, pillEdge)
                 .padding(horizontal = Spacing.xs + Spacing.xxs),
@@ -187,7 +189,7 @@ private fun BottomBarContent(
 private fun TabIcon(tab: CoShellTab, tint: Color) {
     if (!tab.badge) return Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
     val dot = MaterialTheme.colorScheme.tertiary
-    BadgedBox(badge = { Badge(Modifier.fillEdge(dot, CircleShape, MaterialTheme.colorScheme.surfaceContainerHigh), containerColor = dot) }) {
+    BadgedBox(badge = { Badge(Modifier.fillEdge(dot, CircleShape, panelColor()), containerColor = dot) }) {
         Icon(painterResource(tab.icon), contentDescription = null, tint = tint)
     }
 }

@@ -3,6 +3,7 @@ package app.coshell.categories.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.R
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.DeleteCategoryUseCase
@@ -12,6 +13,8 @@ import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.IdGenerator
 import app.coshell.navigation.CategoryEditDestination as Args
+import app.coshell.undo.UndoCenter
+import app.coshell.undo.UndoOffer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +32,7 @@ class CategoryEditViewModel @Inject constructor(
     private val archiveCategory: ArchiveCategoryUseCase,
     private val deleteCategory: DeleteCategoryUseCase,
     private val ids: IdGenerator,
+    private val undo: UndoCenter,
 ) : ViewModel() {
 
     private val categoryId: String? = savedStateHandle[Args.ARG_CATEGORY_ID]
@@ -146,9 +150,19 @@ class CategoryEditViewModel @Inject constructor(
 
     fun delete() {
         val category = existing ?: return
+        // A folder's subcategories move to the top level on delete; «Отменить» puts them back (#194).
+        val children = all.filter { it.parentId == category.id }
         viewModelScope.launch {
             when (deleteCategory(category.id)) {
-                DeleteCategoryUseCase.Result.DELETED -> _state.update { it.copy(isDone = true) }
+                DeleteCategoryUseCase.Result.DELETED -> {
+                    undo.offer(
+                        UndoOffer(R.string.category_deleted) {
+                            categories.saveCategory(category)
+                            if (children.isNotEmpty()) categories.saveCategories(children)
+                        },
+                    )
+                    _state.update { it.copy(isDone = true) }
+                }
                 DeleteCategoryUseCase.Result.HAS_TRANSACTIONS -> _state.update { it.copy(deleteBlocked = true) }
             }
         }

@@ -445,17 +445,8 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountDelete.dc.html": {
-      "x": 5640,
-      "y": 4960,
-      "w": 390,
-      "h": 844,
-      "title": "Счёт: удалить?",
-      "page": "screens",
-      "radius": 28
-    },
     "AccountBlocked.dc.html": {
-      "x": 6110,
+      "x": 5640,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -464,7 +455,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 6580,
+      "x": 6110,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -474,7 +465,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 7050,
+      "x": 6580,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -484,7 +475,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 7520,
+      "x": 7050,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -493,7 +484,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 7990,
+      "x": 7520,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -3464,7 +3455,6 @@
     "CreditTermsSum.dc.html",
     "AccountsCredit.dc.html",
     "AccountEditExisting.dc.html",
-    "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
     "Colors.dc.html",
     "Categories.dc.html",
@@ -3892,7 +3882,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 8380,
+      "maxW": 7910,
       "w": 240
     },
     "row5": {

@@ -143,8 +143,6 @@
     <string name="account_shared_short">Desactívalo para una cuenta personal</string>
     <string name="account_initial_balance_error">Escribe el importe en cifras</string>
     <string name="account_initial_balance_fraction_error">Demasiados decimales</string>
-    <string name="account_delete_confirm_title">¿Eliminar la cuenta?</string>
-    <string name="account_delete_confirm_text">La cuenta se eliminará para siempre.</string>
     <string name="account_delete_blocked_title">Esta cuenta no se puede eliminar</string>
     <string name="account_delete_blocked_text">Tiene movimientos. Archívala: el historial se conserva y no aparecerá al elegir cuenta.</string>
 
@@ -192,8 +190,6 @@
     <string name="category_error_parent_nested">Una subcategoría no puede tener subcategorías propias</string>
     <string name="category_error_parent_type">El tipo debe coincidir con el de la categoría principal</string>
     <string name="category_error_has_children">Esta categoría tiene subcategorías — no puede ser subcategoría</string>
-    <string name="category_delete_confirm_title">¿Eliminar la categoría?</string>
-    <string name="category_delete_confirm_text">La categoría se eliminará para siempre. Sus subcategorías pasarán a ser categorías normales.</string>
     <string name="category_delete_blocked_title">Esta categoría no se puede eliminar</string>
     <string name="category_delete_blocked_text">Se usa en movimientos. Archívala: el historial se conserva y no aparecerá al anotar.</string>
     <string name="transaction_add">Añadir movimiento</string>

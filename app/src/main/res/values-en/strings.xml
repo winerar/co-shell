@@ -140,8 +140,6 @@
     <string name="account_shared_short">Turn off for a personal account</string>
     <string name="account_initial_balance_error">Enter the amount in digits</string>
     <string name="account_initial_balance_fraction_error">Too many decimal places</string>
-    <string name="account_delete_confirm_title">Delete account?</string>
-    <string name="account_delete_confirm_text">The account will be deleted for good.</string>
     <string name="account_delete_blocked_title">This account can\'t be deleted</string>
     <string name="account_delete_blocked_text">It has transactions. Archive it instead: history stays, and it won\'t show up when you pick an account.</string>
 
@@ -188,8 +186,6 @@
     <string name="category_error_parent_nested">A subcategory can\'t have subcategories of its own</string>
     <string name="category_error_parent_type">The type must match the parent category</string>
     <string name="category_error_has_children">This category has subcategories — it can\'t become a subcategory</string>
-    <string name="category_delete_confirm_title">Delete category?</string>
-    <string name="category_delete_confirm_text">The category will be deleted for good. Its subcategories become regular categories.</string>
     <string name="category_delete_blocked_title">This category can\'t be deleted</string>
     <string name="category_delete_blocked_text">It\'s used in transactions. Archive it instead: history stays, and it won\'t show up when you add one.</string>
     <string name="transaction_add">Add transaction</string>

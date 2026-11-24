@@ -148,8 +148,7 @@
     <string name="account_shared_short">Выключите для личного счёта</string>
     <string name="account_initial_balance_error">Введите сумму цифрами</string>
     <string name="account_initial_balance_fraction_error">Слишком много знаков после запятой</string>
-    <string name="account_delete_confirm_title">Удалить счёт?</string>
-    <string name="account_delete_confirm_text">Счёт удалится навсегда.</string>
+    <string name="account_deleted">Счёт удалён</string>
     <string name="account_delete_blocked_title">Счёт нельзя удалить</string>
     <string name="account_delete_blocked_text">По счёту есть операции. Отправьте его в архив: история сохранится, а при выборе счёта его не будет.</string>
 
@@ -198,8 +197,7 @@
     <string name="category_error_parent_nested">У подкатегории не может быть своих подкатегорий</string>
     <string name="category_error_parent_type">Тип должен совпадать с родительской категорией</string>
     <string name="category_error_has_children">У этой категории есть подкатегории — её нельзя сделать подкатегорией</string>
-    <string name="category_delete_confirm_title">Удалить категорию?</string>
-    <string name="category_delete_confirm_text">Категория удалится навсегда. Её подкатегории станут обычными категориями.</string>
+    <string name="category_deleted">Категория удалена</string>
     <string name="category_delete_blocked_title">Категорию нельзя удалить</string>
     <string name="category_delete_blocked_text">Она есть в операциях. Отправьте её в архив: история сохранится, а при вводе её не будет.</string>
     <string name="transaction_add">Добавить операцию</string>

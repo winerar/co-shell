@@ -95,18 +95,28 @@ def family():
     return board('Семья', family_screen(), height=1120)
 
 
+def schedule_block():
+    """Board CopyA (#606): the period, the weekday (or the day of the month), the tiles «Время» / «Хранить», the next copy."""
+    days = ''.join('<span style="height: 36px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 13px; %s">%s</span>'
+                   % (SEL if d == 'Вс' else 'background: %s; color: %s;' % (CHIP, INK2), d) for d in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
+    week = '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 8px;">%s</div>' % days
+    values = group([row('Время', '', '', '<span style="color: %s;">3:00</span>' % MUTED), row('Хранить', '', '', '<span style="color: %s;">последние 8 копий</span>' % MUTED)])
+    return ('<div style="margin-top: 8px;">%s</div>%s<div style="margin-top: 8px;">%s</div>%s'
+            % (segmented(['Каждый день', 'Раз в неделю', 'Раз в месяц'], 'Раз в неделю'), week, values, note('Следующая: вс, 29 ноября, 3:00', 8)))
+
+
 def backup_screen(enabled=True, msg=''):
     """«Резервная копия» as in the app (#464): the ring (days to the copy, or off), the folder + switch, manual tiles, the wipe row."""
     if enabled:
         hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия включена</h2>'
-                '<div style="text-align: center; font-size: 13px; color: %s; margin-top: 4px;">Последняя: 3 ноября · раз в неделю</div>'
+                '<div style="text-align: center; font-size: 13px; color: %s; margin-top: 4px;">Последняя: 3 ноября</div>'
                 % (ring(0.72, '<span style="%s font-size: 40px; font-weight: 700;">2</span><span style="font-size: 12px; color: %s;">дня до копии</span>' % (MONO, MUTED), YELLOW), MUTED))
-        auto = group([row('Папка: Google Диск / Co-Shell', 'тап — выбрать другую', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автоматически раз в неделю', '', '', switch(True))])
+        auto = group([row('Папка: Google Диск / Co-Shell', 'тап — выбрать другую', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автокопия', '', '', switch(True))]) + schedule_block()
     else:
         hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия выключена</h2>'
-                '<div style="text-align: center; font-size: 13px; color: %s; margin: 4px 12px 0;">Выберите папку — копия будет сохраняться туда раз в неделю (хранятся последние 8).</div>'
+                '<div style="text-align: center; font-size: 13px; color: %s; margin: 4px 12px 0;">Выберите папку — копии будут сохраняться сами: раз в день, неделю или месяц.</div>'
                 % (ring(0, svg('refresh', MUTED, 40), CHIP), MUTED))
-        auto = group([row('Выбрать папку для автокопий', 'на телефоне или Google Диске', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автоматически раз в неделю', '', '', switch(False))])
+        auto = group([row('Выбрать папку для автокопий', 'на телефоне или Google Диске', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автокопия', '', '', switch(False))])
     manual = grid([card('%s<div style="margin-top: 14px; font-size: 15px; font-weight: 600;">%s</div><div style="font-size: 12px; color: %s;">%s</div>' % (svg(i, c), t, MUTED, s2), pad='14px')
                    for i, c, t, s2 in [('download', LIME, 'Сохранить копию', 'в папку или на Диск'), ('upload', CYAN, 'Восстановить', 'записи добавятся к текущим')]], 2)
     wipe_row = '<div style="margin-top: 14px;">%s</div>' % row('<span style="color: %s;">Стереть все данные</span>' % PINK, 'Начать с чистого листа. Сначала — копия', svg('trash', PINK), chevron(), min_h=56)

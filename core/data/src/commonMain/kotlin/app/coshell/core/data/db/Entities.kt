@@ -47,6 +47,8 @@ data class AccountEntity(
     @ColumnInfo(name = "deposit_payout") val depositPayout: String? = null,
     /** The day the deposit was opened (#634, v24): optional, `YYYY-MM-DD`; lets «в конце срока» count the whole term. */
     @ColumnInfo(name = "deposit_start") val depositStart: String? = null,
+    /** «Только у меня» (#558, v25): the row and its operations never leave the phone; not in the sync JSON. */
+    @Transient @ColumnInfo(name = "local_only", defaultValue = "0") val localOnly: Boolean = false,
 )
 
 @Serializable

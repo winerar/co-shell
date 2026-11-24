@@ -73,6 +73,7 @@ internal fun buildAccount(form: AccountEditUiState, existing: Account?, newId: (
             excludedFromTotal = !form.includedInTotal,
             color = form.color,
             isShared = form.shared,
+            localOnly = form.localOnly,
             // The repository makes the current member the owner of a new personal account.
             ownerMemberId = if (form.shared) null else base.ownerMemberId,
         ),

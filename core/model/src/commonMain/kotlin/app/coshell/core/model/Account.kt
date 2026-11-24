@@ -34,6 +34,11 @@ data class Account(
     val credit: CreditTerms? = null,
     /** A deposit's conditions (#634, step 3); `null` — none typed. Type stays [AccountType.DEPOSIT], so an older version shows it as it always did. */
     val deposit: DepositTerms? = null,
+    /**
+     * «Только у меня» (#558): the account and every operation on it stay on this phone — they are never sent
+     * to the family and never taken from it. Still in the backup and in this phone's totals.
+     */
+    val localOnly: Boolean = false,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

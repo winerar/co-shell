@@ -9,10 +9,11 @@ import app.coshell.core.domain.BackupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-/** Weekly copy of the whole database into the chosen folder ([AutoBackupScheduler]). */
+/** Copy of the whole database into the chosen folder, when the schedule says it is due or when [FORCE]d ([AutoBackupScheduler]). */
 @HiltWorker
 class AutoBackupWorker @AssistedInject constructor(
     @Assisted context: Context,
@@ -25,10 +26,14 @@ class AutoBackupWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        val folder = settings.config.value.folderUri ?: return Result.success()
+        val config = settings.config.value
+        val folder = config.folderUri ?: return Result.success()
         val now = clock.now()
+        val local = now.toLocalDateTime(timeZone)
+        val last = config.lastBackupAtMs?.let { Instant.fromEpochMilliseconds(it).toLocalDateTime(timeZone) }
+        if (!inputData.getBoolean(FORCE, false) && !AutoBackupPolicy.isDue(config.schedule, last, local)) return Result.success()
         return try {
-            writer.write(folder, AutoBackupPolicy.fileName(now.toLocalDateTime(timeZone).date), backup.exportJson())
+            writer.write(folder, AutoBackupPolicy.fileName(local.date), backup.exportJson(), config.schedule.keep)
             settings.recordResult(now.toEpochMilliseconds(), failed = false)
             Result.success()
         } catch (e: Exception) {
@@ -36,5 +41,10 @@ class AutoBackupWorker @AssistedInject constructor(
             settings.recordResult(now.toEpochMilliseconds(), failed = true)
             if (runAttemptCount < 3) Result.retry() else Result.failure()
         }
+    }
+
+    companion object {
+        /** Input flag: copy now, whatever the schedule says (the first copy after choosing a folder). */
+        const val FORCE = "force"
     }
 }

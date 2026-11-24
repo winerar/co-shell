@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.backup.auto.AutoBackupViewModel
+import app.coshell.backup.auto.BackupSchedule
 import app.coshell.gate.LocalInputLock
 
 /** Connects [BackupScreen] to its ViewModel and to the system "save as" / "open file" dialogs. */
@@ -40,6 +41,7 @@ fun BackupRoute(
             onCancelImport = viewModel::cancelImport,
             onChooseAutoFolder = { pickFolder.launch(null) },
             onDisableAuto = auto::disable,
+            onAutoSchedule = auto::setSchedule,
             onWipeData = onWipeData,
         ),
     )
@@ -54,6 +56,7 @@ data class BackupActions(
     val onCancelImport: () -> Unit = {},
     val onChooseAutoFolder: () -> Unit = {},
     val onDisableAuto: () -> Unit = {},
+    val onAutoSchedule: (BackupSchedule) -> Unit = {},
     /** «Стереть все данные» at the bottom (moved here from «Настройки», #155). */
     val onWipeData: () -> Unit = {},
 )

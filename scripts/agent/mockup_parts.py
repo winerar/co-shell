@@ -21,7 +21,7 @@ ACCOUNTS = [
     ('Песо', 'P', '#A8FF3E', '#0B0F0A', 'Наличные', '310 000', 'ARS', '302', 'cash'),
     ('Доллары', '$', '#2BE4FF', '#0B0F0A', 'Наличные', '1 000', 'USD', '1 000', 'cash'),
     ('Драмы', '֏', '#D36BFF', '#0B0F0A', 'Наличные', '83 000', 'AMD', '215', 'cash'),
-    ('Вклад', 'ВК', '#FFD43B', '#1A1400', 'Вклад', '1 500', 'USD', '1 500', 'deposit'),
+    ('Вклад', 'ВК', '#FFD43B', '#1A1400', 'Вклад', '1 500', 'USD', '1 500', 'deposit', 'local'),
 ]
 GROUPS = [('cards', 'Карты и банки', '3 176'), ('crypto', 'Крипто', '2 310'), ('cash', 'Наличные', '1 517'), ('deposit', 'Вклады', '1 500')]
 
@@ -41,6 +41,9 @@ def money(amt, cur, second='', color=INK, size=15):
 
 
 def acc_row(a):
+    if len(a) > 9 and a[9] == 'local':  # «Только у меня» (#558): lock after the name, caption in the subtitle
+        return row('%s <span style="display: inline-flex; vertical-align: middle; margin-left: 4px;">%s</span>' % (a[0], svg('lock', MUTED, 16)), a[4] + ' · только у меня',
+                   badge(a[1], a[2], a[3], 40, 12), money(a[5], a[6], '≈ %s USD' % a[7]))
     return row(a[0], a[4], badge(a[1], a[2], a[3], 40, 12), money(a[5], a[6], '≈ %s USD' % a[7]))
 
 

@@ -4,3 +4,4 @@ cd "$(dirname "$0")/../.." || exit 0
 echo "# agent.sh start (автоматически, SessionStart)"
 timeout 60 scripts/agent/agent.sh start 2>&1 | head -80
 echo "Дальше: прочитать docs/agents/owner.md и notes.md."
+echo "Получил задачу — сразу переименуй сессию по её сути: get_session → set_session_title (MCP claude-code-remote); задача сменилась — снова."

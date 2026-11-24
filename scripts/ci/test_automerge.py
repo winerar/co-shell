@@ -43,6 +43,12 @@ class AutomergeTest(unittest.TestCase):
         with open(fake_backmerge, "w") as f:
             f.write('echo "backmerge $*" >> "$GH_LOG"\n')
         self.env["BACKMERGE"] = fake_backmerge
+        # task_status.py would call the GitHub API: a fake logs the call and answers $TASK_OUT.
+        fake_status = os.path.join(self.tmp.name, "task_status.py")
+        with open(fake_status, "w") as f:
+            f.write('import os, sys\nopen(os.environ["GH_LOG"], "a").write("task " + " ".join(sys.argv[1:]) + "\\n")\n'
+                    'print(os.environ.get("TASK_OUT", ""))\n')
+        self.env["TASK_STATUS"] = fake_status
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -108,6 +114,32 @@ class AutomergeTest(unittest.TestCase):
         _, calls = self.run_script(CI_GREEN_SHA="sha1")
         self.assertIn("workflow run ci.yml --ref dev", calls)
         self.assertNotIn("backmerge", calls)
+
+    def test_ready_pr_takes_its_issues_and_merge_returns_unfinished(self):
+        self.pr["closingIssuesReferences"] = [{"number": 5, "url": "https://github.com/o/r/issues/5"}]
+        _, calls = self.run_script(CI_GREEN_SHA="sha1")
+        self.assertIn("task ready 7", calls)
+        self.assertIn("task merged 7 5", calls)
+
+    def test_draft_does_not_move_issues(self):
+        self.pr["isDraft"] = True
+        _, calls = self.run_script(CI_GREEN_SHA="sha1")
+        self.assertNotIn("task ", calls)
+
+    def test_moved_status_dispatches_the_board_sync(self):
+        _, calls = self.run_script(CI_GREEN_SHA="sha1", TASK_OUT="changed")
+        self.assertIn("workflow run tasks.yml", calls)
+
+    def test_nothing_moved_no_board_sync(self):
+        _, calls = self.run_script(CI_GREEN_SHA="sha1")
+        self.assertNotIn("tasks.yml", calls)
+
+    def test_failing_status_script_does_not_block_the_merge(self):
+        with open(self.env["TASK_STATUS"], "w") as f:
+            f.write("raise SystemExit('boom')\n")
+        stdout, calls = self.run_script(CI_GREEN_SHA="sha1")
+        self.assertIn("pr merge 7", calls)
+        self.assertIn("::warning::", stdout)
 
 
 if __name__ == "__main__":

@@ -66,7 +66,7 @@ class DraftsTest {
         assertEquals("кофе", draft.title)
         assertEquals("c1", draft.categoryId)
         assertEquals(DraftCategorySource.HISTORY, draft.categorySource)
-        assertEquals("a1", draft.accountId)
+        assertEquals("a2", draft.accountId) // nothing said about paying: cash
         assertEquals(now, draft.dateMillis)
     }
 
@@ -114,6 +114,17 @@ class DraftsTest {
         val local = QuickNoteDrafts.Context(base.accounts, base.categories, base.history, base.fallback, base.known, base.now, local = ars)
         assertEquals("a1", QuickNoteDrafts.build(listOf("кофе 3500"), local, ids()).single().accountId)
         assertEquals("s", QuickNoteDrafts.build(listOf("кофе 3500"), base, ids()).single().accountId)
+    }
+
+    @Test
+    fun `a line that says nothing about paying goes to cash, a card word to the card`() {
+        val history = listOf(spent("t1", "a1", "c1", "x"))
+        assertEquals("a2", QuickNoteDrafts.build(listOf("кофе 3500"), ctx(history), ids()).single().accountId)
+        // Cash only in the currency the line gets anyway: no dollars cash for a peso coffee.
+        assertEquals("a1", QuickNoteDrafts.build(listOf("кофе 3500"), ctx(history, accounts = listOf(galicia, dollars)), ids()).single().accountId)
+        assertEquals("a1", QuickNoteDrafts.build(listOf("кофе 3500 безнал"), ctx(history), ids()).single().accountId)
+        // Without a cash account in that currency the last used one stays.
+        assertEquals("a1", QuickNoteDrafts.build(listOf("кофе 3500"), ctx(history, accounts = listOf(galicia)), ids()).single().accountId)
     }
 
     @Test
@@ -252,7 +263,7 @@ class DraftsTest {
         fun accountOf(line: String, label: String) = QuickNoteDrafts.build(
             listOf(line), ctx(history, listOf(galicia, mp, cash)), ids(), mapOf(0 to NoteHint(null, null, account = label)),
         ).single().accountId
-        assertEquals("a1", accountOf("кофе 3500", "Santander · ARS · card")) // unknown label: the account used last
+        assertEquals("a2", accountOf("кофе 3500", "Santander · ARS · card")) // unknown label: as if nothing was said — cash
         assertEquals("a2", accountOf("кофе 3500 нал", "Mercado Pago · ARS · card")) // the word «нал» wins over a card
         assertEquals("a4", accountOf("кофе 3500 карта", "Mercado Pago · ARS · card")) // same kind: the model chooses among cards
         assertEquals(null, accountOf("кофе 3500 usd", "Mercado Pago · ARS · card")) // a named currency the account does not have: the person chooses
@@ -284,7 +295,7 @@ class DraftsTest {
         assertEquals("a1", made("кофе 40", history).accountId) // pesos here are small: 2 digits, as the number
         assertEquals("a3", made("кофе 4", history).accountId)
         assertEquals("a1", made("кофе 400").accountId) // 3 digits: as far from dollars as from pesos, the usual choice
-        assertEquals("a1", made("кофе 5", accounts = listOf(galicia, cash)).accountId) // all pesos
+        assertEquals("a2", made("кофе 5", accounts = listOf(galicia, cash)).accountId) // all pesos, nothing said: cash
     }
 
     @Test

@@ -12,6 +12,8 @@ import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.ai.NoLanguageModel
 import app.coshell.core.domain.ai.PayeeCategoryAi
+import app.coshell.core.domain.ai.ReceiptAi
+import app.coshell.receipt.inbox.UnreadReceipts
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
 import app.coshell.core.model.Account
 import app.coshell.core.model.Category
@@ -89,6 +91,8 @@ abstract class TransactionEditTestBase {
         draftId: String? = null,
         categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
         savedEntries: SavedEntries = SavedEntries { _, _ -> },
+        receiptAi: ReceiptAi = ReceiptAi(NoLanguageModel),
+        unreadReceipts: UnreadReceipts = UnreadReceipts.NONE,
     ) = TransactionEditViewModel(
         savedStateHandle = SavedStateHandle(
             mapOf(
@@ -119,6 +123,8 @@ abstract class TransactionEditTestBase {
         categoryAi = categoryAi,
         entryDrafts = entryDraftStore,
         savedEntries = savedEntries,
+        receiptAi = receiptAi,
+        unreadReceipts = unreadReceipts,
     )
 
     protected suspend fun seedTemplate(amount: Money? = Money(40_000_00, ars), categoryId: String? = "cafe") {

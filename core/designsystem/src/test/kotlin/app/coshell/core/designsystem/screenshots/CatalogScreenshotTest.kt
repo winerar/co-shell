@@ -13,6 +13,7 @@ import app.coshell.core.designsystem.catalog.HeatCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.PinSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
+import app.coshell.core.designsystem.catalog.ConfirmStackCatalog
 import app.coshell.core.designsystem.catalog.ModalsCatalog
 import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
@@ -117,6 +118,12 @@ class CatalogScreenshotTest {
 
     @Test
     fun `modals light`() = shot("modals_light") { ModalsCatalog() }
+
+    @Test
+    fun `confirm stack dark`() = shot("confirm_stack_dark", dark = true) { ConfirmStackCatalog() }
+
+    @Test
+    fun `confirm stack light`() = shot("confirm_stack_light") { ConfirmStackCatalog() }
 
     @Test
     fun `check marks dark`() = shot("check_marks_dark", dark = true) { CheckMarkSample() }

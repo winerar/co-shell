@@ -148,6 +148,7 @@ class HardcodedTextTest {
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/categoryguess/SoundKey.kt" to "Cyrillic → Latin letters for loose matching (#631), not interface text",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/quickentry/CurrencyWords.kt" to "currency words the parser understands (#631)",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/drafts/AccountMention.kt" to "generic words of account names the parser skips (#632)",
+            "core/domain/src/commonMain/kotlin/app/coshell/core/domain/ai/NoteHints.kt" to "payment slang the model is told about in its prompt (#635), not interface text",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/categoryguess/BrandDictionary.kt" to "letter folding for matching payee names («ё» → «е»), not interface text",
             "core/domain/src/commonMain/kotlin/app/coshell/core/domain/update/NoteEntries.kt" to "markup of release notes written by the team (\"Исправлено:\"), not interface text",
         )

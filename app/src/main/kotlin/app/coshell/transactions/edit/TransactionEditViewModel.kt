@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.core.domain.ai.NoLanguageModel
 import app.coshell.core.domain.ai.PayeeCategoryAi
+import app.coshell.core.domain.ai.ReceiptAi
+import app.coshell.receipt.inbox.UnreadReceipts
 import app.coshell.core.domain.categoryguess.CategoryGuess
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
@@ -94,6 +96,8 @@ class TransactionEditViewModel @Inject constructor(
     private val categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
     private val entryDrafts: EntryDraftStore = InMemoryEntryDraftStore(),
     private val savedEntries: SavedEntries = SavedEntries { _, _ -> },
+    private val receiptAi: ReceiptAi = ReceiptAi(NoLanguageModel),
+    private val unreadReceipts: UnreadReceipts = UnreadReceipts.NONE,
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -141,7 +145,7 @@ class TransactionEditViewModel @Inject constructor(
             isLoading = true,
             isNew = transactionId == null,
             receiptUnread = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_UNREAD] ?: false,
-        ),
+        ).let { it.copy(receiptAi = if (it.receiptUnread) receiptAiMode() else ReceiptAiMode.NONE) },
     )
     val state: StateFlow<TransactionEditUiState> = _state.asStateFlow()
 
@@ -195,6 +199,7 @@ class TransactionEditViewModel @Inject constructor(
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
             tags = _state.value.tags,
             receiptUnread = _state.value.receiptUnread,
+            receiptAi = _state.value.receiptAi,
         )
         val loaded = when {
             transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
@@ -348,6 +353,49 @@ class TransactionEditViewModel @Inject constructor(
     /** «Ввести вручную» or «Отправить образец» in «Не удалось прочитать чек» (#561): the window closes. */
     fun onReceiptUnreadDismiss() = _state.update { it.copy(receiptUnread = false) }
 
+    private var receiptReadJob: Job? = null
+
+    private fun receiptAiMode(): ReceiptAiMode = when {
+        unreadReceipts.text().isNullOrBlank() -> ReceiptAiMode.NONE
+        !receiptAi.available -> ReceiptAiMode.OFF
+        receiptAi.cloud -> ReceiptAiMode.CLOUD
+        else -> ReceiptAiMode.PHONE
+    }
+
+    /**
+     * «Прочитать с ИИ» (#593): the model reads the receipt no format knew; the total must be printed in it ([ReceiptAi]). Read — the sheet
+     * is filled as from any receipt, with «Прочитано ИИ · проверьте сумму и дату»; nothing found — the window comes back without the button.
+     */
+    fun onReceiptAiRead() {
+        val text = unreadReceipts.text()?.takeIf { it.isNotBlank() } ?: return
+        _state.update { it.copy(receiptUnread = false, receiptReading = true) }
+        receiptReadJob?.cancel()
+        receiptReadJob = viewModelScope.launch {
+            val live = accountsById.values.filter { !it.archived }
+            val fallback = _state.value.accountId?.let { accountsById[it]?.currency } ?: live.firstOrNull()?.currency ?: CurrencyCode("USD")
+            val receipt = receiptAi.read(text, fallback, live.map { it.currency }.toSet(), clock.now().toLocalDateTime(timeZone).date)
+            if (receipt == null) {
+                _state.update { it.copy(receiptReading = false, receiptUnread = true, receiptAiFailed = true) }
+                return@launch
+            }
+            scannedQr = receipt
+            scanAmountTouched = false
+            _state.update { form ->
+                form.copy(receiptReading = false).withReceipt(receipt, moneyFormat)
+                    .withDebitSuggestion(converter, moneyFormat)
+                    .withGuessedCategory()
+                    .withCategoryOptions(allCategories, recentCategoryIds)
+            }
+            askAiCategory()
+        }
+    }
+
+    /** «Отменить» in «Читаю чек…»: the reading stops, the blank sheet stays. */
+    fun onReceiptAiCancel() {
+        receiptReadJob?.cancel()
+        _state.update { it.copy(receiptReading = false) }
+    }
+
     /** «Всё равно записать»: the same receipt once more, on purpose. */
     fun onScanDuplicateAccept() = _state.update { form -> form.copy(scan = form.scan?.copy(duplicate = null)) }
 
@@ -422,7 +470,7 @@ class TransactionEditViewModel @Inject constructor(
      */
     private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
         if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
-        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key, note)
+        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key?.takeIf { it.isNotBlank() }, note)
         if (guess == null && categoryByAi) return this
         return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source, categoryByAi = false)
     }
@@ -643,7 +691,8 @@ class TransactionEditViewModel @Inject constructor(
         val paymentId = templateId?.let { id -> paymentDate?.let { autoPaymentId(id, it) } }
         val built = buildTransaction(existing, form, date, paymentId?.let { fixed -> IdGenerator { fixed } } ?: ids, sourceLabels)
         // A new expense made from a scanned receipt remembers which one, to warn when it is scanned again (#526).
-        val scanKey = current.scan?.key
+        // A receipt the model read has no number (#593): nothing to remember.
+        val scanKey = current.scan?.key?.takeIf { it.isNotBlank() }
         return if (existing == null && scanKey != null && (built.type == TransactionType.EXPENSE || built.type == TransactionType.TRANSFER)) built.copy(receiptKey = scanKey) else built
     }
 

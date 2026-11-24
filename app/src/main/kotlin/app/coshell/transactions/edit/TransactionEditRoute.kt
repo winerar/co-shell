@@ -32,6 +32,7 @@ fun TransactionEditRoute(
     onScanReceipt: () -> Unit = {},
     onNewTemplate: () -> Unit = {},
     onSendReceiptSample: () -> Unit = {},
+    onSmartSettings: () -> Unit = {},
     templateStrip: TemplateStripViewModel = hiltViewModel(),
     viewModel: TransactionEditViewModel = hiltViewModel(),
 ) {
@@ -106,6 +107,12 @@ fun TransactionEditRoute(
                 viewModel.onReceiptUnreadDismiss()
                 onSendReceiptSample()
             },
+            onReceiptAiRead = viewModel::onReceiptAiRead,
+            onReceiptAiCancel = viewModel::onReceiptAiCancel,
+            onReceiptAiEnable = {
+                viewModel.onReceiptUnreadDismiss()
+                onSmartSettings()
+            },
             onUnsavedContinue = viewModel::onUnsavedContinue,
             onUnsavedDiscard = viewModel::onUnsavedDiscard,
             onReceiptAccountPick = viewModel::onReceiptAccountPick,
@@ -172,6 +179,9 @@ data class TransactionEditActions(
     /** «Не удалось прочитать чек» of a shared receipt (#561): enter by hand, or send the file as a sample. */
     val onReceiptUnreadManual: () -> Unit = {},
     val onReceiptUnreadSend: () -> Unit = {},
+    val onReceiptAiRead: () -> Unit = {},
+    val onReceiptAiCancel: () -> Unit = {},
+    val onReceiptAiEnable: () -> Unit = {},
     /** «Какой это счёт?» of a bank receipt (#577): the chosen account remembers the digits; the window closes without a choice. */
     val onReceiptAccountPick: (String) -> Unit = {},
     val onReceiptAccountSkip: () -> Unit = {},

@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit.components
 
+import app.coshell.transactions.edit.ReceiptAiMode
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import androidx.compose.foundation.horizontalScroll
@@ -84,7 +85,17 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     }
     state.tip?.let { TipSheet(state, it, actions) }
     state.scan?.duplicate?.let { ScanDuplicateDialog(it, actions.onScanDuplicateAccept, actions.onScanDuplicateCancel) }
-    if (state.receiptUnread) ReceiptUnreadDialog(actions.onReceiptUnreadManual, actions.onReceiptUnreadSend)
+    if (state.receiptUnread) {
+        ReceiptUnreadDialog(
+            mode = state.receiptAi,
+            failed = state.receiptAiFailed,
+            onManual = actions.onReceiptUnreadManual,
+            onSendSample = actions.onReceiptUnreadSend,
+            onRead = actions.onReceiptAiRead,
+            onEnableAi = actions.onReceiptAiEnable,
+        )
+    }
+    if (state.receiptReading) ReceiptReadingDialog(state.receiptAi == ReceiptAiMode.CLOUD, actions.onReceiptAiCancel)
     state.receiptAccountAsk?.let { ReceiptAccountSheet(state, it, actions) }
     if (saveAsOpen) SaveAsTemplateDialog(state, onSave = actions.onSaveAsTemplate, onDismiss = { saveAsOpen = false })
 }

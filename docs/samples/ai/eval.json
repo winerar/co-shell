@@ -237,7 +237,8 @@
    "line": "кофе 3500",
    "title": "кофе",
    "day": 0,
-   "amount_minor": 350000
+   "amount_minor": 350000,
+   "pay": "none"
   },
   {
    "line": "такси 2000",
@@ -450,6 +451,86 @@
    "title": "аптека",
    "day": -2,
    "style": "owner"
+  },
+  {
+   "line": "шаурма 4к нал",
+   "amount_minor": 400000,
+   "title": "шаурма",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "такси 2000 кэшем",
+   "amount_minor": 200000,
+   "title": "такси",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "рынок 3500 кешем",
+   "amount_minor": 350000,
+   "title": "рынок",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "хлеб 900 наликом",
+   "amount_minor": 90000,
+   "title": "хлеб",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "вода 800 за кэш",
+   "amount_minor": 80000,
+   "title": "вода",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "аптека 4200 безнал",
+   "amount_minor": 420000,
+   "title": "аптека",
+   "day": 0,
+   "pay": "card",
+   "style": "slang"
+  },
+  {
+   "line": "обед 9к по безналу",
+   "amount_minor": 900000,
+   "title": "обед",
+   "day": 0,
+   "pay": "card",
+   "style": "slang"
+  },
+  {
+   "line": "кино 7000 карточкой",
+   "amount_minor": 700000,
+   "title": "кино",
+   "day": 0,
+   "pay": "card",
+   "style": "slang"
+  },
+  {
+   "line": "verdulería 5000 en efectivo",
+   "amount_minor": 500000,
+   "title": "verdulería",
+   "day": 0,
+   "pay": "cash",
+   "style": "slang"
+  },
+  {
+   "line": "super 15000 con tarjeta",
+   "amount_minor": 1500000,
+   "title": "super",
+   "day": 0,
+   "pay": "card",
+   "style": "slang"
   }
  ],
  "voice": [

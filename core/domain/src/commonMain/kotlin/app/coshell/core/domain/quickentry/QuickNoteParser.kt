@@ -27,11 +27,13 @@ object QuickNoteParser {
     ).map { (days, words) -> days to Regex(WORDS.format(words.joinToString("|")), RegexOption.IGNORE_CASE) }
     private val ACCOUNTS = listOf(
         AccountWord.CARD to Regex(
-            WORDS.format("с карты|по карте|карта|карты|карте|картой|карту|карточка|карточкой|карточки|безнал|безналом|tarjeta|debito|débito|credito|crédito|card"),
+            WORDS.format("с карты|по карте|карта|карты|карте|картой|карту|карточка|карточкой|карточки|карточку|безнал|безналом|безналу|безналичные|безналичными|" +
+                    "дебетовой|tarjeta|debito|débito|credito|crédito|card"),
             RegexOption.IGNORE_CASE,
         ),
         AccountWord.CASH to Regex(
-            WORDS.format("наличные|наличными|наличкой|наличка|налички|налом|нала|нал|наликом|налик|кэшем|кэш|кеш|efectivo|cash"),
+            WORDS.format("наличные|наличными|наличкой|наличка|налички|наличку|налом|нала|налу|нал|наликами|наликом|налик|" +
+                    "кэшем|кэша|кэш|кешем|кеша|кеш|кешом|кэшом|en efectivo|efectivo|al contado|contado|cash"),
             RegexOption.IGNORE_CASE,
         ),
     )

@@ -3,6 +3,7 @@ package app.coshell.core.domain.quickentry
 import app.coshell.core.model.CurrencyCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.assertNull
 
 /** Quick notes read by rules (#586): the gold lines of `docs/samples/ai/eval.json` plus the edge cases. */
@@ -105,6 +106,24 @@ class QuickNoteParserTest {
         assertEquals(AccountWord.CARD, QuickNoteParser.parse("кофе 3500 с карты", ars)!!.account)
         assertEquals("кофе", QuickNoteParser.parse("кофе 3500 с карты", ars)!!.title)
         assertEquals(AccountWord.CARD, QuickNoteParser.parse("super 12000 débito", ars)!!.account)
+    }
+
+    @Test
+    fun `slang for cash and card is understood and leaves the title clean`() {
+        val cash = listOf("шаурма 4к нал", "такси 2000 кэшем", "рынок 3000 кешем", "хлеб 500 наликом", "сигареты 2500 налички",
+            "вода 800 за кэш", "verdulería 5000 en efectivo", "feria 3000 al contado", "taxi 12 cash")
+        cash.forEach { line ->
+            val note = QuickNoteParser.parse(line, ars)!!
+            assertEquals(AccountWord.CASH, note.account, line)
+            assertTrue(note.title.none { it.isDigit() } && note.title.split(' ').size == 1, line + " -> " + note.title)
+        }
+        val card = listOf("аптека 4200 безнал", "обед 9000 по безналу", "кино 7000 карточкой", "super 15000 con tarjeta", "uber 9 card")
+        card.forEach { line ->
+            val note = QuickNoteParser.parse(line, ars)!!
+            assertEquals(AccountWord.CARD, note.account, line)
+            assertTrue(note.title.split(' ').size == 1, line + " -> " + note.title)
+        }
+        assertEquals(null, QuickNoteParser.parse("кофе 3500", ars)!!.account)
     }
 
     @Test

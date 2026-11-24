@@ -24,10 +24,11 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
     )
     val due = row.credit?.due?.let { stringResource(R.string.account_credit_due, formatDayMonthShort(it)) }
     val grace = row.credit?.graceUntil?.let { stringResource(R.string.account_credit_grace_until, formatDayMonthShort(it)) }
+    val deposit = row.deposit?.let { stringResource(R.string.account_deposit_rate_line, it.rate) + " · " + stringResource(R.string.account_deposit_until, formatDayMonthShort(it.until)) }
     val personal = row.personalOf?.let {
         if (it.isEmpty()) stringResource(R.string.account_personal_mine) else stringResource(R.string.account_personal_of, it)
     }
-    val base = listOfNotNull(type, due, grace, personal).joinToString(" · ")
+    val base = listOfNotNull(type, deposit, due, grace, personal).joinToString(" · ")
     AccountLine(
         name = row.name,
         color = row.color,
@@ -38,6 +39,7 @@ internal fun AccountRow(row: AccountsUiState.Row, onClick: (String) -> Unit, mod
         isNegative = row.isNegative,
         converted = row.converted,
         warn = row.excludedFromTotal,
-        below = row.credit?.let { credit -> { CreditMeter(credit) } },
+        below = row.credit?.let { credit -> { CreditMeter(credit) } }
+            ?: row.deposit?.takeIf { it.income != null }?.let { dep -> { DepositIncomeLine(dep) } },
     )
 }

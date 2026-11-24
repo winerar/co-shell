@@ -21,6 +21,7 @@ import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.model.AccountType
 import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
 
@@ -35,6 +36,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
     var balanceOpen by rememberSaveable { mutableStateOf(false) }
     var adjustOpen by rememberSaveable { mutableStateOf(false) }
     var creditOpen by rememberSaveable { mutableStateOf(false) }
+    var depositOpen by rememberSaveable { mutableStateOf(false) }
     CoShellFormSection(stringResource(R.string.account_section_money)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
             CoShellDetailTile(
@@ -82,11 +84,26 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 empty = state.creditLimit.isBlank(),
             )
         }
+        if (state.type == AccountType.DEPOSIT && !state.credit && !state.prepaid) {
+            CoShellDetailTile(
+                icon = painterResource(DesignR.drawable.ic_savings),
+                label = stringResource(R.string.account_deposit_terms),
+                value = depositSummary(state),
+                onClick = { depositOpen = true },
+                modifier = Modifier.fillMaxWidth(),
+                empty = state.depositRate.isBlank(),
+            )
+        }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
     }
     if (currencyOpen) {
         FormSheet(stringResource(R.string.account_currency), onClosed = { currencyOpen = false }) {
             CurrencyFields(state, actions.onCurrencyChange)
+        }
+    }
+    if (depositOpen) {
+        FormSheet(stringResource(R.string.account_deposit_terms), onClosed = { depositOpen = false }) {
+            DepositTermsFields(state, actions)
         }
     }
     if (creditOpen) {
@@ -121,6 +138,7 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
 @Composable
 private fun moneyError(state: AccountEditUiState): String? = when {
     state.creditError -> stringResource(R.string.account_credit_error)
+    state.depositError -> stringResource(R.string.account_deposit_error)
     state.currencyError == CurrencyError.INVALID -> stringResource(R.string.account_currency_error)
     state.currencyError == CurrencyError.LOCKED -> stringResource(R.string.account_currency_locked)
     state.balanceError == BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)

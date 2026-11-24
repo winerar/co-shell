@@ -41,6 +41,10 @@ data class AccountEntity(
     /** Statement day and grace days (#634, v22): a reminder only, both or neither. */
     @ColumnInfo(name = "credit_statement_day") val creditStatementDay: Int? = null,
     @ColumnInfo(name = "credit_grace_days") val creditGraceDays: Int? = null,
+    /** A deposit's conditions (#634, v23): yearly rate in basis points, the closing day `YYYY-MM-DD` and the payout name; all three or none. */
+    @ColumnInfo(name = "deposit_rate_bp") val depositRateBp: Int? = null,
+    @ColumnInfo(name = "deposit_end") val depositEnd: String? = null,
+    @ColumnInfo(name = "deposit_payout") val depositPayout: String? = null,
 )
 
 @Serializable

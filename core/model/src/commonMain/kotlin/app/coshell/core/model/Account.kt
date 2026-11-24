@@ -32,6 +32,8 @@ data class Account(
      * reason as [prepaid]: an older version cannot read a new type. The balance is the debt when it is negative.
      */
     val credit: CreditTerms? = null,
+    /** A deposit's conditions (#634, step 3); `null` — none typed. Type stays [AccountType.DEPOSIT], so an older version shows it as it always did. */
+    val deposit: DepositTerms? = null,
 ) {
     init {
         require(name.isNotBlank()) { "Account name must not be blank" }

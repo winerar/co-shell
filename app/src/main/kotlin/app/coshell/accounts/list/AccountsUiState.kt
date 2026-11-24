@@ -38,8 +38,13 @@ data class AccountsUiState(
         val prepaid: Boolean = false,
         /** A credit card (#686): what is left of the limit and when the payment is due. */
         val credit: Credit? = null,
+        /** A deposit's conditions (#634, step 3): the rate, the closing day and the expected income. */
+        val deposit: Deposit? = null,
         internal val money: Money? = null,
     ) {
+        /** [income] is `null` when there is nothing to count (no balance, the day has passed). */
+        data class Deposit(val rate: String, val until: LocalDate, val income: String?)
+
         /** [used] is the share of the limit spent (0–1) for the meter; [due] — `null` while there is no debt. */
         data class Credit(val available: String, val limit: String, val used: Float, val due: LocalDate?, val graceUntil: LocalDate? = null)
     }

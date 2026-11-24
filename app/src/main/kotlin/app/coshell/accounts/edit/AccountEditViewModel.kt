@@ -13,6 +13,7 @@ import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.DepositPayout
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Money
@@ -89,6 +90,7 @@ class AccountEditViewModel @Inject constructor(
                     suggestedCurrencies = suggested,
                     currentBalance = balance?.let(moneyFormat::format).orEmpty(),
                 ).let { s -> account.credit?.let { c -> s.withCreditTerms(c, account.currency, moneyFormat) } ?: s }
+                    .let { s -> account.deposit?.let(s::withDepositTerms) ?: s }
             }
         }
     }
@@ -107,6 +109,9 @@ class AccountEditViewModel @Inject constructor(
     fun onCreditLimitChange(value: String) = _state.update { it.copy(creditLimit = value, creditError = false) }
     fun onCreditPayDayChange(value: String) = _state.update { it.copy(creditPayDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
     fun onCreditMinSumChange(sum: Boolean) = _state.update { if (it.creditMinSum == sum) it else it.copy(creditMinSum = sum, creditMin = "", creditError = false) }
+    fun onDepositRateChange(value: String) = _state.update { it.copy(depositRate = value, depositError = false) }
+    fun onDepositEndChange(value: String) = _state.update { it.copy(depositEnd = value, depositError = false) }
+    fun onDepositPayoutChange(value: DepositPayout) = _state.update { it.copy(depositPayout = value) }
     fun onCreditStatementDayChange(value: String) = _state.update { it.copy(creditStatementDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
     fun onCreditGraceDaysChange(value: String) = _state.update { it.copy(creditGraceDays = value.filter { c -> c in '0'..'9' }.take(3), creditError = false) }
     fun onCreditMinChange(value: String) = _state.update { it.copy(creditMin = value, creditError = false) }

@@ -48,6 +48,8 @@ fun formatWeekdayShort(day: kotlinx.datetime.DayOfWeek): String =
     java.time.DayOfWeek.of(day.ordinal + 1).getDisplayName(java.time.format.TextStyle.SHORT_STANDALONE, java.util.Locale.getDefault())
 
 /** «13 нояб.» — the next payment at the right of a row («Регулярные платежи»). */
+fun formatDayMonthYear(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
+
 fun formatDayMonthShort(date: LocalDate): String = date.toJavaLocalDate().format(DateTimeFormatter.ofPattern("d MMM"))
 
 /** «вт, 17 нояб.» — a day in a tight row («Скоро» on «Обзоре»). */

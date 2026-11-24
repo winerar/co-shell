@@ -143,7 +143,7 @@ jobs:
 
       # main: debug and signed release in ONE Gradle call — with the configuration cache their tasks run
       # in parallel (two calls ran them one after another: 2:00 + 3:47, run 318).
-      # Version name 0.N: N = merges into main, i.e. releases (#268); like BUILD_NUMBER, only on main.
+      # Version name YY.M.N: N = releases (merges into main) of the month (#268); like BUILD_NUMBER, only on main.
       - name: Version name (main)
         if: github.ref == 'refs/heads/main'
         run: echo "VERSION_NAME=$(python3 scripts/ci/version_name.py)" | tee -a "$GITHUB_ENV"

@@ -3,15 +3,21 @@ package app.coshell.drafts.list
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellButton
@@ -22,6 +28,7 @@ import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.components.underBars
+import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
@@ -60,7 +67,10 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
                     horizontalArrangement = Arrangement.spacedBy(Spacing.m),
                 ) {
                     if (state.deleteCount > 0) {
-                        CoShellOutlinedButton(onClick = actions.onDelete, modifier = Modifier.weight(1f)) {
+                        // Board `Notes628Delete`: trash glyph and ink text — the quiet second colour was hard to see (#720).
+                        CoShellOutlinedButton(onClick = actions.onDelete, modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface) {
+                            Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = null, modifier = Modifier.size(Sizes.buttonIcon))
+                            Spacer(Modifier.width(Spacing.s))
                             Text(stringResource(R.string.drafts_delete, state.deleteCount), maxLines = 1)
                         }
                     }

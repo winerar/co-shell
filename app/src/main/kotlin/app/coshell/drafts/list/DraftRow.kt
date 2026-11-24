@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import app.coshell.R
 import app.coshell.ui.ai.BetaMark
 import app.coshell.core.designsystem.amount.AmountText
+import app.coshell.core.designsystem.category.AccountBadge
+import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.components.CoShellCheckMark
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellStatusChip
@@ -64,13 +66,17 @@ internal fun DraftRow(row: DraftRowUi, today: LocalDate, onClick: () -> Unit, on
         },
         supporting = {
             Column(verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-                Text(
-                    rowSub(row, today),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                    // As in an operation row (#505): the account's mini badge before its name; no account — no badge.
+                    if (row.accountName != null) AccountBadge(row.accountName, row.accountColor, size = Sizes.miniBadge, initials = false)
+                    Text(
+                        rowSub(row, today),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
                 Missing(row)
             }
         },
@@ -116,6 +122,7 @@ private fun Missing(row: DraftRowUi) {
         null -> null
     }
     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
+        CategoryBadge(row.categoryIcon, row.categoryColor, size = Sizes.categoryMini)
         Text(
             if (source != null) stringResource(R.string.drafts_caption, category, source) else category,
             style = MaterialTheme.typography.labelMedium,

@@ -23,12 +23,18 @@ DRAFTS = [('Кофе', 'Galicia · сегодня', '−3 500', 'Кафе', 'his
           ('Хлеб', 'Наличные · сегодня', '−850', 'Продукты', 'dict'), ('Аптека', 'Galicia · вчера', '−4 200', 'Здоровье', 'spark')]
 
 
+# The category's small badge in the caption (`CategoryBadge`, size `Sizes.categoryMini` 18 dp; poll 2026-11-24 «А»).
+CAT_LOOK = {'Кафе': ('cafe', WARN), 'Такси': ('taxi', CYAN), 'Продукты': ('cart', LIME), 'Здоровье': ('pill', PINK)}
+
+
 def caption(text, src):
     """The grey «by past entries / by name / by AI» caption of an auto-picked category (`CategorySource`); the spark marks «made by AI»."""
     spark = svg('spark', LIME, 12, 2) if src == 'spark' else ''
     word = {'hist': 'по прошлым операциям', 'dict': 'по названию', 'spark': 'предложено ИИ'}[src]
     beta = '<span style="margin-left: 4px;">%s</span>' % status_chip('бета', 'manual') if src == 'spark' else ''
-    return ('<span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: %s;">%s%s · %s%s</span>' % (MUTED, spark, text, word, beta))
+    icon, color = CAT_LOOK.get(text, ('folder', LIME))
+    return ('<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s<span style="display: flex; align-items: center; gap: 4px;">%s%s · %s%s</span></span>'
+            % (MUTED, dot_icon(icon, color, 18), spark, text, word, beta))
 
 
 def mark(text):
@@ -46,13 +52,13 @@ def tick(on):
 
 
 def draft(title, sub, amt, cat=None, src='hist', on=True, need=None):
-    """One draft row (`DraftRow`): tick, title, account · day, then the category caption or the mark of what is missing; amount on the right."""
+    """One draft row (`DraftRow`): tick, title, mini badge of the account + account · day, then the category caption or the mark of what is missing; amount on the right."""
     under = mark(need) if need else caption(cat, src)
     money = amount(amt, '', INK, 15) if amt else '<span style="font-size: 15px; color: %s;">—</span>' % MUTED
     return ('<div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 6px 16px; {{div}}">%s<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">'
             '<span style="display: flex; align-items: center; gap: 8px;"><span style="flex-grow: 1; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>%s</span>'
-            '<span style="font-size: 13px; color: %s; white-space: nowrap;">%s</span>%s</span></div>'
-            % (tick(on), title, money, MUTED, sub, under))
+            '<span style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: %s; white-space: nowrap;">%s<span>%s</span></span>%s</span></div>'
+            % (tick(on), title, money, MUTED, mini_badge(ROW_ACCOUNTS.get(sub.split(' · ')[0])), sub, under))
 
 
 def footer(inner):

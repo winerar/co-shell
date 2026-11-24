@@ -106,6 +106,8 @@ object Sizes {
     val ribbonBadge = 44.dp
     /** Mini account badge before the account name in an operation row (#505). */
     val miniBadge = 16.dp
+    /** Small category badge before the category caption in a draft row (poll 2026-11-24, «А»). */
+    val categoryMini = 18.dp
     /** Account badge inside a choice chip. */
     val chipBadge = 24.dp
     /** Horizontal drag after which letting go flips to the neighbouring tab (issue #112). */

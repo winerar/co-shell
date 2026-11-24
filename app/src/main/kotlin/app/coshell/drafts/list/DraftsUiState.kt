@@ -18,6 +18,10 @@ data class DraftRowUi(
     val categoryName: String?,
     val source: DraftCategorySource?,
     val checked: Boolean,
+    /** Colour of the account for its mini badge (`null` — the neutral fill, as in «Операциях»). */
+    val accountColor: Long? = null,
+    val categoryIcon: String? = null,
+    val categoryColor: Long? = null,
 ) {
     val ready: Boolean get() = missing == null
 }

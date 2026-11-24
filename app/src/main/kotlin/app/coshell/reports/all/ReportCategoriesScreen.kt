@@ -1,14 +1,11 @@
 package app.coshell.reports.all
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +27,7 @@ import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.list.ChipScrollRow
 import app.coshell.reports.ReportsUiState
 import app.coshell.reports.categoryName
 import app.coshell.reports.components.MarkPill
@@ -94,7 +92,7 @@ private fun OrderChips(order: RowOrder, onOrder: (RowOrder) -> Unit, unusual: In
         RowOrder.GROUPS to R.string.reports_order_groups,
     )
     // Four chips do not fit 360 dp in every language: the row scrolls.
-    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+    ChipScrollRow {
         labels.forEach { (value, label) ->
             CoShellFilterChip(selected = order == value, onClick = { onOrder(value) }, label = { Text(stringResource(label)) })
             // «Необычные» filters, the others order; it stands after the orders by amount and growth (`Tr238All`).

@@ -131,9 +131,9 @@ private val draftsToday = LocalDate(2026, 11, 21)
 private val draftsStressSample = DraftsUiState(
     false,
     listOf(
-        DraftRowUi("1", "Кофе", "Galicia", draftsToday, "−3 500,00 ARS", null, "Кафе", DraftCategorySource.HISTORY, true),
-        DraftRowUi("2", "Купил хлеб в магазине у дома по дороге с работы", "Galicia", draftsToday, null, DraftMissing.AMOUNT, null, null, false),
-        DraftRowUi("3", "Netflix", "Galicia", draftsToday, "−7 500,00 ARS", DraftMissing.CATEGORY, null, null, false),
+        DraftRowUi("1", "Кофе", "Galicia", draftsToday, "−3 500,00 ARS", null, "Кафе", DraftCategorySource.HISTORY, true, 0xFFF26E22, "cafe", 0xFFFFB300),
+        DraftRowUi("2", "Купил хлеб в магазине у дома по дороге с работы", "Galicia", draftsToday, null, DraftMissing.AMOUNT, null, null, false, 0xFFF26E22),
+        DraftRowUi("3", "Netflix", "Galicia", draftsToday, "−7 500,00 ARS", DraftMissing.CATEGORY, null, null, false, 0xFFF26E22),
     ),
     draftsToday,
 )

@@ -39,10 +39,10 @@ class NotesScreenshotTest {
     private val today = LocalDate(2026, 11, 21)
     private val note = NotesUiState("кофе 3500\nтакси 2000\nхлеб 850 карта\nвчера аптека 4200", 4)
     private val rows = listOf(
-        DraftRowUi("1", "Кофе", "Galicia", today, "−3 500,00 ARS", null, "Кафе", DraftCategorySource.HISTORY, true),
-        DraftRowUi("2", "Купил хлеб", "Galicia", today, null, DraftMissing.AMOUNT, null, null, false),
-        DraftRowUi("3", "Netflix", "Galicia", today, "−7 500,00 ARS", DraftMissing.CATEGORY, null, null, false),
-        DraftRowUi("4", "Аптека", "Наличные", LocalDate(2026, 11, 20), "−4 200,00 ARS", null, "Здоровье", DraftCategorySource.AI, true),
+        DraftRowUi("1", "Кофе", "Galicia", today, "−3 500,00 ARS", null, "Кафе", DraftCategorySource.HISTORY, true, 0xFFF26E22, "cafe", 0xFFFFB300),
+        DraftRowUi("2", "Купил хлеб", "Galicia", today, null, DraftMissing.AMOUNT, null, null, false, 0xFFF26E22),
+        DraftRowUi("3", "Netflix", "Galicia", today, "−7 500,00 ARS", DraftMissing.CATEGORY, null, null, false, 0xFFF26E22),
+        DraftRowUi("4", "Аптека", "Наличные", LocalDate(2026, 11, 20), "−4 200,00 ARS", null, "Здоровье", DraftCategorySource.AI, true, null, "health", 0xFFE91E63),
     )
 
     @Test fun `note dark`() = shot("notes_dark", dark = true) { NotesScreen(note, NotesActions()) }

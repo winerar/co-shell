@@ -16,6 +16,7 @@ import app.coshell.core.data.auth.AuthGateway
 import app.coshell.family.data.UrlConnectionHttpClient
 import app.coshell.core.domain.ai.CloudAiSettings
 import app.coshell.core.domain.ai.PayeeCategoryAi
+import app.coshell.core.domain.ai.ReceiptAi
 import app.coshell.core.domain.ai.RoutedLanguageModel
 import app.coshell.ai.ReleaseAddonPackage
 import app.coshell.core.domain.ai.LanguageModel
@@ -73,6 +74,10 @@ object AiModule {
     /** Cloud (#635, only when the person allowed it) → the phone → rules. `AI_PROXY_URL` is empty in builds without the Worker. */
     @Provides
     fun providePayeeCategoryAi(model: LanguageModel): PayeeCategoryAi = PayeeCategoryAi(model)
+
+    /** «Прочитать с ИИ» for a receipt no format knows (#593): the same routed model. */
+    @Provides
+    fun provideReceiptAi(model: LanguageModel): ReceiptAi = ReceiptAi(model)
 
     @Provides
     @Named("aiProxyUrl")

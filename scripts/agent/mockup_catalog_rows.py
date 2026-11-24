@@ -56,10 +56,24 @@ def confirm(v, title, text, ok, cancel, danger=False):
             '<span style="font-size: 13px; line-height: 1.4; color: %s;">%s</span>%s</div>' % (KEY, OUTLINE, head, INK2, text, btns))
 
 
+def confirm_stack(v, title, text, labels, progress=False):
+    """Three actions (#593: extraLabel) always stack, the main one first; [progress] — a running line under the text while the work goes on."""
+    btns = ''.join(btn(v, l, 'primary' if i == 0 else 'outline', w='100%') for i, l in enumerate(labels))
+    bar = ('<span style="align-self: stretch; height: 8px; border-radius: 4px; background: %s; overflow: hidden;"><span style="display: block; width: 55%%; height: 8px; '
+           'border-radius: 4px; background: %s;"></span></span>' % (BAR, LIME)) if progress else ''
+    return ('<div style="padding: 20px; border-radius: 28px; background: %s; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">%s'
+            '<span style="font-size: 18px; font-weight: 700;">%s</span><span style="font-size: 13px; line-height: 1.4; color: %s;">%s</span>%s'
+            '<div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">%s</div></div>'
+            % (KEY, holder(v, 'spark' if progress else 'info', LIME, 48), title, INK2, text, bar, btns))
+
+
 def confirms(v):
+    extra = (confirm_stack(v, 'Не удалось прочитать чек', 'Облачный ИИ прочитает чек, а вы проверите поля.', ['✦ Прочитать с ИИ', 'Отправить образец', 'Ввести вручную'])
+             + confirm_stack(v, 'Читаю чек…', 'Это займёт несколько секунд.', ['Отменить'], progress=True)) if v == 'A' else ''
     return col(confirm(v, 'Сохранить копию?', 'Перед стиранием сохраним всё в файл.', 'Сохранить', 'Не сейчас'),
                confirm(v, 'Удалить счёт?', 'Счёт без операций удалится навсегда.', 'Удалить', 'Отмена', True),
-               cap('по центру, кнопки поровну' if v == 'A' else 'по левому краю, кнопки справа'))
+               *([extra] if extra else []),
+               cap('по центру, кнопки поровну; три действия — столбиком, с полоской — пока идёт работа' if v == 'A' else 'по левому краю, кнопки справа'))
 
 
 def sheet(v, title, body, action=None, action_on=True):
@@ -119,7 +133,7 @@ ROWS = [
     ('Строка меню', menu_rows, 'CoShellMenuRow(icon, color, title, subtitle, trailing) · MenuIcon'),
     ('Карточка формы', forms, 'CoShellFormSection(title, trailing) · CoShellSectionLink'),
     ('Поле, ошибка, подсказка', fields, 'CoShellTextField · CoShellSection(title, error) · CoShellHint'),
-    ('Карточка-вопрос', confirms, 'CoShellConfirmCard(title, text, confirmLabel, dismissLabel, destructive)'),
+    ('Карточка-вопрос', confirms, 'CoShellConfirmCard(title, text, confirmLabel, dismissLabel, destructive, extraLabel, confirmIcon, progress)'),
     ('Шторка', sheets, 'CoShellModalSheet(title, actionLabel, actionEnabled) · CoShellModalSheetLayout'),
     ('Шторка ввода и пузырь', entry, 'CoShellSheetLayout · CoShellPeekBubble(lines, footnote) · PeekCard — содержимое пузыря'),
     ('Смена темы', reveal, 'ThemeRevealHost — обёртка приложения'),

@@ -20,8 +20,6 @@ import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.more.components.QuietVersion
-import app.coshell.more.components.VersionCard
 import app.coshell.more.components.moreSections
 import app.coshell.newmark.NewFeatures
 import app.coshell.ui.list.SectionTitle
@@ -30,8 +28,8 @@ import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
 // Menu tab (poll 2026-11-20, Б; boards MoreB, MoreBEnd, MoreBUpdate): rarely used sections as rows in four groups
-// (Деньги · Валюты · Семья и данные · Приложение); the version card goes on top only when an update is out, otherwise a quiet
-// line at the bottom. The former «Настройки» screen is gone: its items live in the groups.
+// (Деньги · Валюты · Семья и данные · Приложение); the version lives in the row «О приложении»
+// The former «Настройки» screen is gone: its items live in the groups.
 
 /** What the rows say about their sections; defaults make previews short. */
 data class MoreState(
@@ -64,10 +62,8 @@ data class MoreActions(
     /** «Быстрые заметки» and «Черновики» (#586). */
     val onNotes: () -> Unit = {},
     val onDrafts: () -> Unit = {},
-    /** Tap on the version card: the update screen. */
+    /** «О приложении»: version, what's new and the update. */
     val onOpenUpdate: () -> Unit = {},
-    /** «Обновить» on the card: the download starts right away and the update screen opens. */
-    val onStartUpdate: () -> Unit = {},
     /** A row with the «новое» pill was opened: the pill goes away. */
     val onOpenedNew: (String) -> Unit = {},
 )
@@ -79,26 +75,14 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
-        val sections = moreSections(actions, state.draftCount)
+        val sections = moreSections(actions, state.draftCount, state.versionName, state.build, state.availableVersion)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
         ) {
-            if (state.availableVersion != null) {
-                item(key = "version") {
-                    VersionCard(
-                        versionName = state.versionName,
-                        build = state.build,
-                        availableVersion = state.availableVersion,
-                        onOpen = actions.onOpenUpdate,
-                        onUpdate = actions.onStartUpdate,
-                        modifier = Modifier.padding(horizontal = Spacing.l).staggeredEntrance(0),
-                    )
-                }
-            }
             itemsIndexed(sections, key = { _, section -> section.title }) { index, section ->
                 SectionTitle(stringResource(section.title))
-                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index + 1)) {
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index)) {
                     section.items.forEach { item ->
                         val isNew = item.newKey != null && item.newKey in state.newMarks
                         row {
@@ -111,7 +95,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                                     item.onClick()
                                 },
                                 mark = when {
-                                    isNew -> {
+                                    isNew || item.fresh -> {
                                         { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
                                     }
                                     item.count != null -> {
@@ -123,9 +107,6 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                         }
                     }
                 }
-            }
-            if (state.availableVersion == null) {
-                item(key = "version") { QuietVersion(state.versionName, state.build, actions.onOpenUpdate) }
             }
         }
     }

@@ -1,6 +1,5 @@
 package app.coshell.reports.capital
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,6 +34,7 @@ import app.coshell.core.designsystem.theme.AmountHeadlineStyle
 import app.coshell.core.designsystem.theme.LocalAmountPalette
 import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.list.ChipScrollRow
 import app.coshell.ui.format.formatDayMonth
 import app.coshell.ui.format.formatMonth
 import app.coshell.ui.format.formatMonthShort
@@ -158,7 +157,7 @@ private fun OrderChips(order: CapitalOrder, onOrder: (CapitalOrder) -> Unit) {
         CapitalOrder.CHANGE to R.string.capital_month_order_change,
     )
     // Three chips may not fit 320 dp in every language: the row scrolls.
-    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+    ChipScrollRow {
         labels.forEach { (value, label) ->
             CoShellFilterChip(selected = order == value, onClick = { onOrder(value) }, label = { Text(stringResource(label)) })
         }

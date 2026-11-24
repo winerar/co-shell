@@ -45,4 +45,7 @@
     <string name="deposit_soon_title">El depósito vence</string>
     <string name="deposit_soon_when">%1$s · %2$s</string>
     <string name="deposit_soon_hint">El banco paga los intereses. Regístralos como ingreso cuando lleguen.</string>
+    <string name="account_deposit_start">Abierto el</string>
+    <string name="account_deposit_start_empty">Sin fecha</string>
+    <string name="account_deposit_clear">Quitar</string>
 </resources>

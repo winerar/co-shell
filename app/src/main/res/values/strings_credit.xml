@@ -45,4 +45,7 @@
     <string name="deposit_soon_title">Вклад закрывается</string>
     <string name="deposit_soon_when">%1$s · %2$s</string>
     <string name="deposit_soon_hint">Проценты придут от банка. Запишите их доходом, когда придут.</string>
+    <string name="account_deposit_start">Открыт</string>
+    <string name="account_deposit_start_empty">Не указан</string>
+    <string name="account_deposit_clear">Убрать</string>
 </resources>

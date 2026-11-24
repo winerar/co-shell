@@ -45,4 +45,7 @@
     <string name="deposit_soon_title">Deposit closes</string>
     <string name="deposit_soon_when">%1$s · %2$s</string>
     <string name="deposit_soon_hint">The bank pays the interest. Record it as income when it arrives.</string>
+    <string name="account_deposit_start">Opened on</string>
+    <string name="account_deposit_start_empty">Not set</string>
+    <string name="account_deposit_clear">Remove</string>
 </resources>

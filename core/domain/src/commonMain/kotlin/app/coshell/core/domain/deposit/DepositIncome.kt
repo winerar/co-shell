@@ -11,14 +11,16 @@ import kotlinx.datetime.plus
 
 /**
  * The expected income of a deposit (#634, step 3): the interest on [balance] from [today] to the closing day, before any tax.
- * Simple interest (balance × rate × days / 365) for «в конце срока» and «каждый месяц»; for «к вкладу» every whole month adds
- * a twelfth of the rate to the deposit, the rest of the days count simply. No balance, or a day past the end, means no income.
+ * Simple interest (balance × rate × days / 365): «в конце срока» counts the whole term when the opening day is known (the interest is
+ * paid once, at the end), otherwise what is left; «каждый месяц» counts what is left (the rest was paid out). For «к вкладу» every whole
+ * month adds a twelfth of the rate to the deposit, the rest of the days count simply. No balance, or a day past the end, means no income.
  */
 object DepositIncome {
     fun expected(terms: DepositTerms, balance: Money, today: LocalDate): Money? {
         if (balance.amountMinor <= 0 || terms.endDate < today) return null
         val income = when (terms.payout) {
-            DepositPayout.AT_END, DepositPayout.MONTHLY -> balance.scale(terms.rateBp.toLong() * today.daysUntil(terms.endDate), BASIS_POINTS * DAYS_IN_YEAR)
+            DepositPayout.AT_END -> simple(terms, balance, terms.startDate ?: today)
+            DepositPayout.MONTHLY -> simple(terms, balance, today)
             DepositPayout.CAPITALIZED -> capitalized(terms, balance, today)
         }
         return Money(income.amountMinor, balance.currency)
@@ -26,6 +28,9 @@ object DepositIncome {
 
     /** Whether the closing day is within [days] days from [today] (today included): the line in «Скоро». */
     fun endsWithin(terms: DepositTerms, today: LocalDate, days: Int): Boolean = terms.endDate >= today && today.daysUntil(terms.endDate) < days
+
+    private fun simple(terms: DepositTerms, balance: Money, from: LocalDate): Money =
+        balance.scale(terms.rateBp.toLong() * from.daysUntil(terms.endDate), BASIS_POINTS * DAYS_IN_YEAR)
 
     private fun capitalized(terms: DepositTerms, balance: Money, today: LocalDate): Money {
         val months = today.monthsUntil(terms.endDate)

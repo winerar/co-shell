@@ -1,7 +1,7 @@
 """Deposit account, step 3 of #634 (proposal, waits for the owner's «ок»): the conditions the person types once, the expected income the app shows.
 
 - `DepositEdit` — the editor: type «Вклад», one tile «Условия вклада».
-- `DepositTerms` — the sheet: rate, the end day, how the interest is paid.
+- `DepositTerms` — the sheet: rate, the opening day (optional), the end day, how the interest is paid.
 - `AccountsDeposit` — the list: the row says the rate and the end day, a quiet line «Ожидаемый доход».
 - `HomeDepositSoon` — «Скоро · 7 дней»: the deposit ends, the interest is expected (no operation is written by itself).
 Imported by mockup_screens_forms.py.
@@ -37,10 +37,11 @@ def terms():
     beta = ('<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">%s<span style="font-size: 12px; color: %s;">Новая функция: сверьте доход с договором банка.</span></div>'
             % (status_chip('бета', 'manual'), MUTED))
     pay = p.seg_small(['В конце срока', 'Каждый месяц', 'К вкладу'], 'В конце срока')
-    rows = (beta + f('Ставка, % годовых', '8') + f('Вклад закрывается', '15 марта 2027')
+    rows = (beta + f('Ставка, % годовых', '8') + p.detail('calendar', 'Открыт', '15 марта 2026') + '<div style="height: 6px;"></div>'
+            + p.detail('calendar', 'Вклад закрывается', '15 марта 2027')
             + '<div style="margin-top: 4px; font-size: 12px; color: %s;">Проценты</div>' % MUTED + pay
             + note('«Каждый месяц» — выплата на счёт, «К вкладу» — проценты прибавляются к вкладу.', mt=6))
-    return board('Условия вклада', md.modal_sheet(form(), 'Условия вклада', rows + button('Готово', mt=8), 'Приложение посчитает ожидаемый доход. Операций само не пишет.', top=150))
+    return board('Условия вклада', md.modal_sheet(form(), 'Условия вклада', rows + button('Готово', mt=8), 'Приложение посчитает ожидаемый доход. Операций само не пишет.', top=110))
 
 
 def list_():

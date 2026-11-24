@@ -34,6 +34,7 @@
     <string name="hint_ok">Got it</string>
     <string name="hint_hold_select">Press and hold a transaction to select several.</string>
     <string name="hint_edit_tap">Made a mistake? Tap the transaction to fix it.</string>
+    <string name="hint_shake_undo">Made a mistake? Shake your phone right after saving and the transaction is undone.</string>
     <string name="hint_first_entry">The first entry is in. This is how a budget begins.</string>
     <string name="hint_first_limit">Limit set. Now you can see how much is left.</string>
     <string name="hints_reset_done">Tips are on</string>

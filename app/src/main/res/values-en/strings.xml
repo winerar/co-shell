@@ -253,6 +253,9 @@
     <string name="shake_to_add_hint">While the app is open</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="transactions_deleted_many">Transactions deleted: %d</string>
+    <string name="entry_saved">Saved · %1$s</string>
+    <string name="entry_undone">Undone · %1$s</string>
+    <string name="action_restore">Restore</string>
     <string name="transactions_selected">%d selected</string>
     <string name="transactions_selection_clear">Clear selection</string>
     <string name="transactions_delete_selected">Delete · %d</string>

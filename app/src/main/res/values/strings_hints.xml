@@ -36,6 +36,7 @@
     <string name="hint_ok">Понятно</string>
     <string name="hint_hold_select">Удерживайте операцию, чтобы выбрать несколько.</string>
     <string name="hint_edit_tap">Ошиблись? Нажмите на операцию, чтобы поправить.</string>
+    <string name="hint_shake_undo">Ошиблись? Сразу после сохранения встряхните телефон — операция отменится.</string>
     <string name="hint_first_entry">Первая запись есть. Так и начинается бюджет.</string>
     <string name="hint_first_limit">Лимит задан. Теперь видно, сколько осталось.</string>
     <string name="hints_reset_done">Подсказки включены</string>

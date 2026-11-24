@@ -56,4 +56,18 @@ class DepositIncomeTest {
         assertFailsWith<IllegalArgumentException> { DepositTerms(0, today, DepositPayout.AT_END) }
         assertFailsWith<IllegalArgumentException> { DepositTerms(10_001, today, DepositPayout.AT_END) }
     }
+
+    @Test
+    fun `the opening day makes the end-of-term income cover the whole term`() {
+        // Opened half a year ago (15 Sep 2025), closes 15 Mar 2027: 546 days, 8 % of 10 000.
+        val withStart = DepositTerms(800, LocalDate(2027, 3, 15), DepositPayout.AT_END, LocalDate(2025, 9, 15))
+        assertEquals(119_671L, DepositIncome.expected(withStart, money(10_000), today)?.amountMinor)
+        // Paid every month: what was paid is not expected again, only what is left.
+        assertEquals(money(800), DepositIncome.expected(withStart.copy(payout = DepositPayout.MONTHLY), money(10_000), today))
+    }
+
+    @Test
+    fun `a deposit cannot open after it closes`() {
+        assertFailsWith<IllegalArgumentException> { DepositTerms(800, today, DepositPayout.AT_END, LocalDate(2026, 3, 16)) }
+    }
 }

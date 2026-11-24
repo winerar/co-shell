@@ -45,6 +45,8 @@ data class AccountEntity(
     @ColumnInfo(name = "deposit_rate_bp") val depositRateBp: Int? = null,
     @ColumnInfo(name = "deposit_end") val depositEnd: String? = null,
     @ColumnInfo(name = "deposit_payout") val depositPayout: String? = null,
+    /** The day the deposit was opened (#634, v24): optional, `YYYY-MM-DD`; lets «в конце срока» count the whole term. */
+    @ColumnInfo(name = "deposit_start") val depositStart: String? = null,
 )
 
 @Serializable

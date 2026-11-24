@@ -35,6 +35,8 @@ data class AccountEditUiState(
     val depositRate: String = "",
     val depositEnd: String = "",
     val depositPayout: DepositPayout = DepositPayout.AT_END,
+    /** The day the deposit was opened (`YYYY-MM-DD`), optional: «в конце срока» then counts the whole term. */
+    val depositStart: String = "",
     /** Saving was refused: the rate or the closing day of a deposit is missing or wrong. */
     val depositError: Boolean = false,
     /** Saving was refused: the conditions of a credit card are not complete. */

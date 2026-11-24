@@ -52,7 +52,7 @@ internal fun AccountEntity.toModel() = Account(
     cardDigits = cardDigits,
     prepaid = prepaid,
     credit = credit(),
-    deposit = depositTermsOf(depositRateBp, depositEnd, depositPayout),
+    deposit = depositTermsOf(depositRateBp, depositEnd, depositPayout, depositStart),
 )
 
 /** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
@@ -68,11 +68,13 @@ internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMino
 }
 
 /** The conditions of a stored deposit; anything unreadable (a payout of a newer version, half a row) is a deposit without conditions. */
-internal fun depositTermsOf(rateBp: Int?, end: String?, payout: String?): DepositTerms? {
+internal fun depositTermsOf(rateBp: Int?, end: String?, payout: String?, start: String? = null): DepositTerms? {
     val rate = rateBp ?: return null
     val day = end?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return null
     val how = payout?.let { name -> DepositPayout.entries.firstOrNull { it.name == name } } ?: return null
-    return runCatching { DepositTerms(rate, day, how) }.getOrNull()
+    // An unreadable opening day only loses the whole-term income, the conditions stay.
+    val opened = start?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+    return runCatching { DepositTerms(rate, day, how, opened) }.getOrNull() ?: runCatching { DepositTerms(rate, day, how) }.getOrNull()
 }
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
@@ -98,6 +100,7 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     depositRateBp = deposit?.rateBp,
     depositEnd = deposit?.endDate?.toString(),
     depositPayout = deposit?.payout?.name,
+    depositStart = deposit?.startDate?.toString(),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

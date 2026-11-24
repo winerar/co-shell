@@ -88,12 +88,13 @@ internal data class AccountDto(
     val depositRateBp: Int? = null,
     val depositEnd: String? = null,
     val depositPayout: String? = null,
+    val depositStart: String? = null,
 ) {
     fun toModel() = Account(
         id, name, CurrencyCode(currency), AccountType.valueOf(type), initialBalanceMinor,
         isShared, ownerMemberId, archived, sortOrder, excludedFromTotal, color, cardDigits, prepaid,
         creditTermsOf(creditLimitMinor, creditPayDay, creditMinBp, creditMinMinor, creditStatementDay, creditGraceDays),
-        depositTermsOf(depositRateBp, depositEnd, depositPayout),
+        depositTermsOf(depositRateBp, depositEnd, depositPayout, depositStart),
     )
 }
 
@@ -109,6 +110,7 @@ internal fun Account.toDto() = AccountDto(
     depositRateBp = deposit?.rateBp,
     depositEnd = deposit?.endDate?.toString(),
     depositPayout = deposit?.payout?.name,
+    depositStart = deposit?.startDate?.toString(),
 )
 
 @Serializable

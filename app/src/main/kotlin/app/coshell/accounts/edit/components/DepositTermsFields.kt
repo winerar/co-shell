@@ -22,6 +22,7 @@ import app.coshell.accounts.edit.DepositPayoutOrder
 import app.coshell.core.designsystem.components.CoShellDatePicker
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellHint
+import app.coshell.core.designsystem.components.CoShellSectionLink
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.rememberDatePick
@@ -37,13 +38,11 @@ import kotlinx.datetime.toLocalDateTime
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * «Условия вклада» (#634, step 3; boards `DepositEdit`, `DepositTerms`): the yearly rate, the closing day and how the interest is paid.
+ * «Условия вклада» (#634, step 3; boards `DepositEdit`, `DepositTerms`): the yearly rate, the opening day (optional), the closing day and how the interest is paid.
  * Only the expected income is counted from them; nothing is written by itself.
  */
 @Composable
 internal fun DepositTermsFields(state: AccountEditUiState, actions: AccountEditActions) {
-    var endOpen by rememberSaveable { mutableStateOf(false) }
-    val end = runCatching { LocalDate.parse(state.depositEnd) }.getOrNull()
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             BetaMark()
@@ -56,13 +55,8 @@ internal fun DepositTermsFields(state: AccountEditUiState, actions: AccountEditA
             suffix = "%",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
         )
-        CoShellDetailTile(
-            icon = painterResource(DesignR.drawable.ic_calendar_today),
-            label = stringResource(R.string.account_deposit_end),
-            value = end?.let(::formatDayMonthYear) ?: stringResource(R.string.account_deposit_empty),
-            onClick = { endOpen = true },
-            empty = end == null,
-        )
+        DepositDateTile(R.string.account_deposit_start, state.depositStart, R.string.account_deposit_start_empty, actions.onDepositStartChange, clearable = true)
+        DepositDateTile(R.string.account_deposit_end, state.depositEnd, R.string.account_deposit_empty, actions.onDepositEndChange, clearable = false)
         CoShellHint(stringResource(R.string.account_deposit_payout_title))
         CoShellSegmented(
             labels = DepositPayoutOrder.map { stringResource(depositPayoutLabel(it)) },
@@ -71,16 +65,32 @@ internal fun DepositTermsFields(state: AccountEditUiState, actions: AccountEditA
         )
         CoShellHint(stringResource(R.string.account_deposit_payout_hint))
     }
-    if (endOpen) {
-        val pick = rememberDatePick(end?.let { it.toEpochMillisUtc() } ?: System.currentTimeMillis())
+}
+
+
+/** A date tile that opens the calendar; [clearable] adds «Убрать» for an optional day (the opening day). */
+@Composable
+private fun DepositDateTile(label: Int, value: String, empty: Int, onChange: (String) -> Unit, clearable: Boolean) {
+    var open by rememberSaveable { mutableStateOf(false) }
+    val day = runCatching { LocalDate.parse(value) }.getOrNull()
+    CoShellDetailTile(
+        icon = painterResource(DesignR.drawable.ic_calendar_today),
+        label = stringResource(label),
+        value = day?.let(::formatDayMonthYear) ?: stringResource(empty),
+        onClick = { open = true },
+        empty = day == null,
+    )
+    if (clearable && day != null) CoShellSectionLink(stringResource(R.string.account_deposit_clear), onClick = { onChange("") })
+    if (open) {
+        val pick = rememberDatePick(day?.toEpochMillisUtc() ?: System.currentTimeMillis())
         ModalSheet(
-            title = stringResource(R.string.account_deposit_end),
+            title = stringResource(label),
             actionLabel = stringResource(R.string.keypad_done),
             onAction = { close ->
-                pick.millis?.let { actions.onDepositEndChange(Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date.toString()) }
+                pick.millis?.let { onChange(Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date.toString()) }
                 close()
             },
-            onClosed = { endOpen = false },
+            onClosed = { open = false },
         ) { CoShellDatePicker(pick) }
     }
 }

@@ -111,6 +111,7 @@ class AccountEditViewModel @Inject constructor(
     fun onCreditMinSumChange(sum: Boolean) = _state.update { if (it.creditMinSum == sum) it else it.copy(creditMinSum = sum, creditMin = "", creditError = false) }
     fun onDepositRateChange(value: String) = _state.update { it.copy(depositRate = value, depositError = false) }
     fun onDepositEndChange(value: String) = _state.update { it.copy(depositEnd = value, depositError = false) }
+    fun onDepositStartChange(value: String) = _state.update { it.copy(depositStart = value, depositError = false) }
     fun onDepositPayoutChange(value: DepositPayout) = _state.update { it.copy(depositPayout = value) }
     fun onCreditStatementDayChange(value: String) = _state.update { it.copy(creditStatementDay = value.filter { c -> c in '0'..'9' }.take(2), creditError = false) }
     fun onCreditGraceDaysChange(value: String) = _state.update { it.copy(creditGraceDays = value.filter { c -> c in '0'..'9' }.take(3), creditError = false) }

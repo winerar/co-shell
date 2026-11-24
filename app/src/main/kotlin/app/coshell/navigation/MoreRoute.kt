@@ -38,6 +38,7 @@ internal fun MoreRoute(
             onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
+            onDebts = { navController.navigate(DebtsDestination) { launchSingleTop = true } },
             onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onOpenedNew = newMarks::opened,

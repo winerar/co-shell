@@ -3,6 +3,7 @@ package app.coshell.core.data.repository
 import app.coshell.core.data.db.AccountEntity
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
+import app.coshell.core.data.db.DebtEventEntity
 import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
@@ -14,11 +15,15 @@ import app.coshell.core.model.CreditTerms
 import app.coshell.core.model.MinPayment
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.DebtDirection
+import app.coshell.core.model.DebtEvent
+import app.coshell.core.model.DebtEventKind
 import app.coshell.core.model.Money
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
 import app.coshell.core.model.TransactionType
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -215,3 +220,33 @@ internal fun Tag.toEntity(stamp: Stamp) = TagEntity(id = id, name = name, color 
 
 /** `transactions.labels` (a JSON array of strings) as a list. */
 internal fun decodeLabels(json: String): List<String> = Json.decodeFromString(labelsSerializer, json)
+
+internal fun DebtEventEntity.toModel() = DebtEvent(
+    id = id,
+    debtId = debtId,
+    kind = DebtEventKind.valueOf(kind),
+    direction = DebtDirection.valueOf(direction),
+    amount = Money(amountMinor, CurrencyCode(currency)),
+    date = Instant.fromEpochMilliseconds(date),
+    accountId = accountId,
+    person = person,
+    dueDate = dueDate?.let(LocalDate::parse),
+    note = note,
+)
+
+internal fun DebtEvent.toEntity(stamp: Stamp) = DebtEventEntity(
+    id = id,
+    debtId = debtId,
+    kind = kind.name,
+    direction = direction.name,
+    amountMinor = amount.amountMinor,
+    currency = amount.currency.value,
+    accountId = accountId,
+    date = date.toEpochMilliseconds(),
+    person = person,
+    dueDate = dueDate?.toString(),
+    note = note,
+    updatedAt = stamp.now,
+    updatedBy = stamp.by,
+)
+

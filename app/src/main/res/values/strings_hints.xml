@@ -28,6 +28,7 @@
     <string name="hint_accounts">Счёт — место, где лежат деньги. Баланс считается сам.</string>
     <string name="hint_scan_receipt">Есть QR на чеке? Нажмите значок камеры: сумма и дата подставятся сами.</string>
     <string name="hint_categories">Категория — на что ушли деньги. Готовые подойдут, свои добавите потом.</string>
+    <string name="hint_debts">Долг записывается отдельно от трат: баланс счёта меняется, а расходы и доходы — нет.</string>
     <string name="hint_budgets">Лимит — сколько можно потратить на категорию за месяц. Это ориентир, а не запрет.</string>
     <string name="hint_reports">Здесь видно, на что уходят деньги. Чем больше записей, тем точнее картина.</string>
     <string name="hint_tags">Тег — цветная метка операции, например «отпуск» или «подарки».</string>
@@ -54,5 +55,6 @@
     <string name="hint_keypad_math">Можно складывать и вычитать: 300 + 150.</string>
     <string name="hint_entry_refund">Вернули деньги? Отметьте «Это возврат».</string>
     <string name="hint_currency_account">Деньги в другой валюте? Итоги посчитаются в валютах итогов, курс подставится сам.</string>
+    <string name="hint_pin_forgot">PIN включён. Забудете — на экране входа нажмите «Забыли PIN?».</string>
     <string name="hint_currency_receipt">Укажите сумму покупки, и курс посчитается сам.</string>
 </resources>

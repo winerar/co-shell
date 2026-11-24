@@ -110,14 +110,18 @@ interface TransactionDao {
 
     /**
      * Effect of live transactions on each account: expenses and outgoing transfers subtract
-     * `amount`, incomes add it, incoming transfers add `to_amount`. An account may appear twice.
+     * `amount`, incomes add it, incoming transfers add `to_amount`. Debts (#552) move the account without being spending or income: a loan
+     * and a return of a borrowed sum subtract, a borrowing and a return of a loan add. An account may appear several times.
      */
     @Query(
         """SELECT account_id, SUM(CASE type WHEN 'INCOME' THEN amount_minor ELSE -amount_minor END) AS delta_minor
            FROM transactions WHERE deleted = 0 GROUP BY account_id
            UNION ALL
            SELECT to_account_id AS account_id, SUM(to_amount_minor) AS delta_minor
-           FROM transactions WHERE deleted = 0 AND type = 'TRANSFER' GROUP BY to_account_id""",
+           FROM transactions WHERE deleted = 0 AND type = 'TRANSFER' GROUP BY to_account_id
+           UNION ALL
+           SELECT account_id, SUM(CASE WHEN (direction = 'LENT') = (kind = 'ISSUE') THEN -amount_minor ELSE amount_minor END) AS delta_minor
+           FROM debt_events WHERE deleted = 0 AND kind IN ('ISSUE', 'RETURN') AND account_id IS NOT NULL GROUP BY account_id""",
     )
     fun observeBalanceDeltas(): Flow<List<BalanceDelta>>
 
@@ -161,6 +165,7 @@ interface BackupDao {
     @Upsert suspend fun upsertTemplates(entities: List<TemplateEntity>)
     @Upsert suspend fun upsertSettings(entities: List<SettingEntity>)
     @Upsert suspend fun upsertTags(entities: List<TagEntity>)
+    @Upsert suspend fun upsertDebtEvents(entities: List<DebtEventEntity>)
 
     @Transaction
     suspend fun upsertAll(
@@ -172,6 +177,7 @@ interface BackupDao {
         templates: List<TemplateEntity>,
         settings: List<SettingEntity> = emptyList(),
         tags: List<TagEntity> = emptyList(),
+        debtEvents: List<DebtEventEntity> = emptyList(),
     ) {
         upsertAccounts(accounts)
         upsertCategories(categories)
@@ -181,5 +187,6 @@ interface BackupDao {
         upsertTemplates(templates)
         upsertSettings(settings)
         upsertTags(tags)
+        upsertDebtEvents(debtEvents)
     }
 }

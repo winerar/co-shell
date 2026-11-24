@@ -60,6 +60,9 @@ import app.coshell.core.domain.shake.ShakeIntent
 import app.coshell.core.domain.shake.ShakeIntents
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import app.coshell.debts.edit.DebtDetailRoute
+import app.coshell.debts.edit.DebtNewRoute
+import app.coshell.debts.list.DebtsRoute
 import app.coshell.drafts.list.DraftsRoute
 import app.coshell.drafts.notes.NotesRoute
 import app.coshell.recurring.list.RecurringListRoute
@@ -242,6 +245,7 @@ fun CoShellNavHost(
                     onPostCredit = { cardId ->
                         navController.navigate(TransactionEditDestination(type = "TRANSFER", creditCardId = cardId)) { launchSingleTop = true }
                     },
+                    onOpenDebt = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                     onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
@@ -332,6 +336,19 @@ fun CoShellNavHost(
                 onEdit = { navController.navigate(TransactionEditDestination(draftId = it)) { launchSingleTop = true } },
                 onNotes = { navController.navigate(NotesDestination) { popUpTo<DraftsDestination> { inclusive = true }; launchSingleTop = true } },
             )
+        }
+        screen<DebtsDestination> {
+            DebtsRoute(
+                onBack = { navController.popBackStack() },
+                onAdd = { navController.navigate(DebtNewDestination) { launchSingleTop = true } },
+                onOpen = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
+            )
+        }
+        dialog<DebtNewDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close -> DebtNewRoute(onDone = close) }
+        }
+        dialog<DebtDetailDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close -> DebtDetailRoute(onDone = close) }
         }
         screen<RecurringListDestination> {
             RecurringListRoute(

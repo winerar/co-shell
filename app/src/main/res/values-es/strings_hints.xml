@@ -26,6 +26,7 @@
     <string name="hint_accounts">Una cuenta es donde está tu dinero. El saldo se calcula solo.</string>
     <string name="hint_scan_receipt">¿Hay un QR en el ticket? Toca el icono de la cámara: el importe y la fecha se completan solos.</string>
     <string name="hint_categories">Una categoría es en qué se fue el dinero. Las que vienen te servirán; añade las tuyas después.</string>
+    <string name="hint_debts">Una deuda se guarda aparte de los gastos: cambia el saldo de la cuenta, pero no gastos ni ingresos.</string>
     <string name="hint_budgets">Un límite es cuánto puedes gastar en una categoría al mes. Es una guía, no una prohibición.</string>
     <string name="hint_reports">Aquí ves en qué se va el dinero. Cuantos más movimientos, más clara la imagen.</string>
     <string name="hint_tags">Una etiqueta es una marca de color en un movimiento, como «vacaciones» o «regalos».</string>
@@ -52,5 +53,6 @@
     <string name="hint_keypad_math">Puedes sumar y restar: 300 + 150.</string>
     <string name="hint_entry_refund">¿Te devolvieron dinero? Marca «Es una devolución».</string>
     <string name="hint_currency_account">¿Dinero en otra moneda? Los totales se cuentan en las monedas de los totales y el tipo de cambio se pone solo.</string>
+    <string name="hint_pin_forgot">PIN activado. Si lo olvidas, pulsa «¿Olvidaste el PIN?» al entrar.</string>
     <string name="hint_currency_receipt">Indica el importe de la compra y el tipo de cambio se calcula solo.</string>
 </resources>

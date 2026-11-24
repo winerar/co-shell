@@ -7,6 +7,9 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.domain.debts.DebtBook
+import app.coshell.core.domain.debts.DebtRepository
+import app.coshell.core.domain.debts.InMemoryDebtRepository
 import app.coshell.core.domain.credit.creditPaymentsDue
 import app.coshell.core.model.TransactionType
 import app.coshell.core.domain.recurring.MissedPaymentsUseCase
@@ -47,6 +50,7 @@ class UpcomingViewModel @Inject constructor(
     private val timeZone: TimeZone,
     private val missed: MissedPaymentsUseCase,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    debts: DebtRepository = InMemoryDebtRepository(),
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
@@ -82,6 +86,12 @@ class UpcomingViewModel @Inject constructor(
                 transactions.observeTransactions(filter).map { buildCreditRows(creditPaymentsDue(list, it, today, timeZone), moneyFormat) }
             }
         }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Debts to be returned within [DebtBook.REMIND_DAYS] days, today or already late (#552) — in the same card. */
+    val debtDue: StateFlow<List<DebtDueRow>> = debts.observeEvents()
+        .map { buildDebtRows(DebtBook.due(DebtBook.of(it), today), moneyFormat) }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 

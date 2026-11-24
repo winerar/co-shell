@@ -3,6 +3,7 @@ package app.coshell.accounts.edit
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.model.Account
+import app.coshell.core.model.AccountType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyParser
 
@@ -50,10 +51,19 @@ internal fun buildAccount(form: AccountEditUiState, existing: Account?, newId: (
     }
     val credit = if (form.credit) parseCreditTerms(form, currency) else null
     if (form.credit && credit == null) return AccountFormResult.Invalid { it.copy(creditError = true) }
+    val deposit = if (form.type == AccountType.DEPOSIT && !form.credit && !form.prepaid) {
+        when (val parsed = parseDepositTerms(form)) {
+            is DepositParse.Valid -> parsed.terms
+            DepositParse.Invalid -> return AccountFormResult.Invalid { it.copy(depositError = true) }
+        }
+    } else {
+        null
+    }
     val base = existing ?: Account(id = newId(), name = name, currency = currency)
     return AccountFormResult.Valid(
         base.copy(
             credit = credit,
+            deposit = deposit,
             cardDigits = digits.ifEmpty { null },
             prepaid = form.prepaid,
             name = name,

@@ -59,6 +59,8 @@ internal fun UpcomingCard(
     onPostCredit: (accountId: String) -> Unit = {},
     debts: List<DebtDueRow> = emptyList(),
     onOpenDebt: (debtId: String) -> Unit = {},
+    deposits: List<DepositEndRow> = emptyList(),
+    onOpenAccount: (accountId: String) -> Unit = {},
 ) {
     Column(modifier) {
         Row(Modifier.fillMaxWidth().padding(start = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
@@ -79,9 +81,15 @@ internal fun UpcomingCard(
                     CreditPaymentItem(row, onPostCredit)
                 }
             }
+            deposits.forEachIndexed { index, row ->
+                key("deposit-" + row.accountId) {
+                    if (rows.isNotEmpty() || credit.isNotEmpty() || index > 0) CoShellDivider()
+                    DepositEndItem(row, onOpenAccount)
+                }
+            }
             debts.forEachIndexed { index, row ->
                 key("debt-" + row.debtId) {
-                    if (rows.isNotEmpty() || credit.isNotEmpty() || index > 0) CoShellDivider()
+                    if (rows.isNotEmpty() || credit.isNotEmpty() || deposits.isNotEmpty() || index > 0) CoShellDivider()
                     DebtDueItem(row, onOpenDebt)
                 }
             }
@@ -183,6 +191,23 @@ private fun DebtDueItem(row: DebtDueRow, onOpen: (String) -> Unit) {
         supporting = { Text(whenText) },
         trailing = { Text(stringResource(if (row.lent) R.string.debts_soon_amount_in else R.string.debts_soon_amount_out, row.left)) },
         onClick = { onOpen(row.debtId) },
+    )
+}
+
+/** A deposit that closes soon (#634, step 3): its badge, «Вклад закрывается», the day and the expected income; a tap opens the account. */
+@Composable
+private fun DepositEndItem(row: DepositEndRow, onOpen: (String) -> Unit) {
+    CoShellListRow(
+        title = { Text(stringResource(R.string.deposit_soon_title), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        supporting = {
+            Column {
+                Text(stringResource(R.string.deposit_soon_when, row.name, formatDayMonthShort(row.end)))
+                Text(stringResource(R.string.deposit_soon_hint))
+            }
+        },
+        leading = { AccountBadge(row.name, row.color) },
+        trailing = { Text(stringResource(R.string.debts_soon_amount_in, row.income)) },
+        onClick = { onOpen(row.accountId) },
     )
 }
 

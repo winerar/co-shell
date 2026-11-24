@@ -53,7 +53,7 @@ def list_():
 def soon():
     r = ('<div style="display: flex; align-items: center; gap: 10px; padding: 6px 0;">%s<span style="flex-grow: 1;"><div style="font-size: 15px;">Вклад закрывается</div>'
          '<div style="font-size: 12px; color: %s;">Ameria · вклад · 15 мар</div></span><span style="%s font-size: 15px;">+640 USD</span></div>' % (badge('AM', COLOR, '#FFFFFF', 40, 12), MUTED, MONO))
-    block = p.block('Скоро · 7 дней', r + note('Проценты придут от банка: записать их — «Ещё → Деньги» или «+».', mt=4), right=p.small_link('Все 3 ›'))
+    block = p.block('Скоро · 7 дней', r + note('Проценты придут от банка. Запишите их доходом, когда придут.', mt=4), right=p.small_link('Все 3 ›'))
     return board('Обзор: вклад закрывается', tab_screen('Обзор', m.balance_hero() + '<div style="height: 10px;"></div>' + block, 'home'))
 
 

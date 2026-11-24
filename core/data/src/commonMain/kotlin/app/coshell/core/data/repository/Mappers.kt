@@ -16,6 +16,8 @@ import app.coshell.core.model.MinPayment
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.DebtDirection
+import app.coshell.core.model.DepositPayout
+import app.coshell.core.model.DepositTerms
 import app.coshell.core.model.DebtEvent
 import app.coshell.core.model.DebtEventKind
 import app.coshell.core.model.Money
@@ -50,6 +52,7 @@ internal fun AccountEntity.toModel() = Account(
     cardDigits = cardDigits,
     prepaid = prepaid,
     credit = credit(),
+    deposit = depositTermsOf(depositRateBp, depositEnd, depositPayout),
 )
 
 /** The credit conditions of a stored account; anything unreadable (a half-written row of another version) is an ordinary account. */
@@ -62,6 +65,14 @@ internal fun creditTermsOf(limitMinor: Long?, payDay: Int?, minBp: Int?, minMino
     // A half-written grace period (one of the two) is dropped, the card stays a card.
     val grace = if (statementDay != null && graceDays != null) statementDay to graceDays else null
     return runCatching { CreditTerms(limit, day, min, grace?.first, grace?.second) }.getOrNull()
+}
+
+/** The conditions of a stored deposit; anything unreadable (a payout of a newer version, half a row) is a deposit without conditions. */
+internal fun depositTermsOf(rateBp: Int?, end: String?, payout: String?): DepositTerms? {
+    val rate = rateBp ?: return null
+    val day = end?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return null
+    val how = payout?.let { name -> DepositPayout.entries.firstOrNull { it.name == name } } ?: return null
+    return runCatching { DepositTerms(rate, day, how) }.getOrNull()
 }
 
 internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
@@ -84,6 +95,9 @@ internal fun Account.toEntity(stamp: Stamp) = AccountEntity(
     creditMinMinor = (credit?.minPayment as? MinPayment.Fixed)?.minor,
     creditStatementDay = credit?.statementDay,
     creditGraceDays = credit?.graceDays,
+    depositRateBp = deposit?.rateBp,
+    depositEnd = deposit?.endDate?.toString(),
+    depositPayout = deposit?.payout?.name,
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

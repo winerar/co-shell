@@ -20,7 +20,7 @@ import kotlinx.coroutines.IO
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class, DebtEventEntity::class,
     ],
-    version = 22,
+    version = 23,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -43,6 +43,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 18, to = 19), // v19: accounts.prepaid — a travel pass (#645)
         AutoMigration(from = 19, to = 20), // v20: accounts.credit_* — a credit card (#686)
         AutoMigration(from = 20, to = 21), // v21: debt_events — debts and loans (#552)
+        AutoMigration(from = 22, to = 23), // v23: accounts.deposit_rate_bp, deposit_end, deposit_payout — deposit conditions (#634)
         AutoMigration(from = 21, to = 22), // v22: accounts.credit_statement_day, credit_grace_days — grace period of a credit card (#634)
     ],
 )

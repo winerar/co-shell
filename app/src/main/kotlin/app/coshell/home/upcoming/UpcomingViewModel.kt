@@ -7,6 +7,7 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
 import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.domain.credit.SOON_CREDIT_DAYS
 import app.coshell.core.domain.debts.DebtBook
 import app.coshell.core.domain.debts.DebtRepository
 import app.coshell.core.domain.debts.InMemoryDebtRepository
@@ -86,6 +87,12 @@ class UpcomingViewModel @Inject constructor(
                 transactions.observeTransactions(filter).map { buildCreditRows(creditPaymentsDue(list, it, today, timeZone), moneyFormat, today) }
             }
         }
+        .offMain()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Deposits that close within the window with their expected income (#634, step 3). */
+    val deposits: StateFlow<List<DepositEndRow>> = accounts.observeAccountsWithBalance()
+        .map { buildDepositRows(it, moneyFormat, today, SOON_CREDIT_DAYS) }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 

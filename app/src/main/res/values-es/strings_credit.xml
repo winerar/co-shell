@@ -26,4 +26,23 @@
     <string name="account_credit_optional">Opcional</string>
     <string name="account_credit_grace_hint">Opcional: mostramos hasta qué día no hay intereses</string>
     <string name="account_credit_grace_until">sin intereses hasta el %1$s</string>
+    <string name="account_deposit_terms">Condiciones del depósito</string>
+    <string name="account_deposit_rate">Tasa, %% anual</string>
+    <string name="account_deposit_end">El depósito vence</string>
+    <string name="account_deposit_payout_title">Intereses</string>
+    <string name="account_deposit_payout_end">Al final del plazo</string>
+    <string name="account_deposit_payout_monthly">Cada mes</string>
+    <string name="account_deposit_payout_added">Al depósito</string>
+    <string name="account_deposit_payout_hint">«Cada mes» se paga a una cuenta, «Al depósito» se suma al depósito.</string>
+    <string name="account_deposit_beta_hint">Función nueva: compara el ingreso con el contrato del banco.</string>
+    <string name="account_deposit_summary">%1$s %% · hasta el %2$s · %3$s</string>
+    <string name="account_deposit_none">Sin condiciones</string>
+    <string name="account_deposit_empty">Sin fecha</string>
+    <string name="account_deposit_error">Indica la tasa y la fecha de vencimiento del depósito</string>
+    <string name="account_deposit_rate_line">%1$s %%</string>
+    <string name="account_deposit_until">hasta el %1$s</string>
+    <string name="account_deposit_income">Ingreso esperado %1$s · %2$s</string>
+    <string name="deposit_soon_title">El depósito vence</string>
+    <string name="deposit_soon_when">%1$s · %2$s</string>
+    <string name="deposit_soon_hint">El banco paga los intereses. Regístralos como ingreso cuando lleguen.</string>
 </resources>

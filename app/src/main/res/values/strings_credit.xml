@@ -26,4 +26,23 @@
     <string name="account_credit_optional">Не обязательно</string>
     <string name="account_credit_grace_hint">Не обязательно: покажем, до какого числа без процентов</string>
     <string name="account_credit_grace_until">без процентов до %1$s</string>
+    <string name="account_deposit_terms">Условия вклада</string>
+    <string name="account_deposit_rate">Ставка, %% годовых</string>
+    <string name="account_deposit_end">Вклад закрывается</string>
+    <string name="account_deposit_payout_title">Проценты</string>
+    <string name="account_deposit_payout_end">В конце срока</string>
+    <string name="account_deposit_payout_monthly">Каждый месяц</string>
+    <string name="account_deposit_payout_added">К вкладу</string>
+    <string name="account_deposit_payout_hint">«Каждый месяц» — выплата на счёт, «К вкладу» — проценты прибавляются к вкладу.</string>
+    <string name="account_deposit_beta_hint">Новая функция: сверьте доход с договором банка.</string>
+    <string name="account_deposit_summary">%1$s %% · до %2$s · %3$s</string>
+    <string name="account_deposit_none">Не заданы</string>
+    <string name="account_deposit_empty">Не задан</string>
+    <string name="account_deposit_error">Укажите ставку и дату закрытия вклада</string>
+    <string name="account_deposit_rate_line">%1$s %%</string>
+    <string name="account_deposit_until">до %1$s</string>
+    <string name="account_deposit_income">Ожидаемый доход %1$s · %2$s</string>
+    <string name="deposit_soon_title">Вклад закрывается</string>
+    <string name="deposit_soon_when">%1$s · %2$s</string>
+    <string name="deposit_soon_hint">Проценты придут от банка. Запишите их доходом, когда придут.</string>
 </resources>

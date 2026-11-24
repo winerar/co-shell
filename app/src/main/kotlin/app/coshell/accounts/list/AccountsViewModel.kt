@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 import app.coshell.core.model.AccountWithBalance
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.ExchangeRate
+import app.coshell.accounts.edit.percentText
 import app.coshell.core.domain.credit.CreditCard
+import app.coshell.core.domain.deposit.DepositIncome
+import app.coshell.core.model.DepositTerms
 import app.coshell.core.model.CreditTerms
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
@@ -174,7 +177,15 @@ class AccountsViewModel @Inject constructor(
         currency = item.account.currency.value,
         prepaid = item.account.prepaid,
         credit = item.account.credit?.let { creditRow(it, item.balance, today) },
+        deposit = item.account.deposit?.let { depositRow(it, item.balance, today) },
         money = item.balance,
+    )
+
+    /** The rate, the closing day and the expected income of a deposit (#634, step 3). */
+    private fun depositRow(terms: DepositTerms, balance: Money, today: LocalDate) = AccountsUiState.Row.Deposit(
+        rate = percentText(terms.rateBp),
+        until = terms.endDate,
+        income = DepositIncome.expected(terms, balance, today)?.let(moneyFormat::format),
     )
 
     /** «Доступно … из …» and the payment day of a credit card (#686): from its conditions and the balance. */

@@ -1,6 +1,7 @@
 package app.coshell.accounts.edit
 
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.DepositPayout
 
 data class AccountEditUiState(
     val isLoading: Boolean = false,
@@ -30,6 +31,12 @@ data class AccountEditUiState(
     /** Statement day and grace days (#634): optional, both or neither. */
     val creditStatementDay: String = "",
     val creditGraceDays: String = "",
+    /** A deposit's conditions as typed in «Условия вклада» (#634): the yearly rate, the closing day (`YYYY-MM-DD`) and how the interest is paid. */
+    val depositRate: String = "",
+    val depositEnd: String = "",
+    val depositPayout: DepositPayout = DepositPayout.AT_END,
+    /** Saving was refused: the rate or the closing day of a deposit is missing or wrong. */
+    val depositError: Boolean = false,
     /** Saving was refused: the conditions of a credit card are not complete. */
     val creditError: Boolean = false,
     val cardDigits: String = "",

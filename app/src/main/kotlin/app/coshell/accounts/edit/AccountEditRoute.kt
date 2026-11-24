@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.domain.hints.HintId
 import app.coshell.core.model.AccountType
+import app.coshell.core.model.DepositPayout
 import app.coshell.gate.LocalInputLock
 import app.coshell.hints.LocalHintHost
 
@@ -34,6 +35,9 @@ fun AccountEditRoute(onDone: () -> Unit, viewModel: AccountEditViewModel = hiltV
             onCreditLimitChange = viewModel::onCreditLimitChange,
             onCreditPayDayChange = viewModel::onCreditPayDayChange,
             onCreditStatementDayChange = viewModel::onCreditStatementDayChange,
+            onDepositRateChange = viewModel::onDepositRateChange,
+            onDepositEndChange = viewModel::onDepositEndChange,
+            onDepositPayoutChange = viewModel::onDepositPayoutChange,
             onCreditGraceDaysChange = viewModel::onCreditGraceDaysChange,
             onCreditMinSumChange = viewModel::onCreditMinSumChange,
             onCreditMinChange = viewModel::onCreditMinChange,
@@ -63,6 +67,9 @@ data class AccountEditActions(
     val onCreditLimitChange: (String) -> Unit = {},
     val onCreditPayDayChange: (String) -> Unit = {},
     val onCreditStatementDayChange: (String) -> Unit = {},
+    val onDepositRateChange: (String) -> Unit = {},
+    val onDepositEndChange: (String) -> Unit = {},
+    val onDepositPayoutChange: (DepositPayout) -> Unit = {},
     val onCreditGraceDaysChange: (String) -> Unit = {},
     val onCreditMinSumChange: (Boolean) -> Unit = {},
     val onCreditMinChange: (String) -> Unit = {},

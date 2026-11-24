@@ -41,6 +41,8 @@ fun HomeRoute(
     val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
     val upcomingTotal by upcomingViewModel.total.collectAsStateWithLifecycle()
     val creditPayments by upcomingViewModel.credit.collectAsStateWithLifecycle()
+    val debtDue by upcomingViewModel.debtDue.collectAsStateWithLifecycle()
+    val depositEnds by upcomingViewModel.deposits.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
         onSignIn = actions.onFamily,
@@ -59,6 +61,8 @@ fun HomeRoute(
         upcoming = upcoming,
         upcomingTotal = upcomingTotal,
         creditPayments = creditPayments,
+        debtDue = debtDue,
+        depositEnds = depositEnds,
         onPostAll = lock.guard1 { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
         onSkipAll = lock.guard1(upcomingViewModel::skipAll),
         gate = gate,

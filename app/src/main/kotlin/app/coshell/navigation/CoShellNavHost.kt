@@ -76,8 +76,6 @@ import app.coshell.update.UpdateRoute
 import app.coshell.update.past.PastReleasesRoute
 import app.coshell.update.notice.UpdateNoticeEffects
 import app.coshell.update.notice.UpdateNoticeViewModel
-import app.coshell.greeting.GreetingPill
-import app.coshell.greeting.GreetingViewModel
 import app.coshell.update.notice.UpdatePill
 import app.coshell.access.AccessLockedDialog
 import app.coshell.access.AccessViewModel
@@ -96,7 +94,6 @@ fun CoShellNavHost(
     shakeSettings: ShakeSettingsViewModel = hiltViewModel(),
     shakeUndo: ShakeUndoViewModel = hiltViewModel(),
     updates: UpdateNoticeViewModel = hiltViewModel(),
-    greeting: GreetingViewModel = hiltViewModel(),
     crashes: CrashNoticeViewModel = hiltViewModel(),
     inputLock: InputLockViewModel = hiltViewModel(),
     access: AccessViewModel = hiltViewModel(),
@@ -113,8 +110,6 @@ fun CoShellNavHost(
     CrashNotice(crashes)
     val updatePill by updates.pill.collectAsStateWithLifecycle()
     val updateAvailable by updates.available.collectAsStateWithLifecycle()
-    val greetingVisible by greeting.pillVisible.collectAsStateWithLifecycle()
-    val onHome = backStackEntry?.destination.isOn(TopLevel.HOME)
     val locked by inputLock.locked.collectAsStateWithLifecycle()
     // «Обновить» on the gate banner and its note (#334): the download starts if the release is known.
     val openUpdate = {
@@ -189,11 +184,11 @@ fun CoShellNavHost(
                 onDismiss = updates::dismissPill,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
             )
-            // Hint banner (#513): gesture card or warm pill; the update pill and the greeting go first.
+            // Hint banner (#513): gesture card or warm pill; the update pill goes first.
             LocalHintHost.current?.let { host ->
                 HintBannerHost(
                     host = host,
-                    visible = onBar && updatePill == null && !(onHome && greetingVisible),
+                    visible = onBar && updatePill == null,
                     modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
                     onOpen = { target ->
                         when (target) {
@@ -210,12 +205,6 @@ fun CoShellNavHost(
             }
             // Sums hidden by laying the phone down (#145): says how to show them; goes first of the quiet pills.
             HiddenPill(visible = onBar && updatePill == null, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m))
-            // The 1.0 greeting: only on «Обзор», and the update pill goes first.
-            GreetingPill(
-                visible = onBar && onHome && greetingVisible && updatePill == null,
-                onDismiss = greeting::dismiss,
-                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
-            )
         },
     ) {
         screen<HomeDestination> {

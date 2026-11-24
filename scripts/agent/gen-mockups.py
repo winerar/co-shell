@@ -49,7 +49,7 @@ OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 PAGES = {
     'Main': ('Шторка ввода: один шаг — тип, лента счетов, сумма, категория (тапайте)', True), 'Operations': ('Операции: удержание → выбор, свайп вкладок (тапайте)', True),
     'Accounts': ('Счета: 12 счетов, группы (тапайте)', True), 'More': ('Ещё', False), 'HomeSync': ('Обзор: ошибка синка (тапайте «Другая причина»)', True),
-    'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True), 'HomeGreeting': ('Обзор: поздравление на 1.0 (тапайте)', True),
+    'Feedback': ('Отзыв: написать (тапайте)', True), 'Update': ('Обновление (тапайте кнопку — состояния)', True), 'UpdatePill': ('Пилюля «есть обновление»', True),
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),
     'DepositEdit': ('Вклад: редактор счёта (#634)', False), 'DepositTerms': ('Вклад: условия (#634)', False), 'AccountsDeposit': ('Счета: вклад, ожидаемый доход (#634)', False), 'HomeDepositSoon': ('Обзор: вклад закрывается (#634)', False),
     'DebtList': ('Долги: две вкладки, итог, строки (#552)', False), 'DebtEmpty': ('Долги: пусто (#552)', False), 'DebtNew': ('Долги: новый долг (#552)', False), 'DebtDetail': ('Долг: карточка (#552)', False), 'DebtReturn': ('Долг: «Вернули часть» (#552)', False),
@@ -65,7 +65,7 @@ PAGES = {
 PAGE_MODULES = (tab_screens, ops_screens, form_screens, set_screens, catalog)
 
 LAYOUT = [  # (row title, [board names]) on the «Экраны» page
-    ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew', 'HomeGreeting', 'HomeCreditSoon', 'HomeCreditGrace', 'HomeHoldFan']),
+    ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew','HomeCreditSoon', 'HomeCreditGrace', 'HomeHoldFan']),
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
     ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryReceiptTransfer', 'ReceiptWhichAccount', 'EntryUnsaved', 'EntryGuessHist', 'EntryGuessAi', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),

@@ -117,25 +117,4 @@ def update_pill():
     return proto('Пилюля «есть обновление»', home + when('is_p_pill', pill_ + nav('home', True)) + when('is_p_gone', nav('home', True)) + when('is_p_screen', screen), p='pill')
 
 
-# ---- 1.0 greeting: one-time pill over «Обзор» + system notification --------------------------------------------------
-
-GREETING = 'Настя, поздравляем с рождением Эмилии!'
-
-
-def greeting():
-    pill_ = ('<div style="position: absolute; left: 50%%; transform: translateX(-50%%); bottom: 96px; max-width: 358px; min-height: 44px; padding: 6px 8px 6px 6px; '
-             'border-radius: 24px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; '
-             '">%s%s</div>'
-             % (CHIP, LIMEPILL, dot_icon('gift', LIME, 32) + '<span>%s</span>' % GREETING, go('g', 'gone', svg('close', MUTED, 18))))
-    shade = ('<div style="position: absolute; left: 12px; right: 12px; top: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;">'
-             '<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: %s;">%s<span>co-shell · сейчас</span></div>'
-             '<div style="margin-top: 6px; font-size: 15px; font-weight: 700;">Поздравляем!</div>'
-             '<div style="margin-top: 2px; font-size: 14px; line-height: 1.4;">%s Желаем здоровья и спокойных ночей.</div></div>'
-             % (CHIP, LIMEPILL, MUTED, dot_icon('gift', LIME, 18), GREETING))
-    home = tab_screen('Обзор', m.balance_hero() + m.tiles(m.tile('Траты за ноябрь', '1 240,50', 'USD'), m.tile('Без категории', '14', 'операций'))
-                      + m.recent_card(m.RECENT[:3]), 'home', m.SEARCH_BTN, False)
-    return proto('Обзор: поздравление на версии 1.0 (тапайте)', home + when('is_g_shade', go('g', 'pill', shade)) + when('is_g_pill', pill_ + nav('home', True))
-                 + when('is_g_gone', nav('home', True)), g='shade')
-
-
-BOARDS = [('Main', entry_main), ('Accounts', accounts), ('More', more), ('HomeSync', home_sync), ('UpdatePill', update_pill), ('HomeGreeting', greeting)]
+BOARDS = [('Main', entry_main), ('Accounts', accounts), ('More', more), ('HomeSync', home_sync), ('UpdatePill', update_pill)]

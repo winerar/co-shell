@@ -24,7 +24,7 @@ private const val PILL_MS = 8_000L
 /**
  * The hint banner over the bottom bar (boards `Hint513Gesture`, `Hint513Moment`, `Hint513Reset`): a gesture card or a
  * warm pill, whichever [HintHost.banner] holds. [visible] is false while something more important sits there
- * (update pill, greeting) or off the tabs.
+ * (the update pill) or off the tabs.
  */
 @Composable
 fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifier, onOpen: (HintTarget) -> Unit = {}) {

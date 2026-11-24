@@ -1,6 +1,7 @@
 package app.coshell
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -49,6 +50,8 @@ class CoShellApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         CrashRecorder(crashLog, Clock.System, BuildConfig.VERSION_CODE).install()
+        // The one-time 1.0 greeting is gone: its notification channel should not linger in the system settings.
+        getSystemService(NotificationManager::class.java)?.deleteNotificationChannel(RETIRED_GREETING_CHANNEL)
         appScope.launch {
             legacyReportCurrencies.moveToFamilySettings()
             // In a family the categories come from the server: seeding an empty phone right after
@@ -67,3 +70,6 @@ class CoShellApp : Application(), Configuration.Provider {
         appScope.launch { launcherShortcuts.run() }
     }
 }
+
+/** Channel of the removed one-time 1.0 greeting (`greeting/`), deleted on start. */
+private const val RETIRED_GREETING_CHANNEL = "greeting"

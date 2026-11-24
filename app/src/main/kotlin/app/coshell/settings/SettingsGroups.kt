@@ -10,8 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -68,7 +66,7 @@ fun MoneySettingsScreen(weekStart: WeekStart, onWeekStart: (WeekStart) -> Unit, 
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellMenuRow(
-                        DesignR.drawable.ic_payments, categoryColor(CategoryPalette.colors[17]),
+                        DesignR.drawable.ic_payments,
                         stringResource(R.string.report_currencies_title), onCurrencies,
                     )
                 }

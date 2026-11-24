@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import app.coshell.core.designsystem.theme.panelColor
 import app.coshell.core.designsystem.tokens.PillShape
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
@@ -40,7 +41,7 @@ fun CoShellActionBar(visible: Boolean, content: @Composable RowScope.() -> Unit)
                     .fillMaxWidth()
                     .height(Sizes.bottomBarHeight)
                     .clip(PillShape)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .background(panelColor())
                     .border(Sizes.hairline, MaterialTheme.colorScheme.outlineVariant, PillShape)
                     .padding(horizontal = Spacing.s),
                 verticalAlignment = Alignment.CenterVertically,

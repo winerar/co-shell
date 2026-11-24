@@ -17,8 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.ai.AiAddonStage
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -141,7 +139,7 @@ internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
 private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int, onAll: (() -> Unit)?, rows: RowGroupScope.() -> Unit) {
     Column(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.m, bottom = Spacing.s)) {
         Row(Modifier.padding(horizontal = Spacing.xs, vertical = Spacing.s), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            MenuIcon(icon, categoryColor(CategoryPalette.colors[color]))
+            MenuIcon(icon)
             CoShellSectionLabel(stringResource(title).uppercase(), Modifier.weight(1f))
             if (onAll != null) CoShellSectionLink(stringResource(R.string.settings_group_all), onClick = onAll)
         }

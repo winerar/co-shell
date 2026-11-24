@@ -44,7 +44,7 @@ def line(*items):
     return '<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">%s</div>' % ''.join(items)
 
 
-TOKENS = [('Фон', BG), ('Поверхность', CARD), ('Панель', BAR), ('Поле', FIELD), ('Линия', LINE2), ('Текст', INK), ('Вторичный', MUTED),
+TOKENS = [('Фон', BG), ('Поверхность', CARD), ('Панель', PANEL), ('Поле', FIELD), ('Линия', LINE2), ('Текст', INK), ('Вторичный', MUTED),
           ('Основной', LIME), ('Акцент', VIOLET), ('Доход', CYAN), ('Расход', '#FF2E63'), ('Тёплый', YELLOW), ('Внимание', WARN), ('Готово', OK)]
 
 

@@ -43,8 +43,8 @@
 - **Строки списков** — `CoShellListRow` (текстовая или со слотами: заголовок bodyLarge, подпись серым,
   `leading`/`trailing` серым; `onClick` → `Tactile.Row`; `onLongClick` — режим выбора списка; `enabled = false`
   → 38 %); прозрачная, `containerColor` — фон (выбранная строка). `CoShellSwitchRow` — вся строка переключает.
-  `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, color, title, onClick, subtitle)`
-  (#155): иконка в квадрате 32 dp с заливкой цвета (`MenuIcon`; квадрат — раздел, круг — категория), шеврон; группы «Ещё»;
+  `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, title, onClick, subtitle)`
+  (#155): иконка второго цвета в круге его тона 18 % (`MenuIcon`, #442 Б — у всех строк один цвет), шеврон; группы «Ещё»;
   `mark` — сразу за заголовком: метка «новое» = `CoShellStatusChip(…, StatusTone.Fresh)` (неон палитры в точке, доска Style2, #335).
 - **Модальные окна (#345, вариант В)** — вопрос: `CoShellAlertDialog` — карточка по центру (иконка в квадрате, вопрос,
   последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`; длинный текст прокручивается над кнопками, кнопки не сжимаются — `ConfirmCardOverflowTest`).

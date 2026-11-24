@@ -28,8 +28,6 @@ import androidx.core.content.FileProvider
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellFilterChip
@@ -163,7 +161,7 @@ fun ExportScreen(state: ExportUiState, actions: ExportActions) {
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.s, bottom = Spacing.l)) {
                     row {
                         CoShellMenuRow(
-                            DesignR.drawable.ic_calendar_today, categoryColor(CategoryPalette.colors[8]),
+                            DesignR.drawable.ic_calendar_today,
                             periodTitle(state), { picking = true }, subtitle = stringResource(R.string.export_period),
                         )
                     }

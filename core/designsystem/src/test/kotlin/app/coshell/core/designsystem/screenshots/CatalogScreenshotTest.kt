@@ -1,7 +1,5 @@
 package app.coshell.core.designsystem.screenshots
 
-import app.coshell.core.designsystem.category.categoryColor
-import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -176,8 +174,8 @@ private fun RowGroupSample() {
 @Composable
 private fun MenuRowsSample() {
     CoShellRowGroup(Modifier.padding(Spacing.l)) {
-        row { CoShellMenuRow(R.drawable.ic_category, categoryColor(CategoryPalette.colors[9]), "Категории", {}, subtitle = "Папки, иконки и цвета") }
-        row { CoShellMenuRow(R.drawable.ic_currency_exchange, categoryColor(CategoryPalette.colors[6]), "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
-        row { CoShellMenuRow(R.drawable.ic_contrast, categoryColor(CategoryPalette.colors[2]), "Внешний вид", {}, subtitle = "Вольт · тёмная") }
+        row { CoShellMenuRow(R.drawable.ic_category, "Категории", {}, subtitle = "Папки, иконки и цвета") }
+        row { CoShellMenuRow(R.drawable.ic_currency_exchange, "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
+        row { CoShellMenuRow(R.drawable.ic_contrast, "Внешний вид", {}, subtitle = "Вольт · тёмная") }
     }
 }

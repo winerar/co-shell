@@ -1,5 +1,6 @@
 package app.coshell.core.designsystem.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 
@@ -73,14 +74,17 @@ internal fun darkNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
 }
 
 /**
- * Light theme (#442): the page is plain white (owner: colour only the components), cards ([Neutrals.surface]) a wash of the
- * primary itself (no deep shade of it — the owner refused an extra dark accent); lines are near-black of the text tint,
- * blocks and fields take the accent. A fill that melts into its background gets a thin edge (`fillEdge`).
+ * Light theme (#442, #493 Б, owner's poll 2026-11-23): the page is plain white (owner: colour only the components), cards ([Neutrals.surface])
+ * a wash of the primary — 16 % for the neon themes, 12 % for the soft ones (no extra brightness for pastels). «Black» becomes the palette's own
+ * deep shade [PaletteSpec.inkLight]: headings and [accentInk], lines lean to it, body text is a near-black of the same hue. Blocks and fields
+ * take the accent. A fill that melts into its background gets a thin edge (`fillEdge`).
  */
-internal fun lightNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
+internal fun lightNeutrals(p: PaletteSpec): Neutrals {
     val page = Color.White
-    val text = lerp(Color.Black, bg, 0.1f)
-    val surface = lerp(page, primary, 0.12f)
+    val ink = p.inkLight
+    val text = lerp(ink, Color.Black, LIGHT_TEXT_DEPTH)
+    val surface = lerp(page, p.primary, if (p.soft) LIGHT_CARD_SOFT else LIGHT_CARD_NEON)
+    val accent = p.accentLight
     return Neutrals(
         lowest = Color.White,
         background = page,
@@ -90,13 +94,26 @@ internal fun lightNeutrals(bg: Color, primary: Color, accent: Color): Neutrals {
         high = lerp(page, accent, 0.14f),
         highest = lerp(page, accent, 0.18f),
         bright = Color.White,
-        line = mixToContrast(page, text, surface, 4.2f),
-        lineSoft = mixToContrast(page, text, surface, 3.1f),
+        line = mixToContrast(page, ink, surface, 4.2f),
+        lineSoft = mixToContrast(page, ink, surface, 3.1f),
         text = text,
-        textMuted = lerp(Color.Black, bg, 0.36f),
-        inkPrimary = text,
+        textMuted = lerp(ink, Color.Black, LIGHT_MUTED_DEPTH),
+        inkPrimary = ink,
     )
 }
+
+/**
+ * Top and bottom capsules (#493 Б): in the light neon themes a light tone of the primary, so the neon reads on the large areas too;
+ * the soft themes and the dark theme keep the accent block (`surfaceContainerHigh`).
+ */
+internal fun panelOf(p: PaletteSpec, dark: Boolean, scheme: ColorScheme): Color =
+    if (dark || p.soft) scheme.surfaceContainerHigh else lerp(Color.White, p.primary, LIGHT_PANEL_NEON)
+
+private const val LIGHT_TEXT_DEPTH = 0.55f
+private const val LIGHT_MUTED_DEPTH = 0.22f
+private const val LIGHT_CARD_NEON = 0.16f
+private const val LIGHT_CARD_SOFT = 0.12f
+private const val LIGHT_PANEL_NEON = 0.30f
 
 // Fixed errors-container tones; the error itself is the palette's expense colour.
 internal val CoralShadow = Color(0xFF6B0F25)

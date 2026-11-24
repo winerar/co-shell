@@ -150,7 +150,7 @@ private fun StepRow(@StringRes title: Int, state: StepState, @StringRes subtitle
         StepState.WAIT -> DesignR.drawable.ic_cloud_download
     }
     val color = if (state == StepState.WAIT) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
-    CoShellListRow(title = stringResource(title), subtitle = stringResource(subtitle), leading = { MenuIcon(icon, color) })
+    CoShellListRow(title = stringResource(title), subtitle = stringResource(subtitle), leading = { MenuIcon(icon) })
 }
 
 @Composable

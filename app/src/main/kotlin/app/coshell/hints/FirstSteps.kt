@@ -11,8 +11,6 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.annotation.StringRes
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.charts.CoShellMeter
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellCheckMark
@@ -56,7 +54,6 @@ fun FirstStepsRow(state: FirstStepsState, onClick: () -> Unit, modifier: Modifie
     CoShellCard(modifier.fillMaxWidth(), onClick = onClick) {
         CoShellMenuRow(
             icon = DesignR.drawable.ic_lightbulb,
-            color = categoryColor(CategoryPalette.colors[8]),
             title = stringResource(R.string.steps_title),
             subtitle = sub,
             onClick = onClick,

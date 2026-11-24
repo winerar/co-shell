@@ -82,9 +82,11 @@
 - Цвета — только константы кирпичей («Вольт · тёмная»), без своих `dark`-tweak; `mockup_theme.py` переводит их в токены
   темы. Цвет, который не должен перекрашиваться (свотчи палитр, банки), — в JS без `#` (`'#' + 'B8FF2E'`); чернила на
   фирменных значках (`#0B0F0A`, `#1A1400`…) — в `KEEP` у `mockup_theme.py`. Главная карточка экрана — `hero_card`
-  (градиент `HERO_BG`, роли `H0…H2` → `CO_HERO` по палитрам и темам, как `heroDarkStops`/`heroLight` в коде, #249).
+  (градиент `HERO_BG`, роли `H0…H2`, сумма — `HERO_AMT`, #249). Темы рантайма — 9 тем 1.0 из `PaletteSpecs.kt` (`palette_data()`, «Вольт» = Лайм);
+  светлая — по #493/#442 (2026-11-24): чернила `inkLight`, карточки 16/12 %, капсулы `PANEL` → роль `Cap` (тон основного у неоновых),
+  второй цвет (`VIOLET`) — заголовки `label(accent)`, значки меню, контурные и текстовые кнопки, «прошлый период».
 - `agent.sh mockups` пишет все доски, «Воркфлоу», `canvas.json` и проверяет логику (`check-mockups.js`). Без холста:
-  `agent.sh render <доски>` или `node scripts/agent/render-mockups.js <папка> light Манго <доски>`.
+  `agent.sh render <доски>` или `node scripts/agent/render-mockups.js <папка> light Гранат <доски>`.
 - Публикация: скопировать `mockups/*` в `<scratch>/project/`, `Artifact publish` с `root`, `file_path` = `project/canvas.json`,
   остальные в `files`, удалённые — `null` (порядок — инструкции типа в ответе `Artifact read`).
 - Общий переключатель темы — `localStorage['coshell-mock-theme']` + событие `storage` (доски — iframe одного источника).

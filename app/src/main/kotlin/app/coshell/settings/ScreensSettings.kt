@@ -13,7 +13,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
 import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -37,10 +36,10 @@ fun ScreensSettingsScreen(onHome: () -> Unit, onOps: () -> Unit, onReports: () -
         item { SectionTitle(stringResource(R.string.settings_screens_title)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
-                row { CoShellMenuRow(DesignR.drawable.ic_home, categoryColor(c[8]), stringResource(R.string.nav_home), onHome, subtitle = stringResource(R.string.settings_home_items)) }
-                row { CoShellMenuRow(DesignR.drawable.ic_receipt_long, categoryColor(c[13]), stringResource(R.string.nav_transactions), onOps, subtitle = stringResource(R.string.settings_ops_items)) }
-                row { CoShellMenuRow(DesignR.drawable.ic_bar_chart, categoryColor(c[18]), stringResource(R.string.reports_title), onReports, subtitle = stringResource(R.string.settings_reports_items)) }
-                row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, categoryColor(c[0]), stringResource(R.string.nav_accounts), onAccounts, subtitle = stringResource(R.string.settings_accounts_items)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_home, stringResource(R.string.nav_home), onHome, subtitle = stringResource(R.string.settings_home_items)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_receipt_long, stringResource(R.string.nav_transactions), onOps, subtitle = stringResource(R.string.settings_ops_items)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_bar_chart, stringResource(R.string.reports_title), onReports, subtitle = stringResource(R.string.settings_reports_items)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, stringResource(R.string.nav_accounts), onAccounts, subtitle = stringResource(R.string.settings_accounts_items)) }
             }
         }
     }

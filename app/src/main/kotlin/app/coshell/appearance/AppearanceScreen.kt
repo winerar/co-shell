@@ -22,8 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
-import app.coshell.core.designsystem.category.CategoryPalette
-import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSegmented
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -124,7 +122,6 @@ private fun LanguageRowGroup(language: LanguageRow, onClick: () -> Unit) {
         row {
             CoShellMenuRow(
                 icon = DesignR.drawable.ic_language,
-                color = categoryColor(CategoryPalette.colors[LANGUAGE_COLOR]),
                 title = stringResource(R.string.language_title),
                 subtitle = if (language.chosen == null) stringResource(R.string.language_row_phone, name) else name,
                 onClick = onClick,
@@ -134,7 +131,6 @@ private fun LanguageRowGroup(language: LanguageRow, onClick: () -> Unit) {
 }
 
 /** Blue of the palette. */
-private const val LANGUAGE_COLOR = 14
 
 
 @Preview(showBackground = true)

@@ -15,7 +15,8 @@ FEEDBACK = [
 
 
 def r(title, sub, icon, color, trail=None):
-    return row(title, sub, tile_icon(icon, color), trail if trail is not None else chevron(), min_h=56)
+    """`CoShellMenuRow`: every icon on the second colour's tone (#442 Б, `MenuIcon`); `color` is the old per-row colour, ignored."""
+    return row(title, sub, tile_icon(icon, VIOLET), trail if trail is not None else chevron(), min_h=56)
 
 
 def version_card(update=None):
@@ -23,7 +24,7 @@ def version_card(update=None):
     if update:
         btn = ('<span style="flex: none; height: 48px; padding: 0 18px; border-radius: 999px; background: %s; color: %s; display: flex; '
                'align-items: center; font-size: 14px; font-weight: 600;">Обновить</span>' % (LIME, ONLIME))
-        return group([row('Co-Shell', 'Вышла версия %s' % update, tile_icon('download', LIME), btn)])
+        return group([row('Co-Shell', 'Вышла версия %s' % update, tile_icon('download', VIOLET), btn)])
     return group([r('Co-Shell', 'Версия 1.2 · сборка 512', 'download', LIME)])
 
 

@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import app.coshell.core.designsystem.theme.accentInk
+import app.coshell.core.designsystem.theme.secondaryInk
 
 /** Look of a [CoShellSectionLabel]. */
 enum class SectionTone {
@@ -33,7 +33,7 @@ fun CoShellSectionLabel(text: String, modifier: Modifier = Modifier, tone: Secti
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.04.em,
         ),
-        color = if (tone == SectionTone.Accent) accentInk() else MaterialTheme.colorScheme.onSurfaceVariant,
+        color = if (tone == SectionTone.Accent) secondaryInk() else MaterialTheme.colorScheme.onSurfaceVariant, // second colour, #442 Б
         modifier = modifier,
     )
 }

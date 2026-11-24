@@ -59,6 +59,15 @@ class MonthRecapTest {
     }
 
     @Test
+    fun `a run of five days or more gets its story and knows where it began`() {
+        val long = recap(day(10, 2, "home", ars(1)), *run(5, 9), day(10, 11, "home", ars(1)))
+        assertEquals(RecapCard.STREAK, long.cards[long.cards.size - 2])
+        assertEquals(4, long.streakStart)
+        val short = recap(*run(5, 8))
+        assertEquals(false, RecapCard.STREAK in short.cards)
+    }
+
+    @Test
     fun `cards without facts are left out and the final one stays`() {
         assertEquals(listOf(RecapCard.FINAL), recap(withHistory = false).cards)
         val full = recap(day(9, 5, "home", ars(10)), day(10, 3, "cafe", ars(10)), day(10, 5, "home", ars(10)))

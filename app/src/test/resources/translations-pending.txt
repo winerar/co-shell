@@ -1,0 +1,8 @@
+# Keys that exist in res/values (Russian) but may be missing in values-en / values-es (owner 2026-11-24:
+# translations are paused until publication — new texts go in Russian only, en/es are caught up in one pass).
+# One key per line (`plural:<name>` for <plurals>). `agent.sh l10n` lists and rewrites this file.
+# Before publication this file must be empty (TranslationsTest `nothing is left untranslated`, enabled by PUBLISHING).
+account_deleted
+category_deleted
+sync_dot_ok
+sync_dot_pending

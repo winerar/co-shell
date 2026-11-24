@@ -88,18 +88,8 @@
       "page": "screens",
       "radius": 28
     },
-    "HomeGreeting.dc.html": {
-      "x": 2350,
-      "y": 0,
-      "w": 390,
-      "h": 844,
-      "title": "Обзор: поздравление на 1.0 (тапайте)",
-      "page": "screens",
-      "is_interactive": true,
-      "radius": 28
-    },
     "HomeCreditSoon.dc.html": {
-      "x": 2820,
+      "x": 2350,
       "y": 0,
       "w": 390,
       "h": 844,
@@ -108,7 +98,7 @@
       "radius": 28
     },
     "HomeCreditGrace.dc.html": {
-      "x": 3290,
+      "x": 2820,
       "y": 0,
       "w": 390,
       "h": 844,
@@ -117,7 +107,7 @@
       "radius": 28
     },
     "HomeHoldFan.dc.html": {
-      "x": 3760,
+      "x": 3290,
       "y": 0,
       "w": 390,
       "h": 844,
@@ -472,17 +462,8 @@
       "page": "screens",
       "radius": 28
     },
-    "AccountDelete.dc.html": {
-      "x": 6580,
-      "y": 4960,
-      "w": 390,
-      "h": 844,
-      "title": "Счёт: удалить?",
-      "page": "screens",
-      "radius": 28
-    },
     "AccountBlocked.dc.html": {
-      "x": 7050,
+      "x": 6580,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -491,7 +472,7 @@
       "radius": 28
     },
     "Colors.dc.html": {
-      "x": 7520,
+      "x": 7050,
       "y": 4960,
       "w": 390,
       "h": 1240,
@@ -501,7 +482,7 @@
       "radius": 28
     },
     "Categories.dc.html": {
-      "x": 7990,
+      "x": 7520,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -511,7 +492,7 @@
       "radius": 28
     },
     "CategoryEdit.dc.html": {
-      "x": 8460,
+      "x": 7990,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -520,7 +501,7 @@
       "radius": 28
     },
     "CategoryBlocked.dc.html": {
-      "x": 8930,
+      "x": 8460,
       "y": 4960,
       "w": 390,
       "h": 844,
@@ -1510,6 +1491,42 @@
       "w": 390,
       "h": 844,
       "title": "Истории «А»: 6 — слова по результату и «Подробнее»",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec554Streak.dc.html": {
+      "x": 2820,
+      "y": 23560,
+      "w": 390,
+      "h": 844,
+      "title": "Новая история: серия дней подряд с записями",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec554Share.dc.html": {
+      "x": 3290,
+      "y": 23560,
+      "w": 390,
+      "h": 844,
+      "title": "Поделиться: значок в шапке историй (один нажим → картинка)",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec554ShareImg.dc.html": {
+      "x": 3760,
+      "y": 23560,
+      "w": 390,
+      "h": 844,
+      "title": "Поделиться: сама картинка 4:5, суммы скрыты",
+      "page": "screens",
+      "radius": 28
+    },
+    "Rec554ShareAsk.dc.html": {
+      "x": 4230,
+      "y": 23560,
+      "w": 390,
+      "h": 844,
+      "title": "Поделиться: значок → шторка «Без сумм / С суммами», нажатие строки делится сразу",
       "page": "screens",
       "radius": 28
     },
@@ -3459,7 +3476,7 @@
       "y": 63900,
       "w": 390,
       "h": 844,
-      "title": "6А · Точка «синхронно» (выбрано)",
+      "title": "6А · Точка «Синхронно» (выбрано)",
       "page": "ideas",
       "radius": 28
     },
@@ -3468,7 +3485,7 @@
       "y": 63900,
       "w": 390,
       "h": 844,
-      "title": "6А · …и «ждут отправки»",
+      "title": "6А · …и «Ждут: N»",
       "page": "ideas",
       "radius": 28
     },
@@ -3542,7 +3559,6 @@
     "HomeAttention.dc.html",
     "HomeSync.dc.html",
     "UpdateWhatsNew.dc.html",
-    "HomeGreeting.dc.html",
     "HomeCreditSoon.dc.html",
     "HomeCreditGrace.dc.html",
     "HomeHoldFan.dc.html",
@@ -3584,7 +3600,6 @@
     "CreditTermsGrace.dc.html",
     "AccountsCreditGrace.dc.html",
     "AccountEditExisting.dc.html",
-    "AccountDelete.dc.html",
     "AccountBlocked.dc.html",
     "Colors.dc.html",
     "Categories.dc.html",
@@ -3699,6 +3714,10 @@
     "Rec554New.dc.html",
     "Rec554Weekend.dc.html",
     "Rec554Final.dc.html",
+    "Rec554Streak.dc.html",
+    "Rec554Share.dc.html",
+    "Rec554ShareImg.dc.html",
+    "Rec554ShareAsk.dc.html",
     "Tr238DrillA.dc.html",
     "Tr238MarkA.dc.html",
     "Tr238All.dc.html",
@@ -3958,13 +3977,13 @@
       "text": "Обзор",
       "x": 0,
       "y": -250,
-      "maxW": 4150,
+      "maxW": 3680,
       "w": 240
     },
     "s0": {
       "page": "screens",
       "text": "Обзор — 2 плитки (решение владельца 2026-11-10). Плашка синка появляется, только если синк не проходит дольше 2 минут или вход/доступ потерян; сама исчезает после удачной синхронизации.",
-      "x": 4230,
+      "x": 3760,
       "y": 0,
       "w": 390
     },
@@ -4022,7 +4041,7 @@
       "text": "Счёт и категории",
       "x": 0,
       "y": 4710,
-      "maxW": 9320,
+      "maxW": 8850,
       "w": 240
     },
     "row5": {
@@ -4206,13 +4225,13 @@
       "text": "Итоги месяца",
       "x": 0,
       "y": 23310,
-      "maxW": 2740,
+      "maxW": 4620,
       "w": 240
     },
     "s19": {
       "page": "screens",
       "text": "Макет #554 — выбрано «А» (владелец 2026-11-23): истории на градиенте темы, полоски сверху, нажатие — дальше. Карточка на «Обзоре» — `Mon236A`, её нажатие открывает истории, «Подробнее» на последней — `Mon236Screen`. Слова — первое подходящее правило `RecapPhrases` (8 правил).",
-      "x": 2820,
+      "x": 4700,
       "y": 23560,
       "w": 390
     },

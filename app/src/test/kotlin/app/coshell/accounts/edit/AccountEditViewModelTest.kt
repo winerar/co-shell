@@ -3,6 +3,7 @@ package app.coshell.accounts.edit
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
+import app.coshell.R
 import app.coshell.core.domain.AdjustBalanceUseCase
 import app.coshell.core.domain.DeleteAccountUseCase
 import app.coshell.core.domain.EnsureAdjustmentCategoriesUseCase
@@ -23,6 +24,7 @@ import app.coshell.testing.FakeAccountRepository
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
+import app.coshell.undo.UndoCenter
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -40,6 +42,7 @@ class AccountEditViewModelTest {
     private val accounts = FakeAccountRepository()
     private val transactions = FakeTransactionRepository()
     private val categories = FakeCategoryRepository()
+    private val undo = UndoCenter()
 
     private fun viewModel(accountId: String? = null) = AccountEditViewModel(
         savedStateHandle = SavedStateHandle(mapOf(AccountEditDestination.ARG_ACCOUNT_ID to accountId)),
@@ -49,6 +52,7 @@ class AccountEditViewModelTest {
         ids = IdGenerator { "new" },
         moneyFormat = MoneyFormat.RU,
         adjustBalance = AdjustBalanceUseCase(accounts, transactions, EnsureAdjustmentCategoriesUseCase(categories), IdGenerator { "adj" }),
+        undo = undo,
     )
 
     @Test
@@ -291,12 +295,28 @@ class AccountEditViewModelTest {
     }
 
     @Test
-    fun `unused account is deleted`() = runTest {
-        accounts.saveAccount(Account("a", "Карта", ars))
+    fun `unused account is deleted at once and the undo offer brings it back`() = runTest {
+        val card = Account("a", "Карта", ars, color = 0xFF112233)
+        accounts.saveAccount(card)
         val vm = viewModel("a")
         vm.delete()
         assertTrue(vm.state.value.isDone)
         assertNull(accounts.getAccount("a"))
+
+        val offer = undo.latest!!
+        assertEquals(R.string.account_deleted, offer.message)
+        offer.undo()
+        assertEquals(card, accounts.getAccount("a"))
+    }
+
+    @Test
+    fun `a blocked delete offers no undo`() = runTest {
+        accounts.saveAccount(Account("a", "Карта", ars))
+        transactions.saveTransaction(
+            Transaction("t", TransactionType.EXPENSE, "a", Money(100, ars), Instant.fromEpochSeconds(0)),
+        )
+        viewModel("a").delete()
+        assertNull(undo.latest)
     }
 
     @Test

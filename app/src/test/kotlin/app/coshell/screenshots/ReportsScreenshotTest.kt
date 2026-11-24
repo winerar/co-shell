@@ -87,10 +87,13 @@ class ReportsScreenshotTest {
     fun `month recap weekend`() = shot("month_recap_weekend_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 4) }
 
     @Test
-    fun `month recap final`() = shot("month_recap_final_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 5) }
+    fun `month recap streak`() = shot("month_recap_streak_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 5) }
+
+    @Test
+    fun `month recap final`() = shot("month_recap_final_dark", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 6) }
 
     @Test @Config(qualifiers = "+en")
-    fun `month recap english`() = shot("month_recap_en", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 5) }
+    fun `month recap english`() = shot("month_recap_en", dark = true) { MonthRecapScreen(MonthRecapSamples.state, startAt = 6) }
 
     @Test
     fun `month review dark`() = shot("month_review_dark", dark = true) { MonthReviewScreen(MonthReviewSamples.state) }

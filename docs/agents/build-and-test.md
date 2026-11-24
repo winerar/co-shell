@@ -59,7 +59,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   образцах из `*Previews.kt` (`internal val …PreviewSample`), обе темы; эталоны — `app/src/test/screenshots/`.
   Часы Compose стоят и проматываются на 3 с (каскад появления блоков доходит до конца). `agent.sh shots` пишет оба модуля.
 - **Локализация** — `TranslationsTest` и `HardcodedTextTest` (`app/.../language/`): падают на непереведённую строку и текст в коде
-  (`glossary.md` §«Языки»); lint `HardcodedText`, `MissingTranslation`, `ExtraTranslation`, `MissingQuantity` — ошибки. Robolectric-тесту с русским текстом — `ru` в `qualifiers`.
+  (`glossary.md` §«Языки»); lint `HardcodedText`, `ExtraTranslation`, `MissingQuantity` — ошибки (`MissingTranslation` выключен до публикации: непереведённое ведёт `translations-pending.txt`, `agent.sh l10n`). Robolectric-тесту с русским текстом — `ru` в `qualifiers`.
 - **Золотые правила** — `ProjectRulesTest` (`app/.../rules/`): чистые `core:model`/`domain`, деньги без плавающей точки.
 - **Доступность** — `ScreensAccessibilityTest` (`app/.../accessibility/`, #380): на главных экранах и редакторах цель нажатия ≥ 48 dp и подпись у всего, что нажимается; `accessibility-baseline.txt` пуст — новое нарушение ронит тест. Один экран на метод теста (смена содержимого внутри композиции оставляет старое дерево на кадр).
 - Имена тестов — предложение в обратных кавычках: `` fun `refuses to mix currencies`() ``.

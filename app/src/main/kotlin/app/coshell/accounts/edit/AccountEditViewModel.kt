@@ -3,6 +3,7 @@ package app.coshell.accounts.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
 import app.coshell.accounts.edit.AccountEditUiState.CurrencyError
 import app.coshell.core.domain.AccountRepository
@@ -20,6 +21,8 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.MoneyParser
 import app.coshell.navigation.AccountEditDestination
+import app.coshell.undo.UndoCenter
+import app.coshell.undo.UndoOffer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +44,7 @@ class AccountEditViewModel @Inject constructor(
     private val ids: IdGenerator,
     private val moneyFormat: MoneyFormat,
     private val adjustBalance: AdjustBalanceUseCase,
+    private val undo: UndoCenter,
     private val otherMembers: OtherMembers = OtherMembers { flowOf(emptyMap()) },
     private val reportCurrencies: ReportCurrencySettings = DefaultReportCurrencies,
 ) : ViewModel() {
@@ -202,7 +206,11 @@ class AccountEditViewModel @Inject constructor(
         val account = existing ?: return
         viewModelScope.launch {
             when (deleteAccount(account.id)) {
-                DeleteAccountUseCase.Result.DELETED -> _state.update { it.copy(isDone = true) }
+                DeleteAccountUseCase.Result.DELETED -> {
+                    // No «Are you sure?» (#194): gone at once, «Отменить» saves the same account again.
+                    undo.offer(UndoOffer(R.string.account_deleted) { accounts.saveAccount(account) })
+                    _state.update { it.copy(isDone = true) }
+                }
                 DeleteAccountUseCase.Result.HAS_TRANSACTIONS -> _state.update { it.copy(deleteBlocked = true) }
             }
         }

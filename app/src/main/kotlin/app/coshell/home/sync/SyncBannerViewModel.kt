@@ -64,6 +64,11 @@ class SyncBannerViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
+    /** The quiet mark beside the title (#193): «Синхронно» or «Ждут: N»; `null` outside a family. */
+    val dot: StateFlow<SyncDotState?> = combine(family.state, syncDao.observePendingCount()) { familyState, pending ->
+        SyncDotRules.of(familyState is FamilyState.Joined, pending)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     /** «Повторить»: one sync now; a failure updates the issue by itself. */
     fun retry() {
         if (busy.value) return

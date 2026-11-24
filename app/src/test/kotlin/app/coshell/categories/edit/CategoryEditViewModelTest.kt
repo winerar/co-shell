@@ -1,6 +1,7 @@
 package app.coshell.categories.edit
 
 import androidx.lifecycle.SavedStateHandle
+import app.coshell.R
 import app.coshell.core.domain.ArchiveCategoryUseCase
 import app.coshell.core.domain.DeleteCategoryUseCase
 import app.coshell.core.domain.SaveCategoryUseCase
@@ -12,6 +13,7 @@ import app.coshell.navigation.CategoryEditDestination as Args
 import app.coshell.testing.FakeCategoryRepository
 import app.coshell.testing.FakeTransactionRepository
 import app.coshell.testing.MainDispatcherRule
+import app.coshell.undo.UndoCenter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -26,6 +28,7 @@ class CategoryEditViewModelTest {
 
     private val categories = FakeCategoryRepository()
     private val transactions = FakeTransactionRepository()
+    private val undo = UndoCenter()
 
     private suspend fun seed() = categories.saveCategories(
         listOf(
@@ -45,7 +48,25 @@ class CategoryEditViewModelTest {
         archiveCategory = ArchiveCategoryUseCase(categories),
         deleteCategory = DeleteCategoryUseCase(categories, transactions),
         ids = IdGenerator { "new" },
+        undo = undo,
     )
+
+    @Test
+    fun `deleting a folder is immediate and undo restores it with its subcategories`() = runTest {
+        seed()
+        val vm = editor(Args.ARG_CATEGORY_ID to "car")
+        vm.delete()
+
+        assertTrue(vm.state.value.isDone)
+        assertNull(categories.getCategory("car"))
+        assertNull(categories.getCategory("fuel")?.parentId)
+
+        val offer = undo.latest!!
+        assertEquals(R.string.category_deleted, offer.message)
+        offer.undo()
+        assertEquals("Машина", categories.getCategory("car")?.name)
+        assertEquals("car", categories.getCategory("fuel")?.parentId)
+    }
 
     @Test
     fun `new folder collects chosen categories`() = runTest {

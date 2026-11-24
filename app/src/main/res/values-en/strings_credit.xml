@@ -27,7 +27,7 @@
     <string name="account_credit_grace_hint">Optional: we show the day up to which there is no interest</string>
     <string name="account_credit_grace_until">no interest until %1$s</string>
     <string name="account_deposit_terms">Deposit terms</string>
-    <string name="account_deposit_rate">Rate, %% per year</string>
+    <string name="account_deposit_rate">Rate, % per year</string>
     <string name="account_deposit_end">Deposit closes</string>
     <string name="account_deposit_payout_title">Interest</string>
     <string name="account_deposit_payout_end">At the end</string>

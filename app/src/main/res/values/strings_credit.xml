@@ -27,7 +27,7 @@
     <string name="account_credit_grace_hint">Не обязательно: покажем, до какого числа без процентов</string>
     <string name="account_credit_grace_until">без процентов до %1$s</string>
     <string name="account_deposit_terms">Условия вклада</string>
-    <string name="account_deposit_rate">Ставка, %% годовых</string>
+    <string name="account_deposit_rate">Ставка, % годовых</string>
     <string name="account_deposit_end">Вклад закрывается</string>
     <string name="account_deposit_payout_title">Проценты</string>
     <string name="account_deposit_payout_end">В конце срока</string>

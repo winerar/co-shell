@@ -27,7 +27,7 @@
     <string name="account_credit_grace_hint">Opcional: mostramos hasta qué día no hay intereses</string>
     <string name="account_credit_grace_until">sin intereses hasta el %1$s</string>
     <string name="account_deposit_terms">Condiciones del depósito</string>
-    <string name="account_deposit_rate">Tasa, %% anual</string>
+    <string name="account_deposit_rate">Tasa anual, %</string>
     <string name="account_deposit_end">El depósito vence</string>
     <string name="account_deposit_payout_title">Intereses</string>
     <string name="account_deposit_payout_end">Al final del plazo</string>

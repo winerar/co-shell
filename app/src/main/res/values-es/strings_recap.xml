@@ -30,4 +30,16 @@
     <string name="recap_phrase_same">Casi igual que el mes anterior</string>
     <string name="recap_phrase_saved">Queda el %1$d %% de los ingresos</string>
     <string name="recap_phrase_busy">Un mes intenso, pero todo registrado</string>
+    <string name="recap_share">Compartir el resumen</string>
+    <plurals name="recap_streak_title">
+        <item quantity="one">%1$d día seguido con movimientos</item>
+        <item quantity="many">%1$d días seguidos con movimientos</item>
+        <item quantity="other">%1$d días seguidos con movimientos</item>
+    </plurals>
+    <string name="recap_streak_caption">La racha más larga del mes</string>
+    <string name="recap_share_title">Compartir el resumen</string>
+    <string name="recap_share_hidden">Sin importes</string>
+    <string name="recap_share_hidden_hint">Porcentajes y palabras: más seguro para un chat</string>
+    <string name="recap_share_shown">Con importes</string>
+    <string name="recap_share_shown_hint">Como en la pantalla</string>
 </resources>

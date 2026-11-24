@@ -32,6 +32,8 @@ data class MonthRecap(
     /** Days with at least one record, and the longest run of such days in a row. */
     val recordedDays: Int,
     val streak: Int,
+    /** 0-based day of the period where the first longest run begins. */
+    val streakStart: Int = 0,
     val limits: LimitsTally?,
     val earned: Money,
     val missing: Set<CurrencyCode> = emptySet(),
@@ -55,11 +57,12 @@ data class MonthRecap(
             if (busiestWeek != null) add(RecapCard.WEEKS)
             if (newCategoryIds.isNotEmpty()) add(RecapCard.NEW_CATEGORY)
             if (weekdayAverage != null && weekendAverage != null) add(RecapCard.WEEKEND)
+            if (streak >= MIN_STREAK_CARD) add(RecapCard.STREAK)
             add(RecapCard.FINAL)
         }
 }
 
-enum class RecapCard { TOP_CATEGORIES, VS_PREVIOUS, WEEKS, NEW_CATEGORY, WEEKEND, FINAL }
+enum class RecapCard { TOP_CATEGORIES, VS_PREVIOUS, WEEKS, NEW_CATEGORY, WEEKEND, STREAK, FINAL }
 
 data class CategoryShare(val categoryId: String, val amount: Money, val percent: Int)
 
@@ -98,6 +101,7 @@ fun monthRecap(
         else sums.byCategory.filterValues { it.isPositive }.keys.filter { it !in knownBefore }.sorted(),
         recordedDays = recorded.count { it },
         streak = longestRun(recorded),
+        streakStart = longestRunStart(recorded),
         limits = limits,
         earned = ledger.earned(month).total(currency),
         missing = sums.missing,
@@ -124,7 +128,25 @@ internal fun longestRun(flags: List<Boolean>): Int {
     return best
 }
 
+/** Index where the first longest run of `true` begins; 0 when there is none. */
+internal fun longestRunStart(flags: List<Boolean>): Int {
+    var best = 0
+    var bestStart = 0
+    var run = 0
+    flags.forEachIndexed { i, f ->
+        run = if (f) run + 1 else 0
+        if (run > best) {
+            best = run
+            bestStart = i - run + 1
+        }
+    }
+    return bestStart
+}
+
 private fun DayOfWeek.isWeekday() = this != DayOfWeek.SATURDAY && this != DayOfWeek.SUNDAY
 
 const val TOP_CATEGORIES = 5
+
+/** A run of this many days in a row (or more) gets its own story. */
+const val MIN_STREAK_CARD = 5
 private const val DAYS_IN_WEEK = 7

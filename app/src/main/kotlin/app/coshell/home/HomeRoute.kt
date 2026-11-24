@@ -38,6 +38,7 @@ fun HomeRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
+    val syncDot by syncViewModel.dot.collectAsStateWithLifecycle()
     val upcoming by upcomingViewModel.rows.collectAsStateWithLifecycle()
     val upcomingTotal by upcomingViewModel.total.collectAsStateWithLifecycle()
     val creditPayments by upcomingViewModel.credit.collectAsStateWithLifecycle()
@@ -73,6 +74,7 @@ fun HomeRoute(
         finale = finale,
         onFinale = hintsViewModel::dismissFinale,
         draftCount = drafts,
+        syncDot = syncDot,
     )
     if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }

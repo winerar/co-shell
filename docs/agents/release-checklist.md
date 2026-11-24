@@ -58,7 +58,8 @@
 
 ## 6. Правила проекта (золотые правила `AGENTS.md`)
 - [x] **[есть, #377]** `ProjectRulesTest`: нет `Double`/`Float` в денежном коде; нет `android.*`/`java.*` в `core:model`/`core:domain`.
-- [x] **[есть, #377]** Lint `HardcodedText`/`MissingTranslation`/`ExtraTranslation`/`MissingQuantity` — ошибкой; литералы в `Text(…)` —
+- [ ] **[перед публикацией, 2026-11-24]** Переводы en/es догнать: `agent.sh l10n` показывает пусто, `translations-pending.txt` пуст, `PUBLISHING=1` тест зелёный; вернуть lint `MissingTranslation` ошибкой (`app/build.gradle.kts`) и правило «во всех языках в одном коммите».
+- [x] **[есть, #377]** Lint `HardcodedText`/`ExtraTranslation`/`MissingQuantity` — ошибкой (`MissingTranslation` выключен на паузе); литералы в `Text(…)` —
   `HardcodedTextTest`; каждая строка во всех `AppLanguage.SUPPORTED` (`ru`, `en`, `es`) — `TranslationsTest`.
 - [x] **[агент, 2026-11-16]** Тексты ru/en/es прогнаны по словарю (транзакция, папка, чек, конверт, бэкап, черновик, отправитель, жаргон, Firebase/GitHub): единственное — «чек/receipt/recibo» в строках шаблона с другой валютой → «Сумма покупки» (`template_foreign_*`). «Папка» осталась только про папку для файлов (копии) — это верно.
 - [ ] Размеры файлов и документация — `session-end.sh` зелёный; `STATUS`, `ROADMAP`, `feature-map.md` актуальны.

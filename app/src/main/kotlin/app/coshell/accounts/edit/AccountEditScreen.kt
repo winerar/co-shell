@@ -29,7 +29,6 @@ import app.coshell.core.designsystem.components.CoShellSwitchLine
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditTitleActions
 import app.coshell.ui.form.IconColorSheet
@@ -41,7 +40,6 @@ import app.coshell.ui.sheet.EditSheetLayout
  */
 @Composable
 fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
-    var confirmDelete by rememberSaveable { mutableStateOf(false) }
     var colorsOpen by rememberSaveable { mutableStateOf(false) }
 
     Box {
@@ -49,7 +47,7 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             title = stringResource(if (state.isNew) R.string.account_edit_title_new else R.string.account_edit_title),
             onSave = actions.onSave,
             saveEnabled = !state.isLoading,
-            titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
+            titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived, actions.onDelete) },
         ) {
             if (state.isLoading) return@EditSheetLayout
             val colorLabel = stringResource(R.string.category_color)
@@ -107,17 +105,6 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             showIcons = false,
             allowNone = true,
             extra = { BankPresets(state.color, actions.onColorChange) },
-        )
-    }
-    if (confirmDelete) {
-        ConfirmDeleteDialog(
-            title = R.string.account_delete_confirm_title,
-            text = R.string.account_delete_confirm_text,
-            onConfirm = {
-                confirmDelete = false
-                actions.onDelete()
-            },
-            onDismiss = { confirmDelete = false },
         )
     }
     if (state.deleteBlocked) {

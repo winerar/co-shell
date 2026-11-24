@@ -11,6 +11,7 @@ import org.w3c.dom.Element
 /**
  * Every language of [AppLanguage.SUPPORTED] has the same strings as the Russian default
  * (`res/values`), with the same placeholders and the plural forms its grammar needs.
+ * Until publication a text may be Russian-only if it is listed in [TranslationPending] (owner 2026-11-24).
  */
 class TranslationsTest {
     private val res = File("src/main/res")
@@ -49,11 +50,35 @@ class TranslationsTest {
     private val requiredPlurals = mapOf("en" to setOf("one", "other"), "es" to setOf("one", "many", "other"))
 
     @Test
-    fun `every language has exactly the default keys`() {
+    fun `every language has the default keys except the pending ones`() {
+        val pending = TranslationPending.keys
         AppLanguage.SUPPORTED.drop(1).forEach { lang ->
             val translated = load("values-$lang")
-            assertEquals("keys of values-$lang", base.texts.keys.sorted(), translated.texts.keys.sorted())
+            val extra = translated.texts.keys - base.texts.keys
+            assertEquals("keys of values-$lang that the default lacks", emptyList<String>(), extra.sorted())
+            val missing = base.texts.keys - translated.texts.keys
+            assertEquals(
+                "untranslated in values-$lang — translate, or (until publication) list in translations-pending.txt (`agent.sh l10n --write`)",
+                emptyList<String>(),
+                (missing - pending).sorted(),
+            )
         }
+    }
+
+    @Test
+    fun `the pending list has no stale entries`() {
+        val translations = AppLanguage.SUPPORTED.drop(1).map { load("values-$it") }
+        val stale = TranslationPending.keys.filter { key ->
+            key !in base.texts || translations.all { key in it.texts }
+        }
+        assertEquals("translated or removed — delete from translations-pending.txt (`agent.sh l10n --write`)", emptyList<String>(), stale.sorted())
+    }
+
+    /** Switched on by publication: the paused translations must be caught up and the pending list empty. */
+    @Test
+    fun `nothing is left untranslated when publishing`() {
+        if (System.getenv("PUBLISHING") != "1") return
+        assertEquals("translate these before publishing", emptyList<String>(), TranslationPending.keys.sorted())
     }
 
     @Test
@@ -61,7 +86,7 @@ class TranslationsTest {
         AppLanguage.SUPPORTED.drop(1).forEach { lang ->
             val translated = load("values-$lang")
             base.texts.forEach { (key, args) ->
-                assertEquals("placeholders of $key in values-$lang", args, translated.texts[key])
+                if (key in translated.texts) assertEquals("placeholders of $key in values-$lang", args, translated.texts[key])
             }
         }
     }

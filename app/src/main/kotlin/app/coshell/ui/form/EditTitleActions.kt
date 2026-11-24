@@ -12,7 +12,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /**
  * «В архив» and «Удалить» as icons beside an editor's title (#290, board `Fb290FA`): the form keeps its room for
- * the item itself. Nothing for a new item. Delete asks first — see [ConfirmDeleteDialog].
+ * the item itself. Nothing for a new item. Delete does not ask (#194, board `Idea7A`): the editor offers «Отменить» through `UndoCenter`.
  */
 @Composable
 fun EditTitleActions(isNew: Boolean, archived: Boolean, onToggleArchived: () -> Unit, onDeleteClick: () -> Unit) {

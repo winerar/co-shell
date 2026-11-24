@@ -213,11 +213,6 @@ def account_blocked():
                      [('Отмена', 'text'), ('В архив', 'primary')]))
 
 
-def account_delete():
-    return (inner_screen('Счёт', field('Название', 'Старая карта') + field('Валюта', 'USD')) + scrim()
-            + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]))
-
-
 def _entry():
     import mockup_screens_entry  # one-step entry sheet (#505); imported late: it builds on this module
     return mockup_screens_entry
@@ -236,6 +231,6 @@ BOARDS = [
     ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
     ('EntryAllAccounts', '5 · Шторка: «Все ›» — все счета, как на «Счетах»', lambda: _entry().all_accounts()),
     ('CategoryBlocked', '7 · Категория: удалить нельзя', category_blocked),
-    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing), ('AccountDelete', '9 · Счёт: удалить?', account_delete),
+    ('AccountEditExisting', '9 · Счёт: правка, ошибки', account_existing),
     ('AccountBlocked', '9 · Счёт: удалить нельзя', account_blocked),
 ]

@@ -69,7 +69,7 @@ LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
     ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryReceiptTransfer', 'ReceiptWhichAccount', 'EntryUnsaved', 'EntryGuessHist', 'EntryGuessAi', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),
-    ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountDigits', 'AccountPass', 'AccountPassCheck', 'AccountsPass', 'CreditEdit', 'CreditTerms', 'CreditTermsSum', 'AccountsCredit', 'CreditTermsGrace', 'AccountsCreditGrace', 'AccountEditExisting', 'AccountDelete', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
+    ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountDigits', 'AccountPass', 'AccountPassCheck', 'AccountsPass', 'CreditEdit', 'CreditTerms', 'CreditTermsSum', 'AccountsCredit', 'CreditTermsGrace', 'AccountsCreditGrace', 'AccountEditExisting', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Вклад', ['DepositEdit', 'DepositTerms', 'AccountsDeposit', 'HomeDepositSoon']),
     ('Долги', ['DebtList', 'DebtEmpty', 'DebtNew', 'DebtDetail', 'DebtReturn']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),

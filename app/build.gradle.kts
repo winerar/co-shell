@@ -111,8 +111,10 @@ android {
         // Full lint runs in `check` on every PR; skipping lintVital keeps `assembleRelease` fast on main.
         checkReleaseBuilds = false
         ignoreTestSources = true // tests are not shipped; saves the lintAnalyze*Test tasks
-        // Golden rule 9 (#377): text only in resources, in every language of AppLanguage.SUPPORTED.
-        error += setOf("HardcodedText", "MissingTranslation", "ExtraTranslation", "MissingQuantity")
+        // Golden rule 9 (#377): text only in resources. Translations are paused until publication (owner 2026-11-24):
+        // MissingTranslation is off; TranslationsTest checks the pending list instead (translations-pending.txt).
+        error += setOf("HardcodedText", "ExtraTranslation", "MissingQuantity")
+        disable += "MissingTranslation"
     }
 }
 

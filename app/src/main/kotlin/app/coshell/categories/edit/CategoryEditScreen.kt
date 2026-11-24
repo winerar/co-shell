@@ -27,7 +27,6 @@ import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.TextKeyboard
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteBlockedDialog
 import app.coshell.ui.form.EditTitleActions
 import app.coshell.ui.form.IconColorSheet
@@ -39,14 +38,13 @@ import app.coshell.ui.sheet.EditSheetLayout
  */
 @Composable
 fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions) {
-    var confirmDelete by rememberSaveable { mutableStateOf(false) }
     var lookOpen by rememberSaveable { mutableStateOf(false) }
 
     EditSheetLayout(
         title = stringResource(state.titleRes),
         onSave = actions.onSave,
         saveEnabled = !state.isLoading,
-        titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived) { confirmDelete = true } },
+        titleAction = { EditTitleActions(state.isNew, state.archived, actions.onToggleArchived, actions.onDelete) },
     ) {
         if (state.isLoading) return@EditSheetLayout
         val lookLabel = stringResource(R.string.form_icon_and_color)
@@ -94,17 +92,6 @@ fun CategoryEditScreen(state: CategoryEditUiState, actions: CategoryEditActions)
             onIconSelect = actions.onIconChange,
             onColorSelect = { picked -> picked?.let(actions.onColorChange) },
             onClosed = { lookOpen = false },
-        )
-    }
-    if (confirmDelete) {
-        ConfirmDeleteDialog(
-            title = R.string.category_delete_confirm_title,
-            text = R.string.category_delete_confirm_text,
-            onConfirm = {
-                confirmDelete = false
-                actions.onDelete()
-            },
-            onDismiss = { confirmDelete = false },
         )
     }
     if (state.deleteBlocked) {

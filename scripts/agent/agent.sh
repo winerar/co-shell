@@ -41,6 +41,7 @@ usage() {
                           (модули: model, domain, data, ds — designsystem, app)
     gradle <задачи…>      любой вызов Gradle вместо ./gradlew
     profile [задачи]      где тратится время сборки
+    l10n [--write]        непереведённые тексты (пауза переводов до публикации): список, --write — обновить translations-pending.txt
     stability             отчёты компилятора Compose (app, ~1,5 мин) → нет нестабильных классов состояний (#383)
     bankcolors [--sheet f.png]  сверить цвета банков в BankColors.kt с иконками сервисов (сеть, Pillow; #505)
     shots [фильтр]        перезаписать эталоны скриншот-тестов (core:designsystem и экраны app) после
@@ -106,6 +107,7 @@ case "$cmd" in
         [ $status -eq 0 ] && echo "OK: $task" || echo "FAILED (exit $status)"
         exit $status ;;
     gradle) exec "$here/gradle.sh" "$@" ;;
+    l10n) exec python3 "$here/l10n.py" "$@" ;;
     stability)
         # --rerun: the build cache restores classes but not the reports (performance.md).
         rm -rf app/build/compose_reports

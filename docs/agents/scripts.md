@@ -59,6 +59,7 @@
 | `backup [-o файл]` (`gen-test-backup.py`) | тестовый бэкап ~9 тыс. операций (`--months`, `--per-day`, `--seed`) |
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |
+| `l10n [--write]` (`l10n.py`) | непереведённые тексты (пауза переводов до публикации, 2026-11-24): ключи есть в `values`, нет в `values-en`/`values-es`; `--write` обновляет `translations-pending.txt` — делать после добавления русской строки |
 | `stability` (`compose-stability.py`) | отчёты компилятора Compose для `app` (`--rerun`, ~1,5 мин) → падает на нестабильном классе состояния (`*UiState*`, `*State`) (#383) |
 | `aibench` | APK замера моделей на телефоне (`tools/aibench`, отдельный Gradle-проект вне `check`; на телефон — workflow `aibench.yml`, пре-релиз `aibench-N`) (#587) |
 | `python3 scripts/agent/ai_eval.py <модель.gguf>… [--tasks …] [--fewshot N]` | точность малых моделей на ПК по `docs/samples/ai/eval.json` (категория, заметки, голос, чеки); нужен `pip install llama-cpp-python`; `docs/research/on-device-ai.md` |

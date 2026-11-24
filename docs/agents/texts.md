@@ -4,7 +4,7 @@
 чтобы их можно было перевести и показать незнакомому человеку. Ревизия всех строк — 2026-11-14.
 
 ## Где живут
-- **Все строки UI — в ресурсах** `app/src/main/res/values/strings*.xml` (файл на тему: `strings_budgets.xml`…).
+- **Все строки UI — в ресурсах** (до публикации — только русский, en/es позже: `glossary.md` §«Языки») `app/src/main/res/values/strings*.xml` (файл на тему: `strings_budgets.xml`…).
   В Kotlin — только `stringResource(R.string.…)`; литералы на русском допустимы в `*Previews.kt`, `*Samples.kt`,
   каталогах дизайн-системы и тестах. Поиск нарушений: `grep -rnP '"[^"]*[А-Яа-яЁё]' app/src/main --include=*.kt`.
 - `core:model`/`core:domain` текстов не показывают: отдают коды/enum, текст выбирает `app`. Исключение —

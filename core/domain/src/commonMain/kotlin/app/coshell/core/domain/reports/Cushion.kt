@@ -17,7 +17,13 @@ data class Cushion(
     val tenths: Long get() = if (money.isPositive) money.scale(10, monthlySpend.amountMinor).amountMinor else 0L
 
     val wholeMonths: Long get() = tenths / 10
+
+    /** Under a month: whole weeks the money lasts (a month ≈ 30 days), at least one while there is money. */
+    val weeks: Long get() = if (tenths <= 0) 0 else maxOf(1L, tenths * DAYS_IN_MONTH / (10 * DAYS_IN_WEEK))
 }
+
+private const val DAYS_IN_MONTH = 30
+private const val DAYS_IN_WEEK = 7
 
 /**
  * The cushion at [worth] (the money now) against the spending of the last [HISTORY_MONTHS] full months of [series]

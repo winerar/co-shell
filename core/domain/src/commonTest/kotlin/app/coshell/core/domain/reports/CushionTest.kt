@@ -67,4 +67,12 @@ class CushionTest {
 
         assertEquals(setOf(ars, eur), c.missing)
     }
+
+    @Test
+    fun `under a month the cushion is counted in whole weeks, at least one`() {
+        val series = listOf(totals(9, 2_000), totals(10, 2_000))
+        assertEquals(3L, cushion(worth(money = 1_600, runningMonth = 11), series)!!.weeks)
+        assertEquals(1L, cushion(worth(money = 200, runningMonth = 11), series)!!.weeks)
+        assertEquals(0L, cushion(worth(money = 0, runningMonth = 11), series)!!.weeks)
+    }
 }

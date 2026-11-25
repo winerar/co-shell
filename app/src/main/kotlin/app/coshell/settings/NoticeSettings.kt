@@ -31,7 +31,7 @@ import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.ui.list.SectionTitle
 import app.coshell.core.designsystem.R as DesignR
 
-/** «Уведомления»: payment reminders and their time. */
+/** «Уведомления»: payment reminders, the limit notification (#186) and their time. */
 @Composable
 fun NoticeSettingsRoute(
     onBack: () -> Unit,
@@ -42,6 +42,7 @@ fun NoticeSettingsRoute(
     val enabled by viewModel.enabled.collectAsStateWithLifecycle()
     val hour by viewModel.hour.collectAsStateWithLifecycle()
     val daysBefore by viewModel.daysBefore.collectAsStateWithLifecycle()
+    val limits by viewModel.limitsEnabled.collectAsStateWithLifecycle()
     val options by screens.options.collectAsStateWithLifecycle()
     val main by accounts.mainCurrency.collectAsStateWithLifecycle()
     val context = LocalContext.current.applicationContext
@@ -54,6 +55,11 @@ fun NoticeSettingsRoute(
         onHourChange = { h -> viewModel.setHour(h, after = { RecurringPaymentsScheduler.schedule(context, replace = true) }) },
         daysBefore = daysBefore,
         onDaysBeforeChange = viewModel::setDaysBefore,
+        limitsEnabled = limits,
+        onLimitsChange = { on ->
+            viewModel.setLimitsEnabled(on)
+            if (on && !PaymentNotices.canNotify(context)) askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+        },
         partnerSpend = options.partnerSpend,
         onPartnerSpend = { on ->
             screens.change { it.copy(partnerSpend = on) }
@@ -74,6 +80,8 @@ fun NoticeSettingsScreen(
     onHourChange: (Int) -> Unit,
     daysBefore: Int,
     onDaysBeforeChange: (Int) -> Unit,
+    limitsEnabled: Boolean,
+    onLimitsChange: (Boolean) -> Unit,
     partnerSpend: Boolean,
     onPartnerSpend: (Boolean) -> Unit,
     partnerMin: Int,
@@ -93,6 +101,20 @@ fun NoticeSettingsScreen(
                         subtitle = stringResource(R.string.reminders_hint),
                         checked = remindersEnabled,
                         onCheckedChange = onRemindersChange,
+                    )
+                }
+            }
+        }
+        item { SectionTitle(stringResource(R.string.settings_notices_budgets)) }
+        item {
+            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
+                row {
+                    CoShellSwitchRow(
+                        leading = { MenuIcon(DesignR.drawable.ic_savings) },
+                        title = stringResource(R.string.settings_notices_limits),
+                        subtitle = stringResource(R.string.settings_notices_limits_hint),
+                        checked = limitsEnabled,
+                        onCheckedChange = onLimitsChange,
                     )
                 }
             }

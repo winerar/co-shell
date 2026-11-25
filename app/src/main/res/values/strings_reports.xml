@@ -174,4 +174,27 @@
     <string name="reports_weekday_5">П</string>
     <string name="reports_weekday_6">С</string>
     <string name="reports_weekday_7">В</string>
+    <!-- «Подушка» (#241, boards Cush241Reports, Cush241Edge). -->
+    <string name="reports_cushion_title">Подушка</string>
+    <string name="reports_cushion_caption">на счетах %1$s</string>
+    <string name="reports_cushion_value">≈ %1$s</string>
+    <string name="reports_cushion_unit">мес.</string>
+    <string name="reports_cushion_normal">Денег хватит при тратах как в среднем за полгода: %1$s в месяц.</string>
+    <plurals name="reports_cushion_few">
+        <item quantity="one">Посчитано по %1$d месяцу — с ростом записей станет точнее.</item>
+        <item quantity="few">Посчитано по %1$d месяцам — с ростом записей станет точнее.</item>
+        <item quantity="many">Посчитано по %1$d месяцам — с ростом записей станет точнее.</item>
+        <item quantity="other">Посчитано по %1$d месяца — с ростом записей станет точнее.</item>
+    </plurals>
+    <string name="reports_cushion_no_rate">Без учёта: %1$s — нет курса. «Ещё → Курсы».</string>
+    <plurals name="reports_cushion_low">
+        <item quantity="one">Денег хватит на ближайшую %1$d неделю. Лимит — ориентир, а не запрет: посмотрите «Бюджеты».</item>
+        <item quantity="few">Денег хватит на ближайшие %1$d недели. Лимит — ориентир, а не запрет: посмотрите «Бюджеты».</item>
+        <item quantity="many">Денег хватит на ближайшие %1$d недель. Лимит — ориентир, а не запрет: посмотрите «Бюджеты».</item>
+        <item quantity="other">Денег хватит на ближайшие %1$d недели. Лимит — ориентир, а не запрет: посмотрите «Бюджеты».</item>
+    </plurals>
+    <string name="reports_cushion_empty">На счетах в общем балансе сейчас нет денег.</string>
+    <string name="reports_cushion_not_yet">Появится после первого полного месяца записей.</string>
+    <string name="reports_cushion_scale_end">6 мес.</string>
+    <string name="reports_cushion_description">Подушка: денег хватит примерно на %1$s месяца</string>
 </resources>

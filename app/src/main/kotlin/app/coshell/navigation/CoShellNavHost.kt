@@ -35,6 +35,7 @@ import app.coshell.privacy.HiddenPill
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
 import app.coshell.recurring.notify.PaymentLinks
+import app.coshell.budgets.notify.BudgetLinks
 import app.coshell.shortcuts.ShortcutLink
 import app.coshell.shortcuts.ShortcutLinks
 import app.coshell.accounts.list.AccountsRoute
@@ -105,6 +106,7 @@ fun CoShellNavHost(
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
     shortcutLinks: ShortcutLinks? = null,
+    budgetLinks: BudgetLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -499,6 +501,17 @@ fun CoShellNavHost(
             }
             navController.navigate(destination) { launchSingleTop = true }
             shortcutLinks.consumed()
+        }
+    }
+
+    // The limit notification (#186): «Бюджеты» and that envelope over it — «Назад» lands on the list of limits.
+    if (budgetLinks != null) {
+        val link by budgetLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val limit = link ?: return@LaunchedEffect
+            navController.navigate(BudgetsDestination) { launchSingleTop = true }
+            navController.navigate(BudgetDetailDestination(limit.categoryId, limit.month.year, limit.month.month.number)) { launchSingleTop = true }
+            budgetLinks.consumed()
         }
     }
 }

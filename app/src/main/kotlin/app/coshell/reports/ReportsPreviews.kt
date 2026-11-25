@@ -11,6 +11,8 @@ import app.coshell.reports.ReportsUiState.Mark
 import app.coshell.reports.ReportsUiState.Comparison
 import app.coshell.reports.ReportsUiState.Capital
 import app.coshell.reports.ReportsUiState.CapitalPoint
+import app.coshell.reports.ReportsUiState.Cushion
+import app.coshell.reports.ReportsUiState.CushionGloss
 import app.coshell.reports.ReportsUiState.Income
 import app.coshell.reports.ReportsUiState.MemberRow
 import app.coshell.reports.ReportsUiState.TopFolder
@@ -107,6 +109,18 @@ object ReportsSamples {
         ),
     )
 
+    /** Board `Cush241Reports`: 9 000 USD, 2 000 USD a month over half a year. */
+    val cushion = Cushion(money = "9\u202F000\u00A0USD", months = "4,5", fraction = 0.75f, gloss = CushionGloss.NORMAL, monthlySpend = "2\u202F000\u00A0USD", historyMonths = 6)
+
+    /** Board `Cush241Edge`: few months, no rate, little money, nothing on the accounts, no full month yet. */
+    val cushionEdges = listOf(
+        cushion.copy(gloss = CushionGloss.FEW, historyMonths = 2),
+        cushion.copy(gloss = CushionGloss.NO_RATE, missing = listOf("AMD")),
+        cushion.copy(money = "1\u202F600\u00A0USD", months = "0,8", fraction = 0.8f / 6, gloss = CushionGloss.LOW, weeks = 3),
+        cushion.copy(money = "0\u00A0USD", months = "0", fraction = 0f, gloss = CushionGloss.EMPTY),
+        Cushion(money = "9\u202F000\u00A0USD"),
+    )
+
     val state = ReportsUiState(
         period = ReportPeriod.month(YearMonth(2026, 11)),
         today = LocalDate(2026, 11, 11),
@@ -117,6 +131,7 @@ object ReportsSamples {
         income = income,
         members = members,
         capital = capital,
+        cushion = cushion,
     )
 
     val empty = state.copy(spending = null)

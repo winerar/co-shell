@@ -22,6 +22,11 @@ interface ReminderSettings {
 
     suspend fun setDaysBefore(days: Int)
 
+    /** «Лимиты» (#186): once a day at [hour] — 80 % of a limit or spending ahead of the month. On by default. */
+    val limitsEnabled: Flow<Boolean>
+
+    suspend fun setLimitsEnabled(enabled: Boolean)
+
     companion object {
         const val DEFAULT_HOUR = 9
 

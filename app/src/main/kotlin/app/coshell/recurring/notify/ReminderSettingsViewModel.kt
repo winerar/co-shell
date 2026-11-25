@@ -37,4 +37,11 @@ class ReminderSettingsViewModel @Inject constructor(private val settings: Remind
     fun setDaysBefore(days: Int) {
         viewModelScope.launch { settings.setDaysBefore(days) }
     }
+
+    /** «Лимиты» (#186): on until loaded. */
+    val limitsEnabled: StateFlow<Boolean> = settings.limitsEnabled.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
+    fun setLimitsEnabled(enabled: Boolean) {
+        viewModelScope.launch { settings.setLimitsEnabled(enabled) }
+    }
 }

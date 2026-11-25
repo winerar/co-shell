@@ -7,6 +7,8 @@
 **Без релиза** (владелец 2026-11-25): изменили только страницу (`site/`, `scripts/landing_texts.py`, `make_landing.py`, `privacy_pages.py`, `qr_code.py`) — после мержа в `dev`
 CI сам пересобирает её из `version.json` последнего релиза (шаг «Publish landing (dev)», `scripts/ci/landing-changed.sh` + `publish-landing.sh`); APK и телефоны не трогаются.
 В Pages должен быть выбран источник **ветка `gh-pages`** (не `main`), иначе по адресу — служебная страница из README.
+**Не для поисковиков** (владелец 2026-11-25: делимся только ссылкой): на каждой странице `<meta name="robots" content="noindex, nofollow">` (тест
+`test_no_page_is_open_to_search_engines`); `robots.txt` не помогает — у Pages проекта он должен лежать в корне `<логин>.github.io`.
 По умолчанию публикация **выключена**.
 
 ## Включить (один раз)

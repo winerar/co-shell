@@ -127,6 +127,7 @@ def render(kind, lang):
            f'<a href="../../{other}/{lang}/">{html.escape(t[f"{other}_link"])}</a>')
     return (f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
+            '<meta name="robots" content="noindex, nofollow">'  # shared by link only, not in search (owner 2026-11-25)
             f"<title>{html.escape(title)}</title><style>{CSS}</style></head><body>"
             f"<nav>{nav}</nav><h1>{html.escape(title.split(' — ')[0])}</h1>\n{_body(t[kind])}</body></html>\n")
 

@@ -119,6 +119,7 @@ def chooser():
     links = " · ".join(f'<a href="{code}/">{label}</a>' for code, label in LANGS)
     return (
         '<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex, nofollow">'
         "<title>Co-Shell</title><script>"
         "var l=(navigator.languages||[navigator.language||'ru']).map(function(x){return x.slice(0,2)})"
         ".filter(function(x){return x==='ru'||x==='en'||x==='es'})[0]||'ru';location.replace(l+'/');"

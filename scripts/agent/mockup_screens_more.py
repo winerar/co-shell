@@ -53,7 +53,7 @@ def avatar(ch, color, ink):
 
 
 def family_signed_out():
-    return fam(hero('user', 'Общий бюджет на двоих', 'Войдите через Google, чтобы вести бюджет вместе. Без интернета всё тоже работает. '
+    return fam(hero('user', 'Общий бюджет с близкими', 'Войдите через Google, чтобы вести бюджет вместе. Без интернета всё тоже работает. '
                     'Вступить можно только по приглашению.', VIOLET, top=24)
                + '<div style="margin-top: 28px;">' + button('Войти через Google', 'primary', 'google', 0) + '</div>')
 

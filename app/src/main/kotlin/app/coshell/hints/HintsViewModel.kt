@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class HintsViewModel @Inject constructor(
     private val store: HintStore,
-    accounts: AccountRepository,
+    private val accounts: AccountRepository,
     private val transactions: TransactionRepository,
     private val budgetSource: BudgetSource,
     private val moneyFormat: MoneyFormat,
@@ -58,7 +58,17 @@ class HintsViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        viewModelScope.launch { center.load() }
+        viewModelScope.launch {
+            center.load()
+            center.checkTour { accounts.observeAccounts().first().isNotEmpty() || transactions.observeTransactions(TransactionFilter(limit = 1)).first().isNotEmpty() }
+        }
+    }
+
+    /** «Знакомство с приложением» on «Обзор» (#598). */
+    val tour: StateFlow<Boolean> = center.tour
+
+    fun tourDone() {
+        viewModelScope.launch { center.tourDone() }
     }
 
     private val data: Flow<FirstStepsData> = combine(

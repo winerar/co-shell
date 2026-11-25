@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Знакомство с приложением» (#598, owner poll 2026-11-25: card on a new «Обзор» — «А», boards Tour598*). -->
+<resources>
+    <string name="tour_header">Знакомство</string>
+    <string name="tour_title">Знакомство с приложением</string>
+    <string name="tour_hint">Что где и для чего</string>
+    <string name="tour_step">Шаг %1$d из %2$d</string>
+    <string name="tour_start">Начать</string>
+    <string name="tour_accounts_title">Начните со счёта</string>
+    <string name="tour_accounts_text">Карта, наличные или копилка — где лежат деньги. Баланс считается сам: Ещё → Счета.</string>
+    <string name="tour_entry_title">Записывайте траты</string>
+    <string name="tour_entry_text">Нажмите «+» — расход, доход или перевод. Удерживайте «+»: QR чека, заметка, шаблон.</string>
+    <string name="tour_categories_title">Категории</string>
+    <string name="tour_categories_text">На что ушли деньги. Готовые уже есть, свои добавите в «Ещё → Категории».</string>
+    <string name="tour_budgets_title">Лимиты на месяц</string>
+    <string name="tour_budgets_text">Сколько готовы тратить на категорию. Видно, сколько осталось. Это ориентир, а не запрет: Ещё → Бюджеты.</string>
+    <string name="tour_reports_title">Отчёты и итоги</string>
+    <string name="tour_reports_text">Куда уходят деньги — по категориям, месяцам и в календаре. В начале месяца — «Итоги».</string>
+    <string name="tour_family_title">Вместе и в сохранности</string>
+    <string name="tour_family_text">Позовите близкого — записи соберутся вместе: Ещё → Семья. Резервная копия — в «Ещё → Резервная копия».</string>
+</resources>

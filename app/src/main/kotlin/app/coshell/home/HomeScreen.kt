@@ -60,6 +60,7 @@ import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
 import app.coshell.release.ReleaseNotice
 import app.coshell.release.ReleaseNoticeCard
+import app.coshell.hints.TourCard
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.sync.SyncDot
@@ -104,6 +105,9 @@ fun HomeScreen(
     release: ReleaseNotice? = null,
     onReleaseOpen: () -> Unit = {},
     onReleaseDismiss: () -> Unit = {},
+    tour: Boolean = false,
+    onTourOpen: () -> Unit = {},
+    onTourDismiss: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -154,6 +158,7 @@ fun HomeScreen(
             release?.let { notice ->
                 item(key = "release") { ReleaseNoticeCard(notice.versionName, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
             }
+            if (tour) item(key = "tour") { TourCard(onTourOpen, onTourDismiss, listItemMotion()) }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }

@@ -41,8 +41,8 @@
 | Семья: удалить семью? | FamilyDelete | — | — | — |
 | Семья: удалить аккаунт? | FamilyDeleteAccount | — | — | — |
 | Семья: вас убрали | FamilyRemoved | — | — | — |
-| Код приглашения | AccessGate | — | — | — |
-| Доступ закрыт | AccessLocked | — | — | — |
+| Код приглашения | AccessGate | access_code | ✓ | ✓ |
+| Доступ закрыт | AccessLocked | access_locked | ✓ | ✓ |
 | Настройки | Set1Root | settings | ✓ | ✓ |
 | Внешний вид | Set1Look | appearance | ✓ | ✓ |
 | Конфиденциальность | Priv145Settings | privacy | ✓ | ✓ |
@@ -109,8 +109,6 @@
 - Семья: удалить семью? (нет эталона: light, dark)
 - Семья: удалить аккаунт? (нет эталона: light, dark)
 - Семья: вас убрали (нет эталона: light, dark)
-- Код приглашения (нет эталона: light, dark)
-- Доступ закрыт (нет эталона: light, dark)
 - ИИ на телефоне: скачивание дополнения (ai_addon_addon_loading: light)
 - Быстрые заметки: облако (нет эталона: light, dark)
 - Быстрые заметки: читает облако (нет эталона: light, dark)

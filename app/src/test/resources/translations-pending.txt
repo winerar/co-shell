@@ -77,6 +77,9 @@ settings_home_intro
 settings_home_tiles_note
 settings_home_tiles_section
 settings_input_account_hint
+settings_invite_for
+settings_invite_revoked
+settings_invite_title
 settings_notices_partner_note
 settings_ops_amount_hint
 steps_family_hint

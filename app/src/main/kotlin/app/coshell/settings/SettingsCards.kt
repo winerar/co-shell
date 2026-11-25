@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import app.coshell.R
+import app.coshell.core.designsystem.theme.LocalStatusPalette
 import app.coshell.ai.AiAddonStage
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -120,7 +122,10 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
         }
     }
 
-/** «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen. */
+/**
+ * «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen.
+ * «Код приглашения» — only in builds with the gate (#671, boards `Inv671A`, `Inv671ARevoked`).
+ */
 @Composable
 internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
     GroupCard(DesignR.drawable.ic_lightbulb, 13, R.string.settings_help_title, onAll = null) {
@@ -132,6 +137,16 @@ internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
             )
         }
         row { ValueRow(stringResource(R.string.hints_reset_title), stringResource(R.string.hints_reset_hint), actions.onHintsReset) }
+        state.invite?.let { invite ->
+            row {
+                ValueRow(
+                    stringResource(R.string.settings_invite_title),
+                    if (invite.revoked) stringResource(R.string.settings_invite_revoked) else stringResource(R.string.settings_invite_for, invite.label),
+                    actions.onInvite,
+                    valueColor = if (invite.revoked) LocalStatusPalette.current.warning else Color.Unspecified,
+                )
+            }
+        }
     }
 
 /** A group: its icon and name in caps, «Все ›» to the group screen [onAll] (none — no such screen), then its main settings in one card. */
@@ -149,14 +164,14 @@ private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int,
 
 /** A setting shown by its value: tap opens where it is chosen. */
 @Composable
-private fun ValueRow(title: String, value: String, onClick: () -> Unit, beta: Boolean = false) = CoShellListRow(
+private fun ValueRow(title: String, value: String, onClick: () -> Unit, beta: Boolean = false, valueColor: Color = Color.Unspecified) = CoShellListRow(
     title = {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
             if (beta) BetaMark()
         }
     },
-    supporting = { Text(value, maxLines = Int.MAX_VALUE, overflow = TextOverflow.Ellipsis) },
+    supporting = { Text(value, color = valueColor, maxLines = Int.MAX_VALUE, overflow = TextOverflow.Ellipsis) },
     trailing = { Icon(painterResource(DesignR.drawable.ic_chevron_right), contentDescription = null) },
     onClick = onClick,
     dense = true,

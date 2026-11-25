@@ -11,6 +11,10 @@ import app.coshell.access.AccessEntry
 import app.coshell.access.AccessError
 import app.coshell.access.AccessLockedDialog
 import app.coshell.access.AccessScreen
+import app.coshell.access.InviteRow
+import app.coshell.settings.HelpCard
+import app.coshell.settings.SettingsActions
+import app.coshell.settings.SettingsState
 import app.coshell.core.designsystem.theme.CoShellTheme
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
@@ -20,7 +24,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** #666/#671: the code screen (board `AccessGate`, with «Отмена» — `Inv671Change`) and the «Доступ закрыт» window (`AccessLocked`). */
+/**
+ * #666/#671: the code screen (board `AccessGate`, with «Отмена» — `Inv671Change`), the «Доступ закрыт» window (`AccessLocked`)
+ * and the «Код приглашения» row in «Настройки → Помощь» (`Inv671A`, `Inv671ARevoked`).
+ */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
@@ -37,6 +44,14 @@ class AccessScreenshotTest {
     @Test fun `locked dark`() = shot("access_locked_dark", dark = true, dialog = true) { AccessLockedDialog({}, {}, {}) }
 
     @Test fun `locked light`() = shot("access_locked_light", dialog = true) { AccessLockedDialog({}, {}, {}) }
+
+    @Test fun `settings invite dark`() = shot("settings_invite_dark", dark = true) { help(InviteRow("Алекс", revoked = false)) }
+
+    @Test fun `settings invite light`() = shot("settings_invite_light") { help(InviteRow("Алекс", revoked = false)) }
+
+    @Test fun `settings invite revoked dark`() = shot("settings_invite_revoked_dark", dark = true) { help(InviteRow("Алекс", revoked = true)) }
+
+    @Composable private fun help(invite: InviteRow) = HelpCard(SettingsState(invite = invite), SettingsActions())
 
     private fun shot(name: String, dark: Boolean = false, dialog: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false

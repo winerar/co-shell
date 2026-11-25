@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.access.AccessViewModel
+import app.coshell.access.InviteRow
+import app.coshell.access.inviteRow
 import app.coshell.ai.AiAddonStage
 import app.coshell.ai.AiAddonViewModel
 import app.coshell.ai.cloud.CloudAiStage
@@ -52,6 +55,8 @@ data class SettingsActions(
     /** «Подсказки» on/off and «Показать подсказки заново» (moved here from «Ещё», poll 2026-11-20, Б). */
     val onHints: (Boolean) -> Unit = {},
     val onHintsReset: () -> Unit = {},
+    /** «Код приглашения»: the code screen with «Отмена» over the app (#671). */
+    val onInvite: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */
@@ -70,6 +75,8 @@ data class SettingsState(
     val ai: AiAddonStage = AiAddonStage.OFF,
     /** «Облачный разбор» on the same card (#635): `null` — this build has no Worker, the row is hidden; else on or off. */
     val cloud: Boolean? = null,
+    /** «Код приглашения» in «Помощь» (#671): `null` — no gate in this build or no code yet, the row is hidden. */
+    val invite: InviteRow? = null,
 )
 
 @Composable
@@ -83,7 +90,9 @@ fun SettingsRoute(
     hints: HintsViewModel = hiltViewModel(),
     ai: AiAddonViewModel = hiltViewModel(),
     cloud: CloudAiViewModel = hiltViewModel(),
+    access: AccessViewModel = hiltViewModel(),
 ) {
+    val accessState by access.state.collectAsStateWithLifecycle()
     val cloudState by cloud.state.collectAsStateWithLifecycle()
     val aiState by ai.state.collectAsStateWithLifecycle()
     val hintsOn by hints.enabled.collectAsStateWithLifecycle()
@@ -102,6 +111,7 @@ fun SettingsRoute(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
             options.weekStart, options.syncWifiOnly, hintsOn, aiState.stage,
             cloud = if (cloudState.configured) cloudState.stage == CloudAiStage.ON else null,
+            invite = accessState.inviteRow(),
         ),
         actions.copy(
             onThemeMode = { m -> if (m != mode) reveal.change { theme.setMode(m) } },
@@ -111,6 +121,7 @@ fun SettingsRoute(
             onWifiOnly = { v -> screens.change(after = { SyncScheduler.schedulePeriodic(context) }) { it.copy(syncWifiOnly = v) } },
             onHints = hints::setEnabled,
             onHintsReset = hints::reset,
+            onInvite = access::changeCode,
         ),
     )
 }

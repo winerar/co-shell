@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2248 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v24.
+- Тесты: всего 2254 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v24.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,5 +69,5 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-25, `claude/amazing-hopper-39n1q4`: **#671** — строка «Код приглашения · Выдан: …» в «Ещё → Настройки → Помощь» (опрос https://claude.ai/artifact/QrGis92GudRanFPmQtj4aS — «А»), эталоны экрана кода, окна «Доступ закрыт» и строки (`AccessScreenshotTest`), шаги «Код приглашения» на доске `Flows`.
-Лендинг: инструкция установки — один список для любого Android (вкладки Chrome / Xiaomi убраны). #671 закрыта.
+2026-11-25, `claude/exciting-faraday-l31oxr`: **#652** — строка «Конфиденциальность» в «Ещё → Настройки → Помощь» (опрос https://claude.ai/artifact/PoQi12zxFz71T3BF1F2vS6 — «А»), политика сверена с трафиком приложения.
+Закрытый тест ждёт владельца: #669 (лендинг), #670 (коды), #657 (Play Console). Дальше агенту — #651 (flavor `play`); #655 отложен владельцем.

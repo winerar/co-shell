@@ -163,4 +163,6 @@
     <string name="settings_invite_title">Код приглашения</string>
     <string name="settings_invite_for">Выдан: %1$s</string>
     <string name="settings_invite_revoked">Больше не действует</string>
+    <string name="settings_policy_title">Конфиденциальность</string>
+    <string name="settings_policy_hint">Что хранится и как удалить данные</string>
 </resources>

@@ -51,7 +51,12 @@ class AccessScreenshotTest {
 
     @Test fun `settings invite revoked dark`() = shot("settings_invite_revoked_dark", dark = true) { help(InviteRow("Алекс", revoked = true)) }
 
-    @Composable private fun help(invite: InviteRow) = HelpCard(SettingsState(invite = invite), SettingsActions())
+    /** «Конфиденциальность» under the code (#652, board `Priv652A`). */
+    @Test fun `settings policy dark`() = shot("settings_policy_dark", dark = true) { help(InviteRow("Алекс", revoked = false), policy = true) }
+
+    @Test fun `settings policy light`() = shot("settings_policy_light") { help(InviteRow("Алекс", revoked = false), policy = true) }
+
+    @Composable private fun help(invite: InviteRow, policy: Boolean = false) = HelpCard(SettingsState(invite = invite, policy = policy), SettingsActions())
 
     private fun shot(name: String, dark: Boolean = false, dialog: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false

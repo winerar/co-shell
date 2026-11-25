@@ -82,6 +82,8 @@ settings_invite_revoked
 settings_invite_title
 settings_notices_partner_note
 settings_ops_amount_hint
+settings_policy_hint
+settings_policy_title
 steps_family_hint
 sync_dot_ok
 sync_dot_pending

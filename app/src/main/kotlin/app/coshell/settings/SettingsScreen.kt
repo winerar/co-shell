@@ -12,7 +12,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.coshell.BuildConfig
 import app.coshell.R
+import app.coshell.language.AppLanguage
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalUriHandler
 import app.coshell.access.AccessViewModel
 import app.coshell.access.InviteRow
 import app.coshell.access.inviteRow
@@ -57,6 +61,8 @@ data class SettingsActions(
     val onHintsReset: () -> Unit = {},
     /** «Код приглашения»: the code screen with «Отмена» over the app (#671). */
     val onInvite: () -> Unit = {},
+    /** «Конфиденциальность»: the privacy policy page in the phone's browser (#652). */
+    val onPolicy: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */
@@ -77,6 +83,8 @@ data class SettingsState(
     val cloud: Boolean? = null,
     /** «Код приглашения» in «Помощь» (#671): `null` — no gate in this build or no code yet, the row is hidden. */
     val invite: InviteRow? = null,
+    /** «Конфиденциальность» in «Помощь» (#652): `false` — this build does not know the site, the row is hidden. */
+    val policy: Boolean = false,
 )
 
 @Composable
@@ -106,12 +114,15 @@ fun SettingsRoute(
     val joined = codes.fold("") { acc, c -> if (acc.isEmpty()) c else stringResource(R.string.settings_join, acc, c) }
     val reveal = LocalThemeReveal.current
     val context = LocalContext.current.applicationContext
+    val uris = LocalUriHandler.current
+    val policyUrl = remember { PolicyLink.of(BuildConfig.SITE_URL, AppLanguage.current()) }
     SettingsScreen(
         SettingsState(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
             options.weekStart, options.syncWifiOnly, hintsOn, aiState.stage,
             cloud = if (cloudState.configured) cloudState.stage == CloudAiStage.ON else null,
             invite = accessState.inviteRow(),
+            policy = policyUrl != null,
         ),
         actions.copy(
             onThemeMode = { m -> if (m != mode) reveal.change { theme.setMode(m) } },
@@ -122,6 +133,7 @@ fun SettingsRoute(
             onHints = hints::setEnabled,
             onHintsReset = hints::reset,
             onInvite = access::changeCode,
+            onPolicy = { policyUrl?.let { url -> runCatching { uris.openUri(url) } } },
         ),
     )
 }

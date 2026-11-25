@@ -40,7 +40,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** «Первые шаги» on «Обзор» and the hints switch in «Ещё → Приложение» (#513, `docs/agents/hints.md`). */
+/**
+ * «Первые шаги» on «Обзор» and the launch-time warm moments (#513, `docs/agents/hints.md`). The switch and «Показать заново»
+ * live in [HintCenter] (one state for the whole app); «Ещё → Настройки → Помощь» uses [HintsSettingsViewModel].
+ */
 @HiltViewModel
 class HintsViewModel @Inject constructor(
     private val store: HintStore,
@@ -54,17 +57,8 @@ class HintsViewModel @Inject constructor(
     private val center: HintCenter,
 ) : ViewModel() {
 
-    private val _enabled = MutableStateFlow(true)
-    private val hidden = MutableStateFlow(false)
-
-    /** «Подсказки»: shown / off. */
-    val enabled: StateFlow<Boolean> = _enabled.asStateFlow()
-
     init {
-        viewModelScope.launch {
-            _enabled.value = store.enabled()
-            hidden.value = store.stepsHidden()
-        }
+        viewModelScope.launch { center.load() }
     }
 
     private val data: Flow<FirstStepsData> = combine(
@@ -75,8 +69,8 @@ class HintsViewModel @Inject constructor(
     ) { account, entry, limit, partner -> FirstStepsData(account, entry, limit, partner) }.offMain()
 
     /** The steps the row shows; null while loading or when hints are off. Ticks come from the data. */
-    val steps: StateFlow<FirstStepsState?> = combine(data, hidden, _enabled) { facts, isHidden, on ->
-        if (on) FirstStepsState.of(facts, isHidden) else null
+    val steps: StateFlow<FirstStepsState?> = combine(data, center.stepsHidden, center.enabled) { facts, isHidden, on ->
+        if (on == true && isHidden != null) FirstStepsState.of(facts, isHidden) else null
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private val _finale = MutableStateFlow(false)
@@ -94,7 +88,7 @@ class HintsViewModel @Inject constructor(
                 when (moment) {
                     StepsMoment.FIRST_ENTRY -> center.offer(mapOf(HintId.FIRST_ENTRY to R.string.hint_first_entry))
                     StepsMoment.FIRST_LIMIT -> center.offer(mapOf(HintId.FIRST_LIMIT to R.string.hint_first_limit))
-                    StepsMoment.FINALE -> if (store.enabled() && !hidden.value && FINALE_KEY !in store.shown()) {
+                    StepsMoment.FINALE -> if (store.enabled() && !store.stepsHidden() && FINALE_KEY !in store.shown()) {
                         store.markShown(FINALE_KEY)
                         _finale.value = true
                     }
@@ -108,9 +102,10 @@ class HintsViewModel @Inject constructor(
         // Time-based moments are checked once per launch, a little after the start (never in the first seconds).
         viewModelScope.launch {
             delay(MOMENTS_DELAY_MS)
-            val today = System.currentTimeMillis() / MILLIS_PER_DAY
+            if (!center.takeLaunchMoments()) return@launch
+            val today = localDay(System.currentTimeMillis())
             val recent = transactions.observeTransactions(TransactionFilter(limit = TimeMoments.BACKUP_ENTRIES)).first()
-            val last = recent.maxOfOrNull { it.date.toEpochMilliseconds() / MILLIS_PER_DAY }
+            val last = recent.maxOfOrNull { localDay(it.date.toEpochMilliseconds()) }
             val facts = MomentFacts(
                 today = today,
                 firstSeenDay = store.firstSeenDay(today),
@@ -141,29 +136,10 @@ class HintsViewModel @Inject constructor(
     }
 
     fun hideSteps() {
-        hidden.value = true
-        viewModelScope.launch { store.setStepsHidden(true) }
-    }
-
-    fun setEnabled(value: Boolean) {
-        _enabled.value = value
-        viewModelScope.launch { store.setEnabled(value) }
-    }
-
-    /** «Показать подсказки заново»: nothing is shown yet, the steps are back, hints are on. */
-    fun reset() {
-        _enabled.value = true
-        hidden.value = false
-        _finale.value = false
-        viewModelScope.launch {
-            store.reset()
-            center.resetVisit()
-            center.say(R.string.hints_reset_done)
-        }
+        viewModelScope.launch { center.hideSteps() }
     }
 
     private companion object {
-        const val MILLIS_PER_DAY = 86_400_000L
         const val MOMENTS_DELAY_MS = 6_000L
         val TIME_MOMENT_TEXTS = mapOf(
             HintId.MONTH_END to R.string.hint_month_end,

@@ -1,5 +1,8 @@
 package app.coshell.hints
 
+import app.coshell.R
+import java.util.TimeZone
+
 import androidx.annotation.StringRes
 import app.coshell.core.domain.hints.HintId
 import app.coshell.core.domain.hints.HintKind
@@ -52,12 +55,55 @@ interface HintHost {
  */
 @Singleton
 class HintCenter(private val store: HintStore, private val today: () -> Long) : HintHost {
-    @Inject constructor(store: HintStore) : this(store, { System.currentTimeMillis() / MILLIS_PER_DAY })
+    @Inject constructor(store: HintStore) : this(store, { localDay(System.currentTimeMillis()) })
 
     private val lock = Mutex()
     private var shownThisVisit = false
+    private var launchMomentsTaken = false
     private val _banner = MutableStateFlow<HintBanner?>(null)
     override val banner: StateFlow<HintBanner?> = _banner.asStateFlow()
+
+    /** Claimed while another banner was up: shown one by one after it, so a claimed moment is never lost. */
+    private val queue = ArrayDeque<HintBanner>()
+
+    // One state for every screen («Обзор» and «Настройки» have their own view models): null until read from the store.
+    private val _enabled = MutableStateFlow<Boolean?>(null)
+    private val _stepsHidden = MutableStateFlow<Boolean?>(null)
+
+    /** «Подсказки» on/off; null while loading (nothing is shown then). */
+    val enabled: StateFlow<Boolean?> = _enabled.asStateFlow()
+
+    /** «Скрыть шаги» was pressed; null while loading. */
+    val stepsHidden: StateFlow<Boolean?> = _stepsHidden.asStateFlow()
+
+    suspend fun load() {
+        if (_enabled.value == null) _enabled.value = store.enabled()
+        if (_stepsHidden.value == null) _stepsHidden.value = store.stepsHidden()
+    }
+
+    suspend fun setEnabled(value: Boolean) {
+        _enabled.value = value
+        store.setEnabled(value)
+        if (!value) clearBanners()
+    }
+
+    suspend fun hideSteps() {
+        _stepsHidden.value = true
+        store.setStepsHidden(true)
+    }
+
+    /** «Показать подсказки заново»: nothing is shown yet, the steps are back, hints are on; answered with a notice. */
+    suspend fun reset() {
+        store.reset()
+        _enabled.value = true
+        _stepsHidden.value = false
+        resetVisit()
+        clearBanners()
+        say(R.string.hints_reset_done)
+    }
+
+    /** True once per process: the time-based moments are checked a single time per launch, whoever asks. */
+    fun takeLaunchMoments(): Boolean = synchronized(this) { !launchMomentsTaken.also { launchMomentsTaken = true } }
     private val _reportsDot = MutableStateFlow(false)
     override val reportsDot: StateFlow<Boolean> = _reportsDot.asStateFlow()
 
@@ -77,16 +123,25 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
 
     override suspend fun offer(texts: Map<HintId, Int>, args: Map<HintId, List<String>>): Boolean {
         val id = claimFirst(texts.keys) ?: return false
-        _banner.value = HintBanner(id, texts.getValue(id), args[id].orEmpty())
+        show(HintBanner(id, texts.getValue(id), args[id].orEmpty()))
         if (id == HintId.MONTH_END) _reportsDot.value = true
         return true
     }
 
     override fun say(text: Int) {
-        _banner.value = HintBanner(null, text)
+        show(HintBanner(null, text))
     }
 
     override fun dismiss() {
+        synchronized(this) { _banner.value = queue.removeFirstOrNull() }
+    }
+
+    private fun show(banner: HintBanner) = synchronized(this) {
+        if (_banner.value == null) _banner.value = banner else queue.addLast(banner)
+    }
+
+    private fun clearBanners() = synchronized(this) {
+        queue.clear()
         _banner.value = null
     }
 
@@ -112,6 +167,11 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
     private companion object {
         /** «Already shown» key of the Reports dot; not a [HintId], `reset()` clears it with the rest. */
         const val DOT_SEEN_KEY = "reports_dot_seen"
-        const val MILLIS_PER_DAY = 86_400_000L
     }
 }
+
+private const val MILLIS_PER_DAY = 86_400_000L
+
+/** The day number of [millis] on the phone's clock (not UTC: in Argentina a UTC day turns at 21:00). */
+fun localDay(millis: Long): Long = (millis + TimeZone.getDefault().getOffset(millis)) / MILLIS_PER_DAY
+

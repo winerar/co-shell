@@ -26,7 +26,7 @@
     <string name="hint_close">Закрыть подсказку</string>
     <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
     <string name="hint_accounts">Счёт — место, где лежат деньги. Баланс считается сам.</string>
-    <string name="hint_scan_receipt">Есть QR на чеке? Нажмите значок камеры: сумма и дата подставятся сами.</string>
+    <string name="hint_scan_receipt">Есть QR на чеке? Нажмите значок QR: сумма и дата подставятся сами.</string>
     <string name="hint_categories">Категория — на что ушли деньги. Готовые подойдут, свои добавите потом.</string>
     <string name="hint_debts">Долг записывается отдельно от трат: баланс счёта меняется, а расходы и доходы — нет.</string>
     <string name="hint_budgets">Лимит — сколько можно потратить на категорию за месяц. Это ориентир, а не запрет.</string>

@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class NotesViewModel @Inject constructor(
     private val store: NoteStore,
     private val process: ProcessQuickNoteUseCase,
-    model: LanguageModel,
+    private val model: LanguageModel,
     private val limitNotice: CloudLimitNotice,
 ) : ViewModel() {
     private val cloud = model.cheap
@@ -41,11 +41,22 @@ class NotesViewModel @Inject constructor(
         viewModelScope.launch {
             val text = store.text()
             _state.value = NotesUiState(text = text, lineCount = QuickNoteDrafts.lines(text).size, cloud = cloud)
+            warmOnce()
         }
+    }
+
+    private var warmed = false
+
+    /** There is something to process: the phone model starts loading now, not on «Обработать» (#583 «оболочка» п. 7). */
+    private fun warmOnce() {
+        if (warmed || _state.value.lineCount == 0) return
+        warmed = true
+        viewModelScope.launch { model.warm() }
     }
 
     fun onTextChange(text: String) {
         _state.update { it.copy(text = text, lineCount = QuickNoteDrafts.lines(text).size, skipped = 0) }
+        warmOnce()
         viewModelScope.launch { store.save(text) }
     }
 

@@ -69,6 +69,22 @@ class DraftsViewModelsTest {
     private class FakeModel(override val cheap: Boolean = false, override val limited: Boolean = false) : LanguageModel {
         override val available = true
         override suspend fun complete(system: String, prompt: String): String? = null
+        var warms = 0
+        override suspend fun warm() { warms++ }
+    }
+
+    @Test
+    fun `the model starts loading once there is something to process, only once`() = runTest {
+        seed()
+        val model = FakeModel()
+        val vm = notes(MemoryNote(""), model)
+        assertEquals(0, model.warms)
+        vm.onTextChange("кофе 3500")
+        vm.onTextChange("кофе 3500\nтакси 2000")
+        assertEquals(1, model.warms)
+        val typed = FakeModel()
+        notes(MemoryNote("кофе 3500"), typed)
+        assertEquals(1, typed.warms)
     }
 
     private fun notes(store: NoteStore, model: FakeModel = FakeModel(), notice: CloudLimitNotice = CloudLimitNotice(), hints: NoteHints? = null) = NotesViewModel(

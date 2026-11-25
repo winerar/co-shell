@@ -20,6 +20,12 @@ interface LanguageModel {
      */
     val cheap: Boolean get() = false
 
+    /**
+     * The person is about to need the model (opened «Быстрые заметки», a receipt was not recognised): start loading it now so the
+     * request does not wait for the load (#583 «оболочка» п. 7). Returns at once; a model with nothing to load ignores it.
+     */
+    suspend fun warm() = Unit
+
     /** The last request was refused because the daily limit of the cloud is over (#635); the caller says so once and the phone model carries on. */
     val limited: Boolean get() = false
 }

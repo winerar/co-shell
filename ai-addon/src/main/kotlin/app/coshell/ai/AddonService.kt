@@ -57,6 +57,10 @@ class AddonService : Service() {
             }
             AddonProtocol.DOWNLOAD -> startDownload(message)
             AddonProtocol.COMPLETE -> handler.sendMessage(Message.obtain(message))
+            AddonProtocol.WARM -> {
+                reply(message, AddonProtocol.STATE, arg2 = model.state())
+                handler.post { if (model.state() == AddonProtocol.MODEL_READY) runCatching { llm.warm(model.file) } }
+            }
         }
     }
 

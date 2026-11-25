@@ -32,18 +32,30 @@ class NoteHints(private val model: LanguageModel) {
     /**
      * Hints for [lines] (same order); empty list entries are `null`. Without a model or on any failure — all `null`.
      * [accounts] — labels of the person's live accounts; the model may name one as the way of paying (never invent one).
+     * [examples] — the family's past «name → category» pairs ([HistoryExamples]): the model follows them for shops it does not know.
      */
-    suspend fun read(lines: List<String>, categories: List<String>, accounts: List<String> = emptyList()): List<NoteHint?> {
+    suspend fun read(
+        lines: List<String>,
+        categories: List<String>,
+        accounts: List<String> = emptyList(),
+        examples: List<HistoryExample> = emptyList(),
+    ): List<NoteHint?> {
         if (lines.isEmpty() || !model.available) return lines.map { null }
         // A long note goes in parts: the add-on's context is 2048 tokens and a small model loses count on long lists.
         return lines.chunked(MAX_LINES).flatMap { part ->
-            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts))
+            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts, examples))
             if (answer == null) part.map { null } else parse(answer, part.size, categories, accounts)
         }
     }
 
-    internal fun prompt(lines: List<String>, categories: List<String>, accounts: List<String> = emptyList()): String = buildString {
+    internal fun prompt(
+        lines: List<String>,
+        categories: List<String>,
+        accounts: List<String> = emptyList(),
+        examples: List<HistoryExample> = emptyList(),
+    ): String = buildString {
         appendLine("Categories: " + categories.joinToString(" | "))
+        HistoryExamples.promptLine(examples).takeIf { it.isNotEmpty() }?.let(::appendLine)
         if (accounts.isNotEmpty()) {
             appendLine("Accounts (name · currency · kind): " + accounts.joinToString(" | "))
             appendLine("If a note says or clearly implies how it was paid (a card, cash, a bank, an app, a person's card, a currency), give the best matching account exactly as written in the list as \"account\"; if it says nothing, leave it out.")

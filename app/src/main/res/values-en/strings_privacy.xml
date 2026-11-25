@@ -7,7 +7,6 @@
     <string name="privacy_section_entry">Sign-in</string>
     <string name="privacy_pin">PIN lock</string>
     <string name="privacy_pin_on">Asked every time you open the app</string>
-    <string name="privacy_pin_off">Off</string>
     <string name="privacy_biometric">Fingerprint or face</string>
     <string name="privacy_biometric_hint">Instead of the PIN, if your phone supports it</string>
     <string name="privacy_biometric_none">No fingerprint or face set up on this phone</string>
@@ -43,7 +42,6 @@
     <string name="pin_create">Choose a PIN</string>
     <string name="pin_create_hint">4 digits. We\'ll ask for it when you open the app.</string>
     <string name="pin_repeat">Repeat the PIN</string>
-    <string name="pin_repeat_hint">Just to be sure</string>
     <string name="pin_mismatch">The PINs don\'t match. Choose again.</string>
     <string name="eye_hide">Hide amounts</string>
     <string name="eye_show">Show amounts</string>

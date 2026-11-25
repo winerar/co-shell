@@ -156,6 +156,6 @@ def all_accounts():
         items = in_group(g)
         body += head(title, len(items)) + group([line(a, a[0] == chosen) for a in items])
     inner = ('<div style="padding: 8px 16px 0; display: flex; align-items: flex-end;"><h2 style="margin: 0; flex-grow: 1; font-size: 22px;">Откуда списали?</h2>'
-             '<span style="font-size: 12px; color: %s;">%d счетов</span></div><div style="padding: 0 16px; height: 560px; overflow: hidden;">%s</div>'
-             '<div style="padding: 8px 16px 12px;">%s</div>' % (MUTED, len(ACCOUNTS), body, search('Найти счёт')))
+             '</div><div style="padding: 0 16px; height: 560px; overflow: hidden;">%s</div>'
+             '<div style="padding: 8px 16px 12px;">%s</div>' % (body, search('Найти счёт')))
     return scrim() + m.sheet(inner, 120)

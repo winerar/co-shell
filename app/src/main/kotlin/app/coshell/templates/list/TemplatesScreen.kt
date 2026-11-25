@@ -51,7 +51,7 @@ fun TemplatesScreen(state: TemplatesUiState, actions: TemplatesActions) {
                 CoShellSearchField(
                     value = state.query,
                     onValueChange = actions.onQueryChange,
-                    placeholder = stringResource(R.string.templates_search, state.total),
+                    placeholder = stringResource(R.string.templates_search),
                     clearLabel = stringResource(R.string.search_clear),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
                 )

@@ -6,7 +6,6 @@
     <string name="accounts_order_title">Orden de las cuentas</string>
     <string name="categories_order_title">Orden de las categorías</string>
     <string name="accounts_order_hint">Mantén pulsada una fila y arrástrala. El orden se comparte con tu familia.</string>
-    <string name="categories_order_hint">Mantén pulsada una fila y arrástrala. Suéltala en el centro de otra categoría para que sea subcategoría; sácala del grupo para que sea independiente.</string>
     <string name="order_drop_into">Suelta: «%1$s» será una subcategoría</string>
     <string name="order_move_up">Subir</string>
     <string name="order_move_down">Bajar</string>

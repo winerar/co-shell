@@ -53,7 +53,7 @@ internal fun AutoBackupSection(
                     icon = DesignR.drawable.ic_folder_open,
                     title = state.folderName?.let { stringResource(R.string.auto_backup_folder, it) }
                         ?: stringResource(R.string.auto_backup_choose),
-                    subtitle = stringResource(if (state.folderName != null) R.string.auto_backup_folder_change else R.string.auto_backup_folder_hint),
+                    subtitle = if (state.folderName != null) null else stringResource(R.string.auto_backup_folder_hint),
                     onClick = onChooseFolder,
                 )
             }

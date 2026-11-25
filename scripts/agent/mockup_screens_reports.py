@@ -140,7 +140,7 @@ ALL = [('Дом', 290, 38, 300), ('Продукты', 121, 16, 180), ('Обра�
 def all_cats():
     rows = ''.join('<div style="padding: 0 14px; %s">%s</div>' % ('border-top: 1px solid %s;' % DIV if i else '', hbar(*c)) for i, c in enumerate(ALL))
     sort = '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % ''.join(chip(t, t == 'По сумме') for t in ['По сумме', 'По росту', 'Папками'])
-    body = search('Найти категорию · 24') + sort + '<div style="margin-top: 12px;">%s</div>' % card(rows)
+    body = search('Найти категорию') + sort + '<div style="margin-top: 12px;">%s</div>' % card(rows)
     return inner_screen('Все категории · ноябрь', body)
 
 

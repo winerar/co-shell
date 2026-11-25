@@ -86,7 +86,7 @@ def biometric():
 def setup(step):
     if step == 1:
         return lock_screen(filled=1, title='Придумайте PIN', sub='4 цифры. Его спросим при входе.', link='', finger=False)
-    return lock_screen(filled=3, title='Повторите PIN', sub='Чтобы не ошибиться', link='', finger=False)
+    return lock_screen(filled=3, title='Повторите PIN', sub='', link='', finger=False)
 
 
 def forgot():
@@ -159,7 +159,7 @@ def settings(on=True):
     def sw(title, sub, v, enabled=True):
         r = row(title, sub, '', switch(v))
         return r if enabled else r.replace('display: flex; align-items: center; gap: 12px;', 'display: flex; align-items: center; gap: 12px; opacity: 0.38;', 1)
-    lock = group([sw('Вход по PIN', 'Спросим при каждом входе' if on else 'Выключен', on),
+    lock = group([sw('Вход по PIN', 'Спросим при каждом входе' if on else '', on),
                   sw('Отпечаток или лицо', 'Вместо PIN, если телефон умеет', on, on),
                   row('Сменить PIN', '', '', chevron()) if on else ''])
     relock = ('<div style="padding: 12px 16px;"><div style="font-size: 15px; margin-bottom: 8px;">Блокировать после выхода</div>%s'

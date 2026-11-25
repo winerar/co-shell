@@ -82,10 +82,10 @@ def tpl_row(name, cat, amt, cur, acc):
 def tpl_all():
     often = ('<div style="display: flex; gap: 8px; overflow: hidden; margin: 0 -16px; padding: 0 16px;">%s</div>'
              % ''.join(tpl_chip(n, c, a, cu) for n, c, a, cu, _ in MANY[:3]))
-    body = (search('Найти шаблон · 32') + label('Часто', top=14) + often
+    body = (search('Найти шаблон') + label('Часто', top=14) + often
             + '<div style="display: flex; gap: 8px; margin-top: 14px; overflow: hidden;">%s</div>' % ''.join(
                 chip(t, t == 'Все') for t in ['Все', 'Расходы · 27', 'Доходы · 3', 'Переводы · 2'])
-            + label('Расходы · по категориям, А→Я', top=14) + group([tpl_row(*t) for t in MANY[3:14]]))
+            + label('Расходы', top=14) + group([tpl_row(*t) for t in MANY[3:14]]))
     return inner_screen('Шаблоны', body, icon_button('plus', 'Новый шаблон'))
 
 

@@ -7,7 +7,6 @@
     <string name="privacy_section_entry">Вход</string>
     <string name="privacy_pin">Вход по PIN</string>
     <string name="privacy_pin_on">Спросим при каждом входе</string>
-    <string name="privacy_pin_off">Выключен</string>
     <string name="privacy_biometric">Отпечаток или лицо</string>
     <string name="privacy_biometric_hint">Вместо PIN, если телефон умеет</string>
     <string name="privacy_biometric_none">На телефоне нет отпечатка или лица</string>
@@ -43,7 +42,6 @@
     <string name="pin_create">Придумайте PIN</string>
     <string name="pin_create_hint">4 цифры. Его спросим при входе.</string>
     <string name="pin_repeat">Повторите PIN</string>
-    <string name="pin_repeat_hint">Чтобы не ошибиться</string>
     <string name="pin_mismatch">PIN не совпал. Придумайте заново.</string>
     <string name="eye_hide">Скрыть суммы</string>
     <string name="eye_show">Показать суммы</string>

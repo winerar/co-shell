@@ -16,7 +16,6 @@
     <string name="tip_category_title">¿Dónde anotar las propinas?</string>
     <string name="tip_category_hint">Lo preguntamos una vez. Para cambiarlo, use la fila «Categoría de la propina».</string>
     <string name="tip_category_same">Como la compra</string>
-    <string name="tip_category_same_hint">La categoría de cada compra</string>
     <string name="tip_category_new_hint">Categoría nueva</string>
     <string name="tip_save">Guardar las dos operaciones</string>
     <string name="tip_failed">La propina no se guardó: agréguela como operación aparte</string>

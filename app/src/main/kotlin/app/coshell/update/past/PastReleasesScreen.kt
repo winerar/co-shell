@@ -66,14 +66,6 @@ private fun ReleaseList(state: PastReleasesState.Loaded, padding: PaddingValues)
         contentPadding = underBars(padding, PaddingValues(start = Spacing.l, end = Spacing.l, bottom = Spacing.xl)),
         verticalArrangement = Arrangement.spacedBy(Spacing.s),
     ) {
-        item(key = "hint") {
-            Text(
-                stringResource(R.string.update_past_hint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = Spacing.xs, vertical = Spacing.xs),
-            )
-        }
         items(state.releases, key = { it.versionCode }) { release ->
             PastReleaseCard(
                 release = release,

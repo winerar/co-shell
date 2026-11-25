@@ -97,14 +97,14 @@ def two_buttons(left, right, kind='primary'):
 
 def a_rate():
     body = (rate_pair() + label('Действует с', top=14) + date_seg()
-            + '<div style="margin: 14px 0 12px; font-size: 12px; line-height: 1.4; color: %s;">Ручной курс важнее загруженного — до следующего ручного курса этой пары.</div>' % MUTED
+            + '<div style="margin: 14px 0 12px; font-size: 12px; line-height: 1.4; color: %s;">Важнее загруженного, действует с выбранной даты до следующего ручного</div>' % MUTED
             + keypad('Сохранить'))
     return modal_sheet(rates_bg(), 'Курс вручную', body, top=150)
 
 
 def a_day():
     body = day_grid() + period_line() + '<div style="margin-top: 10px; font-size: 12px; color: %s;">● — по умолчанию (календарный месяц). В коротком месяце — с последнего дня.</div>' % MUTED
-    return modal_sheet(budget_bg(), 'Начало месяца', body, 'С какого числа считать бюджет — удобно в день зарплаты', top=278) + footer(button('Готово', 'primary', mt=0))
+    return modal_sheet(budget_bg(), 'Начало месяца', body, 'Например, с дня зарплаты', top=278) + footer(button('Готово', 'primary', mt=0))
 
 
 def a_confirm():

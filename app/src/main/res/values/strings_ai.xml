@@ -3,7 +3,7 @@
     <!-- «ИИ на телефоне» (#587): the screen and its row in «Настройки». -->
     <string name="ai_title">ИИ на телефоне</string>
     <string name="ai_off_title">Выключен</string>
-    <string name="ai_off_text">Необязательно. ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.</string>
+    <string name="ai_off_text">ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.</string>
     <string name="ai_off_chip">без него всё работает как раньше</string>
     <string name="ai_step1_title">Шаг 1 из 2</string>
     <string name="ai_step1_text">Android спросит, можно ли установить дополнение. Нажмите «Установить».</string>

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="budgets_title">Presupuestos</string>
-    <string name="budgets_menu_hint">Límites mensuales, plan y real</string>
     <string name="budgets_new">Nuevo límite</string>
     <string name="budgets_previous_month">Mes anterior</string>
     <string name="budgets_next_month">Mes siguiente</string>
     <string name="budgets_settings">Ajustes del presupuesto</string>
     <string name="budgets_start_title">Inicio del mes</string>
-    <string name="budgets_start_subtitle">Desde qué día contar el presupuesto — cómodo el día de cobro</string>
     <string name="budgets_start_rule">El punto es el valor por defecto, el mes natural. En un mes corto, desde su último día.</string>
     <string name="budgets_left">Queda</string>
     <string name="budgets_over">Exceso</string>
@@ -20,7 +18,6 @@
     <string name="budgets_forecast_over">A este ritmo, a fin de mes ≈ %1$s — %2$s más de lo previsto</string>
     <string name="budgets_forecast_ok">A este ritmo, a fin de mes ≈ %1$s — dentro de lo previsto</string>
     <string name="budgets_missing">Sin contar: %1$s — no hay tipo de cambio</string>
-    <string name="budgets_envelopes">Límites · %1$d</string>
     <string name="budgets_filter_all">Todos · %1$d</string>
     <string name="budgets_filter_hot">Al límite · %1$d</string>
     <string name="budgets_filter_in_plan">En plan · %1$d</string>
@@ -45,7 +42,6 @@
     <string name="budgets_fold">Plegar subcategorías</string>
     <string name="budgets_unfold">Desplegar subcategorías</string>
     <string name="budgets_empty_title">No hay límites para este mes</string>
-    <string name="budgets_empty_text">Fija un límite mensual para una categoría — la app mostrará lo que queda y te avisará si gastas más rápido de lo previsto. Pulsa «+» para añadir el primero.</string>
     <string name="budgets_hint">La barra es lo gastado; la marca, el ritmo de hoy. Los cambios del límite rigen desde el mes elegido.</string>
 
     <string name="budget_detail_edit">Cambiar el límite</string>
@@ -73,19 +69,16 @@
     <string name="budget_what">Para qué</string>
     <string name="budget_choose_folder">Elige una categoría con subcategorías</string>
     <string name="budget_choose_category">Elige una categoría</string>
-    <string name="budget_no_folders">Aún no hay categorías con subcategorías — créalas en «Más → Categorías» o elige una categoría normal.</string>
     <string name="budget_category_error">Elige para qué es el límite</string>
     <string name="budget_amount">Al mes</string>
     <string name="budget_amount_error">Escribe el importe con números. También vale 0</string>
     <string name="budget_average">Media de 3 meses — %1$s</string>
     <string name="budget_currency">Moneda del límite</string>
-    <string name="budget_inside">Subcategorías · opcional</string>
     <string name="budget_inside_limit">límite %1$s</string>
     <string name="budget_inside_none">sin límite propio</string>
     <string name="budget_inside_add">＋ límite</string>
     <string name="budget_rollover">Arrastrar el sobrante</string>
     <string name="budget_rollover_hint">lo no gastado o el exceso — al mes siguiente</string>
-    <string name="budget_note">Nota para ti</string>
     <string name="budget_from_month">Rige desde %1$s en adelante; los meses anteriores no cambian.</string>
     <string name="budget_remove">Quitar límite</string>
     <string name="budget_remove_confirm_title">¿Quitar el límite?</string>

@@ -84,7 +84,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
                     BudgetFilterChips(state.counts, state.filter, actions.onFilterChange, Modifier.padding(top = Spacing.s))
                 }
             } else {
-                item(key = "title") { SectionTitle(stringResource(R.string.budgets_envelopes, state.total)) }
+                item(key = "title") { SectionTitle(stringResource(R.string.budgets_envelopes)) }
             }
             item(key = "envelopes") { Envelopes(state, actions, Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
             item(key = "hint") { CoShellHint(stringResource(R.string.budgets_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }

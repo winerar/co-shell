@@ -19,7 +19,7 @@ import app.coshell.feedback.splitFeedbackMessage
 internal fun SentList(entries: List<SentFeedback>, onOpen: (Long) -> Unit, onRemove: (Long) -> Unit) {
     if (entries.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        CoShellSectionLabel(stringResource(R.string.feedback_sent_title, entries.size))
+        CoShellSectionLabel(stringResource(R.string.feedback_sent_title))
         entries.forEach { entry ->
             val (kind, body) = splitFeedbackMessage(entry.text)
             val date = feedbackDay(entry.sentAtMillis)

@@ -154,7 +154,7 @@ def list_screen():
                      '<span style="font-size: 12px; color: %s;">≈ USD, без «сумма при вводе» · 3</span></div>' % (amount_text('−410', 'USD', 28, LIME), HERO_HINT), extra='margin-top: 4px;')
     flt = '<div style="display: flex; gap: 8px; margin-top: 12px; overflow: hidden;">%s</div>' % ''.join(
         chip(t, t.startswith('Все')) for t in ['Все · 24', 'Расходы · 20', 'Доходы · 4', 'Само · 7'])
-    body = (search('Найти платёж · 24') + hero + flt
+    body = (search('Найти платёж') + hero + flt
             + label('Ноябрь · по дате', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[:9])))
             + label('Декабрь', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[9:20]))))
     return inner_screen('Регулярные платежи', body) + fab('Новый платёж')  # the one add button is the round «+» (#464)
@@ -214,7 +214,7 @@ def edge_cases():
         label('31-е в коротком месяце — последний день', top=8), feb,
         label('Валюта платежа ≠ валюте счёта — пересчёт по курсу дня, как в шторке', top=8), other,
         label('Счёт в архиве', top=8), gone, label('На двоих', top=8), both,
-        note('Пустой список: «Регулярных платежей пока нет. Отметьте «Повтор» в любом шаблоне — аренда, подписки, зарплата.»'), gap=6))
+        note('Пустой список: «Регулярных платежей пока нет. Отметьте «Повтор» в шаблоне: аренда, подписки, зарплата.»'), gap=6))
 
 
 BOARDS = [  # name, title, fn, row key

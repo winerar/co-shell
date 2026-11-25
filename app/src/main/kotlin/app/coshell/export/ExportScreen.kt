@@ -173,7 +173,7 @@ fun ExportScreen(state: ExportUiState, actions: ExportActions) {
                     row {
                         CoShellSwitchRow(
                             title = stringResource(R.string.export_all_accounts),
-                            subtitle = stringResource(R.string.export_all_accounts_hint, state.accounts.size),
+                            subtitle = stringResource(R.string.export_all_accounts_hint),
                             checked = state.allAccounts, onCheckedChange = actions.onAllAccounts,
                         )
                     }

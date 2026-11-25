@@ -99,7 +99,6 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
             item { LanguageRowGroup(state.language, actions.onLanguageClick) }
             item { SectionTitle(stringResource(R.string.theme_title)) }
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
-            item { CoShellHint(stringResource(R.string.palette_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
             item { PaletteGrid(selected = state.palette, onSelect = actions.onPaletteChange, modifier = Modifier.padding(bottom = Spacing.l)) }
             item { SectionTitle(stringResource(R.string.density_section)) }
             item {

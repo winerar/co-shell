@@ -77,9 +77,9 @@ def pick_sheet():
     rest = ''.join(line(n, c, u, False) for n, c, u in sorted(TAGS[4:], key=lambda t: t[0].lower())[:9])
     inner = ('<div style="padding: 8px 16px 0;"><div style="display: flex; align-items: center; height: 48px;"><b style="flex-grow: 1; font-size: 20px;">Теги</b>'
              '<span style="color: %s; font-weight: 600;">Готово</span></div>%s<div style="margin-top: 10px;">%s</div>%s'
-             '<div style="margin-top: 8px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 4px; color: %s; font-size: 15px;">%sНовый тег — название и цвет</div>'
+             '<div style="margin-top: 8px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 4px; color: %s; font-size: 15px;">%sНовый тег</div>'
              '%s%s%s%s</div>' % (LIME, search('Найти или создать тег'), chosen, '', LIME, svg('plus', LIME, 18), label('Недавние', top=8), recent,
-                                 label('Все · 34 · по алфавиту', top=10), rest))
+                                 label('Все', top=10), rest))
     return scrim() + sheet(inner, 70)
 
 

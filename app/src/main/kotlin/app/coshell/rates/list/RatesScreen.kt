@@ -64,10 +64,7 @@ fun RatesScreen(state: RatesUiState, actions: RatesActions, editorActions: Manua
             // Status first (mockup 11): loaded or not, and the refresh button under the thumb's reach.
             item(key = "refresh") { RefreshBlock(state.lastDownload, state.refresh, actions.onRefresh) }
             item(key = "current-header") {
-                RatesSectionHeader(
-                    stringResource(R.string.rates_accounts),
-                    stringResource(R.string.rates_current_hint).takeIf { state.current.isNotEmpty() },
-                )
+                RatesSectionHeader(stringResource(R.string.rates_accounts))
             }
             if (state.current.isEmpty() && !state.isLoading) {
                 item(key = "current-empty") { MutedLine(stringResource(R.string.rates_no_currencies)) }

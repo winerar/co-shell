@@ -19,9 +19,7 @@
     <string name="density_section">Lists</string>
     <string name="density_comfortable">Comfortable</string>
     <string name="density_compact">Compact</string>
-    <string name="density_hint">Row density in Transactions and Accounts. Compact fits about a quarter more rows on the screen.</string>
     <string name="settings_screens_title">Screens</string>
-    <string name="settings_screens_intro">What a screen shows and how it opens.</string>
     <string name="settings_screens_items">Overview · transactions · accounts</string>
     <string name="settings_ops_items">Account, tags and note in the row</string>
     <string name="settings_reports_items">Period · comparison with the previous one</string>
@@ -53,11 +51,9 @@
     <string name="settings_input_haptics_hint">taps and a saved transaction</string>
     <string name="settings_data_network">Network</string>
     <string name="settings_data_wifi">Sync on Wi-Fi only</string>
-    <string name="settings_data_wifi_hint">otherwise — on mobile data too</string>
     <string name="settings_notices_when">When</string>
     <string name="settings_notices_time">Reminder time</string>
     <string name="settings_notices_hour">%1$d:00</string>
-    <string name="settings_home_intro">Hold ⠿ and drag to set the order on Overview. A card that is switched off is not shown.</string>
     <string name="settings_home_cards">Cards</string>
     <string name="settings_home_balance">Balance</string>
     <string name="settings_home_balance_hint">always on top</string>
@@ -92,12 +88,9 @@
     <string name="settings_input_always">Always this</string>
     <string name="settings_input_account">Account</string>
     <string name="settings_input_account_gone">pick an account</string>
-    <string name="settings_input_account_hint">The sheet opens with this account and its currency; you can change it in the sheet.</string>
     <string name="settings_balance_title">Accounts in the total balance</string>
     <string name="settings_balance_intro">What the «Total balance» on Overview adds up. Shared by the whole family.</string>
     <string name="settings_balance_accounts">Accounts</string>
-    <string name="settings_balance_all">All · shared by the family</string>
-    <string name="settings_balance_except">All but %1$d · shared by the family</string>
     <string name="settings_home_balance_section">Balance</string>
     <string name="settings_notices_before">Warn in advance</string>
     <string name="settings_notices_same_day">On the day</string>
@@ -106,13 +99,11 @@
     <string name="settings_ops_amount_title">Show in the row</string>
     <string name="settings_ops_amount_account">In the account currency</string>
     <string name="settings_ops_amount_main">And in the main one</string>
-    <string name="settings_ops_amount_hint">A second line «≈ …» at the rate of the day of the transaction. Holding an amount still shows it in all totals currencies.</string>
     <string name="settings_notices_family">Family</string>
     <string name="settings_notices_partner">Partner’s spending</string>
     <string name="settings_notices_partner_hint">a notice when a transaction is added</string>
     <string name="settings_notices_min">Only from an amount</string>
     <string name="settings_notices_min_any">any</string>
-    <string name="settings_notices_partner_note">No server: the notice comes with a sync — at once if the app is open, otherwise with the background sync (hourly). Transfers, imports and your own transactions are not reported.</string>
     <string name="partner_spend_title">%1$s: %2$s</string>
     <string name="partner_spend_channel">Family spending</string>
     <string name="partner_spend_channel_hint">When another member adds an expense</string>
@@ -123,9 +114,7 @@
     <string name="export_period">Period</string>
     <string name="export_accounts">Accounts</string>
     <string name="export_all_accounts">All accounts</string>
-    <string name="export_all_accounts_hint">Accounts: %1$d, archived ones excluded</string>
     <string name="export_count">Transactions in the file: %1$d</string>
-    <string name="export_hint">CSV file: «;» separator, amounts with a comma — opens in Excel and Google Sheets. Send it with «Share»: by e-mail, messenger or to a drive.</string>
     <string name="export_action">Export and share</string>
     <string name="export_menu_hint">transactions for a period</string>
     <string name="export_col_date">Date</string>
@@ -146,13 +135,11 @@
     <string name="export_type_expense">Expense</string>
     <string name="export_type_income">Income</string>
     <string name="export_type_transfer">Transfer</string>
-    <string name="settings_home_tiles_section">Tiles · two</string>
     <string name="settings_home_tile_first">First</string>
     <string name="settings_home_tile_second">Second</string>
     <string name="settings_home_tile_spending">Spending of the month</string>
     <string name="settings_home_tile_budget">Budget of the month</string>
     <string name="settings_home_tile_uncategorized">Uncategorized</string>
-    <string name="settings_home_tiles_note">The «Attention» tile (no rate) takes the second place by itself when needed. While there are no budgets, «Uncategorized» stands in for «Budget».</string>
     <string name="home_edit_hide">Hide</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
     <string name="settings_group_all">All ›</string>

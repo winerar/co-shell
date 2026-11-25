@@ -67,7 +67,7 @@ internal fun ColumnScope.TagsChoices(filter: ListFilter, choices: FilterChoices,
         val chosen = choices.tags.count { it.id in filter.tagIds }
         CoShellSectionLabel(
             if (chosen > 0) stringResource(R.string.filter_tags_some, chosen, choices.tags.size)
-            else stringResource(R.string.filter_tags_all, choices.tags.size),
+            else stringResource(R.string.filter_tags_all),
             tone = SectionTone.Muted,
         )
         if (found.isEmpty()) {

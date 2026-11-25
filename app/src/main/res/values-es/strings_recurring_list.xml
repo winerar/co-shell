@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="recurring_list_title">Pagos recurrentes</string>
-    <string name="recurring_list_search">Buscar pago · %1$d</string>
     <string name="recurring_list_new">Nuevo pago</string>
     <string name="recurring_filter_auto">Auto · %1$d</string>
     <plurals name="recurring_ahead_title">
@@ -12,6 +11,5 @@
     <string name="recurring_ahead_none">No quedan pagos en %1$s</string>
     <string name="recurring_ahead_without">%1$d más — importe al anotar</string>
     <string name="recurring_ahead_missing">Sin contar: %1$s — no hay tipo de cambio</string>
-    <string name="recurring_list_empty">Aún no hay pagos recurrentes. Activa «Repetición» en cualquier plantilla: alquiler, suscripciones, sueldo. Pulsa «+» para crear una plantilla.</string>
     <string name="recurring_menu_hint">Alquiler, suscripciones, sueldo</string>
 </resources>

@@ -1,13 +1,11 @@
 package app.coshell.reports.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -30,14 +28,11 @@ import app.coshell.reports.ReportsUiState.MemberRow
 internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier, onMember: ((String?) -> Unit)? = null) {
     CoShellCard(modifier.fillMaxWidth()) {
         Column(Modifier.padding(Spacing.l)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    stringResource(R.string.reports_members_title),
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.weight(1f).semantics { heading() },
-                )
-                Text(stringResource(R.string.reports_members_caption), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            Text(
+                stringResource(R.string.reports_members_title),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.semantics { heading() },
+            )
             val me = stringResource(R.string.reports_members_me)
             val deleted = stringResource(R.string.reports_deleted_category)
             Column(Modifier.padding(top = Spacing.xs)) {

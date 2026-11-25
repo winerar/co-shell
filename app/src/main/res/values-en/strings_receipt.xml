@@ -16,7 +16,6 @@
     <string name="scan_cam_text">Video is not saved and goes nowhere.</string>
     <string name="scan_cam_allow">Allow</string>
     <string name="receipt_unread_title">Couldn\'t read the receipt</string>
-    <string name="receipt_unread_text">The app doesn\'t know this format yet. Send a sample and we\'ll teach it. You can enter the operation by hand.</string>
     <string name="receipt_unread_send">Send a sample</string>
     <string name="receipt_account_title">Which account is this?</string>
     <string name="receipt_account_hint">The receipt shows card …%1$s. Pick an account and next time the receipt will find it on its own.</string>

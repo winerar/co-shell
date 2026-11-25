@@ -22,7 +22,6 @@
     <string name="recurring_auto_no_transfer">una transferencia se registra a mano</string>
     <string name="recurring_short_month">En un mes corto, su último día.</string>
     <string name="recurring_next_payment">Próximo pago: %1$s.</string>
-    <string name="recurring_off_hint">Sin repetición, la plantilla funciona como siempre.</string>
     <string name="recurring_missed_value">%1$s · pendiente</string>
     <string name="recurring_soon_title">Próximos · %1$d días</string>
     <string name="recurring_post">Registrar</string>

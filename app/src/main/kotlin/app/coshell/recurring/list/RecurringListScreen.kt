@@ -64,7 +64,7 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
                     CoShellSearchField(
                         value = state.query,
                         onValueChange = actions.onQueryChange,
-                        placeholder = stringResource(R.string.recurring_list_search, state.total),
+                        placeholder = stringResource(R.string.recurring_list_search),
                         clearLabel = stringResource(R.string.search_clear),
                         modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
                     )

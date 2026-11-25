@@ -53,9 +53,9 @@ def avatar(ch, color, ink):
 
 
 def family_signed_out():
-    return fam(hero('user', 'Общий бюджет на двоих', 'Войдите через Google, чтобы вести общий бюджет с семьёй. Данные хранятся на телефоне и в облаке Firebase, '
-                    'приложение работает и без интернета. Доступ — только по приглашению.', VIOLET, top=24)
-               + '<div style="margin-top: 28px;">' + button('Войти через Google', 'primary', 'google', 0) + note('Выберите свой Google-аккаунт', 8) + '</div>')
+    return fam(hero('user', 'Общий бюджет на двоих', 'Войдите через Google, чтобы вести бюджет вместе. Без интернета всё тоже работает. '
+                    'Вступить можно только по приглашению.', VIOLET, top=24)
+               + '<div style="margin-top: 28px;">' + button('Войти через Google', 'primary', 'google', 0) + '</div>')
 
 
 def family_no_access():

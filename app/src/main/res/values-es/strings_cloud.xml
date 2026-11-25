@@ -4,12 +4,10 @@
     <string name="cloud_title">Análisis en la nube</string>
     <string name="cloud_off_title">Desactivado</string>
     <string name="cloud_off_text">Opcional. Si tu teléfono es poco potente o la IA en él está desactivada, una IA en la nube lee las líneas de las notas, los recibos que no se leen y la voz.</string>
-    <string name="cloud_off_chip">sin esto todo funciona como antes</string>
     <string name="cloud_nologin_chip">hace falta iniciar sesión: Más → Familia</string>
     <string name="cloud_on_title">Activado</string>
     <string name="cloud_on_text">Funciona cuando hay internet.</string>
     <string name="cloud_on_text_left">Funciona cuando hay internet. Quedan hoy: %1$d de %2$d.</string>
-    <string name="cloud_on_chip">listo</string>
     <string name="cloud_fact_sent">Se envía</string>
     <string name="cloud_fact_sent_text">el texto de la nota o del recibo y los nombres de categorías y cuentas</string>
     <string name="cloud_fact_kept">No se envía</string>

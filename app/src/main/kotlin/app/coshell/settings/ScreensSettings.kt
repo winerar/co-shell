@@ -32,7 +32,6 @@ import app.coshell.core.designsystem.R as DesignR
 fun ScreensSettingsScreen(onHome: () -> Unit, onOps: () -> Unit, onReports: () -> Unit, onAccounts: () -> Unit, onBack: () -> Unit) {
     val c = CategoryPalette.colors
     GroupScaffold(R.string.settings_screens_title, onBack) {
-        item { CoShellHint(stringResource(R.string.settings_screens_intro), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
         item { SectionTitle(stringResource(R.string.settings_screens_title)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {

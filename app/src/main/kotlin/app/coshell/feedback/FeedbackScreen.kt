@@ -111,11 +111,6 @@ private fun Form(state: FeedbackUiState, actions: FeedbackActions) {
         )
         FeedbackFilesBlock(state.kind, state.files, state.canAttach, state.fileError, actions.onAttach, actions.onRemoveFile)
         Text(
-            stringResource(R.string.feedback_intro),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
             stringResource(R.string.feedback_attached, BuildConfig.VERSION_CODE, deviceName(), Build.VERSION.RELEASE),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

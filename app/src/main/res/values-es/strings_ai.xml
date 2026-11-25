@@ -3,7 +3,6 @@
     <!-- «ИИ на телефоне» (#587): the screen and its row in «Настройки». -->
     <string name="ai_title">IA en el teléfono</string>
     <string name="ai_off_title">Desactivada</string>
-    <string name="ai_off_text">Opcional. La IA lee recibos desconocidos, ordena notas y voz y sugiere una categoría para un destinatario nuevo.</string>
     <string name="ai_off_chip">sin ella todo funciona como antes</string>
     <string name="ai_step1_title">Paso 1 de 2</string>
     <string name="ai_step1_text">Android preguntará si instalar el complemento. Toca «Instalar».</string>

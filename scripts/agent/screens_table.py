@@ -14,7 +14,7 @@ OUT = os.path.join(ROOT, 'docs/design/screens-table.md')
 
 # (screen, board or None, reference base or None)
 ROWS = [
-    ('Обзор', 'Home', 'home'), ('Обзор: первый запуск', 'HomeEmpty', 'home_empty'),
+    ('Обзор', 'Home', 'home'), ('Обзор: что нового', 'Rel693Home', 'release_home'), ('Истории релиза', 'Rel693S2', 'release_story_2'), ('Обзор: первый запуск', 'HomeEmpty', 'home_empty'),
     ('Обзор: нет курса', 'HomeAttention', 'home_attention'), ('Обзор: бюджеты', 'BudHome', 'home_budget'),
     ('Обзор: «Скоро»', 'Rec143HomeA', 'recurring_home'), ('Обзор: итог месяца', 'Mon236A', 'home_review'),
     ('Итоги месяца: истории', 'Rec554Top', 'month_recap'), ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),

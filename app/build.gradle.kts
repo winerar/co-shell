@@ -35,6 +35,8 @@ android {
         buildConfigField("String", "FIREBASE_DATABASE_URL", "\"${env("FIREBASE_DATABASE_URL")}\"")
         // Cloud note parsing (#635, tools/ai-proxy): address of the Cloudflare Worker; empty → the cloud model is unavailable.
         buildConfigField("String", "AI_PROXY_URL", "\"${env("AI_PROXY_URL")}\"")
+        // The app's site (landing, #660): «Конфиденциальность» in «Настройки → Помощь» opens <site>/privacy/<lang>/ (#652); empty → no row.
+        buildConfigField("String", "SITE_URL", "\"${env("LANDING_URL")}\"")
     }
 
     androidResources {

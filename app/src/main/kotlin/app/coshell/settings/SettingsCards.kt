@@ -124,7 +124,8 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
 
 /**
  * «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen.
- * «Код приглашения» — only in builds with the gate (#671, boards `Inv671A`, `Inv671ARevoked`).
+ * «Код приглашения» — only in builds with the gate (#671, boards `Inv671A`, `Inv671ARevoked`);
+ * «Конфиденциальность» — only in builds that know the site (#652, board `Priv652A`).
  */
 @Composable
 internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
@@ -146,6 +147,9 @@ internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
                     valueColor = if (invite.revoked) LocalStatusPalette.current.warning else Color.Unspecified,
                 )
             }
+        }
+        if (state.policy) {
+            row { ValueRow(stringResource(R.string.settings_policy_title), stringResource(R.string.settings_policy_hint), actions.onPolicy) }
         }
     }
 

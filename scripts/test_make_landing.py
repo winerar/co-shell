@@ -98,6 +98,16 @@ class MakeLandingTest(unittest.TestCase):
             self.assertIn("navigator.languages", chooser)
             self.assertIn('href="es/"', chooser)
 
+    def test_no_page_is_open_to_search_engines(self):
+        """The page is shared by link only (owner 2026-11-25): every HTML file, policy and chooser included, says noindex."""
+        with tempfile.TemporaryDirectory() as out:
+            ml.build(MANIFEST, out, self.template)
+            pages = [os.path.join(d, f) for d, _, fs in os.walk(out) for f in fs if f.endswith(".html")]
+            self.assertGreaterEqual(len(pages), 10)
+            for page in pages:
+                with self.subTest(page=os.path.relpath(page, out)):
+                    self.assertIn('<meta name="robots" content="noindex, nofollow">', open(page, encoding="utf-8").read())
+
 
 if __name__ == "__main__":
     unittest.main()

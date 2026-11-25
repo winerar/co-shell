@@ -126,7 +126,7 @@ SENT = [('Ошибка · сегодня', 'Список отправленны�
 
 def feedback_status_list():
     rows = [row(t, s, '', status_chip(c, k), min_h=56) for s, t, c, k in SENT]
-    body = (button('Написать отзыв', 'primary', 'plus', 4) + label('Мои отзывы · 5', top=18) + group(rows)
+    body = (button('Написать отзыв', 'primary', 'plus', 4) + label('Мои отзывы', top=18) + group(rows)
             + note('Статус — из задачи разработки, обновляется раз в час. Тап — подробно, удержание — убрать из списка.'))
     return inner_screen('Обратная связь', body)
 

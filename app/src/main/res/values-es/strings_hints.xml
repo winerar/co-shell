@@ -12,7 +12,6 @@
     <string name="steps_limit">Fija tu primer límite</string>
     <string name="steps_limit_hint">Cuánto quieres gastar al mes en comida. Puedes cambiarlo.</string>
     <string name="steps_family">Invita a alguien cercano</string>
-    <string name="steps_family_hint">Es más fácil en pareja. O más tarde.</string>
     <string name="hints_title">Consejos</string>
     <string name="hints_on">Se muestran</string>
     <string name="hints_off">Desactivados</string>
@@ -31,7 +30,6 @@
     <string name="hint_reports">Aquí ves en qué se va el dinero. Cuantos más movimientos, más clara la imagen.</string>
     <string name="hint_tags">Una etiqueta es una marca de color en un movimiento, como «vacaciones» o «regalos».</string>
     <string name="hint_notes">¿Muchos gastos pequeños? Anótalos en una lista en «Notas rápidas» y procésalos de una vez.</string>
-    <string name="hint_family">Juntos es más fácil: los movimientos de ambos teléfonos se reúnen en un solo lugar.</string>
     <string name="hint_ok">Entendido</string>
     <string name="hint_hold_select">Mantén pulsado un movimiento para elegir varios.</string>
     <string name="hint_edit_tap">¿Te equivocaste? Toca el movimiento para corregirlo.</string>
@@ -47,12 +45,10 @@
     <string name="hint_theme">Puedes hacer la app a tu gusto: Más → Ajustes → Apariencia.</string>
     <string name="hint_template">¿Este gasto se repite? Guarda una plantilla y se anotará con un toque.</string>
     <string name="hint_open">Abrir</string>
-    <string name="hint_limit_80">%1$s: aún puedes gastar %2$s. Entra en «Presupuestos» cuando quieras.</string>
     <string name="hint_month_end">El mes terminó. Mira el resumen.</string>
     <string name="hint_entry_minimal">Solo hacen falta el importe y la cuenta. Lo demás se puede omitir.</string>
     <string name="hint_keypad_math">Puedes sumar y restar: 300 + 150.</string>
     <string name="hint_entry_refund">¿Te devolvieron dinero? Marca «Es una devolución».</string>
-    <string name="hint_currency_account">¿Dinero en otra moneda? Los totales se cuentan en las monedas de los totales y el tipo de cambio se pone solo.</string>
     <string name="hint_pin_forgot">PIN activado. Si lo olvidas, pulsa «¿Olvidaste el PIN?» al entrar.</string>
     <string name="hint_currency_receipt">Indica el importe de la compra y el tipo de cambio se calcula solo.</string>
 </resources>

@@ -56,6 +56,10 @@ data class CapitalMonthDestination(
 @Serializable
 data class MonthRecapDestination(val year: Int, val month: Int)
 
+/** «Что нового» as stories (#693): opened from the card on «Обзор» once after an update. */
+@Serializable
+data object ReleaseStoriesDestination
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)

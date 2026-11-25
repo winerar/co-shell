@@ -29,7 +29,7 @@ def facts():
 
 
 def off_body():
-    return ai.status_card('Выключен', TEXT, ai.label_pill('без него всё работает как раньше', 'check')) + switch_card(False) + facts()
+    return ai.status_card('Выключен', TEXT) + switch_card(False) + facts()
 
 
 def off():
@@ -39,7 +39,7 @@ def off():
 def on():
     use = ('<div style="margin: 0 4px 6px; font-size: 12px; letter-spacing: 0.04em; color: %s;">ГДЕ РАБОТАЕТ</div>' % MUTED
            + group([row(t, s, tile_icon(i, CYAN), min_h=56) for i, t, s in USE]))
-    body = (ai.status_card('Включён', 'Работает, когда есть интернет. Осталось сегодня: 87 из 100.', ai.label_pill('готов', 'check'))
+    body = (ai.status_card('Включён', 'Работает, когда есть интернет. Осталось сегодня: 87 из 100.')
             + switch_card(True) + '<div>%s</div>' % use)
     return board('Облачный разбор: включён', screen(body))
 
@@ -63,7 +63,7 @@ def under_button(text):
 
 
 def notes_screen(line, label, disabled=False):
-    body = notes.note_card(notes.LINES, 'Каждая строка — одна трата. Счёт и день — по желанию.')
+    body = notes.note_card(notes.LINES, 'Каждая строка — одна трата. Можно добавить счёт и день.')
     return (inner_screen('Быстрые заметки', '<div style="margin-top: 8px;">%s</div>' % body) + under_button(line)
             + notes.footer(button(label, 'primary', None if disabled else 'spark', 0, disabled)))
 

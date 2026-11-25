@@ -23,7 +23,7 @@
     <string name="import_batch_period">с %1$s по %2$s</string>
     <string name="import_undo">Отменить импорт</string>
     <string name="import_undo_confirm_title">Отменить импорт?</string>
-    <string name="import_undo_confirm_text">Все операции этой загрузки будут удалены (и на втором телефоне). Счета и категории останутся.</string>
+    <string name="import_undo_confirm_text">Операции этой загрузки удалятся на всех телефонах. Счета и категории останутся.</string>
     <string name="import_undone">Импорт отменён: удалено операций — %1$d.</string>
 
     <string name="import_summary_records">Записей: %1$d</string>

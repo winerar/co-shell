@@ -6,7 +6,6 @@
     <string name="access_continue">Continue</string>
     <string name="access_where">Where do I get a code?</string>
     <string name="access_where_title">Where do I get a code?</string>
-    <string name="access_where_text">The person who invited you gives it out. Ask them for your personal code: it has 12 characters, for example K7QX-M2PD-9WTA.</string>
     <string name="access_where_ok">Got it</string>
     <string name="access_err_malformed">A code has 12 characters: letters and digits, for example K7QX-M2PD-9WTA.</string>
     <string name="access_err_not_found">There is no such code. Check that everything is typed correctly.</string>

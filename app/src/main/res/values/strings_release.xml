@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Release stories (#693, owner poll 2026-11-24: card on «Обзор» — Б, five stories — А; boards Rel693*). -->
+    <string name="release_notice_version">Версия %1$s</string>
+    <string name="release_notice_title">Что нового</string>
+    <string name="release_notice_open">Смотреть</string>
+    <string name="release_notice_dismiss">Не сейчас</string>
+    <string name="release_header">Что нового · %1$s</string>
+    <string name="release_close">Закрыть</string>
+    <string name="release_next">Дальше</string>
+    <string name="release_done">Готово</string>
+    <string name="release_progress">История %1$d из %2$d</string>
+
+    <string name="release_debts_title">Долги</string>
+    <string name="release_debts_text">Ещё → Долги. Баланс счёта меняется, расходы — нет.</string>
+    <string name="release_accounts_title">Новые счета</string>
+    <string name="release_accounts_text">Кредитка, проездной, вклад. «Только у меня» — не видно семье.</string>
+    <string name="release_fan_title">Удерживайте «+»</string>
+    <string name="release_fan_text">QR чека, заметка или шаблон — веером.</string>
+    <string name="release_receipt_title">Чек сам находит счёт</string>
+    <string name="release_receipt_text">По последним цифрам карты.</string>
+    <string name="release_recap_title">Итоги месяца</string>
+    <string name="release_recap_text">Листайте и делитесь картинкой.</string>
+</resources>

@@ -50,9 +50,9 @@ def budget_edit():
                     row('Связь', 'без своего лимита', cat_icon('Связь', 32), '<span style="color: %s; font-size: 13px;">＋ лимит</span>' % LIME, min_h=52)])
     body = (segmented(['Папка', 'Категория'], 'Папка') + field('Что', 'Дом · Аренда, Коммуналка, Связь', trail=chevron())
             + field('В месяц', '400 000', 'В среднем за 3 месяца — 372 000 ARS', mono=True, trail=chip('ARS ▾'))
-            + label('Внутри папки · необязательно', top=14) + inside
+            + label('Подкатегории', top=14) + inside
             + '<div style="margin-top: 10px;">%s</div>' % group([toggle_row('Переносить остаток', 'недотрата/перерасход → в следующий месяц', False)])
-            + field('Заметка для себя', 'Аренда 280 000 до 5-го, свет и газ ~60 000') + button('Сохранить', mt=16))
+            + field('Заметка', 'Аренда 280 000 до 5-го, свет и газ ~60 000') + button('Сохранить', mt=16))
     return inner_screen('Лимит', body)
 
 

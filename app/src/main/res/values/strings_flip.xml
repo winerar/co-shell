@@ -5,7 +5,7 @@
     <string name="home_back_income">Доходы</string>
     <string name="home_back_spending">Расходы</string>
     <string name="home_back_result">Разница</string>
-    <string name="home_back_per_day">В среднем ≈ %1$s в день</string>
+    <string name="home_back_per_day">≈ %1$s в день</string>
     <string name="home_back_currencies">По валютам счетов</string>
     <string name="budgets_back_per_day_title">Можно тратить в день</string>
     <string name="budgets_back_per_day_hint">До конца месяца. Это ориентир, а не запрет.</string>

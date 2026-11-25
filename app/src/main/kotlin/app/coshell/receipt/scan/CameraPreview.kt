@@ -1,9 +1,12 @@
 package app.coshell.receipt.scan
 
+import android.util.Size
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
@@ -43,6 +46,7 @@ internal fun CameraPreview(onText: (String) -> Unit, onCamera: (Camera?) -> Unit
                 provider = bound
                 val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
                 val analysis = ImageAnalysis.Builder()
+                    .setResolutionSelector(analysisResolution)
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build().also { it.setAnalyzer(executor, analyzer) }
                 runCatching {
@@ -62,3 +66,12 @@ internal fun CameraPreview(onText: (String) -> Unit, onCamera: (Camera?) -> Unit
     }
     AndroidView(factory = { previewView }, modifier = modifier)
 }
+
+/**
+ * Frames for the analyzer at ~1280×960 (#712): CameraX's default 640×480 gives a dense receipt QR (a long AFIP link)
+ * 2–3 pixels a module unless the phone is held close and straight; twice the side lets it be read from further away
+ * and at an angle. Closest higher first, then lower — any phone gets some size.
+ */
+private val analysisResolution = ResolutionSelector.Builder()
+    .setResolutionStrategy(ResolutionStrategy(Size(1280, 960), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER))
+    .build()

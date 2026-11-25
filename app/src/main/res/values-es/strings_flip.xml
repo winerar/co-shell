@@ -5,7 +5,6 @@
     <string name="home_back_income">Ingresos</string>
     <string name="home_back_spending">Gastos</string>
     <string name="home_back_result">Diferencia</string>
-    <string name="home_back_per_day">De media ≈ %1$s al día</string>
     <string name="home_back_currencies">Por moneda de las cuentas</string>
     <string name="budgets_back_per_day_title">Puedes gastar al día</string>
     <string name="budgets_back_per_day_hint">Hasta fin de mes. Una guía, no una regla.</string>

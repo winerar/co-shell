@@ -212,7 +212,7 @@ def account_local():
     """«Только у меня» (#558, poll A): a new account in a family — the switch on, the note about transfers."""
     body = (field('Название', 'Моя копилка') + field('Валюта', 'ARS')
             + '<div style="margin-top: 12px;">' + group([row('Учитывать в общем балансе', 'Выключите для долга или чужих денег', '', switch(True)),
-                                                         row('Только у меня', 'Другие участники семьи не увидят счёт и операции по нему', '', switch(True))]) + '</div>'
+                                                         row('Только у меня', 'Семья не увидит счёт и его операции', '', switch(True))]) + '</div>'
             + note('Переводы между этим счётом и общими другие участники не увидят.'))
     return inner_screen('Счёт', body, '') + form_footer()
 

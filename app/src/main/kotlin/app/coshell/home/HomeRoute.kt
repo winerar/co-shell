@@ -1,5 +1,9 @@
 package app.coshell.home
 
+import app.coshell.BuildConfig
+import app.coshell.release.ReleaseNotice
+import app.coshell.release.ReleaseNoticeViewModel
+import app.coshell.release.ReleaseStories
 import app.coshell.hints.FirstStepsSheet
 import app.coshell.hints.HintsViewModel
 import androidx.compose.runtime.setValue
@@ -27,10 +31,12 @@ fun HomeRoute(
     screenOptions: ScreenOptionsViewModel = hiltViewModel(),
     hintsViewModel: HintsViewModel = hiltViewModel(),
     draftsCount: DraftsCountViewModel = hiltViewModel(),
+    releaseNotice: ReleaseNoticeViewModel = hiltViewModel(),
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
 ) {
     val drafts by draftsCount.count.collectAsStateWithLifecycle()
+    val release by releaseNotice.visible.collectAsStateWithLifecycle()
     val lock = LocalInputLock.current
     val steps by hintsViewModel.steps.collectAsStateWithLifecycle()
     val finale by hintsViewModel.finale.collectAsStateWithLifecycle()
@@ -75,6 +81,9 @@ fun HomeRoute(
         onFinale = hintsViewModel::dismissFinale,
         draftCount = drafts,
         syncDot = syncDot,
+        release = if (release) ReleaseNotice(BuildConfig.VERSION_NAME) else null,
+        onReleaseOpen = { releaseNotice.done(); actions.onReleaseStories() },
+        onReleaseDismiss = releaseNotice::done,
     )
     if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }

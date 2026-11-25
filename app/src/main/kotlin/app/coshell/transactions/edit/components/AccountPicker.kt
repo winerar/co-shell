@@ -2,7 +2,6 @@ package app.coshell.transactions.edit.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -15,9 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.AccountGroupTitle
@@ -54,14 +51,7 @@ internal fun AccountPicker(
     val choices = accounts.filter { it.id != excludeId }
     val found = if (query.isBlank()) choices else choices.filter { it.name.contains(query.trim(), ignoreCase = true) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.Bottom) {
-            Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
-            Text(
-                pluralStringResource(R.plurals.picker_account_count, choices.size, choices.size),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+        Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l))
         Column(
             Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.l),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),

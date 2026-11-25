@@ -23,7 +23,6 @@
     <string name="reports_ghost_value">previous period %1$s</string>
     <string name="reports_other">Other · %1$s</string>
     <string name="reports_other_more">Other · %1$s and %2$d more</string>
-    <string name="reports_all">All categories · %1$d</string>
     <string name="reports_deleted_category">Deleted category</string>
     <string name="reports_rate_note">In %1$s at the rate of each operation\'s day</string>
     <string name="reports_missing">Not counted: %1$s — no rate</string>
@@ -41,7 +40,6 @@
     <string name="reports_compare_hint">Grey line on the bars</string>
     <string name="reports_show">Show</string>
     <string name="reports_all_title">All categories</string>
-    <string name="reports_all_search">Find a category · %1$d</string>
     <string name="reports_order_amount">By amount</string>
     <string name="reports_order_growth">By growth</string>
     <string name="reports_order_groups">Grouped</string>
@@ -90,7 +88,6 @@
     <string name="review_earned">Came in</string>
     <string name="review_changes">Main changes vs the %1$d-month average</string>
     <string name="review_change_usual">%1$s · usually %2$s</string>
-    <string name="review_no_history">Nothing to compare with yet: the main changes appear once there is at least a month of history.</string>
     <string name="review_no_changes">Spending as usual — no notable changes.</string>
     <string name="review_limits">Limits</string>
     <string name="review_limits_kept">Kept %1$d of %2$d</string>
@@ -105,7 +102,6 @@
     <string name="review_card_hide">Hide until next month</string>
     <!-- Income and spending (#189, board Rp189IeA) -->
     <string name="reports_income_title">Income and spending</string>
-    <string name="reports_income_caption">tap a month</string>
     <string name="reports_income_in">came in</string>
     <string name="reports_income_out">went out</string>
     <string name="reports_income_left">left</string>
@@ -116,7 +112,6 @@
     <string name="reports_income_description">%1$s: came in %2$s, went out %3$s</string>
     <!-- Who spent how much (#189, board Rp189WhoA) -->
     <string name="reports_members_title">Who spent how much</string>
-    <string name="reports_members_caption">by who added it</string>
     <string name="reports_members_me">Me</string>
     <string name="reports_members_note">Spending is shared — split by who recorded the operation.</string>
     <!-- Net worth (#189, board Rp189NwB) -->
@@ -133,9 +128,7 @@
     <!-- «Капитал · октябрь» (#373) -->
     <string name="capital_month_title">Net worth · %1$s</string>
     <string name="capital_month_on">Net worth on %1$s</string>
-    <string name="capital_month_tap">tap for another month</string>
     <string name="capital_month_change">%1$s this month</string>
-    <string name="capital_month_search">Find an account · %1$d</string>
     <string name="capital_month_order_change">By change</string>
     <string name="reports_tab_overview">Overview</string>
     <string name="reports_tab_calendar">Calendar</string>

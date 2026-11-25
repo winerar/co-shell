@@ -6,7 +6,6 @@
     <string name="access_continue">Continuar</string>
     <string name="access_where">¿Dónde consigo un código?</string>
     <string name="access_where_title">¿Dónde consigo un código?</string>
-    <string name="access_where_text">Lo da quien te invitó. Pídele tu código personal: tiene 12 caracteres, por ejemplo K7QX-M2PD-9WTA.</string>
     <string name="access_where_ok">Entendido</string>
     <string name="access_err_malformed">Un código tiene 12 caracteres: letras y números, por ejemplo K7QX-M2PD-9WTA.</string>
     <string name="access_err_not_found">Ese código no existe. Comprueba que lo escribiste bien.</string>

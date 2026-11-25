@@ -43,7 +43,7 @@ class NewMarksViewModelTest {
     }
 }
 
-private class MemoryStore : NewMarkStore {
+internal class MemoryStore : NewMarkStore {
     private var started = false
     private val shown = mutableMapOf<String, Instant>()
     private val opened = mutableSetOf<String>()

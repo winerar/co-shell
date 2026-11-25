@@ -15,7 +15,6 @@
     <!-- Template editor: «Платёж в другой валюте» (#415, board Rec415B). -->
     <string name="template_foreign_title">Payment in another currency</string>
     <string name="template_foreign_subtitle">purchase amount; we ask what was charged</string>
-    <string name="template_foreign_amount_hint">Purchase amount. We ask what was charged when recording and suggest it at the rate</string>
     <string name="template_foreign_currency_error">Pick a currency other than the account’s: USD, EUR…</string>
     <string name="recurring_auto_no_foreign">a payment in another currency is recorded by you: the charged amount varies</string>
     <string name="recurring_notify_ahead_tomorrow">Payment tomorrow</string>

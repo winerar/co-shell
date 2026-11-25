@@ -69,7 +69,7 @@ fun UpdatePill(
     CoShellNoticePill(
         visible = visible && release != null,
         icon = DesignR.drawable.ic_download,
-        text = shown?.let { stringResource(R.string.update_pill, it.versionName, it.versionCode) }.orEmpty(),
+        text = shown?.let { stringResource(R.string.update_pill, it.versionName) }.orEmpty(),
         onClick = { shown?.let(onOpen) },
         dismissLabel = stringResource(R.string.update_pill_dismiss),
         onDismiss = { shown?.let(onDismiss) },

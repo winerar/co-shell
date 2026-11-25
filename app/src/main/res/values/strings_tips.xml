@@ -16,7 +16,6 @@
     <string name="tip_category_title">Куда записывать чаевые?</string>
     <string name="tip_category_hint">Спросим один раз. Поменять — строка «Категория чаевых».</string>
     <string name="tip_category_same">Как у покупки</string>
-    <string name="tip_category_same_hint">Категория каждой покупки</string>
     <string name="tip_category_new_hint">Новая категория</string>
     <string name="tip_save">Сохранить две операции</string>
     <string name="tip_failed">Чаевые не сохранились — добавьте их отдельной операцией</string>

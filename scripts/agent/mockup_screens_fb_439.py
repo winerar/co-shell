@@ -91,7 +91,7 @@ def grid_a():
             body += label(g, top=10) + grid4(cells(items), '10px 4px', 3)
     singles = [i for g, items in CATS_G if len(items) == 1 for i in items]
     body += label('Без группы', top=10) + grid4(cells(singles), '10px 4px', 3)
-    return frame('Все категории · 25', body)
+    return frame('Все категории', body)
 
 
 def other_head(title, field, rows, recent=None):

@@ -3,6 +3,9 @@ package app.coshell.navigation
 import app.coshell.hints.SheetCoach
 import app.coshell.core.domain.hints.HintId
 import app.coshell.R
+import app.coshell.BuildConfig
+import app.coshell.release.ReleaseStories
+import app.coshell.release.ReleaseStoriesScreen
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
@@ -228,6 +231,7 @@ fun CoShellNavHost(
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
                     onReview = { month -> navController.navigate(MonthRecapDestination(month.year, month.month.number)) { launchSingleTop = true } },
+                    onReleaseStories = { navController.navigate(ReleaseStoriesDestination) { launchSingleTop = true } },
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
@@ -308,6 +312,9 @@ fun CoShellNavHost(
                 onEdit = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
                 onNew = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
             )
+        }
+        screen<ReleaseStoriesDestination> {
+            ReleaseStoriesScreen(BuildConfig.VERSION_NAME, ReleaseStories.current, onClose = { navController.popBackStack() })
         }
         screen<NotesDestination> {
             NotesRoute(

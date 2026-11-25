@@ -26,7 +26,7 @@
     <string name="reports_ghost_value">в прошлом периоде %1$s</string>
     <string name="reports_other">Другое · %1$s</string>
     <string name="reports_other_more">Другое · %1$s и ещё %2$d</string>
-    <string name="reports_all">Все категории · %1$d</string>
+    <string name="reports_all">Все категории</string>
     <string name="reports_deleted_category">Удалённая категория</string>
     <string name="reports_rate_note">В %1$s по курсу на день операции</string>
     <string name="reports_missing">Без учёта: %1$s — нет курса</string>
@@ -49,7 +49,7 @@
     <string name="reports_show">Показать</string>
     <!-- «Все категории» (доска RepAll) -->
     <string name="reports_all_title">Все категории</string>
-    <string name="reports_all_search">Найти категорию · %1$d</string>
+    <string name="reports_all_search">Найти категорию</string>
     <string name="reports_order_amount">По сумме</string>
     <string name="reports_order_growth">По росту</string>
     <string name="reports_order_groups">Группами</string>
@@ -104,7 +104,7 @@
     <string name="review_earned">Пришло</string>
     <string name="review_changes">Главное к среднему за %1$d мес.</string>
     <string name="review_change_usual">%1$s · обычно %2$s</string>
-    <string name="review_no_history">Сравнивать пока не с чем: главные изменения появятся, когда будет хотя бы месяц истории.</string>
+    <string name="review_no_history">Сравнивать пока не с чем: нужен хотя бы месяц записей.</string>
     <string name="review_no_changes">Траты как обычно — заметных изменений нет.</string>
     <string name="review_limits">Лимиты</string>
     <string name="review_limits_kept">Уложились %1$d из %2$d</string>
@@ -119,7 +119,7 @@
     <string name="review_card_hide">Скрыть до следующего месяца</string>
     <!-- «Доходы и расходы» (#189, board Rp189IeA) -->
     <string name="reports_income_title">Доходы и расходы</string>
-    <string name="reports_income_caption">тап — месяц</string>
+    <string name="reports_income_caption">нажмите на месяц</string>
     <string name="reports_income_in">пришло</string>
     <string name="reports_income_out">ушло</string>
     <string name="reports_income_left">остаток</string>
@@ -130,7 +130,6 @@
     <string name="reports_income_description">%1$s: пришло %2$s, ушло %3$s</string>
     <!-- «Кто сколько потратил» (#189, board Rp189WhoA) -->
     <string name="reports_members_title">Кто сколько потратил</string>
-    <string name="reports_members_caption">по тому, кто внёс</string>
     <string name="reports_members_me">Я</string>
     <string name="reports_members_note">Траты общие — делим по тому, кто записал операцию.</string>
     <!-- «Капитал» (#189, board Rp189NwB) -->
@@ -147,9 +146,9 @@
     <!-- «Капитал · октябрь» (#373) -->
     <string name="capital_month_title">Капитал · %1$s</string>
     <string name="capital_month_on">Капитал на %1$s</string>
-    <string name="capital_month_tap">тап — другой месяц</string>
+    <string name="capital_month_tap">нажмите на месяц</string>
     <string name="capital_month_change">%1$s за месяц</string>
-    <string name="capital_month_search">Найти счёт · %1$d</string>
+    <string name="capital_month_search">Найти счёт</string>
     <string name="capital_month_order_change">По изменению</string>
     <string name="reports_tab_overview">Обзор</string>
     <string name="reports_tab_calendar">Календарь</string>

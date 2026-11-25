@@ -89,7 +89,7 @@ def refund_check(on=False):
 
 def details_block():
     cells = (detail('calendar', 'Дата', 'Сегодня, 13 нояб.') + detail('note', 'Заметка', 'Café Martínez, с Аней')
-             + detail('spark', 'Теги · 2', '● Аня  ● на двоих') + refund_check())
+             + detail('spark', 'Теги', '● Аня  ● на двоих') + refund_check())
     return block('Детали', '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s</div>' % cells)
 
 
@@ -110,7 +110,7 @@ def all_cats_sheet():
     body = ''
     for g, items in groups:
         body += label(g, top=10) + grid4([cat_cell(n, ic, col, n == 'Кафе', 32) for n, ic, col in items], '6px 2px')
-    inner = ('<div style="padding: 6px 16px 0;"><div style="display: flex; align-items: center; height: 48px;"><b style="flex-grow: 1; font-size: 20px;">Все категории · 24</b>'
+    inner = ('<div style="padding: 6px 16px 0;"><div style="display: flex; align-items: center; height: 48px;"><b style="flex-grow: 1; font-size: 20px;">Все категории</b>'
              '<span style="color: %s;">✕</span></div>%s%s</div>' % (MUTED, search('Найти категорию'), body))
     return scrim() + sheet(inner, 64)
 
@@ -188,7 +188,7 @@ def icons_sheet():
              '<span style="color: %s; font-weight: 600;">Готово</span></div>%s%s'
              '<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px;">%s</div>%s'
              '<div style="display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 10px 0;">%s</div></div>'
-             % (LIME, search('Найти иконку: хлеб, кот, такси'), label('Иконки · 48', top=10), cells, label('Цвета · 20', top=12), dots))
+             % (LIME, search('Найти иконку: хлеб, кот, такси'), label('Иконки', top=10), cells, label('Цвета', top=12), dots))
     return scrim() + sheet(inner, 150)
 
 

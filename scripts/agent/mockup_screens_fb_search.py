@@ -100,7 +100,7 @@ def period_sheet_a():
             'background: %s;">%s<span style="font-size: 16px; font-weight: 600;">Октябрь 2026</span>%s</div>' % (CHIP, icon_button('back', 'Раньше'), icon_button('chev', 'Позже')))
     own = (label('Свой период', False, 18) + '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">%s%s</div>'
            % (field('С', '1 окт. 2026'), field('По', '31 окт. 2026')))
-    body = '<div style="padding: 12px 16px 0;">%s%s%s%s</div>' % (grid, step, own, note('Стрелки листают выбранный отрезок: месяц, квартал, год.'))
+    body = '<div style="padding: 12px 16px 0;">%s%s%s%s</div>' % (grid, step, own, note('Стрелки листают выбранный период.'))
     return over_list(sheet_head('Период') + body + sheet_button('Показать 23 операции'), 300)
 
 

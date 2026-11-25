@@ -29,7 +29,7 @@ class AllCategoriesSheetTest {
     @Test
     fun `picking a category in the all sheet selects it and closes the sheet`() {
         val state = mutableStateOf(entrySheetSample.copy(categoryId = null))
-        val title = "Все категории · ${entrySheetSample.categories.leafCount}"
+        val title = "Все категории"
         compose.setContent {
             CoShellTheme {
                 Surface {

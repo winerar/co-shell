@@ -58,6 +58,8 @@ import app.coshell.reports.review.MonthReviewUiState
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
+import app.coshell.release.ReleaseNotice
+import app.coshell.release.ReleaseNoticeCard
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.sync.SyncDot
@@ -99,6 +101,9 @@ fun HomeScreen(
     onFinale: () -> Unit = {},
     draftCount: Int = 0,
     syncDot: SyncDotState? = null,
+    release: ReleaseNotice? = null,
+    onReleaseOpen: () -> Unit = {},
+    onReleaseDismiss: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -146,6 +151,9 @@ fun HomeScreen(
             if (state.isLoading) return@LazyColumn
             gate?.let { banner -> item(key = "gate") { VersionGateBanner(banner, onUpdate, listItemMotion()) } }
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
+            release?.let { notice ->
+                item(key = "release") { ReleaseNoticeCard(notice.versionName, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
+            }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }

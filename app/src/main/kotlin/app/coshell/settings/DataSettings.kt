@@ -70,7 +70,7 @@ fun DataSettingsScreen(
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellSwitchRow(
-                        title = stringResource(R.string.settings_data_wifi), subtitle = stringResource(R.string.settings_data_wifi_hint),
+                        title = stringResource(R.string.settings_data_wifi),
                         checked = wifiOnly, onCheckedChange = onWifiOnlyChange,
                     )
                 }

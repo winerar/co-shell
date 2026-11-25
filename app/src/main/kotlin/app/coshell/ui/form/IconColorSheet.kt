@@ -57,12 +57,12 @@ internal fun IconColorContent(
     val iconLabel = rememberIconLabel()
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
         if (showIcons) {
-            SheetCaption(stringResource(R.string.form_icons_count, CategoryIcons.keys.size))
+            SheetCaption(stringResource(R.string.form_icons_count))
             Grid(CategoryIcons.keys, ICON_COLUMNS, Spacing.s - Spacing.xxs) { key, cell ->
                 Row(cell, horizontalArrangement = Arrangement.Center) { CoShellIconCell(key, key == icon, iconLabel(key), ICON_CELL) { onIconSelect(key) } }
             }
         }
-        SheetCaption(stringResource(R.string.form_colors_count, CategoryPalette.colors.size))
+        SheetCaption(stringResource(R.string.form_colors_count))
         val swatch = color?.let(CategoryPalette::normalize)
         val items: List<Long?> = (if (allowNone) listOf(null) else emptyList<Long?>()) + CategoryPalette.colors
         Grid(items, COLOR_COLUMNS, Spacing.xs) { item, cell ->

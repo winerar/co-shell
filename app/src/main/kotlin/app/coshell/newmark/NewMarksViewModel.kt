@@ -19,7 +19,7 @@ class NewMarksViewModel @Inject constructor(private val marks: NewMarks) : ViewM
     val current: StateFlow<Set<String>> = _current.asStateFlow()
 
     init {
-        viewModelScope.launch { _current.value = marks.current(NewFeatures.all) }
+        viewModelScope.launch { _current.value = marks.current(NewFeatures.tracked).intersect(NewFeatures.all.toSet()) }
     }
 
     fun opened(key: String) {

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="budgets_title">Budgets</string>
-    <string name="budgets_menu_hint">Monthly limits, plan and actual</string>
     <string name="budgets_new">New limit</string>
     <string name="budgets_previous_month">Previous month</string>
     <string name="budgets_next_month">Next month</string>
     <string name="budgets_settings">Budget settings</string>
     <string name="budgets_start_title">Month start</string>
-    <string name="budgets_start_subtitle">Which day the budget starts — handy on payday</string>
     <string name="budgets_start_rule">The dot is the default, a calendar month. In a short month — from its last day.</string>
     <string name="budgets_left">Left</string>
     <string name="budgets_over">Over budget</string>
@@ -19,7 +17,6 @@
     <string name="budgets_forecast_over">At this pace, ≈ %1$s by the end of the month — %2$s over plan</string>
     <string name="budgets_forecast_ok">At this pace, ≈ %1$s by the end of the month — within plan</string>
     <string name="budgets_missing">Not counted: %1$s — no rate</string>
-    <string name="budgets_envelopes">Limits · %1$d</string>
     <string name="budgets_filter_all">All · %1$d</string>
     <string name="budgets_filter_hot">Running hot · %1$d</string>
     <string name="budgets_filter_in_plan">On plan · %1$d</string>
@@ -42,7 +39,6 @@
     <string name="budgets_fold">Collapse subcategories</string>
     <string name="budgets_unfold">Expand subcategories</string>
     <string name="budgets_empty_title">No limits for this month</string>
-    <string name="budgets_empty_text">Set a monthly limit for a category — the app will show what\'s left and warn you if spending runs ahead of pace. Tap “+” to add the first one.</string>
     <string name="budgets_hint">The bar is what\'s spent, the mark is today\'s pace. Limit changes apply from the chosen month.</string>
 
     <string name="budget_detail_edit">Edit limit</string>
@@ -69,19 +65,16 @@
     <string name="budget_what">For what</string>
     <string name="budget_choose_folder">Choose a category with subcategories</string>
     <string name="budget_choose_category">Choose a category</string>
-    <string name="budget_no_folders">No categories with subcategories yet — create them in “More → Categories” or pick a regular category.</string>
     <string name="budget_category_error">Choose what the limit is for</string>
     <string name="budget_amount">Per month</string>
     <string name="budget_amount_error">Enter the amount in digits. 0 works too</string>
     <string name="budget_average">3-month average — %1$s</string>
     <string name="budget_currency">Limit currency</string>
-    <string name="budget_inside">Subcategories · optional</string>
     <string name="budget_inside_limit">limit %1$s</string>
     <string name="budget_inside_none">no limit of its own</string>
     <string name="budget_inside_add">＋ limit</string>
     <string name="budget_rollover">Carry over the remainder</string>
     <string name="budget_rollover_hint">underspending or overspending — to the next month</string>
-    <string name="budget_note">Note to self</string>
     <string name="budget_from_month">Applies from %1$s on; past months don\'t change.</string>
     <string name="budget_remove">Remove limit</string>
     <string name="budget_remove_confirm_title">Remove limit?</string>

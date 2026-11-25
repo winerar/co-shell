@@ -4,12 +4,10 @@
     <string name="cloud_title">Cloud analysis</string>
     <string name="cloud_off_title">Off</string>
     <string name="cloud_off_text">Optional. If your phone is weak or AI on it is off, a cloud AI reads note lines, unreadable receipts and voice.</string>
-    <string name="cloud_off_chip">everything works as before without it</string>
     <string name="cloud_nologin_chip">sign-in needed: More → Family</string>
     <string name="cloud_on_title">On</string>
     <string name="cloud_on_text">Works when you are online.</string>
     <string name="cloud_on_text_left">Works when you are online. Left today: %1$d of %2$d.</string>
-    <string name="cloud_on_chip">ready</string>
     <string name="cloud_fact_sent">Sent</string>
     <string name="cloud_fact_sent_text">the text of a note or receipt, names of categories and accounts</string>
     <string name="cloud_fact_kept">Not sent</string>

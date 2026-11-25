@@ -6,7 +6,7 @@
     <string name="access_continue">Продолжить</string>
     <string name="access_where">Где взять код?</string>
     <string name="access_where_title">Где взять код?</string>
-    <string name="access_where_text">Код выдаёт тот, кто вас пригласил. Попросите прислать вам личный код: он состоит из 12 знаков, например K7QX-M2PD-9WTA.</string>
+    <string name="access_where_text">Код выдаёт тот, кто вас пригласил: 12 знаков, например K7QX-M2PD-9WTA.</string>
     <string name="access_where_ok">Понятно</string>
     <string name="access_err_malformed">Код состоит из 12 знаков: букв и цифр, например K7QX-M2PD-9WTA.</string>
     <string name="access_err_not_found">Такого кода нет. Проверьте, что всё набрано верно.</string>

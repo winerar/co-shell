@@ -10,7 +10,10 @@ import app.coshell.core.domain.hints.HintPlanner
 import app.coshell.core.domain.hints.HintStore
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -40,6 +43,11 @@ interface HintHost {
     fun say(@StringRes text: Int)
 
     fun dismiss()
+
+    /** «Открыть» on a moment card: the card goes, the app opens [target] (`CoShellNavHost` listens to [opens]). */
+    fun open(target: HintTarget)
+
+    val opens: SharedFlow<HintTarget>
 
     /** True from «month_end» until «Отчёты» is opened: the dot on that tab. */
     val reportsDot: StateFlow<Boolean>
@@ -152,6 +160,14 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
 
     override fun say(text: Int) {
         show(HintBanner(null, text))
+    }
+
+    private val _opens = MutableSharedFlow<HintTarget>(extraBufferCapacity = 1)
+    override val opens: SharedFlow<HintTarget> = _opens.asSharedFlow()
+
+    override fun open(target: HintTarget) {
+        dismiss()
+        _opens.tryEmit(target)
     }
 
     override fun dismiss() {

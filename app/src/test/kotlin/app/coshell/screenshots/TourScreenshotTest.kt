@@ -11,6 +11,7 @@ import app.coshell.home.HomeScreen
 import app.coshell.home.HomeUiState
 import app.coshell.release.StoriesScreen
 import app.coshell.hints.TourStories
+import app.coshell.hints.HintCard
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -45,6 +46,15 @@ class TourScreenshotTest {
     @Test fun `story 6 dark`() = story(5, dark = true)
 
     @Test fun `story 3 light`() = story(2, dark = false)
+
+    /** Every hint is this card inside the screen (#513, owner poll 2026-11-25 «А», board `Tip513HomeA`). */
+    @Test fun `hint card dark`() = shot("hint_card_dark", dark = true) { HintCard(BACKUP, onOk = {}, openLabel = "Открыть") }
+
+    @Test fun `hint card light`() = shot("hint_card_light") { HintCard(BACKUP, onOk = {}, openLabel = "Открыть") }
+
+    private companion object {
+        const val BACKUP = "Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия."
+    }
 
     private fun story(index: Int, dark: Boolean) = shot("tour_story_${index + 1}_${if (dark) "dark" else "light"}", dark) {
         StoriesScreen(stringResource(R.string.tour_header), TourStories.all, stringResource(R.string.tour_start), startAt = index, steps = true)

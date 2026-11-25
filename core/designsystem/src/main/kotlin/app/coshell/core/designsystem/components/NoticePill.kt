@@ -35,7 +35,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 
 /**
  * A small, quiet notice that floats over the bottom bar (design-system.md §«Компоненты»): a neon dot
- * icon, a short text (up to two lines) and a «×»; with [actionLabel] a text button before the «×» (the pill itself
+ * icon, a short text (up to four lines, so a long hint with an action still reads to the end) and a «×»; with [actionLabel] a text button before the «×» (the pill itself
  * then does not click: [onClick] is the action). Used for "a new version is available" and warm hints (#513).
  * Rises from below with the spatial spring and pops in slightly, like the tab pill.
  */
@@ -73,7 +73,7 @@ fun CoShellNoticePill(
                 text,
                 style = MaterialTheme.typography.labelLarge,
                 color = scheme.onSurface,
-                maxLines = 2,
+                maxLines = 4, // a long warm hint with «Открыть» must read to the end (onboarding check 2026-11-25)
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f, fill = false),
             )

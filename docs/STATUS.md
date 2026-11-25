@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2280 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v24.
+- Тесты: всего 2285 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v24.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,7 +69,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-25, `claude/intelligent-darwin-bx3sr1`: #321 — «Вставить из буфера» стал значком в ряду типа шторки ввода (рядом с QR и «Шаблонами», просьба владельца); `CoShellSegmented(icons)`: не влезают слова — значки ↗ ↙ ⇄. Доски `Clip321*`, `Entry*`, каталог обновлены.
-Подсказки — карточками в экране (опрос https://claude.ai/artifact/Scg6rmgXv57LEGzFnSQbJi — «А», доски `Tip513*`); аудит: +4 подсказки (`clipboard`, `recurring`, `hold_amount`, `app_shortcuts`).
+2026-11-25, `claude/config-model-jjk6ts`: #241 — расчёт «Подушки» (`core:domain/reports/Cushion`, тесты) готов, экрана нет; опрос https://claude.ai/artifact/Y9kJkMzfMJZA1UgdB1i52h (место подушки, текст и выключатель уведомления #186; доски — `scripts/agent/mockup_poll_cushion241.py`) ждёт владельца.
+#141 по коду уже сделан (вариант А, `feature-map.md`) — осталось закрыть задачу. Синк: фильтр «чужие записи» по uid не делаем (один аккаунт на двух телефонах перестал бы синкаться); лишние чтения — только при массовом импорте.
 Релиз «2026-11-25, вечер» выпущен; лендинг: Pages надо переключить на ветку `gh-pages`; заголовок «Общий бюджет семьи», «Только для Android»; лендинг публикуется без релиза после мержа в `dev` (`publish-landing.sh`). Скрыт от поисковиков (`noindex`).
 Закрытый тест ждёт владельца: #669 (лендинг), #670 (коды), #657 (Play Console). Дальше агенту — #651 (flavor `play`); #655 отложен владельцем.

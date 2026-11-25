@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import app.coshell.core.designsystem.components.CoShellOutlinedButton
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -123,21 +125,15 @@ internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
     }
 
 /**
- * «Помощь»: hints on/off and «Показать заново» (from «Ещё», poll 2026-11-20, Б; board MoreBSettings); no group screen.
+ * «Помощь»: hints on/off with «Показать подсказки заново» as an outlined button under it (an action, not a page: #598 poll 2026-11-25 «Б»,
+ * board `Help598B`), then «Знакомство с приложением» and the rows below in a second card; no group screen.
  * «Код приглашения» — only in builds with the gate (#671, boards `Inv671A`, `Inv671ARevoked`);
- * «Конфиденциальность» — only in builds that know the site (#652, board `Priv652A`).
+ * «Политика конфиденциальности» — only in builds that know the site (#652, board `Priv652A`).
  */
 @Composable
 internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
-    GroupCard(DesignR.drawable.ic_lightbulb, 13, R.string.settings_help_title, onAll = null) {
-        row {
-            CoShellSwitchRow(
-                title = stringResource(R.string.hints_title),
-                subtitle = stringResource(if (state.hints) R.string.hints_on else R.string.hints_off),
-                checked = state.hints, onCheckedChange = actions.onHints,
-            )
-        }
-        row { ValueRow(stringResource(R.string.hints_reset_title), stringResource(R.string.hints_reset_hint), actions.onHintsReset) }
+    GroupCard(DesignR.drawable.ic_lightbulb, 13, R.string.settings_help_title, onAll = null, more = {
+        row { ValueRow(stringResource(R.string.tour_title), stringResource(R.string.tour_hint), actions.onTour) }
         state.invite?.let { invite ->
             row {
                 ValueRow(
@@ -151,11 +147,35 @@ internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
         if (state.policy) {
             row { ValueRow(stringResource(R.string.settings_policy_title), stringResource(R.string.settings_policy_hint), actions.onPolicy) }
         }
+    }) {
+        row {
+            Column {
+                CoShellSwitchRow(
+                    title = stringResource(R.string.hints_title),
+                    subtitle = stringResource(if (state.hints) R.string.hints_on else R.string.hints_off),
+                    checked = state.hints, onCheckedChange = actions.onHints,
+                )
+                CoShellOutlinedButton(
+                    onClick = actions.onHintsReset,
+                    modifier = Modifier.fillMaxWidth().padding(start = Spacing.l, end = Spacing.l, bottom = Spacing.m),
+                ) {
+                    Icon(painterResource(DesignR.drawable.ic_refresh), contentDescription = null)
+                    Text(stringResource(R.string.hints_reset_title), modifier = Modifier.padding(start = Spacing.s))
+                }
+            }
+        }
     }
 
 /** A group: its icon and name in caps, «Все ›» to the group screen [onAll] (none — no such screen), then its main settings in one card. */
 @Composable
-private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int, onAll: (() -> Unit)?, rows: RowGroupScope.() -> Unit) {
+private fun GroupCard(
+    @DrawableRes icon: Int,
+    color: Int,
+    @StringRes title: Int,
+    onAll: (() -> Unit)?,
+    more: (RowGroupScope.() -> Unit)? = null,
+    rows: RowGroupScope.() -> Unit,
+) {
     Column(Modifier.padding(horizontal = Spacing.l).padding(top = Spacing.m, bottom = Spacing.s)) {
         Row(Modifier.padding(horizontal = Spacing.xs, vertical = Spacing.s), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
             MenuIcon(icon)
@@ -163,6 +183,8 @@ private fun GroupCard(@DrawableRes icon: Int, color: Int, @StringRes title: Int,
             if (onAll != null) CoShellSectionLink(stringResource(R.string.settings_group_all), onClick = onAll)
         }
         CoShellRowGroup(rows = rows)
+        // A second card under the first one («Помощь»: the switch with its button, then the pages).
+        more?.let { CoShellRowGroup(Modifier.padding(top = Spacing.s), rows = it) }
     }
 }
 

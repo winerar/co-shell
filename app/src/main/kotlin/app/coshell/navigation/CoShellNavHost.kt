@@ -3,9 +3,12 @@ package app.coshell.navigation
 import app.coshell.hints.SheetCoach
 import app.coshell.core.domain.hints.HintId
 import app.coshell.R
+import androidx.compose.ui.res.stringResource
 import app.coshell.BuildConfig
 import app.coshell.release.ReleaseStories
 import app.coshell.release.ReleaseStoriesScreen
+import app.coshell.release.StoriesScreen
+import app.coshell.hints.TourStories
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
@@ -232,6 +235,7 @@ fun CoShellNavHost(
                     },
                     onReview = { month -> navController.navigate(MonthRecapDestination(month.year, month.month.number)) { launchSingleTop = true } },
                     onReleaseStories = { navController.navigate(ReleaseStoriesDestination) { launchSingleTop = true } },
+                    onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
@@ -315,6 +319,12 @@ fun CoShellNavHost(
         }
         screen<ReleaseStoriesDestination> {
             ReleaseStoriesScreen(BuildConfig.VERSION_NAME, ReleaseStories.current, onClose = { navController.popBackStack() })
+        }
+        screen<TourDestination> {
+            StoriesScreen(
+                stringResource(R.string.tour_header), TourStories.all, stringResource(R.string.tour_start),
+                onClose = { navController.popBackStack() }, steps = true,
+            )
         }
         screen<NotesDestination> {
             NotesRoute(

@@ -23,6 +23,13 @@ interface HintStore {
 
     /** «Показать подсказки заново»: forgets «shown», unhides the steps, turns hints on. */
     suspend fun reset()
+
+    /**
+     * «Знакомство» (#598): true once this phone was sorted into «new install» or «already in use». Survives [reset], so the
+     * card comes back after «Показать подсказки заново» but never pops up on a phone that had data when the tour appeared.
+     */
+    suspend fun tourChecked(): Boolean = true
+    suspend fun setTourChecked() = Unit
 }
 
 /**

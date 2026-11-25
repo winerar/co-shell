@@ -40,7 +40,11 @@ class PrefsHintStore @Inject constructor(@ApplicationContext context: Context) :
             ?: candidate?.also { prefs.edit { putLong(FIRST_ENTRY, it) } }
     }
 
-    // Keeps the dates: «show hints again» forgets what was shown, not when the phone started.
+    override suspend fun tourChecked(): Boolean = io { prefs.getBoolean(TOUR_CHECKED, false) }
+
+    override suspend fun setTourChecked() = io { prefs.edit { putBoolean(TOUR_CHECKED, true) } }
+
+    // Keeps the dates (and the tour check): «show hints again» forgets what was shown, not when the phone started.
     override suspend fun reset() = io {
         prefs.edit {
             remove(SHOWN)
@@ -59,6 +63,7 @@ class PrefsHintStore @Inject constructor(@ApplicationContext context: Context) :
         const val FIRST_SEEN = "first_seen"
         const val FIRST_ENTRY = "first_entry"
         const val STEPS_HIDDEN = "steps_hidden"
+        const val TOUR_CHECKED = "tour_checked"
         const val NONE = Long.MIN_VALUE
     }
 }

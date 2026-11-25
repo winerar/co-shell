@@ -39,6 +39,7 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onBackup = { navController.navigate(BackupDestination) },
                 onAiAddon = { navController.navigate(AiAddonDestination) { launchSingleTop = true } },
                 onCloudAi = { navController.navigate(CloudAiDestination) { launchSingleTop = true } },
+                onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
             ),
         )
     }

@@ -51,7 +51,7 @@ class AccessScreenshotTest {
 
     @Test fun `settings invite revoked dark`() = shot("settings_invite_revoked_dark", dark = true) { help(InviteRow("Алекс", revoked = true)) }
 
-    /** «Конфиденциальность» under the code (#652, board `Priv652A`). */
+    /** «Политика конфиденциальности» under the code (#652, board `Priv652A`). */
     @Test fun `settings policy dark`() = shot("settings_policy_dark", dark = true) { help(InviteRow("Алекс", revoked = false), policy = true) }
 
     @Test fun `settings policy light`() = shot("settings_policy_light") { help(InviteRow("Алекс", revoked = false), policy = true) }

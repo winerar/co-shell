@@ -40,6 +40,7 @@ fun HomeRoute(
     val lock = LocalInputLock.current
     val steps by hintsViewModel.steps.collectAsStateWithLifecycle()
     val finale by hintsViewModel.finale.collectAsStateWithLifecycle()
+    val tour by hintsViewModel.tour.collectAsStateWithLifecycle()
     var stepsOpen by rememberSaveable { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
@@ -84,6 +85,9 @@ fun HomeRoute(
         release = if (release) ReleaseNotice(BuildConfig.VERSION_NAME) else null,
         onReleaseOpen = { releaseNotice.done(); actions.onReleaseStories() },
         onReleaseDismiss = releaseNotice::done,
+        tour = tour,
+        onTourOpen = { hintsViewModel.tourDone(); actions.onTour() },
+        onTourDismiss = hintsViewModel::tourDone,
     )
     if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }

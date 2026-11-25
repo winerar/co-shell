@@ -7,7 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import app.coshell.hints.HintsViewModel
+import app.coshell.hints.HintsSettingsViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -61,8 +61,10 @@ data class SettingsActions(
     val onHintsReset: () -> Unit = {},
     /** «Код приглашения»: the code screen with «Отмена» over the app (#671). */
     val onInvite: () -> Unit = {},
-    /** «Конфиденциальность»: the privacy policy page in the phone's browser (#652). */
+    /** «Политика конфиденциальности»: the privacy policy page in the phone's browser (#652). */
     val onPolicy: () -> Unit = {},
+    /** «Знакомство с приложением» (#598). */
+    val onTour: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */
@@ -83,7 +85,7 @@ data class SettingsState(
     val cloud: Boolean? = null,
     /** «Код приглашения» in «Помощь» (#671): `null` — no gate in this build or no code yet, the row is hidden. */
     val invite: InviteRow? = null,
-    /** «Конфиденциальность» in «Помощь» (#652): `false` — this build does not know the site, the row is hidden. */
+    /** «Политика конфиденциальности» in «Помощь» (#652): `false` — this build does not know the site, the row is hidden. */
     val policy: Boolean = false,
 )
 
@@ -95,7 +97,7 @@ fun SettingsRoute(
     reminders: ReminderSettingsViewModel = hiltViewModel(),
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
-    hints: HintsViewModel = hiltViewModel(),
+    hints: HintsSettingsViewModel = hiltViewModel(),
     ai: AiAddonViewModel = hiltViewModel(),
     cloud: CloudAiViewModel = hiltViewModel(),
     access: AccessViewModel = hiltViewModel(),

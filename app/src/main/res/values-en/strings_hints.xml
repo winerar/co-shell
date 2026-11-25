@@ -16,14 +16,13 @@
     <string name="hints_on">Shown</string>
     <string name="hints_off">Off</string>
     <string name="hints_reset_title">Show hints again</string>
-    <string name="hints_reset_hint">Brings back “First steps” and tips</string>
     <string name="hint_flip_card">Tap the card to flip it: the back has the most useful things of the month.</string>
     <string name="hint_swipe_tabs">Swipe sideways to switch tabs.</string>
     <string name="hint_hold_plus">Hold “+”: receipt QR, note and template in a fan.</string>
     <string name="hint_close">Dismiss tip</string>
     <string name="hint_overview_empty">No transactions yet. Tap “+” to add the first one.</string>
     <string name="hint_accounts">An account is where your money sits. The balance adds up by itself.</string>
-    <string name="hint_scan_receipt">Got a QR on the receipt? Tap the camera icon: the amount and date fill in by themselves.</string>
+    <string name="hint_scan_receipt">Got a QR on the receipt? Tap the QR icon: the amount and date fill in by themselves.</string>
     <string name="hint_categories">A category is what the money went on. The ready-made ones will do; add your own later.</string>
     <string name="hint_debts">A debt is kept apart from spending: the account balance changes, spending and income do not.</string>
     <string name="hint_budgets">A limit is how much you can spend on a category in a month. A guide, not a ban.</string>

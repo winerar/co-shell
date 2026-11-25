@@ -7,3 +7,4 @@ paths:
 @../../docs/agents/texts.md
 @../../docs/agents/glossary.md
 @../../docs/agents/hints.md
+@../../docs/agents/hints-code.md

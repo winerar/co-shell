@@ -4,13 +4,16 @@ import app.coshell.core.designsystem.theme.selectionColors
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +30,13 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import app.coshell.core.designsystem.tokens.Motion
@@ -41,6 +50,8 @@ import app.coshell.core.designsystem.tokens.Spacing
  * «how a list is shown», no violet): neon + 2 dp frame in ink + bold; the control is a 44 dp cell. The pill is drawn behind the labels, so a change only redraws — no
  * relayout (performance.md). The track itself can be swiped; to swipe the content under it as well, give
  * the content [segmentSwipe] with the same [swipe] — the pill then follows the finger (#173).
+ * With [icons] (one per label), a track too narrow for any label shows the icons instead — all at once, the label stays for
+ * TalkBack (#321: the entry sheet's type row shares its width with three round buttons).
  */
 @Composable
 fun CoShellSegmented(
@@ -50,7 +61,15 @@ fun CoShellSegmented(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     swipe: SegmentSwipe? = null,
+    @DrawableRes icons: List<Int>? = null,
 ) {
+    val iconsOrNull = icons?.takeIf { it.size == labels.size }
+    val measurer = rememberTextMeasurer()
+    val style = segmentStyle(selected = true)
+    // The widest label (bold, as when chosen): a segment narrower than it shows the icon. Segments are equal, so all switch at once.
+    val widest = remember(labels, style, iconsOrNull) {
+        if (iconsOrNull == null) 0 else labels.maxOfOrNull { measurer.measure(it, style, maxLines = 1).size.width } ?: 0
+    }
     val colors = MaterialTheme.colorScheme
     val sel = selectionColors()
     val pill = sel.fill
@@ -81,13 +100,13 @@ fun CoShellSegmented(
             .selectableGroup(),
     ) {
         labels.forEachIndexed { index, label ->
-            Segment(label, index == selected, enabled, ink, colors.onSurfaceVariant, Modifier.weight(1f)) { onSelect(index) }
+            Segment(label, iconsOrNull?.get(index), widest, index == selected, enabled, ink, colors.onSurfaceVariant, Modifier.weight(1f)) { onSelect(index) }
         }
     }
 }
 
 @Composable
-private fun Segment(label: String, selected: Boolean, enabled: Boolean, ink: Color, muted: Color, modifier: Modifier, onClick: () -> Unit) {
+private fun Segment(label: String, @DrawableRes icon: Int?, widest: Int, selected: Boolean, enabled: Boolean, ink: Color, muted: Color, modifier: Modifier, onClick: () -> Unit) {
     val color by animateColorAsState(if (selected) ink else muted, Motion.effects(), label = "segmentInk")
     val source = remember { MutableInteractionSource() }
     Box(
@@ -98,15 +117,27 @@ private fun Segment(label: String, selected: Boolean, enabled: Boolean, ink: Col
             .padding(horizontal = Spacing.s),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = label,
-            color = color,
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        if (icon == null) {
+            Text(text = label, color = color, style = segmentStyle(selected), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        } else {
+            Layout(
+                content = {
+                    Text(text = label, color = color, style = segmentStyle(selected), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Icon(painterResource(icon), contentDescription = null, tint = color, modifier = Modifier.size(Sizes.buttonIcon))
+                },
+                // TalkBack hears the label whichever of the two is placed.
+                modifier = Modifier.clearAndSetSemantics { contentDescription = label },
+            ) { measurables, constraints ->
+                val shown = measurables[if (widest > constraints.maxWidth) 1 else 0].measure(constraints.copy(minWidth = 0, minHeight = 0))
+                layout(shown.width, shown.height) { shown.place(0, 0) }
+            }
+        }
     }
 }
+
+@Composable
+private fun segmentStyle(selected: Boolean): TextStyle =
+    MaterialTheme.typography.labelLarge.copy(fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
 
 /** A locked control (the type of a category already in use) stays readable but clearly out of reach. */
 private const val DISABLED_ALPHA = 0.5f

@@ -23,6 +23,13 @@ interface HintStore {
 
     /** «Показать подсказки заново»: forgets «shown», unhides the steps, turns hints on. */
     suspend fun reset()
+
+    /**
+     * «Знакомство» (#598): true once this phone was sorted into «new install» or «already in use». Survives [reset], so the
+     * card comes back after «Показать подсказки заново» but never pops up on a phone that had data when the tour appeared.
+     */
+    suspend fun tourChecked(): Boolean = true
+    suspend fun setTourChecked() = Unit
 }
 
 /**
@@ -38,9 +45,11 @@ object HintPlanner {
         lastShownDay: Long?,
         today: Long,
         shownThisVisit: Boolean,
+        emptyScreen: Boolean = false,
     ): HintId? {
         if (!enabled) return null
-        val limited = shownThisVisit || lastShownDay == today
+        // A screen with no data yet is a new person's first look: its word shows whatever else was shown today (owner 2026-11-25).
+        val limited = !emptyScreen && (shownThisVisit || lastShownDay == today)
         return HintId.entries.firstOrNull { it in candidates && it.key !in shown && (!limited || it.kind == HintKind.MOMENT) }
     }
 }

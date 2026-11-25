@@ -3,75 +3,114 @@
 
 Usage: make_landing.py <version.json> <out-dir>
 
-Reads the release manifest CI writes (scripts/make-update-files.py): version, size, SHA-256 and the fixed APK URL.
-Writes <out>/{ru,en,es}/index.html from site/index.template.html, an <out>/index.html that sends the visitor to the page of
-their browser's language (Russian when unsure), and .nojekyll. CI pushes <out> to the `gh-pages` branch of the public releases repo
-(GitHub Pages) when the repository variable LANDING is true (.github/workflows/ci.yml). The page asks nobody for anything:
-the app itself is closed by an invitation code (docs/research/closed-testing-plan.md).
+Reads the release manifest CI writes (scripts/make-update-files.py): version, size, SHA-256, notes and the APK URL.
+Layout — variant «Б» of poll 2026-11-25 (docs/design/poll-660.json): app screen from the screenshot references,
+three points, QR to the page (computers only), install steps for any Android (one list, owner 2026-11-25), «Что нового» on the Russian page only.
+Texts — landing_texts.py; the page address for the QR — env LANDING_URL, else GitHub Pages of the releases repo.
 """
 import html
 import json
 import os
+import re
+import shutil
 import sys
 
 import privacy_pages
+import qr_code
+from landing_texts import TEXTS
 
 LANGS = [("ru", "RU"), ("en", "EN"), ("es", "ES")]
-TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site", "index.template.html")
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+TEMPLATE = os.path.join(ROOT, "site", "index.template.html")
+SHOTS_DIR = os.path.join(ROOT, "app", "src", "test", "screenshots")
+# Screen of the app per language: (light, dark or None) — screenshot references of the Overview (ScreensScreenshotTest).
+SHOTS = {"ru": ("home_light.png", "home_dark.png"), "en": ("home_en.png", None), "es": ("home_es.png", None)}
+NEWS_LANGS = ("ru",)  # whats-new.md is Russian only (poll 2026-11-25, «А»)
 
-TEXTS = {
-    "ru": {
-        "title": "Co-Shell — семейный бюджет", "h1": "Семейный бюджет на двоих",
-        "lead": "Для нескольких валют, без лишнего. Работает без интернета, общий бюджет — на всех телефонах семьи.",
-        "download": "Скачать", "mb": "МБ", "meta": "Версия {version} · Android 8+ · обновляется само",
-        "sha": "Контрольная сумма SHA-256", "invite_title": "Нужен код приглашения",
-        "invite_text": "Приложение пока для приглашённых: при первом запуске введите код. Попросите его у того, кто вас позвал.",
-        "steps": "Как установить", "step1": "Нажмите «Скачать» и откройте файл.", "step2": "Разрешите установку из этого источника.",
-        "step3": "Если Play Protect предупредит — выберите «Всё равно установить».",
-        "footer": "Только для Android. Данные хранятся на вашем телефоне.",
-    },
-    "en": {
-        "title": "Co-Shell — family budget", "h1": "A budget for two",
-        "lead": "Several currencies, nothing extra. Works offline; a shared budget on every phone in the family.",
-        "download": "Download", "mb": "MB", "meta": "Version {version} · Android 8+ · updates itself",
-        "sha": "SHA-256 checksum", "invite_title": "You need an invitation code",
-        "invite_text": "The app is by invitation for now: enter the code on first launch. Ask the person who invited you.",
-        "steps": "How to install", "step1": "Tap “Download” and open the file.", "step2": "Allow installing from this source.",
-        "step3": "If Play Protect warns you, choose “Install anyway”.",
-        "footer": "Android only. Your data stays on your phone.",
-    },
-    "es": {
-        "title": "Co-Shell — presupuesto familiar", "h1": "Un presupuesto para dos",
-        "lead": "Varias monedas, sin florituras. Funciona sin internet; un presupuesto compartido en todos los teléfonos de la familia.",
-        "download": "Descargar", "mb": "MB", "meta": "Versión {version} · Android 8+ · se actualiza sola",
-        "sha": "Suma de comprobación SHA-256", "invite_title": "Necesitas un código de invitación",
-        "invite_text": "Por ahora la app es solo por invitación: introduce el código al abrirla. Pídeselo a quien te invitó.",
-        "steps": "Cómo instalar", "step1": "Toca «Descargar» y abre el archivo.", "step2": "Permite instalar desde esta fuente.",
-        "step3": "Si Play Protect avisa, elige «Instalar de todos modos».",
-        "footer": "Solo para Android. Tus datos se quedan en tu teléfono.",
-    },
-}
+esc = lambda s: html.escape(str(s), quote=True)  # noqa: E731
 
 
 def size_mb(size):
     return f"{size / 1_000_000:.1f}"
 
 
+def site_url(manifest):
+    """Root of the landing site: LANDING_URL, else https://<owner>.github.io/<repo>/ from the APK URL; None if unknown."""
+    custom = os.environ.get("LANDING_URL", "").strip()
+    if custom:
+        return custom.rstrip("/") + "/"
+    m = re.match(r"https://github\.com/([^/]+)/([^/]+)/releases/", manifest.get("apk", ""))
+    return f"https://{m.group(1).lower()}.github.io/{m.group(2)}/" if m else None
+
+
+def steps_html(steps):
+    out = []
+    for title, hint, dialog in steps:
+        item = esc(title)
+        if hint:
+            item += f"<small>{esc(hint)}</small>"
+        if dialog:
+            head, text, cancel, action = dialog
+            item += (f'<div class="sys" aria-hidden="true"><b>{esc(head)}</b>{esc(text)}'
+                     f'<div class="act"><span>{esc(cancel)}</span><span class="go">{esc(action)}</span></div></div>')
+        out.append(f"<li>{item}</li>")
+    return "".join(out)
+
+
+def news_html(lang, manifest, t):
+    if lang not in NEWS_LANGS:
+        return ""
+    lines = [ln.strip().lstrip("•-").strip() for ln in manifest.get("notes", "").splitlines()]
+    lines = [ln for ln in lines if ln and not ln.startswith("#")]
+    if not lines:
+        return ""
+    items = "".join(f"<li>{esc(ln)}</li>" for ln in lines)
+    return f'<details class="news" open><summary>{esc(t["news"].format(version=manifest["versionName"]))}</summary><ul>{items}</ul></details>'
+
+
+def shot_html(lang, t):
+    light, dark = SHOTS[lang]
+    imgs = f'<img class="light-img" src="../img/{light}" alt="{esc(t["shot_alt"])}">'
+    if dark:
+        imgs += f'<img class="dark-img" src="../img/{dark}" alt="{esc(t["shot_alt"])}">'
+    return f'<div class="phone{" has-dark" if dark else ""}">{imgs}</div>'
+
+
+def qr_html(lang, manifest, t):
+    root = site_url(manifest)
+    if not root:
+        return ""
+    return (f'<div class="card qr">{qr_code.svg(root + lang + "/", module=4, quiet=2)}'
+            f'<div><b>{esc(t["qr_title"])}</b><p>{esc(t["qr_text"])}</p></div></div>')
+
+
 def page(template, lang, manifest):
     t = TEXTS[lang]
+    links = privacy_pages.TEXTS[lang]
     mb = size_mb(manifest["size"])
     if lang in ("ru", "es"):
         mb = mb.replace(".", ",")
-    langs = " ".join(("<b>%s</b>" % label) if code == lang else f'<a href="../{code}/">{label}</a>' for code, label in LANGS)
-    values = {
+    text = {
         "LANG": lang, "TITLE": t["title"], "H1": t["h1"], "LEAD": t["lead"], "DOWNLOAD": t["download"], "MB": t["mb"],
         "META": t["meta"].format(version=manifest["versionName"]), "SHA_LABEL": t["sha"], "INVITE_TITLE": t["invite_title"],
-        "INVITE_TEXT": t["invite_text"], "STEPS_TITLE": t["steps"], "STEP1": t["step1"], "STEP2": t["step2"], "STEP3": t["step3"],
-        "FOOTER": t["footer"], "SIZE_MB": mb, "SHA256": manifest["sha256"], "APK_URL": manifest["apk"], "LANGS": langs,
+        "INVITE_TEXT": t["invite_text"], "STEPS_TITLE": t["steps"],
+        "UPDATE_TITLE": t["update_title"], "UPDATE_TEXT": t["update_text"], "FOOTER": t["footer"],
+        "PRIVACY_LINK": links["privacy_link"], "DELETE_LINK": links["delete_link"],
+        "SIZE_MB": mb, "SHA256": manifest["sha256"], "APK_URL": manifest["apk"],
+    }
+    raw = {
+        "LANGS": " ".join(("<b>%s</b>" % label) if code == lang else f'<a href="../{code}/">{label}</a>' for code, label in LANGS),
+        "QR": qr_html(lang, manifest, t), "SHOT": shot_html(lang, t),
+        "POINTS": '<div class="points">' + "".join(
+            f'<div class="point"><i aria-hidden="true">{esc(icon)}</i><div><b>{esc(head)}</b><p>{esc(body)}</p></div></div>'
+            for icon, head, body in t["points"]) + "</div>",
+        "INSTALL_STEPS": steps_html(t["install"]), "NEWS": news_html(lang, manifest, t),
     }
     out = template
-    for key, value in values.items():
-        out = out.replace("{{%s}}" % key, value if key in ("LANGS",) else html.escape(str(value), quote=True))
+    for key, value in raw.items():
+        out = out.replace("{{%s}}" % key, value)
+    for key, value in text.items():
+        out = out.replace("{{%s}}" % key, esc(value))
     return out
 
 
@@ -92,6 +131,9 @@ def build(manifest, out_dir, template):
         os.makedirs(os.path.join(out_dir, lang), exist_ok=True)
         with open(os.path.join(out_dir, lang, "index.html"), "w", encoding="utf-8") as f:
             f.write(page(template, lang, manifest))
+    os.makedirs(os.path.join(out_dir, "img"), exist_ok=True)
+    for name in {n for pair in SHOTS.values() for n in pair if n}:
+        shutil.copyfile(os.path.join(SHOTS_DIR, name), os.path.join(out_dir, "img", name))
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
         f.write(chooser())
     privacy_pages.write_all(out_dir)

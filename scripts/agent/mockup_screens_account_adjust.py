@@ -4,10 +4,17 @@ with the new balance and the «Баланс исправлен» pill. Boards `A
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_screens_fb_290 import acc_form_a
-from mockup_screens_fb_hints import pill_box
 
 REAL, DIFF = '257 300,00', '+12 000,00'
 
+
+
+def pill_box(text, ic):
+    """A quiet pill above the bar (CoShellNoticePill): icon in a circle, the text, «×» — the result of the action, not a hint."""
+    return ('<div style="position: absolute; left: 24px; right: 24px; bottom: 96px; min-height: 52px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; '
+            'align-items: center; gap: 10px; padding: 6px;"><span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; '
+            'justify-content: center;">%s</span><span style="flex-grow: 1; font-size: 14px; line-height: 1.35;">%s</span>%s</div>'
+            % (KEY, LINE2, LIME, svg(ic, ONLIME, 22, 2.4), text, icon_button('close', 'Закрыть', MUTED)))
 
 def _amount_sheet(right, hint, foot=''):
     head = ('<div style="padding: 6px 16px 0;"><div style="display: flex; align-items: center; height: 48px;"><b style="flex-grow: 1; font-size: 20px;">Исправить баланс</b>%s</div>'

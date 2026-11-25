@@ -1,5 +1,8 @@
 package app.coshell.reports
 
+import app.coshell.core.designsystem.motion.listItemMotion
+import app.coshell.hints.hintSlotShown
+import app.coshell.hints.HintSlot
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -89,6 +92,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
+        val showHint = hintSlotShown()
         LazyColumn(
             Modifier.fillMaxSize().segmentSwipe(swipe, tab, 2, onSelect = { tab = it }),
             state = list,
@@ -96,7 +100,8 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (period == null) return@LazyColumn
-            if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports) }
+            if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
+            if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports, emptyScreen = state.isEmpty) }
             item(key = "tabs") {
                 CoShellSegmented(
                     listOf(stringResource(R.string.reports_tab_overview), stringResource(R.string.reports_tab_calendar)),

@@ -1,5 +1,7 @@
 package app.coshell.core.designsystem.components
 
+import androidx.annotation.DrawableRes
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,9 +20,10 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 
 /**
- * Gesture hint (#513, owner poll 2026-11-19, board «Компоненты» → «Уведомления»): a card over the bottom bar with a
- * line of text and one text button («Понятно»). Does not point at an element, does not take touches outside itself.
- * Rises like [CoShellNoticePill]; the screen decides when to show it (`app/.../hints/`).
+ * Hint card (#513, board «Компоненты» → «Уведомления»): a line of text and a text button («Понятно»); with [icon] — a lightbulb
+ * in a tinted circle before the text, with [secondaryLabel] — a second action before the first («Открыть»). Since the owner's poll
+ * 2026-11-25 «А» every hint lies inside the screen as this card and never leaves by itself (boards `Tip513*`); over the entry sheet
+ * it still floats (`SheetCoach`). Rises like [CoShellNoticePill]; the screen decides when to show it (`app/.../hints/`).
  */
 @Composable
 fun CoShellCoachCard(
@@ -29,6 +32,9 @@ fun CoShellCoachCard(
     actionLabel: String,
     onAction: () -> Unit,
     modifier: Modifier = Modifier,
+    @DrawableRes icon: Int? = null,
+    secondaryLabel: String? = null,
+    onSecondary: () -> Unit = {},
 ) {
     AnimatedVisibility(visible = visible, modifier = modifier, enter = PillIn, exit = PillOut) {
         val scheme = MaterialTheme.colorScheme
@@ -42,8 +48,12 @@ fun CoShellCoachCard(
                 .padding(start = Spacing.l, top = Spacing.m, end = Spacing.s, bottom = Spacing.xs),
             verticalArrangement = Arrangement.spacedBy(Spacing.xs),
         ) {
-            Text(text, style = MaterialTheme.typography.bodyMedium, color = scheme.onSurface, modifier = Modifier.padding(end = Spacing.m))
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m), verticalAlignment = Alignment.Top) {
+                if (icon != null) MenuIcon(icon)
+                Text(text, style = MaterialTheme.typography.bodyMedium, color = scheme.onSurface, modifier = Modifier.weight(1f).padding(end = Spacing.m))
+            }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
+                if (secondaryLabel != null) CoShellTextButton(onClick = onSecondary) { Text(secondaryLabel, style = MaterialTheme.typography.labelLarge) }
                 CoShellTextButton(onClick = onAction) { Text(actionLabel, style = MaterialTheme.typography.labelLarge) }
             }
         }

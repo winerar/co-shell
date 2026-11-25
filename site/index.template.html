@@ -6,37 +6,65 @@
 <title>{{TITLE}}</title>
 <meta name="description" content="{{LEAD}}">
 <style>
-:root{--bg:#fff;--ink:#16200c;--muted:#566049;--line:#c9d1bd;--card:#f1ffd6;--prim:#b8ff2e;--onprim:#0e1f00;--edge:#476b00;--acc:#5b1fa8;--disc:#efe7fb}
-@media (prefers-color-scheme:dark){:root{--bg:#0a0f06;--ink:#f1f5ea;--muted:#a9b39c;--line:#44503a;--card:#17210f;--edge:#d9ff8a;--acc:#c27bff;--disc:#2c2140}}
+:root{--bg:#fff;--ink:#16200c;--muted:#566049;--line:#c9d1bd;--card:#f1ffd6;--prim:#b8ff2e;--onprim:#0e1f00;--edge:#476b00;--acc:#5b1fa8;--disc:#efe7fb;--sys:#f3f4f1}
+@media (prefers-color-scheme:dark){:root{--bg:#0a0f06;--ink:#f1f5ea;--muted:#a9b39c;--line:#44503a;--card:#17210f;--edge:#d9ff8a;--acc:#c27bff;--disc:#2c2140;--sys:#23261f}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);max-width:720px;margin:0 auto}
+header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);max-width:960px;margin:0 auto}
 header b{font-size:18px}.logo{width:28px;height:28px;border-radius:9px;background:var(--prim);box-shadow:inset 0 0 0 1.5px var(--edge)}
-nav{margin-left:auto;font-size:13px;color:var(--muted)}nav a{color:var(--acc);text-decoration:none;margin-left:8px}nav b{margin-left:8px;font-size:13px}
-main{max-width:720px;margin:0 auto;padding:28px 20px 48px}
+nav{margin-left:auto;font-size:13px;color:var(--muted)}nav a{color:var(--acc);text-decoration:none;margin-left:8px}nav b{margin-left:8px}
+main{max-width:960px;margin:0 auto;padding:28px 20px 48px}.narrow{max-width:640px}
 h1{font-size:30px;line-height:1.15;margin:0}.lead{color:var(--muted);margin:10px 0 0}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:999px;margin-top:22px;background:var(--prim);color:var(--onprim);box-shadow:inset 0 0 0 1.5px var(--edge);font-weight:700;font-size:17px;text-decoration:none}
-.meta{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}.meta code{font-size:11px;word-break:break-all}
-details{margin-top:6px;font-size:12px;color:var(--muted);text-align:center}
-.card{margin-top:26px;padding:14px 16px;border-radius:20px;background:var(--card);border:1px solid var(--line)}.card p{margin:4px 0 0;color:var(--muted);font-size:14px}
-h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:26px 0 0}
-ol{list-style:none;padding:0;margin:0;counter-reset:s}li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin-top:12px}
-li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--disc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-footer{margin-top:28px;font-size:13px;color:var(--muted)}
+.btn{display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;margin-top:22px;background:var(--prim);color:var(--onprim);box-shadow:inset 0 0 0 1.5px var(--edge);font-weight:700;font-size:17px;text-decoration:none}
+.meta{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+details.sha{margin-top:4px;font-size:12px;color:var(--muted);text-align:center}details.sha code{font-size:11px;word-break:break-all}
+.card{margin-top:22px;padding:14px 16px;border-radius:24px;background:var(--card);border:1px solid var(--line)}.card p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.qr{display:none;gap:16px;align-items:center}.qr svg{flex:none;width:148px;height:148px;border-radius:16px}
+@media (min-width:800px) and (hover:hover){.qr{display:flex}}
+.hero{display:grid;gap:24px}
+.phone{width:240px;height:380px;margin:4px auto 0;border-radius:32px;border:6px solid var(--line);overflow:hidden;background:var(--bg)}
+.phone img{width:100%;display:block}
+.dark-img{display:none}@media (prefers-color-scheme:dark){.has-dark .dark-img{display:block}.has-dark .light-img{display:none}}
+.points{display:grid;gap:10px;margin-top:22px}
+.point{display:flex;gap:12px;align-items:flex-start}.point i{flex:none;width:40px;height:40px;border-radius:50%;background:var(--disc);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:18px}
+.point p{margin:2px 0 0;color:var(--muted);font-size:14px}
+@media (min-width:800px){.hero{grid-template-columns:1fr 280px;align-items:center}.phone{width:280px;height:460px}.points{grid-template-columns:repeat(3,1fr)}}
+h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:30px 0 0}
+ol{list-style:none;padding:0;margin:0;counter-reset:s}
+ol>li{counter-increment:s;display:grid;grid-template-columns:26px 1fr;gap:4px 12px;margin-top:16px}
+ol>li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--disc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+ol>li small{grid-column:2;color:var(--muted);font-size:13px}
+.sys{grid-column:2;margin-top:6px;max-width:300px;border-radius:20px;background:var(--sys);padding:12px 14px;font-size:13px;border:1px solid var(--line)}
+.sys b{display:block;font-size:14px;margin-bottom:4px}.sys .act{display:flex;justify-content:flex-end;gap:16px;margin-top:10px;font-weight:600}
+.sys .go{color:var(--acc);outline:2px dashed var(--acc);outline-offset:3px;border-radius:6px}
+.news{margin-top:12px;border-radius:24px;border:1px solid var(--line);padding:12px 16px}
+.news summary{font-weight:600;cursor:pointer}.news ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}
+footer{margin-top:32px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}footer a{color:var(--acc);text-decoration:none}
 </style>
 </head>
 <body>
 <header><span class="logo"></span><b>Co-Shell</b><nav>{{LANGS}}</nav></header>
 <main>
+<div class="hero"><div>
 <h1>{{H1}}</h1>
 <p class="lead">{{LEAD}}</p>
 <a class="btn" href="{{APK_URL}}" download>{{DOWNLOAD}} · {{SIZE_MB}} {{MB}}</a>
 <p class="meta">{{META}}</p>
-<details><summary>{{SHA_LABEL}}</summary><code>{{SHA256}}</code></details>
+<details class="sha"><summary>{{SHA_LABEL}}</summary><code>{{SHA256}}</code></details>
+{{QR}}
+</div>
+{{SHOT}}
+</div>
+{{POINTS}}
 <div class="card"><b>{{INVITE_TITLE}}</b><p>{{INVITE_TEXT}}</p></div>
+<div class="narrow">
 <h2>{{STEPS_TITLE}}</h2>
-<ol><li>{{STEP1}}</li><li>{{STEP2}}</li><li>{{STEP3}}</li></ol>
-<footer>{{FOOTER}}</footer>
+<ol class="steps">{{INSTALL_STEPS}}</ol>
+<h2>{{UPDATE_TITLE}}</h2>
+<p>{{UPDATE_TEXT}}</p>
+{{NEWS}}
+</div>
+<footer>{{FOOTER}}<br><a href="../privacy/{{LANG}}/">{{PRIVACY_LINK}}</a> · <a href="../delete/{{LANG}}/">{{DELETE_LINK}}</a></footer>
 </main>
 </body>
 </html>

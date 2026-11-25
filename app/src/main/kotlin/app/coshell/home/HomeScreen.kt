@@ -60,6 +60,9 @@ import app.coshell.ui.top.TabTopBar
 import app.coshell.privacy.EyeButton
 import app.coshell.release.ReleaseNotice
 import app.coshell.release.ReleaseNoticeCard
+import app.coshell.hints.TourCard
+import app.coshell.hints.HintSlot
+import app.coshell.hints.hintSlotShown
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.sync.SyncDot
@@ -104,6 +107,9 @@ fun HomeScreen(
     release: ReleaseNotice? = null,
     onReleaseOpen: () -> Unit = {},
     onReleaseDismiss: () -> Unit = {},
+    tour: Boolean = false,
+    onTourOpen: () -> Unit = {},
+    onTourDismiss: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -136,6 +142,7 @@ fun HomeScreen(
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
+        val showHint = hintSlotShown()
         CoachHint(mapOf(HintId.FLIP_CARD to R.string.hint_flip_card), enabled = state.recent.isNotEmpty())
         LazyColumn(
             state = listState,
@@ -154,6 +161,8 @@ fun HomeScreen(
             release?.let { notice ->
                 item(key = "release") { ReleaseNoticeCard(notice.versionName, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
             }
+            if (tour) item(key = "tour") { TourCard(onTourOpen, onTourDismiss, listItemMotion()) }
+            if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
@@ -171,7 +180,7 @@ fun HomeScreen(
             firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
             if (finale) item(key = "steps-finale") { StepsFinale(onFinale, listItemMotion()) }
             item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, actions.onNotes, listItemMotion()) }
-            if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty) }
+            if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty, emptyScreen = true) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
                 val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))

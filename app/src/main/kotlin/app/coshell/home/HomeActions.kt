@@ -38,4 +38,6 @@ data class HomeActions(
     val onNotes: () -> Unit = {},
     /** «Смотреть» on «Что нового · N историй» → the release stories (#693). */
     val onReleaseStories: () -> Unit = {},
+    /** «Знакомство с приложением» (#598). */
+    val onTour: () -> Unit = {},
 )

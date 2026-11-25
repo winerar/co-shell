@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellCoachCard
 import app.coshell.core.domain.hints.HintId
 import kotlinx.coroutines.delay
@@ -39,5 +40,6 @@ fun SheetCoach(texts: Map<HintId, Int>, modifier: Modifier = Modifier) {
         actionLabel = stringResource(R.string.hint_ok),
         onAction = { visible = false },
         modifier = modifier,
+        icon = DesignR.drawable.ic_lightbulb,
     )
 }

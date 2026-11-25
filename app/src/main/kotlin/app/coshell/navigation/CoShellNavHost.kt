@@ -3,9 +3,12 @@ package app.coshell.navigation
 import app.coshell.hints.SheetCoach
 import app.coshell.core.domain.hints.HintId
 import app.coshell.R
+import androidx.compose.ui.res.stringResource
 import app.coshell.BuildConfig
 import app.coshell.release.ReleaseStories
 import app.coshell.release.ReleaseStoriesScreen
+import app.coshell.release.StoriesScreen
+import app.coshell.hints.TourStories
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
@@ -25,7 +28,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.coroutines.flow.MutableStateFlow
-import app.coshell.hints.HintBannerHost
 import app.coshell.hints.HintTarget
 import app.coshell.hints.LocalHintHost
 import app.coshell.accounts.edit.AccountEditRoute
@@ -139,6 +141,20 @@ fun CoShellNavHost(
     val reportsDot by (hintHost?.reportsDot ?: remember { MutableStateFlow(false) }).collectAsStateWithLifecycle()
     val onReports = backStackEntry?.destination.isOn(TopLevel.REPORTS)
     LaunchedEffect(onReports) { if (onReports) hintHost?.reportsOpened() }
+    // «Открыть» on a hint card (#513): the moments that name a screen open it (`HintSlot`, `HintTarget`).
+    LaunchedEffect(hintHost) {
+        hintHost?.opens?.collect { target ->
+            when (target) {
+                HintTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
+                HintTarget.APPEARANCE -> navController.navigate(AppearanceDestination) { launchSingleTop = true }
+                HintTarget.MONTH_RECAP -> {
+                    // «month_end» shows in the first days of a month: the month that just ended.
+                    val last = java.time.YearMonth.now().minusMonths(1)
+                    navController.navigate(MonthRecapDestination(last.year, last.monthValue)) { launchSingleTop = true }
+                }
+            }
+        }
+    }
 
     // Shake: within 4 s after a new operation was saved it takes the save back (#325, «Отменено · Вернуть»); otherwise → the
     // receipt QR scanner (#526; «Ввести вручную» there opens the empty sheet). Only on the tabs: never interrupts a form or another screen.
@@ -187,25 +203,6 @@ fun CoShellNavHost(
                 onDismiss = updates::dismissPill,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
             )
-            // Hint banner (#513): gesture card or warm pill; the update pill goes first.
-            LocalHintHost.current?.let { host ->
-                HintBannerHost(
-                    host = host,
-                    visible = onBar && updatePill == null,
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m),
-                    onOpen = { target ->
-                        when (target) {
-                            HintTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
-                            HintTarget.APPEARANCE -> navController.navigate(AppearanceDestination) { launchSingleTop = true }
-                            HintTarget.MONTH_RECAP -> {
-                                // «month_end» shows in the first days of a month: the month that just ended.
-                                val last = java.time.YearMonth.now().minusMonths(1)
-                                navController.navigate(MonthRecapDestination(last.year, last.monthValue)) { launchSingleTop = true }
-                            }
-                        }
-                    },
-                )
-            }
             // Sums hidden by laying the phone down (#145): says how to show them; goes first of the quiet pills.
             HiddenPill(visible = onBar && updatePill == null, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.m))
         },
@@ -232,6 +229,7 @@ fun CoShellNavHost(
                     },
                     onReview = { month -> navController.navigate(MonthRecapDestination(month.year, month.month.number)) { launchSingleTop = true } },
                     onReleaseStories = { navController.navigate(ReleaseStoriesDestination) { launchSingleTop = true } },
+                    onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
                     onPostPayment = { templateId, date ->
                         navController.navigate(TransactionEditDestination(templateId = templateId, paymentDate = date.toString())) { launchSingleTop = true }
                     },
@@ -286,6 +284,7 @@ fun CoShellNavHost(
                             HintId.ENTRY_MINIMAL to R.string.hint_entry_minimal,
                             HintId.KEYPAD_MATH to R.string.hint_keypad_math,
                             HintId.ENTRY_REFUND to R.string.hint_entry_refund,
+                            HintId.CLIPBOARD to R.string.hint_clipboard,
                         ),
                         Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(horizontal = Spacing.l),
                     )
@@ -315,6 +314,12 @@ fun CoShellNavHost(
         }
         screen<ReleaseStoriesDestination> {
             ReleaseStoriesScreen(BuildConfig.VERSION_NAME, ReleaseStories.current, onClose = { navController.popBackStack() })
+        }
+        screen<TourDestination> {
+            StoriesScreen(
+                stringResource(R.string.tour_header), TourStories.all, stringResource(R.string.tour_start),
+                onClose = { navController.popBackStack() }, steps = true,
+            )
         }
         screen<NotesDestination> {
             NotesRoute(

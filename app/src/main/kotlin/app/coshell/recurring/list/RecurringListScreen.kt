@@ -18,6 +18,9 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.WordHint
+import app.coshell.hints.LocalHintHost
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAddFab
@@ -51,14 +54,19 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.isEmpty) {
-            EmptyList(Modifier.padding(underBars(padding)))
+            Column(Modifier.padding(underBars(padding))) {
+                WordHint(HintId.RECURRING, R.string.hint_recurring, Modifier.padding(horizontal = Spacing.l), emptyScreen = true)
+                EmptyList()
+            }
             return@Scaffold
         }
+        val hintsOn = LocalHintHost.current != null
         LazyColumn(
             Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance)),
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
+            if (hintsOn) item(key = "word-hint") { WordHint(HintId.RECURRING, R.string.hint_recurring, Modifier.padding(horizontal = Spacing.l)) }
             if (state.total >= SEARCH_FROM) {
                 item(key = "search") {
                     CoShellSearchField(

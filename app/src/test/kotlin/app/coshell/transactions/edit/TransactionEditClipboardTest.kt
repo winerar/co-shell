@@ -1,5 +1,6 @@
 package app.coshell.transactions.edit
 
+import app.coshell.core.model.TransactionType
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -51,11 +52,13 @@ class TransactionEditClipboardTest : TransactionEditTestBase() {
     }
 
     @Test
-    fun `the paste row is offered only while a new operation has no amount`() = runTest {
+    fun `the paste icon stays on a new operation and leaves for a transfer`() = runTest {
         seed()
         val vm = viewModel()
-        assertTrue(vm.state.value.showsPasteRow)
+        assertTrue(vm.state.value.showsPasteButton)
         vm.onPasteText("ARS 500")
-        assertFalse(vm.state.value.showsPasteRow)
+        assertTrue(vm.state.value.showsPasteButton)
+        vm.onTypeChange(TransactionType.TRANSFER)
+        assertFalse(vm.state.value.showsPasteButton)
     }
 }

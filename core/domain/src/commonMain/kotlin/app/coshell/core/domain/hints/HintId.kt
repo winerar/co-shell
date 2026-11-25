@@ -1,6 +1,6 @@
 package app.coshell.core.domain.hints
 
-/** How a hint looks (`docs/agents/hints.md`): a line under the header, a bubble over the screen, or a one-time warm pill. */
+/** What a hint is about (`docs/agents/hints.md`): a word, a gesture or a one-time warm moment; all of them show as a card in the screen. */
 enum class HintKind { WORD, GESTURE, MOMENT }
 
 /**
@@ -14,6 +14,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     SCAN_RECEIPT("scan_receipt", HintKind.WORD),
     KEYPAD_MATH("keypad_math", HintKind.WORD),
     ENTRY_REFUND("entry_refund", HintKind.WORD),
+    CLIPBOARD("clipboard", HintKind.WORD),
     CATEGORIES("categories", HintKind.WORD),
     BUDGETS("budgets", HintKind.WORD),
     DEBTS("debts", HintKind.WORD),
@@ -22,13 +23,16 @@ enum class HintId(val key: String, val kind: HintKind) {
     FAMILY("family", HintKind.WORD),
     CURRENCY_RECEIPT("currency_receipt", HintKind.WORD),
     NOTES("notes", HintKind.WORD),
+    RECURRING("recurring", HintKind.WORD),
     HOLD_SELECT("hold_select", HintKind.GESTURE),
     SWIPE_TABS("swipe_tabs", HintKind.GESTURE),
     HOLD_PLUS("hold_plus", HintKind.GESTURE),
     TEMPLATE("template", HintKind.GESTURE),
     EDIT_TAP("edit_tap", HintKind.GESTURE),
+    HOLD_AMOUNT("hold_amount", HintKind.GESTURE),
     SHAKE_UNDO("shake_undo", HintKind.GESTURE),
     FLIP_CARD("flip_card", HintKind.GESTURE),
+    APP_SHORTCUTS("app_shortcuts", HintKind.GESTURE),
     FIRST_ENTRY("first_entry", HintKind.MOMENT),
     FIRST_LIMIT("first_limit", HintKind.MOMENT),
     FIRST_WEEK("first_week", HintKind.MOMENT),

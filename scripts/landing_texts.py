@@ -1,0 +1,92 @@
+"""Texts of the landing page (#660) in ru/en/es — used by make_landing.py; every language has the same keys (test).
+
+Steps: (title, hint or "", dialog or None); dialog = (title, text, cancel, action) — a sketch of the system window
+with the button to press outlined. Tone and words — docs/agents/texts.md and glossary.md.
+"""
+
+TEXTS = {
+    "ru": {
+        "title": "Co-Shell — семейный бюджет", "h1": "Семейный бюджет на двоих",
+        "lead": "Для нескольких валют, без лишнего. Работает без интернета, общий бюджет — на всех телефонах семьи.",
+        "download": "Скачать", "mb": "МБ", "meta": "Версия {version} · Android 8+ · обновляется само",
+        "sha": "Контрольная сумма SHA-256", "shot_alt": "Экран «Обзор» в приложении",
+        "qr_title": "Открыли на компьютере?", "qr_text": "Наведите камеру телефона на код — страница откроется на телефоне.",
+        "points": [
+            ("⇄", "Несколько валют", "Песо, доллары, рубли, драмы — итог в одной валюте."),
+            ("☁", "Без интернета", "Записи сохраняются сразу, общий бюджет догонит, когда появится сеть."),
+            ("♡", "Вместе", "Записи со всех телефонов семьи — в одном месте."),
+        ],
+        "invite_title": "Нужен код приглашения",
+        "invite_text": "Приложение пока для приглашённых: при первом запуске введите код. Попросите его у того, кто вас позвал.",
+        "steps": "Как установить",
+        "install": [
+            ("Нажмите «Скачать».", "Браузер может предупредить про файл APK — так он делает со всеми приложениями не из Google Play.",
+             ("Скачать файл?", "Файлы этого типа могут навредить устройству.", "Отмена", "Всё равно скачать")),
+            ("Откройте файл и разрешите установку.", "Он в уведомлении о загрузке или в «Загрузках». Разрешить нужно один раз.",
+             ("Неизвестные приложения", "Установка из этого источника запрещена.", "Отмена", "Настройки → Разрешить")),
+            ("Если телефон предупредит о проверке — установите всё равно.", "Так Android встречает приложения не из Google Play. Данные остаются на телефоне.",
+             ("Play Protect", "Это приложение не проверялось.", "ОК", "Подробнее → Всё равно установить")),
+            ("Откройте приложение и введите код приглашения.", "", None),
+        ],
+        "update_title": "Как обновлять",
+        "update_text": "Ничего делать не нужно: приложение само скажет о новой версии — нажмите «Обновить».",
+        "news": "Что нового в {version}",
+        "footer": "Только для Android. Данные хранятся на вашем телефоне.",
+    },
+    "en": {
+        "title": "Co-Shell — family budget", "h1": "A budget for two",
+        "lead": "Several currencies, nothing extra. Works offline; a shared budget on every phone in the family.",
+        "download": "Download", "mb": "MB", "meta": "Version {version} · Android 8+ · updates itself",
+        "sha": "SHA-256 checksum", "shot_alt": "The Overview screen of the app",
+        "qr_title": "On a computer?", "qr_text": "Point your phone’s camera at the code to open this page on the phone.",
+        "points": [
+            ("⇄", "Several currencies", "Pesos, dollars, rubles, drams — totals in one currency."),
+            ("☁", "Works offline", "Entries are saved at once; the shared budget catches up when you’re back online."),
+            ("♡", "Together", "Entries from every phone in the family in one place."),
+        ],
+        "invite_title": "You need an invitation code",
+        "invite_text": "The app is by invitation for now: enter the code on first launch. Ask the person who invited you.",
+        "steps": "How to install",
+        "install": [
+            ("Tap “Download”.", "Your browser may warn about the APK file — it does so for every app not from Google Play.",
+             ("Download file?", "This type of file can harm your device.", "Cancel", "Download anyway")),
+            ("Open the file and allow installing.", "It’s in the download notification or in “Downloads”. You allow it once.",
+             ("Unknown apps", "Installing from this source isn’t allowed.", "Cancel", "Settings → Allow")),
+            ("If the phone warns about a check, install anyway.", "Android does this for apps from outside Google Play. Your data stays on the phone.",
+             ("Play Protect", "This app hasn’t been checked.", "OK", "More details → Install anyway")),
+            ("Open the app and enter your invitation code.", "", None),
+        ],
+        "update_title": "How to update",
+        "update_text": "Nothing to do: the app tells you about a new version — tap “Update”.",
+        "news": "What’s new in {version}",
+        "footer": "Android only. Your data stays on your phone.",
+    },
+    "es": {
+        "title": "Co-Shell — presupuesto familiar", "h1": "Un presupuesto para dos",
+        "lead": "Varias monedas, sin florituras. Funciona sin internet; un presupuesto compartido en todos los teléfonos de la familia.",
+        "download": "Descargar", "mb": "MB", "meta": "Versión {version} · Android 8+ · se actualiza sola",
+        "sha": "Suma de comprobación SHA-256", "shot_alt": "La pantalla Resumen de la app",
+        "qr_title": "¿Estás en una computadora?", "qr_text": "Apunta la cámara del teléfono al código para abrir esta página en el teléfono.",
+        "points": [
+            ("⇄", "Varias monedas", "Pesos, dólares, rublos, drams: totales en una sola moneda."),
+            ("☁", "Sin internet", "Los movimientos se guardan al instante; el presupuesto compartido se pone al día cuando vuelve la conexión."),
+            ("♡", "Juntos", "Los movimientos de todos los teléfonos de la familia, en un solo lugar."),
+        ],
+        "invite_title": "Necesitas un código de invitación",
+        "invite_text": "Por ahora la app es solo por invitación: introduce el código al abrirla. Pídeselo a quien te invitó.",
+        "steps": "Cómo instalar",
+        "install": [
+            ("Toca «Descargar».", "El navegador puede avisar del archivo APK: lo hace con todas las apps que no son de Google Play.",
+             ("¿Descargar archivo?", "Este tipo de archivo puede dañar tu dispositivo.", "Cancelar", "Descargar de todos modos")),
+            ("Abre el archivo y permite la instalación.", "Está en la notificación de descarga o en «Descargas». Se permite una sola vez.",
+             ("Apps desconocidas", "No se permite instalar desde esta fuente.", "Cancelar", "Ajustes → Permitir")),
+            ("Si el teléfono avisa de una revisión, instala de todos modos.", "Android lo hace con las apps que no son de Google Play. Tus datos se quedan en el teléfono.",
+             ("Play Protect", "Esta app no se ha revisado.", "Aceptar", "Más detalles → Instalar de todos modos")),
+            ("Abre la app e introduce tu código de invitación.", "", None),
+        ],
+        "update_title": "Cómo actualizar",
+        "update_text": "No tienes que hacer nada: la app te avisa de una nueva versión; toca «Actualizar».",
+        "news": "Novedades de {version}",
+        "footer": "Solo para Android. Tus datos se quedan en tu teléfono.",
+    },
+}

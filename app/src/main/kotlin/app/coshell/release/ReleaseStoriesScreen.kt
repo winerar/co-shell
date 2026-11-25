@@ -40,22 +40,32 @@ import app.coshell.ui.top.ScreenTopBar
  * sentences per story; a tap on the card or «Дальше» goes on, «Готово» on the last one closes. The same springs as «Итоги месяца».
  */
 @Composable
-fun ReleaseStoriesScreen(
-    versionName: String,
+fun ReleaseStoriesScreen(versionName: String, stories: List<ReleaseStory>, onClose: () -> Unit = {}, startAt: Int = 0) =
+    StoriesScreen(stringResource(R.string.release_header, versionName), stories, stringResource(R.string.release_done), onClose, startAt)
+
+/**
+ * The stories engine of «Что нового» and «Знакомство» (#598): [header] in the top bar, [doneLabel] on the last button,
+ * [steps] — «Шаг N из M» over the title (the tour is an order of things to do).
+ */
+@Composable
+fun StoriesScreen(
+    header: String,
     stories: List<ReleaseStory>,
+    doneLabel: String,
     onClose: () -> Unit = {},
     startAt: Int = 0,
+    steps: Boolean = false,
 ) {
     var index by rememberSaveable { mutableIntStateOf(startAt) }
     val last = stories.lastIndex
     val at = index.coerceIn(0, maxOf(last, 0))
     val next = { if (at < last) index = at + 1 else onClose() }
     Scaffold(
-        topBar = { ScreenTopBar(stringResource(R.string.release_header, versionName), onBack = onClose) },
+        topBar = { ScreenTopBar(header, onBack = onClose) },
         bottomBar = {
             if (stories.isNotEmpty()) {
                 CoShellButton(onClick = next, modifier = Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {
-                    Text(stringResource(if (at < last) R.string.release_next else R.string.release_done))
+                    Text(if (at < last) stringResource(R.string.release_next) else doneLabel)
                 }
             }
         },
@@ -72,7 +82,8 @@ fun ReleaseStoriesScreen(
                 onClick = next,
             ) {
                 AnimatedContent(at, transitionSpec = { storyTransition(last) }, label = "release-story") { shown ->
-                    StoryBody(stories[shown.coerceIn(0, last)], Modifier.fillMaxSize().padding(Spacing.l))
+                    val i = shown.coerceIn(0, last)
+                    StoryBody(stories[i], if (steps) stringResource(R.string.tour_step, i + 1, stories.size) else null, Modifier.fillMaxSize().padding(Spacing.l))
                 }
             }
         }
@@ -80,10 +91,13 @@ fun ReleaseStoriesScreen(
 }
 
 @Composable
-private fun StoryBody(story: ReleaseStory, modifier: Modifier) {
+private fun StoryBody(story: ReleaseStory, step: String?, modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         StoryScheme(story, Modifier.fillMaxWidth().padding(vertical = Spacing.xl))
-        Text(stringResource(story.title), style = MaterialTheme.typography.headlineSmall)
+        Column {
+            step?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            Text(stringResource(story.title), style = MaterialTheme.typography.headlineSmall)
+        }
         Text(stringResource(story.text), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

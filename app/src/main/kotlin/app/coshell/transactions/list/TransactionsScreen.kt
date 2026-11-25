@@ -1,5 +1,6 @@
 package app.coshell.transactions.list
 
+import app.coshell.hints.HintSlot
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
@@ -59,12 +60,15 @@ fun TransactionsScreen(
     peek: AmountPeek? = null,
 ) {
     val noRate = stringResource(R.string.amount_peek_no_rate)
-    // Gesture tips: editing by a tap after the first entry, selecting by a hold once there are three.
+    // Gesture tips: editing by a tap after the first entry, selecting by a hold once there are three; holding a sum (other currencies)
+    // from five; the app icon's shortcuts from ten (#513, audit 2026-11-25).
     val rowCount = state.days.sumOf { it.rows.size }
     val tips = buildMap {
         if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
         if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
         if (state.repeatedSpending && !state.filter.isActive) put(HintId.TEMPLATE, R.string.hint_template)
+        if (rowCount >= HOLD_AMOUNT_ROWS) put(HintId.HOLD_AMOUNT, R.string.hint_hold_amount)
+        if (rowCount >= SHORTCUTS_ROWS && !state.filter.isActive) put(HintId.APP_SHORTCUTS, R.string.hint_app_shortcuts)
     }
     CoachHint(tips, enabled = !state.isLoading && !selection.active && tips.isNotEmpty())
     val scroll = rememberTabScrollBehavior()
@@ -113,6 +117,7 @@ fun TransactionsScreen(
                     // The tags word (#513) sits in the filters item, so [dayAt] keeps counting one item for the top.
                     Column {
                         FilterBar(state, actions.onFilter, Modifier.padding(bottom = Spacing.s))
+                        HintSlot(Modifier.padding(start = Spacing.l, end = Spacing.l, bottom = Spacing.s))
                         if (rowCount >= TAGS_HINT_ROWS && !state.filter.isActive) {
                             WordHint(HintId.TAGS, R.string.hint_tags, Modifier.padding(horizontal = Spacing.l))
                         }
@@ -153,6 +158,12 @@ internal const val TAGS_HINT_ROWS = 10
 
 /** Many small expenses: the word about «Быстрые заметки» (#586). */
 internal const val NOTES_HINT_ROWS = 20
+
+/** «Удерживайте сумму…» (#513): from five rows, when there is something to look at in other currencies. */
+internal const val HOLD_AMOUNT_ROWS = 5
+
+/** «Удерживайте значок приложения…» (#555 shortcuts): from ten rows — someone who records often. */
+internal const val SHORTCUTS_ROWS = 10
 
 /**
  * The day whose title or rows are at the top of the list at item [index]: the list is the filter bar (when

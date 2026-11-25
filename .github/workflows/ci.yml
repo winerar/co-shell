@@ -163,6 +163,12 @@ jobs:
             export UPDATE_BASE_URL="https://github.com/$RELEASES_REPO/releases/latest/download"
             # The invitation gate of the closed test (#666): off until the repository variable ACCESS_GATE is true (docs/setup/invite.md).
             export ACCESS_GATE="${{ vars.ACCESS_GATE }}"
+            # The site with the privacy policy (#652): only when the landing is published (docs/setup/landing.md); the same address as its QR.
+            if [ "${{ vars.LANDING }}" = true ]; then
+              export LANDING_URL="${{ vars.LANDING_URL }}"
+              owner="${RELEASES_REPO%%/*}"
+              [ -n "$LANDING_URL" ] || export LANDING_URL="https://${owner,,}.github.io/${RELEASES_REPO#*/}/"
+            fi
             echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > "$RELEASE_KEYSTORE_FILE"
             tasks+=(assembleRelease)
           fi

@@ -25,7 +25,12 @@ import app.coshell.core.designsystem.R as DesignR
  * «Смотреть» opens the stories, «✕» — not now, for good. Shown by [ReleaseNoticeViewModel].
  */
 @Composable
-fun ReleaseNoticeCard(versionName: String, onOpen: () -> Unit, onDismiss: () -> Unit, modifier: Modifier = Modifier) {
+fun ReleaseNoticeCard(versionName: String, onOpen: () -> Unit, onDismiss: () -> Unit, modifier: Modifier = Modifier) =
+    StoryNoticeCard(stringResource(R.string.release_notice_version, versionName), stringResource(R.string.release_notice_title), onOpen, onDismiss, modifier)
+
+/** The card that offers stories on «Обзор»: «Что нового» (#693) and «Знакомство с приложением» (#598, board `Tour598Home`). */
+@Composable
+fun StoryNoticeCard(eyebrow: String, title: String, onOpen: () -> Unit, onDismiss: () -> Unit, modifier: Modifier = Modifier) {
     CoShellCard(modifier.fillMaxWidth()) {
         Row(
             Modifier.fillMaxWidth().padding(start = Spacing.l, top = Spacing.m, bottom = Spacing.m, end = Spacing.xs),
@@ -34,11 +39,11 @@ fun ReleaseNoticeCard(versionName: String, onOpen: () -> Unit, onDismiss: () -> 
         ) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    stringResource(R.string.release_notice_version, versionName),
+                    eyebrow,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text(stringResource(R.string.release_notice_title), style = MaterialTheme.typography.titleMedium)
+                Text(title, style = MaterialTheme.typography.titleMedium)
             }
             CoShellButton(onClick = onOpen) { Text(stringResource(R.string.release_notice_open), maxLines = 1) }
             CoShellIconButton(onClick = onDismiss) {

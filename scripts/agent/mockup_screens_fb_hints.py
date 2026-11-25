@@ -7,7 +7,8 @@ from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 from mockup_screens_main import RECENT, balance_hero, tile, tiles, converter_card, recent_card
 from mockup_screens_tabs import more_body
-from mockup_catalog_rows import hint as hint_card
+from mockup_catalog_rows import hint as hint_card  # noqa: F401
+from mockup_screens_fb_tips import tip
 from mockup_screens_fb_quick import entry_from, simple_amount, plain_details
 from mockup_catalog_parts import peek_card  # noqa: F401  (same bubble family as the hold-to-peek one)
 
@@ -30,8 +31,8 @@ def steps_row(done, nxt):
     return '<div style="margin-top: 10px;">%s</div>' % card(inner + '<div style="padding: 0 16px 14px;">%s</div>' % progress(done / 4, 0))
 
 
-def home(done, nxt, extra='', steps=None):
-    body = balance_hero('0,00', 'USD', 'Счетов пока нет') if done == 0 else balance_hero()
+def home(done, nxt, extra='', steps=None, top=''):
+    body = top + (balance_hero('0,00', 'USD', 'Счетов пока нет') if done == 0 else balance_hero())
     body += steps if steps is not None else steps_row(done, nxt)
     if done == 0:
         body += empty('wallet', 'Операций пока нет. Нажмите «+», чтобы записать первую.').replace('padding: 96px', 'padding: 40px')
@@ -66,41 +67,27 @@ def steps_sheet(done=2):
 
 
 def accounts_hint():
-    """П1: a word hint under the header, once per screen; «✕» = shown."""
-    h = '<div style="display: flex; align-items: flex-start; gap: 4px;"><div style="flex-grow: 1;">%s</div>%s</div>' % (
-        hint_card('A', 'Счёт — место, где лежат деньги. Баланс считается сам.'), icon_button('close', 'Закрыть подсказку', MUTED))
+    """П1: a word hint as a card under the header (owner poll 2026-11-25 «А»): lightbulb, text, «Понятно»; once per screen."""
     accs = group([row('<b>Galicia</b>', 'Карта · ARS', badge('GA', '#F26E22'), '<span style="%s">1 250 000 ARS</span>' % MONO),
                   row('<b>Наличные</b>', 'Наличные · USD', badge('НЛ', '#C9D3C2'), '<span style="%s">320 USD</span>' % MONO)])
-    return board('Счета', inner_head('Счета') + '<div style="padding: 0 16px;"><div style="margin-top: 4px;">%s</div><div style="margin-top: 12px;">%s</div></div>' % (h, accs))
+    return board('Счета', inner_head('Счета') + '<div style="padding: 0 16px;"><div style="margin-top: 4px;">%s</div><div style="margin-top: 12px;">%s</div></div>' % (
+        tip('Счёт — место, где лежат деньги. Баланс считается сам.'), accs))
 
 
 def gesture():
-    """П2: a bubble over the list; non-modal, «Понятно» closes it."""
-    bubble = ('<div style="position: absolute; left: 24px; right: 24px; top: 400px; padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s; '
-              '"><div style="font-size: 14px; line-height: 1.4;">Удерживайте операцию, чтобы выбрать несколько.</div>'
-              '<div style="margin-top: 10px; text-align: right;"><span style="color: %s; font-size: 14px; font-weight: 700;">Понятно</span></div></div>' % (KEY, LINE2, LIME))
-    rows = ''.join(tx(*r) for r in RECENT)
-    return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bubble)
-
-
-def pill_box(text, ic, action=None, two=False):
-    """Warm pill above the bar (CoShellNoticePill): icon in a circle, 1-2 lines, optional «Открыть» (opens the screen the text names), «×»."""
-    act = ('<span style="color: %s; font-size: 14px; font-weight: 700; padding: 0 10px;">%s</span>' % (LIME, action)) if action else ''
-    return ('<div style="position: absolute; left: 24px; right: 24px; bottom: 96px; min-height: 52px; border-radius: 999px; background: %s; border: 1px solid %s; display: flex; '
-            'align-items: center; gap: 10px; padding: 6px;"><span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; align-items: center; '
-            'justify-content: center;">%s</span><span style="flex-grow: 1; font-size: 14px; line-height: 1.35;">%s</span>%s%s</div>'
-            % (KEY, LINE2, LIME, svg(ic, ONLIME, 22, 2.4), text, act, icon_button('close', 'Закрыть', MUTED)))
+    """П2: the gesture card on top of the list where the gesture works (owner poll 2026-11-25 «А»); «Понятно» closes it."""
+    return _ops_rows('', top=tip('Удерживайте операцию, чтобы выбрать несколько.'))
 
 
 def moment():
-    """Warm one-time moment, one line; shown by the event itself (outside the daily limit), vibration Confirm like a save."""
-    return board('Обзор: первая запись', home(2, 'первый лимит', pill_box('Первая запись есть. Так и начинается бюджет.', 'check')))
+    """Warm one-time moment: the hint card on top of the tab (owner poll 2026-11-25 «А»); by the event itself (outside the daily limit), Confirm."""
+    return board('Обзор: первая запись', home(2, 'первый лимит', top=tip_top('Первая запись есть. Так и начинается бюджет.')))
 
 
 def moment_long():
-    """Long moment (backup, month_end, theme): up to two lines + «Открыть» to the named screen (owner poll 2026-11-19, A)."""
-    return board('Обзор: резервная копия', home(2, 'первый лимит', pill_box(
-        'Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.', 'check', 'Открыть')))
+    """Long moment (backup, month_end, theme): the card with «Открыть» to the named screen before «Понятно»."""
+    return board('Обзор: резервная копия', home(2, 'первый лимит', top=tip_top(
+        'Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.', 'Открыть')))
 
 
 def finale():
@@ -111,10 +98,9 @@ def finale():
 
 
 def hints_reset():
-    """After «Показать подсказки заново»: a one-line pill «Подсказки включены» above the bar."""
-    return board('Ещё: сброс подсказок', tab_screen('Ещё', label('Приложение', top=6) + group([
-        row('Показать подсказки заново', 'Вернёт «Первые шаги» и советы', tile_icon('refresh', LIME, LIMEBG), chevron(), min_h=52)]), 'more')
-        + pill_box('Подсказки включены', 'check'))
+    """After «Показать подсказки заново» (in «Настройки → Помощь»): back on the tabs, the card «Подсказки включены» on top of the list."""
+    return board('Ещё: сброс подсказок', tab_screen('Ещё', tip_top('Подсказки включены') + label('Деньги', top=6) + group([
+        row('Счета', '', tile_icon('wallet', VIOLET, VIOLETBG), chevron(), min_h=52)]), 'more'))
 
 
 def app_settings():
@@ -128,9 +114,7 @@ def app_settings():
 def coach_strip(text):
     """П2 over the entry sheet (owner poll 2026-11-19, Б): `CoShellCoachCard` as it is (text, «Понятно» under it), under the status bar over the sheet's
     top edge, non-modal — the form stays under it. In the app the sheet starts ≈ 102 dp from the top, so the card sits in the dimmed strip."""
-    return ('<div style="position: absolute; left: 16px; right: 16px; top: 30px; padding: 12px 8px 4px 16px; border-radius: 24px; background: %s; border: 1px solid %s; z-index: 5;">'
-            '<div style="font-size: 14px; line-height: 1.4; padding-right: 12px;">%s</div><div style="text-align: right; color: %s; font-size: 14px; font-weight: 700; padding: 8px 12px;">Понятно</div></div>'
-            % (KEY, LINE2, text, LIME))
+    return '<div style="position: absolute; left: 16px; right: 16px; top: 30px; z-index: 5;">%s</div>' % tip(text)
 
 
 def entry_hint():
@@ -140,8 +124,11 @@ def entry_hint():
 
 
 def hint_row(text):
-    return ('<div style="display: flex; align-items: flex-start; gap: 4px; margin-bottom: 10px;"><div style="flex-grow: 1;">%s</div>%s</div>'
-            % (hint_card('A', text), icon_button('close', 'Закрыть подсказку', MUTED)))
+    return '<div style="margin-bottom: 10px;">%s</div>' % tip(text)
+
+
+def tip_top(text, extra=None):
+    return '<div style="margin: 8px 0 4px;">%s</div>' % tip(text, extra_action=extra)
 
 
 def tags_hint():
@@ -162,9 +149,10 @@ def currency_hint():
     return board('Валюта покупки: подсказка', scrim(home(4, '')) + sheet(head + body, top=300))
 
 
-def _ops_rows(bottom_overlay):
+def _ops_rows(bottom_overlay, top=''):
     rows = ''.join(tx(*r) for r in RECENT)
-    return board('Операции', tab_screen('Операции', '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bottom_overlay)
+    head = '<div style="margin-top: 8px;">%s</div>' % top if top else ''
+    return board('Операции', tab_screen('Операции', head + '<div style="margin: 8px -16px 0;">%s%s</div>' % (day('СЕГОДНЯ', '−45 100', 'ARS'), rows), 'ops') + bottom_overlay)
 
 
 def saved_snack():
@@ -178,17 +166,14 @@ def undone_snack():
 
 
 def shake_hint():
-    """#325 gesture hint (once, after the first saved operation, 0,6 s after its snackbar left): `CoShellCoachCard`, «Понятно»."""
-    card_html = ('<div style="position: absolute; left: 16px; right: 16px; bottom: 96px; padding: 12px 8px 4px 16px; border-radius: 24px; background: %s; border: 1px solid %s;">'
-                 '<div style="font-size: 14px; line-height: 1.4; padding-right: 12px;">Ошиблись? Сразу после сохранения встряхните телефон — операция отменится.</div>'
-                 '<div style="text-align: right; color: %s; font-size: 14px; font-weight: 700; padding: 8px 12px;">Понятно</div></div>' % (KEY, LINE2, LIME))
-    return _ops_rows(card_html)
+    """#325 gesture hint (once, after the first saved operation, 0,6 s after its snackbar left): the card on top of the tab, «Понятно»."""
+    return _ops_rows('', top=tip('Ошиблись? Сразу после сохранения встряхните телефон — операция отменится.'))
 
 
 def pin_forgot():
-    """#602 (poll 2026-11-23 «А»): right after the PIN is turned on, one warm moment names the way back; it shows once."""
-    from mockup_screens_fb_privacy import settings
-    return board('Конфиденциальность: PIN включён', settings(True) + pill_box('PIN включён. Забудете — на экране входа нажмите «Забыли PIN?».', 'check', two=True))
+    """#602 (poll 2026-11-23 «А»): right after the PIN is turned on, one warm moment names the way back; it shows once, as the card on top of
+    the tab the person comes back to (it waits off the tabs, owner poll 2026-11-25 «А»)."""
+    return board('Обзор: PIN включён', home(4, '', top=tip_top('PIN включён. Забудете — на экране входа нажмите «Забыли PIN?».')))
 
 
 BOARDS = [  # name, title, fn, issue number
@@ -197,14 +182,14 @@ BOARDS = [  # name, title, fn, issue number
     ('Hint513Steps', '#513 · шторка «Первые шаги»', steps_sheet, 513),
     ('Hint513Word', '#513 · П1: подсказка-слово на «Счетах»', accounts_hint, 513),
     ('Hint513Gesture', '#513 · П2: подсказка-жест в «Операциях»', gesture, 513),
-    ('Hint513Moment', '#513 · тёплая плашка: первая запись', moment, 513),
-    ('Hint513MomentLong', '#513 · тёплая плашка: две строки + «Открыть»', moment_long, 513),
+    ('Hint513Moment', '#513 · тёплый момент: карточка «Первая запись есть»', moment, 513),
+    ('Hint513MomentLong', '#513 · тёплый момент: карточка с «Открыть»', moment_long, 513),
     ('Hint513Finale', '#513 · финал «Первых шагов»: «Всё готово»', finale, 513),
     ('Hint513Reset', '#513 · «Подсказки включены» после сброса', hints_reset, 513),
     ('Hint513EntryCoach', '#513 · шторка ввода: карточка «Понятно» над шторкой', entry_hint, 513),
     ('Hint513Tags', '#513 · «Теги»: подсказка под заголовком', tags_hint, 513),
     ('Hint513Currency', '#513 · «Валюта покупки»: подсказка под заголовком', currency_hint, 513),
-    ('Hint602PinForgot', '#602 · плашка после включения PIN: «Забыли PIN?»', pin_forgot, 602),
+    ('Hint602PinForgot', '#602 · карточка после включения PIN: «Забыли PIN?»', pin_forgot, 602),
     ('Hint513Settings', '#513 · «Ещё → Приложение»: подсказки', app_settings, 513),
     ('Undo325Saved', '#325 · снэкбар «Сохранено · Отменить» (4 с)', saved_snack, 325),
     ('Undo325Shaken', '#325 · встряхнули: «Отменено · Вернуть»', undone_snack, 325),

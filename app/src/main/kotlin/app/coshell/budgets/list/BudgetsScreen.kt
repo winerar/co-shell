@@ -1,7 +1,6 @@
 package app.coshell.budgets.list
 
 import app.coshell.core.domain.hints.HintId
-import app.coshell.hints.CoachHint
 import app.coshell.hints.WordHint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -66,12 +65,11 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
         floatingActionButton = { CoShellAddFab(stringResource(R.string.budgets_new), { actions.onEdit(null) }) },
     ) { padding ->
         val month = state.month ?: return@Scaffold
-        CoachHint(mapOf(HintId.FLIP_CARD to R.string.hint_flip_card), enabled = state.summary != null)
         LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(bottom = Sizes.fabClearance))) {
             item(key = "month") {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }
-            item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l)) }
+            item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l), emptyScreen = state.isEmpty) }
             if (state.isEmpty) {
                 item(key = "empty") { EmptyBudgets() }
                 return@LazyColumn

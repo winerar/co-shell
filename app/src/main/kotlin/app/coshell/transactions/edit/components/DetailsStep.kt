@@ -43,7 +43,7 @@ import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.ui.format.formatDayMonthShort
 import app.coshell.transactions.edit.TransactionEditUiState
-import app.coshell.transactions.edit.showsPasteRow
+import app.coshell.transactions.edit.showsPasteButton
 import app.coshell.transactions.edit.TransactionEditUiState.EntryStep
 import app.coshell.transactions.edit.TransactionEditUiState.KeypadTarget
 import app.coshell.ui.form.DateChips
@@ -61,7 +61,6 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
         state.unsaved?.takeIf { state.isNew }?.let { UnsavedPlate(it, actions.onUnsavedContinue, actions.onUnsavedDiscard) }
         if (state.showsTypeSwitch) TypeBar(state, actions)
-        if (state.showsPasteRow) PasteRow(state, actions)
         Header(state, actions)
         AccountRibbonBlock(state, actions)
         Column(
@@ -150,8 +149,10 @@ private fun Header(state: TransactionEditUiState, actions: TransactionEditAction
 private fun TypeBar(state: TransactionEditUiState, actions: TransactionEditActions) {
     Column(Modifier.fillMaxWidth()) {
         if (state.scan == null) WordHint(HintId.SCAN_RECEIPT, R.string.hint_scan_receipt, Modifier.padding(horizontal = Spacing.l))
-        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
             TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f))
+            // «Вставить из буфера» (#321): an icon like the QR and «Шаблоны», not a row of its own.
+            if (state.showsPasteButton) PasteButton(actions)
             // The camera for a receipt QR (#526, board «QrBtnA»): amount and day of the receipt fill the sheet.
             CoShellIconButton(onClick = actions.onScanReceipt) {
                 Icon(painterResource(DesignR.drawable.ic_qr_code_scanner), contentDescription = stringResource(R.string.scan_title))
@@ -160,6 +161,7 @@ private fun TypeBar(state: TransactionEditUiState, actions: TransactionEditActio
                 Icon(painterResource(DesignR.drawable.ic_format_list_bulleted), contentDescription = stringResource(R.string.templates_title))
             }
         }
+        ClipboardNonePill(state, actions)
     }
 }
 

@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.core.designsystem.R
+import app.coshell.core.designsystem.tokens.Sizes
+import androidx.compose.foundation.layout.width
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.CategoryPalette
@@ -131,6 +133,11 @@ fun SegmentedSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellSegmented(listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {})
         CoShellSegmented(listOf("По типу", "По валюте", "Чьи"), selected = 1, onSelect = {})
+        // Too narrow for the words: the icons instead (#321).
+        CoShellSegmented(
+            listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {}, modifier = Modifier.width(Sizes.tileMinHeight),
+            icons = listOf(R.drawable.ic_call_made, R.drawable.ic_call_received, R.drawable.ic_swap_horiz),
+        )
     }
 }
 

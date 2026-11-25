@@ -28,7 +28,7 @@ HERO_BG, HERO_HINT = 'linear-gradient(135deg, #314617, #0E2523, #271E36)', '#AFB
 
 ICON = {
     'back': 'M15 6l-6 6 6 6', 'close': 'M6 6l12 12M18 6L6 18', 'search': 'M20 20l-4-4M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z',
-    'plus': 'M12 5v14M5 12h14', 'swap': 'M8 4v14M4 8l4-4 4 4M16 20V6M12 16l4 4 4-4', 'check': 'M5 12l5 5 9-10', 'chev': 'M9 6l6 6-6 6', 'down': 'M6 9l6 6 6-6',
+    'plus': 'M12 5v14M5 12h14', 'out': 'M7 17L17 7M9 7h8v8', 'in': 'M17 7L7 17M7 9v8h8', 'swaph': 'M4 9h15M15 5l4 4-4 4M20 15H5M9 11l-4 4 4 4', 'swap': 'M8 4v14M4 8l4-4 4 4M16 20V6M12 16l4 4 4-4', 'check': 'M5 12l5 5 9-10', 'chev': 'M9 6l6 6-6 6', 'down': 'M6 9l6 6 6-6',
     'home': 'M4 11l8-7 8 7v9H4z', 'list': 'M5 7h14M5 12h14M5 17h9', 'wallet': 'M3 7h18v12H3zM3 11h18', 'more': 'M5 12h.01M12 12h.01M19 12h.01', 'drag': 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
     'cart': 'M3 4h2l2.4 11h11l2-8H6.5M9 20h.01M17 20h.01', 'cafe': 'M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 9h2a2 2 0 0 1 0 4h-2',
     'taxi': 'M5 16h14l-1.5-6h-11zM7 16v2M17 16v2M8 10l1-3h6l1 3', 'salary': 'M4 8h16v11H4zM9 8V5h6v3M4 13h16',

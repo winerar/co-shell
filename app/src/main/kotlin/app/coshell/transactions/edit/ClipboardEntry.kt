@@ -32,6 +32,9 @@ internal fun TransactionEditUiState.withClipboardAmount(
     )
 }
 
-/** The row «Вставить из буфера» is offered while a new operation has no amount yet. */
-internal val TransactionEditUiState.showsPasteRow: Boolean
-    get() = isNew && !isCopy && !isTransfer && scan == null && payment == null && templateName == null && amount.isBlank() && receiptAmount.isBlank()
+/**
+ * The «Вставить из буфера» icon next to the QR and templates of a new operation (not a transfer). It stays after the amount is typed,
+ * so the type row does not jump; a second paste just replaces the amount.
+ */
+internal val TransactionEditUiState.showsPasteButton: Boolean
+    get() = isNew && !isCopy && !isTransfer && payment == null && templateName == null

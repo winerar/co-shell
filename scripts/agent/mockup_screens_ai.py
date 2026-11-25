@@ -5,7 +5,7 @@ always ask before 2,5 GB = «А»). Boards `AiOff`, `AiStep1`, `AiStep2`, `AiOn`
 from mockup_catalog_bricks import status_chip
 from mockup_bricks import *  # noqa: F401,F403
 
-TEXT = 'Необязательно. ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.'
+TEXT = 'ИИ читает незнакомые чеки, разбирает заметки и голос и подсказывает категорию для нового получателя.'
 FACTS = [('cloud', 'Размер', 'Дополнение 20 МБ + модель 2,5 ГБ'), ('phone', 'Память телефона', 'Нужно от 6 ГБ'),
          ('lock', 'Приватность', 'Всё считается на телефоне, без интернета')]
 USE = [('note', 'Незнакомые чеки', '«Прочитать с ИИ»'), ('note', 'Быстрые заметки и голос', 'разбор сложных фраз'),
@@ -57,7 +57,7 @@ def screen(title_body, bottom=''):
 
 
 def off():
-    body = status_card('Выключен', TEXT, label_pill('без него всё работает как раньше', 'check')) + '<div style="height: 10px;"></div>' + facts()
+    body = status_card('Выключен', TEXT) + '<div style="height: 10px;"></div>' + facts()
     return board('ИИ на телефоне: выключен', screen(body, footer(button('Включить · 2,5 ГБ', 'primary', 'cloud', 0))))
 
 
@@ -83,13 +83,13 @@ def step2():
 def on():
     use = ('<div style="margin: 0 4px 6px; font-size: 12px; letter-spacing: 0.04em; color: %s;">ГДЕ РАБОТАЕТ</div>' % MUTED
            + group([row(t, s, tile_icon(i, CYAN), min_h=56) for i, t, s in USE]))
-    body = status_card('Включён', 'Работает без интернета. Занимает 2,5 ГБ.', label_pill('готов', 'check')) + '<div style="height: 14px;"></div>' + use
+    body = status_card('Включён', 'Работает без интернета. Занимает 2,5 ГБ.') + '<div style="height: 14px;"></div>' + use
     note_ = ('<p style="margin: 10px 8px 0; font-size: 13px; line-height: 1.45; color: %s;">Дополнение (20 МБ) останется. Убрать его можно в настройках телефона, в списке приложений.</p>' % MUTED)
     return board('ИИ на телефоне: включён', screen(body + note_, footer(button('Удалить модель', 'outline', 'trash', 0))))
 
 
 def data():
-    under = screen(status_card('Выключен', TEXT, label_pill('без него всё работает как раньше', 'check')) + '<div style="height: 10px;"></div>' + facts(),
+    under = screen(status_card('Выключен', TEXT) + '<div style="height: 10px;"></div>' + facts(),
                    footer(button('Включить · 2,5 ГБ', 'primary', 'cloud', 0)))
     dlg = dialog('Скачать 2,5 ГБ?', 'Лучше по Wi-Fi: мобильный интернет может быть платным. Удалить можно в любой момент.', [('Отмена', 'text'), ('Скачать', 'primary')])
     return board('ИИ на телефоне: вопрос про мобильный интернет', scrim(under) + dlg)

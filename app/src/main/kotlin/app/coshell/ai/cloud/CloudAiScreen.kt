@@ -83,11 +83,7 @@ private fun StatusCard(state: CloudAiUiState) {
         else -> stringResource(R.string.cloud_on_text)
     }
     AiStatusCard(stringResource(if (on) R.string.cloud_on_title else R.string.cloud_off_title), text) {
-        when (state.stage) {
-            CloudAiStage.OFF -> CoShellStatusChip(stringResource(R.string.cloud_off_chip), StatusTone.Done)
-            CloudAiStage.ON -> CoShellStatusChip(stringResource(R.string.cloud_on_chip), StatusTone.Done)
-            CloudAiStage.NO_LOGIN -> CoShellStatusChip(stringResource(R.string.cloud_nologin_chip), StatusTone.Work)
-        }
+        if (state.stage == CloudAiStage.NO_LOGIN) CoShellStatusChip(stringResource(R.string.cloud_nologin_chip), StatusTone.Work)
     }
 }
 

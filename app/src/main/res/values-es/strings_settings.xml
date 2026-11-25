@@ -19,9 +19,7 @@
     <string name="density_section">Listas</string>
     <string name="density_comfortable">Normal</string>
     <string name="density_compact">Compacta</string>
-    <string name="density_hint">Densidad de filas en Movimientos y Cuentas. La compacta muestra aproximadamente una cuarta parte más de filas.</string>
     <string name="settings_screens_title">Pantallas</string>
-    <string name="settings_screens_intro">Qué muestra cada pantalla y cómo se abre.</string>
     <string name="settings_screens_items">Resumen · movimientos · cuentas</string>
     <string name="settings_ops_items">Cuenta, etiquetas y nota en la fila</string>
     <string name="settings_reports_items">Periodo · comparación con el anterior</string>
@@ -53,11 +51,9 @@
     <string name="settings_input_haptics_hint">toques y al guardar un movimiento</string>
     <string name="settings_data_network">Red</string>
     <string name="settings_data_wifi">Sincronizar solo con Wi-Fi</string>
-    <string name="settings_data_wifi_hint">si no, también con datos móviles</string>
     <string name="settings_notices_when">Cuándo</string>
     <string name="settings_notices_time">Hora del recordatorio</string>
     <string name="settings_notices_hour">%1$d:00</string>
-    <string name="settings_home_intro">Mantén ⠿ y arrastra para ordenar el Resumen. Una tarjeta desactivada no se muestra.</string>
     <string name="settings_home_cards">Tarjetas</string>
     <string name="settings_home_balance">Saldo</string>
     <string name="settings_home_balance_hint">siempre arriba</string>
@@ -92,12 +88,9 @@
     <string name="settings_input_always">Siempre esta</string>
     <string name="settings_input_account">Cuenta</string>
     <string name="settings_input_account_gone">elige una cuenta</string>
-    <string name="settings_input_account_hint">La hoja se abre con esta cuenta y su moneda; puedes cambiarla en la hoja.</string>
     <string name="settings_balance_title">Cuentas en el saldo total</string>
     <string name="settings_balance_intro">Lo que suma el «Saldo total» del Resumen. Común a toda la familia.</string>
     <string name="settings_balance_accounts">Cuentas</string>
-    <string name="settings_balance_all">Todas · común a la familia</string>
-    <string name="settings_balance_except">Todas menos %1$d · común a la familia</string>
     <string name="settings_home_balance_section">Saldo</string>
     <string name="settings_notices_before">Avisar con antelación</string>
     <string name="settings_notices_same_day">El mismo día</string>
@@ -106,13 +99,11 @@
     <string name="settings_ops_amount_title">Mostrar en la fila</string>
     <string name="settings_ops_amount_account">En la moneda de la cuenta</string>
     <string name="settings_ops_amount_main">Y en la principal</string>
-    <string name="settings_ops_amount_hint">Una segunda línea «≈ …» al tipo del día del movimiento. Al mantener pulsado un importe se ve en todas las monedas de los totales.</string>
     <string name="settings_notices_family">Familia</string>
     <string name="settings_notices_partner">Gasto de la pareja</string>
     <string name="settings_notices_partner_hint">aviso cuando se añade un movimiento</string>
     <string name="settings_notices_min">Solo desde un importe</string>
     <string name="settings_notices_min_any">cualquiera</string>
-    <string name="settings_notices_partner_note">Sin servidor: el aviso llega con la sincronización — al instante si la app está abierta, si no con la sincronización en segundo plano (cada hora). Transferencias, importaciones y tus propios movimientos no se avisan.</string>
     <string name="partner_spend_title">%1$s: %2$s</string>
     <string name="partner_spend_channel">Gastos de la familia</string>
     <string name="partner_spend_channel_hint">Cuando otro miembro añade un gasto</string>
@@ -123,9 +114,7 @@
     <string name="export_period">Periodo</string>
     <string name="export_accounts">Cuentas</string>
     <string name="export_all_accounts">Todas las cuentas</string>
-    <string name="export_all_accounts_hint">Cuentas: %1$d, sin las archivadas</string>
     <string name="export_count">Movimientos en el archivo: %1$d</string>
-    <string name="export_hint">Archivo CSV: separador «;», importes con coma — se abre en Excel y Hojas de cálculo de Google. Envíalo con «Compartir»: por correo, mensajería o a un disco.</string>
     <string name="export_action">Exportar y compartir</string>
     <string name="export_menu_hint">movimientos de un periodo</string>
     <string name="export_col_date">Fecha</string>
@@ -146,13 +135,11 @@
     <string name="export_type_expense">Gasto</string>
     <string name="export_type_income">Ingreso</string>
     <string name="export_type_transfer">Transferencia</string>
-    <string name="settings_home_tiles_section">Mosaicos · dos</string>
     <string name="settings_home_tile_first">Primero</string>
     <string name="settings_home_tile_second">Segundo</string>
     <string name="settings_home_tile_spending">Gastos del mes</string>
     <string name="settings_home_tile_budget">Presupuesto del mes</string>
     <string name="settings_home_tile_uncategorized">Sin categoría</string>
-    <string name="settings_home_tiles_note">El mosaico «Atención» (sin tipo de cambio) ocupa el segundo lugar solo cuando hace falta. Mientras no haya presupuestos, «Sin categoría» ocupa el lugar de «Presupuesto».</string>
     <string name="home_edit_hide">Ocultar</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
     <string name="settings_group_all">Todo ›</string>

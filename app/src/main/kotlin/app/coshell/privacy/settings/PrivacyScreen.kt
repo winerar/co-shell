@@ -44,7 +44,7 @@ fun PrivacyScreen(options: PrivacyOptions, biometricAvailable: Boolean, actions:
                 row {
                     CoShellSwitchRow(
                         title = stringResource(R.string.privacy_pin),
-                        subtitle = stringResource(if (pin) R.string.privacy_pin_on else R.string.privacy_pin_off),
+                        subtitle = if (pin) stringResource(R.string.privacy_pin_on) else null,
                         checked = pin,
                         onCheckedChange = actions.onPin,
                     )

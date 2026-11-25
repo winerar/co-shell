@@ -4,7 +4,7 @@
     <string name="notes_title">Быстрые заметки</string>
     <string name="notes_label">Заметка</string>
     <string name="notes_placeholder">кофе 3500</string>
-    <string name="notes_hint">Каждая строка — одна трата. Счёт и день — по желанию.</string>
+    <string name="notes_hint">Каждая строка — одна трата. Можно добавить счёт и день.</string>
     <string name="notes_empty_hint">Запишите траты строками, например «такси 2000» или «вчера аптека 4200». Потом нажмите «Обработать».</string>
     <string name="notes_process">Обработать · %1$d</string>
     <string name="notes_process_none">Обработать</string>
@@ -13,9 +13,8 @@
     <string name="drafts_title">Черновики</string>
     <string name="drafts_title_count">Черновики · %1$d</string>
     <string name="drafts_menu_hint">Из заметок: проверьте и запишите</string>
-    <string name="drafts_summary">Черновиков: %1$d · готовы: %2$d</string>
     <string name="drafts_hint_ready">Нажмите на строку, чтобы поправить.</string>
-    <string name="drafts_hint_unready">Нажмите на строку, чтобы дописать сумму или выбрать категорию.</string>
+    <string name="drafts_hint_unready">Нажмите на строку, чтобы дописать.</string>
     <string name="drafts_post">Записать · %1$d</string>
     <string name="drafts_post_none">Записать</string>
     <string name="drafts_posted">Записано: %1$d</string>
@@ -38,6 +37,6 @@
     </plurals>
     <string name="drafts_delete">Удалить · %1$d</string>
     <string name="drafts_deleted">Удалено черновиков: %1$d</string>
-    <string name="notes_strip_drafts">Траты строками · черновиков: %1$d</string>
+    <string name="notes_strip_drafts">Черновиков: %1$d</string>
     <string name="notes_strip_write">Записать</string>
 </resources>

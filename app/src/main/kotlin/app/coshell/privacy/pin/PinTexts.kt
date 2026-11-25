@@ -21,7 +21,6 @@ fun PinFlowState.toUi(): PinUi {
         PinNote.MISMATCH -> stringResource(R.string.pin_mismatch)
         PinNote.NONE -> when (step) {
             PinStep.CREATE -> stringResource(R.string.pin_create_hint)
-            PinStep.REPEAT -> stringResource(R.string.pin_repeat_hint)
             else -> ""
         }
     }

@@ -24,7 +24,6 @@
     <string name="reports_ghost_value">período anterior %1$s</string>
     <string name="reports_other">Otros · %1$s</string>
     <string name="reports_other_more">Otros · %1$s y %2$d más</string>
-    <string name="reports_all">Todas las categorías · %1$d</string>
     <string name="reports_deleted_category">Categoría eliminada</string>
     <string name="reports_rate_note">En %1$s al tipo de cambio del día de cada operación</string>
     <string name="reports_missing">Sin contar: %1$s — sin tipo de cambio</string>
@@ -42,7 +41,6 @@
     <string name="reports_compare_hint">Línea gris en las barras</string>
     <string name="reports_show">Mostrar</string>
     <string name="reports_all_title">Todas las categorías</string>
-    <string name="reports_all_search">Buscar categoría · %1$d</string>
     <string name="reports_order_amount">Por importe</string>
     <string name="reports_order_growth">Por aumento</string>
     <string name="reports_order_groups">Agrupadas</string>
@@ -94,7 +92,6 @@
     <string name="review_earned">Entró</string>
     <string name="review_changes">Lo principal frente a la media de %1$d meses</string>
     <string name="review_change_usual">%1$s · normalmente %2$s</string>
-    <string name="review_no_history">Aún no hay con qué comparar: los cambios principales aparecerán cuando haya al menos un mes de historial.</string>
     <string name="review_no_changes">Gastos como siempre — sin cambios notables.</string>
     <string name="review_limits">Límites</string>
     <string name="review_limits_kept">Cumplidos %1$d de %2$d</string>
@@ -109,7 +106,6 @@
     <string name="review_card_hide">Ocultar hasta el próximo mes</string>
     <!-- Ingresos y gastos (#189, board Rp189IeA) -->
     <string name="reports_income_title">Ingresos y gastos</string>
-    <string name="reports_income_caption">toca un mes</string>
     <string name="reports_income_in">entró</string>
     <string name="reports_income_out">salió</string>
     <string name="reports_income_left">quedó</string>
@@ -120,7 +116,6 @@
     <string name="reports_income_description">%1$s: entró %2$s, salió %3$s</string>
     <!-- Quién gastó cuánto (#189, board Rp189WhoA) -->
     <string name="reports_members_title">Quién gastó cuánto</string>
-    <string name="reports_members_caption">según quién lo anotó</string>
     <string name="reports_members_me">Yo</string>
     <string name="reports_members_note">Los gastos son comunes: se reparten según quién anotó la operación.</string>
     <!-- Patrimonio (#189, board Rp189NwB) -->
@@ -137,9 +132,7 @@
     <!-- «Капитал · октябрь» (#373) -->
     <string name="capital_month_title">Patrimonio · %1$s</string>
     <string name="capital_month_on">Patrimonio al %1$s</string>
-    <string name="capital_month_tap">toca para otro mes</string>
     <string name="capital_month_change">%1$s en el mes</string>
-    <string name="capital_month_search">Buscar cuenta · %1$d</string>
     <string name="capital_month_order_change">Por cambio</string>
     <string name="reports_tab_overview">Resumen</string>
     <string name="reports_tab_calendar">Calendario</string>

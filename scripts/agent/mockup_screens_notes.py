@@ -73,7 +73,7 @@ def note_card(lines, hint):
 
 
 def notes_input():
-    body = note_card(LINES, 'Каждая строка — одна трата. Счёт и день — по желанию.')
+    body = note_card(LINES, 'Каждая строка — одна трата. Можно добавить счёт и день.')
     return inner_screen('Быстрые заметки', '<div style="margin-top: 8px;">%s</div>' % body) + footer(button('Обработать · 4', 'primary', 'spark', 0))
 
 
@@ -85,7 +85,7 @@ def notes_empty():
 
 
 def drafts_body(rows, summary, hint):
-    cap = '<div style="margin: 8px 20px 6px; font-size: 13px; color: %s;">%s</div>' % (MUTED, summary)
+    cap = '<div style="height: 8px;"></div>'  # no summary line in the app (texts audit 2026-11-25)
     return cap + group(rows) + '<div style="margin: 8px 20px 0; font-size: 13px; color: %s;">%s</div>' % (MUTED, hint)
 
 
@@ -98,7 +98,7 @@ def drafts():
 def drafts_unready():
     rows = [draft(*DRAFTS[0]), draft('Купил хлеб', 'Galicia · сегодня', '', on=False, need='Нужна сумма'),
             draft('Netflix', 'Galicia · сегодня', '−7 500', on=False, need='Выберите категорию'), draft(*DRAFTS[3])]
-    body = drafts_body(rows, '4 черновика · готовы 2', 'Нажмите на строку, чтобы дописать сумму или выбрать категорию.')
+    body = drafts_body(rows, '4 черновика · готовы 2', 'Нажмите на строку, чтобы дописать.')
     return inner_screen('Черновики', body) + footer(button('Записать · 2', 'primary', 'check', 0))
 
 
@@ -133,7 +133,7 @@ def drafts_posted():
 
 def strip(drafts=5):
     """`DraftsStrip` (#641 «Б»): «Быстрые заметки» under the balance, always; «Записать» opens the note, the row — the drafts while any wait."""
-    sub = 'Траты строками · черновиков: %d' % drafts if drafts else 'Траты строками: кофе 3500'
+    sub = 'Черновиков: %d' % drafts if drafts else 'Траты строками: кофе 3500'
     write = ('<span style="height: 40px; padding: 0 16px; border-radius: 999px; background: %s; color: %s; font-weight: 600; font-size: 15px; display: flex; '
              'align-items: center;">Записать</span>' % (LIME, ONLIME))
     return card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><span style="font-size: 16px; font-weight: 600;">Быстрые заметки</span>'
@@ -144,7 +144,7 @@ def strip(drafts=5):
 def drafts_delete():
     rows = [draft(*DRAFTS[0], on=False), draft('Тест заметки', 'Galicia · сегодня', '', on=True, need='Нужна сумма'),
             draft(*DRAFTS[1], on=False), draft('Позвонить маме', 'Galicia · сегодня', '', on=True, need='Нужна сумма')]
-    body = drafts_body(rows, '4 черновика · готовы 2', 'Нажмите на строку, чтобы дописать сумму или выбрать категорию.')
+    body = drafts_body(rows, '4 черновика · готовы 2', 'Нажмите на строку, чтобы дописать.')
     two = ('<div style="display: flex; gap: 12px;"><span style="flex: 1;">%s</span><span style="flex: 1;">%s</span></div>'
            % (button('Удалить · 2', 'outline', None, 0), button('Записать', 'primary', None, 0, True)))
     return inner_screen('Черновики · 4', body) + footer(two)
@@ -163,8 +163,8 @@ def home_drafts():
 def more_drafts():
     cnt = ('<span style="display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 999px; background: %s; font-size: 12px;">'
            '<span style="width: 6px; height: 6px; border-radius: 50%%; background: %s;"></span>5</span>' % (mix(LIME, 18), LIME))
-    money = group([menu.r('Счета', 'Карты, наличные, вклады', 'wallet', PINK), menu.r('Категории', 'Подкатегории, иконки и цвета', 'folder', LIME),
-                   menu.r('Бюджеты', 'Лимиты на месяц, план и факт', 'wallet', PINK), menu.r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN),
+    money = group([menu.r('Счета', 'Карты, наличные, вклады', 'wallet', PINK), menu.r('Категории', 'На что уходят деньги', 'folder', LIME),
+                   menu.r('Бюджеты', 'Лимиты на месяц', 'wallet', PINK), menu.r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN),
                    menu.r('Быстрые заметки', 'Траты строками: кофе 3500', 'note', VIOLET), menu.r('Черновики', 'Из заметок: проверьте и запишите', 'draft', CYAN, cnt)])
     body = label('Деньги', top=6) + money + label('Валюты', top=14) + menu.new_rates()
     return tab_screen('Ещё', body, 'more')

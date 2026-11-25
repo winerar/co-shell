@@ -74,14 +74,14 @@ internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEdi
 
 private enum class DetailSheet { NONE, DATE, NOTE, TAGS }
 
-/** «Теги · 2» over «Аня, на двоих»; none — «Без тегов». */
+/** «Теги» over «Аня, на двоих»; none — «Без тегов». */
 @Composable
 private fun TagsTile(state: TransactionEditUiState, modifier: Modifier, onClick: () -> Unit) {
     val byId = state.tags.options.associateBy { it.id }
     val chosen = state.tagIds.mapNotNull { byId[it]?.name }
     CoShellDetailTile(
         painterResource(DesignR.drawable.ic_sell),
-        if (chosen.isEmpty()) stringResource(R.string.entry_tags) else stringResource(R.string.entry_tags_count, chosen.size),
+        stringResource(R.string.entry_tags),
         chosen.joinToString().ifEmpty { stringResource(R.string.entry_tags_empty) },
         onClick,
         modifier,

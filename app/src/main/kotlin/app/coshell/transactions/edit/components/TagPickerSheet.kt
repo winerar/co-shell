@@ -119,7 +119,7 @@ internal fun ColumnScope.TagPickerContent(state: TransactionEditUiState, onToggl
     if (found.isEmpty()) {
         Hint(stringResource(R.string.tags_nothing))
     } else {
-        TagSection(stringResource(R.string.tags_all_by_name, options.size), found, state.tagIds, onToggle)
+        TagSection(stringResource(R.string.tags_all_by_name), found, state.tagIds, onToggle)
     }
 }
 

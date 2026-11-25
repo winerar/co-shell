@@ -16,7 +16,7 @@
     <string name="scan_cam_text">Видео не сохраняется и никуда не уходит.</string>
     <string name="scan_cam_allow">Разрешить</string>
     <string name="receipt_unread_title">Не удалось прочитать чек</string>
-    <string name="receipt_unread_text">Такой формат приложение пока не знает. Отправьте образец — научим. Запись можно внести вручную.</string>
+    <string name="receipt_unread_text">Такой формат приложение пока не знает. Пришлите образец — научимся.</string>
     <string name="receipt_unread_send">Отправить образец</string>
     <string name="receipt_account_title">Какой это счёт?</string>
     <string name="receipt_account_hint">В чеке карта …%1$s. Выберите счёт, и в следующий раз чек найдёт его сам.</string>

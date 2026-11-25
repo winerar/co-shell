@@ -66,7 +66,7 @@ def back_month():
     head = '<div style="font-size: 13px;">Ноябрь · итоги</div>'
     trio = ('<div style="margin-top: 10px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">%s%s%s</div>'
             % (kv('Доходы', '+2 100', 'USD', OK), kv('Расходы', '−1 240', 'USD', PINK), kv('Разница', '+860', 'USD', LIME)))
-    pace = '<div style="margin-top: 10px; font-size: 13px; color: %s;">В среднем ≈ 64 USD в день · прошло 8 дней</div>' % HERO_HINT
+    pace = '<div style="margin-top: 10px; font-size: 13px; color: %s;">≈ 64 USD в день · прошло 8 дней</div>' % HERO_HINT
     return head + trio + pace + hairline() + currencies()
 
 

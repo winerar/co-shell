@@ -19,7 +19,6 @@
     <string name="amount_peek_no_rate">no rate</string>
     <string name="home_total_missing">Not counted: %1$s — no rate</string>
     <string name="home_spending_title">%1$s spending</string>
-    <string name="home_spending_rate_hint">At the rate on the day of each expense</string>
     <string name="home_spending_tile">Spending</string>
     <string name="home_spending_without">without %1$s</string>
     <string name="home_uncategorized_title">No category</string>
@@ -57,10 +56,6 @@
     <string name="account_group_other">Other</string>
     <string name="picker_recent">Recent</string>
     <string name="picker_search">Find an account</string>
-    <plurals name="picker_account_count">
-        <item quantity="one">%1$d account</item>
-        <item quantity="other">%1$d accounts</item>
-    </plurals>
     <string name="search_clear">Clear search</string>
     <string name="transactions_search_open">Search operations</string>
     <string name="search_close">Close search</string>
@@ -126,7 +121,6 @@
     <string name="account_balance_saved">Balance corrected: %1$s</string>
     <string name="account_initial_balance_hint">The amount before the first transaction. For a debt, use a minus sign.</string>
     <string name="account_included_in_total">Include in total balance</string>
-    <string name="account_included_in_total_hint">Turn off for debts or someone else\'s money — the account won\'t count in the total balance</string>
     <string name="account_excluded_from_total">Not in total balance</string>
     <string name="account_excluded_suffix">%1$s · not in total balance</string>
     <string name="account_section_money">Money</string>
@@ -169,8 +163,6 @@
     <string name="category_color">Color</string>
     <string name="form_all_count">All %1$d</string>
     <string name="form_icon_and_color">Icon and color</string>
-    <string name="form_icons_count">Icons · %1$d</string>
-    <string name="form_colors_count">Colors · %1$d</string>
     <string name="color_none">No color</string>
     <string name="category_type_locked">Type can\'t change: the category is in transactions or has subcategories</string>
     <string name="category_section_what">What it is</string>
@@ -241,7 +233,6 @@
     <string name="backup_error_write">Couldn\'t save the file. Choose another folder.</string>
     <string name="backup_error_read">Couldn\'t read the file.</string>
     <string name="feedback_title">Feedback</string>
-    <string name="categories_menu_hint">Subcategories, icons and colors</string>
     <string name="backup_menu_hint">Save or restore your data</string>
     <string name="feedback_menu_hint">A problem or an idea</string>
     <string name="shake_to_add_title">Shake to scan a QR</string>
@@ -270,7 +261,6 @@
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="palette_hint">Tap a theme — the app recolours right away</string>
     <string name="palette_lime">Lime</string>
     <string name="palette_garnet">Pomegranate</string>
     <string name="palette_banana">Banana</string>
@@ -280,7 +270,6 @@
     <string name="palette_sakura">Sakura</string>
     <string name="palette_cornflower">Cornflower</string>
     <string name="palette_lotus">Lotus</string>
-    <string name="feedback_intro">Tell us what\'s not working or what\'s missing.</string>
     <string name="feedback_attached">We\'ll attach: version %1$d · %2$s · Android %3$s, technical log (no amounts)</string>
     <string name="feedback_text_label">Message</string>
     <string name="feedback_kind_bug">Problem</string>
@@ -291,8 +280,6 @@
     <string name="feedback_prompt_idea">What should we add or simplify?</string>
     <string name="feedback_prompt_design">What looks off?</string>
     <string name="feedback_prompt_other">Anything at all</string>
-    <string name="feedback_sent_title">My feedback · %1$d</string>
-    <string name="feedback_sent_note">Statuses update a few times a day. Tap for details, hold to remove.</string>
     <string name="feedback_status_sent">Sent</string>
     <string name="feedback_status_received">Received</string>
     <string name="feedback_status_in_progress">In progress</string>
@@ -360,7 +347,6 @@
     <string name="update_this_version_title">What\'s in this version</string>
     <string name="update_past_title">Past versions</string>
     <string name="update_past_row">Past versions</string>
-    <string name="update_past_hint">Tap to expand</string>
     <string name="update_past_installed">yours</string>
     <string name="update_past_error">Couldn\'t load versions. Check your internet.</string>
     <string name="update_past_retry">Retry</string>
@@ -379,7 +365,6 @@
     <string name="update_installing">Confirm the installation in the Android window. Your data stays.</string>
     <string name="update_permission_hint">Android will ask to allow installs from Co-Shell. Turn it on and come back here.</string>
     <string name="update_allow_install">Allow installing</string>
-    <string name="update_installing_manual">The install window didn\'t appear or showed an error? Try “Install manually”.</string>
     <string name="update_install_manually">Install manually</string>
     <string name="update_retry">Retry</string>
     <string name="update_error_check">Couldn\'t check for updates. Check your internet connection.</string>
@@ -387,7 +372,6 @@
     <string name="update_error_checksum">The file downloaded with an error. Download it again.</string>
     <string name="update_error_install">The update didn\'t install. Try “Install manually”.</string>
     <string name="update_open">Update</string>
-    <string name="update_pill">Version %1$s · build %2$d · Update</string>
     <string name="update_pill_dismiss">Hide until next launch</string>
     <string name="crash_notice_title">The app closed with an error</string>
     <string name="crash_notice_text">Send a report? Only technical data — no amounts or names.</string>
@@ -400,12 +384,9 @@
 
     <string name="report_currencies_title">Totals currencies</string>
     <string name="report_currencies_hint">The total balance is shown in each of these currencies. Tap one to make it the main one.</string>
-    <string name="report_currencies_preview">Total balance · as it will look on “Overview”</string>
     <string name="report_currencies_main">Main</string>
     <string name="report_currencies_add">Add currency</string>
-    <string name="report_currencies_menu_hint">Main: %1$s</string>
     <string name="rates_current">Today\'s rates</string>
-    <string name="rates_current_hint">tap to change</string>
     <string name="rates_accounts">Your account currencies</string>
     <string name="rates_no_rate">No rate yet</string>
     <string name="rates_no_currencies">Rates for the currencies of your accounts and transactions will appear here</string>
@@ -420,7 +401,6 @@
     <string name="rates_refresh_fresh">Today\'s rates are already downloaded</string>
     <string name="rates_refresh_failed">Couldn\'t load rates. Check your internet</string>
     <string name="rates_manual">Manual rates</string>
-    <string name="rates_manual_hint">A manual rate beats the downloaded one and applies from the chosen date until the next manual one</string>
     <string name="rates_since_date">since %1$s</string>
     <string name="rates_manual_add">Add rate</string>
     <string name="rates_manual_title">Manual rate</string>
@@ -437,7 +417,6 @@
     <string name="rates_sources_daily">Rates update automatically once a day.</string>
 
     <string name="account_local_only">Only me</string>
-    <string name="account_local_only_short">Other family members won\'t see this account or its transactions</string>
     <string name="account_local_only_transfers">Other members won\'t see transfers between this account and shared ones.</string>
     <string name="account_local_only_off">If you turn this off, other members will see the account and all its transactions.</string>
     <string name="account_local_only_locked">“Only me” can be turned on only when creating an account.</string>
@@ -450,20 +429,17 @@
     <string name="auto_backup_on">Auto backup is on</string>
     <string name="auto_backup_choose">Choose a folder for auto backups</string>
     <string name="auto_backup_folder">Folder: %1$s</string>
-    <string name="auto_backup_off">Choose a folder — backups will be saved there on their own: daily, weekly or monthly.</string>
     <string name="auto_backup_pending">The first backup will appear soon</string>
     <string name="auto_backup_last">Last: %1$s</string>
     <string name="auto_backup_failed">Couldn\'t save the backup. Choose the folder again — access to it may have been lost</string>
     <string name="auto_backup_off_title">Auto backup is off</string>
     <string name="auto_backup_failed_title">Backup wasn\'t saved</string>
-    <string name="auto_backup_folder_change">tap to change</string>
     <string name="auto_backup_folder_hint">on the phone or Google Drive</string>
     <string name="auto_backup_period_daily">Every day</string>
     <string name="auto_backup_period_weekly">Once a week</string>
     <string name="auto_backup_period_monthly">Once a month</string>
     <string name="auto_backup_month_hint">If the month is shorter, the backup is made on its last day.</string>
     <string name="auto_backup_time">Time</string>
-    <string name="auto_backup_time_hint">The backup is saved at this time, or a little later if the phone is busy.</string>
     <string name="auto_backup_keep">Keep</string>
     <string name="auto_backup_keep_hint">Older backups in the folder are deleted. Backups you save by hand stay.</string>
     <string name="auto_backup_next">Next: %1$s, %2$s</string>
@@ -479,9 +455,7 @@
     <string name="family_title">Family</string>
     <string name="family_menu_hint">A shared budget with your family</string>
     <string name="family_not_configured">Sync isn\'t set up in this build — the app works on this phone only.</string>
-    <string name="family_intro">Sign in with Google to keep a budget together with your family. Data is stored on the phone and in the cloud; the app works offline too. You can join only by invitation.</string>
     <string name="family_sign_in">Sign in with Google</string>
-    <string name="family_sign_in_hint">Choose your Google account</string>
     <string name="family_checking">Signed in as %1$s. Checking access…</string>
     <string name="family_no_access">Signed in as %1$s. Ask a family member to invite this address, then tap “Check again”.</string>
     <string name="family_check_again">Check again</string>
@@ -573,7 +547,6 @@
     <!-- #334: the other phone runs a newer, incompatible version (board Fb334A) -->
     <string name="gate_banner_title">Version %1$s needed</string>
     <string name="gate_banner_title_any">A newer version is needed</string>
-    <string name="gate_banner_text">Someone in the family has updated, and this version can’t read the new data. You can look around; adding and editing open after the update, so nothing breaks.</string>
     <string name="gate_banner_update">Update</string>
     <string name="gate_banner_update_size">Update · %1$s MB</string>
     <string name="gate_locked_note">Adding and editing open after the update, so the family’s data stays intact.</string>
@@ -603,17 +576,13 @@
 
     <string name="templates_title">Templates</string>
     <string name="templates_all">All %1$d ›</string>
-    <string name="templates_search">Find a template · %1$d</string>
     <string name="templates_frequent">Frequent</string>
     <string name="templates_filter_all">All · %1$d</string>
     <string name="templates_filter_expense">Expenses · %1$d</string>
     <string name="templates_filter_income">Income · %1$d</string>
     <string name="templates_filter_transfer">Transfers · %1$d</string>
-    <string name="templates_section_expense">Expenses · by category, A→Z</string>
-    <string name="templates_section_income">Income · by category, A→Z</string>
     <string name="templates_section_transfer">Transfers</string>
     <string name="templates_hint">Tap for a new transaction from the template. Hold to edit or delete.</string>
-    <string name="templates_empty">A template is a shortcut for repeating transactions: rent, lessons, coffee. It keeps the account, category, note and, if you like, the amount. Tap “+” to create the first one.</string>
     <string name="template_new">New template</string>
     <string name="template_edit_title">Template</string>
     <string name="template_amount_on_entry">amount on entry</string>
@@ -656,14 +625,12 @@
     <string name="entry_receipt_remove">Remove purchase amount</string>
     <string name="entry_note_empty">No note</string>
     <string name="entry_tags">Tags</string>
-    <string name="entry_tags_count">Tags · %1$d</string>
     <string name="entry_tags_empty">No tags</string>
     <string name="entry_refund_title">This is a refund</string>
     <string name="entry_refund_subtitle">returned to the account</string>
     <string name="entry_date_today">Today, %1$s</string>
     <string name="entry_date_yesterday">Yesterday, %1$s</string>
     <string name="transaction_categories_all">All</string>
-    <string name="transaction_categories_all_title">All categories · %1$d</string>
     <string name="transaction_categories_search">Find a category</string>
     <string name="transaction_categories_nothing">Nothing found</string>
 </resources>

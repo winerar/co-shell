@@ -12,7 +12,6 @@
     <string name="steps_limit">Set your first limit</string>
     <string name="steps_limit_hint">How much you are happy to spend on groceries a month. You can change it.</string>
     <string name="steps_family">Invite someone close</string>
-    <string name="steps_family_hint">It is easier together. Or later.</string>
     <string name="hints_title">Hints</string>
     <string name="hints_on">Shown</string>
     <string name="hints_off">Off</string>
@@ -31,7 +30,6 @@
     <string name="hint_reports">Here you see where the money goes. The more entries, the clearer the picture.</string>
     <string name="hint_tags">A tag is a coloured label on a transaction, like “holiday” or “gifts”.</string>
     <string name="hint_notes">Lots of small expenses? Write them as a list in “Quick notes” and process them at once.</string>
-    <string name="hint_family">Easier together: entries from both phones come together in one place.</string>
     <string name="hint_ok">Got it</string>
     <string name="hint_hold_select">Press and hold a transaction to select several.</string>
     <string name="hint_edit_tap">Made a mistake? Tap the transaction to fix it.</string>
@@ -47,12 +45,10 @@
     <string name="hint_theme">You can make the app your own: More → Settings → Appearance.</string>
     <string name="hint_template">Spending repeats? Save a template and it goes in with one tap.</string>
     <string name="hint_open">Open</string>
-    <string name="hint_limit_80">%1$s: you can still spend %2$s. Look into “Budgets” whenever you like.</string>
     <string name="hint_month_end">The month is over. See the recap.</string>
     <string name="hint_entry_minimal">Only the amount and the account are needed. You can skip the rest.</string>
     <string name="hint_keypad_math">You can add and subtract: 300 + 150.</string>
     <string name="hint_entry_refund">Got money back? Tick “This is a refund”.</string>
-    <string name="hint_currency_account">Money in another currency? Totals are counted in your totals currencies, the rate is filled in for you.</string>
     <string name="hint_pin_forgot">PIN is on. If you forget it, tap “Forgot PIN?” when signing in.</string>
     <string name="hint_currency_receipt">Enter the purchase amount and the rate is worked out for you.</string>
 </resources>

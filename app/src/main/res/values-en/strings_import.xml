@@ -22,7 +22,6 @@
     <string name="import_batch_period">%1$s to %2$s</string>
     <string name="import_undo">Undo import</string>
     <string name="import_undo_confirm_title">Undo import?</string>
-    <string name="import_undo_confirm_text">All transactions from this import will be deleted (on the second phone too). Accounts and categories stay.</string>
     <string name="import_undone">Import undone: transactions deleted — %1$d.</string>
 
     <string name="import_summary_records">Records: %1$d</string>

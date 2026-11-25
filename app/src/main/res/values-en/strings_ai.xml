@@ -3,7 +3,6 @@
     <!-- «ИИ на телефоне» (#587): the screen and its row in «Настройки». -->
     <string name="ai_title">AI on this phone</string>
     <string name="ai_off_title">Off</string>
-    <string name="ai_off_text">Optional. AI reads unfamiliar receipts, sorts out notes and voice, and suggests a category for a new payee.</string>
     <string name="ai_off_chip">everything works as before without it</string>
     <string name="ai_step1_title">Step 1 of 2</string>
     <string name="ai_step1_text">Android will ask whether to install the add-on. Tap “Install”.</string>

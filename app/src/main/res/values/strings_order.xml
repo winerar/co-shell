@@ -6,7 +6,7 @@
     <string name="accounts_order_title">Порядок счетов</string>
     <string name="categories_order_title">Порядок категорий</string>
     <string name="accounts_order_hint">Удерживайте строку и перетащите. Порядок общий для семьи.</string>
-    <string name="categories_order_hint">Удерживайте строку и перетащите. На середину другой категории — станет подкатегорией, из группы наверх — отдельной.</string>
+    <string name="categories_order_hint">Удерживайте строку и перетащите. На другую категорию — станет подкатегорией.</string>
     <string name="order_drop_into">Отпустите — «%1$s» станет подкатегорией</string>
     <string name="order_move_up">Выше</string>
     <string name="order_move_down">Ниже</string>

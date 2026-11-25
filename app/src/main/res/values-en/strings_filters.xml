@@ -29,7 +29,6 @@
     <string name="filter_period_own">Custom period</string>
     <string name="filter_period_from">From</string>
     <string name="filter_period_to">To</string>
-    <string name="filter_period_note">The arrows move the chosen span: a month, three months, a year.</string>
 
     <string name="filter_accounts_title">Account and who added</string>
     <string name="filter_accounts_title_alone">Accounts</string>
@@ -40,7 +39,6 @@
     <string name="filter_tag"># Tag</string>
     <string name="filter_tags_title">Tags</string>
     <string name="filter_tags_search">Find a tag</string>
-    <string name="filter_tags_all">All · %1$d · A–Z</string>
     <string name="filter_tags_some">%1$d of %2$d selected</string>
     <string name="filter_tags_nothing">No such tag</string>
 

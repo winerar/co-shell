@@ -22,7 +22,6 @@
     <string name="import_batch_period">del %1$s al %2$s</string>
     <string name="import_undo">Deshacer importación</string>
     <string name="import_undo_confirm_title">¿Deshacer la importación?</string>
-    <string name="import_undo_confirm_text">Se eliminarán todos los movimientos de esta importación (también en el otro teléfono). Las cuentas y categorías se quedan.</string>
     <string name="import_undone">Importación deshecha: movimientos eliminados — %1$d.</string>
 
     <string name="import_summary_records">Registros: %1$d</string>

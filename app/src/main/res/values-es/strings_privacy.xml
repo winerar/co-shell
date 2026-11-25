@@ -7,7 +7,6 @@
     <string name="privacy_section_entry">Acceso</string>
     <string name="privacy_pin">Bloqueo con PIN</string>
     <string name="privacy_pin_on">Se pide cada vez que abres la app</string>
-    <string name="privacy_pin_off">Desactivado</string>
     <string name="privacy_biometric">Huella o cara</string>
     <string name="privacy_biometric_hint">En lugar del PIN, si tu teléfono lo permite</string>
     <string name="privacy_biometric_none">No hay huella ni cara configuradas en este teléfono</string>
@@ -43,7 +42,6 @@
     <string name="pin_create">Elige un PIN</string>
     <string name="pin_create_hint">4 dígitos. Te lo pediremos al abrir la app.</string>
     <string name="pin_repeat">Repite el PIN</string>
-    <string name="pin_repeat_hint">Para estar seguros</string>
     <string name="pin_mismatch">Los PIN no coinciden. Elige otro.</string>
     <string name="eye_hide">Ocultar importes</string>
     <string name="eye_show">Mostrar importes</string>

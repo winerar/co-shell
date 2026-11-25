@@ -61,8 +61,8 @@ def mode_head(mode):
     icon, label_txt, to = ('list', 'Пара валют', 'Показать все валюты') if mode == 'pair' else ('transfer', 'Все валюты', 'Показать пару')
     return ('<div style="display: flex; align-items: flex-start; gap: 4px; padding: 8px 8px 0 20px;"><div style="flex-grow: 1; padding-top: 10px;">'
             '<h2 style="margin: 0; font-size: 22px; font-weight: 700;">Конвертер</h2>'
-            '<div style="margin-top: 4px; font-size: 13px; color: %s;">%s · курс на сегодня</div></div>%s%s</div>'
-            % (MUTED, label_txt, icon_button(icon, to, INK), icon_button('close', 'Закрыть', MUTED)))
+            '<div style="margin-top: 4px; font-size: 13px; color: %s;">Курс на сегодня</div></div>%s%s</div>'
+            % (MUTED, icon_button(icon, to, INK), icon_button('close', 'Закрыть', MUTED)))
 
 
 def mode_sheet(mode, body, top=70):

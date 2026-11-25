@@ -18,7 +18,7 @@ internal fun AllCategoriesSheet(groups: List<CategoryGroup>, selectedId: String?
     val parentSubtitle = stringResource(R.string.category_kind_folder)
     val options = remember(groups, parentSubtitle) { categoryChoiceOptions(groups, parentSubtitle) }
     ChoiceSheet(
-        title = stringResource(R.string.transaction_categories_all_title, groups.leafCount),
+        title = stringResource(R.string.transaction_categories_all_title),
         options = options,
         selected = selectedId,
         // ChoiceSheet's onPick must close the sheet itself: onDismiss is not called after a pick (#439).

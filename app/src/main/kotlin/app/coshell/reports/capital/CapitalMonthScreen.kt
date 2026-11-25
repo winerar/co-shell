@@ -74,7 +74,7 @@ fun CapitalMonthScreen(state: CapitalMonthUiState, actions: CapitalMonthActions)
                 CoShellSearchField(
                     value = state.query,
                     onValueChange = actions.onQuery,
-                    placeholder = stringResource(R.string.capital_month_search, state.count),
+                    placeholder = stringResource(R.string.capital_month_search),
                     clearLabel = stringResource(R.string.search_clear),
                     modifier = Modifier.fillMaxWidth(),
                 )

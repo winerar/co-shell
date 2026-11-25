@@ -31,7 +31,6 @@
     <string name="filter_period_own">Periodo propio</string>
     <string name="filter_period_from">Desde</string>
     <string name="filter_period_to">Hasta</string>
-    <string name="filter_period_note">Las flechas mueven el tramo elegido: un mes, tres meses, un año.</string>
 
     <string name="filter_accounts_title">Cuenta y quién lo anotó</string>
     <string name="filter_accounts_title_alone">Cuentas</string>
@@ -42,7 +41,6 @@
     <string name="filter_tag"># Etiqueta</string>
     <string name="filter_tags_title">Etiquetas</string>
     <string name="filter_tags_search">Buscar etiqueta</string>
-    <string name="filter_tags_all">Todas · %1$d · A–Z</string>
     <string name="filter_tags_some">%1$d de %2$d seleccionadas</string>
     <string name="filter_tags_nothing">No existe esa etiqueta</string>
 

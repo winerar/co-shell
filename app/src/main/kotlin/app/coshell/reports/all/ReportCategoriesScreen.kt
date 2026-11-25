@@ -61,7 +61,7 @@ fun ReportCategoriesScreen(state: ReportsUiState, onBack: () -> Unit, onCategory
                 CoShellSearchField(
                     value = query,
                     onValueChange = { query = it },
-                    placeholder = stringResource(R.string.reports_all_search, rows.size),
+                    placeholder = stringResource(R.string.reports_all_search),
                     clearLabel = stringResource(R.string.search_clear),
                     modifier = Modifier.fillMaxWidth(),
                 )

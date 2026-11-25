@@ -96,12 +96,6 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
                     CoShellMessage(stringResource(R.string.cloud_limit_message), isError = false, modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs))
                 }
             }
-            item(key = "summary", contentType = "hint") {
-                CoShellHint(
-                    stringResource(R.string.drafts_summary, state.rows.size, state.readyCount),
-                    Modifier.padding(horizontal = Spacing.xl, vertical = Spacing.xs),
-                )
-            }
             item(key = "list", contentType = "card") {
                 CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l)) {
                     state.rows.forEachIndexed { index, row ->

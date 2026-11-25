@@ -65,7 +65,7 @@ def ie_a():
     inner = (pairs() + legend((CYAN, 'пришло'), (PINK, 'ушло'))
              + stat_row([('Октябрь · пришло', '1 620', CYAN), ('ушло', '1 350', PINK), ('остаток', '+270', OK)])
              + '<div style="margin-top: 8px; font-size: 12px; color: %s;">Отложили <b style="%s color: %s;">17%%</b> дохода · в среднем за 5 мес. — 19%%</div>' % (MUTED, MONO, INK))
-    return chart_card('Доходы и расходы', 'тап — месяц', inner)
+    return chart_card('Доходы и расходы', 'нажмите на месяц', inner)
 
 
 def feed(card_html, title='Отчёты'):
@@ -136,7 +136,7 @@ def who_bar(name, ini, color, usd, pct, sub, top=430):
 
 def who_a():
     rows = ''.join(who_bar(n, i, c, u, p, ' · '.join('%s %d' % t for t in top)) for n, i, c, u, p, top in WHO)
-    return chart_card('Кто сколько потратил', 'по тому, кто внёс', '<div style="margin-top: 4px;">%s</div>' % rows
+    return chart_card('Кто сколько потратил', '', '<div style="margin-top: 4px;">%s</div>' % rows
                       + note('Траты общие — делим по тому, кто записал. Тап — его операции.', mt=6))
 
 
@@ -162,10 +162,10 @@ EXTRA = [('Ualá', 'UA', '#3A6BFF', '#FFFFFF', 'Карта', '84 000', 'ARS', '8
 
 def nw_drill():
     accs = ACCOUNTS + EXTRA
-    head = chart_card('Капитал на 31 октября', 'тап — другой месяц', nw_head('7 700', '+260 за месяц') + line(h=60, sel=10), 'margin-top: 4px;')
+    head = chart_card('Капитал на 31 октября', 'нажмите на месяц', nw_head('7 700', '+260 за месяц') + line(h=60, sel=10), 'margin-top: 4px;')
     chips = '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % ''.join(chip(t, t == 'Группами') for t in ['Группами', 'По сумме', 'По изменению'])
     cards = [a for a in accs if a[8] == 'cards']
-    body = (head + '<div style="margin-top: 12px;">%s</div>' % search('Найти счёт · %d' % len(accs)) + chips
+    body = (head + '<div style="margin-top: 12px;">%s</div>' % search('Найти счёт') + chips
             + group_head('Карты и банки', len(cards), '3 642') + card(''.join(acc_row(a) for a in cards[:5]))
             + group_head('Крипто', sum(a[8] == 'crypto' for a in accs), '2 430', open_=False)
             + group_head('Наличные', sum(a[8] == 'cash' for a in accs), '1 816', open_=False)

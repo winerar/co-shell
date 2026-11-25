@@ -94,7 +94,7 @@ internal fun ColumnScope.RepeatSheetBody(draft: RepeatDraft, state: TemplateEdit
         CoShellSectionLabel(stringResource(R.string.recurring_how))
         ModeRows(draft.mode.takeIf { state.canPostAuto } ?: PostMode.REMIND, state) { onChange(draft.copy(mode = it)) }
     }
-    CoShellHint(hintText(draft, state))
+    hintText(draft, state).takeIf { it.isNotEmpty() }?.let { CoShellHint(it) }
 }
 
 @Composable
@@ -128,7 +128,7 @@ private fun ModeRows(mode: PostMode, state: TemplateEditUiState, onPick: (PostMo
 
 @Composable
 private fun hintText(draft: RepeatDraft, state: TemplateEditUiState): String {
-    val recurrence = draft.recurrence ?: return stringResource(R.string.recurring_off_hint)
+    val recurrence = draft.recurrence ?: return ""
     val next = state.preview(recurrence, draft.mode)?.nextUnhandled()?.let { stringResource(R.string.recurring_next_payment, formatWeekdayDayMonth(it)) }
     val shortMonth = stringResource(R.string.recurring_short_month).takeIf { recurrence is Recurrence.Monthly && recurrence.day > SAFE_DAY }
     return listOfNotNull(shortMonth, next).joinToString(" ")

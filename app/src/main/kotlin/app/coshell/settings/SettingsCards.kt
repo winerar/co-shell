@@ -94,7 +94,7 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
         row { ValueRow(stringResource(R.string.backup_title), stringResource(R.string.backup_menu_hint), actions.onBackup) }
         row {
             CoShellSwitchRow(
-                title = stringResource(R.string.settings_data_wifi), subtitle = stringResource(R.string.settings_data_wifi_hint),
+                title = stringResource(R.string.settings_data_wifi),
                 checked = state.wifiOnly, onCheckedChange = actions.onWifiOnly,
             )
         }

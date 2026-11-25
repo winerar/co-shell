@@ -94,7 +94,7 @@ internal fun SpendingCard(
             )
         }
         Text(
-            stringResource(R.string.reports_all, spending.categories.size),
+            stringResource(R.string.reports_all),
             style = MaterialTheme.typography.labelLarge,
             color = secondaryInk(),
             modifier = Modifier

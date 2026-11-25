@@ -33,11 +33,10 @@ def export():
         _, name, value, count = next(p for p in periods if p[0] == k)
         return (chips([p[1] for p in periods], name)
                 + '<div style="margin-top: 10px;">%s</div>' % group([row(value, 'Период', svg('calendar', LIME), chevron())])
-                + label('Счета') + group([row('Все счета', '12 счетов, кроме архивных', '', switch(False)),
+                + label('Счета') + group([row('Все счета', 'кроме архивных', '', switch(False)),
                                           row('Galicia, Mercado Pago, USDT · Binance', 'Выбрано: 3', '', chevron())])
                 + '<div style="margin-top: 16px; text-align: center; font-size: 13px; color: %s;">Операций в файле: <b style="color: %s;">%s</b></div>' % (MUTED, INK, count))
-    hint = note('Файл CSV: разделитель «;», суммы с запятой — откроется в Excel и Google Таблицах. Отправьте его через «Поделиться»: '
-                'в почту, мессенджер или на диск.', 14)
+    hint = note('Откроется в Excel и Google Таблицах. Отправьте файл в почту, мессенджер или на диск.', 14)
     return (top_bar('Экспорт в CSV') + '<div style="padding: 0 16px;">%s%s</div>' % (body('m'), hint)
             + footer(button('Выгрузить и поделиться', 'primary', 'upload', 0)))
 
@@ -82,7 +81,7 @@ def sort_categories():
             % (LIME, mix(LIME, 8), row('<b>Еда</b>', 'Отпустите — «Пекарня» станет подкатегорией', dot_icon('cart', '#8BC34A', 36), ''),
                cat('Продукты', 'cart', '#8BC34A', True) + cat('Кафе', 'cafe', '#FF9800', True)))
     moving = lifted(row('Пекарня', 'без папки', dot_icon('school', '#E07A4F', 36), handle()))
-    body = (note('Удерживайте строку и перетащите. На середину другой категории — станет подкатегорией, из группы наверх — отдельной.', 4)
+    body = (note('Удерживайте строку и перетащите. На другую категорию — станет подкатегорией.', 4)
             + drop + moving
             + group([cat('Транспорт', 'taxi', '#FFEB3B'), cat('Такси', 'taxi', '#FFEB3B', True), cat('Бензин и парковка', 'bolt', '#FFB547', True)])
             + '<div style="margin-top: 10px;">%s</div>' % group([cat('Здоровье', 'pill', '#E91E63'), cat('Аптека', 'pill', '#E91E63', True)]))

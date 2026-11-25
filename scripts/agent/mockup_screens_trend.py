@@ -107,7 +107,7 @@ def all_marked():
                  % ('border-top: 1px solid %s;' % DIV if rows else '', cat_icon(n, 28), n, MONO, right))
     sort = '<div style="display: flex; gap: 8px; margin-top: 12px;">%s</div>' % ''.join(
         chip(t, t == 'По сумме') for t in ['По сумме', 'По росту', 'Необычные · 4', 'Папками'])
-    body = search('Найти категорию · 24') + sort + '<div style="margin-top: 12px;">%s</div>' % card(rows)
+    body = search('Найти категорию') + sort + '<div style="margin-top: 12px;">%s</div>' % card(rows)
     return inner_screen('Все категории · ноябрь', body)
 
 

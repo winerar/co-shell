@@ -4,7 +4,6 @@
     <string name="notes_title">Quick notes</string>
     <string name="notes_label">Note</string>
     <string name="notes_placeholder">coffee 3500</string>
-    <string name="notes_hint">Each line is one expense. Account and day are optional.</string>
     <string name="notes_empty_hint">Write expenses line by line, like “taxi 2000” or “yesterday pharmacy 4200”. Then tap “Process”.</string>
     <string name="notes_process">Process · %1$d</string>
     <string name="notes_process_none">Process</string>
@@ -13,9 +12,7 @@
     <string name="drafts_title">Drafts</string>
     <string name="drafts_title_count">Drafts · %1$d</string>
     <string name="drafts_menu_hint">From notes: check and add</string>
-    <string name="drafts_summary">Drafts: %1$d · ready: %2$d</string>
     <string name="drafts_hint_ready">Tap a row to edit it.</string>
-    <string name="drafts_hint_unready">Tap a row to add the amount or choose a category.</string>
     <string name="drafts_post">Add · %1$d</string>
     <string name="drafts_post_none">Add</string>
     <string name="drafts_posted">Added: %1$d</string>
@@ -36,6 +33,5 @@
     </plurals>
     <string name="drafts_delete">Delete · %1$d</string>
     <string name="drafts_deleted">Drafts deleted: %1$d</string>
-    <string name="notes_strip_drafts">Spending as lines · drafts: %1$d</string>
     <string name="notes_strip_write">Write</string>
 </resources>

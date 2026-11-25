@@ -26,7 +26,6 @@ internal fun SignedOutBlock(busy: Boolean, onSignIn: () -> Unit) {
             ActionRow(
                 icon = DesignR.drawable.ic_login,
                 title = stringResource(R.string.family_sign_in),
-                subtitle = stringResource(R.string.family_sign_in_hint),
                 onClick = onSignIn,
                 enabled = !busy,
             )

@@ -16,7 +16,6 @@
     <string name="tip_category_title">Where should tips go?</string>
     <string name="tip_category_hint">We ask once. To change it, use the “Tip category” row.</string>
     <string name="tip_category_same">Same as the purchase</string>
-    <string name="tip_category_same_hint">The category of each purchase</string>
     <string name="tip_category_new_hint">New category</string>
     <string name="tip_save">Save both entries</string>
     <string name="tip_failed">The tip was not saved — add it as a separate entry</string>

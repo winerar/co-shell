@@ -20,7 +20,7 @@ def rates():
     # As in the app (#464, #319): the converter row on top (opens the converter sheet), the status card with «Курсы обновлены», the add button is the round «+» (fab).
     conv = ('<div style="padding: 8px 14px; border-radius: 24px; background: %s; border: 1px solid %s; display: flex; align-items: center; gap: 12px; min-height: 52px;">'
             '%s<div style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Конвертер</div>'
-            '<div style="font-size: 12px; color: %s;">Нажмите, чтобы посчитать</div></div>%s</div>'
+            '<div style="font-size: 12px; color: %s;">Сколько это в других валютах</div></div>%s</div>'
             % (CARD, LINE, tile_icon('transfer', LIME, CHIP), MUTED, chevron()))
     head = hero_card('<div style="display: flex; align-items: center; gap: 12px;">%s<span style="flex-grow: 1;"><div style="font-size: 15px; font-weight: 600;">Курсы на сегодня</div>'
                      '<div style="font-size: 12px; color: %s;">Загружено 9 ноября · currency-api</div></span>%s</div>'
@@ -28,7 +28,7 @@ def rates():
                      % (dot_icon('check', CYAN, 40), HERO_HINT, icon_button('refresh', 'Обновить', INK, True), CHIP),
                      pad='12px 12px 12px 14px', radius=20)
     lbl = ('<div style="display: flex; margin: 18px 4px 8px; font-size: 13px;"><span style="flex-grow: 1; font-weight: 600; color: %s;">Валюты ваших счетов</span>'
-           '<span style="color: %s;">нажмите, чтобы изменить</span></div>' % (MUTED, MUTED))
+           '</div>' % MUTED)
     rows = group([row('<span style="%s">%s</span>' % (MONO, r), s, code_badge(c), amount(d, '', OK if d.startswith('+') else PINK, 12) if d else '') for c, r, s, d in RATES])
     manual = ('<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 24px; background: %s; border: 1px solid %s;"><span style="width: 4px; align-self: stretch; border-radius: 2px; background: %s;"></span>'
               '<span style="flex-grow: 1;"><div style="%s font-size: 15px;">1 USD = 1 185,00 ARS</div><div style="font-size: 12px; color: %s;">вручную · с 1 ноября · важнее загруженного</div></span>%s</div>'
@@ -47,7 +47,7 @@ CURS = [('usd', 'USD', 'доллар США', '3 412,80', '4 044 168,00 ARS · 2
 def report_currencies():
     def screen(main):
         k, code, _, total, sub = next(c for c in CURS if c[0] == main)
-        hero = hero_card('<div style="font-size: 13px;">Общий баланс · так будет на «Обзоре»</div><div style="margin-top: 8px; %s font-size: 30px; font-weight: 700; color: %s;">%s %s</div>'
+        hero = hero_card('<div style="font-size: 13px;">Так будет на «Обзоре»</div><div style="margin-top: 8px; %s font-size: 30px; font-weight: 700; color: %s;">%s %s</div>'
                          '<div style="margin-top: 4px; %s font-size: 12px; color: %s;">%s</div>' % (MONO, LIME, total, code, MONO, HERO_HINT, sub), pad='16px 18px')
         rows = ''
         for key, c, name, _, _ in CURS:
@@ -114,7 +114,7 @@ def backup_screen(enabled=True, msg=''):
         auto = group([row('Папка: Google Диск / Co-Shell', 'тап — выбрать другую', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автокопия', '', '', switch(True))]) + schedule_block()
     else:
         hero = ('<div style="margin-top: 8px;">%s</div><h2 style="margin: 18px 0 0; text-align: center; font-size: 22px;">Автокопия выключена</h2>'
-                '<div style="text-align: center; font-size: 13px; color: %s; margin: 4px 12px 0;">Выберите папку — копии будут сохраняться сами: раз в день, неделю или месяц.</div>'
+                '<div style="text-align: center; font-size: 13px; color: %s; margin: 4px 12px 0;">Выберите папку — копии будут сохраняться сами.</div>'
                 % (ring(0, svg('refresh', MUTED, 40), CHIP), MUTED))
         auto = group([row('Выбрать папку для автокопий', 'на телефоне или Google Диске', tile_icon('folder', YELLOW, YELLOWBG), chevron()), row('Автокопия', '', '', switch(False))])
     manual = grid([card('%s<div style="margin-top: 14px; font-size: 15px; font-weight: 600;">%s</div><div style="font-size: 12px; color: %s;">%s</div>' % (svg(i, c), t, MUTED, s2), pad='14px')

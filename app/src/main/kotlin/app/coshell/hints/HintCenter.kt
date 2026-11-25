@@ -30,8 +30,11 @@ interface HintHost {
     /** The banner now on screen (gesture or moment), null when none. */
     val banner: StateFlow<HintBanner?>
 
-    /** Word hints: true if [id] may be shown now (and is counted as shown). */
-    suspend fun claim(id: HintId): Boolean
+    /**
+     * Word hints: true if [id] may be shown now (and is counted as shown). [emptyScreen] — the screen has no data yet (a new person):
+     * the daily and per-visit limits do not apply, and the hint does not use them up either.
+     */
+    suspend fun claim(id: HintId, emptyScreen: Boolean = false): Boolean
 
     /** Gestures and moments: picks the first of [texts] by priority that may show now and puts it on the banner. */
     suspend fun offer(texts: Map<HintId, Int>, args: Map<HintId, List<String>> = emptyMap()): Boolean
@@ -149,7 +152,7 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
         store.markShown(DOT_SEEN_KEY)
     }
 
-    override suspend fun claim(id: HintId): Boolean = claimFirst(setOf(id)) != null
+    override suspend fun claim(id: HintId, emptyScreen: Boolean): Boolean = claimFirst(setOf(id), emptyScreen) != null
 
     override suspend fun offer(texts: Map<HintId, Int>, args: Map<HintId, List<String>>): Boolean {
         val id = claimFirst(texts.keys) ?: return false
@@ -189,13 +192,14 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
         _reportsDot.value = false
     }
 
-    override suspend fun claimFirst(ids: Set<HintId>): HintId? = lock.withLock {
-        val candidates = ids
+    override suspend fun claimFirst(ids: Set<HintId>): HintId? = claimFirst(ids, emptyScreen = false)
+
+    private suspend fun claimFirst(ids: Set<HintId>, emptyScreen: Boolean): HintId? = lock.withLock {
         val day = today()
-        val pick = HintPlanner.next(candidates, store.enabled(), store.shown(), store.lastShownDay(), day, shownThisVisit)
+        val pick = HintPlanner.next(ids, store.enabled(), store.shown(), store.lastShownDay(), day, shownThisVisit, emptyScreen)
             ?: return null
         store.markShown(pick.key)
-        if (pick.kind != HintKind.MOMENT) {
+        if (pick.kind != HintKind.MOMENT && !emptyScreen) {
             store.setLastShownDay(day)
             shownThisVisit = true
         }

@@ -42,7 +42,7 @@ fun FamilyScreen(state: FamilyUiState, actions: FamilyActions) {
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(underBars(padding)),
             verticalArrangement = Arrangement.spacedBy(Spacing.s),
         ) {
-            WordHint(HintId.FAMILY, R.string.hint_family, Modifier.padding(horizontal = Spacing.l))
+            WordHint(HintId.FAMILY, R.string.hint_family, Modifier.padding(horizontal = Spacing.l), emptyScreen = state.family !is FamilyState.Joined)
             if (state.isBusy) CoShellLinearProgress(Modifier.padding(horizontal = Spacing.l))
             when (val family = state.family) {
                 FamilyState.NotConfigured -> NotConfiguredBlock()

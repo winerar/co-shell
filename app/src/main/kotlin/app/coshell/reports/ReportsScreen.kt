@@ -101,7 +101,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
         ) {
             if (period == null) return@LazyColumn
             if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
-            if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports) }
+            if (hintsOn) item(key = "word-hint") { WordHint(HintId.REPORTS, R.string.hint_reports, emptyScreen = state.isEmpty) }
             item(key = "tabs") {
                 CoShellSegmented(
                     listOf(stringResource(R.string.reports_tab_overview), stringResource(R.string.reports_tab_calendar)),

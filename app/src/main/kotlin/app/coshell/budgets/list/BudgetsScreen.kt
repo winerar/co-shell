@@ -69,7 +69,7 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
             item(key = "month") {
                 MonthSwitch(month, state.periodDays, actions.onPreviousMonth, actions.onNextMonth, Modifier.padding(horizontal = Spacing.s))
             }
-            item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l)) }
+            item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l), emptyScreen = state.isEmpty) }
             if (state.isEmpty) {
                 item(key = "empty") { EmptyBudgets() }
                 return@LazyColumn

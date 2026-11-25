@@ -51,11 +51,10 @@ fun DebtsScreen(state: DebtsUiState, actions: DebtsActions) {
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.nothingAtAll) {
-            CoShellEmptyState(
-                iconRes = DesignR.drawable.ic_person_add,
-                text = stringResource(R.string.debts_empty),
-                modifier = Modifier.padding(underBars(padding)),
-            )
+            Column(Modifier.padding(underBars(padding))) {
+                WordHint(HintId.DEBTS, R.string.hint_debts, Modifier.padding(horizontal = Spacing.l), emptyScreen = true)
+                CoShellEmptyState(iconRes = DesignR.drawable.ic_person_add, text = stringResource(R.string.debts_empty))
+            }
             return@Scaffold
         }
         LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Spacing.l)), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {

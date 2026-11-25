@@ -45,9 +45,11 @@ object HintPlanner {
         lastShownDay: Long?,
         today: Long,
         shownThisVisit: Boolean,
+        emptyScreen: Boolean = false,
     ): HintId? {
         if (!enabled) return null
-        val limited = shownThisVisit || lastShownDay == today
+        // A screen with no data yet is a new person's first look: its word shows whatever else was shown today (owner 2026-11-25).
+        val limited = !emptyScreen && (shownThisVisit || lastShownDay == today)
         return HintId.entries.firstOrNull { it in candidates && it.key !in shown && (!limited || it.kind == HintKind.MOMENT) }
     }
 }

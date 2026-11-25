@@ -76,3 +76,32 @@ class HintCenterStateTest {
         assertFalse(center.takeLaunchMoments())
     }
 }
+
+/** A screen with no data yet shows its word whatever else was shown today, and does not use up the limit (owner 2026-11-25). */
+class EmptyScreenHintTest {
+    @Test
+    fun `an empty screen shows its word even after another hint today`() = kotlinx.coroutines.test.runTest {
+        val center = HintCenter(FakeHintStore()) { 100L }
+        assertTrue(center.claim(HintId.CATEGORIES))
+        assertFalse(center.claim(HintId.BUDGETS))
+        assertTrue(center.claim(HintId.ACCOUNTS, emptyScreen = true))
+    }
+
+    @Test
+    fun `an empty-screen word does not use up the day`() = kotlinx.coroutines.test.runTest {
+        val store = FakeHintStore()
+        val center = HintCenter(store) { 100L }
+        assertTrue(center.claim(HintId.DEBTS, emptyScreen = true))
+        assertTrue(center.claim(HintId.CATEGORIES))
+    }
+
+    @Test
+    fun `still only once and never while hints are off`() = kotlinx.coroutines.test.runTest {
+        val store = FakeHintStore()
+        val center = HintCenter(store) { 100L }
+        assertTrue(center.claim(HintId.ACCOUNTS, emptyScreen = true))
+        assertFalse(HintCenter(store) { 101L }.claim(HintId.ACCOUNTS, emptyScreen = true))
+        store.on = false
+        assertFalse(HintCenter(store) { 101L }.claim(HintId.FAMILY, emptyScreen = true))
+    }
+}

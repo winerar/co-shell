@@ -81,6 +81,11 @@ jobs:
           if [ -n "$range" ] && scripts/ci/rules-changed.sh "$range"; then rules=true; fi
           echo "rules=$rules" >> "$GITHUB_OUTPUT"
           echo "Rules changed: $rules"
+          # Landing texts or template changed in a merge into dev: republish the page now, not with the next release.
+          landing=false
+          if [ "$GITHUB_REF" = refs/heads/dev ] && scripts/ci/landing-changed.sh HEAD^1; then landing=true; fi
+          echo "landing=$landing" >> "$GITHUB_OUTPUT"
+          echo "Landing changed: $landing"
 
       - uses: actions/setup-java@v6
         if: steps.changes.outputs.code == 'true'
@@ -215,16 +220,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
         run: |
-          python3 scripts/make_landing.py update-files/version.json landing-out
-          git clone --quiet --depth 1 --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/$RELEASES_REPO.git" landing-repo 2>/dev/null \
-            || { git init --quiet landing-repo && git -C landing-repo checkout --quiet -b gh-pages \
-                 && git -C landing-repo remote add origin "https://x-access-token:${GH_TOKEN}@github.com/$RELEASES_REPO.git"; }
-          find landing-repo -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -r landing-out/. landing-repo/
-          git -C landing-repo add -A
-          git -C landing-repo -c user.name="co-shell bot" -c user.email="bot@users.noreply.github.com" \
-            commit --quiet -m "Landing for build ${{ github.run_number }}" || echo "Landing unchanged"
-          git -C landing-repo push --quiet origin gh-pages
+          scripts/ci/publish-landing.sh update-files/version.json "build ${{ github.run_number }}"
+
+      # The page alone (texts, template) after a merge into dev: rebuilt from the latest published release, no new APK (docs/setup/landing.md).
+      - name: Publish landing (dev)
+        if: github.ref == 'refs/heads/dev' && github.event_name != 'pull_request' && steps.changes.outputs.landing == 'true' && vars.LANDING == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          curl -fsSL "https://github.com/$RELEASES_REPO/releases/latest/download/version.json" -o latest-version.json
+          scripts/ci/publish-landing.sh latest-version.json "texts from dev ${GITHUB_SHA::7}"
 
       # Every merge to main becomes a release with a fixed file name, so the newest APK is always at
       # https://github.com/winerar/co-shell/releases/latest/download/co-shell-debug.apk

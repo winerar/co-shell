@@ -36,4 +36,6 @@ data class HomeActions(
     val onDrafts: () -> Unit = {},
     /** «Записать» on that row → «Быстрые заметки» (#641). */
     val onNotes: () -> Unit = {},
+    /** «Смотреть» on «Что нового · N историй» → the release stories (#693). */
+    val onReleaseStories: () -> Unit = {},
 )

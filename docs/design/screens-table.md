@@ -5,6 +5,8 @@
 | Экран | Доска | Эталон | светлая | тёмная |
 |---|---|---|---|---|
 | Обзор | Home | home | ✓ | ✓ |
+| Обзор: что нового | Rel693Home | release_home | ✓ | ✓ |
+| Истории релиза | Rel693S2 | release_story_2 | ✓ | ✓ |
 | Обзор: первый запуск | HomeEmpty | home_empty | ✓ | ✓ |
 | Обзор: нет курса | HomeAttention | home_attention | ✓ | ✓ |
 | Обзор: бюджеты | BudHome | home_budget | ✓ | ✓ |

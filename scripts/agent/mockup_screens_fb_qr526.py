@@ -18,6 +18,9 @@ FEEDBACK = [
 QR = ('<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="%s" stroke-width="1.7" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>'
       '<rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>')
 SELLER = '30-71234567-8'
+# «Вставить из буфера» (#321): a round icon before the camera, a new operation that is not a transfer.
+CLIP = ('<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="%s" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+        '<path d="M9 4h6v3H9zM7 6H6v14h12V6h-1M9 12h6M9 16h4"/></svg>')
 
 
 def round_btn(inner):
@@ -25,13 +28,13 @@ def round_btn(inner):
 
 
 def seg():
-    """Type of the operation (the pill the app has) + the camera + the templates button."""
+    """Type of the operation (the pill the app has) + paste + the camera + the templates button."""
     pill = ('<span style="flex-grow: 1; height: 48px; border-radius: 999px; background: %s; display: flex; align-items: center; padding: 4px; gap: 4px;">'
-            '<span style="flex: 1; height: 40px; border-radius: 999px; background: %s; color: %s; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">Расход</span>'
-            '<span style="flex: 1; text-align: center; color: %s; font-size: 14px;">Доход</span><span style="flex: 1; text-align: center; color: %s; font-size: 14px;">Перевод</span></span>'
-            % (BAR, LIME, ONLIME, MUTED, MUTED))
-    return ('<div style="display: flex; align-items: center; gap: 8px;">%s%s%s</div>'
-            % (pill, round_btn(QR % LIME), round_btn(svg('list', MUTED, 22))))
+            '<span style="flex: 1; height: 40px; border-radius: 999px; background: %s; color: %s; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center;">%s</span>'
+            '<span style="flex: 1; display: flex; justify-content: center;">%s</span><span style="flex: 1; display: flex; justify-content: center;">%s</span></span>'
+            % (BAR, LIME, ONLIME, svg('out', ONLIME, 20), svg('in', MUTED, 20), svg('swaph', MUTED, 20)))
+    return ('<div style="display: flex; align-items: center; gap: 8px;">%s%s%s%s</div>'
+            % (pill, round_btn(CLIP % MUTED), round_btn(QR % LIME), round_btn(svg('list', MUTED, 22))))
 
 
 def amount(value, cur, color=PINK, extra=''):

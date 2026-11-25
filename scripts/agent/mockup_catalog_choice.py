@@ -15,7 +15,8 @@ def seg(v, labels, chosen, disabled=False):
 
 def segments(v):
     return col(labeled(seg(v, ['Расход', 'Доход', 'Перевод'], 0), 'что выбрать — вид операции'), labeled(seg(v, ['По типу', 'По валюте', 'Чьи'], 1), 'как показать — тоже неон'),
-               labeled(seg(v, ['Категория', 'Папка'], 0, disabled=True), 'заблокировано — 50 %'), labeled(seg(v, ['Ежедневно', 'Еженедельно', 'Ежемесячно', 'Никогда'], 2), 'длинные — «…»'))
+               labeled(seg(v, ['Категория', 'Папка'], 0, disabled=True), 'заблокировано — 50 %'), labeled(seg(v, ['Ежедневно', 'Еженедельно', 'Ежемесячно', 'Никогда'], 2), 'длинные — «…»'),
+               labeled(seg(v, [svg('out', ONLIME, 20), svg('in', INK2, 20), svg('swaph', INK2, 20)], 0), 'слова не влезли — значки, подпись для TalkBack'))
 
 
 def pill(v, text, on=False):
@@ -149,7 +150,7 @@ def action_fan(v):
 CHOICE = [
     ('Веер над «+»', action_fan, 'CoShellActionFan(actions, enabled) { «+» } · FanAction(icon, label, onSelect)'),
     ('Лента счетов', account_ribbon, 'CoShellAccountRibbon(accounts, selectedId, onSelect, onAll)'),
-    ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
+    ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled, icons) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),
     ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty)'),

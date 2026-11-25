@@ -1,6 +1,6 @@
 """Entry sheet boards in one step (#505, = `transactions/edit/components/DetailsStep.kt`).
 
-Type + camera + templates (new only) → ribbon of account badges («Откуда»/«Куда» for a transfer) → cards «Сумма»,
+Type + paste + camera + templates (new only) → ribbon of account badges («Откуда»/«Куда» for a transfer) → cards «Сумма»,
 «Категория · частые» (not for a transfer), «Детали» → keypad with «Готово». Used by `Main` (interactive, `mockup_screens_tabs.py`)
 and the static `Entry*` boards listed in `mockup_screens_main.BOARDS`.
 """
@@ -12,13 +12,15 @@ import mockup_screens_fb_290 as p
 import mockup_screens_fb_qr526 as q
 
 TYPES = [('exp', 'Расход', PINK), ('inc', 'Доход', CYAN), ('tr', 'Перевод', INK)]
+TYPE_ICON = {'exp': 'out', 'inc': 'in', 'tr': 'swaph'}  # CoShellSegmented(icons): the words do not fit next to three buttons
 RIBBON = 4  # badges before «Все ›» on 390 dp
 
 
 def type_bar(cur, taps=False):
-    """CoShellSegmented + QR camera + «Шаблоны»; `taps` — each type is a tap target `go_t_<key>` (interactive board)."""
+    """CoShellSegmented + paste (not for a transfer) + QR camera + «Шаблоны»; `taps` — each type is a tap target `go_t_<key>` (interactive board)."""
     def cell(k, name, _):
         on = k == cur
+        name = svg(TYPE_ICON[k], ONLIME if on else MUTED, 20)
         style = ('background: %s; color: %s; font-weight: 700; box-shadow: inset 0 0 0 2px %s;' % (LIME, ONLIME, ONLIME) if on
                  else 'color: %s;' % MUTED)
         html = ('<span style="flex: 1; height: 40px; border-radius: 999px; %s font-size: 14px; display: flex; align-items: center; '
@@ -26,7 +28,9 @@ def type_bar(cur, taps=False):
         return go('t', k, html) if taps else html
     pill = ('<span style="flex-grow: 1; height: 48px; border-radius: 999px; background: %s; display: flex; align-items: center; padding: 4px; gap: 4px;">%s</span>'
             % (BAR, ''.join(cell(*x) for x in TYPES)))
-    return '<div style="display: flex; align-items: center; gap: 4px;">%s%s%s</div>' % (pill, q.round_btn(q.QR % LIME), q.round_btn(svg('list', MUTED, 22)))
+    paste = q.round_btn(q.CLIP % MUTED) if cur != 'tr' else ''
+    return ('<div style="display: flex; align-items: center; gap: 4px;">%s%s%s%s</div>'
+            % (pill, paste, q.round_btn(q.QR % LIME), q.round_btn(svg('list', MUTED, 22))))
 
 
 def ribbon(chosen=0, caption=''):
@@ -111,6 +115,7 @@ def edit_types(cur='exp'):
     """CoShellSegmented of a saved operation: no camera and «Шаблоны» — those are for a new one (#509, poll «А»)."""
     def cell(k, name, _):
         on = k == cur
+        name = svg(TYPE_ICON[k], ONLIME if on else MUTED, 20)
         style = ('background: %s; color: %s; font-weight: 700; box-shadow: inset 0 0 0 2px %s;' % (LIME, ONLIME, ONLIME) if on
                  else 'color: %s;' % MUTED)
         return ('<span style="flex: 1; height: 40px; border-radius: 999px; %s font-size: 13px; display: flex; align-items: center; '

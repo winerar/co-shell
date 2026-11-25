@@ -12,6 +12,23 @@ class RoutedLanguageModelTest {
         override val cheap: Boolean get() = cheapValue
         var calls = 0
         override suspend fun complete(system: String, prompt: String): String? { calls++; return answer }
+        var warms = 0
+        override suspend fun warm() { warms++ }
+    }
+
+    @Test
+    fun `only the phone model is warmed and only when the cloud will not answer`() = runTest {
+        val cloud = Fake(true, "cloud"); val phone = Fake(true, "phone")
+        routed(cloud, phone, on = true).warm()
+        assertEquals(0 to 0, cloud.warms to phone.warms)
+        routed(cloud, phone, on = false).warm()
+        assertEquals(0 to 1, cloud.warms to phone.warms)
+        cloud.available = false
+        routed(cloud, phone, on = true).warm()
+        assertEquals(2, phone.warms)
+        phone.available = false
+        routed(cloud, phone, on = false).warm()
+        assertEquals(2, phone.warms)
     }
 
     private fun routed(cloud: Fake, phone: Fake, on: Boolean) = RoutedLanguageModel(cloud, phone, object : CloudAiSettings { override val enabled = on })

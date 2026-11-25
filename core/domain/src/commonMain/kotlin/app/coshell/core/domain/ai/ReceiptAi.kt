@@ -24,6 +24,9 @@ class ReceiptAi(private val model: LanguageModel) {
     /** `true` — the text leaves the phone (the cloud model): the window says so. */
     val cloud: Boolean get() = model.cheap
 
+    /** «Прочитать с ИИ» is on the screen: start loading the model so the button does not wait for it. */
+    suspend fun warm() = model.warm()
+
     /** [known] — currencies of the person's accounts; [fallback] — the currency when the receipt names none of them. */
     suspend fun read(text: String, fallback: CurrencyCode, known: Set<CurrencyCode>, today: LocalDate): Receipt? {
         val body = text.trim().take(MAX_TEXT)

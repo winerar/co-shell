@@ -13,16 +13,20 @@ import kotlinx.serialization.json.contentOrNull
 class PayeeCategoryAi(private val model: LanguageModel) {
     val available: Boolean get() = model.available
 
-    /** The name from [categories] that fits [text], `null` when the model is not sure, failed, or named something else. */
-    suspend fun suggest(text: String, categories: List<String>): String? {
+    /**
+     * The name from [categories] that fits [text], `null` when the model is not sure, failed, or named something else.
+     * [examples] — the family's past «name → category» pairs ([HistoryExamples]): local shops the model does not know.
+     */
+    suspend fun suggest(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList()): String? {
         val shop = text.trim().take(MAX_TEXT)
         if (!model.available || shop.isEmpty() || categories.isEmpty()) return null
-        val answer = model.complete(SYSTEM, prompt(shop, categories)) ?: return null
+        val answer = model.complete(SYSTEM, prompt(shop, categories, examples)) ?: return null
         return parse(answer, categories)
     }
 
-    internal fun prompt(text: String, categories: List<String>): String = buildString {
+    internal fun prompt(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList()): String = buildString {
         appendLine("Categories: " + categories.joinToString(" | "))
+        HistoryExamples.promptLine(examples).takeIf { it.isNotEmpty() }?.let(::appendLine)
         appendLine("Shop or note: $text")
         append("Answer {\"category\":\"<one name from the list>\"}, or {\"category\":null} if you are not sure.")
     }

@@ -23,6 +23,11 @@ class RoutedLanguageModel(
 
     override val limited: Boolean get() = settings.enabled && cloud.limited
 
+    /** Only the phone model has something to load, and only when the cloud will not answer first. */
+    override suspend fun warm() {
+        if (!cloudAllowed && phone.available) phone.warm()
+    }
+
     override suspend fun complete(system: String, prompt: String): String? {
         if (cloudAllowed) cloud.complete(system, prompt)?.let { return it }
         return if (phone.available) phone.complete(system, prompt) else null

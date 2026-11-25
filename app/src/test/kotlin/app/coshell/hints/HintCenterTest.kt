@@ -8,7 +8,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import kotlinx.coroutines.test.runTest
 
-private class FakeHintStore(var on: Boolean = true) : HintStore {
+internal class FakeHintStore(var on: Boolean = true) : HintStore {
+    var hidden = false
     val seen = mutableSetOf<String>()
     var day: Long? = null
     override suspend fun enabled() = on
@@ -17,11 +18,11 @@ private class FakeHintStore(var on: Boolean = true) : HintStore {
     override suspend fun markShown(key: String) { seen += key }
     override suspend fun lastShownDay() = day
     override suspend fun setLastShownDay(day: Long) { this.day = day }
-    override suspend fun stepsHidden() = false
-    override suspend fun setStepsHidden(value: Boolean) = Unit
+    override suspend fun stepsHidden() = hidden
+    override suspend fun setStepsHidden(value: Boolean) { hidden = value }
     override suspend fun firstSeenDay(today: Long) = today
     override suspend fun firstEntryDay(candidate: Long?) = candidate
-    override suspend fun reset() { seen.clear(); day = null; on = true }
+    override suspend fun reset() { seen.clear(); day = null; on = true; hidden = false }
 }
 
 class HintCenterTest {

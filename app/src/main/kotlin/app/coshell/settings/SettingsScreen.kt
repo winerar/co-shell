@@ -7,7 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import app.coshell.hints.HintsViewModel
+import app.coshell.hints.HintsSettingsViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -95,7 +95,7 @@ fun SettingsRoute(
     reminders: ReminderSettingsViewModel = hiltViewModel(),
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
-    hints: HintsViewModel = hiltViewModel(),
+    hints: HintsSettingsViewModel = hiltViewModel(),
     ai: AiAddonViewModel = hiltViewModel(),
     cloud: CloudAiViewModel = hiltViewModel(),
     access: AccessViewModel = hiltViewModel(),

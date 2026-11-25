@@ -35,8 +35,9 @@ fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifi
     val shown = last ?: return
     val text = stringResource(shown.text, *shown.args.toTypedArray())
     val gesture = shown.id?.kind == HintKind.GESTURE
-    if (!gesture) LaunchedEffect(banner) {
-        if (banner == null) return@LaunchedEffect
+    // The pill's 8 s run only while it is on screen: claimed off the tabs (a limit set in «Бюджеты»), it waits for them.
+    if (!gesture) LaunchedEffect(banner, visible) {
+        if (banner == null || !visible) return@LaunchedEffect
         delay(PILL_MS)
         host.dismiss()
     }

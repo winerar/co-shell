@@ -8,6 +8,7 @@ package app.coshell.ai
  *  - [STATUS]: asks for the state; reply [STATE].
  *  - [DOWNLOAD]: starts downloading the model (replies [PROGRESS], then [STATE]); [CANCEL] stops it; [DELETE] removes the file.
  *  - [COMPLETE]: data `system`, `prompt`; reply [RESULT] with `text` (`error` when the model failed).
+ *  - [WARM]: start loading the model now (the person is about to ask); reply [STATE] at once, the load goes on in the background.
  */
 object AddonProtocol {
     const val PACKAGE = "app.coshell.ai"
@@ -19,6 +20,7 @@ object AddonProtocol {
     const val CANCEL = 3
     const val DELETE = 4
     const val COMPLETE = 5
+    const val WARM = 6
 
     const val STATE = 101
     const val PROGRESS = 102

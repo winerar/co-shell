@@ -61,6 +61,8 @@ import app.coshell.privacy.EyeButton
 import app.coshell.release.ReleaseNotice
 import app.coshell.release.ReleaseNoticeCard
 import app.coshell.hints.TourCard
+import app.coshell.hints.HintSlot
+import app.coshell.hints.hintSlotShown
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 import app.coshell.home.sync.SyncDot
@@ -140,6 +142,7 @@ fun HomeScreen(
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
+        val showHint = hintSlotShown()
         CoachHint(mapOf(HintId.FLIP_CARD to R.string.hint_flip_card), enabled = state.recent.isNotEmpty())
         LazyColumn(
             state = listState,
@@ -159,6 +162,7 @@ fun HomeScreen(
                 item(key = "release") { ReleaseNoticeCard(notice.versionName, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
             }
             if (tour) item(key = "tour") { TourCard(onTourOpen, onTourDismiss, listItemMotion()) }
+            if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }

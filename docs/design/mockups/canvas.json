@@ -905,7 +905,7 @@
       "y": 11160,
       "w": 390,
       "h": 844,
-      "title": "#602 · плашка после включения PIN: «Забыли PIN?»",
+      "title": "#602 · карточка после включения PIN: «Забыли PIN?»",
       "page": "screens",
       "radius": 28
     },
@@ -1964,7 +1964,7 @@
       "y": 16780,
       "w": 390,
       "h": 844,
-      "title": "#513 · тёплая плашка: первая запись",
+      "title": "#513 · тёплый момент: карточка «Первая запись есть»",
       "page": "ideas",
       "radius": 28
     },
@@ -1973,7 +1973,7 @@
       "y": 16780,
       "w": 390,
       "h": 844,
-      "title": "#513 · тёплая плашка: две строки + «Открыть»",
+      "title": "#513 · тёплый момент: карточка с «Открыть»",
       "page": "ideas",
       "radius": 28
     },
@@ -2058,12 +2058,21 @@
       "page": "ideas",
       "radius": 28
     },
-    "Tip513HomeB.dc.html": {
+    "Tip513Recurring.dc.html": {
       "x": 7520,
       "y": 16780,
       "w": 390,
       "h": 844,
-      "title": "Б · момент: плашка над панелью, до 4 строк",
+      "title": "Слово: «Регулярные» (аудит 2026-11-25)",
+      "page": "ideas",
+      "radius": 28
+    },
+    "Tip513Clipboard.dc.html": {
+      "x": 7990,
+      "y": 16780,
+      "w": 390,
+      "h": 844,
+      "title": "Слово в шторке ввода: «Вставить из буфера» (аудит 2026-11-25)",
       "page": "ideas",
       "radius": 28
     },
@@ -3985,7 +3994,8 @@
     "Tip513Accounts.dc.html",
     "Tip513Ops.dc.html",
     "Tip513HomeA.dc.html",
-    "Tip513HomeB.dc.html",
+    "Tip513Recurring.dc.html",
+    "Tip513Clipboard.dc.html",
     "Help598B.dc.html",
     "Tour598Home.dc.html",
     "Tour598S1.dc.html",
@@ -4064,7 +4074,8 @@
     "Tip513Accounts.dc.html",
     "Tip513Ops.dc.html",
     "Tip513HomeA.dc.html",
-    "Tip513HomeB.dc.html",
+    "Tip513Recurring.dc.html",
+    "Tip513Clipboard.dc.html",
     "Conv2PairEmpty.dc.html",
     "Conv2PairType.dc.html",
     "Conv2AllType.dc.html",
@@ -4570,13 +4581,13 @@
       "text": "Обучение новичка: «Первые шаги» и мягкие подсказки · 2026-11-18",
       "x": 0,
       "y": 16530,
-      "maxW": 7910,
+      "maxW": 8380,
       "w": 240
     },
     "fbS513": {
       "page": "ideas",
       "text": "Вид А2 (строка на «Обзоре» → шторка), П1 слова, П2 жесты, тёплые моменты, «Подсказки» в «Ещё → Приложение». Тексты и условия — docs/agents/hints.md. Без вины и красного, любой шаг можно пропустить.",
-      "x": 7990,
+      "x": 8460,
       "y": 16780,
       "w": 390
     },

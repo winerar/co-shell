@@ -35,9 +35,13 @@ filter_tags_all
 form_colors_count
 form_icons_count
 gate_banner_text
+hint_app_shortcuts
+hint_clipboard
 hint_currency_account
 hint_family
+hint_hold_amount
 hint_limit_80
+hint_recurring
 home_back_per_day
 import_undo_confirm_text
 notes_hint

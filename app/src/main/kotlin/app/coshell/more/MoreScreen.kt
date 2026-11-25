@@ -1,5 +1,6 @@
 package app.coshell.more
 
+import app.coshell.hints.HintSlot
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -82,6 +83,7 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
             modifier = Modifier.fillMaxSize(),
             contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
         ) {
+            item(key = "hint") { HintSlot(Modifier.padding(horizontal = Spacing.l)) }
             itemsIndexed(sections, key = { _, section -> section.title }) { index, section ->
                 SectionTitle(stringResource(section.title))
                 CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index)) {

@@ -3,29 +3,28 @@
 The card is the approved `CoShellCoachCard` (text + «Понятно»), now lying in the screen's own list instead of floating over the bar:
 it never leaves by itself, so there is time to read it; «Понятно» hides it for good.
 А — everything inline: words under the header, gestures on top of their list, warm moments on top of «Обзора» (with «Открыть» where the text
-names a screen). Nothing floats over the bar any more. Б — words and gestures inline; warm moments stay a pill over the bar, but up to 4 lines
-and 8–15 s by length. Poll boards — until «ок». Imported by mockup_screens_feedback.py (FEEDBACK + BOARDS).
+names a screen). Nothing floats over the bar any more. Picked А (poll-513-tips.json, 2026-11-25); board Б removed. Imported by mockup_screens_feedback.py (FEEDBACK + BOARDS).
 """
 from mockup_bricks import *  # noqa: F401,F403
 from mockup_parts import *  # noqa: F401,F403
 from mockup_screens_main import RECENT, balance_hero, tile, tiles, recent_card
 
 FEEDBACK = [
-    (513, 'Подсказки — карточками на экране · опрос 2026-11-25',
+    (513, 'Подсказки — карточками на экране · выбрано А, 2026-11-25',
      'Подсказка лежит в самом экране карточкой «текст + Понятно» и не исчезает сама — её успевают прочитать. А — так все подсказки, '
-     'включая тёплые моменты вверху «Обзора»; Б — моменты остаются плашкой над панелью, но длиннее и без обрезки.'),
+     'включая тёплые моменты: карточкой вверху вкладки, где человек сейчас (пойманный на внутреннем экране — ждёт вкладок). Над панелью подсказок больше нет.'),
 ]
 
 
 def tip(text, action='Понятно', extra_action=None):
     """CoShellCoachCard inline: a lightbulb in a tinted circle, the text in the normal ink, the action(s) under it on the right."""
-    acts = ''.join('<span style="color: %s; font-size: 14px; font-weight: 700; margin-left: 20px;">%s</span>' % (c, a)
-                   for a, c in ([(extra_action, CYAN)] if extra_action else []) + [(action, LIME)])
+    acts = ''.join('<span style="color: %s; font-size: 14px; font-weight: 700; margin-left: 20px;">%s</span>' % (VIOLET, a)
+                   for a in ([extra_action] if extra_action else []) + [action])
     return ('<div style="padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s;">'
             '<div style="display: flex; gap: 12px; align-items: flex-start;"><span style="flex: none; width: 32px; height: 32px; border-radius: 50%%; '
             'background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
             '<div style="font-size: 15px; line-height: 1.4;">%s</div></div><div style="margin-top: 8px; text-align: right;">%s</div></div>'
-            % (KEY, LINE2, mix(LIME, 18), svg('bulb', LIME, 20), text, acts))
+            % (KEY, LINE2, mix(VIOLET, 18), svg('bulb', VIOLET, 20), text, acts))
 
 
 def accounts():
@@ -47,21 +46,23 @@ def home_moment():
     return tab_screen('Обзор', '<div style="margin-top: 8px;"></div>' + body, 'home')
 
 
-def home_pill():
-    """Б: the warm moment stays a pill over the bar — four lines at most, 8–15 s by length, so the long text reads to the end."""
-    pill = ('<div style="position: absolute; left: 24px; right: 24px; bottom: 96px; border-radius: 28px; background: %s; border: 1px solid %s; display: flex; '
-            'align-items: center; gap: 10px; padding: 8px 6px;"><span style="width: 40px; height: 40px; flex: none; border-radius: 50%%; background: %s; display: flex; '
-            'align-items: center; justify-content: center;">%s</span><span style="flex-grow: 1; font-size: 14px; line-height: 1.35;">%s</span>'
-            '<span style="color: %s; font-size: 14px; font-weight: 700; padding: 0 6px;">Открыть</span>%s</div>'
-            % (KEY, LINE2, LIME, svg('check', ONLIME, 22, 2.4), 'Записей уже много. Сохраните резервную копию, чтобы ничего не потерять: Ещё → Резервная копия.',
-               CYAN, icon_button('close', 'Закрыть', MUTED)))
-    body = balance_hero() + tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Без категории', '14', 'операций')) + recent_card(RECENT[:2])
-    return tab_screen('Обзор', body, 'home') + pill
+def recurring():
+    pays = group([row('<b>Аренда</b>', '1-го числа · Galicia', '', '<span style="%s">650 USD</span>' % MONO, min_h=56),
+                  row('<b>Интернет</b>', '15-го числа · Galicia', '', '<span style="%s">25 000 ARS</span>' % MONO, min_h=56)])
+    return inner_screen('Регулярные', '<div style="margin-top: 4px;">%s</div><div style="margin-top: 12px;">%s</div>' % (
+        tip('Шаблон с «Повтором» напомнит о платеже и появится в «Скоро» на «Обзоре».'), pays))
+
+
+def clipboard():
+    """The fourth word of the entry sheet (after «Это возврат»), floating over its dimmed strip like the others (`SheetCoach`)."""
+    from mockup_screens_fb_hints import entry_hint
+    return entry_hint().replace('Нужны только сумма и счёт. Остальное можно пропустить.', 'Скопировали сообщение банка? Нажмите значок буфера — сумма подставится сама.')
 
 
 BOARDS = [  # name, title, fn, issue number
     ('Tip513Accounts', 'Слово: карточка под шапкой «Счетов»', accounts, 513),
     ('Tip513Ops', 'Жест: карточка над списком «Операций»', operations, 513),
     ('Tip513HomeA', 'А · момент: карточка вверху «Обзора» с «Открыть»', home_moment, 513),
-    ('Tip513HomeB', 'Б · момент: плашка над панелью, до 4 строк', home_pill, 513),
+    ('Tip513Recurring', 'Слово: «Регулярные» (аудит 2026-11-25)', recurring, 513),
+    ('Tip513Clipboard', 'Слово в шторке ввода: «Вставить из буфера» (аудит 2026-11-25)', clipboard, 513),
 ]

@@ -16,10 +16,11 @@ def frame(html, h, extra=''):
     return '<div style="position: relative; height: %dpx; overflow: hidden; border-radius: 16px; background: %s; %s">%s</div>' % (h, BG, extra, html)
 
 
-def coach_card(text, action='Понятно'):
-    """CoShellCoachCard (#513, owner poll 2026-11-19): gesture hint over the bottom bar — text + one text button."""
-    return ('<div style="padding: 14px 16px; border-radius: 24px; background: %s; border: 1px solid %s;"><div style="font-size: 14px; line-height: 1.4;">%s</div>'
-            '<div style="margin-top: 10px; text-align: right;"><span style="color: %s; font-size: 14px; font-weight: 700;">%s</span></div></div>' % (KEY, LINE2, text, LIME, action))
+def coach_card(text, action='Понятно', extra=None):
+    """CoShellCoachCard (#513; owner poll 2026-11-25 «А»: every hint lies inside the screen as this card): lightbulb `icon` in a tinted circle,
+    the text, `secondaryLabel` («Открыть») and the action under it — the same brick as `mockup_screens_fb_tips.tip`."""
+    from mockup_screens_fb_tips import tip
+    return tip(text, action, extra)
 
 
 def notice_long(text, action='Открыть'):
@@ -109,8 +110,9 @@ def components():
         section('Уведомления', stack(message('Копия сохранена.', 'ok'), message('Не удалось загрузить курсы.', 'error'), message('Курсы ещё не загружались.', 'warn'),
                                      message('Сначала сохраним копию.', 'info', 'Перед стиранием'), frame(snackbar('Операция удалена', bottom=12) + toast('Сохранено', 76), 136),
                                      notice_long('Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.'),
-                                     coach_card('Удерживайте операцию, чтобы выбрать несколько.')),
-                'message(text, kind, title) → CoShellMessage · SyncBanner · snackbar → CoShellSnackbarHost · toast / pill → CoShellNoticePill (до двух строк, `actionLabel` — «Открыть») · UpdatePill · coach_card → CoShellCoachCard (подсказка-жест, «Понятно»)'),
+                                     coach_card('Удерживайте операцию, чтобы выбрать несколько.'),
+                                     coach_card('Записей уже много. Сохраните резервную копию, чтобы ничего не потерять.', extra='Открыть')),
+                'message(text, kind, title) → CoShellMessage · SyncBanner · snackbar → CoShellSnackbarHost · toast / pill → CoShellNoticePill (до двух строк, `actionLabel` — «Открыть») · UpdatePill · coach_card → CoShellCoachCard (любая подсказка — карточкой в экране: `icon`, «Понятно», `secondaryLabel` — «Открыть»)'),
         section('Диалоги и шторки', stack(frame(scrim() + dialog('Удалить счёт?', 'Счёт без операций будет удалён безвозвратно.', [('Отмена', 'text'), ('Удалить', 'danger')]), 250),
                                           frame(scrim() + sheet('<div style="padding: 14px 16px;">%s</div>' % segmented(['Расход', 'Доход', 'Перевод'], 'Расход', 'lime'), 60), 160)),
                 'dialog(title, text, actions, body) → CoShellDialog · CoShellAlertDialog · sheet(inner, top) + scrim → CoShellSheet'),

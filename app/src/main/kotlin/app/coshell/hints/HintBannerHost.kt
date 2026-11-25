@@ -18,8 +18,11 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.hints.HintKind
 import kotlinx.coroutines.delay
 
-/** A warm pill leaves by itself; a gesture card waits for «Понятно». */
-private const val PILL_MS = 8_000L
+/**
+ * How long a warm pill stays on screen: enough to read it slowly — 4 s plus 70 ms a character (≈ 14 characters a second),
+ * never under 8 s nor over 15 s. A gesture card waits for «Понятно» instead (onboarding check 2026-11-25).
+ */
+internal fun pillMillis(text: String): Long = (4_000L + 70L * text.length).coerceIn(8_000L, 15_000L)
 
 /**
  * The hint banner over the bottom bar (boards `Hint513Gesture`, `Hint513Moment`, `Hint513Reset`): a gesture card or a
@@ -35,10 +38,10 @@ fun HintBannerHost(host: HintHost, visible: Boolean, modifier: Modifier = Modifi
     val shown = last ?: return
     val text = stringResource(shown.text, *shown.args.toTypedArray())
     val gesture = shown.id?.kind == HintKind.GESTURE
-    // The pill's 8 s run only while it is on screen: claimed off the tabs (a limit set in «Бюджеты»), it waits for them.
+    // The pill's reading time runs only while it is on screen: claimed off the tabs (a limit set in «Бюджеты»), it waits for them.
     if (!gesture) LaunchedEffect(banner, visible) {
         if (banner == null || !visible) return@LaunchedEffect
-        delay(PILL_MS)
+        delay(pillMillis(text))
         host.dismiss()
     }
     if (gesture) {

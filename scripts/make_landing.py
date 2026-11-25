@@ -5,7 +5,7 @@ Usage: make_landing.py <version.json> <out-dir>
 
 Reads the release manifest CI writes (scripts/make-update-files.py): version, size, SHA-256, notes and the APK URL.
 Layout — variant «Б» of poll 2026-11-25 (docs/design/poll-660.json): app screen from the screenshot references,
-three points, QR to the page (computers only), install steps per browser, «Что нового» on the Russian page only.
+three points, QR to the page (computers only), install steps for any Android (one list, owner 2026-11-25), «Что нового» on the Russian page only.
 Texts — landing_texts.py; the page address for the QR — env LANDING_URL, else GitHub Pages of the releases repo.
 """
 import html
@@ -93,7 +93,7 @@ def page(template, lang, manifest):
     text = {
         "LANG": lang, "TITLE": t["title"], "H1": t["h1"], "LEAD": t["lead"], "DOWNLOAD": t["download"], "MB": t["mb"],
         "META": t["meta"].format(version=manifest["versionName"]), "SHA_LABEL": t["sha"], "INVITE_TITLE": t["invite_title"],
-        "INVITE_TEXT": t["invite_text"], "STEPS_TITLE": t["steps"], "TAB_CHROME": t["tab_chrome"], "TAB_XIAOMI": t["tab_xiaomi"],
+        "INVITE_TEXT": t["invite_text"], "STEPS_TITLE": t["steps"],
         "UPDATE_TITLE": t["update_title"], "UPDATE_TEXT": t["update_text"], "FOOTER": t["footer"],
         "PRIVACY_LINK": links["privacy_link"], "DELETE_LINK": links["delete_link"],
         "SIZE_MB": mb, "SHA256": manifest["sha256"], "APK_URL": manifest["apk"],
@@ -104,7 +104,7 @@ def page(template, lang, manifest):
         "POINTS": '<div class="points">' + "".join(
             f'<div class="point"><i aria-hidden="true">{esc(icon)}</i><div><b>{esc(head)}</b><p>{esc(body)}</p></div></div>'
             for icon, head, body in t["points"]) + "</div>",
-        "CHROME_STEPS": steps_html(t["chrome"]), "XIAOMI_STEPS": steps_html(t["xiaomi"]), "NEWS": news_html(lang, manifest, t),
+        "INSTALL_STEPS": steps_html(t["install"]), "NEWS": news_html(lang, manifest, t),
     }
     out = template
     for key, value in raw.items():

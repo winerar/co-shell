@@ -41,9 +41,8 @@ class MakeLandingTest(unittest.TestCase):
         for lang in ("en", "es"):
             self.assertEqual(set(ml.TEXTS["ru"]), set(ml.TEXTS[lang]))
             self.assertEqual({k: len(v) for k, v in shape(ml.TEXTS["ru"]).items()}, {k: len(v) for k, v in shape(ml.TEXTS[lang]).items()})
-            for key in ("chrome", "xiaomi"):
-                dialogs = lambda steps: [d is None for _, _, d in steps]  # noqa: E731
-                self.assertEqual(dialogs(ml.TEXTS["ru"][key]), dialogs(ml.TEXTS[lang][key]), f"{lang} {key}")
+            dialogs = lambda steps: [d is None for _, _, d in steps]  # noqa: E731
+            self.assertEqual(dialogs(ml.TEXTS["ru"]["install"]), dialogs(ml.TEXTS[lang]["install"]), lang)
 
     def test_qr_points_to_the_page_of_the_same_language_on_github_pages(self):
         os.environ.pop("LANDING_URL", None)
@@ -69,9 +68,12 @@ class MakeLandingTest(unittest.TestCase):
         self.assertNotIn('class="news"', ml.page(self.template, "en", manifest))
         self.assertNotIn('class="news"', ml.page(self.template, "ru", {**MANIFEST, "notes": ""}))
 
-    def test_install_steps_have_both_tabs_and_the_footer_links_the_policy(self):
+    def test_install_steps_are_one_list_for_any_android_and_the_footer_links_the_policy(self):
         page = ml.page(self.template, "ru", MANIFEST)
-        self.assertEqual(4, page.count("<li>", page.index("pane p-chrome"), page.index("pane p-xiaomi")))
+        start = page.index('class="steps"')
+        self.assertEqual(4, page.count("<li>", start, page.index("</ol>", start)))
+        self.assertNotIn("Xiaomi", page)
+        self.assertNotIn("{{", page)
         self.assertIn("Всё равно установить", page)
         self.assertIn('href="../privacy/ru/"', page)
         self.assertIn('href="../delete/ru/"', page)

@@ -30,12 +30,6 @@ details.sha{margin-top:4px;font-size:12px;color:var(--muted);text-align:center}d
 .point p{margin:2px 0 0;color:var(--muted);font-size:14px}
 @media (min-width:800px){.hero{grid-template-columns:1fr 280px;align-items:center}.phone{width:280px;height:460px}.points{grid-template-columns:repeat(3,1fr)}}
 h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:30px 0 0}
-.tabs{display:flex;gap:6px;margin-top:12px;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line);width:max-content;max-width:100%}
-.tabs label{padding:8px 16px;border-radius:999px;font-size:14px;cursor:pointer}
-.tab{position:absolute;opacity:0}.pane{display:none}
-#t-chrome:checked~.tabs label[for=t-chrome],#t-xiaomi:checked~.tabs label[for=t-xiaomi]{background:var(--prim);color:var(--onprim);box-shadow:inset 0 0 0 2px var(--edge);font-weight:700}
-#t-chrome:checked~.p-chrome,#t-xiaomi:checked~.p-xiaomi{display:block}
-.tab:focus-visible~.tabs{outline:2px solid var(--acc);outline-offset:2px}
 ol{list-style:none;padding:0;margin:0;counter-reset:s}
 ol>li{counter-increment:s;display:grid;grid-template-columns:26px 1fr;gap:4px 12px;margin-top:16px}
 ol>li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--disc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
@@ -65,10 +59,7 @@ footer{margin-top:32px;font-size:13px;color:var(--muted);border-top:1px solid va
 <div class="card"><b>{{INVITE_TITLE}}</b><p>{{INVITE_TEXT}}</p></div>
 <div class="narrow">
 <h2>{{STEPS_TITLE}}</h2>
-<input class="tab" type="radio" name="how" id="t-chrome" checked><input class="tab" type="radio" name="how" id="t-xiaomi">
-<div class="tabs"><label for="t-chrome">{{TAB_CHROME}}</label><label for="t-xiaomi">{{TAB_XIAOMI}}</label></div>
-<ol class="pane p-chrome">{{CHROME_STEPS}}</ol>
-<ol class="pane p-xiaomi">{{XIAOMI_STEPS}}</ol>
+<ol class="steps">{{INSTALL_STEPS}}</ol>
 <h2>{{UPDATE_TITLE}}</h2>
 <p>{{UPDATE_TEXT}}</p>
 {{NEWS}}

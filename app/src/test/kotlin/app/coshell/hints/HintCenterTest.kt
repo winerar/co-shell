@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 
 internal class FakeHintStore(var on: Boolean = true) : HintStore {
     var hidden = false
+    var checked = true
     val seen = mutableSetOf<String>()
     var day: Long? = null
     override suspend fun enabled() = on
@@ -22,6 +23,8 @@ internal class FakeHintStore(var on: Boolean = true) : HintStore {
     override suspend fun setStepsHidden(value: Boolean) { hidden = value }
     override suspend fun firstSeenDay(today: Long) = today
     override suspend fun firstEntryDay(candidate: Long?) = candidate
+    override suspend fun tourChecked() = checked
+    override suspend fun setTourChecked() { checked = true }
     override suspend fun reset() { seen.clear(); day = null; on = true; hidden = false }
 }
 

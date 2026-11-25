@@ -60,6 +60,10 @@ data class MonthRecapDestination(val year: Int, val month: Int)
 @Serializable
 data object ReleaseStoriesDestination
 
+/** «Знакомство с приложением» (#598): from the card on a new «Обзор» and «Ещё → Настройки → Помощь». */
+@Serializable
+data object TourDestination
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)

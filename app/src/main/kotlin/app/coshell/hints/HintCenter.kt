@@ -76,6 +76,26 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
     /** «Скрыть шаги» was pressed; null while loading. */
     val stepsHidden: StateFlow<Boolean?> = _stepsHidden.asStateFlow()
 
+    private val _tour = MutableStateFlow(false)
+
+    /** The «Знакомство с приложением» card on «Обзор» (#598): a new install, hints on, not opened or closed yet. */
+    val tour: StateFlow<Boolean> = _tour.asStateFlow()
+
+    /** Once per phone sorts it: a phone that already has data ([inUse]) never gets the card; then shows it if due. */
+    suspend fun checkTour(inUse: suspend () -> Boolean) {
+        if (!store.tourChecked()) {
+            if (inUse()) store.markShown(TOUR_KEY)
+            store.setTourChecked()
+        }
+        _tour.value = store.enabled() && TOUR_KEY !in store.shown()
+    }
+
+    /** «Смотреть» or «✕»: the card goes for good (until «Показать подсказки заново»). */
+    suspend fun tourDone() {
+        _tour.value = false
+        store.markShown(TOUR_KEY)
+    }
+
     suspend fun load() {
         if (_enabled.value == null) _enabled.value = store.enabled()
         if (_stepsHidden.value == null) _stepsHidden.value = store.stepsHidden()
@@ -84,6 +104,7 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
     suspend fun setEnabled(value: Boolean) {
         _enabled.value = value
         store.setEnabled(value)
+        _tour.value = value && store.tourChecked() && TOUR_KEY !in store.shown()
         if (!value) clearBanners()
     }
 
@@ -97,6 +118,7 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
         store.reset()
         _enabled.value = true
         _stepsHidden.value = false
+        _tour.value = true
         resetVisit()
         clearBanners()
         say(R.string.hints_reset_done)
@@ -167,6 +189,9 @@ class HintCenter(private val store: HintStore, private val today: () -> Long) : 
     private companion object {
         /** «Already shown» key of the Reports dot; not a [HintId], `reset()` clears it with the rest. */
         const val DOT_SEEN_KEY = "reports_dot_seen"
+
+        /** «Already shown» key of the tour card; not a [HintId], `reset()` clears it so the card comes back (owner 2026-11-25). */
+        const val TOUR_KEY = "tour_card"
     }
 }
 

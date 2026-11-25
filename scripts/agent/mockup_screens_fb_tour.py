@@ -1,9 +1,9 @@
 """Boards (#598, owner 2026-11-25): «Знакомство» — onboarding stories on «Обзор» for a new install (what each screen is for and
-in which order to create things), and «Показать подсказки заново» as an action instead of a row with «›». Poll boards — until «ок».
+in which order to create things), and «Показать подсказки заново» as an action instead of a row with «›». Picked: tour «А», button «Б».
 
-Help: А — the row turns into an action (↻ on the left, the title in the link colour, no «›»); Б — an outlined button under the switch.
+Help: Б picked (poll-598-tour.json, 2026-11-25) — an outlined button under the switch; board А (row-action) removed.
 Tour: card «Знакомство с приложением» on top of a new «Обзор» (the same look as «Что нового», #693 «Б»), six stories in the order of creation;
-the library in «Помощь» (#598 «А»). Schemes — the same three-layer vectors as `story_art_693.py` (new ones live in TOUR_ART until «ок»).
+the library in «Помощь» (#598 «А»); the card comes back after «Показать подсказки заново». Schemes — `story_art_693.py`.
 Imported by mockup_screens_feedback.py (FEEDBACK + BOARDS).
 """
 from mockup_plan_bricks import *  # noqa: F401,F403
@@ -14,32 +14,10 @@ import mockup_screens_fb_setcards as sc
 import story_art_693 as ART
 
 FEEDBACK = [
-    (598, 'Знакомство на «Обзоре» и кнопка «Показать подсказки заново» · опрос 2026-11-25',
+    (598, 'Знакомство на «Обзоре» и кнопка «Показать подсказки заново» · выбрано: кнопка — Б, знакомство — А, 2026-11-25',
      'Новому человеку — карточка «Знакомство с приложением» вверху «Обзора»: шесть историй, какие экраны для чего и что создавать по порядку '
-     '(счёт → операция → категории → лимит → отчёты → семья и копия). «Показать подсказки заново» — действие, а не переход: без «›».'),
+     '(счёт → операция → категории → лимит → отчёты → семья и копия); после «Показать подсказки заново» карточка возвращается (правка владельца). «Показать подсказки заново» — кнопка-контур под переключателем.'),
 ]
-
-R, L = ART.rrect, ART.line
-TOUR_ART = {
-    'categories': [
-        ('accent', 'fill', ART.circle(70, 50, 26)),
-        ('ink', 'stroke', ART.circle(150, 50, 26) + ' ' + ART.circle(230, 50, 26) + ' ' + ART.circle(70, 130, 26) + ' ' + ART.circle(150, 130, 26)),
-        ('ink', 'stroke', 'M230,116 v28 M216,130 h28', 3),
-        ('ink', 'stroke', R(140, 40, 20, 18, 4) + ' ' + L((222, 58), (230, 40), (238, 58)) + ' ' + L((60, 122), (80, 138)) + ' ' + ART.circle(150, 130, 8)),
-    ],
-    'budgets': [
-        ('ink', 'stroke', R(30, 30, 240, 20, 10) + ' ' + R(30, 80, 240, 20, 10) + ' ' + R(30, 130, 240, 20, 10)),
-        ('accent', 'fill', R(30, 30, 150, 20, 10) + ' ' + R(30, 80, 90, 20, 10) + ' ' + R(30, 130, 200, 20, 10)),
-        ('ink', 'stroke', L((210, 20), (210, 160)), 2.5),
-    ],
-    'family': [
-        ('ink', 'stroke', ART.circle(80, 70, 22) + ' M44,140 a36,30 0 0 1 72,0'),
-        ('accent', 'fill', ART.circle(160, 70, 22)),
-        ('ink', 'stroke', 'M124,140 a36,30 0 0 1 72,0'),
-        ('ink', 'stroke', 'M222,112 h44 a14,14 0 0 0 -2,-28 a20,20 0 0 0 -38,4 a12,12 0 0 0 -4,24z', 2.5),
-        ('accent', 'stroke', L((244, 104), (244, 124)) + ' ' + L((236, 116), (244, 124), (252, 116)), 3),
-    ],
-}
 
 STORIES = [
     ('accounts', 'Начните со счёта', 'Карта, наличные или копилка — где лежат деньги. Баланс считается сам: Ещё → Счета.'),
@@ -52,16 +30,11 @@ STORIES = [
 
 
 def art(key):
-    saved = ART.STORIES
-    ART.STORIES = {**saved, **TOUR_ART}
-    try:
-        return ART.svg(key, INK, LIME, ONLIME)
-    finally:
-        ART.STORIES = saved
+    return ART.svg(key, INK, LIME, ONLIME)
 
 
 def tour_card():
-    words = ('<div style="flex: 1;"><div style="font-size: 12px; color: %s;">Шесть коротких историй</div>'
+    words = ('<div style="flex: 1;"><div style="font-size: 12px; color: %s;">Что где и для чего</div>'
              '<div style="font-size: 16px; font-weight: 600;">Знакомство с приложением</div></div>' % MUTED)
     return card('<div style="display: flex; align-items: center; gap: 8px;">%s<span style="flex: none;">%s</span>%s</div>'
                 % (words, button('Смотреть', 'primary', None, 0), icon_button('close', 'Не сейчас', INK)), pad='8px 4px 8px 16px', extra='margin-top: 8px;')
@@ -93,29 +66,16 @@ def story(at):
         footer(button('Начать' if last else 'Дальше', 'primary', None, 0))
 
 
-def reset_action():
-    """А: the row is an action — ↻ in the link colour on the left, the title in the link colour, no «›»."""
-    return row('Показать подсказки заново', 'Вернёт «Первые шаги» и советы', svg('refresh', CYAN, 22), '', title_color=CYAN, min_h=52)
-
-
-def help_a():
-    smart = sc.section(*sc.RU['smart'][0], group([sc.val(*sc.RU['smart'][1], beta=True), sc.val(*sc.RU['smart'][2], beta=True)]), '')
-    rows = group([sc.sw(*sc.RU['help'][1], True), reset_action(), row('Знакомство с приложением', 'Шесть историй: что где и для чего', '', chevron(), min_h=52),
-                  inv.a_row(), row('Политика конфиденциальности', 'Что хранится и как удалить данные', '', chevron(), min_h=52)])
-    return inner_screen(sc.RU['title'], smart + sc.section(*sc.RU['help'][0], rows, ''))
-
-
 def help_b():
     """Б: an outlined button under the switch, inside the card; the other rows stay rows with «›»."""
     smart = sc.section(*sc.RU['smart'][0], group([sc.val(*sc.RU['smart'][1], beta=True), sc.val(*sc.RU['smart'][2], beta=True)]), '')
     first = card(sc.sw(*sc.RU['help'][1], True) + '<div style="padding: 0 16px 14px;">%s</div>' % button('Показать подсказки заново', 'outline', 'refresh', 4))
-    rest = group([row('Знакомство с приложением', 'Шесть историй: что где и для чего', '', chevron(), min_h=52), inv.a_row(),
+    rest = group([row('Знакомство с приложением', 'Что где и для чего', '', chevron(), min_h=52), inv.a_row(),
                   row('Политика конфиденциальности', 'Что хранится и как удалить данные', '', chevron(), min_h=52)])
     return inner_screen(sc.RU['title'], smart + sc.section(*sc.RU['help'][0], first + '<div style="height: 8px;"></div>' + rest, ''))
 
 
 BOARDS = [  # name, title, fn, issue number
-    ('Help598A', 'А · «Показать подсказки заново» — действие: ↻ и цвет ссылки, без «›»', help_a, 598),
     ('Help598B', 'Б · кнопка-контур под переключателем', help_b, 598),
     ('Tour598Home', '«Обзор» новой установки: карточка «Знакомство с приложением»', home, 598),
 ] + [('Tour598S%d' % (i + 1), 'Знакомство %d из 6: %s' % (i + 1, STORIES[i][1]), (lambda i=i: story(i)), 598) for i in range(len(STORIES))]

@@ -63,6 +63,8 @@ data class SettingsActions(
     val onInvite: () -> Unit = {},
     /** «Политика конфиденциальности»: the privacy policy page in the phone's browser (#652). */
     val onPolicy: () -> Unit = {},
+    /** «Знакомство с приложением» (#598). */
+    val onTour: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */

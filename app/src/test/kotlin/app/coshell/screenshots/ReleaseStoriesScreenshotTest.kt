@@ -27,7 +27,7 @@ import org.robolectric.annotation.GraphicsMode
 class ReleaseStoriesScreenshotTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private val notice = ReleaseNotice("26.12.1", ReleaseStories.current.size)
+    private val notice = ReleaseNotice("26.12.1")
 
     @Test fun `home notice dark`() = shot("release_home_dark", dark = true) { HomeScreen(homePreviewSample, release = notice) }
 

@@ -81,7 +81,7 @@ fun HomeRoute(
         onFinale = hintsViewModel::dismissFinale,
         draftCount = drafts,
         syncDot = syncDot,
-        release = if (release) ReleaseNotice(BuildConfig.VERSION_NAME, ReleaseStories.current.size) else null,
+        release = if (release) ReleaseNotice(BuildConfig.VERSION_NAME) else null,
         onReleaseOpen = { releaseNotice.done(); actions.onReleaseStories() },
         onReleaseDismiss = releaseNotice::done,
     )

@@ -54,7 +54,10 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
     ) { padding ->
         if (state.isLoading) return@Scaffold
         if (state.isEmpty) {
-            EmptyList(Modifier.padding(underBars(padding)))
+            Column(Modifier.padding(underBars(padding))) {
+                WordHint(HintId.RECURRING, R.string.hint_recurring, Modifier.padding(horizontal = Spacing.l), emptyScreen = true)
+                EmptyList()
+            }
             return@Scaffold
         }
         val hintsOn = LocalHintHost.current != null

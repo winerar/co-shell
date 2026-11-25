@@ -1,6 +1,7 @@
 package app.coshell.accounts.list
 
 import app.coshell.core.domain.hints.HintId
+import app.coshell.hints.LocalHintHost
 import app.coshell.hints.WordHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellEmptyState
@@ -86,6 +87,7 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
         },
         floatingActionButton = { CoShellAddFab(stringResource(R.string.accounts_add), actions.onAddAccount) },
     ) { padding ->
+        val hintsOn = LocalHintHost.current != null
         LazyColumn(
             // The groupings swipe like tabs (#173); from the first or last one the swipe goes to the next tab.
             modifier = Modifier.fillMaxSize()
@@ -95,6 +97,7 @@ fun AccountsScreen(state: AccountsUiState, actions: AccountsActions) {
         ) {
             if (state.isLoading) return@LazyColumn
             if (state.active.isEmpty() && state.archived.isEmpty()) {
+                if (hintsOn) item(key = "word-hint") { WordHint(HintId.ACCOUNTS, R.string.hint_accounts, emptyScreen = true) }
                 item {
                     CoShellEmptyState(
                         iconRes = DesignR.drawable.ic_account_balance_wallet,

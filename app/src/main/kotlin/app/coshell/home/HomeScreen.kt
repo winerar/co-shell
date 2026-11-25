@@ -152,7 +152,7 @@ fun HomeScreen(
             gate?.let { banner -> item(key = "gate") { VersionGateBanner(banner, onUpdate, listItemMotion()) } }
             sync?.let { banner -> item(key = "sync") { SyncBanner(banner, syncActions, listItemMotion()) } }
             release?.let { notice ->
-                item(key = "release") { ReleaseNoticeCard(notice.versionName, notice.count, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
+                item(key = "release") { ReleaseNoticeCard(notice.versionName, onReleaseOpen, onReleaseDismiss, listItemMotion()) }
             }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }

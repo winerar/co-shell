@@ -4,7 +4,6 @@
 # Before publication this file must be empty (TranslationsTest `nothing is left untranslated`, enabled by PUBLISHING).
 account_deleted
 category_deleted
-plural:release_notice_title
 release_accounts_text
 release_accounts_title
 release_close
@@ -17,6 +16,7 @@ release_header
 release_next
 release_notice_dismiss
 release_notice_open
+release_notice_title
 release_notice_version
 release_progress
 release_recap_text

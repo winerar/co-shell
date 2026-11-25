@@ -13,5 +13,5 @@ private fun ReleaseStoriesPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ReleaseNoticePreview() {
-    CoShellTheme { ReleaseNoticeCard("26.12.1", ReleaseStories.current.size, onOpen = {}, onDismiss = {}) }
+    CoShellTheme { ReleaseNoticeCard("26.12.1", onOpen = {}, onDismiss = {}) }
 }

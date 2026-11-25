@@ -2,12 +2,7 @@
 <resources>
     <!-- Release stories (#693, owner poll 2026-11-24: card on «Обзор» — Б, five stories — А; boards Rel693*). -->
     <string name="release_notice_version">Версия %1$s</string>
-    <plurals name="release_notice_title">
-        <item quantity="one">Что нового · %1$d история</item>
-        <item quantity="few">Что нового · %1$d истории</item>
-        <item quantity="many">Что нового · %1$d историй</item>
-        <item quantity="other">Что нового · %1$d истории</item>
-    </plurals>
+    <string name="release_notice_title">Что нового</string>
     <string name="release_notice_open">Смотреть</string>
     <string name="release_notice_dismiss">Не сейчас</string>
     <string name="release_header">Что нового · %1$s</string>
@@ -16,14 +11,14 @@
     <string name="release_done">Готово</string>
     <string name="release_progress">История %1$d из %2$d</string>
 
-    <string name="release_debts_title">Долги — отдельно от трат</string>
-    <string name="release_debts_text">Одолжили или взяли в долг? «Ещё → Долги»: баланс счёта меняется, а расходы и доходы — нет.</string>
+    <string name="release_debts_title">Долги</string>
+    <string name="release_debts_text">Ещё → Долги. Баланс счёта меняется, расходы — нет.</string>
     <string name="release_accounts_title">Новые счета</string>
-    <string name="release_accounts_text">Кредитка с лимитом и сроком платежа, проездной, вклад со ставкой. Счёт «Только у меня» не попадёт в семью.</string>
+    <string name="release_accounts_text">Кредитка, проездной, вклад. «Только у меня» — не видно семье.</string>
     <string name="release_fan_title">Удерживайте «+»</string>
-    <string name="release_fan_text">Откроется веер: QR чека, заметка или шаблон. Проведите палец к нужному и отпустите.</string>
+    <string name="release_fan_text">QR чека, заметка или шаблон — веером.</string>
     <string name="release_receipt_title">Чек сам находит счёт</string>
-    <string name="release_receipt_text">По последним цифрам карты. Перевод между своими счетами откроется переводом, а незнакомый чек можно прочитать с ИИ.</string>
-    <string name="release_recap_title">Итоги месяца — историями</string>
-    <string name="release_recap_text">Листайте и отправляйте картинкой, с суммами или без. В «Отчётах» — календарь трат.</string>
+    <string name="release_receipt_text">По последним цифрам карты.</string>
+    <string name="release_recap_title">Итоги месяца</string>
+    <string name="release_recap_text">Листайте и делитесь картинкой.</string>
 </resources>

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Whether «Что нового · N историй» stands on «Обзор» (#693, board `Rel693NoticeB`): once after an update, through the «новое»
+ * Whether «Что нового» stands on «Обзор» (#693, board `Rel693NoticeB`): once after an update, through the «новое»
  * marks (`NewMarks`: nothing on a fresh install, a week at most). «Смотреть» or «✕» put it away for good.
  */
 @HiltViewModel

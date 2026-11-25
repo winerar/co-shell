@@ -1,5 +1,5 @@
 """Generated boards: release stories (#693, owner poll 2026-11-24: card on «Обзор» — «Б», five stories — «А»; poll boards Rel693*).
-The card «Версия N · Что нового · 5 историй» stands at the top of «Обзор» once after an update; «Смотреть» opens the stories,
+The card «Версия N · Что нового» stands at the top of «Обзор» once after an update; «Смотреть» opens the stories,
 «✕» — not now, for good. Schemes come from `story_art_693.py` — the same paths as the app's vector layers.
 
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
@@ -14,16 +14,16 @@ ROW = ('release', 'Истории релиза',
        'на новой установке её нет), «Смотреть» и «✕» убирают её навсегда. Истории — полоски, схема, заголовок, 1–2 предложения, «Дальше»/«Готово».')
 
 STORIES = [
-    ('debts', 'Долги — отдельно от трат', 'Одолжили или взяли в долг? «Ещё → Долги»: баланс счёта меняется, а расходы и доходы — нет.'),
-    ('accounts', 'Новые счета', 'Кредитка с лимитом и сроком платежа, проездной, вклад со ставкой. Счёт «Только у меня» не попадёт в семью.'),
-    ('fan', 'Удерживайте «+»', 'Откроется веер: QR чека, заметка или шаблон. Проведите палец к нужному и отпустите.'),
-    ('receipt', 'Чек сам находит счёт', 'По последним цифрам карты. Перевод между своими счетами откроется переводом, а незнакомый чек можно прочитать с ИИ.'),
-    ('recap', 'Итоги месяца — историями', 'Листайте и отправляйте картинкой, с суммами или без. В «Отчётах» — календарь трат.'),
+    ('debts', 'Долги', 'Ещё → Долги. Баланс счёта меняется, расходы — нет.'),
+    ('accounts', 'Новые счета', 'Кредитка, проездной, вклад. «Только у меня» — не видно семье.'),
+    ('fan', 'Удерживайте «+»', 'QR чека, заметка или шаблон — веером.'),
+    ('receipt', 'Чек сам находит счёт', 'По последним цифрам карты.'),
+    ('recap', 'Итоги месяца', 'Листайте и делитесь картинкой.'),
 ]
 
 
 def notice():
-    words = ('<div style="flex: 1;"><div style="font-size: 12px; color: %s;">Версия 26.12.1</div><div style="font-size: 16px; font-weight: 600;">Что нового · 5 историй</div></div>' % MUTED)
+    words = ('<div style="flex: 1;"><div style="font-size: 12px; color: %s;">Версия 26.12.1</div><div style="font-size: 16px; font-weight: 600;">Что нового</div></div>' % MUTED)
     return card('<div style="display: flex; align-items: center; gap: 8px;">%s<span style="flex: none;">%s</span>%s</div>'
                 % (words, button('Смотреть', 'primary', None, 0), icon_button('close', 'Не сейчас', INK)), pad='8px 4px 8px 16px', extra='margin-top: 8px;')
 
@@ -48,5 +48,5 @@ def story(at):
         footer(button('Готово' if last else 'Дальше', 'primary', None, 0))
 
 
-BOARDS = [('Rel693Home', '«Обзор»: карточка «Что нового · 5 историй» после обновления', home, 'release')] + [
+BOARDS = [('Rel693Home', '«Обзор»: карточка «Что нового» после обновления', home, 'release')] + [
     ('Rel693S%d' % (i + 1), 'История %d из 5: %s' % (i + 1, STORIES[i][1]), (lambda i=i: story(i)), 'release') for i in range(len(STORIES))]

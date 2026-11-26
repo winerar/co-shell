@@ -52,6 +52,17 @@
     <string name="budgets_unfold">Развернуть подкатегории</string>
     <string name="budgets_empty_title">Лимитов на этот месяц нет</string>
     <string name="budgets_empty_text">Задайте лимит на категорию — будет видно, сколько осталось. Нажмите «+», чтобы добавить первый.</string>
+    <string name="budgets_first_title">Бюджет на месяц</string>
+    <string name="budgets_first_text">Начнём с ваших трат за 3 месяца. Отметьте нужное — суммы поправите потом.</string>
+    <string name="budgets_first_label">Предлагаем лимиты</string>
+    <string name="budgets_first_average">в среднем за 3 мес.</string>
+    <plurals name="budgets_first_create">
+        <item quantity="one">Создать %d лимит</item>
+        <item quantity="few">Создать %d лимита</item>
+        <item quantity="many">Создать %d лимитов</item>
+        <item quantity="other">Создать %d лимита</item>
+    </plurals>
+    <string name="budgets_first_note">Месяц считается с %1$d-го числа — можно поменять в настройках бюджета.</string>
     <string name="budgets_hint">Полоса — потрачено, черта — норма на сегодня. Изменения лимита действуют с выбранного месяца.</string>
 
     <!-- Экран конверта (#183) -->

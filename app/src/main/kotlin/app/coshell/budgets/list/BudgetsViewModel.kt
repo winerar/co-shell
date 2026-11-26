@@ -3,7 +3,9 @@ package app.coshell.budgets.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.budgets.BudgetSource
+import app.coshell.core.domain.budgets.SaveBudgetUseCase
 import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.budgets.suggestBudgetLimits
 import app.coshell.core.domain.settings.MonthStartSettings
 import app.coshell.core.model.MoneyFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +39,7 @@ import kotlinx.datetime.todayIn
 class BudgetsViewModel @Inject constructor(
     private val source: BudgetSource,
     private val monthStart: MonthStartSettings,
+    private val saveBudget: SaveBudgetUseCase,
     moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
@@ -49,6 +52,9 @@ class BudgetsViewModel @Inject constructor(
     private val chosenMonth = MutableStateFlow<YearMonth?>(null)
     private val filter = MutableStateFlow(BudgetFilter.ALL)
     private val collapsed = MutableStateFlow<Set<String>>(emptySet())
+
+    /** Rows of the first-visit offer the person ticked off (#185); everything is ticked at first. */
+    private val unticked = MutableStateFlow<Set<String>>(emptySet())
 
     /** Where the board is computed (it indexes all operations); tests run it in place. Read once, on first [state]. */
     internal var work: CoroutineContext = Dispatchers.Default
@@ -65,15 +71,21 @@ class BudgetsViewModel @Inject constructor(
             summary = if (envelopes.isEmpty()) null else buildSummary(calculator.summary(month, today, snapshot.mainCurrency), today, format),
             envelopes = envelopes,
             counts = envelopeCounts(envelopes),
+            offer = if (envelopes.isEmpty()) {
+                buildOffer(suggestBudgetLimits(snapshot.ledger, snapshot.categories, month, snapshot.mainCurrency, snapshot.startDay), snapshot.categories, format)
+            } else {
+                null
+            },
         )
     }.flowOn(work)
 
     val state: StateFlow<BudgetsUiState> by lazy { stateFlow() }
 
-    private fun stateFlow(): StateFlow<BudgetsUiState> = combine(board(), filter, collapsed) { base, chosenFilter, folded ->
+    private fun stateFlow(): StateFlow<BudgetsUiState> = combine(board(), filter, collapsed, unticked) { base, chosenFilter, folded, off ->
         // A filter that emptied (the last «горит» limit calmed down) would hide everything with no chip to leave it.
         val shown = chosenFilter.takeIf { it == BudgetFilter.ALL || (base.counts[it] ?: 0) > 0 } ?: BudgetFilter.ALL
-        base.copy(filter = shown, collapsed = folded)
+        val offer = base.offer?.let { o -> o.copy(rows = o.rows.map { it.copy(checked = it.categoryId !in off) }) }
+        base.copy(filter = shown, collapsed = folded, offer = offer)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), BudgetsUiState(isLoading = true))
 
     fun onPreviousMonth() = shiftMonth(-1)
@@ -85,6 +97,16 @@ class BudgetsViewModel @Inject constructor(
     /** [day] — 1..31; the shown month stays, its days follow the new start. */
     fun onStartDayChange(day: Int) {
         viewModelScope.launch { monthStart.setMonthStartDay(day) }
+    }
+
+    /** A row of the first-visit offer ticked on or off. */
+    fun onToggleSuggestion(categoryId: String) = unticked.update { if (categoryId in it) it - categoryId else it + categoryId }
+
+    /** «Создать N лимитов»: the ticked rows become limits from the shown month on; the amounts are edited later. */
+    fun onCreateSuggested() {
+        val month = state.value.month ?: return
+        val rows = state.value.offer?.rows?.filter { it.checked } ?: return
+        viewModelScope.launch { rows.forEach { saveBudget(it.categoryId, month, it.limit) } }
     }
 
     fun onToggleFolder(categoryId: String) = collapsed.update { if (categoryId in it) it - categoryId else it + categoryId }

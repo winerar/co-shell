@@ -28,6 +28,8 @@ fun BudgetsRoute(
             onFilterChange = viewModel::onFilterChange,
             onToggleFolder = viewModel::onToggleFolder,
             onStartDayChange = viewModel::onStartDayChange,
+            onToggleSuggestion = viewModel::onToggleSuggestion,
+            onCreateSuggested = viewModel::onCreateSuggested,
         ),
     )
 }
@@ -45,4 +47,8 @@ data class BudgetsActions(
     val onToggleFolder: (String) -> Unit = {},
     /** «Настройки бюджета» → the day the month starts on. */
     val onStartDayChange: (Int) -> Unit = {},
+    /** A row of the first-visit offer (#185) ticked on or off. */
+    val onToggleSuggestion: (String) -> Unit = {},
+    /** «Создать N лимитов». */
+    val onCreateSuggested: () -> Unit = {},
 )

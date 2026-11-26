@@ -27,6 +27,7 @@ import app.coshell.R
 import app.coshell.budgets.list.components.BudgetFilterChips
 import app.coshell.budgets.list.components.BudgetSummaryCard
 import app.coshell.budgets.list.components.EnvelopeRow
+import app.coshell.budgets.list.components.FirstLimits
 import app.coshell.budgets.list.components.MonthStartSheet
 import app.coshell.budgets.list.components.MonthSwitch
 import app.coshell.core.designsystem.R as DesignR
@@ -71,7 +72,12 @@ fun BudgetsScreen(state: BudgetsUiState, actions: BudgetsActions) {
             }
             item(key = "word-hint") { WordHint(HintId.BUDGETS, R.string.hint_budgets, Modifier.padding(horizontal = Spacing.l), emptyScreen = state.isEmpty) }
             if (state.isEmpty) {
-                item(key = "empty") { EmptyBudgets() }
+                val offer = state.offer
+                if (offer != null) {
+                    item(key = "first") { FirstLimits(offer, state.startDay, actions.onToggleSuggestion, actions.onCreateSuggested) }
+                } else {
+                    item(key = "empty") { EmptyBudgets() }
+                }
                 return@LazyColumn
             }
             state.summary?.let { summary ->

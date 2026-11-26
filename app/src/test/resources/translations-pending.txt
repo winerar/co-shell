@@ -13,6 +13,11 @@ budget_no_folders
 budget_note
 budgets_empty_text
 budgets_envelopes
+budgets_first_average
+budgets_first_label
+budgets_first_note
+budgets_first_text
+budgets_first_title
 budgets_menu_hint
 budgets_start_subtitle
 capital_month_search
@@ -88,6 +93,7 @@ notice_recap_switch
 notice_recap_text
 notice_recap_title
 notice_time_title
+plural:budgets_first_create
 plural:notice_backup_text_last
 plural:notice_limit_text
 plural:reports_cushion_few

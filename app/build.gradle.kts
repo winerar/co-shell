@@ -67,6 +67,12 @@ android {
         }
     }
 
+    // Debug builds only (#742): the AI evaluation shared with the phone bench, and its gold set, for CloudEvalActivity.
+    sourceSets.getByName("debug") {
+        kotlin.directories.add("../tools/ai-eval/src")
+        assets.directories.add("../docs/samples")
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"

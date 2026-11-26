@@ -38,6 +38,7 @@ class NoticeFactsSource @Inject constructor(
     private val hintStore: HintStore,
     private val autoBackup: AutoBackupSettings,
     private val moneyFormat: MoneyFormat,
+    private val log: NoticeLog,
     private val clock: Clock,
     private val zone: TimeZone,
 ) {
@@ -69,7 +70,7 @@ class NoticeFactsSource @Inject constructor(
     private suspend fun limitFact(today: LocalDate): LimitFact? {
         val snapshot = budgets.observe().first()
         val period = budgetPeriodOf(today, snapshot.startDay)
-        val alert = LimitAlerts.pick(snapshot.calculator().month(period.month, today), emptySet()) ?: return null
+        val alert = LimitAlerts.pick(snapshot.calculator().month(period.month, today), log.limitTold()) ?: return null
         val name = snapshot.categories.firstOrNull { it.id == alert.progress.budget.categoryId }?.name ?: return null
         return LimitFact(
             key = alert.key,
@@ -78,6 +79,8 @@ class NoticeFactsSource @Inject constructor(
             percentLeft = alert.leftPercent,
             daysLeft = today.daysUntil(period.endExclusive).coerceAtLeast(1),
             pace = alert.kind == LimitAlertKind.PACE,
+            categoryId = alert.progress.budget.categoryId,
+            month = period.month.toString(),
         )
     }
 

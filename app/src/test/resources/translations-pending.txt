@@ -47,6 +47,7 @@ hint_family
 hint_hold_amount
 hint_limit_80
 hint_recurring
+hint_share_receipt
 home_back_per_day
 import_undo_confirm_text
 notes_hint

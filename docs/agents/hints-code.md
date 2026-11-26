@@ -20,6 +20,7 @@
 **Решено опросом 2026-11-19 (`poll-513b.json`: шторка — Б, «Теги»/«Валюта» — А; доски `Hint513EntryCoach`, `Hint513Tags`, `Hint513Currency`):** слова шторки ввода — карточка `SheetCoach` над шторкой (`entry_minimal` → `keypad_math` → `entry_refund`: при открытии новой операции выдаётся первая ещё не показанная, не чаще одной в день); `tags` и `currency_receipt` — `WordHint` под заголовком шторок «Теги» и «Валюта покупки».
 **Сделано (ч. 8):** `tags` в «Операциях» от 10 строк без фильтра (`TAGS_HINT_ROWS`, строка П1 внутри элемента фильтров — `dayAt` не сдвигается); `currency_account` — момент-плашка: `AccountEditViewModel` ставит `foreignCurrencyAdded` (новый счёт, валюта не в валютах итогов), `AccountEditRoute` предлагает её до закрытия шторки.
 **Сделано (#526):** `scan_receipt` — `WordHint` в шторке ввода (новая операция, `DetailsStep`).
+**Сделано (#579, 2026-11-26):** жест `share_receipt` — от 3 строк в «Операциях» без фильтра (`SHARE_RECEIPT_ROWS`); показ «после первого скана QR», решённый опросом, не подключён — хватает счёта строк.
 **Осталось:** ничего.
 - `core:domain/hints/`: `HintId`, `HintTrigger`, `HintPlanner` (чистая логика «что показать», тесты), `HintsSettings` (интерфейс);
   шаги — `FirstSteps` (`FirstStepsState` из данных). Хранение — `app/.../hints/` (настройки устройства).

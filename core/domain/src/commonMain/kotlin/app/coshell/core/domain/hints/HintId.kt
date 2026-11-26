@@ -33,6 +33,7 @@ enum class HintId(val key: String, val kind: HintKind) {
     SHAKE_UNDO("shake_undo", HintKind.GESTURE),
     FLIP_CARD("flip_card", HintKind.GESTURE),
     APP_SHORTCUTS("app_shortcuts", HintKind.GESTURE),
+    SHARE_RECEIPT("share_receipt", HintKind.GESTURE),
     FIRST_ENTRY("first_entry", HintKind.MOMENT),
     FIRST_LIMIT("first_limit", HintKind.MOMENT),
     FIRST_WEEK("first_week", HintKind.MOMENT),

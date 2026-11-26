@@ -11,8 +11,8 @@ import app.coshell.core.model.TransactionType
  * «500 latest» the entry sheet already loads.
  */
 object CategoryGuess {
-    /** How many latest operations are looked at. */
-    const val WINDOW = 200
+    /** How many latest operations are looked at: the entry sheet's «500 latest» (#742: 200 was about six weeks of a family's records). */
+    const val WINDOW = 500
 
     /**
      * [history] newest first. Signals are tried in order — payee, receipt seller, note — and the first one
@@ -65,7 +65,8 @@ object CategoryGuess {
         if (type != TransactionType.EXPENSE) return null
         val icon = BrandDictionary.iconOf(payee) ?: MccCategories.iconOf(mcc)
             ?: BrandDictionary.iconOf(note.lineSequence().firstOrNull { it.isNotBlank() })
-        return BrandDictionary.categoryFor(icon, categories)?.let { Suggestion(it, Source.DICTIONARY) }
+        val uses = history.asSequence().take(WINDOW).filter { it.type == type }.mapNotNull { it.categoryId }.groupingBy { it }.eachCount()
+        return BrandDictionary.categoryFor(icon, categories, uses)?.let { Suggestion(it, Source.DICTIONARY) }
     }
 
     private fun mostFrequent(past: List<Transaction>, matches: (Transaction) -> Boolean): String? {

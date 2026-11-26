@@ -45,10 +45,13 @@ class NoteHints(private val model: LanguageModel) {
         if (lines.isEmpty() || !model.available) return lines.map { null }
         // A long note goes in parts: the add-on's context is 2048 tokens and a small model loses count on long lists.
         return lines.chunked(MAX_LINES).flatMap { part ->
-            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts, examples, categoryHints))
+            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts, family(examples), categoryHints))
             if (answer == null) part.map { null } else parse(answer, part.size, categories, accounts)
         }
     }
+
+    /** The family's past entries stay on the phone: the cloud model never gets them (`cloud-ai.md` §«Правила», #742). */
+    private fun family(examples: List<HistoryExample>) = if (model.cheap) emptyList() else examples
 
     internal fun prompt(
         lines: List<String>,

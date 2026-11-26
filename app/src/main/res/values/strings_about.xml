@@ -11,4 +11,7 @@
     <string name="about_principle_data">Данные у вас</string>
     <string name="about_principle_data_hint">Резервную копию можно сохранить файлом, а всё стереть одним действием</string>
     <string name="about_feedback">Отправить отзыв</string>
+    <!-- Authors (#761): a quiet signature at the end of «О приложении». -->
+    <string name="about_credits_ideas">Идеи и тестирование — Анастасия Карачевцева</string>
+    <string name="about_credits_dev">Разработка — Александр Карачевцев · вместе с Claude</string>
 </resources>

@@ -19,6 +19,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 import app.coshell.update.components.AboutBlock
+import app.coshell.update.components.AboutCredits
 import app.coshell.update.components.AboutHead
 import app.coshell.update.components.AboutLinks
 import app.coshell.update.components.UpdateDetails
@@ -63,6 +64,7 @@ fun UpdateScreen(state: UpdateUiState, actions: UpdateActions) {
             UpdateDetails(state, onPastReleases = actions.onPastReleases)
             if (state.phase !is UpdatePhase.UpToDate) AboutBlock()
             AboutLinks(actions.onFeedback)
+            AboutCredits()
         }
     }
 }

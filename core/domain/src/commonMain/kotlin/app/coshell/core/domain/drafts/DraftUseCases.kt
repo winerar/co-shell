@@ -65,7 +65,7 @@ class ProcessQuickNoteUseCase(
     }
 
     private companion object {
-        const val HISTORY = 200
+        const val HISTORY = 500
     }
 }
 

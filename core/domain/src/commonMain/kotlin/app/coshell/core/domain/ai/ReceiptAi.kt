@@ -86,9 +86,9 @@ class ReceiptAi(private val model: LanguageModel) {
             "with columns broken by the PDF. Take the final total actually paid (after discounts, with tax), not a subtotal or a single item. " +
             "Answer with one JSON object only, no comments."
 
-        /** Signs that name one currency only («$» is everyone's and does not count). */
+        /** Signs that name one currency only («$» is everyone's and does not count); «ФН»/«ФД» — the fiscal numbers of a Russian till receipt. */
         private val SIGNS = mapOf(
-            "USD" to listOf("US$", "U\$S", "U\$D", "U\$\$"), "RUB" to listOf("₽", "руб"), "AMD" to listOf("֏", "драм"),
+            "USD" to listOf("US$", "U\$S", "U\$D", "U\$\$"), "RUB" to listOf("₽", "руб", "ФН ", "ФД "), "AMD" to listOf("֏", "драм"),
             "EUR" to listOf("€"), "ARS" to listOf("AR$"), "GBP" to listOf("£"),
         )
 

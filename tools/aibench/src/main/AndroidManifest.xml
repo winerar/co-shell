@@ -9,6 +9,11 @@
         <!-- Without these the «GPU» checkbox cannot work: LiteRT-LM's GPU backend loads OpenCL from the system. -->
         <uses-native-library android:name="libvndksupport.so" android:required="false" />
         <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <provider
+            android:name=".AnswersProvider"
+            android:authorities="app.coshell.aibench.answers"
+            android:exported="false"
+            android:grantUriPermissions="true" />
         <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

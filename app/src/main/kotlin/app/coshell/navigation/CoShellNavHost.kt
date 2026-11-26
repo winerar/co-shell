@@ -34,6 +34,8 @@ import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.privacy.HiddenPill
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
+import app.coshell.notices.NoticeLinks
+import app.coshell.notices.NoticeTarget
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.shortcuts.ShortcutLink
 import app.coshell.shortcuts.ShortcutLinks
@@ -105,6 +107,7 @@ fun CoShellNavHost(
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
     shortcutLinks: ShortcutLinks? = null,
+    noticeLinks: NoticeLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -499,6 +502,25 @@ fun CoShellNavHost(
             }
             navController.navigate(destination) { launchSingleTop = true }
             shortcutLinks.consumed()
+        }
+    }
+
+    // A tap on one of the optional notifications (#745): the screen it is about.
+    if (noticeLinks != null) {
+        val target by noticeLinks.target.collectAsStateWithLifecycle()
+        LaunchedEffect(target) {
+            val open = target ?: return@LaunchedEffect
+            when (open) {
+                NoticeTarget.NEW_ENTRY -> navController.navigate(TransactionEditDestination()) { launchSingleTop = true }
+                NoticeTarget.BUDGETS -> navController.navigate(BudgetsDestination) { launchSingleTop = true }
+                NoticeTarget.DRAFTS -> navController.navigate(DraftsDestination) { launchSingleTop = true }
+                NoticeTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
+                NoticeTarget.RECAP -> {
+                    val last = java.time.YearMonth.now().minusMonths(1)
+                    navController.navigate(MonthRecapDestination(last.year, last.monthValue)) { launchSingleTop = true }
+                }
+            }
+            noticeLinks.consumed()
         }
     }
 }

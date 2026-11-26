@@ -10,7 +10,6 @@
     <string name="settings_input_items">Shake · vibration</string>
     <string name="settings_input_quick">Quick entry</string>
     <string name="settings_notices_title">Notifications</string>
-    <string name="settings_notices_items">Payments · time</string>
     <string name="settings_notices_payments">Payments</string>
     <string name="settings_data_title">Data and backup</string>
     <string name="settings_data_items">Backup · import · Wi-Fi · wipe</string>
@@ -51,8 +50,6 @@
     <string name="settings_input_haptics_hint">taps and a saved transaction</string>
     <string name="settings_data_network">Network</string>
     <string name="settings_data_wifi">Sync on Wi-Fi only</string>
-    <string name="settings_notices_when">When</string>
-    <string name="settings_notices_time">Reminder time</string>
     <string name="settings_notices_hour">%1$d:00</string>
     <string name="settings_home_cards">Cards</string>
     <string name="settings_home_balance">Balance</string>

@@ -76,6 +76,7 @@ class ReceiptAiTest {
         val named = ReceiptAi(Fixed("""{"total":"24.98","currency":"USD"}""")).read("Total: $24.98 USD", ars, setOf(ars, usd), today)!!
         assertEquals(usd, named.total.currency)
         assertTrue(ReceiptAi.printedCurrency(CurrencyCode("RUB"), "Итого 522 ₽"))
+        assertTrue(ReceiptAi.printedCurrency(CurrencyCode("RUB"), "ИТОГ =453.88\nФН 7380440700123456 ФД 55431"))
         assertTrue(ReceiptAi.printedCurrency(usd, "Precio U${'$'}S 10"))
         assertEquals(false, ReceiptAi.printedCurrency(usd, "USDT 10"))
     }

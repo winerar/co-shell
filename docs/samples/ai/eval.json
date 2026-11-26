@@ -247,7 +247,10 @@
   {
    "payee": "Veterinaria Patitas",
    "category": "Другое",
-   "local": true
+   "local": true,
+   "also": [
+    "Здоровье"
+   ]
   },
   {
    "payee": "Peluquería Estilo Ana",
@@ -267,7 +270,10 @@
   {
    "payee": "Jardín Pequeños Pasos",
    "category": "Дети",
-   "local": true
+   "local": true,
+   "also": [
+    "Образование"
+   ]
   },
   {
    "payee": "Bicicletería Rodando",
@@ -295,7 +301,11 @@
   {
    "payee": "Gimnasio Fuerza Total",
    "category": "Развлечения",
-   "local": true
+   "local": true,
+   "also": [
+    "Здоровье",
+    "Другое"
+   ]
   },
   {
    "payee": "Химчистка Диана",
@@ -690,7 +700,10 @@
    "amount_minor": 1500000,
    "title": "ветеринар",
    "day": 0,
-   "category": "Другое",
+   "category": [
+    "Другое",
+    "Здоровье"
+   ],
    "style": "hard"
   },
   {
@@ -700,7 +713,8 @@
    "day": 0,
    "category": [
     "Развлечения",
-    "Здоровье"
+    "Здоровье",
+    "Другое"
    ],
    "style": "hard"
   },

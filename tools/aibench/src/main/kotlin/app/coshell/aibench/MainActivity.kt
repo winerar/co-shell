@@ -153,10 +153,13 @@ class MainActivity : Activity() {
         }
     }
 
+    /** The answer files of this session's runs, as files (a pasted text gets cut in a chat). */
     private fun shareAnswers() {
         if (answers.isEmpty()) return say("Сначала запустите тест")
-        val text = answers.entries.joinToString("\n") { (name, json) -> "=== $name ===\n$json" }
-        share(text, "Ответы модели")
+        val uris = ArrayList(answers.keys.map { AnswersProvider.uriOf(it) })
+        val send = Intent(Intent.ACTION_SEND_MULTIPLE).setType("application/json")
+            .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(Intent.createChooser(send, "Ответы модели"))
     }
 
     /**

@@ -20,7 +20,8 @@ class PayeeCategoryAi(private val model: LanguageModel) {
     suspend fun suggest(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList(), categoryHints: String = ""): String? {
         val shop = text.trim().take(MAX_TEXT)
         if (!model.available || shop.isEmpty() || categories.isEmpty()) return null
-        val answer = model.complete(SYSTEM, prompt(shop, categories, examples, categoryHints)) ?: return null
+        val answer = // The family's past entries stay on the phone: the cloud model never gets them (`cloud-ai.md` §«Правила», #742).
+        model.complete(SYSTEM, prompt(shop, categories, if (model.cheap) emptyList() else examples, categoryHints)) ?: return null
         return parse(answer, categories)
     }
 

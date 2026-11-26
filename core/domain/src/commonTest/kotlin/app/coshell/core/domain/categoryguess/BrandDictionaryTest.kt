@@ -124,6 +124,21 @@ class BrandDictionaryTest {
     }
 
     @Test
+    fun `the category the family uses wins over an untouched one with the same or a related icon (#742)`() {
+        val categories = listOf(
+            Category("food", "Продукты", CategoryType.EXPENSE, icon = "food", sortOrder = 1),
+            Category("super", "Супермаркеты", CategoryType.EXPENSE, icon = "food", sortOrder = 5),
+            Category("transport", "Транспорт", CategoryType.EXPENSE, icon = "transport", sortOrder = 2),
+            Category("train", "Общественный транспорт", CategoryType.EXPENSE, icon = "train", sortOrder = 6),
+        )
+        val uses = mapOf("super" to 318, "train" to 55)
+        assertEquals("super", BrandDictionary.categoryFor("food", categories, uses))
+        assertEquals("train", BrandDictionary.categoryFor("transport", categories, uses))
+        assertEquals("transport", BrandDictionary.categoryFor("transport", categories))
+        assertEquals("train", BrandDictionary.categoryFor("transport", categories.filter { it.id != "transport" }))
+    }
+
+    @Test
     fun `the gold payees of the model test are mostly found`() {
         // Optimistic by construction: the dictionary was written by someone who had seen this list (docs/research/on-device-ai.md).
         val gold = mapOf(

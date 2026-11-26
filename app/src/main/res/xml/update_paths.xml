@@ -6,4 +6,6 @@
     <cache-path name="exports" path="exports/" />
     <!-- The picture of «Итоги месяца» → «Поделиться» (#554). -->
     <cache-path name="recap" path="recap/" />
+    <!-- Debug builds only: answers of the cloud AI check (#742, CloudEvalActivity). -->
+    <cache-path name="aieval" path="aieval/" />
 </paths>

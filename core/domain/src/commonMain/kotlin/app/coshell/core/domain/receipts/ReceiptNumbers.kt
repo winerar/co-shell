@@ -18,8 +18,7 @@ object ReceiptNumbers {
         }
     }
 
-    private val NUMBER = Regex("""(?<![\d.,])(\d{1,3}(?:[   .,']\d{3})+(?:[.,]\d{1,8})?|\d+(?:[.,]\d{1,8})?)(?!\d)""")
-    private val KEYWORD = Regex("""(total|итог|к оплате|importe|a pagar|pagado|abonado|ընդամենը)""", RegexOption.IGNORE_CASE)
+    private val NUMBER = Regex("""(?<![\d.,])(\d{1,3}(?:[ \u00A0\u202F.,']\d{3})+(?:[.,]\d{1,8})?|\d+(?:[.,]\d{1,8})?)(?!\d)""")
 
     /** Every printed number of [text], in order. */
     fun all(text: String): List<Printed> = text.lines().flatMap { line ->
@@ -31,7 +30,7 @@ object ReceiptNumbers {
      * digits — thousands; else the decimal mark. Spaces and «'» are always thousands.
      */
     fun read(token: String, line: String = token): Printed? {
-        val t = token.filterNot { it == ' ' || it == ' ' || it == ' ' || it == '\'' }
+        val t = token.filterNot { it == ' ' || it == '\u00A0' || it == '\u202F' || it == '\'' }
         if (t.isEmpty() || !t.first().isDigit()) return null
         val marks = t.filter { it == '.' || it == ',' }
         if (marks.isEmpty()) return Printed(t, "", line)
@@ -40,15 +39,5 @@ object ReceiptNumbers {
         val thousands = marks.toSet().size == 1 && (marks.length > 1 || after.length == 3)
         return if (thousands) Printed(t.filter(Char::isDigit), "", line)
         else Printed(t.substringBeforeLast(last).filter(Char::isDigit), after, line)
-    }
-
-    /** The number on the last «total» line («TOTAL», «Итого», «К оплате», «Total a pagar»; not «Subtotal») — what code reads without a model. */
-    fun byKeyword(text: String): Printed? =
-        text.lines().filter { KEYWORD.containsMatchIn(it) && !it.contains("subtotal", ignoreCase = true) }
-            .lastNotNullOfOrNull { line -> NUMBER.findAll(line).lastOrNull()?.let { read(it.value, line) } }
-
-    private inline fun <T, R : Any> List<T>.lastNotNullOfOrNull(f: (T) -> R?): R? {
-        for (i in indices.reversed()) f(this[i])?.let { return it }
-        return null
     }
 }

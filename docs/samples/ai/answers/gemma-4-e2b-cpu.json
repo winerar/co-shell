@@ -1,6 +1,6 @@
 {
  "model": "Gemma 4 E2B [CPU]",
- "scores": "заметки (новый человек) 58/61, заметки (с историей) 60/61, категория (новый человек) 64/70, категория (с историей) 63/70, чеки 18/19",
+ "scores": "заметки (новый человек) 58/61, заметки (с историей) 60/61, категория (новый человек) 64/70, категория (с историей) 63/70, чеки 17/19",
  "answers": [
   {
    "system": "You are a precise parser for a family budget app. Notes are short, in any language, often with typos. Example: notes \"0: carrefor mp\", \"1: call mom\", categories \"Groceries | Cafe\", accounts \"Mercado Pago · ARS · card | Cash · ARS · cash\" → [{\"i\":0,\"title\":\"Carrefour\",\"category\":\"Groceries\",\"account\":\"Mercado Pago · ARS · card\"},{\"i\":1,\"expense\":false}]. Answer with one JSON array only, no comments.",

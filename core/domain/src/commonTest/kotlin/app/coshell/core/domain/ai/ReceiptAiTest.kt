@@ -42,12 +42,13 @@ class ReceiptAiTest {
     }
 
     @Test
-    fun `a total that is not in the text is never taken, the TOTAL line read by code is (#742)`() = runTest {
-        assertEquals(3_791_450, read("""{"total":"40000","currency":"ARS","date":"2026-11-19","shop":"La Esquina"}""")!!.total.amountMinor)
-        assertEquals(3_791_450, read("""{"total":null}""")!!.total.amountMinor)
-        assertNull(ReceiptAi(Fixed("""{"total":"40000"}""")).read("Gracias por su compra 40", ars, setOf(ars), today))
+    fun `a total that is not in the text is never taken`() = runTest {
+        assertNull(read("""{"total":"40000","currency":"ARS","date":"2026-11-19","shop":"La Esquina"}"""))
+        assertNull(read("""{"total":null}"""))
         assertNull(read("not json"))
         assertNull(read(null))
+        // Card digits or an item count are numbers too: a made-up total must not land on them through the «TOTAL» line.
+        assertNull(ReceiptAi(Fixed("""{"total":"9900"}""")).read("Total ARS 9.834,00\nPagado con Mastercard ••8812", ars, setOf(ars), today))
     }
 
     @Test
@@ -56,7 +57,7 @@ class ReceiptAiTest {
         suspend fun on(t: String, answer: String) = ReceiptAi(Fixed(answer)).read(t, ars, setOf(ars, usd, CurrencyCode("AMD")), today)!!.total
         assertEquals(Money(1_075_050, ars), on("TOTAL $10.750,50", """{"total":"10.750.50"}"""))
         assertEquals(Money(6_545_000, ars), on("Total con propina       65.450", """{"total":"65.450"}"""))
-        assertEquals(Money(350_000, CurrencyCode("AMD")), on("Total 3,500 AMD", """{"total":"3.5","currency":"AMD"}"""))
+        assertEquals(Money(350_000, CurrencyCode("AMD")), on("Total 3,500 AMD", """{"total":"3,500","currency":"AMD"}"""))
         assertEquals(Money(1_740_000, ars), on("Total $ 17.400,00\n(USD 14,50 aprox.)", """{"total":"17400","currency":"USD"}"""))
         assertEquals(Money(2_498, usd), on("Total: $24.98 USD", """{"total":24.98,"currency":"USD"}"""))
     }

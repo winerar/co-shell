@@ -29,10 +29,18 @@ android {
     }
 
     sourceSets["main"].assets.directories.add("../../docs/samples")
+    // The app's own code (#742): the bench measures what «Обработать» and «Прочитать с ИИ» do, not a separate prompt.
+    sourceSets["main"].kotlin.directories.addAll(
+        listOf("../../core/model/src/commonMain/kotlin", "../../core/domain/src/commonMain/kotlin", "../ai-eval/src"),
+    )
 
     packaging { jniLibs.useLegacyPackaging = true }
 }
 
 dependencies {
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.19.1")
+    // What core:model and core:domain need (same versions as gradle/libs.versions.toml).
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
 }

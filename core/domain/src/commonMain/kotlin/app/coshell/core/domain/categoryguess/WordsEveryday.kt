@@ -6,16 +6,16 @@ package app.coshell.core.domain.categoryguess
  * of [BrandDictionary] («в аптеке» → «аптека»). Words that mean money in general («перевод», «долг») are left out on purpose.
  */
 internal val EVERYDAY_WORDS: Map<String, String> = mapOf(
-    "food" to "продуктов, продуктовые, хлеб, молоко, яйца, сыр, колбаса, курица, рыба, овощей, фруктов, крупы, сахар, чай, вода питьевая, " +
+    "food" to "продуктов, продуктовые, хлеб, молоко, яйца, сыр, колбаса, курица, рыба, овощей, фруктов, крупы, сахар, чай, вода, водичка, вода питьевая, " +
         "магазин продуктов, супермаркета, гипермаркет, рынке, бакалея, " +
         "comida, mercado, super, supermercado, verduras, frutas, carne, pollo, leche, pan, huevos, queso, facturas, yerba, " +
         "groceries, grocery, supermarket, food store",
     "restaurant" to "кофе, кофеек, капучино, латте, раф, обед, ужин, завтрак, ланч, бизнес ланч, перекус, пицца, суши, роллы, бургер, шашлык, хинкали, " +
-        "столовка, кафешка, ресторане, кафе бар, пиво, вино, коктейль, " +
+        "десерт, десерты, торт, пирожные, столовка, кафешка, ресторане, кафе бар, пиво, вино, коктейль, " +
         "cafe, cafecito, cortado, medialunas, almuerzo, cena, desayuno, merienda, birra, cerveza, vino, helado, lomito, choripan, delivery, " +
         "coffee, lunch, dinner, breakfast, takeaway, takeout",
     "taxi" to "такси, таксист, такса, taxi, remis, remise, cab, ride",
-    "transport" to "бензин, топливо, дизель, заправка, заправился, парковка платная, стоянка, метро проезд, автобус проезд, билет на поезд, поезд, " +
+    "transport" to "субе, бензин, топливо, дизель, заправка, заправился, парковка платная, стоянка, метро проезд, автобус проезд, билет на поезд, поезд, " +
         "самолет, авиабилет, авиабилеты, каршеринг поездка, самокат кикшеринг, кикшеринг, whoosh, юрент, " +
         "combustible, gasoil, carga sube, boleto, pasaje, pasajes, tren, subte viaje, peaje autopista, " +
         "gas station, fuel, petrol, parking, bus, train, flight, metro card",

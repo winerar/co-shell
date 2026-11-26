@@ -45,6 +45,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
   CI сам гоняет правила при их изменении и публикует их после мержа в `dev` (`ci.md` §«Правила Firebase»):
   задачу владельцу «опубликовать правила» больше не заводить.
 - Worker облачного ИИ (`tools/ai-proxy`) — `node --test tools/ai-proxy/worker.test.mjs` (Node 20+, вручную; в CI пока нет).
+- **ИИ без телефона** — `AiEvalTest` (`core:data` jvmTest, код — `tools/ai-eval/src`, #742): набор `docs/samples/ai/eval.json` через код приложения; правила не хуже порога, записанные ответы модели (`docs/samples/ai/answers/`) дают тот же итог.
 - Python-скрипты — `python3 -m unittest discover -s scripts -p 'test_*.py'` и то же для `-s scripts/ci` (шаг в CI).
 - ViewModel с `flowOn(Dispatchers.Default)` в тесте: поток доезжает после `resetMain` и роняет **следующий** тест
   (`UncaughtExceptionsBeforeTest`). Делай контекст подменяемым — `internal var work = Dispatchers.Default`, `state by lazy`

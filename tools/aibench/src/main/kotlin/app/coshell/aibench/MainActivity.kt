@@ -27,7 +27,6 @@ class MainActivity : Activity() {
     private lateinit var log: TextView
     private lateinit var scroll: ScrollView
     private lateinit var gpu: CheckBox
-    private lateinit var quick: CheckBox
     private lateinit var token: EditText
     private val rows = mutableMapOf<String, Pair<TextView, Button>>()
     private val report = StringBuilder()
@@ -51,8 +50,8 @@ class MainActivity : Activity() {
         col.addView(text(device, 12f))
         col.addView(text("По памяти: ${tierFor(ramMb)}", 14f))
         gpu = CheckBox(this).apply { text = "GPU вместо процессора (если телефон умеет)" }
-        quick = CheckBox(this).apply { text = "Быстрый тест (≈ 30 примеров, 5–10 мин)"; isChecked = true }
-        col.addView(gpu); col.addView(quick)
+        col.addView(gpu)
+        col.addView(text("Тест гоняет набор через код приложения: правила, «Быстрые заметки», «Прочитать с ИИ», категория нового получателя.", 12f))
         token = EditText(this).apply {
             hint = "Токен Hugging Face (только для Gemma 3n)"; textSize = 12f; setSingleLine()
             setText(getSharedPreferences("bench", MODE_PRIVATE).getString("hf_token", ""))
@@ -63,8 +62,9 @@ class MainActivity : Activity() {
         col.addView(Button(this).apply { text = "Сравнить всё: процессор и GPU"; setOnClickListener { compareAll() } })
         bottom.addView(Button(this).apply { text = "Остановить"; setOnClickListener { cancel = true } })
         bottom.addView(Button(this).apply { text = "Скопировать отчёт"; setOnClickListener { copy() } })
-        bottom.addView(Button(this).apply { text = "Поделиться"; setOnClickListener { share() } })
+        bottom.addView(Button(this).apply { text = "Поделиться"; setOnClickListener { share(report.toString(), "Отчёт") } })
         col.addView(bottom)
+        col.addView(Button(this).apply { text = "Поделиться ответами модели"; setOnClickListener { shareAnswers() } })
         log = text("", 12f).apply { typeface = Typeface.MONOSPACE; setTextIsSelectable(true) }
         col.addView(log)
         scroll = ScrollView(this).apply { addView(col) }
@@ -127,19 +127,36 @@ class MainActivity : Activity() {
         Thread { try { bench(c, gpu.isChecked) } finally { busy = false } }.start()
     }
 
+    /** Answers of the last run per model and backend: the file for `docs/samples/ai/answers/` (replayed by the JVM tests). */
+    private val answers = LinkedHashMap<String, String>()
+    @Volatile private var rulesShown = false
+
     /** One model on one backend: logs the run and its summary; `null` when it failed (the error is in the log). */
     private fun bench(c: Candidate, onGpu: Boolean): Bench.Report? {
-        say("\n=== ${c.label} (${if (onGpu) "GPU" else "CPU"}, ${if (quick.isChecked) "быстрый" else "полный"}) ===")
+        say("\n=== ${c.label} (${if (onGpu) "GPU" else "CPU"}) ===")
         return try {
-            Bench(this, Gold(this)).run(c, fileOf(c), onGpu, quick.isChecked, ::say) { cancel }.also { r ->
-                say("Итог ${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { "${it.name} ${it.ok}/${it.of}" }}")
+            Bench(this).run(c, fileOf(c), onGpu, ::say) { cancel }.also { r ->
+                if (!rulesShown) {
+                    rulesShown = true
+                    say("Без ИИ (только правила): ${r.rulesOnly.joinToString(" · ") { it.short }}")
+                }
+                say("Итог ${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { it.short }}")
                 say("скорость %.1f ток/с · память (PSS) до %d МБ · загрузка %.1f с · всего %.0f с · батарея %.1f→%.1f °C".format(
                     r.tokPerSec, r.peakPssMb, r.loadSec, r.totalSec, r.tempBefore, r.tempAfter))
+                val name = "${c.id}-${r.backend.lowercase()}.json"
+                answers[name] = r.answersJson
+                runCatching { File(getExternalFilesDir("answers"), name).writeText(r.answersJson) }
             }
         } catch (e: Throwable) {
             say("Ошибка: ${e::class.simpleName}: ${e.message}")
             null
         }
+    }
+
+    private fun shareAnswers() {
+        if (answers.isEmpty()) return say("Сначала запустите тест")
+        val text = answers.entries.joinToString("\n") { (name, json) -> "=== $name ===\n$json" }
+        share(text, "Ответы модели")
     }
 
     /**
@@ -159,7 +176,7 @@ class MainActivity : Activity() {
                     if (cancel) break@loop
                     val r = bench(c, onGpu)
                     rows += if (r == null) "${c.label} [${if (onGpu) "GPU" else "CPU"}]: ошибка"
-                    else "${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { "${it.name} ${it.ok}/${it.of}" }} · %.1f ток/с · %d МБ · загрузка %.1f с · %.0f с".format(
+                    else "${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { it.short }} · %.1f ток/с · %d МБ · загрузка %.1f с · %.0f с".format(
                         r.tokPerSec, r.peakPssMb, r.loadSec, r.totalSec)
                     if (!cancel) Thread.sleep(COOL_DOWN_MS)
                 }
@@ -178,8 +195,8 @@ class MainActivity : Activity() {
         say("Отчёт скопирован — вставьте его в чат.")
     }
 
-    private fun share() {
-        startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, report.toString()), "Отчёт"))
+    private fun share(text: String, title: String) {
+        startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text), title))
     }
 
     private companion object {

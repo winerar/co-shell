@@ -62,7 +62,8 @@ class NoteHints(private val model: LanguageModel) {
             appendLine("Slang: нал, налик, наличка, кэш, кеш, efectivo, contado mean cash; безнал, карточка, tarjeta, débito mean a card; an abbreviation may be a bank or app name (мп = Mercado Pago).")
         }
         appendLine("For each numbered note give a short title (the shop or thing, no amount, no date) and the best category from the list, or null.")
-        appendLine("If a note is not about spending money (a reminder, a test, a random phrase), give \"expense\":false and nothing else.")
+        appendLine("If no category clearly fits, give the most general one of the list (like \"Other\"), not a near guess.")
+        appendLine("If a note is not about spending money (a reminder or plan like \"call mom\", \"buy milk tomorrow\", a test, a random phrase), give \"expense\":false and nothing else.")
         appendLine(if (accounts.isEmpty()) "Answer: [{\"i\":0,\"title\":\"...\",\"category\":\"...\"}, {\"i\":1,\"expense\":false}, ...]"
             else "Answer: [{\"i\":0,\"title\":\"...\",\"category\":\"...\",\"account\":\"...\"}, {\"i\":1,\"expense\":false}, ...]")
         lines.forEachIndexed { i, line -> appendLine("$i: $line") }

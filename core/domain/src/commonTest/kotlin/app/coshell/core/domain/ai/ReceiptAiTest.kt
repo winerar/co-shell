@@ -52,10 +52,32 @@ class ReceiptAiTest {
     @Test
     fun `a doubtful day becomes today, a strange currency the fallback, a shop without letters nothing`() = runTest {
         val future = read("""{"total":"37914.50","currency":"EUR","date":"2027-01-01","shop":"1234"}""")!!
-        assertEquals(today, future.date)
+        // A wrong day gives way to the day the text prints (#742); without one in the text — today.
+        assertEquals(LocalDate(2026, 11, 19), future.date)
         assertEquals(ars, future.total.currency)
         assertEquals("", future.merchant)
-        assertEquals(today, read("""{"total":"37914.50","date":"2019-05-01"}""")!!.date)
+        assertEquals(LocalDate(2026, 11, 19), read("""{"total":"37914.50","date":"2019-05-01"}""")!!.date)
+        val noDate = ReceiptAi(Fixed("""{"total":"37914.50","date":"2019-05-01"}""")).read("TOTAL 37.914,50", ars, setOf(ars), today)!!
+        assertEquals(today, noDate.date)
+    }
+
+    @Test
+    fun `the date is copied as printed and read by code (#742)`() = runTest {
+        assertEquals(LocalDate(2026, 11, 19), read("""{"total":"37914.50","date":"19/11/2026"}""")!!.date)
+        assertEquals(LocalDate(2026, 11, 19), read("""{"total":"37914.50","date":"2026-11-19"}""")!!.date)
+        assertEquals(LocalDate(2026, 11, 19), read("""{"total":"37914.50"}""")!!.date)
+    }
+
+    @Test
+    fun `a currency the text does not print is the local one, a bare dollar sign included (#742)`() = runTest {
+        val usd = CurrencyCode("USD")
+        val bare = ReceiptAi(Fixed("""{"total":"11997","currency":"USD"}""")).read("TOTAL $ 11.997,00", ars, setOf(ars, usd), today)!!
+        assertEquals(ars, bare.total.currency)
+        val named = ReceiptAi(Fixed("""{"total":"24.98","currency":"USD"}""")).read("Total: $24.98 USD", ars, setOf(ars, usd), today)!!
+        assertEquals(usd, named.total.currency)
+        assertTrue(ReceiptAi.printedCurrency(CurrencyCode("RUB"), "Итого 522 ₽"))
+        assertTrue(ReceiptAi.printedCurrency(usd, "Precio U${'$'}S 10"))
+        assertEquals(false, ReceiptAi.printedCurrency(usd, "USDT 10"))
     }
 
     @Test

@@ -29,7 +29,17 @@ data class NoticeFacts(
  * not yet 80 %, but spending runs ahead of the month: «[name]: траты опережают месяц». [key] changes with the limit, the month and
  * the kind (`LimitAlert.key`), so the same case is told once.
  */
-data class LimitFact(val key: String, val name: String, val left: String, val percentLeft: Int = 0, val daysLeft: Int = 0, val pace: Boolean = false)
+data class LimitFact(
+    val key: String,
+    val name: String,
+    val left: String,
+    val percentLeft: Int = 0,
+    val daysLeft: Int = 0,
+    val pace: Boolean = false,
+    /** The envelope a tap opens: the limit's category and its month (`2026-11`). */
+    val categoryId: String = "",
+    val month: String = "",
+)
 
 /** What went out before: the day of the last optional notice and, per kind, its day and key. Phone-only. */
 data class NoticeHistory(

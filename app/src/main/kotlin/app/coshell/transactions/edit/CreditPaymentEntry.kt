@@ -34,3 +34,9 @@ internal fun TransactionEditUiState.withCreditPayment(
         toAmountError = null,
     )
 }
+
+/** «Пополнить» a savings goal (#768): the same transfer as a card payment, into the goal's account; no amount when [amount] is zero. */
+internal fun TransactionEditUiState.withGoalTopUp(target: Account, amount: Money, accounts: List<Account>, moneyFormat: MoneyFormat): TransactionEditUiState {
+    val filled = withCreditPayment(target, amount, accounts, moneyFormat)
+    return if (amount.amountMinor > 0) filled else filled.copy(amount = "", toAmount = "")
+}

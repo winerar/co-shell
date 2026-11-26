@@ -166,6 +166,7 @@ interface BackupDao {
     @Upsert suspend fun upsertSettings(entities: List<SettingEntity>)
     @Upsert suspend fun upsertTags(entities: List<TagEntity>)
     @Upsert suspend fun upsertDebtEvents(entities: List<DebtEventEntity>)
+    @Upsert suspend fun upsertGoals(entities: List<GoalEntity>)
 
     @Transaction
     suspend fun upsertAll(
@@ -178,6 +179,7 @@ interface BackupDao {
         settings: List<SettingEntity> = emptyList(),
         tags: List<TagEntity> = emptyList(),
         debtEvents: List<DebtEventEntity> = emptyList(),
+        goals: List<GoalEntity> = emptyList(),
     ) {
         upsertAccounts(accounts)
         upsertCategories(categories)
@@ -188,5 +190,6 @@ interface BackupDao {
         upsertSettings(settings)
         upsertTags(tags)
         upsertDebtEvents(debtEvents)
+        upsertGoals(goals)
     }
 }

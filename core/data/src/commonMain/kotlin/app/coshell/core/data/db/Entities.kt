@@ -227,3 +227,25 @@ data class DebtEventEntity(
     @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
 )
 
+
+/**
+ * A savings goal (#768, `Goal`): saved = the balance of `account_id`. Synced (`kind` = `goal`, last chunk after `debtEvent`), in the backup,
+ * soft-deleted by «Стереть всё». `deadline` — `YYYY-MM-DD` or null; `currency` is the account's at the time of saving.
+ */
+@Serializable
+@Entity(tableName = "goals")
+data class GoalEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    @ColumnInfo(name = "target_minor") val targetMinor: Long,
+    val currency: String,
+    @ColumnInfo(name = "account_id") val accountId: String,
+    val deadline: String? = null,
+    @ColumnInfo(defaultValue = "0") val yearly: Boolean = false,
+    val icon: String? = null,
+    val color: Long? = null,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+    @ColumnInfo(name = "updated_by") val updatedBy: String?,
+    val deleted: Boolean = false,
+    @Transient @ColumnInfo(name = "pending_sync") val pendingSync: Boolean = true,
+)

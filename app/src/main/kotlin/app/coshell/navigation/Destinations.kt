@@ -227,10 +227,15 @@ data class TransactionEditDestination(
     val draftId: String? = null,
     /** «Провести» a credit card payment (#686): a new transfer into this card for the minimum payment; the source account is chosen. */
     val creditCardId: String? = null,
+    /** «Пополнить» a savings goal (#768): a new transfer into this account for [topUpMinor] (0 — no amount); the source account is chosen. */
+    val topUpAccountId: String? = null,
+    val topUpMinor: Long = 0,
 ) {
     companion object {
         // SavedStateHandle keys; must match the property names.
         const val ARG_CREDIT_CARD = "creditCardId"
+        const val ARG_TOP_UP_ACCOUNT = "topUpAccountId"
+        const val ARG_TOP_UP_MINOR = "topUpMinor"
         const val ARG_TRANSACTION_ID = "transactionId"
         const val ARG_TYPE = "type"
         const val ARG_COPY_FROM = "copyFrom"
@@ -292,6 +297,19 @@ data class BudgetEditDestination(val categoryId: String? = null, val year: Int, 
         const val ARG_CATEGORY_ID = "categoryId"
         const val ARG_YEAR = "year"
         const val ARG_MONTH = "month"
+    }
+}
+
+/** «Цели» (#768): savings goals over account balances. */
+@Serializable
+data object GoalsDestination
+
+/** The goal sheet (#768): a new goal without [goalId], else that goal with «Пополнить». */
+@Serializable
+data class GoalEditDestination(val goalId: String? = null) {
+    companion object {
+        /** SavedStateHandle key of [goalId]; must match the property name. */
+        const val ARG_GOAL_ID = "goalId"
     }
 }
 

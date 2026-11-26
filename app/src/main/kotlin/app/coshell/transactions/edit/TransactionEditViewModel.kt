@@ -35,6 +35,7 @@ import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
+import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
@@ -111,6 +112,10 @@ class TransactionEditViewModel @Inject constructor(
 
     /** «Провести» a credit card payment from «Скоро» (#686): a new transfer into this card for the minimum payment. */
     private val creditCardId: String? = savedStateHandle[TransactionEditDestination.ARG_CREDIT_CARD]
+
+    /** «Пополнить» a savings goal (#768): a new transfer into the goal's account for what to put aside this month. */
+    private val topUpAccountId: String? = savedStateHandle[TransactionEditDestination.ARG_TOP_UP_ACCOUNT]
+    private val topUpMinor: Long = savedStateHandle[TransactionEditDestination.ARG_TOP_UP_MINOR] ?: 0L
 
     /** A draft of a quick note from the route (#586): fills a new form once; saved — the draft is gone. */
     private val draftId: String? = savedStateHandle[TransactionEditDestination.ARG_DRAFT_ID]
@@ -209,6 +214,10 @@ class TransactionEditViewModel @Inject constructor(
             val minimum = card.account.credit?.let { CreditCard.status(it, card.balance, today).minPayment } ?: return@let
             _state.update { it.withCreditPayment(card.account, minimum, accountList.filter { a -> !a.archived }, moneyFormat) }
         }
+        topUpAccountId?.takeIf { transaction == null && template == null }?.let { id ->
+            val target = withBalances.firstOrNull { it.account.id == id }?.account ?: return@let
+            _state.update { it.withGoalTopUp(target, Money(topUpMinor, target.currency), accountList.filter { a -> !a.archived }, moneyFormat) }
+        }
         if (transaction == null && template == null) draftId?.let { applyDraft(it) }
         // A plain new sheet offers what the last closed one had (#323).
         if (isPlainNew(transaction, template)) {
@@ -228,7 +237,7 @@ class TransactionEditViewModel @Inject constructor(
 
     /** A new operation from nothing: not an edit, a copy, a template, a receipt, a draft of notes or a credit card payment. */
     private fun isPlainNew(transaction: Transaction?, template: Transaction?): Boolean =
-        transactionId == null && transaction == null && copyFromId == null && template == null && templateId == null && scannedQr == null && draftId == null && creditCardId == null &&
+        transactionId == null && transaction == null && copyFromId == null && template == null && templateId == null && scannedQr == null && draftId == null && creditCardId == null && topUpAccountId == null &&
             !_state.value.receiptUnread
 
     /** «Продолжить» on the plate «Не сохранено» (#323): the draft goes back into the form. */

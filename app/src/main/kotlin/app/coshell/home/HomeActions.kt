@@ -29,6 +29,9 @@ data class HomeActions(
     /** «Провести» in the credit card line of «Скоро» (#686). */
     val onPostCredit: (accountId: String) -> Unit = {},
     val onOpenDebt: (debtId: String) -> Unit = {},
+    /** «Цели» card (#768): «Все ›» and one goal. */
+    val onGoals: () -> Unit = {},
+    val onOpenGoal: (goalId: String) -> Unit = {},
     val onOpenAccount: (accountId: String) -> Unit = {},
     /** «Все N ›» in «Скоро» → «Регулярные платежи» (#403). */
     val onRecurring: () -> Unit = {},

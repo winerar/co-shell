@@ -21,6 +21,7 @@ data class PulledRows(
     val settings: List<SettingEntity> = emptyList(),
     val tags: List<TagEntity> = emptyList(),
     val debtEvents: List<DebtEventEntity> = emptyList(),
+    val goals: List<GoalEntity> = emptyList(),
     /** Unknown fields of the pulled records that have any (#340); kept only for rows that win. */
     val extras: List<SyncExtraEntity> = emptyList(),
 )
@@ -36,9 +37,10 @@ data class PendingRows(
     val settings: List<SettingEntity>,
     val tags: List<TagEntity> = emptyList(),
     val debtEvents: List<DebtEventEntity> = emptyList(),
+    val goals: List<GoalEntity> = emptyList(),
 ) {
     val size get() = accounts.size + categories.size + transactions.size + budgets.size + manualRates.size + templates.size +
-        settings.size + tags.size + debtEvents.size
+        settings.size + tags.size + debtEvents.size + goals.size
 }
 
 /** Ids of accounts marked «Только у меня» (#558): they, their operations and templates never leave the phone. */
@@ -63,20 +65,21 @@ abstract class SyncDao {
     @Query("SELECT * FROM settings WHERE pending_sync = 1") abstract suspend fun pendingSettings(): List<SettingEntity>
     @Query("SELECT * FROM tags WHERE pending_sync = 1") abstract suspend fun pendingTags(): List<TagEntity>
     @Query("SELECT * FROM debt_events WHERE pending_sync = 1 AND $NOT_LOCAL_DEBT") abstract suspend fun pendingDebtEvents(): List<DebtEventEntity>
+    @Query("SELECT * FROM goals WHERE pending_sync = 1") abstract suspend fun pendingGoals(): List<GoalEntity>
 
     @Query(
         """SELECT (SELECT COUNT(*) FROM accounts WHERE pending_sync = 1 AND local_only = 0) + (SELECT COUNT(*) FROM categories WHERE pending_sync = 1)
            + (SELECT COUNT(*) FROM transactions WHERE pending_sync = 1 AND $NOT_LOCAL_TX) + (SELECT COUNT(*) FROM budgets WHERE pending_sync = 1)
            + (SELECT COUNT(*) FROM manual_rates WHERE pending_sync = 1) + (SELECT COUNT(*) FROM templates WHERE pending_sync = 1 AND $NOT_LOCAL_TEMPLATE)
            + (SELECT COUNT(*) FROM settings WHERE pending_sync = 1) + (SELECT COUNT(*) FROM tags WHERE pending_sync = 1)
-           + (SELECT COUNT(*) FROM debt_events WHERE pending_sync = 1 AND $NOT_LOCAL_DEBT)""",
+           + (SELECT COUNT(*) FROM debt_events WHERE pending_sync = 1 AND $NOT_LOCAL_DEBT) + (SELECT COUNT(*) FROM goals WHERE pending_sync = 1)""",
     )
     abstract fun observePendingCount(): Flow<Int>
 
     @Transaction
     open suspend fun pending() = PendingRows(
         pendingAccounts(), pendingCategories(), pendingTransactions(), pendingBudgets(), pendingManualRates(), pendingTemplates(),
-        pendingSettings(), pendingTags(), pendingDebtEvents(),
+        pendingSettings(), pendingTags(), pendingDebtEvents(), pendingGoals(),
     )
 
     // --- clear the flag only if the row was not edited again while it was being sent ---
@@ -98,6 +101,8 @@ abstract class SyncDao {
     abstract suspend fun clearTag(id: String, updatedAt: Long)
     @Query("UPDATE debt_events SET pending_sync = 0 WHERE id = :id AND updated_at = :updatedAt")
     abstract suspend fun clearDebtEvent(id: String, updatedAt: Long)
+    @Query("UPDATE goals SET pending_sync = 0 WHERE id = :id AND updated_at = :updatedAt")
+    abstract suspend fun clearGoal(id: String, updatedAt: Long)
 
     /**
      * Clears the flags of one pushed chunk in one transaction (#131): row by row, 10 000 imported
@@ -115,6 +120,7 @@ abstract class SyncDao {
             SyncKind.SETTING -> clearSetting(r.id, r.updatedAt)
             SyncKind.TAG -> clearTag(r.id, r.updatedAt)
             SyncKind.DEBT_EVENT -> clearDebtEvent(r.id, r.updatedAt)
+            SyncKind.GOAL -> clearGoal(r.id, r.updatedAt)
         }
     }
 
@@ -128,6 +134,7 @@ abstract class SyncDao {
     @Query("SELECT * FROM settings WHERE id IN (:ids)") abstract suspend fun settings(ids: List<String>): List<SettingEntity>
     @Query("SELECT * FROM tags WHERE id IN (:ids)") abstract suspend fun tags(ids: List<String>): List<TagEntity>
     @Query("SELECT * FROM debt_events WHERE id IN (:ids)") abstract suspend fun debtEvents(ids: List<String>): List<DebtEventEntity>
+    @Query("SELECT * FROM goals WHERE id IN (:ids)") abstract suspend fun goals(ids: List<String>): List<GoalEntity>
 
     @Upsert abstract suspend fun upsertAccounts(rows: List<AccountEntity>)
     @Upsert abstract suspend fun upsertCategories(rows: List<CategoryEntity>)
@@ -138,6 +145,7 @@ abstract class SyncDao {
     @Upsert abstract suspend fun upsertSettings(rows: List<SettingEntity>)
     @Upsert abstract suspend fun upsertTags(rows: List<TagEntity>)
     @Upsert abstract suspend fun upsertDebtEvents(rows: List<DebtEventEntity>)
+    @Upsert abstract suspend fun upsertGoals(rows: List<GoalEntity>)
 
     @Query("SELECT COUNT(*) FROM transactions WHERE deleted = 0") abstract suspend fun liveTransactionCount(): Int
     @Query("SELECT id FROM accounts WHERE local_only = 1") abstract suspend fun localOnlyAccountIds(): List<String>
@@ -192,6 +200,7 @@ abstract class SyncDao {
         upsertSettings(winners(SyncKind.SETTING, rows.settings, settings(rows.settings.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertTags(winners(SyncKind.TAG, rows.tags, tags(rows.tags.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertDebtEvents(winners(SyncKind.DEBT_EVENT, rows.debtEvents, debtEvents(rows.debtEvents.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        upsertGoals(winners(SyncKind.GOAL, rows.goals, goals(rows.goals.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         won.forEach { (kind, ids) -> if (ids.isNotEmpty()) deleteExtras(kind.wire, ids) }
         val wonKeys = won.flatMap { (kind, ids) -> ids.map { "${kind.wire}_$it" } }.toSet()
         upsertExtras(rows.extras.filter { "${it.kind}_${it.id}" in wonKeys })
@@ -209,13 +218,14 @@ abstract class SyncDao {
     @Query("DELETE FROM settings") abstract suspend fun deleteSettings()
     @Query("DELETE FROM tags") abstract suspend fun deleteTags()
     @Query("DELETE FROM debt_events WHERE $NOT_LOCAL_DEBT") abstract suspend fun deleteDebtEvents()
+    @Query("DELETE FROM goals") abstract suspend fun deleteGoals()
     @Query("DELETE FROM sync_state") abstract suspend fun deleteState()
 
     @Transaction
     open suspend fun wipeSyncedData() {
         // «Только у меня» (#558): local-only accounts stay, and so do their operations, templates and debts.
         deleteTransactions(); deleteDebtEvents(); deleteAccounts(); deleteCategories(); deleteBudgets(); deleteManualRates(); deleteTemplates()
-        deleteSettings(); deleteTags(); deleteState(); deleteAllExtras()
+        deleteSettings(); deleteTags(); deleteGoals(); deleteState(); deleteAllExtras()
     }
 
     /** Marks every row as not yet sent — used when this phone's data must go to a (new) family. */
@@ -228,11 +238,12 @@ abstract class SyncDao {
     @Query("UPDATE settings SET pending_sync = 1") abstract suspend fun markSettingsPending()
     @Query("UPDATE tags SET pending_sync = 1") abstract suspend fun markTagsPending()
     @Query("UPDATE debt_events SET pending_sync = 1") abstract suspend fun markDebtEventsPending()
+    @Query("UPDATE goals SET pending_sync = 1") abstract suspend fun markGoalsPending()
 
     @Transaction
     open suspend fun markAllPending() {
         markAccountsPending(); markCategoriesPending(); markTransactionsPending(); markBudgetsPending(); markManualRatesPending()
-        markTemplatesPending(); markSettingsPending(); markTagsPending(); markDebtEventsPending()
+        markTemplatesPending(); markSettingsPending(); markTagsPending(); markDebtEventsPending(); markGoalsPending()
         deleteState()
     }
 }

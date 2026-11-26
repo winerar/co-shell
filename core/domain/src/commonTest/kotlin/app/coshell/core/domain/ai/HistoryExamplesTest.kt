@@ -91,4 +91,22 @@ class HistoryExamplesTest {
         NoteHints(notes).read(listOf("диско 5000"), listOf("Продукты"), examples = examples)
         assertTrue("Disco → Продукты" in notes.prompt)
     }
+
+    private class Cloud(val answer: String) : LanguageModel {
+        override val available = true
+        override val cheap = true
+        var prompt = ""
+        override suspend fun complete(system: String, prompt: String): String { this.prompt = prompt; return answer }
+    }
+
+    @Test
+    fun `the family's past entries never go to the cloud model`() = runTest {
+        val examples = listOf(HistoryExample("Disco", "Продукты"))
+        val payee = Cloud("""{"category":"Продукты"}""")
+        PayeeCategoryAi(payee).suggest("Disco Norte", listOf("Продукты"), examples)
+        assertTrue("Disco → Продукты" !in payee.prompt && "Past entries" !in payee.prompt)
+        val notes = Cloud("""[{"i":0,"title":"Disco","category":"Продукты"}]""")
+        NoteHints(notes).read(listOf("диско 5000"), listOf("Продукты"), examples = examples)
+        assertTrue("Past entries" !in notes.prompt)
+    }
 }

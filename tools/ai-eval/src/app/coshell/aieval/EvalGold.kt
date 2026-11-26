@@ -30,7 +30,10 @@ class EvalGold(json: String, readFile: (String) -> String) {
     class Payee(val payee: String, val categories: List<String>) {
         val category: String get() = categories.first()
     }
-    class Receipt(val id: String, val text: String, val totalMinor: Long, val currency: String, val date: String, val merchant: String)
+    /** [merchants] — the shop's name; a receipt printing it in two scripts («ԵՐԵՎԱՆ ՍԻԹԻ / YEREVAN CITY») lists both. */
+    class Receipt(val id: String, val text: String, val totalMinor: Long, val currency: String, val date: String, val merchants: List<String>) {
+        val merchant: String get() = merchants.first()
+    }
 
     val categories: List<String>
     val notes: List<Note>
@@ -61,7 +64,10 @@ class EvalGold(json: String, readFile: (String) -> String) {
         receipts = root.getValue("receipts").jsonArray.map { e ->
             val o = e.jsonObject
             val text = o.str("text") ?: readFile(o.str("file")!!)
-            Receipt(o.str("id")!!, text, (o["total"] as JsonPrimitive).longOrNull!!, o.str("currency")!!, o.str("date")!!, o.str("merchant")!!)
+            Receipt(
+                o.str("id")!!, text, (o["total"] as JsonPrimitive).longOrNull!!, o.str("currency")!!, o.str("date")!!,
+                listOf(o.str("merchant")!!) + (o["merchant_also"] as? JsonArray).orEmpty().map { it.jsonPrimitive.content },
+            )
         }
     }
 }

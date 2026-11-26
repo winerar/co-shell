@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -82,4 +83,16 @@ internal fun AboutLinks(onFeedback: () -> Unit, modifier: Modifier = Modifier) {
     CoShellRowGroup(modifier) {
         row { CoShellMenuRow(DesignR.drawable.ic_feedback, stringResource(R.string.about_feedback), onFeedback, subtitle = stringResource(R.string.feedback_menu_hint)) }
     }
+}
+
+/** Who made the app (#761, poll 2026-11-26 «Д»): two quiet centred lines at the very end of the screen, after [AboutLinks]. */
+@Composable
+internal fun AboutCredits(modifier: Modifier = Modifier) {
+    Text(
+        stringResource(R.string.about_credits_ideas) + "\n" + stringResource(R.string.about_credits_dev),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = modifier.fillMaxWidth(),
+    )
 }

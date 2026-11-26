@@ -17,17 +17,19 @@ class PayeeCategoryAi(private val model: LanguageModel) {
      * The name from [categories] that fits [text], `null` when the model is not sure, failed, or named something else.
      * [examples] — the family's past «name → category» pairs ([HistoryExamples]): local shops the model does not know.
      */
-    suspend fun suggest(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList()): String? {
+    suspend fun suggest(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList(), categoryHints: String = ""): String? {
         val shop = text.trim().take(MAX_TEXT)
         if (!model.available || shop.isEmpty() || categories.isEmpty()) return null
-        val answer = model.complete(SYSTEM, prompt(shop, categories, examples)) ?: return null
+        val answer = model.complete(SYSTEM, prompt(shop, categories, examples, categoryHints)) ?: return null
         return parse(answer, categories)
     }
 
-    internal fun prompt(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList()): String = buildString {
+    internal fun prompt(text: String, categories: List<String>, examples: List<HistoryExample> = emptyList(), categoryHints: String = ""): String = buildString {
         appendLine("Categories: " + categories.joinToString(" | "))
+        if (categoryHints.isNotEmpty()) appendLine(categoryHints)
         HistoryExamples.promptLine(examples).takeIf { it.isNotEmpty() }?.let(::appendLine)
         appendLine("Shop or note: $text")
+        appendLine("If no category clearly fits, give the most general one of the list (like \"Other\"), not a near guess.")
         append("Answer {\"category\":\"<one name from the list>\"}, or {\"category\":null} if you are not sure.")
     }
 

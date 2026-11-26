@@ -32,18 +32,20 @@ class NoteHints(private val model: LanguageModel) {
     /**
      * Hints for [lines] (same order); empty list entries are `null`. Without a model or on any failure — all `null`.
      * [accounts] — labels of the person's live accounts; the model may name one as the way of paying (never invent one).
-     * [examples] — the family's past «name → category» pairs ([HistoryExamples]): the model follows them for shops it does not know.
+     * [examples] — the family's past «name → category» pairs ([HistoryExamples]): the model follows them for shops it does not know;
+     * [categoryHints] — [CategoryHints.line]: what the categories hold.
      */
     suspend fun read(
         lines: List<String>,
         categories: List<String>,
         accounts: List<String> = emptyList(),
         examples: List<HistoryExample> = emptyList(),
+        categoryHints: String = "",
     ): List<NoteHint?> {
         if (lines.isEmpty() || !model.available) return lines.map { null }
         // A long note goes in parts: the add-on's context is 2048 tokens and a small model loses count on long lists.
         return lines.chunked(MAX_LINES).flatMap { part ->
-            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts, examples))
+            val answer = model.complete(if (accounts.isEmpty()) SYSTEM else SYSTEM_ACCOUNTS, prompt(part, categories, accounts, examples, categoryHints))
             if (answer == null) part.map { null } else parse(answer, part.size, categories, accounts)
         }
     }
@@ -53,8 +55,10 @@ class NoteHints(private val model: LanguageModel) {
         categories: List<String>,
         accounts: List<String> = emptyList(),
         examples: List<HistoryExample> = emptyList(),
+        categoryHints: String = "",
     ): String = buildString {
         appendLine("Categories: " + categories.joinToString(" | "))
+        if (categoryHints.isNotEmpty()) appendLine(categoryHints)
         HistoryExamples.promptLine(examples).takeIf { it.isNotEmpty() }?.let(::appendLine)
         if (accounts.isNotEmpty()) {
             appendLine("Accounts (name · currency · kind): " + accounts.joinToString(" | "))

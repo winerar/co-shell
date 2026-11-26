@@ -62,7 +62,7 @@ class ReceiptAi(private val model: LanguageModel) {
         val minor = printed.minor(Currencies.info(currency).fractionDigits)?.takeIf { it > 0 } ?: return null
         val total = Money(minor, currency)
         val date = date(field("date"), text, today)
-        val shop = field("shop")?.take(MAX_SHOP)?.takeIf { s -> s.any(Char::isLetter) && !paymentApp(s) }.orEmpty()
+        val shop = field("shop")?.take(MAX_SHOP)?.takeIf { s -> s.any(Char::isLetter) && !paymentApp(s) } ?: header(text).orEmpty()
         return Receipt(total = total, date = date, merchant = shop, key = "", format = FORMAT)
     }
 
@@ -111,6 +111,7 @@ class ReceiptAi(private val model: LanguageModel) {
         const val FORMAT = "ai"
         private const val MAX_TEXT = 6000
         private const val MAX_SHOP = 60
+        private const val MAX_HEADER = 40
         private val NUMBER = Regex("""(?<![\d.,])(\d{1,3}(?:[ \u00A0\u202F.,']\d{3})+(?:[.,]\d{1,8})?|\d+(?:[.,]\d{1,8})?)(?!\d)""")
         private const val SYSTEM = "You read a shop receipt or a payment confirmation for a family budget app. The text may be in any language, " +
             "with columns broken by the PDF. Take the final total actually paid (after discounts, with tax), not a subtotal or a single item. " +
@@ -120,6 +121,22 @@ class ReceiptAi(private val model: LanguageModel) {
         private val PAYMENT_APPS = listOf("mercado pago", "rappi pay", "ualá", "uala", "naranja x", "modo", "visa", "mastercard", "amex", "google pay", "apple pay")
 
         internal fun paymentApp(shop: String): Boolean = shop.trim().lowercase() in PAYMENT_APPS
+
+        /** Words that start a document's title line, not a shop's name («Чек № 8841», «Comprobante de transferencia»). */
+        private val TITLE_WORDS = listOf("чек", "кассовый", "ticket", "tique", "factura", "comprobante", "recibo", "receipt", "invoice", "order", "заказ")
+
+        /**
+         * The shop from the receipt's own header when the model gave none (#742): the first of the top three lines that reads like a name —
+         * letters, short, not a document title; «YPF FULL - EST. 4410» → «YPF FULL».
+         */
+        internal fun header(text: String): String? = text.lines().map { it.trim() }.filter { it.isNotEmpty() }.take(3).firstNotNullOfOrNull { line ->
+            val name = line.substringBefore(" - ").substringBefore(" / ").trim()
+            val lower = name.lowercase()
+            name.takeIf {
+                it.length in 2..MAX_HEADER && it.count(Char::isLetter) >= 3 && it.count(Char::isDigit) <= 2 &&
+                    TITLE_WORDS.none { w -> lower.startsWith(w) } && !paymentApp(it)
+            }
+        }
 
         /** Signs that name one currency only («$» is everyone's and does not count); «ФН»/«ФД» — the fiscal numbers of a Russian till receipt. */
         private val SIGNS = mapOf(

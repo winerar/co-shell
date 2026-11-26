@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.core.domain.ai.NoLanguageModel
+import app.coshell.core.domain.ai.CategoryHints
 import app.coshell.core.domain.ai.HistoryExamples
 import app.coshell.core.domain.ai.PayeeCategoryAi
 import app.coshell.core.domain.ai.ReceiptAi
@@ -560,7 +561,7 @@ class TransactionEditViewModel @Inject constructor(
         aiJob = viewModelScope.launch {
             delay(AI_DELAY_MS)
             val options = allCategories.filter { it.type == CategoryType.EXPENSE && !it.archived }
-            val name = categoryAi.suggest(text, options.map { it.name }, HistoryExamples.pick(history, options, listOf(text))) ?: return@launch
+            val name = categoryAi.suggest(text, options.map { it.name }, HistoryExamples.pick(history, options, listOf(text)), CategoryHints.line(options)) ?: return@launch
             val category = options.firstOrNull { it.name == name } ?: return@launch
             _state.update { cur ->
                 val same = (cur.scan?.seller ?: cur.note).trim() == text

@@ -63,8 +63,12 @@ class ReceiptAiTest {
     }
 
     @Test
-    fun `a payment app is not a shop`() = runTest {
-        assertEquals("", read("""{"total":"37914.50","shop":"Mercado Pago"}""")!!.merchant)
+    fun `a payment app is not a shop, the receipt header is (#742)`() = runTest {
+        assertEquals("LA ESQUINA SRL", read("""{"total":"37914.50","shop":"Mercado Pago"}""")!!.merchant)
+        assertEquals("LA ESQUINA SRL", read("""{"total":"37914.50"}""")!!.merchant)
+        assertEquals("YPF FULL", ReceiptAi.header("YPF FULL - EST. 4410\nAv. del Libertador 5800"))
+        assertEquals("ООО «Автопарк-М»", ReceiptAi.header("Чек № 8841\nООО «Автопарк-М»\nДата 15.11.2026"))
+        assertEquals(null, ReceiptAi.header("Comprobante de transferencia\n27/11/2026 21:03\n$ 27.500"))
         assertEquals("La Esquina", read("""{"total":"37914.50","shop":"La Esquina"}""")!!.merchant)
     }
 
@@ -74,7 +78,7 @@ class ReceiptAiTest {
         // A wrong day gives way to the day the text prints (#742); without one in the text — today.
         assertEquals(LocalDate(2026, 11, 19), future.date)
         assertEquals(ars, future.total.currency)
-        assertEquals("", future.merchant)
+        assertEquals("LA ESQUINA SRL", future.merchant) // «1234» is no name: the header is
         assertEquals(LocalDate(2026, 11, 19), read("""{"total":"37914.50","date":"2019-05-01"}""")!!.date)
         val noDate = ReceiptAi(Fixed("""{"total":"37914.50","date":"2019-05-01"}""")).read("TOTAL 37.914,50", ars, setOf(ars), today)!!
         assertEquals(today, noDate.date)

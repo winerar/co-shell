@@ -45,31 +45,35 @@ class AiEvalTest {
     }
 
     @Test
-    fun `recorded phone answers replay to their scores`() = runTest {
+    fun `recorded phone answers replay to scores not worse than on the phone`() = runTest {
         val files = File(samples, "answers").listFiles { f -> f.extension == "json" }.orEmpty().sortedBy { it.name }
         for (file in files) {
             val text = file.readText()
             val expected = EXPECTED.find(text)?.groupValues?.get(1)?.split(", ")?.toSet() ?: continue
-            val replay = ReplayModel(text)
-            val eval = AiEval(gold, replay)
-            val got = eval.all()
-            if (replay.missing > 0) {
-                println("${file.name}: ${replay.missing} requests are not in the recording (prompts changed) — record again on the phone")
-                continue
-            }
-            println("== ${file.name}")
-            got.forEach { s -> println(s.line); s.misses.forEach { println("  ✗ $it") } }
-            // Not worse than on the phone: the code may only read the same answers better (#742).
             val recorded = expected.associate { it.substringBeforeLast(' ') to it.substringAfterLast(' ').substringBefore('/').toInt() }
-            for (s in got) assertTrue(s.ok >= (recorded[s.name] ?: 0), "${file.name}: ${s.short}, on the phone ${recorded[s.name]}")
+            println("== ${file.name}")
+            // Each measure on its own: a prompt changed for notes leaves the recorded receipts still checked.
+            val measures = listOf<suspend (AiEval) -> AiEval.Score>({ it.notes(false) }, { it.notes(true) }, { it.payees(false) }, { it.payees(true) }, { it.receipts() })
+            for (measure in measures) {
+                val replay = ReplayModel(text)
+                val s = measure(AiEval(gold, replay))
+                if (replay.missing > 0) {
+                    println("${s.name}: ${replay.missing} requests are not in the recording (prompt changed) — record again on the phone")
+                    continue
+                }
+                println(s.line)
+                s.misses.forEach { println("  ✗ $it") }
+                // Not worse than on the phone: the code may only read the same answers better (#742).
+                assertTrue(s.ok >= (recorded[s.name] ?: 0), "${file.name}: ${s.short}, on the phone ${recorded[s.name]}")
+            }
         }
     }
 
     private companion object {
         val EXPECTED = Regex(""""scores"\s*:\s*"([^"]*)"""")
-        const val RULES_NOTES_NEW = 55
-        const val RULES_NOTES_HISTORY = 55
-        const val RULES_PAYEES_NEW = 60
-        const val RULES_PAYEES_HISTORY = 60
+        const val RULES_NOTES_NEW = 59
+        const val RULES_NOTES_HISTORY = 59
+        const val RULES_PAYEES_NEW = 66
+        const val RULES_PAYEES_HISTORY = 66
     }
 }

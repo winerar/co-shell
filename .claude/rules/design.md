@@ -8,6 +8,7 @@ paths:
 @../../docs/agents/design-navigation.md
 @../../docs/agents/components.md
 @../../docs/agents/components-approved.md
+@../../docs/agents/components-keypad.md
 @../../docs/agents/components-topbars.md
 @../../docs/agents/fonts.md
 @../../docs/agents/motion.md

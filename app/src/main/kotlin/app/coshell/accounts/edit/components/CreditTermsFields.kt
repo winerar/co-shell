@@ -18,7 +18,7 @@ import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.ui.form.AmountSheetField
-import app.coshell.ui.ai.BetaMark
+import app.coshell.ui.beta.BetaMark
 
 /**
  * «Условия карты» (#686, boards `CreditTerms`, `CreditTermsSum`): the limit, the day of the month the payment is due and the minimum

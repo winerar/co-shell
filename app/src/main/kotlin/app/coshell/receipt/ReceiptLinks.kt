@@ -8,7 +8,6 @@ import app.coshell.receipt.inbox.Incoming
 import app.coshell.receipt.inbox.ReceiptFileReader
 import app.coshell.receipt.inbox.ReceiptSamples
 import app.coshell.receipt.inbox.SharedFile
-import app.coshell.receipt.inbox.UnreadReceipts
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +27,7 @@ import kotlinx.coroutines.withContext
  * Everything is read in the app, offline; links are never opened in a browser.
  */
 @Singleton
-class ReceiptLinks @Inject constructor(private val files: ReceiptFileReader) : ReceiptSamples, UnreadReceipts {
+class ReceiptLinks @Inject constructor(private val files: ReceiptFileReader) : ReceiptSamples {
     /** What to open: [text] for the formats (may be empty), [readable] — a known format reads it. */
     data class Pending(val text: String, val readable: Boolean)
 
@@ -40,11 +39,6 @@ class ReceiptLinks @Inject constructor(private val files: ReceiptFileReader) : R
     private var sample: SharedFile? = null
 
     override fun take(): SharedFile? = sample.also { sample = null }
-
-    /** The text of the last unread share, for «Прочитать с ИИ» (#593). */
-    @Volatile private var unreadText: String? = null
-
-    override fun text(): String? = unreadText
 
     /** `true` — the intent carried a receipt, shared text or a shared file. */
     fun offer(intent: Intent?): Boolean {
@@ -66,7 +60,6 @@ class ReceiptLinks @Inject constructor(private val files: ReceiptFileReader) : R
                 is Incoming.File -> files.read(incoming.uri, incoming.mime).let { it.text to it.file }
             }
             val readable = withContext(Dispatchers.Default) { ReceiptFormats.read(text) != null }
-            unreadText = text.takeIf { !readable && it.isNotBlank() }
             sample = when {
                 readable -> null
                 file != null -> file

@@ -5,7 +5,6 @@
 access_where_text
 account_deleted
 account_local_only_short
-ai_off_text
 amount_sign_minus
 amount_sign_plus
 auto_backup_off

@@ -1,7 +1,6 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.domain.quickentry.ReceiptPrefills
-import app.coshell.core.domain.ai.ReceiptAi
 import app.coshell.core.domain.receipts.AfipQrFormat
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptNote
@@ -16,7 +15,7 @@ import kotlinx.datetime.LocalDate
  * ([document] — a receipt file or text, «Из чека · Teleshka») for the quiet source line, [key] marks the saved operation,
  * [duplicate] is the live operation of the same receipt (the «Этот чек уже записан» window).
  */
-data class ScanUi(val seller: String, val key: String, val duplicate: ScanDuplicate? = null, val document: Boolean = false, val ai: Boolean = false)
+data class ScanUi(val seller: String, val key: String, val duplicate: ScanDuplicate? = null, val document: Boolean = false)
 
 /**
  * «Какой это счёт?» (#577): the receipt prints the last [digits] of a card or an account no account has yet; [target] — they are
@@ -55,7 +54,6 @@ internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: M
             key = prefill.dedupeKey,
             duplicate = scan?.duplicate,
             document = receipt.format != AfipQrFormat.id,
-            ai = receipt.format == ReceiptAi.FORMAT,
         ),
     )
 }

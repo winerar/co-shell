@@ -50,7 +50,6 @@ usage() {
   Дизайн (холст)
     mockups               пересобрать доски холста из генераторов + проверка логики тапов
     render <доски…>       PNG досок без холста (тёмная, Вольт) в scratchpad
-    aibench                      APK замера моделей на телефоне (tools/aibench, #587)
     poll <spec.json> [--img dir] страница-опрос «выбери вариант» для владельца → scratchpad/poll (workflow.md)
     flows                 перерисовать только доску «Воркфлоу» (mockups делает это сам)
 
@@ -135,7 +134,6 @@ case "$cmd" in
         out="$(scratch)/shots"; mkdir -p "$out"
         files=(); for b in "$@"; do files+=("docs/design/mockups/${b%.dc.html}.dc.html"); done
         exec node "$here/render-mockups.js" "$out" dark Вольт "${files[@]}" ;;
-    aibench) export ANDROID_HOME="${ANDROID_HOME:-$(sed -n 's/^sdk.dir=//p' local.properties 2>/dev/null)}"; "$here/gradle.sh" -p tools/aibench assembleDebug --console=plain "$@" && echo "APK: tools/aibench/build/outputs/apk/debug/aibench-debug.apk" ;;
     poll) spec="$1"; shift; exec python3 "$here/poll-page.py" "$spec" "$(scratch)/poll" "$@" ;;
     flows) exec python3 "$here/gen-flows-board.py" "$@" ;;
     backup) exec python3 "$here/gen-test-backup.py" "$@" ;;

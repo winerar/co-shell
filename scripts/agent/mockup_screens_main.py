@@ -236,7 +236,7 @@ BOARDS = [
     ('OpsSelect', '2 · Операции: выбор нескольких', lambda: ops_list((0, 1, 3))), ('OpsUndo', '2 · Операции: удалено, «Отменить»', lambda: ops_list(snack=True)),
     ('AccountsEmpty', '3 · Счета: пусто', accounts_empty), ('AccountsSearch', '3 · Счета: поиск', accounts_search),
     ('EntryTransfer', '5 · Шторка: перевод между валютами', lambda: _entry().transfer()), ('EntryReceipt', '5 · Шторка: чек в другой валюте', lambda: _entry().receipt()),
-    ('EntryGuessHist', '5 · Шторка: категория по прошлым операциям', lambda: _entry().guess('hist')), ('EntryGuessAi', '5 · Шторка: категория предложена ИИ', lambda: _entry().guess('ai')),
+    ('EntryGuessHist', '5 · Шторка: категория по прошлым операциям', lambda: _entry().guess('hist')),
     ('EntryEdit', '5 · Шторка: правка операции', lambda: _entry().edit()), ('EntryError', '5 · Шторка: не выбрана категория', lambda: _entry().error()),
     ('EntryNoAccounts', '5 · Шторка: нет счетов', lambda: _entry().no_accounts()),
     ('EntryAllAccounts', '5 · Шторка: «Все ›» — все счета, как на «Счетах»', lambda: _entry().all_accounts()),

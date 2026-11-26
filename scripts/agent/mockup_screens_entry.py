@@ -61,12 +61,10 @@ HISTORY = 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4M12 8v4l3 2'
 
 
 def guess_caption(source):
-    """The grey line of an automatic category (#584, #594; `GuessCaption`, `AiGuessCaption`): where it came from; the model's one has a spark and «бета»."""
-    ai = source == 'ai'
-    icon = svg('spark', MUTED, 14, 2) if ai else svg(HISTORY, MUTED, 14, 2)
-    word = 'предложено ИИ' if ai else 'по прошлым операциям'
-    beta = ' ' + status_chip('бета', 'manual') if ai else ''
-    return ('<span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: %s; white-space: nowrap;">%s%s%s</span>' % (MUTED, icon, word, beta))
+    """The grey line of an automatic category (#584; `GuessCaption`): where it came from."""
+    icon = svg(HISTORY, MUTED, 14, 2)
+    word = 'по прошлым операциям'
+    return ('<span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: %s; white-space: nowrap;">%s%s</span>' % (MUTED, icon, word))
 
 
 def categories(selected=None, error=False, caption=''):

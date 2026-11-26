@@ -28,14 +28,4 @@
     <string name="account_digits_field">Last digits</string>
     <string name="account_digits_field_hint">From a bank receipt: “4083********3900” → 3900</string>
     <string name="account_digits_error">Enter four digits.</string>
-    <string name="receipt_ai_read">Read with AI</string>
-    <string name="receipt_ai_text_phone">We don\'t know this format yet. AI on this phone will read the receipt offline, and you\'ll check the fields.</string>
-    <string name="receipt_ai_text_cloud">We don\'t know this format yet. Cloud AI will read the receipt, and you\'ll check the fields. The receipt text goes to the AI server.</string>
-    <string name="receipt_ai_text_off">We don\'t know this format yet. Send a sample and we\'ll add it. Or turn on AI: More → Settings → Smart features.</string>
-    <string name="receipt_ai_enable">Turn on AI</string>
-    <string name="receipt_ai_failed">AI found no total in the receipt. Enter the amount by hand or send a sample and we\'ll add the format.</string>
-    <string name="receipt_ai_busy_title">Reading the receipt…</string>
-    <string name="receipt_ai_busy_phone">This takes a few seconds. The receipt stays on your phone.</string>
-    <string name="receipt_ai_busy_cloud">This takes a few seconds.</string>
-    <string name="scan_source_ai">Read by AI · check the amount and date</string>
 </resources>

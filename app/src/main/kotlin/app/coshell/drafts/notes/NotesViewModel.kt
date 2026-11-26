@@ -2,8 +2,6 @@ package app.coshell.drafts.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.coshell.ai.cloud.CloudLimitNotice
-import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.core.domain.drafts.ProcessQuickNoteUseCase
 import app.coshell.core.domain.drafts.QuickNoteDrafts
 import app.coshell.drafts.NoteStore
@@ -26,11 +24,8 @@ import kotlinx.coroutines.launch
 class NotesViewModel @Inject constructor(
     private val store: NoteStore,
     private val process: ProcessQuickNoteUseCase,
-    private val model: LanguageModel,
-    private val limitNotice: CloudLimitNotice,
 ) : ViewModel() {
-    private val cloud = model.cheap
-    private val _state = MutableStateFlow(NotesUiState(isLoading = true, cloud = cloud))
+    private val _state = MutableStateFlow(NotesUiState(isLoading = true))
     val state: StateFlow<NotesUiState> = _state.asStateFlow()
 
     private val _done = Channel<Unit>(Channel.BUFFERED)
@@ -40,23 +35,12 @@ class NotesViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val text = store.text()
-            _state.value = NotesUiState(text = text, lineCount = QuickNoteDrafts.lines(text).size, cloud = cloud)
-            warmOnce()
+            _state.value = NotesUiState(text = text, lineCount = QuickNoteDrafts.lines(text).size)
         }
-    }
-
-    private var warmed = false
-
-    /** There is something to process: the phone model starts loading now, not on «Обработать» (#583 «оболочка» п. 7). */
-    private fun warmOnce() {
-        if (warmed || _state.value.lineCount == 0) return
-        warmed = true
-        viewModelScope.launch { model.warm() }
     }
 
     fun onTextChange(text: String) {
         _state.update { it.copy(text = text, lineCount = QuickNoteDrafts.lines(text).size, skipped = 0) }
-        warmOnce()
         viewModelScope.launch { store.save(text) }
     }
 
@@ -73,8 +57,7 @@ class NotesViewModel @Inject constructor(
             // Lines that are not about money stay in the note (#630); the rest became drafts.
             val left = result.skipped.joinToString("\n")
             store.save(left)
-            if (result.limited) limitNotice.raise()
-            _state.value = NotesUiState(text = left, lineCount = result.skipped.size, skipped = result.skipped.size, cloud = cloud)
+            _state.value = NotesUiState(text = left, lineCount = result.skipped.size, skipped = result.skipped.size)
             if (result.made > 0) _done.send(Unit)
         }
     }

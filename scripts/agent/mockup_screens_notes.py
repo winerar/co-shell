@@ -18,9 +18,9 @@ ROW = ('notes', 'Быстрые заметки и черновики',
        '(готовы: есть сумма и категория), остальные ждут с пометкой. Вход — строка на «Обзоре» и «Ещё → Деньги → Черновики».')
 
 LINES = ['кофе 3500', 'такси 2000', 'хлеб 850 карта', 'вчера аптека 4200']
-# title, sub, amount, category, how it was found ('hist' — past entries, 'spark' — AI, 'dict' — by name), ready
+# title, sub, amount, category, how it was found ('hist' — past entries, 'dict' — by name), ready
 DRAFTS = [('Кофе', 'Galicia · сегодня', '−3 500', 'Кафе', 'hist'), ('Такси', 'Galicia · сегодня', '−2 000', 'Такси', 'hist'),
-          ('Хлеб', 'Наличные · сегодня', '−850', 'Продукты', 'dict'), ('Аптека', 'Galicia · вчера', '−4 200', 'Здоровье', 'spark')]
+          ('Хлеб', 'Наличные · сегодня', '−850', 'Продукты', 'dict'), ('Аптека', 'Galicia · вчера', '−4 200', 'Здоровье', 'dict')]
 
 
 # The category's small badge in the caption (`CategoryBadge`, size `Sizes.categoryMini` 18 dp; poll 2026-11-24 «А»).
@@ -28,10 +28,10 @@ CAT_LOOK = {'Кафе': ('cafe', WARN), 'Такси': ('taxi', CYAN), 'Прод�
 
 
 def caption(text, src):
-    """The grey «by past entries / by name / by AI» caption of an auto-picked category (`CategorySource`); the spark marks «made by AI»."""
-    spark = svg('spark', LIME, 12, 2) if src == 'spark' else ''
-    word = {'hist': 'по прошлым операциям', 'dict': 'по названию', 'spark': 'предложено ИИ'}[src]
-    beta = '<span style="margin-left: 4px;">%s</span>' % status_chip('бета', 'manual') if src == 'spark' else ''
+    """The grey «by past entries / by name» caption of an auto-picked category (`CategorySource`)."""
+    spark = ''
+    word = {'hist': 'по прошлым операциям', 'dict': 'по названию'}[src]
+    beta = ''
     icon, color = CAT_LOOK.get(text, ('folder', LIME))
     return ('<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: %s;">%s<span style="display: flex; align-items: center; gap: 4px;">%s%s · %s%s</span></span>'
             % (MUTED, dot_icon(icon, color, 18), spark, text, word, beta))
@@ -115,7 +115,7 @@ def drafts_long():
         elif i == 9:
             rows.append(draft(n, sub, amt, on=False, need='Выберите категорию'))
         else:
-            rows.append(draft(n, sub, amt, cats[i % 4], ['hist', 'dict', 'spark'][i % 3]))
+            rows.append(draft(n, sub, amt, cats[i % 4], ['hist', 'dict'][i % 2]))
     body = drafts_body(rows, '18 черновиков · готовы 15', 'Нажмите на строку, чтобы поправить.')
     return inner_screen('Черновики', body) + footer(button('Записать · 15', 'primary', 'check', 0))
 

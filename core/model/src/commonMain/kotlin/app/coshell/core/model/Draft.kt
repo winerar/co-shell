@@ -3,8 +3,8 @@ package app.coshell.core.model
 /** Where a draft came from. Only notes now; bank notifications and statements join later (#592, #331). */
 enum class DraftOrigin { NOTE }
 
-/** How the category of a draft was found — the grey caption under it («по прошлым операциям», «по названию», «предложено ИИ»). */
-enum class DraftCategorySource { HISTORY, DICTIONARY, AI }
+/** How the category of a draft was found — the grey caption under it («по прошлым операциям», «по названию»). */
+enum class DraftCategorySource { HISTORY, DICTIONARY }
 
 /**
  * An unfinished expense (#586): a line of a quick note read by rules or the on-device model, waiting for the person to check it.

@@ -277,7 +277,6 @@ fun CoShellNavHost(
                         onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
                         onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
                         onSendReceiptSample = { navController.navigate(FeedbackDestination(receiptSample = true)) { launchSingleTop = true } },
-                        onSmartSettings = { navController.navigate(SettingsDestination) { launchSingleTop = true } },
                     )
                 }
                 // New entries only: the words about the sheet sit in the dimmed strip above it (#513, `SheetCoach`).

@@ -19,7 +19,6 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import app.coshell.R
-import app.coshell.ui.ai.BetaMark
 import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.category.CategoryBadge
@@ -118,7 +117,6 @@ private fun Missing(row: DraftRowUi) {
     val source = when (row.source) {
         DraftCategorySource.HISTORY -> stringResource(R.string.entry_category_guess_history)
         DraftCategorySource.DICTIONARY -> stringResource(R.string.entry_category_guess_name)
-        DraftCategorySource.AI -> stringResource(R.string.drafts_category_ai)
         null -> null
     }
     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
@@ -131,7 +129,6 @@ private fun Missing(row: DraftRowUi) {
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f, fill = false),
         )
-        if (row.source == DraftCategorySource.AI) BetaMark()
     }
 }
 

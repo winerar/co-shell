@@ -674,7 +674,6 @@
     <string name="entry_section_category_frequent">Категория · частые</string>
     <string name="entry_category_guess_history">по прошлым операциям</string>
     <string name="entry_category_guess_name">по названию</string>
-    <string name="entry_category_guess_ai">предложено ИИ</string>
     <string name="entry_section_details">Детали</string>
     <string name="entry_receipt_add">+ Сумма покупки</string>
     <string name="entry_receipt">Сумма покупки</string>
@@ -690,4 +689,6 @@
     <string name="transaction_categories_all_title">Все категории</string>
     <string name="transaction_categories_search">Найти категорию</string>
     <string name="transaction_categories_nothing">Ничего не нашлось</string>
+    <!-- «бета» next to a feature that is not stable yet (#643): credit cards, deposits. -->
+    <string name="beta">бета</string>
 </resources>

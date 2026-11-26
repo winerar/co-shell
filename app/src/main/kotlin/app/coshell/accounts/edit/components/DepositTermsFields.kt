@@ -28,7 +28,7 @@ import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.rememberDatePick
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.DepositPayout
-import app.coshell.ui.ai.BetaMark
+import app.coshell.ui.beta.BetaMark
 import app.coshell.ui.format.formatDayMonthYear
 import app.coshell.ui.sheet.ModalSheet
 import kotlin.time.Instant

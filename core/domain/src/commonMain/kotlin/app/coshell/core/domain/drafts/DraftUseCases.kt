@@ -5,10 +5,6 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
-import app.coshell.core.domain.ai.CategoryHints
-import app.coshell.core.domain.ai.HistoryExamples
-import app.coshell.core.domain.ai.NoteHint
-import app.coshell.core.domain.ai.NoteHints
 import app.coshell.core.model.CategoryType
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
@@ -19,22 +15,21 @@ import kotlinx.coroutines.flow.first
 import kotlin.time.Instant
 
 /**
- * «Обработать» (#586): the note's text → drafts, saved in one write. The model (if installed) reads only the lines rules could not
- * finish, all in one request; without it those lines wait as drafts with the missing piece marked.
+ * «Обработать» (#586): the note's text → drafts by rules, saved in one write; a line the rules could not finish waits as a draft
+ * with the missing piece marked.
  */
 class ProcessQuickNoteUseCase(
     private val accounts: AccountRepository,
     private val categories: CategoryRepository,
     private val transactions: TransactionRepository,
     private val drafts: DraftRepository,
-    private val hints: NoteHints?,
     private val ids: IdGenerator = IdGenerator.Random,
     /** The currency of the country the phone is in (by the mobile network, #633), `null` when unknown. */
     private val localCurrency: () -> CurrencyCode? = { null },
     private val now: () -> Long,
 ) {
-    /** [made] drafts; [skipped] — lines that are not about money (#630), to be left in the note; [limited] — the cloud's daily limit ended the request (#635). */
-    data class Result(val made: Int, val skipped: List<String>, val limited: Boolean = false)
+    /** [made] drafts; [skipped] — lines that are not about money (#630), to be left in the note. */
+    data class Result(val made: Int, val skipped: List<String>)
 
     /**
      * Drafts made and lines skipped; the text is not touched (the caller keeps only [Result.skipped] in the note). A number without a
@@ -52,16 +47,10 @@ class ProcessQuickNoteUseCase(
             fallback = last?.currency ?: CurrencyCode("USD"), known = live.mapTo(mutableSetOf()) { it.currency }, now = now(),
             local = localCurrency(),
         )
-        val ask = hints?.let { QuickNoteDrafts.needsModel(lines, ctx, it.broad) }.orEmpty()
-        val labels = live.filter { !it.archived }.map(AccountLabels::of)
-        val asked = ask.map { lines[it] }
-        val examples = if (ask.isEmpty()) emptyList() else HistoryExamples.pick(history, expense, asked)
-        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(asked, expense.map { it.name }, labels, examples, CategoryHints.line(expense)).orEmpty()
-        val byLine = ask.zip(read).mapNotNull { (i, hint) -> hint?.let { i to it } }.toMap()
-        val made = QuickNoteDrafts.build(lines, ctx, ids, byLine)
+        val made = QuickNoteDrafts.build(lines, ctx, ids)
         drafts.saveDrafts(made)
-        val skipped = lines.indices.filter { QuickNoteDrafts.isNoise(lines[it], ctx, byLine[it]) }.map { lines[it] }
-        return Result(made.size, skipped, limited = hints?.limited == true)
+        val skipped = lines.filter { QuickNoteDrafts.isNoise(it, ctx) }
+        return Result(made.size, skipped)
     }
 
     private companion object {

@@ -1,7 +1,7 @@
 """Privacy policy and data-deletion pages (#652) for the landing site: privacy/<lang>/ and delete/<lang>/.
 
 Plain static HTML, no scripts, no trackers. Texts must match what the app really does (docs/research/play-release-plan.md §2, §5):
-data lives on the phone; the family cloud is Firestore; exchange rates and the optional cloud analysis are the only other traffic.
+data lives on the phone; the family cloud is Firestore; exchange rates and updates are the only other traffic.
 """
 import html
 
@@ -19,9 +19,8 @@ TEXTS = {
             ("h2", "Что ещё уходит в интернет"),
             ("ul", ["Курсы валют: приложение скачивает общедоступные курсы; ваши операции и суммы туда не передаются.",
                     "Отзыв: то, что вы написали сами, файлы, которые вы приложили (например, образец чека), версия приложения, модель телефона, случайный номер установки и статус синхронизации. Операции и суммы не прикладываются.",
-                    "Облачный разбор (только если вы включили): текст заметки или чека и названия ваших категорий и счетов уходят на сервер ИИ для разбора и не сохраняются. Суммы на счетах и история операций не передаются.",
                     "Код приглашения (закрытое тестирование): код и случайный номер установки сохраняются в нашей базе, чтобы считать телефоны на один код; приложение иногда проверяет, действует ли код.",
-                    "Обновления: приложение проверяет, вышла ли новая версия, и скачивает её с GitHub; оттуда же — необязательный пакет «ИИ на телефоне», если вы его установили."]),
+                    "Обновления: приложение проверяет, вышла ли новая версия, и скачивает её с GitHub."]),
             ("h2", "Что мы не делаем"),
             ("p", "Не показываем рекламу, не продаём и не передаём данные третьим лицам, не собираем аналитику о ваших тратах."),
             ("h2", "Безопасность"),
@@ -50,9 +49,8 @@ TEXTS = {
             ("h2", "What else goes online"),
             ("ul", ["Exchange rates: the app downloads public rates; your transactions and amounts are not sent.",
                     "Feedback: what you wrote, files you attached yourself (for example, a receipt sample), the app version, the phone model, a random installation number and the sync status. Transactions and amounts are not attached.",
-                    "Cloud analysis (only if you turn it on): the text of a note or receipt and the names of your categories and accounts go to an AI server to be parsed and are not stored. Account balances and transaction history are not sent.",
                     "Invitation code (closed test): the code and a random installation number are stored in our database to count phones per code; the app checks now and then whether the code is still valid.",
-                    "Updates: the app checks whether a new version is out and downloads it from GitHub; the optional “AI on this phone” pack comes from there too, if you install it."]),
+                    "Updates: the app checks whether a new version is out and downloads it from GitHub."]),
             ("h2", "What we do not do"),
             ("p", "We show no ads, do not sell or share your data with third parties, and collect no analytics about your spending."),
             ("h2", "Security"),
@@ -81,9 +79,8 @@ TEXTS = {
             ("h2", "Qué más sale a internet"),
             ("ul", ["Tipos de cambio: la app descarga tipos públicos; tus movimientos e importes no se envían.",
                     "Comentarios: lo que escribes, los archivos que adjuntas tú (por ejemplo, un ticket de muestra), la versión de la app, el modelo del teléfono, un número de instalación aleatorio y el estado de la sincronización. No se adjuntan movimientos ni importes.",
-                    "Análisis en la nube (solo si lo activas): el texto de una nota o un ticket y los nombres de tus categorías y cuentas van a un servidor de IA para interpretarlos y no se guardan. No se envían los saldos ni el historial de movimientos.",
                     "Código de invitación (prueba cerrada): el código y un número de instalación aleatorio se guardan en nuestra base de datos para contar los teléfonos por código; la app comprueba de vez en cuando si el código sigue valiendo.",
-                    "Actualizaciones: la app comprueba si hay una versión nueva y la descarga de GitHub; de ahí viene también el paquete opcional «IA en el teléfono», si lo instalas."]),
+                    "Actualizaciones: la app comprueba si hay una versión nueva y la descarga de GitHub."]),
             ("h2", "Lo que no hacemos"),
             ("p", "No mostramos anuncios, no vendemos ni compartimos tus datos con terceros y no recopilamos analíticas de tus gastos."),
             ("h2", "Seguridad"),

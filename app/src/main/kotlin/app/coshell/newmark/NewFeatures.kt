@@ -17,10 +17,7 @@ object NewFeatures {
     /** «Ещё → О приложении» (#440). */
     const val ABOUT = "more.about"
 
-    /** «Ещё → Настройки»: «Умные функции → Облачный разбор» inside (#635). */
-    const val SETTINGS_CLOUD = "more.settings.cloud"
-
-    val all: List<String> = listOf(RECURRING, DEBTS, ABOUT, SETTINGS_CLOUD)
+    val all: List<String> = listOf(RECURRING, DEBTS, ABOUT)
 
     /**
      * Every key `NewMarks` tracks: the rows above and the release stories' card (#693). Both view models pass the whole list,

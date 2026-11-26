@@ -37,8 +37,8 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.room.testing) // MigrationTestHelper
         }
-        // The AI evaluation shared with the phone bench (#742): the gold set through the app's own code, rules and recorded answers.
-        jvmTest { kotlin.srcDir("../../tools/ai-eval/src") }
+        // The rules evaluation (#742, tools/eval): the gold set docs/samples/eval through the app's own code.
+        jvmTest { kotlin.srcDir("../../tools/eval/src") }
     }
 }
 

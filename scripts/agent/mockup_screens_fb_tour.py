@@ -68,11 +68,10 @@ def story(at):
 
 def help_b():
     """Б: an outlined button under the switch, inside the card; the other rows stay rows with «›»."""
-    smart = sc.section(*sc.RU['smart'][0], group([sc.val(*sc.RU['smart'][1], beta=True), sc.val(*sc.RU['smart'][2], beta=True)]), '')
     first = card(sc.sw(*sc.RU['help'][1], True) + '<div style="padding: 0 16px 14px;">%s</div>' % button('Показать подсказки заново', 'outline', 'refresh', 4))
     rest = group([row('Знакомство с приложением', 'Что где и для чего', '', chevron(), min_h=52), inv.a_row(),
                   row('Политика конфиденциальности', 'Что хранится и как удалить данные', '', chevron(), min_h=52)])
-    return inner_screen(sc.RU['title'], smart + sc.section(*sc.RU['help'][0], first + '<div style="height: 8px;"></div>' + rest, ''))
+    return inner_screen(sc.RU['title'], sc.section(*sc.RU['help'][0], first + '<div style="height: 8px;"></div>' + rest, ''))
 
 
 BOARDS = [  # name, title, fn, issue number

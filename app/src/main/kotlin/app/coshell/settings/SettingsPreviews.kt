@@ -7,7 +7,7 @@ import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.WeekStart
 
 /** «Настройки» as on board SetCardsC: the family's three currencies, shake on; also the screenshot sample. */
-internal val SettingsPreviewState = SettingsState(themeMode = ThemeMode.DARK, shake = true, currencies = "USD · ARS · AMD", weekStart = WeekStart.MONDAY, cloud = false)
+internal val SettingsPreviewState = SettingsState(themeMode = ThemeMode.DARK, shake = true, currencies = "USD · ARS · AMD", weekStart = WeekStart.MONDAY)
 
 @Preview(showBackground = true)
 @Composable

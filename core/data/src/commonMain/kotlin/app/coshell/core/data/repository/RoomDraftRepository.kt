@@ -22,6 +22,7 @@ class RoomDraftRepository(private val dao: DraftDao) : DraftRepository {
 
 internal fun DraftEntity.toModel() = Draft(
     id = id, title = title, currency = CurrencyCode(currency), amountMinor = amountMinor, accountId = accountId, categoryId = categoryId,
+    // An unknown name ("AI" of drafts made before #742 removed the model) reads as «no caption».
     categorySource = categorySource?.let { name -> DraftCategorySource.entries.firstOrNull { it.name == name } },
     dateMillis = date, createdAt = createdAt, origin = DraftOrigin.entries.firstOrNull { it.name == origin } ?: DraftOrigin.NOTE,
 )

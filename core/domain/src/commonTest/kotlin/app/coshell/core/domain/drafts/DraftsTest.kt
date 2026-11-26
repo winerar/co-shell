@@ -4,9 +4,6 @@ import app.coshell.core.domain.FakeAccountRepository
 import app.coshell.core.domain.FakeCategoryRepository
 import app.coshell.core.domain.FakeTransactionRepository
 import app.coshell.core.domain.SaveTransactionUseCase
-import app.coshell.core.domain.ai.LanguageModel
-import app.coshell.core.domain.ai.NoteHint
-import app.coshell.core.domain.ai.NoteHints
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.Category
@@ -144,49 +141,11 @@ class DraftsTest {
     }
 
     @Test
-    fun `the model fills the category only for lines nothing could guess`() = runTest {
-        val model = object : LanguageModel {
-            override val available = true
-            var asked = ""
-            override suspend fun complete(system: String, prompt: String): String? {
-                asked = prompt
-                return "[{\"i\":0,\"title\":\"Такси\",\"category\":\"Такси\"}]"
-            }
-        }
-        val accounts = FakeAccountRepository().apply { saveAccount(galicia) }
-        val categories = FakeCategoryRepository().apply { listOf(cafe, taxi, food).forEach { saveCategory(it) } }
-        val transactions = FakeTransactionRepository().apply { saveTransaction(spent("t1", "a1", "c1", "кофе")) }
-        val drafts = InMemoryDraftRepository()
-        val made = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids()) { now }("кофе 3500, поездка 2000")
-        assertEquals(2, made.made)
-        val byTitle = drafts.items.value.associateBy { it.title }
-        assertEquals(DraftCategorySource.HISTORY, byTitle.getValue("кофе").categorySource)
-        assertEquals("c2", byTitle.getValue("Такси").categoryId)
-        assertEquals(DraftCategorySource.AI, byTitle.getValue("Такси").categorySource)
-        assertEquals(true, "поездка 2000" in model.asked && "кофе" !in model.asked.substringAfter("0: "))
-    }
-
-    @Test
-    fun `a line the model calls not an expense is skipped`() = runTest {
-        val model = object : LanguageModel {
-            override val available = true
-            override suspend fun complete(system: String, prompt: String) = "[{\"i\":0,\"expense\":false}]"
-        }
+    fun `nothing is guessed beyond history and names`() = runTest {
         val accounts = FakeAccountRepository().apply { saveAccount(galicia) }
         val categories = FakeCategoryRepository().apply { listOf(cafe, taxi).forEach { saveCategory(it) } }
         val drafts = InMemoryDraftRepository()
-        val result = ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, NoteHints(model), ids()) { now }("встреча 15")
-        assertEquals(0, result.made)
-        assertEquals(listOf("встреча 15"), result.skipped)
-        assertEquals(emptyList(), drafts.items.value)
-    }
-
-    @Test
-    fun `without a model nothing is guessed beyond history and names`() = runTest {
-        val accounts = FakeAccountRepository().apply { saveAccount(galicia) }
-        val categories = FakeCategoryRepository().apply { listOf(cafe, taxi).forEach { saveCategory(it) } }
-        val drafts = InMemoryDraftRepository()
-        ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, null, ids()) { now }("поездка 2000")
+        ProcessQuickNoteUseCase(accounts, categories, FakeTransactionRepository(), drafts, ids()) { now }("поездка 2000")
         assertNull(drafts.items.value.single().categoryId)
     }
 
@@ -226,58 +185,6 @@ class DraftsTest {
     private val mp = Account("a4", "Mercado Pago", ars, AccountType.CARD)
 
     @Test
-    fun `a cheap model is asked about every line and its account is used`() = runTest {
-        val model = object : LanguageModel {
-            override val available = true
-            override val cheap = true
-            var asked = ""
-            override suspend fun complete(system: String, prompt: String): String? {
-                asked = prompt
-                return "[{\"i\":0,\"account\":\"Mercado Pago · ARS · card\"}]"
-            }
-        }
-        val accounts = FakeAccountRepository().apply { saveAccount(galicia); saveAccount(mp) }
-        val categories = FakeCategoryRepository().apply { listOf(cafe, taxi).forEach { saveCategory(it) } }
-        val transactions = FakeTransactionRepository().apply { saveTransaction(spent("t1", "a1", "c1", "кофе")) }
-        val drafts = InMemoryDraftRepository()
-        ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids()) { now }("кофе 3500")
-        val draft = drafts.items.value.single()
-        assertEquals("a4", draft.accountId)
-        assertEquals(DraftCategorySource.HISTORY, draft.categorySource)
-        assertEquals(true, "Mercado Pago · ARS · card" in model.asked)
-    }
-
-    @Test
-    fun `a slow model is not asked about a line the rules finished`() {
-        val lines = listOf("кофе 3500")
-        val history = listOf(spent("t1", "a1", "c1", "кофе"))
-        val accounts = listOf(galicia, mp)
-        assertEquals(emptyList(), QuickNoteDrafts.needsModel(lines, ctx(history, accounts)))
-        assertEquals(listOf(0), QuickNoteDrafts.needsModel(lines, ctx(history, accounts), broad = true))
-        assertEquals(emptyList(), QuickNoteDrafts.needsModel(lines, ctx(history, listOf(galicia)), broad = true))
-    }
-
-    @Test
-    fun `an account the model made up or one that contradicts the line is ignored`() {
-        val history = listOf(spent("t1", "a1", "c1", "кофе"))
-        fun accountOf(line: String, label: String) = QuickNoteDrafts.build(
-            listOf(line), ctx(history, listOf(galicia, mp, cash)), ids(), mapOf(0 to NoteHint(null, null, account = label)),
-        ).single().accountId
-        assertEquals("a2", accountOf("кофе 3500", "Santander · ARS · card")) // unknown label: as if nothing was said — cash
-        assertEquals("a2", accountOf("кофе 3500 нал", "Mercado Pago · ARS · card")) // the word «нал» wins over a card
-        assertEquals("a4", accountOf("кофе 3500 карта", "Mercado Pago · ARS · card")) // same kind: the model chooses among cards
-        assertEquals(null, accountOf("кофе 3500 usd", "Mercado Pago · ARS · card")) // a named currency the account does not have: the person chooses
-    }
-
-    private fun spentIn(id: String, account: Account, whole: Long) = Transaction(
-        id = id, type = TransactionType.EXPENSE, accountId = account.id, amount = Money(whole * 100, account.currency),
-        date = Instant.fromEpochMilliseconds(now - 1), categoryId = "c1", payee = "кофе",
-    )
-
-    private fun made(line: String, history: List<Transaction> = emptyList(), accounts: List<Account> = listOf(galicia, dollars)) =
-        QuickNoteDrafts.build(listOf(line), ctx(history, accounts), ids()).single()
-
-    @Test
     fun `the order of the number picks the currency when none is typed`() {
         val pesos = made("кофе 3500")
         assertEquals("a1", pesos.accountId)
@@ -303,4 +210,12 @@ class DraftsTest {
         assertEquals("a1", made("кофе 5 ars").accountId)
         assertEquals("a1", made("кофе 5 galicia").accountId)
     }
+
+    private fun spentIn(id: String, account: Account, whole: Long) = Transaction(
+        id = id, type = TransactionType.EXPENSE, accountId = account.id, amount = Money(whole * 100, account.currency),
+        date = Instant.fromEpochMilliseconds(now - 1), categoryId = "c1", payee = "кофе",
+    )
+
+    private fun made(line: String, history: List<Transaction> = emptyList(), accounts: List<Account> = listOf(galicia, dollars)) =
+        QuickNoteDrafts.build(listOf(line), ctx(history, accounts), ids()).single()
 }

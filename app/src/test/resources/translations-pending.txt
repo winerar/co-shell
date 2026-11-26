@@ -8,7 +8,6 @@ access_where_text
 account_deleted
 account_local_only_short
 action_clear_value
-ai_off_text
 amount_sign_minus
 amount_sign_plus
 auto_backup_off

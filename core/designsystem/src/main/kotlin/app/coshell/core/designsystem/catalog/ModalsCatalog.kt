@@ -48,18 +48,18 @@ fun ModalsCatalog() {
     }
 }
 
-/** The question card with three actions (#593, `extraLabel`, `confirmIcon`): its own reference. The running line (`progress`) loops forever, so it is not shot. */
+/** The question card with three actions (`extraLabel`, `confirmIcon`): its own reference. The running line (`progress`) loops forever, so it is not shot. */
 @Composable
 internal fun ConfirmStackCatalog() {
     Column(Modifier.padding(vertical = Spacing.l)) {
         CoShellConfirmCard(
             title = "Не удалось прочитать чек",
-            text = "Такого формата мы ещё не знаем. Облачный ИИ прочитает чек, а вы проверите поля.",
-            confirmLabel = "Прочитать с ИИ",
+            text = "Такого формата мы ещё не знаем. Отправьте образец — добавим формат.",
+            confirmLabel = "Отправить образец",
             onConfirm = {},
-            dismissLabel = "Отправить образец",
-            extraLabel = "Ввести вручную",
-            confirmIcon = R.drawable.ic_spark,
+            dismissLabel = "Ввести вручную",
+            extraLabel = "Отмена",
+            confirmIcon = R.drawable.ic_send,
             icon = R.drawable.ic_receipt_long,
             modifier = Modifier.padding(horizontal = Spacing.l + Spacing.xs),
         )

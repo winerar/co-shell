@@ -25,9 +25,8 @@ def hints_rows():
 
 
 def settings(rows):
-    """The bottom of «Настройки» (as board Set1RootMore): «Умные функции», then «Помощь» with the new rows."""
-    smart = sc.section(*sc.RU['smart'][0], group([sc.val(*sc.RU['smart'][1], beta=True), sc.val(*sc.RU['smart'][2], beta=True)]), '')
-    return inner_screen(sc.RU['title'], smart + help_section(hints_rows() + rows))
+    """The bottom of «Настройки» (as board Set1RootMore): «Помощь» with the new rows."""
+    return inner_screen(sc.RU['title'], help_section(hints_rows() + rows))
 
 
 def a_row(revoked=False):

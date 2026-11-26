@@ -1,8 +1,5 @@
 package app.coshell.transactions.edit
 
-import app.coshell.receipt.inbox.UnreadReceipts
-import app.coshell.core.domain.ai.ReceiptAi
-import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.core.model.ExchangeRate
 import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
@@ -153,43 +150,5 @@ class TransactionEditScanTest : TransactionEditTestBase() {
         assertFalse(vm.state.value.receiptUnread)
     }
 
-    private class Answer(private val text: String?, override val cheap: Boolean = false) : LanguageModel {
-        override val available = true
-        override suspend fun complete(system: String, prompt: String): String? = text
-    }
 
-    private val unread = UnreadReceipts { "MI KIOSCO\nFecha 19/11/2026\nTOTAL $ 37.914,50" }
-
-    @Test
-    fun `an unread receipt offers the model that will read it, or turning one on`() = runTest {
-        seed()
-        assertEquals(ReceiptAiMode.NONE, viewModel(receiptUnread = true).state.value.receiptAi)
-        assertEquals(ReceiptAiMode.OFF, viewModel(receiptUnread = true, unreadReceipts = unread).state.value.receiptAi)
-        assertEquals(ReceiptAiMode.PHONE, viewModel(receiptUnread = true, unreadReceipts = unread, receiptAi = ReceiptAi(Answer("{}"))).state.value.receiptAi)
-        assertEquals(ReceiptAiMode.CLOUD, viewModel(receiptUnread = true, unreadReceipts = unread, receiptAi = ReceiptAi(Answer("{}", cheap = true))).state.value.receiptAi)
-    }
-
-    @Test
-    fun `read with AI fills the sheet with a total printed in the receipt and no receipt key`() = runTest {
-        seed()
-        val ai = ReceiptAi(Answer("""{"total":"37914.50","currency":"ARS","date":"2026-11-19","shop":"Mi Kiosco"}"""))
-        val vm = viewModel(receiptUnread = true, unreadReceipts = unread, receiptAi = ai)
-        vm.onReceiptAiRead()
-        val state = vm.state.value
-        assertFalse(state.receiptUnread)
-        assertFalse(state.receiptReading)
-        assertTrue(state.scan!!.ai)
-        assertEquals("", state.scan!!.key)
-        assertTrue(state.amount.isNotEmpty() || state.receiptAmount.isNotEmpty())
-    }
-
-    @Test
-    fun `nothing printed found brings the window back without the button`() = runTest {
-        seed()
-        val vm = viewModel(receiptUnread = true, unreadReceipts = unread, receiptAi = ReceiptAi(Answer("""{"total":"99999"}""")))
-        vm.onReceiptAiRead()
-        assertTrue(vm.state.value.receiptUnread)
-        assertTrue(vm.state.value.receiptAiFailed)
-        assertEquals(null, vm.state.value.scan)
-    }
 }

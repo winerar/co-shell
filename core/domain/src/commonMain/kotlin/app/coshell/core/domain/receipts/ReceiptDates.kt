@@ -4,8 +4,8 @@ import kotlinx.datetime.LocalDate
 
 /**
  * Dates as receipts print them (#742): «19/11/26», «15.11.2026», «2026-11-12», «14 de noviembre de 2026», «10 ноября 2026»,
- * «08 Nov, 2026», «15 Nov 2026», «Nov 15, 2026». Used by [app.coshell.core.domain.ai.ReceiptAi]: the model copies the date as printed and code reads it,
- * and a date the model got wrong is replaced by one the text really has. Day first in «dd/mm» (Argentina, Armenia, Russia).
+ * «08 Nov, 2026», «15 Nov 2026», «Nov 15, 2026». A building block for reading receipts no format knows (#742) by rules.
+ * Day first in «dd/mm» (Argentina, Armenia, Russia).
  */
 object ReceiptDates {
     private val NUMERIC = Regex("""(?<!\d)(\d{1,2})[./-](\d{1,2})[./-](\d{4}|\d{2})(?!\d)""")
@@ -43,7 +43,7 @@ object ReceiptDates {
         return found.sortedBy { it.first }.map { it.second }.distinct()
     }
 
-    /** One date as the model copied it (any of the printed forms), `null` when it is not a date. */
+    /** One date in any of the printed forms, `null` when it is not a date. */
     fun parse(value: String): LocalDate? = find(value).firstOrNull()
 
     private fun year(y: String): Int = if (y.length == 2) 2000 + y.toInt() else y.toInt()

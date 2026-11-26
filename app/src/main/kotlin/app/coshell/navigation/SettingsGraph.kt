@@ -2,8 +2,6 @@ package app.coshell.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import app.coshell.ai.AiAddonRoute
-import app.coshell.ai.cloud.CloudAiRoute
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.export.ExportRoute
 import app.coshell.privacy.pin.PinSetupRoute
@@ -37,17 +35,9 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onData = { navController.navigate(DataSettingsDestination) },
                 onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onBackup = { navController.navigate(BackupDestination) },
-                onAiAddon = { navController.navigate(AiAddonDestination) { launchSingleTop = true } },
-                onCloudAi = { navController.navigate(CloudAiDestination) { launchSingleTop = true } },
                 onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
             ),
         )
-    }
-    screen<AiAddonDestination> {
-        AiAddonRoute(onBack = { navController.popBackStack() })
-    }
-    screen<CloudAiDestination> {
-        CloudAiRoute(onBack = { navController.popBackStack() })
     }
     screen<AppearanceDestination> {
         AppearanceRoute(onBack = { navController.popBackStack() })

@@ -20,7 +20,7 @@ ROWS = [
     ('Итоги месяца: истории', 'Rec554Top', 'month_recap'), ('Итог месяца', 'Mon236Screen', 'month_review'), ('Итог месяца: лимиты', 'Mon236Limits', 'month_review_limits'),
     ('Операции', 'Operations', 'transactions'), ('Операции: прокрутка', 'OpsScrolled', 'transactions_scrolled'),
     ('Шторка ввода', 'Main', 'entry_sheet'), ('Шторка: возврат', 'Fb208C', 'entry_refund'),
-    ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: QR чека', 'Qr526Filled', 'entry_scan'), ('Шторка: категория предложена ИИ', 'EntryGuessAi', None), ('Шторка: категория по истории', 'EntryGuessHist', None), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),
+    ('Шторка: теги', 'Fb129A', 'entry_tags'), ('Шторка: QR чека', 'Qr526Filled', 'entry_scan'), ('Шторка: категория по истории', 'EntryGuessHist', None), ('Шторка: «Провести»', 'Rec143Post', 'recurring_post'),
     ('Счета', 'Accounts', 'accounts'), ('Счета: пусто', 'AccountsEmpty', 'accounts_empty'),
     ('Редактор счёта', 'AccountEdit', 'account_edit'),
     ('Категории', 'Categories', 'categories'), ('Редактор категории', 'CategoryEdit', 'category_edit'),
@@ -36,9 +36,9 @@ ROWS = [
     ('Настройки: отчёты', 'Set1Reports', 'settings_reports'), ('Настройки: счета', 'Set1Accounts', 'settings_accounts'),
     ('Настройки: деньги и даты', 'Set1Money', 'settings_money'), ('Настройки: ввод операции', 'Set1Entry', 'settings_input'),
     ('Настройки: уведомления', 'Set1Notices', 'settings_notices'), ('Настройки: данные и копия', 'Set1Data', 'settings_data'),
-    ('ИИ на телефоне', 'AiOff', 'ai_addon'), ('ИИ на телефоне: шаги', 'AiStep2', 'ai_addon_loading'), ('ИИ на телефоне: скачивание дополнения', 'AiStep1Load', 'ai_addon_addon_loading'), ('ИИ на телефоне: включён', 'AiOn', 'ai_addon_on'), ('ИИ на телефоне: слабый телефон', 'AiWeak', 'ai_addon_weak'),
-    ('Облачный разбор', 'CloudOff', 'cloud_ai'), ('Облачный разбор: включён', 'CloudOn', 'cloud_ai_on'), ('Облачный разбор: вопрос', 'CloudConsent', 'cloud_ai_consent'), ('Облачный разбор: нужен вход', 'CloudNoLogin', 'cloud_ai_nologin'),
-    ('Быстрые заметки: облако', 'CloudNotes', None), ('Быстрые заметки: читает облако', 'CloudBusy', None), ('Черновики: лимит облака', 'CloudLimit', None),
+   
+   
+
     ('Резервная копия', 'Backup', 'backup'), ('Копия: автоматическая', 'BackupAuto', 'backup_auto'),
     ('Ещё', 'More', 'more'), ('Обновление', 'Update', 'update_available'),
     ('Бюджеты', 'BudA', 'budgets'), ('Бюджет: лимит', 'BudDetail', 'budget_detail'), ('Бюджет: правка', 'BudEdit', 'budget_edit'),

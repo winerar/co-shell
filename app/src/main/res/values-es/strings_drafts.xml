@@ -22,7 +22,6 @@
     <string name="drafts_day_today">hoy</string>
     <string name="drafts_day_yesterday">ayer</string>
     <string name="drafts_untitled">Sin título</string>
-    <string name="drafts_category_ai">sugerido por la IA</string>
     <string name="drafts_caption" translatable="false">%1$s · %2$s</string>
     <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
     <string name="drafts_empty">No hay borradores. Anota los gastos en «Notas rápidas» y aparecerán aquí.</string>

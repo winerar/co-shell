@@ -2,6 +2,7 @@ package app.coshell.budgets.list
 
 import androidx.compose.runtime.Immutable
 import app.coshell.core.designsystem.charts.BulletTone
+import app.coshell.core.model.Money
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 
@@ -21,6 +22,8 @@ data class BudgetsUiState(
     val counts: Map<BudgetFilter, Int> = emptyMap(),
     /** Folders the user folded; their inner limits are hidden. */
     val collapsed: Set<String> = emptySet(),
+    /** While the month has no limits: limits made from the spending of earlier months (#185, board `BudFirst`); `null` — nothing to offer. */
+    val offer: FirstLimits? = null,
 ) {
     val isEmpty: Boolean get() = !isLoading && envelopes.isEmpty()
     val total: Int get() = counts[BudgetFilter.ALL] ?: 0
@@ -98,6 +101,22 @@ data class BudgetsUiState(
                 else -> null
             }
         }
+    }
+
+    /** The first visit (#185): every row can be ticked off, «Создать N лимитов» saves the ticked ones. */
+    data class FirstLimits(val rows: List<Row>) {
+        val checkedCount: Int get() = rows.count { it.checked }
+
+        data class Row(
+            val categoryId: String,
+            val name: String,
+            val icon: String?,
+            val color: Long?,
+            /** With the code: «372 000 ARS». */
+            val amount: String,
+            val limit: Money,
+            val checked: Boolean = true,
+        )
     }
 
     /** The line under a bullet. Amounts are formatted, with the code. */

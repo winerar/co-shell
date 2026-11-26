@@ -9,7 +9,8 @@
 - **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outline` (≥ 3:1, Style8) → ink в фокусе,
   радиус 16, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
-  после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
+  после числа).
+  Сумма в редакторе — [`components-keypad.md`](components-keypad.md). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
@@ -83,11 +84,7 @@
   `ui/list/ActionRow`, `EditFooter`, `DateChips`) остаются в `app`, но строятся на этих компонентах.
 - Новый компонент: без строк приложения (тексты — параметрами), с `@Preview` светлой и тёмной темы,
   добавить его в `catalog/`.
-- **Клавиатура суммы** — `components/keypad/CoShellKeypad` (решение владельца 2026-11-09: «удобно одним пальцем»):
-  3×4 цифры, `000`, `,` (скрыта у валют без дробной части); правая колонка «стереть · `+` · `−` · «Готово»» (опрос 2026-11-18, #291: «Готово» в один ряд, все клавиши ≥ 48 dp; без `+`/`−` — «Готово» высокая);
-  фиксированная высота (шторка не прыгает), каждая клавиша — тактильная, тик клавиатуры. Логика ввода —
-  чистая `AmountKeys.apply/normalize/display` (тест `AmountKeysTest`): текст вида `"32000 + 1500,5 − 200"` (`AmountKeys.terms` — слагаемые со знаками); сумму
-  считает экран (`parsePositiveAmount` в `transactions/edit/ReceiptForm.kt`, итог должен быть больше нуля; конвертер — не ниже нуля).
+- **Клавиатура суммы** и поле суммы в редакторах — [`components-keypad.md`](components-keypad.md).
 - **PIN** (#145, доска `Priv145LockA`) — `CoShellPinPad(onKey: (PinKey), backspaceLabel, biometricLabel)` (клетки `CoShellKeypad`, отпечаток слева от нуля,
   `biometricLabel = null` — без него) и `CoShellPinDots(filled, description, error)`; экран — `app/.../privacy/pin/PinLayout`.
 - **Скрытые суммы** (#145) — `amount/LocalAmountsHidden` + `shownAmount(text)`/`maskAmounts` («•••• USD»): `AmountText`, `RollingAmountText`, подписи графиков,

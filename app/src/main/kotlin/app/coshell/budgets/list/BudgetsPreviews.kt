@@ -6,6 +6,9 @@ import app.coshell.budgets.list.BudgetsUiState.Caption
 import app.coshell.budgets.list.BudgetsUiState.Envelope
 import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Money
+import app.coshell.core.model.MoneyFormat
 import kotlinx.datetime.YearMonth
 
 // Numbers of mockup `BudA`.
@@ -36,6 +39,26 @@ private val summary = BudgetsUiState.Summary(
 internal val budgetsPreviewSample =
     BudgetsUiState(month = YearMonth(2026, 11), summary = summary, envelopes = sample, counts = envelopeCounts(sample))
 
+// Numbers of mockup `BudFirst` (#185): the first visit, no limits yet; «Подарки» is ticked off.
+internal val budgetsFirstPreviewSample = BudgetsUiState(
+    month = YearMonth(2026, 11),
+    offer = BudgetsUiState.FirstLimits(
+        listOf(
+            offerRow("home", "Дом", "home", 0xFF00BCD4, 372_000),
+            offerRow("food", "Продукты", "food", 0xFF8BC34A, 340_000),
+            offerRow("cafe", "Кафе", "cafe", 0xFFE91E63, 78_000),
+            offerRow("transport", "Транспорт", "transport", 0xFF2196F3, 55_000),
+            offerRow("learn", "Образование", "education", 0xFF9C27B0, 160_000),
+            offerRow("gifts", "Подарки", "gift", 0xFFFF9800, 38_000, checked = false),
+        ),
+    ),
+)
+
+private fun offerRow(id: String, name: String, icon: String, color: Long, major: Long, checked: Boolean = true): BudgetsUiState.FirstLimits.Row {
+    val limit = Money.ofMajor(major, currency = CurrencyCode("ARS"))
+    return BudgetsUiState.FirstLimits.Row(id, name, icon, color, MoneyFormat.RU.format(limit), limit, checked)
+}
+
 @Preview(showBackground = true, heightDp = 1100)
 @Composable
 private fun BudgetsPreview() {
@@ -51,4 +74,10 @@ private fun BudgetsPreview() {
 @Composable
 private fun BudgetsEmptyPreview() {
     CoShellTheme { BudgetsScreen(BudgetsUiState(month = YearMonth(2026, 11)), BudgetsActions()) }
+}
+
+@Preview(showBackground = true, heightDp = 1000)
+@Composable
+private fun BudgetsFirstPreview() {
+    CoShellTheme { BudgetsScreen(budgetsFirstPreviewSample, BudgetsActions()) }
 }

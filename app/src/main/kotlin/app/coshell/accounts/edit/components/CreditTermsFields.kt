@@ -13,11 +13,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditUiState
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.ui.ai.BetaMark
 
 /**
@@ -32,7 +32,7 @@ internal fun CreditTermsFields(state: AccountEditUiState, actions: AccountEditAc
             BetaMark()
             CoShellHint(stringResource(R.string.account_credit_beta_hint), Modifier.weight(1f))
         }
-        CoShellAmountField(
+        AmountSheetField(
             value = state.creditLimit,
             onValueChange = actions.onCreditLimitChange,
             label = stringResource(R.string.account_credit_limit),
@@ -50,7 +50,7 @@ internal fun CreditTermsFields(state: AccountEditUiState, actions: AccountEditAc
             onSelect = { actions.onCreditMinSumChange(it == 1) },
         )
         if (state.creditMinSum) {
-            CoShellAmountField(
+            AmountSheetField(
                 value = state.creditMin,
                 onValueChange = actions.onCreditMinChange,
                 label = stringResource(R.string.account_credit_min_label),

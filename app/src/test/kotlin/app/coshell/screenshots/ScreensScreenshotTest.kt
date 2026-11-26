@@ -65,6 +65,7 @@ import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.accountsPreviewSample
 import app.coshell.budgets.list.BudgetsActions
 import app.coshell.budgets.list.BudgetsScreen
+import app.coshell.budgets.list.budgetsFirstPreviewSample
 import app.coshell.budgets.list.budgetsPreviewSample
 import app.coshell.categories.edit.CategoryEditActions
 import app.coshell.categories.edit.CategoryEditScreen
@@ -271,6 +272,12 @@ class ScreensScreenshotTest {
 
     @Test
     fun `budgets dark`() = shot("budgets_dark", dark = true) { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }
+
+    @Test
+    fun `budgets first visit light`() = shot("budgets_first_light") { BudgetsScreen(budgetsFirstPreviewSample, BudgetsActions()) }
+
+    @Test
+    fun `budgets first visit dark`() = shot("budgets_first_dark", dark = true) { BudgetsScreen(budgetsFirstPreviewSample, BudgetsActions()) }
 
     @Test
     fun `categories light`() = shot("categories_light") { CategoriesScreen(categoriesPreviewSample, CategoriesActions()) }

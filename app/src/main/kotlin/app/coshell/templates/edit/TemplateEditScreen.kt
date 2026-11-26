@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
 import app.coshell.core.designsystem.components.underBars
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
@@ -29,6 +28,7 @@ import app.coshell.templates.edit.components.RepeatBlock
 import app.coshell.templates.edit.components.TemplatePickers
 import app.coshell.templates.edit.components.TemplatePicker
 import app.coshell.transactions.edit.components.TypeSelector
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.ui.form.ChoiceField
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.DeleteButton
@@ -76,7 +76,7 @@ fun TemplateEditScreen(state: TemplateEditUiState, actions: TemplateEditActions)
                     onClick = { picker = TemplatePicker.TO_ACCOUNT },
                 )
             }
-            CoShellAmountField(
+            AmountSheetField(
                 value = state.amount,
                 onValueChange = actions.onAmountChange,
                 label = stringResource(R.string.template_amount),

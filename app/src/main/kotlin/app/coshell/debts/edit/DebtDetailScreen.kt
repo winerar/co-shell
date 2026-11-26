@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.charts.CoShellMeter
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellFormSection
@@ -24,6 +23,7 @@ import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellOutlinedButton
 import app.coshell.core.designsystem.theme.progressColors
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.form.ConfirmDeleteDialog
 import app.coshell.ui.form.ConfirmDialog
@@ -102,7 +102,7 @@ private fun ReturnSheet(state: DebtDetailUiState, actions: DebtDetailActions, on
         onClosed = onClosed,
     ) { close ->
         if (state.returnDone) androidx.compose.runtime.LaunchedEffect(Unit) { close() }
-        CoShellAmountField(
+        AmountSheetField(
             value = state.returnAmount,
             onValueChange = actions.onReturnAmount,
             label = stringResource(R.string.debts_field_amount),

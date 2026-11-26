@@ -15,6 +15,9 @@
     <string name="notice_evening_title">Как прошёл день?</string>
     <string name="notice_evening_text">Запишите сегодняшние траты — это минута.</string>
     <string name="notice_limit_title">%1$s: ещё можно %2$s</string>
+    <!-- #186, board Not186B: spending ahead of the month, not yet 80 %. -->
+    <string name="notice_limit_pace_title">%1$s: траты опережают месяц</string>
+    <string name="notice_limit_pace_text">Если так пойдёт, лимит закончится раньше срока. Загляните в «Бюджеты».</string>
     <plurals name="notice_limit_text">
         <item quantity="one">Это %1$d %% лимита на %2$d день.</item>
         <item quantity="few">Это %1$d %% лимита на %2$d дня.</item>
@@ -43,7 +46,7 @@
     <string name="notice_evening_switch">Вечером — записать траты</string>
     <string name="notice_evening_hint">если за день записей нет</string>
     <string name="notice_limit_switch">Лимиты</string>
-    <string name="notice_limit_hint">когда потрачено 80 %</string>
+    <string name="notice_limit_hint">80 % лимита или траты быстрее плана</string>
     <string name="notice_recap_switch">Итоги месяца</string>
     <string name="notice_recap_hint">в первые дни нового месяца</string>
     <string name="notice_backup_switch">Резервная копия</string>

@@ -16,7 +16,7 @@ data class NoticeFacts(
     val firstSeenDay: LocalDate,
     /** The last automatic copy; `null` — never (or the copies are off). */
     val lastBackupDay: LocalDate?,
-    /** The nearest limit that is 80–99 % spent, if any (`LimitWatch`). */
+    /** The limit worth telling about (`LimitAlerts`): 80–99 % spent, else spending ahead of the month. */
     val limit: LimitFact? = null,
     /** The last full month had entries — there is something to recap. */
     val lastMonthHadEntries: Boolean = false,
@@ -25,10 +25,11 @@ data class NoticeFacts(
 )
 
 /**
- * The limit the notification names: «[name]: ещё можно [left]», «это [percentLeft] % лимита на [daysLeft] дн.».
- * [key] changes with the limit and the month, so the same one is told once.
+ * The limit the notification names: «[name]: ещё можно [left]», «это [percentLeft] % лимита на [daysLeft] дн.»; [pace] (#186) —
+ * not yet 80 %, but spending runs ahead of the month: «[name]: траты опережают месяц». [key] changes with the limit, the month and
+ * the kind (`LimitAlert.key`), so the same case is told once.
  */
-data class LimitFact(val key: String, val name: String, val left: String, val percentLeft: Int = 0, val daysLeft: Int = 0)
+data class LimitFact(val key: String, val name: String, val left: String, val percentLeft: Int = 0, val daysLeft: Int = 0, val pace: Boolean = false)
 
 /** What went out before: the day of the last optional notice and, per kind, its day and key. Phone-only. */
 data class NoticeHistory(

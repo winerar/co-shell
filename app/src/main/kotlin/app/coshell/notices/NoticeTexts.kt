@@ -25,11 +25,18 @@ object NoticeTexts {
             )
             NoticeKind.LIMIT -> {
                 val limit = checkNotNull(planned.limit)
-                NoticeContent(
-                    res.getString(R.string.notice_limit_title, limit.name, limit.left),
-                    res.getQuantityString(R.plurals.notice_limit_text, limit.daysLeft, limit.percentLeft, limit.daysLeft),
-                    NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open),
-                )
+                if (limit.pace) {
+                    NoticeContent(
+                        res.getString(R.string.notice_limit_pace_title, limit.name), res.getString(R.string.notice_limit_pace_text),
+                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open),
+                    )
+                } else {
+                    NoticeContent(
+                        res.getString(R.string.notice_limit_title, limit.name, limit.left),
+                        res.getQuantityString(R.plurals.notice_limit_text, limit.daysLeft, limit.percentLeft, limit.daysLeft),
+                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open),
+                    )
+                }
             }
             NoticeKind.RECAP -> NoticeContent(
                 res.getString(R.string.notice_recap_title, lastMonthName(context, facts)), res.getString(R.string.notice_recap_text),

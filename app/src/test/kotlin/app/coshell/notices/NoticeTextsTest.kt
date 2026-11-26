@@ -44,6 +44,13 @@ class NoticeTextsTest {
         assertEquals(NoticeTarget.BUDGETS, c.target)
     }
 
+    @Test fun `spending ahead of the month says so calmly and opens the budgets`() {
+        val c = NoticeTexts.of(context, PlannedNotice(NoticeKind.LIMIT, "k", limit.copy(pace = true)), facts)
+        assertEquals("Продукты: траты опережают месяц", c.title)
+        assertEquals("Если так пойдёт, лимит закончится раньше срока. Загляните в «Бюджеты».", c.text)
+        assertEquals(NoticeTarget.BUDGETS, c.target)
+    }
+
     @Test fun `limit days agree with the number`() {
         fun text(days: Int) = NoticeTexts.of(context, PlannedNotice(NoticeKind.LIMIT, "k", limit.copy(daysLeft = days)), facts).text
         assertTrue(text(1).endsWith("на 1 день."))

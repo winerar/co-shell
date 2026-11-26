@@ -10,7 +10,8 @@ import app.coshell.core.domain.budgets.budgetPeriodOf
 import app.coshell.core.domain.drafts.DraftCheck
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.hints.HintStore
-import app.coshell.core.domain.hints.LimitWatch
+import app.coshell.core.domain.budgets.LimitAlertKind
+import app.coshell.core.domain.budgets.LimitAlerts
 import app.coshell.core.domain.notices.LimitFact
 import app.coshell.core.domain.notices.NoticeFacts
 import app.coshell.core.model.MoneyFormat
@@ -61,19 +62,22 @@ class NoticeFactsSource @Inject constructor(
         )
     }
 
-    /** The limit nearest to its end among those 80–99 % spent (`LimitWatch`), with what is left and for how long. */
+    /**
+     * The limit to tell about (`LimitAlerts`, #186): the nearest to its end among those 80–99 % spent, else the one whose spending
+     * runs ahead of the month and would use the limit up early; with what is left and for how long.
+     */
     private suspend fun limitFact(today: LocalDate): LimitFact? {
         val snapshot = budgets.observe().first()
         val period = budgetPeriodOf(today, snapshot.startDay)
-        val near = LimitWatch.nearest(snapshot.calculator().month(period.month, today)) ?: return null
-        val name = snapshot.categories.firstOrNull { it.id == near.budget.categoryId }?.name ?: return null
-        val percent = (near.left.amountMinor * 100 / near.available.amountMinor).toInt()
+        val alert = LimitAlerts.pick(snapshot.calculator().month(period.month, today), emptySet()) ?: return null
+        val name = snapshot.categories.firstOrNull { it.id == alert.progress.budget.categoryId }?.name ?: return null
         return LimitFact(
-            key = "${near.budget.categoryId}:${period.month}",
+            key = alert.key,
             name = name,
-            left = moneyFormat.copy(trimZeroFraction = true).format(near.left),
-            percentLeft = percent,
+            left = moneyFormat.copy(trimZeroFraction = true).format(alert.progress.left),
+            percentLeft = alert.leftPercent,
             daysLeft = today.daysUntil(period.endExclusive).coerceAtLeast(1),
+            pace = alert.kind == LimitAlertKind.PACE,
         )
     }
 

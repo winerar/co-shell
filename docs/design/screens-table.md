@@ -84,6 +84,7 @@
 | Отчёты: тренд | Tr238DrillA | report_category_trend | ✓ | ✓ |
 | Отчёты: картина | Rp189IeA | reports_picture | ✓ | ✓ |
 | Капитал по месяцам | Rp189NwDrill | capital_month | ✓ | ✓ |
+| Отчёты: подушка | Cush241Edge | reports_cushion | ✓ | ✓ |
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |

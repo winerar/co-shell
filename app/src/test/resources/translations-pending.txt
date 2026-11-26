@@ -76,6 +76,8 @@ notice_group_order
 notice_group_spend
 notice_limit_hint
 notice_limit_note
+notice_limit_pace_text
+notice_limit_pace_title
 notice_limit_switch
 notice_limit_title
 notice_offer_enable
@@ -88,6 +90,8 @@ notice_recap_title
 notice_time_title
 plural:notice_backup_text_last
 plural:notice_limit_text
+plural:reports_cushion_few
+plural:reports_cushion_low
 rates_manual_hint
 receipt_unread_text
 recurring_list_empty
@@ -114,6 +118,16 @@ release_receipt_title
 report_currencies_preview
 reports_all
 reports_all_search
+reports_cushion_caption
+reports_cushion_description
+reports_cushion_empty
+reports_cushion_no_rate
+reports_cushion_normal
+reports_cushion_not_yet
+reports_cushion_scale_end
+reports_cushion_title
+reports_cushion_unit
+reports_cushion_value
 reports_income_caption
 review_no_history
 settings_balance_all

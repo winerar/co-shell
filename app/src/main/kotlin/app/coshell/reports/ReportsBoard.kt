@@ -62,11 +62,12 @@ internal fun UsualMark.toUi(month: BudgetPeriod, today: LocalDate, format: Money
 private fun Map<String, UsualMark>.toUi(month: BudgetPeriod, today: LocalDate, format: MoneyFormat): Map<String, Mark> =
     mapValues { it.value.toUi(month, today, format) }
 
-/** The days to load for [this] report: the period, the period before it and the months of «По месяцам». */
+/** The days to load for [this] report: the period, the period before it, the months of «По месяцам» and of «Подушка». */
 internal fun ReportPeriod.loadRange(startDay: Int, today: LocalDate): Pair<LocalDate, LocalDate> {
     val previous = previous(startDay)
     val columns = columnMonths(startDay, today)
-    return minOf(start, previous.start, columns.first().start) to maxOf(endExclusive, columns.last().endExclusive)
+    val cushion = cushionMonths(startDay).first()
+    return minOf(start, previous.start, columns.first().start, cushion.start) to maxOf(endExclusive, columns.last().endExclusive)
 }
 
 /**

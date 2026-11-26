@@ -29,6 +29,8 @@ data class ReportsUiState(
     val members: List<MemberRow> = emptyList(),
     /** «Капитал» (#189); `null` — no account counted into the total. */
     val capital: Capital? = null,
+    /** «Подушка» (#241), next to [capital]; `null` — no account counted into the total. */
+    val cushion: Cushion? = null,
     /** «Календарь трат» (#553) of the period's last month. */
     val calendar: Calendar? = null,
     /** The tapped day of [calendar] and its operations (rows as in «Операции»); `null` — none chosen. */
@@ -179,6 +181,31 @@ data class ReportsUiState(
         /** Currencies left out for lack of a rate: «без учёта: AMD». */
         val missing: List<String> = emptyList(),
     )
+
+    /**
+     * «Подушка» (#241, board `Cush241Reports`): how many months the money lasts at the average spending. [months] `null` —
+     * no full month with spending yet («Появится после…»). [gloss] — which phrase goes under the number.
+     */
+    data class Cushion(
+        /** «9 000 USD» — the money on the accounts in the total. */
+        val money: String,
+        /** «4,5» (or «12» from ten months on); `null` — not counted yet. */
+        val months: String? = null,
+        /** The scale 0–6 months, 0..1. */
+        val fraction: Float = 0f,
+        val gloss: CushionGloss = CushionGloss.NOT_YET,
+        /** «2 000 USD» — the average month of spending. */
+        val monthlySpend: String = "",
+        /** Full months the average is over (for [CushionGloss.FEW]). */
+        val historyMonths: Int = 0,
+        /** Weeks the money lasts (for [CushionGloss.LOW]). */
+        val weeks: Int = 0,
+        /** Currencies without a rate (for [CushionGloss.NO_RATE]). */
+        val missing: List<String> = emptyList(),
+    )
+
+    /** The phrase under the number; the first that fits, in this order. */
+    enum class CushionGloss { NOT_YET, EMPTY, LOW, FEW, NO_RATE, NORMAL }
 
     data class CapitalPoint(val month: YearMonth, val value: String, val minor: Long)
 

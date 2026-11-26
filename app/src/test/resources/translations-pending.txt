@@ -142,6 +142,7 @@ reports_cushion_unit
 reports_cushion_value
 reports_income_caption
 review_no_history
+scan_source_plain
 settings_balance_all
 settings_balance_except
 settings_home_converter_hint

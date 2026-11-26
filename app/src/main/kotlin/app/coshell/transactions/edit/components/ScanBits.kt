@@ -51,6 +51,8 @@ internal fun ScanSourceLine(scan: ScanUi, modifier: Modifier = Modifier) {
                 // #593, board `AiRecFilledA`: one line — the model filled the fields, the person checks them.
                 scan.ai -> stringResource(R.string.scan_source_ai)
                 scan.document -> stringResource(R.string.scan_source_document, scan.seller)
+                // A Russian receipt QR names no shop.
+                scan.seller.isBlank() -> stringResource(R.string.scan_source_plain)
                 else -> stringResource(R.string.scan_source, scan.seller)
             },
             style = MaterialTheme.typography.bodySmall,

@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import app.coshell.core.domain.quickentry.AfipReceiptQr
+import app.coshell.core.domain.receipts.ReceiptFormats
 import kotlinx.coroutines.delay
 
 /** How long «Это не QR чека» stays; the same wrong code is not shown again while it is in the frame. */
@@ -54,7 +54,7 @@ fun ReceiptScanRoute(onReceipt: (String) -> Unit, onManual: () -> Unit, onClose:
         badVisible = bad,
         onText = { text ->
             if (done) return@ReceiptScanScreen
-            if (AfipReceiptQr.find(text) != null) {
+            if (ReceiptFormats.readExact(text) != null) {
                 done = true
                 onReceipt(text)
             } else if (badText != text) {

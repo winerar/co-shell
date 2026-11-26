@@ -48,8 +48,9 @@ object CategoryGuess {
     class Suggestion(val categoryId: String, val source: Source)
 
     /**
-     * History first ([guess]); for an expense nobody has recorded before — [BrandDictionary] by the payee, then by the first line of
-     * the note («Starbucks», «farmacia»). A payee the dictionary does not know gets nothing: the person chooses.
+     * History first ([guess]); for an expense nobody has recorded before — [BrandDictionary] by the payee, then the shop's category
+     * code of a payment QR ([MccCategories]), then the dictionary by the first line of the note («Starbucks», «farmacia»).
+     * A payee nobody knows gets nothing: the person chooses.
      */
     fun suggest(
         history: List<Transaction>,
@@ -58,10 +59,12 @@ object CategoryGuess {
         payee: String? = null,
         receiptKey: String? = null,
         note: String = "",
+        mcc: String? = null,
     ): Suggestion? {
         guess(history, type, categories, payee, receiptKey, note)?.let { return Suggestion(it, Source.HISTORY) }
         if (type != TransactionType.EXPENSE) return null
-        val icon = BrandDictionary.iconOf(payee) ?: BrandDictionary.iconOf(note.lineSequence().firstOrNull { it.isNotBlank() })
+        val icon = BrandDictionary.iconOf(payee) ?: MccCategories.iconOf(mcc)
+            ?: BrandDictionary.iconOf(note.lineSequence().firstOrNull { it.isNotBlank() })
         val uses = history.asSequence().take(WINDOW).filter { it.type == type }.mapNotNull { it.categoryId }.groupingBy { it }.eachCount()
         return BrandDictionary.categoryFor(icon, categories, uses)?.let { Suggestion(it, Source.DICTIONARY) }
     }
@@ -87,8 +90,19 @@ object CategoryGuess {
         return cleaned.ifEmpty { null }
     }
 
-    /** Seller id (CUIT) of a receipt key `seller:point:type:number` (`ReceiptQr.key`). */
-    fun seller(receiptKey: String?): String? = receiptKey?.substringBefore(':')?.takeIf { it.isNotBlank() }
+    /**
+     * The seller in a receipt key: the CUIT of `seller:point:type:number` (`ReceiptQr.key`), the fiscal drive of a Russian QR
+     * (`fns:<fn>:…` — one cash desk), the format of a shop's own receipt (`teleshka:…`). A payment QR and an unknown printed
+     * receipt (`emv:…`, `text:…` — a hash) name no seller: the payee does.
+     */
+    fun seller(receiptKey: String?): String? {
+        val head = receiptKey?.substringBefore(':')?.takeIf { it.isNotBlank() } ?: return null
+        return when (head) {
+            "fns" -> receiptKey.split(':').getOrNull(1)?.let { "fns:$it" }
+            "emv", "text" -> null
+            else -> head
+        }
+    }
 
     /** First line of a note — receipt notes start with the shop, then the items. */
     private fun noteKey(note: String): String? = normalize(note.lineSequence().firstOrNull { it.isNotBlank() })

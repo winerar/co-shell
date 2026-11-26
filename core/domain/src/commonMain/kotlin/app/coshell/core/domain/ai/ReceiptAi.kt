@@ -54,6 +54,7 @@ class ReceiptAi(private val model: LanguageModel) {
         val obj = runCatching { Json.parseToJsonElement(answer.substring(from, to + 1)) }.getOrNull() as? JsonObject ?: return null
         fun field(name: String) = (obj[name] as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf { it.isNotEmpty() && it != "null" }
         // The model only points at the total; code finds that number in the text and reads it, and the currency printed by it (#742).
+        // A total the text does not print — no receipt.
         val found = total(field("total"), text)
         val printed = found.firstOrNull() ?: return null
         // The same sum may stand on several lines («Subtotal $24.98», «Total: $24.98 USD»): the currency is looked for on all of them.
@@ -66,15 +67,15 @@ class ReceiptAi(private val model: LanguageModel) {
     }
 
     /**
-     * The printed number the model's [value] names: the same sum, or the same digits written otherwise («10.750.50» for «10.750,50»);
-     * a total the text does not have — the number on the «TOTAL» line, read by code. `null` when neither is there.
+     * The printed numbers the model's [value] names: the same sum, or the same digits written otherwise («10.750.50» for «10.750,50»).
+     * Empty when the text does not print it: then there is no receipt — a sum the model made up is never taken (#593). Reading the
+     * «TOTAL» line without the model was tried (#742) and dropped: it took card digits («Pagado con Mastercard ••8812») and item counts.
      */
     private fun total(value: String?, text: String): List<ReceiptNumbers.Printed> {
         val all = ReceiptNumbers.all(text)
         val model = value?.let { ReceiptNumbers.read(it) }
         fun norm(p: ReceiptNumbers.Printed) = p.whole.trimStart('0') + "." + p.fraction.trimEnd('0')
-        val same = model?.let { m -> all.filter { norm(it) == norm(m) }.ifEmpty { all.filter { it.digits == m.digits } } }.orEmpty()
-        return same.ifEmpty { listOfNotNull(ReceiptNumbers.byKeyword(text)) }
+        return model?.let { m -> all.filter { norm(it) == norm(m) }.ifEmpty { all.filter { it.digits == m.digits } } }.orEmpty()
     }
 
     /**

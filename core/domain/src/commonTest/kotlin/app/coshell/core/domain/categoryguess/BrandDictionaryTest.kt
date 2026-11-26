@@ -54,6 +54,14 @@ class BrandDictionaryTest {
     }
 
     @Test
+    fun `words of the owner's own notes are known (#742 gold set)`() {
+        assertEquals("transport", icon("Субе"))
+        assertEquals("food", icon("вода"))
+        assertEquals("restaurant", icon("десерты"))
+        assertEquals("utilities", icon("вода за месяц"))
+    }
+
+    @Test
     fun `phrases that are not purchases stay unknown`() {
         assertNull(icon("тест заметки"))
         assertNull(icon("позвонить маме"))

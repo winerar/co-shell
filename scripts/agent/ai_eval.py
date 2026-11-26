@@ -80,7 +80,7 @@ def task_notes(llm, gold, limit, label='notes'):
     sch = schema({'amount': {'type': 'string'}, 'title': {'type': 'string'}, 'day': {'type': 'integer'},
                   'pay': {'type': 'string', 'enum': ['cash', 'card', 'none']}})
     ok = amt = n = 0
-    for c in gold[label][:limit]:
+    for c in [c for c in gold[label] if not c.get('noise')][:limit]:
         text = c['line'] if label == 'notes' else c['phrase']
         out, dt, tk = ask(llm, 'Today is %s. Parse one spending note. amount = the amount as digits with a dot for decimals, no spaces, in the units written (3 500 -> 3500, 6,99 usd -> 6.99, \"к\"/k = thousand: 30к -> 30000, '
                           '"три пятьсот" -> 3500, "two thousand five hundred" -> 2500); title = short thing bought, same language; day = 0 today, -1 yesterday, -2 day before yesterday; '

@@ -60,6 +60,7 @@ class MainActivity : Activity() {
         col.addView(token)
         for (c in CANDIDATES) col.addView(modelRow(c))
         val bottom = LinearLayout(this).apply { gravity = Gravity.CENTER }
+        col.addView(Button(this).apply { text = "Сравнить всё: процессор и GPU"; setOnClickListener { compareAll() } })
         bottom.addView(Button(this).apply { text = "Остановить"; setOnClickListener { cancel = true } })
         bottom.addView(Button(this).apply { text = "Скопировать отчёт"; setOnClickListener { copy() } })
         bottom.addView(Button(this).apply { text = "Поделиться"; setOnClickListener { share() } })
@@ -123,16 +124,52 @@ class MainActivity : Activity() {
         if (busy) return
         if (!fileOf(c).exists()) return say("Сначала скачайте ${c.label}")
         busy = true; cancel = false
-        say("\n=== ${c.label} (${if (gpu.isChecked) "GPU" else "CPU"}, ${if (quick.isChecked) "быстрый" else "полный"}) ===")
-        Thread {
-            try {
-                val r = Bench(this, Gold(this)).run(c, fileOf(c), gpu.isChecked, quick.isChecked, ::say) { cancel }
+        Thread { try { bench(c, gpu.isChecked) } finally { busy = false } }.start()
+    }
+
+    /** One model on one backend: logs the run and its summary; `null` when it failed (the error is in the log). */
+    private fun bench(c: Candidate, onGpu: Boolean): Bench.Report? {
+        say("\n=== ${c.label} (${if (onGpu) "GPU" else "CPU"}, ${if (quick.isChecked) "быстрый" else "полный"}) ===")
+        return try {
+            Bench(this, Gold(this)).run(c, fileOf(c), onGpu, quick.isChecked, ::say) { cancel }.also { r ->
                 say("Итог ${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { "${it.name} ${it.ok}/${it.of}" }}")
                 say("скорость %.1f ток/с · память (PSS) до %d МБ · загрузка %.1f с · всего %.0f с · батарея %.1f→%.1f °C".format(
                     r.tokPerSec, r.peakPssMb, r.loadSec, r.totalSec, r.tempBefore, r.tempAfter))
-            } catch (e: Throwable) {
-                say("Ошибка: ${e::class.simpleName}: ${e.message}")
-            } finally { busy = false }
+            }
+        } catch (e: Throwable) {
+            say("Ошибка: ${e::class.simpleName}: ${e.message}")
+            null
+        }
+    }
+
+    /**
+     * Every downloaded model on the CPU, then on the GPU, one after another (#742); a table at the end. A pause between runs lets
+     * the phone cool a little, so the second run is not slower only because the first heated it.
+     */
+    private fun compareAll() {
+        if (busy) return
+        val models = CANDIDATES.filter { fileOf(it).exists() }
+        if (models.isEmpty()) return say("Сначала скачайте модели")
+        busy = true; cancel = false
+        say("\nСравнение: ${models.joinToString { it.label }} — процессор и GPU")
+        Thread {
+            val rows = mutableListOf<String>()
+            try {
+                loop@ for (c in models) for (onGpu in listOf(false, true)) {
+                    if (cancel) break@loop
+                    val r = bench(c, onGpu)
+                    rows += if (r == null) "${c.label} [${if (onGpu) "GPU" else "CPU"}]: ошибка"
+                    else "${r.model} [${r.backend}]: ${r.scores.joinToString(" · ") { "${it.name} ${it.ok}/${it.of}" }} · %.1f ток/с · %d МБ · загрузка %.1f с · %.0f с".format(
+                        r.tokPerSec, r.peakPssMb, r.loadSec, r.totalSec)
+                    if (!cancel) Thread.sleep(COOL_DOWN_MS)
+                }
+            } catch (_: InterruptedException) {
+            } finally {
+                say("\n=== Сводка ===")
+                rows.forEach(::say)
+                say("Нажмите «Скопировать отчёт» и вставьте в чат.")
+                busy = false
+            }
         }.start()
     }
 
@@ -143,5 +180,9 @@ class MainActivity : Activity() {
 
     private fun share() {
         startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, report.toString()), "Отчёт"))
+    }
+
+    private companion object {
+        const val COOL_DOWN_MS = 30_000L
     }
 }

@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">Из QR чека · продавец %1$s</string>
+    <string name="scan_source_plain">Из QR чека</string>
     <string name="scan_source_document">Из чека · %1$s</string>
     <string name="scan_dup_title">Этот чек уже записан</string>
     <string name="scan_dup_text">В операциях есть такой же: %1$s.</string>

@@ -48,7 +48,7 @@ class ReceiptFileReader @Inject constructor(@ApplicationContext private val cont
 
     private fun pdf(file: File): String {
         val layer = runCatching { PdfText.extract(file.readBytes()) }.getOrDefault("")
-        if (ReceiptFormats.read(layer) != null) return layer
+        if (ReceiptFormats.readExact(layer) != null) return layer
         val qr = pdfQr(file)
         return listOfNotNull(layer.ifBlank { null }, qr).joinToString("\n")
     }

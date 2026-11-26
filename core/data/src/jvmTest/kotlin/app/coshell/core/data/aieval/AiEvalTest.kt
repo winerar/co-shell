@@ -4,6 +4,7 @@ import app.coshell.aieval.AiEval
 import app.coshell.aieval.EvalGold
 import app.coshell.aieval.ReplayModel
 import app.coshell.core.domain.receipts.ReceiptFormats
+import app.coshell.core.domain.receipts.TextReceiptFormat
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,9 +26,20 @@ class AiEvalTest {
         assertEquals(AiEval(gold, null).categories.map { it.name }, gold.categories, "the gold set uses the starter categories of the app")
         assertTrue(gold.notes.all { n -> n.noise || n.categories.isNotEmpty() && n.categories.all { it in names } }, "every note has categories from the list")
         assertTrue(gold.payees.all { p -> p.categories.all { it in names } })
-        val known = gold.receipts.filter { ReceiptFormats.read(it.text) != null }.map { it.id }
-        assertEquals(emptyList(), known, "receipts read by a format are not «unknown»: they never reach the model")
+        val known = gold.receipts.filter { ReceiptFormats.readExact(it.text) != null }.map { it.id }
+        assertEquals(emptyList(), known, "receipts read by an exact format are not «unknown»")
         assertTrue(gold.receipts.size >= 19)
+    }
+
+    @Test
+    fun `the printed receipt rules read the gold receipts and never wrong`() {
+        val read = gold.receipts.mapNotNull { g -> TextReceiptFormat.read(g.text)?.let { g to it } }
+        val wrong = read.filterNot { (g, r) ->
+            r.total.amountMinor == g.totalMinor && r.total.currency.value == g.currency && r.date.toString() == g.date
+        }.map { it.first.id }
+        assertEquals(emptyList(), wrong, "a receipt read wrong is worse than one not read")
+        // Raise when the rules get better: 17 of 19 on 2026-11-26 (a transfer and a bank SMS are no receipts).
+        assertTrue(read.size >= RULES_RECEIPTS, "read by rules: ${read.map { it.first.id }}")
     }
 
     @Test
@@ -75,5 +87,6 @@ class AiEvalTest {
         const val RULES_NOTES_HISTORY = 59
         const val RULES_PAYEES_NEW = 66
         const val RULES_PAYEES_HISTORY = 66
+        const val RULES_RECEIPTS = 17
     }
 }

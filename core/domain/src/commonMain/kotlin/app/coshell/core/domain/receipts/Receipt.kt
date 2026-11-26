@@ -14,6 +14,8 @@ import kotlinx.datetime.LocalDate
  * - [debitDigits] — last digits of the card/account the money left, as the bank prints them: finds the account (#577).
  * - [transfer] — the document is a transfer between the owner's own accounts (#646): [total] is what left [debitDigits],
  *   [ReceiptTransfer] says where it arrived. Such a receipt is never an expense.
+ * - [refund] — the receipt returns money for a purchase (Russian QR `n=2`): the sheet opens with «Это возврат».
+ * - [mcc] — the merchant category code of a payment QR (EMVCo tag 52): suggests the category ([app.coshell.core.domain.categoryguess.MccCategories]).
  */
 data class Receipt(
     val total: Money,
@@ -24,6 +26,8 @@ data class Receipt(
     val items: List<ReceiptItem> = emptyList(),
     val debitDigits: String? = null,
     val transfer: ReceiptTransfer? = null,
+    val refund: Boolean = false,
+    val mcc: String? = null,
 )
 
 /** Where a transfer between own accounts arrived: the last digits of the receiving account and the sum that came in. */

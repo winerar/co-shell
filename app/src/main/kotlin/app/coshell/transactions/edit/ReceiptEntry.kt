@@ -1,7 +1,6 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.domain.quickentry.ReceiptPrefills
-import app.coshell.core.domain.ai.ReceiptAi
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.domain.receipts.ReceiptNote
@@ -21,7 +20,6 @@ data class ScanUi(
     val key: String,
     val duplicate: ScanDuplicate? = null,
     val document: Boolean = false,
-    val ai: Boolean = false,
     /** The shop's category code of a payment QR: suggests the category of a shop never paid before. */
     val mcc: String? = null,
 )
@@ -63,7 +61,6 @@ internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: M
             key = prefill.dedupeKey,
             duplicate = scan?.duplicate,
             document = receipt.format !in ReceiptFormats.qr,
-            ai = receipt.format == ReceiptAi.FORMAT,
             mcc = receipt.mcc,
         ),
     )

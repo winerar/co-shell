@@ -20,7 +20,7 @@ class DraftDataTest {
     private val drafts = RoomDraftRepository(db.draftDao())
 
     private fun draft(id: String, at: Long, amount: Long? = 100) =
-        Draft(id, "t-$id", ars, amount, "a1", "c1", DraftCategorySource.AI, 1_000, at)
+        Draft(id, "t-$id", ars, amount, "a1", "c1", DraftCategorySource.DICTIONARY, 1_000, at)
 
     @Test
     fun `drafts come back in the order they were written and keep every field`() = runTest {

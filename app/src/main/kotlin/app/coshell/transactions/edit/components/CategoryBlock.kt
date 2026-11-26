@@ -31,8 +31,7 @@ internal fun CategoryBlock(state: TransactionEditUiState, actions: TransactionEd
         if (hasMore) listOf(GridPlace.All(total, stringResource(R.string.transaction_categories_all)) { allOpen = true }) else emptyList()
     CoShellFormSection(
         title = stringResource(if (hasMore) R.string.entry_section_category_frequent else R.string.entry_section_category),
-        trailing = (if (state.categoryByAi && state.categoryGuessed) ({ AiGuessCaption() }) else null)
-            ?: state.categoryGuessSource?.takeIf { state.categoryGuessed }?.let { source -> { GuessCaption(source) } }
+        trailing = state.categoryGuessSource?.takeIf { state.categoryGuessed }?.let { source -> { GuessCaption(source) } }
             ?: state.categoryName?.let { name ->
                 { Text("$name ✓", style = MaterialTheme.typography.labelMedium, color = accentInk(), maxLines = 1, overflow = TextOverflow.Ellipsis) }
             },

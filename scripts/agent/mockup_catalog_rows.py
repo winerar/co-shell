@@ -57,7 +57,7 @@ def confirm(v, title, text, ok, cancel, danger=False):
 
 
 def confirm_stack(v, title, text, labels, progress=False):
-    """Three actions (#593: extraLabel) always stack, the main one first; [progress] — a running line under the text while the work goes on."""
+    """Three actions (extraLabel) always stack, the main one first; [progress] — a running line under the text while the work goes on."""
     btns = ''.join(btn(v, l, 'primary' if i == 0 else 'outline', w='100%') for i, l in enumerate(labels))
     bar = ('<span style="align-self: stretch; height: 8px; border-radius: 4px; background: %s; overflow: hidden;"><span style="display: block; width: 55%%; height: 8px; '
            'border-radius: 4px; background: %s;"></span></span>' % (BAR, LIME)) if progress else ''
@@ -68,8 +68,8 @@ def confirm_stack(v, title, text, labels, progress=False):
 
 
 def confirms(v):
-    extra = (confirm_stack(v, 'Не удалось прочитать чек', 'Облачный ИИ прочитает чек, а вы проверите поля.', ['✦ Прочитать с ИИ', 'Отправить образец', 'Ввести вручную'])
-             + confirm_stack(v, 'Читаю чек…', 'Это займёт несколько секунд.', ['Отменить'], progress=True)) if v == 'A' else ''
+    extra = (confirm_stack(v, 'Не удалось прочитать чек', 'Такого формата мы ещё не знаем. Отправьте образец — добавим формат.', ['Отправить образец', 'Ввести вручную', 'Отмена'])
+             + confirm_stack(v, 'Загружаем курсы…', 'Это займёт несколько секунд.', ['Отменить'], progress=True)) if v == 'A' else ''
     return col(confirm(v, 'Сохранить копию?', 'Перед стиранием сохраним всё в файл.', 'Сохранить', 'Не сейчас'),
                confirm(v, 'Удалить счёт?', 'Счёт без операций удалится навсегда.', 'Удалить', 'Отмена', True),
                *([extra] if extra else []),

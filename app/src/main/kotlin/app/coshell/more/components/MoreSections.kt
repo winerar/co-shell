@@ -68,7 +68,7 @@ internal fun moreSections(actions: MoreActions, draftCount: Int = 0, versionName
         MoreSection(
             R.string.more_section_app,
             listOf(
-                MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, stringResource(R.string.settings_menu_hint), actions.onSettings, NewFeatures.SETTINGS_CLOUD),
+                MoreItem(DesignR.drawable.ic_settings, R.string.settings_title, stringResource(R.string.settings_menu_hint), actions.onSettings),
                 MoreItem(DesignR.drawable.ic_shield_lock, R.string.privacy_title, stringResource(R.string.privacy_menu_hint), actions.onPrivacy),
                 MoreItem(DesignR.drawable.ic_feedback, R.string.feedback_title, stringResource(R.string.feedback_menu_hint), actions.onFeedback),
                 MoreItem(

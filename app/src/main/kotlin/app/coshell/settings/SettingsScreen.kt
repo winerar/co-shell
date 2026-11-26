@@ -20,10 +20,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import app.coshell.access.AccessViewModel
 import app.coshell.access.InviteRow
 import app.coshell.access.inviteRow
-import app.coshell.ai.AiAddonStage
-import app.coshell.ai.AiAddonViewModel
-import app.coshell.ai.cloud.CloudAiStage
-import app.coshell.ai.cloud.CloudAiViewModel
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.motion.LocalThemeReveal
@@ -49,8 +45,6 @@ data class SettingsActions(
     val onData: () -> Unit = {},
     val onCurrencies: () -> Unit = {},
     val onBackup: () -> Unit = {},
-    val onAiAddon: () -> Unit = {},
-    val onCloudAi: () -> Unit = {},
     val onThemeMode: (ThemeMode) -> Unit = {},
     val onShake: (Boolean) -> Unit = {},
     val onHaptics: (Boolean) -> Unit = {},
@@ -79,10 +73,6 @@ data class SettingsState(
     val weekStart: WeekStart = WeekStart.SYSTEM,
     val wifiOnly: Boolean = false,
     val hints: Boolean = true,
-    /** «ИИ на телефоне» on the «Умные функции» card (#587). */
-    val ai: AiAddonStage = AiAddonStage.OFF,
-    /** «Облачный разбор» on the same card (#635): `null` — this build has no Worker, the row is hidden; else on or off. */
-    val cloud: Boolean? = null,
     /** «Код приглашения» in «Помощь» (#671): `null` — no gate in this build or no code yet, the row is hidden. */
     val invite: InviteRow? = null,
     /** «Политика конфиденциальности» in «Помощь» (#652): `false` — this build does not know the site, the row is hidden. */
@@ -98,13 +88,9 @@ fun SettingsRoute(
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
     hints: HintsSettingsViewModel = hiltViewModel(),
-    ai: AiAddonViewModel = hiltViewModel(),
-    cloud: CloudAiViewModel = hiltViewModel(),
     access: AccessViewModel = hiltViewModel(),
 ) {
     val accessState by access.state.collectAsStateWithLifecycle()
-    val cloudState by cloud.state.collectAsStateWithLifecycle()
-    val aiState by ai.state.collectAsStateWithLifecycle()
     val hintsOn by hints.enabled.collectAsStateWithLifecycle()
     val mode by theme.mode.collectAsStateWithLifecycle()
     val palette by theme.palette.collectAsStateWithLifecycle()
@@ -121,8 +107,7 @@ fun SettingsRoute(
     SettingsScreen(
         SettingsState(
             mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
-            options.weekStart, options.syncWifiOnly, hintsOn, aiState.stage,
-            cloud = if (cloudState.configured) cloudState.stage == CloudAiStage.ON else null,
+            options.weekStart, options.syncWifiOnly, hintsOn,
             invite = accessState.inviteRow(),
             policy = policyUrl != null,
         ),
@@ -155,7 +140,6 @@ fun SettingsScreen(state: SettingsState, actions: SettingsActions) {
             item(key = "money") { MoneyCard(state, actions) }
             item(key = "screens") { ScreensCard(actions) }
             item(key = "data") { DataCard(state, actions) }
-            item(key = "smart") { SmartCard(state, actions) }
             item(key = "help") { HelpCard(state, actions) }
         }
     }

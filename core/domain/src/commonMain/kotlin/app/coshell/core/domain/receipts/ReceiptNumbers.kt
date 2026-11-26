@@ -6,8 +6,7 @@ import app.coshell.core.model.Money
 
 /**
  * Sums as receipts print them (#742): «11.997,00», «65.450» (a dot before three digits is thousands in Argentina), «3,500 AMD»,
- * «1 840,00», «$24.98». [app.coshell.core.domain.ai.ReceiptAi] takes the model's total only as a pointer to one of these printed numbers
- * and reads the number itself: a model that writes «10.750.50» or «65.450» for 65 450 no longer turns the sum into something else.
+ * «1 840,00», «$24.98». A building block for reading receipts no format knows (#742) by rules: which mark is the decimal one.
  */
 object ReceiptNumbers {
     /** A sum printed in the text: [whole] and [fraction] digits, the [line] it stands on. */

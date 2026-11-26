@@ -3,7 +3,6 @@ package app.coshell.drafts.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.R
-import app.coshell.ai.cloud.CloudLimitNotice
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.TransactionRepository
@@ -46,10 +45,7 @@ class DraftsViewModel @Inject constructor(
     private val moneyFormat: MoneyFormat,
     private val clock: Clock,
     private val timeZone: TimeZone,
-    notice: CloudLimitNotice,
 ) : ViewModel() {
-    private val cloudLimited = notice.take()
-
     /** Rows whose tick the person flipped: a ready row starts ticked, an unready one unticked (#628: those can be ticked to delete). */
     private val flipped = MutableStateFlow<Set<String>>(emptySet())
 
@@ -65,7 +61,6 @@ class DraftsViewModel @Inject constructor(
             isLoading = false,
             today = day(clock.now()),
             ticksTouched = list.any { it.id in flip },
-            cloudLimited = cloudLimited,
             rows = list.map { draft ->
                 val missing = DraftCheck.missing(draft, accountMap.filterValues { !it.archived }, categoryMap)
                 DraftRowUi(

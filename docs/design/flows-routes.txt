@@ -52,8 +52,6 @@ TemplateEditDestination	Rec143RepeatA
 BudgetsDestination	BudA
 BudgetDetailDestination	BudDetail
 BudgetEditDestination	BudEdit
-AiAddonDestination	AiOff
-CloudAiDestination	CloudOff
 NotesDestination	Notes586Input
 DraftsDestination	Notes586Drafts
 DebtsDestination	DebtList

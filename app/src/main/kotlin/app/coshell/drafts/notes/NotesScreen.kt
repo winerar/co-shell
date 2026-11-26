@@ -49,14 +49,6 @@ fun NotesScreen(state: NotesUiState, actions: NotesActions) {
                 verticalArrangement = Arrangement.spacedBy(Spacing.s),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // Board `CloudNotes` / `CloudBusy`: while the cloud is on, say where the text goes.
-                if (state.cloud) {
-                    Text(
-                        stringResource(if (state.processing) R.string.cloud_notes_busy else R.string.cloud_notes_line),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
                 CoShellButton(
                     onClick = actions.onProcess,
                     enabled = state.lineCount > 0 && !state.processing && !state.isLoading,

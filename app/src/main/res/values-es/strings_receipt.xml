@@ -26,14 +26,4 @@
     <string name="account_digits_sheet_title">Dígitos de la tarjeta o la cuenta</string>
     <string name="account_digits_sheet_sub">Con ellos, el ticket del banco encontrará esta cuenta. Vacío: la cuenta no está vinculada.</string>
     <string name="account_digits_field_hint">Del ticket del banco: «4083********3900» → 3900</string>
-    <string name="receipt_ai_read">Leer con IA</string>
-    <string name="receipt_ai_text_phone">Aún no conocemos este formato. La IA en el teléfono leerá el ticket sin internet y tú revisarás los campos.</string>
-    <string name="receipt_ai_text_cloud">Aún no conocemos este formato. La IA en la nube leerá el ticket y tú revisarás los campos. El texto del ticket se enviará al servidor de IA.</string>
-    <string name="receipt_ai_text_off">Aún no conocemos este formato. Envía una muestra y lo añadiremos. O activa la IA: Más → Ajustes → Funciones inteligentes.</string>
-    <string name="receipt_ai_enable">Activar IA</string>
-    <string name="receipt_ai_failed">La IA no encontró el total en el ticket. Ingresa el importe a mano o envía una muestra y añadiremos el formato.</string>
-    <string name="receipt_ai_busy_title">Leyendo el ticket…</string>
-    <string name="receipt_ai_busy_phone">Tarda unos segundos. El ticket no sale del teléfono.</string>
-    <string name="receipt_ai_busy_cloud">Tarda unos segundos.</string>
-    <string name="scan_source_ai">Leído por IA · revisa el importe y la fecha</string>
 </resources>

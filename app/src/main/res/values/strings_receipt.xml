@@ -26,9 +26,7 @@
     <string name="account_digits_empty">Не заданы</string>
     <string name="account_digits_sheet_title">Цифры карты или счёта</string>
     <string name="account_digits_sheet_sub">По ним чек из банка найдёт этот счёт. Пусто — счёт не привязан.</string>
-    <string name="account_digits_field">Последние цифры</string>
     <string name="account_digits_field_hint">Из чека банка: «4083********3900» → 3900</string>
-    <string name="account_digits_error">Введите четыре цифры.</string>
     <string name="receipt_ai_read">Прочитать с ИИ</string>
     <string name="receipt_ai_text_phone">Такого формата мы ещё не знаем. ИИ на телефоне прочитает чек сам, без интернета, а вы проверите поля.</string>
     <string name="receipt_ai_text_cloud">Такого формата мы ещё не знаем. Облачный ИИ прочитает чек, а вы проверите поля. Текст чека уйдёт на сервер ИИ.</string>

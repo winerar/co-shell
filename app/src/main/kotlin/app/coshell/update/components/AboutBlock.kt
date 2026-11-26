@@ -33,13 +33,12 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 internal fun AboutHead(versionName: String, build: Int, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        CoShellCard {
-            Image(
-                painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier.padding(Spacing.s).size(Sizes.heroRing / 2),
-            )
-        }
+        // As the launcher shows it — lime on graphite (#755: on a light card the lime shell was hard to see; board AboutLatest).
+        Image(
+            painterResource(R.drawable.ic_app_tile),
+            contentDescription = null,
+            modifier = Modifier.size(Sizes.heroRing / 2),
+        )
         Text(stringResource(R.string.about_name), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = Spacing.s))
         Text(
             stringResource(R.string.version_label, versionName, build),

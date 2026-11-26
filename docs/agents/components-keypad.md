@@ -10,3 +10,6 @@
 - **Сумма в редакторе (#300):** `CoShellTextField`/`CoShellAmountField(onClick)` — поле только показывает число, нажатие зовёт `onClick`, системной клавиатуры нет;
   в `app` — `ui/form/AmountSheetField` (поле + шторка `AmountSheet` с `CoShellKeypad`, без «+»/«−»; доска `Amount300Sheet`, тест `AmountSheetFieldTest`). Новое поле суммы в редакторе — только им;
   баланс, который может быть ниже нуля (начальный, текущий, Wallet), — `signed = true`: над числом «В плюсе · В минусе» (`CoShellSegmented`, опрос 2026-11-26, В; доска `Amount300Sign`), число без знака, минус ставит `AmountSign.signed` (`core:model`).
+- **Остальные числа в редакторах (2026-11-26) — тоже без системной клавиатуры:** день месяца 1–31 — `ui/form/DaySheetField` (сетка `CoShellDayGrid`, `clearable` — «Убрать» у необязательного: день выписки);
+  проценты, дни, цифры карты — `ui/form/NumberSheetField` / `NumberSheet` (`CoShellKeypad` без «+»/«−», логика `NumberKeys`: без группировки, нули впереди сохраняются, `maxWhole`/`fractionDigits`; тест `NumberKeysTest`).
+  `KeyboardType.Number/Decimal` в `app` больше нет — новое числовое поле только так.

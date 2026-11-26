@@ -5,7 +5,7 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.accounts.edit.AccountEditUiState.BalanceError
-import app.coshell.core.designsystem.components.CoShellAmountField
+import app.coshell.ui.form.AmountSheetField
 
 /**
  * «Исправить баланс»: the real balance of the account. The hint says the current one, then the difference that
@@ -13,11 +13,12 @@ import app.coshell.core.designsystem.components.CoShellAmountField
  */
 @Composable
 internal fun ActualBalanceField(state: AccountEditUiState, onValueChange: (String) -> Unit) {
-    CoShellAmountField(
+    AmountSheetField(
         value = state.actualBalance,
         onValueChange = onValueChange,
         label = stringResource(if (state.prepaid) R.string.account_balance_on_card else R.string.account_balance_actual),
         currency = state.currency,
+        signed = true,
         error = when (state.actualBalanceError) {
             BalanceError.INVALID -> stringResource(R.string.account_initial_balance_error)
             BalanceError.TOO_MANY_FRACTION_DIGITS -> stringResource(R.string.account_initial_balance_fraction_error)

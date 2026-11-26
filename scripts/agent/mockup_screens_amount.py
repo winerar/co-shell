@@ -12,7 +12,7 @@ from mockup_screens_main import keypad
 
 ROW = ('amount300', 'Сумма в редакторе (#300)',
        'Выбрано (опрос 2026-11-24, А): поле суммы только показывает число, нажатие поднимает шторку со своей клавиатурой и «Готово»; '
-       '«+» и «−» — только в шторке ввода операции. Так же — начальный и текущий баланс счёта, сумма шаблона, долга и возврата, кредитный лимит.')
+       '«+» и «−» — только в шторке ввода операции. Так же — сумма шаблона, долга и возврата, кредитный лимит. Баланс, который может быть ниже нуля (начальный, текущий, Wallet), — с «В плюсе · В минусе» над числом (опрос 2026-11-26, В).')
 
 
 def amount_sheet():
@@ -22,6 +22,16 @@ def amount_sheet():
     return md.modal_sheet(md.budget_bg(), 'Лимит', fig + '<div style="margin-top: 14px;">%s</div>' % keypad('Готово'), top=330)
 
 
+def balance_sheet():
+    """The balance of an account may be below zero (owner poll 2026-11-26, В): «В плюсе · В минусе» above the number, the number without a sign."""
+    seg = segmented(['В плюсе', 'В минусе'], 'В минусе')
+    fig = ('<div style="margin-top: 12px; display: flex; align-items: center; justify-content: flex-end; min-height: 52px;">'
+           '<span style="%s font-size: 40px; font-weight: 700;">−120 000</span><span style="width: 2px; height: 34px; background: %s; margin-left: 2px;"></span>'
+           '<span style="%s font-size: 18px; color: %s; margin-left: 8px;">ARS</span></div>' % (MONO, LIME, MONO, MUTED))
+    return md.modal_sheet(md.accounts_bg(), 'Начальный баланс', seg + fig + '<div style="margin-top: 14px;">%s</div>' % keypad('Готово'), top=300)
+
+
 BOARDS = [  # name, title, fn, row key
     ('Amount300Sheet', 'Выбрано (А): сумма в редакторе — шторка со своей клавиатурой', amount_sheet, 'amount300'),
+    ('Amount300Sign', 'Выбрано (В): баланс ниже нуля — «В плюсе · В минусе» над числом', balance_sheet, 'amount300'),
 ]

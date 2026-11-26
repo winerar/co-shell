@@ -186,7 +186,9 @@ class TransactionEditScanTest : TransactionEditTestBase() {
     @Test
     fun `nothing printed found brings the window back without the button`() = runTest {
         seed()
-        val vm = viewModel(receiptUnread = true, unreadReceipts = unread, receiptAi = ReceiptAi(Answer("""{"total":"99999"}""")))
+        // No «TOTAL» line either: code has nothing of its own to read (#742).
+        val noTotal = UnreadReceipts { "MI KIOSCO\nFecha 19/11/2026\n$ 37.914,50" }
+        val vm = viewModel(receiptUnread = true, unreadReceipts = noTotal, receiptAi = ReceiptAi(Answer("""{"total":"99999"}""")))
         vm.onReceiptAiRead()
         assertTrue(vm.state.value.receiptUnread)
         assertTrue(vm.state.value.receiptAiFailed)

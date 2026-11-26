@@ -1,7 +1,6 @@
 package app.coshell.accounts.edit.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,16 +9,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditUiState
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellHint
-import app.coshell.core.designsystem.components.CoShellTextField
-import app.coshell.ui.sheet.FormSheet
+import app.coshell.core.model.Account
+import app.coshell.ui.form.NumberSheet
 import app.coshell.core.designsystem.R as DesignR
 
 /**
@@ -40,18 +37,17 @@ internal fun ReceiptDigitsSection(state: AccountEditUiState, actions: AccountEdi
         )
     }
     if (open) {
-        FormSheet(
+        NumberSheet(
             title = stringResource(R.string.account_digits_sheet_title),
+            initial = state.cardDigits,
+            maxWhole = Account.CARD_DIGITS,
+            onDone = actions.onCardDigitsChange,
             onClosed = { open = false },
+            placeholder = "····",
+            // None (not linked) or all four — what a bank prints; anything between would not match a receipt.
+            accept = { it.isEmpty() || it.length == Account.CARD_DIGITS },
         ) {
-            CoShellTextField(
-                value = state.cardDigits,
-                onValueChange = actions.onCardDigitsChange,
-                label = stringResource(R.string.account_digits_field),
-                hint = stringResource(R.string.account_digits_field_hint),
-                error = if (state.cardDigitsError) stringResource(R.string.account_digits_error) else null,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-            )
+            CoShellHint(stringResource(R.string.account_digits_field_hint))
             CoShellHint(stringResource(R.string.account_digits_sheet_sub))
         }
     }

@@ -25,9 +25,7 @@
     <string name="account_digits_empty">Not set</string>
     <string name="account_digits_sheet_title">Card or account digits</string>
     <string name="account_digits_sheet_sub">A bank receipt will find this account by them. Empty — the account is not linked.</string>
-    <string name="account_digits_field">Last digits</string>
     <string name="account_digits_field_hint">From a bank receipt: “4083********3900” → 3900</string>
-    <string name="account_digits_error">Enter four digits.</string>
     <string name="receipt_ai_read">Read with AI</string>
     <string name="receipt_ai_text_phone">We don\'t know this format yet. AI on this phone will read the receipt offline, and you\'ll check the fields.</string>
     <string name="receipt_ai_text_cloud">We don\'t know this format yet. Cloud AI will read the receipt, and you\'ll check the fields. The receipt text goes to the AI server.</string>

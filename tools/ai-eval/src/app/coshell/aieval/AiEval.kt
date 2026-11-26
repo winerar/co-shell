@@ -137,7 +137,7 @@ class AiEval(private val gold: EvalGold, private val model: LanguageModel?) {
                 if (got.total.currency.value != r.currency) add("валюта ${got.total.currency.value} ≠ ${r.currency}")
                 if (got.total.amountMinor != r.totalMinor) add("итог ${got.total.amountMinor} ≠ ${r.totalMinor}")
                 if (got.date.toString() != r.date) add("дата ${got.date} ≠ ${r.date}")
-                if (!got.merchant.lowercase().contains(r.merchant.substringBefore(' ').lowercase())) add("магазин «${got.merchant}» ≠ «${r.merchant}»")
+                if (r.merchants.none { got.merchant.lowercase().contains(it.substringBefore(' ').lowercase()) }) add("магазин «${got.merchant}» ≠ «${r.merchant}»")
             }
             if (wrong.isEmpty()) ok++ else misses += "${r.id}: ${wrong.joinToString("; ")}"
         }

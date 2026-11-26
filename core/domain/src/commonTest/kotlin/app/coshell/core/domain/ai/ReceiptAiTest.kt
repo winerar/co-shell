@@ -47,6 +47,25 @@ class ReceiptAiTest {
         assertNull(read("""{"total":null}"""))
         assertNull(read("not json"))
         assertNull(read(null))
+        // Card digits or an item count are numbers too: a made-up total must not land on them through the «TOTAL» line.
+        assertNull(ReceiptAi(Fixed("""{"total":"9900"}""")).read("Total ARS 9.834,00\nPagado con Mastercard ••8812", ars, setOf(ars), today))
+    }
+
+    @Test
+    fun `the model points at a printed number and code reads it (#742)`() = runTest {
+        val usd = CurrencyCode("USD")
+        suspend fun on(t: String, answer: String) = ReceiptAi(Fixed(answer)).read(t, ars, setOf(ars, usd, CurrencyCode("AMD")), today)!!.total
+        assertEquals(Money(1_075_050, ars), on("TOTAL $10.750,50", """{"total":"10.750.50"}"""))
+        assertEquals(Money(6_545_000, ars), on("Total con propina       65.450", """{"total":"65.450"}"""))
+        assertEquals(Money(350_000, CurrencyCode("AMD")), on("Total 3,500 AMD", """{"total":"3,500","currency":"AMD"}"""))
+        assertEquals(Money(1_740_000, ars), on("Total $ 17.400,00\n(USD 14,50 aprox.)", """{"total":"17400","currency":"USD"}"""))
+        assertEquals(Money(2_498, usd), on("Total: $24.98 USD", """{"total":24.98,"currency":"USD"}"""))
+    }
+
+    @Test
+    fun `a payment app is not a shop`() = runTest {
+        assertEquals("", read("""{"total":"37914.50","shop":"Mercado Pago"}""")!!.merchant)
+        assertEquals("La Esquina", read("""{"total":"37914.50","shop":"La Esquina"}""")!!.merchant)
     }
 
     @Test

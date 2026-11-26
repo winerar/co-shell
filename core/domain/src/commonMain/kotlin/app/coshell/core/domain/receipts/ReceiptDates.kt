@@ -4,12 +4,14 @@ import kotlinx.datetime.LocalDate
 
 /**
  * Dates as receipts print them (#742): «19/11/26», «15.11.2026», «2026-11-12», «14 de noviembre de 2026», «10 ноября 2026»,
- * «08 Nov, 2026», «15 Nov 2026». Used by [app.coshell.core.domain.ai.ReceiptAi]: the model copies the date as printed and code reads it,
+ * «08 Nov, 2026», «15 Nov 2026», «Nov 15, 2026». Used by [app.coshell.core.domain.ai.ReceiptAi]: the model copies the date as printed and code reads it,
  * and a date the model got wrong is replaced by one the text really has. Day first in «dd/mm» (Argentina, Armenia, Russia).
  */
 object ReceiptDates {
     private val NUMERIC = Regex("""(?<!\d)(\d{1,2})[./-](\d{1,2})[./-](\d{4}|\d{2})(?!\d)""")
     private val ISO = Regex("""(?<!\d)(\d{4})-(\d{2})-(\d{2})(?!\d)""")
+    /** «Nov 15, 2026» — month first, as English receipts print it. */
+    private val WORDS_MONTH_FIRST = Regex("""(?<![A-Za-z])([A-Za-z]{3,9})\.?\s+(\d{1,2}),?\s+(\d{4})(?!\d)""")
     private val WORDS = Regex("""(?<!\d)(\d{1,2})\s*(?:de\s+)?([A-Za-zА-Яа-яЁё]+)\.?,?\s*(?:de\s+|del\s+)?(\d{4})(?!\d)""")
 
     private val MONTHS: Map<String, Int> = buildMap {
@@ -32,6 +34,10 @@ object ReceiptDates {
         }
         WORDS.findAll(text).forEach { m ->
             val (d, word, y) = m.destructured
+            month(word)?.let { mo -> date(y.toInt(), mo, d.toInt())?.let { found += m.range.first to it } }
+        }
+        WORDS_MONTH_FIRST.findAll(text).forEach { m ->
+            val (word, d, y) = m.destructured
             month(word)?.let { mo -> date(y.toInt(), mo, d.toInt())?.let { found += m.range.first to it } }
         }
         return found.sortedBy { it.first }.map { it.second }.distinct()

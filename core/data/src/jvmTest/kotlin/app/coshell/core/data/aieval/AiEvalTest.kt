@@ -12,7 +12,7 @@ import kotlinx.coroutines.test.runTest
 
 /**
  * The AI gold set through the app's own code (#742) without a phone: the set is consistent, the rules alone keep their score, and model
- * answers recorded on a phone (`docs/samples/ai/answers/<model>.json`, «Поделиться ответами» in the bench) replay to the same scores — so a change
+ * answers recorded on a phone (`docs/samples/ai/answers/<model>.json`, «Поделиться ответами» in the bench) replay to scores not worse than on the phone — so a change
  * of a parser or a check that would make the app worse fails here. A recording whose prompts no longer match is reported and skipped.
  */
 class AiEvalTest {
@@ -57,8 +57,11 @@ class AiEvalTest {
                 println("${file.name}: ${replay.missing} requests are not in the recording (prompts changed) — record again on the phone")
                 continue
             }
-            got.forEach { println(it.line) }
-            assertEquals(expected, got.map { it.short }.toSet(), file.name)
+            println("== ${file.name}")
+            got.forEach { s -> println(s.line); s.misses.forEach { println("  ✗ $it") } }
+            // Not worse than on the phone: the code may only read the same answers better (#742).
+            val recorded = expected.associate { it.substringBeforeLast(' ') to it.substringAfterLast(' ').substringBefore('/').toInt() }
+            for (s in got) assertTrue(s.ok >= (recorded[s.name] ?: 0), "${file.name}: ${s.short}, on the phone ${recorded[s.name]}")
         }
     }
 

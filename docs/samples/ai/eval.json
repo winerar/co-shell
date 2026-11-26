@@ -1018,7 +1018,10 @@
    "total": 387000,
    "currency": "AMD",
    "date": "2026-11-18",
-   "merchant": "YEREVAN CITY"
+   "merchant": "YEREVAN CITY",
+   "merchant_also": [
+    "ԵՐԵՎԱՆ ՍԻԹԻ"
+   ]
   },
   {
    "id": "gg-taxi",

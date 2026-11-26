@@ -22,6 +22,7 @@ class ReceiptDatesTest {
         assertEquals(LocalDate(2026, 11, 10), ReceiptDates.parse("Поездка 10 ноября 2026 в 08:45"))
         assertEquals(LocalDate(2026, 11, 8), ReceiptDates.parse("Date issued: 08 Nov, 2026 @ 3:12pm"))
         assertEquals(LocalDate(2026, 11, 15), ReceiptDates.parse("15 Nov 2026, 22:47"))
+        assertEquals(LocalDate(2026, 11, 15), ReceiptDates.parse("Order placed Nov 15, 2026"))
     }
 
     @Test

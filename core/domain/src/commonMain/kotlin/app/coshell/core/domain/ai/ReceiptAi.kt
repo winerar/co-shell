@@ -2,9 +2,10 @@ package app.coshell.core.domain.ai
 
 import app.coshell.core.domain.receipts.Receipt
 import app.coshell.core.domain.receipts.ReceiptDates
+import app.coshell.core.domain.receipts.ReceiptNumbers
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Currencies
-import app.coshell.core.model.MoneyParser
+import app.coshell.core.model.Money
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
@@ -52,13 +53,42 @@ class ReceiptAi(private val model: LanguageModel) {
         if (from < 0 || to <= from) return null
         val obj = runCatching { Json.parseToJsonElement(answer.substring(from, to + 1)) }.getOrNull() as? JsonObject ?: return null
         fun field(name: String) = (obj[name] as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf { it.isNotEmpty() && it != "null" }
-        // The currency must be printed (its code or a sign only it uses): a bare «$» is the local currency, not the dollar (#742).
-        val currency = field("currency")?.let(CurrencyCode::parseOrNull)?.takeIf { it in currencies && printedCurrency(it, text) } ?: fallback
-        val total = field("total")?.let { MoneyParser.parseOrNull(it, currency) }?.takeIf { it.isPositive } ?: return null
-        if (!printed(total.amountMinor, Currencies.info(currency).fractionDigits, text)) return null
+        // The model only points at the total; code finds that number in the text and reads it, and the currency printed by it (#742).
+        // A total the text does not print — no receipt.
+        val found = total(field("total"), text)
+        val printed = found.firstOrNull() ?: return null
+        // The same sum may stand on several lines («Subtotal $24.98», «Total: $24.98 USD»): the currency is looked for on all of them.
+        val currency = currency(field("currency")?.let(CurrencyCode::parseOrNull), found.joinToString("\n") { it.line }, text, currencies, fallback)
+        val minor = printed.minor(Currencies.info(currency).fractionDigits)?.takeIf { it > 0 } ?: return null
+        val total = Money(minor, currency)
         val date = date(field("date"), text, today)
-        val shop = field("shop")?.take(MAX_SHOP)?.takeIf { s -> s.any(Char::isLetter) }.orEmpty()
+        val shop = field("shop")?.take(MAX_SHOP)?.takeIf { s -> s.any(Char::isLetter) && !paymentApp(s) }.orEmpty()
         return Receipt(total = total, date = date, merchant = shop, key = "", format = FORMAT)
+    }
+
+    /**
+     * The printed numbers the model's [value] names: the same sum, or the same digits written otherwise («10.750.50» for «10.750,50»).
+     * Empty when the text does not print it: then there is no receipt — a sum the model made up is never taken (#593). Reading the
+     * «TOTAL» line without the model was tried (#742) and dropped: it took card digits («Pagado con Mastercard ••8812») and item counts.
+     */
+    private fun total(value: String?, text: String): List<ReceiptNumbers.Printed> {
+        val all = ReceiptNumbers.all(text)
+        val model = value?.let { ReceiptNumbers.read(it) }
+        fun norm(p: ReceiptNumbers.Printed) = p.whole.trimStart('0') + "." + p.fraction.trimEnd('0')
+        return model?.let { m -> all.filter { norm(it) == norm(m) }.ifEmpty { all.filter { it.digits == m.digits } } }.orEmpty()
+    }
+
+    /**
+     * The currency printed on the total's [line] (all lines that print the sum) when there is one; a bare «$» there — the local [fallback] (#742); else the model's
+     * currency if the text prints it; else the only currency the text prints; else [fallback].
+     */
+    private fun currency(model: CurrencyCode?, line: String, text: String, known: Set<CurrencyCode>, fallback: CurrencyCode): CurrencyCode {
+        val onLine = known.filter { printedCurrency(it, line) }
+        if (onLine.size == 1) return onLine.single()
+        if (model != null && model in onLine) return model
+        if ('$' in line) return fallback
+        if (model != null && model in known && printedCurrency(model, text)) return model
+        return known.filter { printedCurrency(it, text) }.singleOrNull() ?: fallback
     }
 
     /**
@@ -85,6 +115,11 @@ class ReceiptAi(private val model: LanguageModel) {
         private const val SYSTEM = "You read a shop receipt or a payment confirmation for a family budget app. The text may be in any language, " +
             "with columns broken by the PDF. Take the final total actually paid (after discounts, with tax), not a subtotal or a single item. " +
             "Answer with one JSON object only, no comments."
+
+        /** Payment apps and cards: a shop name the model must not give (it is how one paid, not whom). */
+        private val PAYMENT_APPS = listOf("mercado pago", "rappi pay", "ualá", "uala", "naranja x", "modo", "visa", "mastercard", "amex", "google pay", "apple pay")
+
+        internal fun paymentApp(shop: String): Boolean = shop.trim().lowercase() in PAYMENT_APPS
 
         /** Signs that name one currency only («$» is everyone's and does not count); «ФН»/«ФД» — the fiscal numbers of a Russian till receipt. */
         private val SIGNS = mapOf(

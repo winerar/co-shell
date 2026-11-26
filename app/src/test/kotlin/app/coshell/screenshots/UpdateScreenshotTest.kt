@@ -44,6 +44,13 @@ class UpdateScreenshotTest {
         UpdateScreen(installed.copy(phase = UpdatePhase.UpToDate(current)), UpdateActions())
     }
 
+    /** The whole screen down to the authors' signature (#761), which the 891 dp window cuts off. */
+    @Test
+    @Config(qualifiers = "+h2000dp")
+    fun `update latest whole dark`() = shot("update_latest_whole_dark", dark = true) {
+        UpdateScreen(installed.copy(phase = UpdatePhase.UpToDate(current)), UpdateActions())
+    }
+
     @Test
     fun `update installing dark`() = shot("update_installing_dark", dark = true) {
         UpdateScreen(installed.copy(phase = UpdatePhase.Installing(next)), UpdateActions())

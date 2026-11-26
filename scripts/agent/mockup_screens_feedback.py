@@ -26,7 +26,6 @@ import mockup_screens_fb_set as fb_set
 import mockup_screens_fb_setcards as fb_setcards
 import mockup_screens_fb_menu as fb_menu
 import mockup_screens_about as fb_about
-import mockup_screens_credits as fb_credits
 import mockup_screens_fb_invite as fb_invite
 import mockup_screens_fb_policy as fb_policy
 import mockup_screens_fb_tour as fb_tour
@@ -161,5 +160,5 @@ BOARDS = [  # name, title, fn, issue number
     ('Fb154Look', 'А · Внешний вид (бывшие «Настройки»)', look, 154),
     ('Fb157A', 'А · Мои отзывы со статусом (выбрано)', feedback_status_list, 157),
     ('Fb157A2', 'А · Отзыв подробно: путь до версии', feedback_detail, 157),
-] + fb_561.BOARDS + fb_593.BOARDS + fb_privacy.BOARDS + fb_qr526.BOARDS + fb_clip321.BOARDS + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS + fb_290.BOARDS + fb_quick.BOARDS + fb_nov14.BOARDS + fb_nov14b.BOARDS + fb_modals.BOARDS + fb_lang.BOARDS + fb_headers.BOARDS + fb_add.BOARDS + fb_439.BOARDS + fb_1117.BOARDS + fb_set.BOARDS + fb_conv.BOARDS + fb_hints.BOARDS + fb_flip.BOARDS + fb_setcards.BOARDS + fb_menu.BOARDS + fb_about.BOARDS + fb_invite.BOARDS + fb_policy.BOARDS + fb_tour.BOARDS + fb_tips.BOARDS + fb_credits.BOARDS
-FEEDBACK = fb_credits.FEEDBACK + fb_tips.FEEDBACK + fb_tour.FEEDBACK + fb_policy.FEEDBACK + fb_invite.FEEDBACK + fb_about.FEEDBACK + fb_593.FEEDBACK + fb_561.FEEDBACK + fb_privacy.FEEDBACK + fb_menu.FEEDBACK + fb_setcards.FEEDBACK + fb_qr526.FEEDBACK + fb_clip321.FEEDBACK + fb_flip.FEEDBACK + fb_hints.FEEDBACK + fb_conv.FEEDBACK + fb_set.FEEDBACK + fb_1117.FEEDBACK + fb_439.FEEDBACK + fb_add.FEEDBACK + fb_headers.FEEDBACK + fb_modals.FEEDBACK + fb_lang.FEEDBACK + fb_nov14.FEEDBACK + fb_nov14b.FEEDBACK + fb_quick.FEEDBACK + fb_290.FEEDBACK + fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK
+] + fb_561.BOARDS + fb_593.BOARDS + fb_privacy.BOARDS + fb_qr526.BOARDS + fb_clip321.BOARDS + fb_nov12.BOARDS + fb_cats.BOARDS + fb_search.BOARDS + fb_tags.BOARDS + fb_more.BOARDS + fb_290.BOARDS + fb_quick.BOARDS + fb_nov14.BOARDS + fb_nov14b.BOARDS + fb_modals.BOARDS + fb_lang.BOARDS + fb_headers.BOARDS + fb_add.BOARDS + fb_439.BOARDS + fb_1117.BOARDS + fb_set.BOARDS + fb_conv.BOARDS + fb_hints.BOARDS + fb_flip.BOARDS + fb_setcards.BOARDS + fb_menu.BOARDS + fb_about.BOARDS + fb_invite.BOARDS + fb_policy.BOARDS + fb_tour.BOARDS + fb_tips.BOARDS
+FEEDBACK = fb_tips.FEEDBACK + fb_tour.FEEDBACK + fb_policy.FEEDBACK + fb_invite.FEEDBACK + fb_about.FEEDBACK + fb_593.FEEDBACK + fb_561.FEEDBACK + fb_privacy.FEEDBACK + fb_menu.FEEDBACK + fb_setcards.FEEDBACK + fb_qr526.FEEDBACK + fb_clip321.FEEDBACK + fb_flip.FEEDBACK + fb_hints.FEEDBACK + fb_conv.FEEDBACK + fb_set.FEEDBACK + fb_1117.FEEDBACK + fb_439.FEEDBACK + fb_add.FEEDBACK + fb_headers.FEEDBACK + fb_modals.FEEDBACK + fb_lang.FEEDBACK + fb_nov14.FEEDBACK + fb_nov14b.FEEDBACK + fb_quick.FEEDBACK + fb_290.FEEDBACK + fb_tags.FEEDBACK + fb_more.FEEDBACK + FEEDBACK + fb_nov12.FEEDBACK + fb_cats.FEEDBACK + fb_search.FEEDBACK

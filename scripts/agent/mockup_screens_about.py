@@ -38,6 +38,12 @@ def links():
     return group([row('Отправить отзыв', 'Ошибка или идея', tile_icon('mail', PINK), chevron(), min_h=56)])
 
 
+def credits():
+    """Authors (#761, poll 2026-11-26: «скромно и внизу», round 2 «Д»): two quiet centred lines after «Отправить отзыв»."""
+    return ('<div style="margin-top: 20px; text-align: center; font-size: 12px; line-height: 1.6; color: %s;">'
+            'Идеи и тестирование — Анастасия Карачевцева<br>Разработка — Александр Карачевцев · вместе с Claude</div>' % MUTED)
+
+
 def older():
     return ('<div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid %s; display: flex; font-size: 13px; color: %s;">'
             '<span style="flex-grow: 1;">Прошлые версии: 1.1, 1.0, 0.57…</span>%s</div>' % (DIV, MUTED, chevron()))
@@ -49,7 +55,7 @@ def about_latest():
                 '<span style="font-size: 12px; color: %s;">сборка 512</span></span><span style="font-size: 12px; color: %s; text-align: right;">актуальная<br>проверили только что</span></div>'
                 % (tile_icon('check', LIME), MUTED, MONO, MUTED, MUTED), pad='14px', extra='margin-top: 12px;')
     body = (app_head('Версия 1.2 · сборка 512') + about_card() + '<div style="padding: 0 16px;">%s%s%s</div>'
-            % (mine, notes_card('Что в этой версии', '', NOTES, older()), '<div style="margin-top: 14px;">%s</div>' % links()))
+            % (mine, notes_card('Что в этой версии', '', NOTES, older()), '<div style="margin-top: 14px;">%s</div>' % links() + credits()))
     return top_bar('О приложении') + '<div style="height: 690px; overflow: hidden;">%s</div>' % body + footer(button('Проверить обновление', 'outline', 'refresh', 0))
 
 

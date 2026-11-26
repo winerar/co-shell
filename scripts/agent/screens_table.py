@@ -48,6 +48,7 @@ ROWS = [
     ('Отчёты: подушка', 'Cush241Edge', 'reports_cushion'),
     ('Быстрые заметки', 'Notes586Input', 'notes'), ('Черновики', 'Notes586Drafts', 'drafts'), ('Черновики: пусто', 'Notes586Empty2', 'drafts_empty'),
     ('Долги', 'DebtList', 'debts'), ('Долги: пусто', 'DebtEmpty', 'debts_empty'), ('Долг: новый', 'DebtNew', None), ('Долг: карточка', 'DebtDetail', None), ('Долг: вернули часть', 'DebtReturn', None),
+    ('Цели', 'GoalList', 'goals'), ('Цели: много', 'GoalMany', None), ('Цели: пусто', 'GoalEmpty', 'goals_empty'), ('Цель: новая', 'GoalNew', None), ('Цель', 'GoalDetail', 'goal_edit'), ('Обзор: цели', 'GoalHome', None),
     ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
     ('Импорт из Wallet', 'ImportStart', 'import_start'), ('Отзыв', 'Feedback', 'feedback'), ('Стереть всё', 'Wipe', 'wipe'),
 ]

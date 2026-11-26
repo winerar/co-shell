@@ -18,6 +18,7 @@ import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.DebtDirection
 import app.coshell.core.model.DebtEvent
 import app.coshell.core.model.DebtEventKind
+import app.coshell.core.model.Goal
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
@@ -50,6 +51,8 @@ internal data class BackupFile(
     val tags: List<TagDto> = emptyList(),
     /** Since schema v21: events of debts and loans (#552); optional, no version bump. */
     val debtEvents: List<DebtEventDto> = emptyList(),
+    /** Savings goals (#768); optional, the file version stays. */
+    val goals: List<GoalDto> = emptyList(),
 ) {
     companion object {
         const val FORMAT = "co-shell-backup"
@@ -283,3 +286,20 @@ internal fun DebtEvent.toDto() = DebtEventDto(
     accountId, date.toEpochMilliseconds(), person, dueDate?.toString(), note,
 )
 
+
+/** A savings goal (#768); [deadline] — `YYYY-MM-DD`. */
+@Serializable
+internal data class GoalDto(
+    val id: String,
+    val name: String,
+    val target: MoneyDto,
+    val accountId: String,
+    val deadline: String? = null,
+    val yearly: Boolean = false,
+    val icon: String? = null,
+    val color: Long? = null,
+) {
+    fun toModel() = Goal(id, name, target.toModel(), accountId, deadline?.let(LocalDate::parse), yearly, icon, color)
+}
+
+internal fun Goal.toDto() = GoalDto(id, name, target.toDto(), accountId, deadline?.toString(), yearly, icon, color)

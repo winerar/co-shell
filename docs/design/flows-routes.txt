@@ -59,3 +59,5 @@ DraftsDestination	Notes586Drafts
 DebtsDestination	DebtList
 DebtNewDestination	DebtNew
 DebtDetailDestination	DebtDetail
+GoalsDestination	GoalList
+GoalEditDestination	GoalNew

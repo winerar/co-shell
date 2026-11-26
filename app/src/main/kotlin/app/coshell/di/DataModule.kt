@@ -9,9 +9,11 @@ import app.coshell.core.data.db.createCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomBudgetRepository
 import app.coshell.core.data.repository.RoomDebtRepository
+import app.coshell.core.data.repository.RoomGoalRepository
 import app.coshell.core.data.repository.RoomTagRepository
 import app.coshell.core.domain.debts.CloseDebtUseCase
 import app.coshell.core.domain.debts.DebtRepository
+import app.coshell.core.domain.goals.GoalRepository
 import app.coshell.core.domain.debts.IssueDebtUseCase
 import app.coshell.core.domain.debts.ReturnDebtUseCase
 import app.coshell.core.data.repository.RoomTemplateRepository
@@ -139,6 +141,10 @@ object DataModule {
     @Singleton
     fun provideDebtRepository(db: CoShellDatabase, stamper: WriteStamper): DebtRepository =
         RoomDebtRepository(db.debtDao(), stamper)
+
+    @Provides @Singleton
+    fun provideGoalRepository(db: CoShellDatabase, stamper: WriteStamper): GoalRepository =
+        RoomGoalRepository(db.goalDao(), stamper)
 
     @Provides
     fun provideIssueDebt(debts: DebtRepository, accounts: AccountRepository, ids: IdGenerator) = IssueDebtUseCase(debts, accounts, ids)

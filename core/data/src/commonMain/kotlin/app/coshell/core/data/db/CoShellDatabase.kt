@@ -19,8 +19,9 @@ import kotlinx.coroutines.IO
         AccountEntity::class, CategoryEntity::class, TransactionEntity::class, BudgetEntity::class,
         ManualRateEntity::class, DownloadedRateEntity::class, SyncStateEntity::class, TemplateEntity::class,
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class, DebtEventEntity::class,
+        GoalEntity::class,
     ],
-    version = 25,
+    version = 26,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -47,6 +48,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 22, to = 23), // v23: accounts.deposit_rate_bp, deposit_end, deposit_payout — deposit conditions (#634)
         AutoMigration(from = 21, to = 22), // v22: accounts.credit_statement_day, credit_grace_days — grace period of a credit card (#634)
         AutoMigration(from = 24, to = 25), // v25: accounts.local_only — «Только у меня» (#558)
+        AutoMigration(from = 25, to = 26), // v26: goals — savings goals (#768)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)
@@ -59,6 +61,7 @@ abstract class CoShellDatabase : RoomDatabase() {
     abstract fun settingDao(): SettingDao
     abstract fun tagDao(): TagDao
     abstract fun debtDao(): DebtDao
+    abstract fun goalDao(): GoalDao
     abstract fun backupDao(): BackupDao
     abstract fun rateDao(): RateDao
     abstract fun syncDao(): SyncDao

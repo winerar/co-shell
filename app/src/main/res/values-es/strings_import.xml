@@ -39,7 +39,6 @@
     <string name="import_account_new">Cuenta nueva</string>
     <string name="import_wallet_balance">Saldo actual en Wallet</string>
     <string name="import_wallet_balance_hint">Opcional: la diferencia irá al saldo inicial</string>
-    <string name="import_wallet_balance_toggle_sign">Cambiar signo: menos — deuda de la tarjeta de crédito</string>
     <string name="import_wallet_balance_error">Revisa el importe: solo cifras y una coma</string>
 
     <string name="import_categories_hint">Pulsa una categoría para elegir una existente en lugar de crear una nueva.</string>

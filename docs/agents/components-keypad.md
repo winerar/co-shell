@@ -9,4 +9,4 @@
   считает экран (`parsePositiveAmount` в `transactions/edit/ReceiptForm.kt`, итог должен быть больше нуля; конвертер — не ниже нуля).
 - **Сумма в редакторе (#300):** `CoShellTextField`/`CoShellAmountField(onClick)` — поле только показывает число, нажатие зовёт `onClick`, системной клавиатуры нет;
   в `app` — `ui/form/AmountSheetField` (поле + шторка `AmountSheet` с `CoShellKeypad`, без «+»/«−»; доска `Amount300Sheet`, тест `AmountSheetFieldTest`). Новое поле суммы в редакторе — только им;
-  отрицательные балансы (начальный, текущий, Wallet) пока на системной клавиатуре — знак в шторке без доски не делаем.
+  баланс, который может быть ниже нуля (начальный, текущий, Wallet), — `signed = true`: над числом «В плюсе · В минусе» (`CoShellSegmented`, опрос 2026-11-26, В; доска `Amount300Sign`), число без знака, минус ставит `AmountSign.signed` (`core:model`).

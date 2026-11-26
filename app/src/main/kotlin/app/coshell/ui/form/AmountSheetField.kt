@@ -16,10 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellAmountField
+import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.keypad.AmountKeys
 import app.coshell.core.designsystem.components.keypad.CoShellKeypad
 import app.coshell.core.designsystem.components.keypad.KeypadKey
 import app.coshell.core.designsystem.theme.AmountInputStyle
+import app.coshell.core.model.AmountSign
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.ui.sheet.ModalSheet
@@ -27,7 +29,8 @@ import app.coshell.ui.sheet.ModalSheet
 /**
  * An amount of an editor (#300, owner poll 2026-11-24): the field only shows the number; a tap raises [AmountSheet] with our own
  * keypad — never the system one. [value] / [onValueChange] are plain text as the screen's view model already parses it
- * (`1234,5`); the field shows it grouped. [currency] sets the fraction digits (none — two) and the grey code after the number.
+ * (`1234,5`); the field shows it grouped. [signed] — the balance may be below zero (a credit card): the sheet asks «В плюсе · В минусе»
+ * (owner poll 2026-11-26, В) and the text gets a leading minus. [currency] sets the fraction digits (none — two) and the grey code after the number.
  */
 @Composable
 internal fun AmountSheetField(
@@ -39,10 +42,11 @@ internal fun AmountSheetField(
     error: String? = null,
     hint: String? = null,
     sheetTitle: String = label,
+    signed: Boolean = false,
 ) {
     var open by rememberSaveable { mutableStateOf(false) }
     CoShellAmountField(
-        value = if (value.isBlank()) "" else AmountKeys.display(AmountKeys.normalize(value)),
+        value = shownValue(value),
         onValueChange = {},
         label = label,
         modifier = modifier,
@@ -56,6 +60,7 @@ internal fun AmountSheetField(
             title = sheetTitle,
             initial = value,
             currency = currency,
+            signed = signed,
             onDone = { onValueChange(it) },
             onClosed = { open = false },
         )
@@ -67,14 +72,29 @@ internal fun AmountSheetField(
  * the × or a swipe closes without it ([onClosed] runs in both cases, after the sheet slid down — as `ChoiceSheet`).
  */
 @Composable
-internal fun AmountSheet(title: String, initial: String, currency: String?, onDone: (String) -> Unit, onClosed: () -> Unit) {
+internal fun AmountSheet(
+    title: String,
+    initial: String,
+    currency: String?,
+    onDone: (String) -> Unit,
+    onClosed: () -> Unit,
+    signed: Boolean = false,
+) {
     val digits = fractionDigitsOf(currency)
-    var text by rememberSaveable { mutableStateOf(AmountKeys.normalize(initial)) }
+    var text by rememberSaveable { mutableStateOf(AmountKeys.normalize(AmountSign.magnitude(initial))) }
+    var negative by rememberSaveable { mutableStateOf(signed && AmountSign.isNegative(initial)) }
     var done by remember { mutableStateOf(false) }
-    ModalSheet(title = title, onClosed = { if (done) onDone(text); onClosed() }) { close ->
+    ModalSheet(title = title, onClosed = { if (done) onDone(AmountSign.signed(text, negative)); onClosed() }) { close ->
+        if (signed) {
+            CoShellSegmented(
+                labels = listOf(stringResource(R.string.amount_sign_plus), stringResource(R.string.amount_sign_minus)),
+                selected = if (negative) 1 else 0,
+                onSelect = { negative = it == 1 },
+            )
+        }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
             Text(
-                AmountKeys.display(text) + currency?.let { " $it" }.orEmpty(),
+                (if (negative && text.isNotEmpty()) MINUS else "") + AmountKeys.display(text) + currency?.let { " $it" }.orEmpty(),
                 style = AmountInputStyle,
                 textAlign = TextAlign.End,
                 color = if (text.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
@@ -100,3 +120,11 @@ internal fun AmountSheet(title: String, initial: String, currency: String?, onDo
 /** Fraction digits of the currency named by [code]; two when there is none or it is not a code. */
 internal fun fractionDigitsOf(code: String?): Int =
     code?.let { CurrencyCode.parseOrNull(it) }?.let { Currencies.info(it).fractionDigits } ?: 2
+
+/** How the field shows [value]: grouped digits, a «−» in front of a negative one, nothing for an empty one. */
+private fun shownValue(value: String): String = when {
+    value.isBlank() -> ""
+    else -> (if (AmountSign.isNegative(value)) MINUS else "") + AmountKeys.display(AmountKeys.normalize(AmountSign.magnitude(value)))
+}
+
+private const val MINUS = "\u2212"

@@ -39,7 +39,6 @@
     <string name="import_account_new">New account</string>
     <string name="import_wallet_balance">Current balance in Wallet</string>
     <string name="import_wallet_balance_hint">Optional: the difference goes into the starting balance</string>
-    <string name="import_wallet_balance_toggle_sign">Switch sign: minus — credit card debt</string>
     <string name="import_wallet_balance_error">Check the amount: digits and a decimal point only</string>
 
     <string name="import_categories_hint">Tap a category to pick an existing one instead of a new one.</string>

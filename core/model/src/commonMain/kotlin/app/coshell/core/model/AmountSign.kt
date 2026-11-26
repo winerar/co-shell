@@ -16,4 +16,13 @@ object AmountSign {
             else -> "-$trimmed"
         }
     }
+
+    /** Whether the typed amount starts with a minus (`-` or `−`): «-12,5» → `true`. */
+    fun isNegative(text: String): Boolean = text.trimStart().firstOrNull() in MINUSES
+
+    /** The digits of [text] without a sign: «-12,5» → «12,5», «+3» → «3». */
+    fun magnitude(text: String): String = text.trimStart().let { if (it.firstOrNull() in MINUSES || it.startsWith('+')) it.substring(1) else it }
+
+    /** [digits] with the sign [negative] says; nothing typed has no sign: «12,5», `true` → «-12,5»; «», `true` → «». */
+    fun signed(digits: String, negative: Boolean): String = if (negative && digits.isNotBlank()) "-" + magnitude(digits) else magnitude(digits)
 }

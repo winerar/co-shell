@@ -28,12 +28,12 @@ class AmountSheetFieldTest {
 
     private val value = mutableStateOf("")
 
-    private fun show(initial: String = "", currency: String? = "USD") {
+    private fun show(initial: String = "", currency: String? = "USD", signed: Boolean = false) {
         value.value = initial
         compose.setContent {
             CoShellTheme {
                 Surface {
-                    AmountSheetField(value.value, { value.value = it }, label = "Лимит", currency = currency)
+                    AmountSheetField(value.value, { value.value = it }, label = "Лимит", currency = currency, signed = signed)
                 }
             }
         }
@@ -84,6 +84,56 @@ class AmountSheetFieldTest {
 
         assertEquals("10", value.value)
         compose.onAllNodesWithText("Готово").assertCountEquals(0)
+    }
+
+    @Test
+    fun `a field that cannot be negative does not ask plus or minus`() {
+        show(initial = "10")
+        open()
+        compose.onAllNodesWithText("В минусе").assertCountEquals(0)
+    }
+
+    @Test
+    fun `a negative balance keeps its minus through the sheet`() {
+        show(initial = "-1234,5", signed = true)
+        open()
+        compose.onNodeWithText("Готово").performClick()
+        compose.waitForIdle()
+
+        assertEquals("-1234,5", value.value)
+    }
+
+    @Test
+    fun `plus makes a negative balance positive`() {
+        show(initial = "-1234,5", signed = true)
+        open()
+        compose.onNodeWithText("В плюсе").performClick()
+        compose.onNodeWithText("Готово").performClick()
+        compose.waitForIdle()
+
+        assertEquals("1234,5", value.value)
+    }
+
+    @Test
+    fun `minus puts a sign in front of the typed number`() {
+        show(initial = "100", signed = true)
+        open()
+        compose.onNodeWithText("В минусе").performClick()
+        compose.onNodeWithText("Готово").performClick()
+        compose.waitForIdle()
+
+        assertEquals("-100", value.value)
+    }
+
+    @Test
+    fun `minus on an empty number leaves it empty`() {
+        show(initial = "", signed = true)
+        open()
+        compose.onNodeWithText("В минусе").performClick()
+        compose.onNodeWithText("Готово").performClick()
+        compose.waitForIdle()
+
+        assertEquals("", value.value)
     }
 
     @Test

@@ -26,7 +26,6 @@ import app.coshell.budgets.edit.components.InsideFolder
 import app.coshell.core.designsystem.amount.shownAmount
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAlertDialog
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
@@ -36,6 +35,7 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellTextButton
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.ui.form.ChoiceField
 import app.coshell.ui.format.formatMonthYearFrom
 import app.coshell.ui.list.SectionTitle
@@ -76,7 +76,7 @@ fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
                     onClick = { if (!state.locked) picker = BudgetPicker.CATEGORY },
                 )
             }
-            CoShellAmountField(
+            AmountSheetField(
                 value = state.amount,
                 onValueChange = actions.onAmountChange,
                 label = stringResource(R.string.budget_amount),

@@ -9,7 +9,10 @@
 - **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outline` (≥ 3:1, Style8) → ink в фокусе,
   радиус 16, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
-  после числа). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
+  после числа).
+  **Сумма в редакторе (#300):** `CoShellTextField`/`CoShellAmountField(onClick)` — поле только показывает число, нажатие зовёт `onClick`, системной клавиатуры нет;
+  в `app` — `ui/form/AmountSheetField` (поле + шторка `AmountSheet` с `CoShellKeypad`, без «+»/«−»; доска `Amount300Sheet`, тест `AmountSheetFieldTest`). Новое поле суммы в редакторе — только им;
+  отрицательные балансы (начальный, текущий, Wallet) пока на системной клавиатуре — знак в шторке без доски не делаем. Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.

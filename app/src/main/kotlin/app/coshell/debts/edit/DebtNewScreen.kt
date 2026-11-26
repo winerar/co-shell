@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellDatePicker
 import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellHint
@@ -21,6 +20,7 @@ import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.rememberDatePick
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.ui.form.ChoiceSheet
 import app.coshell.ui.sheet.EditSheetLayout
 import app.coshell.ui.sheet.ModalSheet
@@ -58,7 +58,7 @@ fun DebtNewScreen(state: DebtNewUiState, actions: DebtNewActions) {
                 error = if (state.personError) stringResource(R.string.debts_error_person) else null,
                 modifier = Modifier.fillMaxWidth(),
             )
-            CoShellAmountField(
+            AmountSheetField(
                 value = state.amount,
                 onValueChange = actions.onAmount,
                 label = stringResource(R.string.debts_field_amount),

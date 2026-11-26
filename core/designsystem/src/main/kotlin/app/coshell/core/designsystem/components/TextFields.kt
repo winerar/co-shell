@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import app.coshell.core.designsystem.motion.errorShake
 import app.coshell.core.designsystem.motion.smoothResize
+import app.coshell.core.designsystem.motion.tactileClickable
 import app.coshell.core.designsystem.theme.AmountInputStyle
 import app.coshell.core.designsystem.theme.accentInk
 import app.coshell.core.designsystem.tokens.Sizes
@@ -42,6 +44,8 @@ import app.coshell.core.designsystem.tokens.Sizes
 /**
  * Text input. The line under the field shows [error] (field turns red) or else [hint].
  * [isError] — red without a message of its own (e.g. a length counter as [hint]).
+ * [onClick] — the field only shows the value and a tap goes to [onClick] (no system keyboard: the number is typed
+ * on our own keypad in a sheet, #300); [onValueChange] is not called then.
  */
 @Composable
 fun CoShellTextField(
@@ -61,6 +65,37 @@ fun CoShellTextField(
     keyboardOptions: KeyboardOptions = TextKeyboard,
     textStyle: TextStyle = LocalTextStyle.current,
     trailingIcon: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+) {
+    if (onClick == null) {
+        TextFieldBody(value, onValueChange, label, modifier, error, hint, isError, placeholder, prefix, suffix, enabled, singleLine, minLines, keyboardOptions, textStyle, trailingIcon, readOnly = false)
+        return
+    }
+    Box(modifier.fillMaxWidth()) {
+        TextFieldBody(value, onValueChange, label, Modifier, error, hint, isError, placeholder, prefix, suffix, enabled, singleLine, minLines, keyboardOptions, textStyle, trailingIcon, readOnly = true)
+        Box(Modifier.matchParentSize().tactileClickable(enabled = enabled, role = Role.Button, onClick = onClick))
+    }
+}
+
+@Composable
+private fun TextFieldBody(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier,
+    error: String?,
+    hint: String?,
+    isError: Boolean,
+    placeholder: String?,
+    prefix: String?,
+    suffix: String?,
+    enabled: Boolean,
+    singleLine: Boolean,
+    minLines: Int,
+    keyboardOptions: KeyboardOptions,
+    textStyle: TextStyle,
+    trailingIcon: (@Composable () -> Unit)?,
+    readOnly: Boolean,
 ) {
     val supporting = supportingLine(error, hint)
     val interaction = remember { MutableInteractionSource() }
@@ -75,6 +110,7 @@ fun CoShellTextField(
             value = value,
             onValueChange = onValueChange,
             enabled = enabled,
+            readOnly = readOnly,
             singleLine = singleLine,
             minLines = minLines,
             maxLines = if (singleLine) 1 else Int.MAX_VALUE,
@@ -136,6 +172,7 @@ fun CoShellAmountField(
     imeAction: ImeAction = ImeAction.Done,
     onToggleSign: (() -> Unit)? = null,
     toggleSignLabel: String? = null,
+    onClick: (() -> Unit)? = null,
 ) = CoShellTextField(
     value = value,
     onValueChange = onValueChange,
@@ -147,6 +184,7 @@ fun CoShellAmountField(
     suffix = currency,
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = imeAction),
     textStyle = AmountInputStyle,
+    onClick = onClick,
     trailingIcon = onToggleSign?.let { toggle ->
         {
             TextButton(onClick = toggle, modifier = Modifier.semantics { toggleSignLabel?.let { contentDescription = it } }) {

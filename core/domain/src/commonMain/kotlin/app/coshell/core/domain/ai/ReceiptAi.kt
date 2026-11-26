@@ -1,6 +1,7 @@
 package app.coshell.core.domain.ai
 
 import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptDates
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.MoneyParser
@@ -40,7 +41,9 @@ class ReceiptAi(private val model: LanguageModel) {
         appendLine("Receipt text:")
         appendLine(text)
         append("Answer {\"total\":\"<the final sum paid, digits with a dot for decimals>\",\"currency\":\"<one code from the list>\",")
-        append("\"date\":\"<YYYY-MM-DD of the purchase>\",\"shop\":\"<shop or company name>\"}; null for what is not in the text.")
+        append("\"date\":\"<the purchase or payment date exactly as printed>\",")
+        append("\"shop\":\"<who received the money: the shop, restaurant, service or person — not a product, a fuel type or the payment app>\"}; ")
+        append("null for what is not in the text.")
     }
 
     internal fun parse(answer: String, text: String, fallback: CurrencyCode, currencies: Set<CurrencyCode>, today: LocalDate): Receipt? {
@@ -49,13 +52,28 @@ class ReceiptAi(private val model: LanguageModel) {
         if (from < 0 || to <= from) return null
         val obj = runCatching { Json.parseToJsonElement(answer.substring(from, to + 1)) }.getOrNull() as? JsonObject ?: return null
         fun field(name: String) = (obj[name] as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf { it.isNotEmpty() && it != "null" }
-        val currency = field("currency")?.let(CurrencyCode::parseOrNull)?.takeIf { it in currencies } ?: fallback
+        // The currency must be printed (its code or a sign only it uses): a bare «$» is the local currency, not the dollar (#742).
+        val currency = field("currency")?.let(CurrencyCode::parseOrNull)?.takeIf { it in currencies && printedCurrency(it, text) } ?: fallback
         val total = field("total")?.let { MoneyParser.parseOrNull(it, currency) }?.takeIf { it.isPositive } ?: return null
         if (!printed(total.amountMinor, Currencies.info(currency).fractionDigits, text)) return null
-        val date = field("date")?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
-            ?.takeIf { it <= today && it >= today.minus(DatePeriod(years = 1)) } ?: today
+        val date = date(field("date"), text, today)
         val shop = field("shop")?.take(MAX_SHOP)?.takeIf { s -> s.any(Char::isLetter) }.orEmpty()
         return Receipt(total = total, date = date, merchant = shop, key = "", format = FORMAT)
+    }
+
+    /**
+     * The model's date (copied as printed, #742) when the text has it; else the only date of the text; else the first printed one not in the
+     * future; else today. Only days within the last year count.
+     */
+    private fun date(value: String?, text: String, today: LocalDate): LocalDate {
+        fun fits(d: LocalDate) = d <= today && d >= today.minus(DatePeriod(years = 1))
+        val printed = ReceiptDates.find(text).filter(::fits)
+        val model = value?.let { runCatching { LocalDate.parse(it) }.getOrNull() ?: ReceiptDates.parse(it) }?.takeIf(::fits)
+        return when {
+            model != null && (printed.isEmpty() || model in printed) -> model
+            printed.isNotEmpty() -> printed.first()
+            else -> today
+        }
     }
 
     companion object {
@@ -67,6 +85,18 @@ class ReceiptAi(private val model: LanguageModel) {
         private const val SYSTEM = "You read a shop receipt or a payment confirmation for a family budget app. The text may be in any language, " +
             "with columns broken by the PDF. Take the final total actually paid (after discounts, with tax), not a subtotal or a single item. " +
             "Answer with one JSON object only, no comments."
+
+        /** Signs that name one currency only («$» is everyone's and does not count). */
+        private val SIGNS = mapOf(
+            "USD" to listOf("US$", "U\$S", "U\$D", "U\$\$"), "RUB" to listOf("₽", "руб"), "AMD" to listOf("֏", "драм"),
+            "EUR" to listOf("€"), "ARS" to listOf("AR$"), "GBP" to listOf("£"),
+        )
+
+        /** [currency]'s code as a word, or one of its own [SIGNS], is in [text]. */
+        internal fun printedCurrency(currency: CurrencyCode, text: String): Boolean {
+            if (Regex("(?<![A-Za-z])${currency.value}(?![A-Za-z])").containsMatchIn(text)) return true
+            return SIGNS[currency.value].orEmpty().any { text.contains(it, ignoreCase = true) }
+        }
 
         /** The total is one of the numbers in the text: «37.914,50», «37 914,5» or «37914» for 37 914,00. */
         internal fun printed(minor: Long, fractionDigits: Int, text: String): Boolean {

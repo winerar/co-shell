@@ -2,9 +2,12 @@
 # translations are paused until publication — new texts go in Russian only, en/es are caught up in one pass).
 # One key per line (`plural:<name>` for <plurals>). `agent.sh l10n` lists and rewrites this file.
 # Before publication this file must be empty (TranslationsTest `nothing is left untranslated`, enabled by PUBLISHING).
+about_credits_dev
+about_credits_ideas
 access_where_text
 account_deleted
 account_local_only_short
+action_clear_value
 amount_sign_minus
 amount_sign_plus
 auto_backup_off
@@ -138,6 +141,7 @@ reports_cushion_unit
 reports_cushion_value
 reports_income_caption
 review_no_history
+scan_source_plain
 settings_balance_all
 settings_balance_except
 settings_home_converter_hint

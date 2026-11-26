@@ -1,5 +1,9 @@
 package app.coshell.core.domain.receipts
 
+import app.coshell.core.model.Currencies
+import app.coshell.core.model.CurrencyCode
+import app.coshell.core.model.Money
+
 /**
  * Sums as receipts print them (#742): «11.997,00», «65.450» (a dot before three digits is thousands in Argentina), «3,500 AMD»,
  * «1 840,00», «$24.98». A building block for reading receipts no format knows (#742) by rules: which mark is the decimal one.
@@ -15,6 +19,10 @@ object ReceiptNumbers {
             if (f.length > fractionDigits && f.drop(fractionDigits).any { it != '0' }) return null
             return (whole.trimStart('0').ifEmpty { "0" } + f.take(fractionDigits)).toLongOrNull()
         }
+
+        /** The sum in [currency]; `null` when it does not fit the currency's fraction or is not above zero. */
+        fun money(currency: CurrencyCode): Money? =
+            minor(Currencies.info(currency).fractionDigits)?.takeIf { it > 0 }?.let { Money(it, currency) }
     }
 
     private val NUMBER = Regex("""(?<![\d.,])(\d{1,3}(?:[ \u00A0\u202F.,']\d{3})+(?:[.,]\d{1,8})?|\d+(?:[.,]\d{1,8})?)(?!\d)""")

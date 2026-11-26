@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import app.coshell.R
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellListRow
@@ -33,13 +34,12 @@ import app.coshell.core.designsystem.R as DesignR
 @Composable
 internal fun AboutHead(versionName: String, build: Int, modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        CoShellCard {
-            Image(
-                painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier.padding(Spacing.s).size(Sizes.heroRing / 2),
-            )
-        }
+        // As the launcher shows it — lime on graphite (#755: on a light card the lime shell was hard to see; board AboutLatest).
+        Image(
+            painterResource(R.drawable.ic_app_tile),
+            contentDescription = null,
+            modifier = Modifier.size(Sizes.heroRing / 2),
+        )
         Text(stringResource(R.string.about_name), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = Spacing.s))
         Text(
             stringResource(R.string.version_label, versionName, build),
@@ -83,4 +83,16 @@ internal fun AboutLinks(onFeedback: () -> Unit, modifier: Modifier = Modifier) {
     CoShellRowGroup(modifier) {
         row { CoShellMenuRow(DesignR.drawable.ic_feedback, stringResource(R.string.about_feedback), onFeedback, subtitle = stringResource(R.string.feedback_menu_hint)) }
     }
+}
+
+/** Who made the app (#761, poll 2026-11-26 «Д»): two quiet centred lines at the very end of the screen, after [AboutLinks]. */
+@Composable
+internal fun AboutCredits(modifier: Modifier = Modifier) {
+    Text(
+        stringResource(R.string.about_credits_ideas) + "\n" + stringResource(R.string.about_credits_dev),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = modifier.fillMaxWidth(),
+    )
 }

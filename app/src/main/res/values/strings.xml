@@ -75,6 +75,7 @@
     <string name="picker_from_transfer">Откуда перевод?</string>
     <string name="picker_to_transfer">Куда перевод?</string>
     <string name="keypad_done">Готово</string>
+    <string name="action_clear_value">Убрать</string>
     <string name="keypad_backspace">Стереть</string>
     <string name="transaction_change_account">Сменить счёт</string>
     <string name="accounts_group_shared">Общие</string>

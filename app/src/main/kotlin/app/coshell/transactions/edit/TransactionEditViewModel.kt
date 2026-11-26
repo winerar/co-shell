@@ -418,7 +418,7 @@ class TransactionEditViewModel @Inject constructor(
      */
     private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
         if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
-        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key?.takeIf { it.isNotBlank() }, note)
+        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key?.takeIf { it.isNotBlank() }, note, scan?.mcc)
         return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source)
     }
 

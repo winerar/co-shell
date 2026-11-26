@@ -3,7 +3,6 @@ package app.coshell.accounts.edit.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,8 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditUiState
@@ -24,11 +21,11 @@ import app.coshell.core.designsystem.components.CoShellDetailTile
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSectionLink
 import app.coshell.core.designsystem.components.CoShellSegmented
-import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.components.rememberDatePick
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.model.DepositPayout
 import app.coshell.ui.beta.BetaMark
+import app.coshell.ui.form.NumberSheetField
 import app.coshell.ui.format.formatDayMonthYear
 import app.coshell.ui.sheet.ModalSheet
 import kotlin.time.Instant
@@ -48,12 +45,13 @@ internal fun DepositTermsFields(state: AccountEditUiState, actions: AccountEditA
             BetaMark()
             CoShellHint(stringResource(R.string.account_deposit_beta_hint), Modifier.weight(1f))
         }
-        CoShellTextField(
+        NumberSheetField(
             value = state.depositRate,
             onValueChange = actions.onDepositRateChange,
             label = stringResource(R.string.account_deposit_rate),
+            maxWhole = PERCENT_WHOLE,
+            fractionDigits = PERCENT_FRACTION,
             suffix = "%",
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
         )
         DepositDateTile(R.string.account_deposit_start, state.depositStart, R.string.account_deposit_start_empty, actions.onDepositStartChange, clearable = true)
         DepositDateTile(R.string.account_deposit_end, state.depositEnd, R.string.account_deposit_empty, actions.onDepositEndChange, clearable = false)

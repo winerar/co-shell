@@ -25,7 +25,5 @@
     <string name="account_digits_empty">Not set</string>
     <string name="account_digits_sheet_title">Card or account digits</string>
     <string name="account_digits_sheet_sub">A bank receipt will find this account by them. Empty — the account is not linked.</string>
-    <string name="account_digits_field">Last digits</string>
     <string name="account_digits_field_hint">From a bank receipt: “4083********3900” → 3900</string>
-    <string name="account_digits_error">Enter four digits.</string>
 </resources>

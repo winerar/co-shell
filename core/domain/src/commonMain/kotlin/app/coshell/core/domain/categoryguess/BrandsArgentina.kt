@@ -11,7 +11,7 @@ internal val ARGENTINA_BRANDS: Map<String, String> = mapOf(
 )
 
 internal val ARGENTINA_MORE: Map<String, String> = mapOf(
-    "transport" to "ypf, ypf full, axion, puma energy, petrobras, sube, trenes argentinos, aerolineas argentinas, flybondi, jetsmart, autopista, ausol, aubasa, peaje, " +
+    "transport" to "bicicleteria, ypf, ypf full, axion, puma energy, petrobras, sube, trenes argentinos, aerolineas argentinas, flybondi, jetsmart, autopista, ausol, aubasa, peaje, " +
         "estacionamiento, cochera, playa de estacionamiento, subte, colectivo, emova, ecobici, uber moto, nafta",
     "taxi" to "uber, cabify, didi, bolt, indrive, in drive, remis, remises, radio taxi, taxi, beat, free now",
     "health" to "farmacity, farmacia, dr ahorro, farmaplus, swiss medical, osde, galeno, medicus, omint, sancor salud, hospital italiano, hospital aleman, dentista, odontologia, " +

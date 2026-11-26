@@ -5,6 +5,7 @@ import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionFilter
 import app.coshell.core.domain.TransactionRepository
+import app.coshell.core.domain.ai.CategoryHints
 import app.coshell.core.domain.ai.HistoryExamples
 import app.coshell.core.domain.ai.NoteHint
 import app.coshell.core.domain.ai.NoteHints
@@ -55,7 +56,7 @@ class ProcessQuickNoteUseCase(
         val labels = live.filter { !it.archived }.map(AccountLabels::of)
         val asked = ask.map { lines[it] }
         val examples = if (ask.isEmpty()) emptyList() else HistoryExamples.pick(history, expense, asked)
-        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(asked, expense.map { it.name }, labels, examples).orEmpty()
+        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(asked, expense.map { it.name }, labels, examples, CategoryHints.line(expense)).orEmpty()
         val byLine = ask.zip(read).mapNotNull { (i, hint) -> hint?.let { i to it } }.toMap()
         val made = QuickNoteDrafts.build(lines, ctx, ids, byLine)
         drafts.saveDrafts(made)

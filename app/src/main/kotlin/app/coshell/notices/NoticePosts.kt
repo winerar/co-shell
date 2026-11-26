@@ -19,7 +19,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /** What one notification says and where it leads (#745). Texts come from [NoticeTexts]; the action is the tap on the body too. */
-data class NoticeContent(val title: String, val text: String, val target: NoticeTarget, val actionLabel: String)
+data class NoticeContent(
+    val title: String,
+    val text: String,
+    val target: NoticeTarget,
+    val actionLabel: String,
+    /** Extras for the tap (the limit's envelope); see [NoticeLinks]. */
+    val extras: Map<String, String> = emptyMap(),
+)
 
 /**
  * Posts the optional notifications (#745): a channel per kind so the person can silence one kind in the phone's settings,
@@ -32,7 +39,7 @@ class NoticePosts @Inject constructor(@ApplicationContext private val context: C
     /** `false` — the system does not let us notify (Android 13+ permission), nothing was posted. */
     fun show(kind: NoticeKind, content: NoticeContent): Boolean {
         ensureChannel(kind)
-        val open = open(kind, content.target)
+        val open = open(kind, content)
         val notification = NotificationCompat.Builder(context, channelId(kind))
             .setSmallIcon(R.drawable.ic_launcher_monochrome)
             .setContentTitle(content.title)
@@ -51,9 +58,10 @@ class NoticePosts @Inject constructor(@ApplicationContext private val context: C
         return true
     }
 
-    private fun open(kind: NoticeKind, target: NoticeTarget): PendingIntent = PendingIntent.getActivity(
+    private fun open(kind: NoticeKind, content: NoticeContent): PendingIntent = PendingIntent.getActivity(
         context, notificationId(kind),
-        Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(NoticeLinks.EXTRA, target.name),
+        Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .putExtra(NoticeLinks.EXTRA, content.target.name).apply { content.extras.forEach { (key, value) -> putExtra(key, value) } },
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
     )
 

@@ -95,9 +95,20 @@ class NoticeTextsTest {
         val links = NoticeLinks()
         val intent = Intent().putExtra(NoticeLinks.EXTRA, NoticeTarget.DRAFTS.name)
         assertTrue(links.offer(intent))
-        assertEquals(NoticeTarget.DRAFTS, links.target.value)
+        assertEquals(NoticeTarget.DRAFTS, links.link.value?.target)
         assertFalse(links.offer(intent))
         links.consumed()
-        assertNull(links.target.value)
+        assertNull(links.link.value)
+    }
+
+    @Test fun `a limit tap names its envelope`() {
+        val links = NoticeLinks()
+        val intent = Intent().putExtra(NoticeLinks.EXTRA, NoticeTarget.BUDGETS.name)
+            .putExtra(NoticeLinks.EXTRA_CATEGORY, "food").putExtra(NoticeLinks.EXTRA_MONTH, "2026-11")
+        assertTrue(links.offer(intent))
+        val link = checkNotNull(links.link.value)
+        assertEquals("food", link.categoryId)
+        assertEquals(kotlinx.datetime.YearMonth(2026, 11), link.month)
+        assertFalse("the extras are taken out of the intent", intent.hasExtra(NoticeLinks.EXTRA_CATEGORY))
     }
 }

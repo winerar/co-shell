@@ -2,6 +2,7 @@ package app.coshell.notices
 
 import android.content.Context
 import app.coshell.R
+import app.coshell.core.domain.notices.LimitFact
 import app.coshell.core.domain.notices.NoticeFacts
 import app.coshell.core.domain.notices.NoticeKind
 import app.coshell.core.domain.notices.PlannedNotice
@@ -28,13 +29,13 @@ object NoticeTexts {
                 if (limit.pace) {
                     NoticeContent(
                         res.getString(R.string.notice_limit_pace_title, limit.name), res.getString(R.string.notice_limit_pace_text),
-                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open),
+                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open), envelope(limit),
                     )
                 } else {
                     NoticeContent(
                         res.getString(R.string.notice_limit_title, limit.name, limit.left),
                         res.getQuantityString(R.plurals.notice_limit_text, limit.daysLeft, limit.percentLeft, limit.daysLeft),
-                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open),
+                        NoticeTarget.BUDGETS, res.getString(R.string.notice_action_open), envelope(limit),
                     )
                 }
             }
@@ -52,6 +53,10 @@ object NoticeTexts {
             )
         }
     }
+
+    /** A tap on a limit opens that limit's envelope, not just the list. */
+    private fun envelope(limit: LimitFact): Map<String, String> =
+        if (limit.categoryId.isBlank() || limit.month.isBlank()) emptyMap() else mapOf(NoticeLinks.EXTRA_CATEGORY to limit.categoryId, NoticeLinks.EXTRA_MONTH to limit.month)
 
     private fun backupText(context: Context, facts: NoticeFacts): String {
         val last = facts.lastBackupDay ?: return context.getString(R.string.notice_backup_text_never)

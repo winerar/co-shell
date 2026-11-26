@@ -507,12 +507,20 @@ fun CoShellNavHost(
 
     // A tap on one of the optional notifications (#745): the screen it is about.
     if (noticeLinks != null) {
-        val target by noticeLinks.target.collectAsStateWithLifecycle()
-        LaunchedEffect(target) {
-            val open = target ?: return@LaunchedEffect
-            when (open) {
+        val link by noticeLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val open = link ?: return@LaunchedEffect
+            when (open.target) {
                 NoticeTarget.NEW_ENTRY -> navController.navigate(TransactionEditDestination()) { launchSingleTop = true }
-                NoticeTarget.BUDGETS -> navController.navigate(BudgetsDestination) { launchSingleTop = true }
+                NoticeTarget.BUDGETS -> {
+                    // A limit notice: «Бюджеты» and that envelope over it — «Назад» lands on the list of limits.
+                    navController.navigate(BudgetsDestination) { launchSingleTop = true }
+                    val category = open.categoryId
+                    val month = open.month
+                    if (category != null && month != null) {
+                        navController.navigate(BudgetDetailDestination(category, month.year, month.month.number)) { launchSingleTop = true }
+                    }
+                }
                 NoticeTarget.DRAFTS -> navController.navigate(DraftsDestination) { launchSingleTop = true }
                 NoticeTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
                 NoticeTarget.RECAP -> {

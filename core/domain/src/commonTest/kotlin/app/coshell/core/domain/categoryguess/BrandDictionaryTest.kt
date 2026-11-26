@@ -62,6 +62,17 @@ class BrandDictionaryTest {
     }
 
     @Test
+    fun `everyday services go to other, kindergartens to kids, bike shops to transport (#742)`() {
+        assertEquals("other", icon("стрижка"))
+        assertEquals("other", icon("маникюр"))
+        assertEquals("other", icon("Peluquería Estilo Ana"))
+        assertEquals("other", icon("Veterinaria Patitas"))
+        assertEquals("kids", icon("садик за ноябрь"))
+        assertEquals("transport", icon("Bicicletería Rodando"))
+        assertEquals("restaurant", icon("Panchería El Tano"))
+    }
+
+    @Test
     fun `phrases that are not purchases stay unknown`() {
         assertNull(icon("тест заметки"))
         assertNull(icon("позвонить маме"))

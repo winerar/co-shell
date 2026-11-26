@@ -1,6 +1,7 @@
 package app.coshell.aieval
 
 import app.coshell.core.domain.DefaultCategories
+import app.coshell.core.domain.ai.CategoryHints
 import app.coshell.core.domain.ai.HistoryExamples
 import app.coshell.core.domain.ai.LanguageModel
 import app.coshell.core.domain.ai.NoteHint
@@ -71,7 +72,7 @@ class AiEval(private val gold: EvalGold, private val model: LanguageModel?) {
         val ask = hints?.let { QuickNoteDrafts.needsModel(lines, ctx, it.broad) }.orEmpty()
         val asked = ask.map { lines[it] }
         val examples = if (withHistory && asked.isNotEmpty()) HistoryExamples.pick(history, categories, asked) else emptyList()
-        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(asked, gold.categories, accounts.map(AccountLabels::of), examples).orEmpty()
+        val read: List<NoteHint?> = hints?.takeIf { ask.isNotEmpty() }?.read(asked, gold.categories, accounts.map(AccountLabels::of), examples, CategoryHints.line(categories)).orEmpty()
         val byLine = ask.zip(read).mapNotNull { (i, h) -> h?.let { i to it } }.toMap()
         var ok = 0
         val misses = mutableListOf<String>()
@@ -115,7 +116,7 @@ class AiEval(private val gold: EvalGold, private val model: LanguageModel?) {
                 categories.first { it.id == rules.categoryId }.name
             } else {
                 val examples = if (withHistory) HistoryExamples.pick(history, categories, listOf(p.payee)) else emptyList()
-                ai?.suggest(p.payee, gold.categories, examples)
+                ai?.suggest(p.payee, gold.categories, examples, CategoryHints.line(categories))
             }
             if (got in p.categories) ok++ else misses += "«${p.payee}»: ${got ?: "—"} ≠ ${p.category}" + if (rules != null) " (словарь/история)" else ""
         }

@@ -208,7 +208,10 @@
   },
   {
    "payee": "Mercado Libre",
-   "category": "Другое"
+   "category": "Другое",
+   "also": [
+    "Дом"
+   ]
   },
   {
    "payee": "Claro",
@@ -242,7 +245,10 @@
   {
    "payee": "Lavadero Burbujas",
    "category": "Другое",
-   "local": true
+   "local": true,
+   "also": [
+    "Дом"
+   ]
   },
   {
    "payee": "Veterinaria Patitas",

@@ -3,7 +3,7 @@
 - `Cush241Reports` — the card «Подушка» in the «Отчёты» feed after «Капитал»: months the money lasts, one phrase, scale 0–6 months.
 - `Cush241Edge` — few months of history · no rate · little money (calm, no red) · nothing on the accounts · no full month yet.
 - `Not186B` — the notification: first what is still available, then a calm word (as the hint `limit_80`); the pace case.
-The switch «Лимиты» lives on `Set1Notices` (mockup_screens_fb_set.py), group «Бюджеты».
+The switch «Лимиты» lives on `Set1Notices` (mockup_screens_fb_set.py), group «Бюджет» — the notification is #745's `NoticeKind.LIMIT`.
 Data: 9 000 USD on the accounts in the total, average spending 2 000 USD over the last six full months → «≈ 4,5 мес.».
 
 ROW — (key, row title, sticky text) for the «Экраны» page; BOARDS — (name, title, fn, key).
@@ -15,8 +15,8 @@ from mockup_screens_recurring import notif
 import mockup_screens_picture as picture
 
 ROW = ('cushion', 'Подушка и лимиты (#241, #186)',
-       'Выбрано (опрос 2026-11-25, А · Б · А): карточка «Подушка» в ленте «Отчётов» после «Капитала»; уведомление «ещё можно…» раз в день '
-       'при 80 % лимита или темпе быстрее плана; выключатель «Лимиты» — «Ещё → Настройки → Уведомления», время общее с платежами.')
+       'Выбрано (опрос 2026-11-25, А · Б · А): карточка «Подушка» в ленте «Отчётов» после «Капитала»; уведомление «Лимиты» (#745) — '
+       '«ещё можно…» при 80 % лимита и «траты опережают месяц» при темпе быстрее плана; выключатель — «Ещё → Настройки → Уведомления → Бюджет».')
 
 GOAL = 6  # the scale: half a year
 
@@ -48,12 +48,12 @@ def edge():
 
 
 def notices():
-    body = col(label('Раз в день, во время напоминаний о платежах', top=6),
-               notif('Продукты: ещё можно 18 000 ARS', 'Это 20 % лимита на 12 дней. Лимит — ориентир, а не запрет.', ['Открыть']),
+    body = col(label('80 % лимита — сколько ещё можно', top=6),
+               notif('Продукты: ещё можно 18 000 ARS', 'Это 20 % лимита на 12 дней.', ['Открыть']),
                label('Траты идут быстрее плана', top=10),
                notif('Кафе: траты опережают месяц', 'Если так пойдёт, лимит закончится раньше срока. Загляните в «Бюджеты».', ['Открыть']),
-               note('Одна категория — одно уведомление каждого вида за месяц. Нажатие — «Бюджеты», конверт этой категории. '
-                    'Выключатель — «Ещё → Настройки → Уведомления → Лимиты».'), gap=8)
+               note('Не больше одного уведомления в день (#745); один и тот же случай — один раз. Нажатие — «Бюджеты». '
+                    'Включается в «Ещё → Настройки → Уведомления → Бюджет → Лимиты».'), gap=8)
     return inner_screen('Уведомления', body)
 
 

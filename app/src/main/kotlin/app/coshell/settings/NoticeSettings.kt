@@ -25,24 +25,30 @@ import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.domain.notices.NoticeKind
+import app.coshell.core.domain.notices.NoticeSettings
 import app.coshell.core.domain.settings.ReminderSettings
+import app.coshell.notices.NoticeKindsViewModel
+import app.coshell.notices.NoticeScheduler
 import app.coshell.recurring.notify.RecurringPaymentsScheduler
 import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.ui.list.SectionTitle
 import app.coshell.core.designsystem.R as DesignR
 
-/** «Уведомления»: payment reminders, the limit notification (#186) and their time. */
+/** «Уведомления»: payment reminders and their time. */
 @Composable
 fun NoticeSettingsRoute(
     onBack: () -> Unit,
     viewModel: ReminderSettingsViewModel = hiltViewModel(),
+    kindsViewModel: NoticeKindsViewModel = hiltViewModel(),
     screens: ScreenOptionsViewModel = hiltViewModel(),
     accounts: SettingsAccountsViewModel = hiltViewModel(),
 ) {
     val enabled by viewModel.enabled.collectAsStateWithLifecycle()
     val hour by viewModel.hour.collectAsStateWithLifecycle()
     val daysBefore by viewModel.daysBefore.collectAsStateWithLifecycle()
-    val limits by viewModel.limitsEnabled.collectAsStateWithLifecycle()
+    val kinds by kindsViewModel.enabled.collectAsStateWithLifecycle()
+    val noticeHour by kindsViewModel.hour.collectAsStateWithLifecycle()
     val options by screens.options.collectAsStateWithLifecycle()
     val main by accounts.mainCurrency.collectAsStateWithLifecycle()
     val context = LocalContext.current.applicationContext
@@ -55,11 +61,6 @@ fun NoticeSettingsRoute(
         onHourChange = { h -> viewModel.setHour(h, after = { RecurringPaymentsScheduler.schedule(context, replace = true) }) },
         daysBefore = daysBefore,
         onDaysBeforeChange = viewModel::setDaysBefore,
-        limitsEnabled = limits,
-        onLimitsChange = { on ->
-            viewModel.setLimitsEnabled(on)
-            if (on && !PaymentNotices.canNotify(context)) askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
-        },
         partnerSpend = options.partnerSpend,
         onPartnerSpend = { on ->
             screens.change { it.copy(partnerSpend = on) }
@@ -69,6 +70,13 @@ fun NoticeSettingsRoute(
         onPartnerMin = { v -> screens.change { it.copy(partnerSpendMin = v) } },
         mainCurrency = main,
         onBack = onBack,
+        kinds = kinds,
+        onKind = { kind, on ->
+            kindsViewModel.setEnabled(kind, on)
+            if (on && !PaymentNotices.canNotify(context)) askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+        },
+        noticeHour = noticeHour,
+        onNoticeHour = { h -> kindsViewModel.setHour(h, after = { NoticeScheduler.schedule(context, replace = true) }) },
     )
 }
 
@@ -80,14 +88,16 @@ fun NoticeSettingsScreen(
     onHourChange: (Int) -> Unit,
     daysBefore: Int,
     onDaysBeforeChange: (Int) -> Unit,
-    limitsEnabled: Boolean,
-    onLimitsChange: (Boolean) -> Unit,
     partnerSpend: Boolean,
     onPartnerSpend: (Boolean) -> Unit,
     partnerMin: Int,
     onPartnerMin: (Int) -> Unit,
     mainCurrency: String,
     onBack: () -> Unit,
+    kinds: Set<NoticeKind> = emptySet(),
+    onKind: (NoticeKind, Boolean) -> Unit = { _, _ -> },
+    noticeHour: Int = NoticeSettings.DEFAULT_HOUR,
+    onNoticeHour: (Int) -> Unit = {},
 ) {
     var pickingMin by rememberSaveable { mutableStateOf(false) }
     GroupScaffold(R.string.settings_notices_title, onBack) {
@@ -105,21 +115,6 @@ fun NoticeSettingsScreen(
                 }
             }
         }
-        item { SectionTitle(stringResource(R.string.settings_notices_budgets)) }
-        item {
-            CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
-                row {
-                    CoShellSwitchRow(
-                        leading = { MenuIcon(DesignR.drawable.ic_savings) },
-                        title = stringResource(R.string.settings_notices_limits),
-                        subtitle = stringResource(R.string.settings_notices_limits_hint),
-                        checked = limitsEnabled,
-                        onCheckedChange = onLimitsChange,
-                    )
-                }
-            }
-        }
-        item { SectionTitle(stringResource(R.string.settings_notices_when)) }
         item {
             PickCard(
                 title = stringResource(R.string.settings_notices_time),
@@ -136,6 +131,8 @@ fun NoticeSettingsScreen(
                 onSelect = { onDaysBeforeChange(ReminderSettings.DAYS_BEFORE[it]) },
             )
         }
+        noticeKindGroups(kinds, onKind, noticeHour, onNoticeHour)
+        item { CoShellHint(stringResource(R.string.notice_limit_note), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.s)) }
         item { SectionTitle(stringResource(R.string.settings_notices_family)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {

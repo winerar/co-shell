@@ -53,24 +53,12 @@ class PrefsReminderSettings @Inject constructor(@ApplicationContext context: Con
         io { prefs.edit { putInt(KEY_DAYS, days) } }
     }
 
-    private val limitsState = MutableStateFlow<Boolean?>(null)
-
-    override val limitsEnabled: Flow<Boolean> = limitsState
-        .onStart { if (limitsState.value == null) limitsState.compareAndSet(null, io { prefs.getBoolean(KEY_LIMITS, true) }) }
-        .filterNotNull()
-
-    override suspend fun setLimitsEnabled(enabled: Boolean) {
-        limitsState.value = enabled
-        io { prefs.edit { putBoolean(KEY_LIMITS, enabled) } }
-    }
-
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
 
     companion object {
         private const val KEY_ENABLED = "payment_reminders"
         private const val KEY_HOUR = "reminder_hour"
         private const val KEY_DAYS = "reminder_days_before"
-        private const val KEY_LIMITS = "limit_alerts"
 
         private fun storedHour(prefs: android.content.SharedPreferences): Int =
             prefs.getInt(KEY_HOUR, ReminderSettings.DEFAULT_HOUR).takeIf { it in 0..23 } ?: ReminderSettings.DEFAULT_HOUR

@@ -6,10 +6,12 @@ import app.coshell.core.domain.settings.ListDensitySettings
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.settings.PrefsScreenOptions
 import app.coshell.core.domain.settings.MonthReviewSettings
+import app.coshell.core.domain.notices.NoticeSettings
 import app.coshell.core.domain.settings.ReminderSettings
 import app.coshell.core.domain.settings.ThemeSettings
 import app.coshell.core.domain.shake.ShakeSettings
 import app.coshell.core.domain.templates.TemplateUsage
+import app.coshell.notices.data.PrefsNoticeSettings
 import app.coshell.recurring.notify.data.PrefsReminderSettings
 import app.coshell.reports.review.data.PrefsMonthReviewSettings
 import app.coshell.settings.PrefsConverterSettings
@@ -51,6 +53,9 @@ interface SettingsModule {
 
     @Binds
     fun bindReminderSettings(impl: PrefsReminderSettings): ReminderSettings
+
+    @Binds
+    fun bindNoticeSettings(impl: PrefsNoticeSettings): NoticeSettings
 
     @Binds
     fun bindTipSettings(impl: PrefsTipSettings): TipSettings

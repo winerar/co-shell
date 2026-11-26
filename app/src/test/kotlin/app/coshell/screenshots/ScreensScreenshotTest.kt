@@ -400,10 +400,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, true, {}, 50, {}, "USD", {}) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, true, {}, 50, {}, "USD", {}) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
@@ -480,3 +480,9 @@ class ScreensScreenshotTest {
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2, nextDay = "вс, 29 ноября", nextTime = "3:00")
+
+/** Board `Set1Notices`: the evening reminder, limits, the recap and the copy are on; drafts and the welcome-back are off. */
+private val NOTICE_KINDS_SAMPLE = setOf(
+    app.coshell.core.domain.notices.NoticeKind.EVENING, app.coshell.core.domain.notices.NoticeKind.LIMIT,
+    app.coshell.core.domain.notices.NoticeKind.RECAP, app.coshell.core.domain.notices.NoticeKind.BACKUP,
+)

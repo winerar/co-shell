@@ -61,6 +61,7 @@ import app.coshell.privacy.EyeButton
 import app.coshell.release.ReleaseNotice
 import app.coshell.release.ReleaseNoticeCard
 import app.coshell.hints.TourCard
+import app.coshell.notices.NoticeOfferCard
 import app.coshell.hints.HintSlot
 import app.coshell.hints.hintSlotShown
 import app.coshell.ui.top.rememberTabScrollBehavior
@@ -110,6 +111,9 @@ fun HomeScreen(
     tour: Boolean = false,
     onTourOpen: () -> Unit = {},
     onTourDismiss: () -> Unit = {},
+    noticeOffer: Boolean = false,
+    onNoticeOfferEnable: () -> Unit = {},
+    onNoticeOfferLater: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -163,6 +167,7 @@ fun HomeScreen(
             }
             if (tour) item(key = "tour") { TourCard(onTourOpen, onTourDismiss, listItemMotion()) }
             if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
+            if (noticeOffer) item(key = "notice_offer") { NoticeOfferCard(onNoticeOfferEnable, onNoticeOfferLater, listItemMotion()) }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }

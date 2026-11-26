@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Local notifications (#745): kinds, channels, texts, the offer card. Tone: no blame, no streaks (hints.md). -->
+    <string name="notice_channel_evening">Запись трат</string>
+    <string name="notice_channel_limit">Лимиты</string>
+    <string name="notice_channel_recap">Итоги месяца</string>
+    <string name="notice_channel_backup">Резервная копия</string>
+    <string name="notice_channel_drafts">Черновики</string>
+    <string name="notice_channel_comeback">С возвращением</string>
+
+    <string name="notice_action_write">Записать</string>
+    <string name="notice_action_open">Открыть</string>
+    <string name="notice_action_save">Сохранить</string>
+
+    <string name="notice_evening_title">Как прошёл день?</string>
+    <string name="notice_evening_text">Запишите сегодняшние траты — это минута.</string>
+    <string name="notice_limit_title">%1$s: ещё можно %2$s</string>
+    <!-- #186, board Not186B: spending ahead of the month, not yet 80 %. -->
+    <string name="notice_limit_pace_title">%1$s: траты опережают месяц</string>
+    <string name="notice_limit_pace_text">Если так пойдёт, лимит закончится раньше срока. Загляните в «Бюджеты».</string>
+    <plurals name="notice_limit_text">
+        <item quantity="one">Это %1$d %% лимита на %2$d день.</item>
+        <item quantity="few">Это %1$d %% лимита на %2$d дня.</item>
+        <item quantity="many">Это %1$d %% лимита на %2$d дней.</item>
+        <item quantity="other">Это %1$d %% лимита на %2$d дня.</item>
+    </plurals>
+    <string name="notice_recap_title">Итоги %1$s готовы</string>
+    <string name="notice_recap_text">Посмотрите, на что ушли деньги.</string>
+    <string name="notice_comeback_title">С возвращением</string>
+    <string name="notice_comeback_text">Можно записать траты за эти дни: дату выберете в операции.</string>
+    <string name="notice_backup_title">Сохраните резервную копию</string>
+    <plurals name="notice_backup_text_last">
+        <item quantity="one">Последняя — %1$d день назад.</item>
+        <item quantity="few">Последняя — %1$d дня назад.</item>
+        <item quantity="many">Последняя — %1$d дней назад.</item>
+        <item quantity="other">Последняя — %1$d дня назад.</item>
+    </plurals>
+    <string name="notice_backup_text_never">Копии пока нет. Ещё → Резервная копия.</string>
+    <string name="notice_drafts_title">Черновики ждут</string>
+    <string name="notice_drafts_text">Готово к записи: %1$d. Проверьте и запишите.</string>
+
+    <!-- «Ещё → Настройки → Уведомления» -->
+    <string name="notice_group_spend">Траты</string>
+    <string name="notice_group_budget">Бюджет</string>
+    <string name="notice_group_order">Порядок</string>
+    <string name="notice_evening_switch">Вечером — записать траты</string>
+    <string name="notice_evening_hint">если за день записей нет</string>
+    <string name="notice_limit_switch">Лимиты</string>
+    <string name="notice_limit_hint">80 % лимита или траты быстрее плана</string>
+    <string name="notice_recap_switch">Итоги месяца</string>
+    <string name="notice_recap_hint">в первые дни нового месяца</string>
+    <string name="notice_backup_switch">Резервная копия</string>
+    <string name="notice_backup_hint">раз в две недели, если давно не сохраняли</string>
+    <string name="notice_drafts_switch">Черновики</string>
+    <string name="notice_drafts_hint">когда накопилось три готовых</string>
+    <string name="notice_comeback_switch">С возвращением</string>
+    <string name="notice_comeback_hint">после трёх дней без записей, один раз</string>
+    <string name="notice_time_title">Когда напоминать</string>
+    <string name="notice_limit_note">Не больше одного напоминания в день.</string>
+
+    <!-- The card on «Обзор» after the first entry -->
+    <string name="notice_offer_text">Напоминать вечером о тратах? Раз в день, если записей нет. Выключить можно в «Ещё → Настройки → Уведомления».</string>
+    <string name="notice_offer_enable">Включить</string>
+    <string name="notice_offer_later">Не сейчас</string>
+</resources>

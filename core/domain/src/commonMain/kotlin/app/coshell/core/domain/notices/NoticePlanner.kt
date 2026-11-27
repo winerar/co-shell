@@ -1,5 +1,6 @@
 package app.coshell.core.domain.notices
 
+import app.coshell.core.domain.settings.ClockMinutes
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
@@ -22,6 +23,8 @@ data class NoticeFacts(
     val lastMonthHadEntries: Boolean = false,
     /** Drafts of quick notes with an amount, an account and a category (`DraftCheck`). */
     val readyDrafts: Int = 0,
+    /** The phone's clock, minutes since midnight; `null` — not known (tests of the rules), the time is not checked. */
+    val minutesNow: Int? = null,
 )
 
 /**
@@ -54,7 +57,8 @@ data class PlannedNotice(val kind: NoticeKind, val key: String, val limit: Limit
 
 /**
  * Which optional notification goes out in today's check (#745, `hints.md` §«Уведомления»). Pure: the worker collects the facts.
- * Rules: only kinds that are on; **at most one a day**; each kind says its own conditions and never repeats the same case.
+ * Rules: only kinds that are on; **at most one a day**; only once the chosen time [at] has come today (a check the phone ran late,
+ * after midnight, says nothing — the next evening will); each kind says its own conditions and never repeats the same case.
  * No tone here — texts live in resources.
  */
 object NoticePlanner {
@@ -64,8 +68,9 @@ object NoticePlanner {
     const val DRAFTS_AGAIN_DAYS = 3
     const val RECAP_UNTIL_DAY = 3
 
-    fun next(facts: NoticeFacts, enabled: Set<NoticeKind>, history: NoticeHistory): PlannedNotice? {
+    fun next(facts: NoticeFacts, enabled: Set<NoticeKind>, history: NoticeHistory, at: Int = NoticeSettings.DEFAULT_TIME): PlannedNotice? {
         if (history.lastAnyDay == facts.today) return null
+        if (facts.minutesNow != null && !ClockMinutes.isDue(facts.minutesNow, at)) return null
         for (kind in NoticeKind.entries) {
             if (kind !in enabled) continue
             val planned = candidate(kind, facts, history) ?: continue

@@ -101,6 +101,7 @@ goals_yearly_until
 hint_app_shortcuts
 hint_clipboard
 hint_currency_account
+hint_edit_home
 hint_family
 hint_goals
 hint_hold_amount
@@ -108,6 +109,12 @@ hint_limit_80
 hint_recurring
 hint_share_receipt
 home_back_per_day
+home_edit_empty
+home_edit_help
+home_edit_hidden
+home_edit_hidden_title
+home_edit_restore
+home_edit_show
 import_undo_confirm_text
 notes_hint
 notes_strip_drafts

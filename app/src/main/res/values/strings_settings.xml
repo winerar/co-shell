@@ -163,6 +163,12 @@
     <string name="settings_home_tile_uncategorized">Без категории</string>
     <string name="settings_home_tiles_note">Нет курса — на втором месте сама появится «Внимание». Пока лимитов нет, вместо «Бюджета» — «Без категории».</string>
     <string name="home_edit_hide">Скрыть</string>
+    <string name="home_edit_help">Тяните ⠿, чтобы переставить. ✕ — скрыть. Баланс остаётся сверху.</string>
+    <string name="home_edit_hidden">Скрыто: %1$d</string>
+    <string name="home_edit_restore">Вернуть</string>
+    <string name="home_edit_hidden_title">Скрытые карточки</string>
+    <string name="home_edit_show">Показать</string>
+    <string name="home_edit_empty">Пока пусто — карточка появится, когда будет что показать.</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
     <string name="settings_group_all">Все ›</string>
     <string name="settings_palette">Палитра</string>

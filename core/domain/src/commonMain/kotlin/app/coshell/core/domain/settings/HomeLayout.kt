@@ -50,6 +50,9 @@ data class HomeLayout(
     /** The cards to draw, in order. */
     val visible: List<HomeCard> get() = order.filter { it !in hidden }
 
+    /** The hidden cards, in [order]: «Скрыто: N · Вернуть» in the editing mode. */
+    val hiddenCards: List<HomeCard> get() = order.filter { it in hidden }
+
     fun isShown(card: HomeCard): Boolean = card !in hidden
 
     fun withShown(card: HomeCard, shown: Boolean): HomeLayout = copy(hidden = if (shown) hidden - card else hidden + card)

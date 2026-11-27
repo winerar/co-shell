@@ -34,6 +34,8 @@ import app.coshell.settings.LocalScreenOptions
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.draw.alpha
+import app.coshell.core.designsystem.components.CoShellHint
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -126,8 +128,8 @@ fun HomeScreen(
     // Hold a card — editing right here: ⠿ drags it, ✕ hides it, «Готово» ends (board Set1HomeEdit).
     var editing by rememberSaveable { mutableStateOf(false) }
     val layout = LocalScreenOptions.current.home
-    // The cards this phone shows, without those that have nothing to say now (no gap is left for them).
-    val cards = LocalScreenOptions.current.home.visible.filter { card ->
+    // The cards this phone shows, without those that have nothing to say now (no gap is left for them); the editing mode keeps them.
+    val hasContent: (HomeCard) -> Boolean = { card ->
         when (card) {
             HomeCard.REVIEW -> review?.month != null
             HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty() || depositEnds.isNotEmpty()
@@ -137,6 +139,7 @@ fun HomeScreen(
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
     }
+    val cards = if (editing) layout.visible else layout.visible.filter(hasContent)
     Scaffold(
         topBar = {
             TabTopBar(stringResource(R.string.nav_home), scroll) {
@@ -146,7 +149,8 @@ fun HomeScreen(
         },
         bottomBar = {
             if (editing) {
-                Box(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l)) {
+                Column(Modifier.fillMaxWidth().aboveBottomBars().padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+                    HiddenCardsBar(layout.hiddenCards, onShow = { onLayoutChange(layout.withShown(it, true)) })
                     CoShellButton(onClick = { editing = false }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.keypad_done)) }
                 }
             }
@@ -155,7 +159,10 @@ fun HomeScreen(
     ) { padding ->
         val hintsOn = LocalHintHost.current != null
         val showHint = hintSlotShown()
-        CoachHint(mapOf(HintId.FLIP_CARD to R.string.hint_flip_card), enabled = state.recent.isNotEmpty())
+        CoachHint(
+            mapOf(HintId.FLIP_CARD to R.string.hint_flip_card, HintId.EDIT_HOME to R.string.hint_edit_home),
+            enabled = state.recent.isNotEmpty() && !editing,
+        )
         LazyColumn(
             state = listState,
             // While editing, the «Готово» bar below ends the list; otherwise the list goes under both capsules.
@@ -194,10 +201,15 @@ fun HomeScreen(
             if (finale) item(key = "steps-finale") { StepsFinale(onFinale, listItemMotion()) }
             item(key = "drafts") { DraftsStrip(draftCount, actions.onDrafts, actions.onNotes, listItemMotion()) }
             if (state.recent.isEmpty() && hintsOn) item(key = "word-hint") { WordHint(HintId.OVERVIEW_EMPTY, R.string.hint_overview_empty, emptyScreen = true) }
+            if (editing) item(key = "edit-help") { CoShellHint(stringResource(R.string.home_edit_help), Modifier.padding(horizontal = Spacing.xs)) }
             // «Настройки → Экраны → Обзор»: the cards below the balance in the order and the visibility of this phone.
             itemsIndexed(cards, key = { _, card -> card.name }) { index, card ->
                 val entrance = Modifier.staggeredEntrance(minOf(index + 1, MAX_ENTRANCE))
-                val body: @Composable () -> Unit = {
+                val body: @Composable () -> Unit = body@{
+                    if (!hasContent(card)) {
+                        Box(Modifier.alpha(EMPTY_CARD_ALPHA)) { EmptyCardNote() }
+                        return@body
+                    }
                     when (card) {
                         HomeCard.REVIEW -> review?.month?.let { month ->
                             MonthReviewCard(review, onOpen = { actions.onReview(month) }, onHide = { onHideReview(month) }, entrance)
@@ -243,3 +255,6 @@ fun HomeScreen(
 
 /** The cascade of the first showing stops growing after this many cards. */
 private const val MAX_ENTRANCE = 3
+
+/** A card with nothing to show, in the editing mode. */
+private const val EMPTY_CARD_ALPHA = 0.55f

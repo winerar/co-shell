@@ -124,9 +124,13 @@ def home_edit():
         head = ('<div style="display: flex; align-items: center; gap: 8px; margin: 12px 0 6px 4px;"><span style="flex-grow: 1; font-size: 13px; font-weight: 600; color: %s;">%s</span>%s%s</div>'
                 % (MUTED, label_, small('drag', 'Тянуть'), small('close', 'Скрыть')))
         return head + '<div style="border-radius: 26px; border: 1.5px dashed %s; padding: 4px;">%s</div>' % (LINE2, inner)
-    body = (balance_hero() + wrap(tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Бюджет · 13 дней', '68 %', 'осталось 410')).replace('margin-top: 10px; ', ''), 'Плитки')
+    help_ = note('Тяните ⠿, чтобы переставить. ✕ — скрыть. Баланс остаётся сверху.', 4)
+    empty = wrap('<div style="padding: 16px; font-size: 14px; color: %s; opacity: .55;">Пока пусто — карточка появится, когда будет что показать.</div>' % MUTED, 'Скоро')
+    hidden = ('<div style="margin-top: 12px; padding: 12px 8px 12px 16px; border-radius: 24px; border: 1px solid %s; display: flex; align-items: center;">'
+              '<span style="flex-grow: 1; font-size: 15px;">Скрыто: 2</span><span style="padding: 0 12px; font-size: 14px; font-weight: 600; color: %s;">Вернуть</span></div>' % (LINE2, INK))
+    body = (balance_hero() + help_ + empty + wrap(tiles(tile('Траты за ноябрь', '1 240,50', 'USD'), tile('Бюджет · 13 дней', '68 %', 'осталось 410')).replace('margin-top: 10px; ', ''), 'Плитки')
             + wrap(card(''.join(tx(*x) for x in RECENT[:2])), 'Последние операции')
-            + button('Готово', 'primary', 'check', 16))
+            + hidden + button('Готово', 'primary', 'check', 16))
     return tab_screen('Обзор', body, 'home')
 
 
@@ -247,7 +251,7 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1Screens', 'Экраны: Обзор, Операции, Отчёты, Счета', screens, 1118),
     ('Set1Home', 'Обзор: карточки — показать/скрыть и порядок', home_cards, 1118),
     ('Set1HomeMore', 'Обзор: «Скоро», «Последние», плитки', home_horizon, 1118),
-    ('Set1HomeEdit', 'Обзор: режим правки на экране (удержание)', home_edit, 1118),
+    ('Set1HomeEdit', 'Обзор: режим правки на экране (удержание; пояснение, «Скрыто: N», пустые карточки — опрос #154)', home_edit, 1118),
     ('Set1Ops', 'Операции: что в строке, в какой валюте сумма', ops, 1118),
     ('Set1Reports', 'Отчёты: период и сравнение', reports, 1118),
     ('Set1Accounts', 'Счета: группировка и архив', accounts, 1118),

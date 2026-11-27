@@ -2,6 +2,9 @@ package app.coshell.core.domain.settings
 
 /** The cards of «Обзор» below the balance (which is always first and cannot be hidden). */
 enum class HomeCard {
+    /** «Сегодня можно» (#769): what may be spent today; first, right under the balance (a saved layout gets it at the end). */
+    DAILY,
+
     /** «Итог месяца» in the first days of a month. */
     REVIEW,
 

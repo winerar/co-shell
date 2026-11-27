@@ -67,7 +67,10 @@ internal fun UnusualLines(lines: List<UnusualLine>, onCategory: ((String) -> Uni
     }
 }
 
-/** «примерно в 2 раза больше обычного · обычно 90 000», «меньше обычного на 30 % — хорошо идёте», «раньше трат не было». */
+/**
+ * «примерно в 2 раза больше обычного», «больше обычного на 60 %», «меньше обычного на 30 % — хорошо идёте», «раньше трат не было».
+ * The usual amount itself is the grey mark on the bar (and TalkBack says it): one line under the bar stays whole.
+ */
 @Composable
 internal fun unusualCaption(mark: Mark): String {
     val percent = mark.percent ?: return stringResource(R.string.report_mark_new_line)
@@ -75,9 +78,9 @@ internal fun unusualCaption(mark: Mark): String {
         !mark.up -> stringResource(R.string.reports_unusual_less, percent)
         percent >= TIMES_FROM -> {
             val times = (PERCENT + percent + PERCENT / 2) / PERCENT
-            pluralStringResource(R.plurals.reports_unusual_times, times, times) + " · " + usualPart(mark)
+            pluralStringResource(R.plurals.reports_unusual_times, times, times)
         }
-        else -> stringResource(R.string.reports_unusual_more, percent) + " · " + usualPart(mark)
+        else -> stringResource(R.string.reports_unusual_more, percent)
     }
 }
 

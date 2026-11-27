@@ -97,6 +97,9 @@
 | Итоги месяца: не как обычно | SmartRecap | — | — | — |
 | Операции: регулярный платёж и дубль | SmartOps | smart_operations | — | ✓ |
 | Похоже на дубль | SmartDuplicate | — | — | — |
+| Помощь: жесты | Gest797 | gestures | — | — |
+| Отчёты: прогноз остатка | Forecast770 | forecast | — | — |
+| Прогноз остатка: не хватает | Forecast770Low | — | — | — |
 | Новый лимит: обычно уходит | SmartLimit | budget_edit | ✓ | ✓ |
 | Цели: что если | SmartGoal | smart_goals | — | ✓ |
 | Что если | SmartWhatIf | smart_whatif_sheet | ✓ | — |
@@ -128,6 +131,9 @@
 - Итоги месяца: не как обычно (нет эталона: light, dark)
 - Операции: регулярный платёж и дубль (smart_operations: light)
 - Похоже на дубль (нет эталона: light, dark)
+- Помощь: жесты (gestures: light, dark)
+- Отчёты: прогноз остатка (forecast: light, dark)
+- Прогноз остатка: не хватает (нет эталона: light, dark)
 - Цели: что если (smart_goals: light)
 - Что если (smart_whatif_sheet: dark)
 

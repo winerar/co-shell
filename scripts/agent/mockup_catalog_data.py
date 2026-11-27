@@ -243,5 +243,5 @@ DATA = [
     ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
     ('Календарь трат', heat, 'CoShellHeatGrid(weekdays, leadingBlanks, cells: HeatCell, selected, onSelect) · CoShellHeatLegend(lessLabel, moreLabel, trailing) — доски CalTabA (#553)'),
     ('Доли и тренд', shares_spark, 'CoShellShareBar(shares: List<ShareSlice>, description) — полоса долей валют (#192, доска Idea5A) · CoShellSparkline(points, color, description) — мини-линия курса за 30 дней (#195, доска Idea10A)'),
-    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect, second, legend) — доски Rp189NwB, Smart788Chart'),
+    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect, second, legend) — доски Rp189NwB, Smart788Chart · CoShellForecastLine(past, future, lowest, warning, startLabel, todayLabel, endLabel) — линия остатка: сплошная — было, пунктир — ожидаем, нулевая черта, отметка низшей точки (#770, доски Forecast770, Forecast770Low)'),
 ]

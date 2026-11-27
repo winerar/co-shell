@@ -37,6 +37,7 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
                 onBackup = { navController.navigate(BackupDestination) },
                 onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
+                onGestures = { navController.navigate(GesturesDestination) { launchSingleTop = true } },
             ),
         )
     }

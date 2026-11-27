@@ -85,6 +85,13 @@
     <string name="accounts_grouping_owner">Чьи</string>
     <string name="accounts_total">Всего в общем балансе</string>
     <string name="rates_change_30d">%1$s за 30 дн.</string>
+    <string name="reports_forecast_title">Прогноз остатка</string>
+    <string name="reports_forecast_legend">сплошная — было, пунктир — ожидаем</string>
+    <string name="reports_forecast_low">Самая низкая точка: %1$s, ≈\u00A0%2$s</string>
+    <string name="reports_forecast_short">Не хватит с %1$s · дальше −%2$s</string>
+    <string name="reports_forecast_today">сегодня</string>
+    <string name="reports_forecast_days">%1$d дней</string>
+    <string name="reports_forecast_description">Остаток на %1$d дней вперёд. %2$s</string>
     <string name="accounts_share_other">Другие</string>
     <string name="accounts_share_percent" translatable="false">%1$d %%</string>
     <string name="accounts_shares_description">Доли валют в общем балансе: %1$s</string>

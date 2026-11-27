@@ -64,6 +64,10 @@ data object ReleaseStoriesDestination
 @Serializable
 data object TourDestination
 
+/** «Жесты» (#797): the cheat sheet of every gesture, «Ещё → Настройки → Помощь → Жесты». */
+@Serializable
+data object GesturesDestination
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)

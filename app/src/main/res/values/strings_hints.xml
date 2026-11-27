@@ -62,4 +62,31 @@
     <string name="hint_hold_amount">Удерживайте сумму, чтобы увидеть её в других валютах.</string>
     <string name="hint_recurring">Шаблон с «Повтором» напомнит о платеже и появится в «Скоро» на «Обзоре».</string>
     <string name="hint_app_shortcuts">Удерживайте значок приложения на рабочем столе — расход или доход откроется сразу.</string>
+    <!-- «Ещё → Настройки → Помощь → Жесты» (#797): by screen; keep the words in step with the hints above -->
+    <string name="gestures_title">Жесты</string>
+    <string name="gestures_hint">Что делают нажатие и удержание</string>
+    <string name="gestures_home">«Обзор»</string>
+    <string name="gestures_plus">«+»</string>
+    <string name="gestures_operations">«Операции»</string>
+    <string name="gestures_everywhere">Везде</string>
+    <string name="gesture_flip_title">Нажмите на карточку</string>
+    <string name="gesture_flip_text">перевернуть: на обороте самое полезное за месяц</string>
+    <string name="gesture_edit_home_title">Удерживайте карточку</string>
+    <string name="gesture_edit_home_text">переставить или скрыть</string>
+    <string name="gesture_plus_tap_title">Нажмите</string>
+    <string name="gesture_plus_tap_text">новая операция</string>
+    <string name="gesture_plus_hold_title">Удерживайте</string>
+    <string name="gesture_plus_hold_text">веером: QR чека, заметка, шаблон</string>
+    <string name="gesture_edit_title">Нажмите на операцию</string>
+    <string name="gesture_edit_text">поправить</string>
+    <string name="gesture_select_title">Удерживайте операцию</string>
+    <string name="gesture_select_text">выбрать несколько</string>
+    <string name="gesture_amount_title">Удерживайте сумму</string>
+    <string name="gesture_amount_text">увидеть её в других валютах</string>
+    <string name="gesture_swipe_title">Листайте вбок</string>
+    <string name="gesture_swipe_text">сменить вкладку</string>
+    <string name="gesture_shake_title">Встряхните телефон</string>
+    <string name="gesture_shake_text">отменить только что сохранённую операцию</string>
+    <string name="gesture_shortcuts_title">Удерживайте значок приложения</string>
+    <string name="gesture_shortcuts_text">расход или доход сразу</string>
 </resources>

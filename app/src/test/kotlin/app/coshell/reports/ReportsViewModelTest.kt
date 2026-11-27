@@ -1,5 +1,9 @@
 package app.coshell.reports
 
+import app.coshell.core.model.Recurrence
+import app.coshell.core.model.RecurringSchedule
+import app.coshell.core.model.TransactionTemplate
+import app.coshell.testing.FakeTemplateRepository
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.domain.reports.ReportDay
@@ -83,6 +87,8 @@ class ReportsViewModelTest {
 
     private val others = MutableStateFlow(emptyMap<String, String>())
 
+    private val templates = FakeTemplateRepository()
+
     private val accounts = FakeAccountRepository().apply {
         items.value = mapOf("cash" to Account("cash", "Доллары", usd, initialBalanceMinor = 1_000_00))
     }
@@ -95,6 +101,7 @@ class ReportsViewModelTest {
         OtherMembers { others },
         transactions,
         FakeTagRepository(),
+        templates,
         FakeReportCurrencySettings(listOf(usd, CurrencyCode("ARS"))),
         monthStart,
         MoneyFormat.RU,
@@ -102,6 +109,25 @@ class ReportsViewModelTest {
         TimeZone.UTC,
         InMemoryScreenOptions(options),
     ).apply { work = EmptyCoroutineContext }
+
+    @Test
+    fun `repeating expenses make the fixed card with a year, a month and their share`() = runTest {
+        templates.items.value = mapOf(
+            "gym" to TransactionTemplate(
+                "gym", "Спортзал", TransactionType.EXPENSE, "cash", usd, usd(30), categoryId = "home",
+                schedule = RecurringSchedule(Recurrence.Monthly(5), LocalDate(2026, 1, 5)),
+            ),
+            "coffee" to TransactionTemplate("coffee", "Кофе", TransactionType.EXPENSE, "cash", usd, usd(3)),
+        )
+        val vm = viewModel()
+        vm.state.launchIn(backgroundScope)
+        val fixed = vm.state.first { it.fixed != null }.fixed!!
+        assertEquals("360${MoneyFormat.NBSP}USD", fixed.yearly)
+        assertEquals("30${MoneyFormat.NBSP}USD", fixed.monthly)
+        assertEquals(listOf("Спортзал"), fixed.rows.map { it.item.name })
+        // June (10) and October (600) are the full months with spending: 30 of 305 a month.
+        assertEquals(10, fixed.sharePercent)
+    }
 
     @Test
     fun `opens on the current month with subcategories in their parent and the month before as grey marks`() = runTest {

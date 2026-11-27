@@ -58,6 +58,14 @@ feedback_sent_note
 feedback_sent_title
 filter_period_note
 filter_tags_all
+fixed_all
+fixed_monthly
+fixed_monthly_share
+fixed_per_year
+fixed_row_sub
+fixed_title
+fixed_year_empty
+fixed_year_title
 form_colors_count
 form_icons_count
 gate_banner_text
@@ -162,6 +170,7 @@ notice_recap_title
 notice_time_title
 plural:budgets_first_create
 plural:daily_left
+plural:fixed_count
 plural:notice_backup_text_last
 plural:notice_limit_text
 plural:reports_cushion_few
@@ -170,6 +179,8 @@ rates_manual_hint
 receipt_unread_text
 recurring_list_empty
 recurring_list_search
+recurring_mode_month
+recurring_mode_year
 release_accounts_text
 release_accounts_title
 release_close

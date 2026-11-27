@@ -22,6 +22,7 @@ fun RecurringListRoute(
             onNew = onNew,
             onQueryChange = viewModel::onQueryChange,
             onFilterChange = viewModel::onFilterChange,
+            onModeChange = viewModel::onModeChange,
         ),
     )
 }
@@ -34,4 +35,6 @@ data class RecurringListActions(
     val onNew: () -> Unit = {},
     val onQueryChange: (String) -> Unit = {},
     val onFilterChange: (PaymentFilter) -> Unit = {},
+    /** «До конца месяца · За год» (#771). */
+    val onModeChange: (RecurringMode) -> Unit = {},
 )

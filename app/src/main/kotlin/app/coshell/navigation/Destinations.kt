@@ -251,9 +251,14 @@ data class TransactionEditDestination(
     }
 }
 
-/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment. */
+/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment; [year] — opens on «За год» (#771). */
 @Serializable
-data object RecurringListDestination
+data class RecurringListDestination(val year: Boolean = false) {
+    companion object {
+        /** SavedStateHandle key of [year]; must match the property name. */
+        const val ARG_YEAR = "year"
+    }
+}
 
 /** «Быстрые заметки» (#586): the lines of expenses; «Обработать» makes drafts of them. */
 @Serializable

@@ -1,6 +1,13 @@
 package app.coshell.core.designsystem.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import app.coshell.core.designsystem.motion.dataSwap
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.dp
+import app.coshell.core.designsystem.tokens.Motion
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -87,13 +94,20 @@ fun CoShellHeatGrid(
 @Composable
 private fun HeatCellBox(cell: HeatCell, selected: Boolean, onClick: () -> Unit, modifier: Modifier) {
     val surface = MaterialTheme.colorScheme.surface
-    val fill = heatFill(cell.level, quiet = cell.quiet).compositeOver(surface)
+    val target = heatFill(cell.level, quiet = cell.quiet).compositeOver(surface)
+    // Another month or another day picked: the cells change colour and the ring grows to its day instead of blinking (owner 2026-11-27).
+    val fill by animateColorAsState(target, Motion.effects(), label = "heatFill")
     val shape = RoundedCornerShape(Radii.medium)
-    val ring = when {
-        selected -> Modifier.border(Sizes.heatSelectedRing, themeEdge(), shape)
-        cell.today -> Modifier.border(Sizes.heatTodayRing, themeEdge(), shape)
-        else -> Modifier.fillEdge(fill, shape, surface)
-    }
+    val ringWidth by animateDpAsState(
+        when {
+            selected -> Sizes.heatSelectedRing
+            cell.today -> Sizes.heatTodayRing
+            else -> 0.dp
+        },
+        Motion.spatialFast(),
+        label = "heatRing",
+    )
+    val ring = if (ringWidth > 0.dp) Modifier.border(ringWidth, themeEdge(), shape) else Modifier.fillEdge(target, shape, surface)
     Box(
         modifier
             .height(Sizes.heatCell)
@@ -107,7 +121,7 @@ private fun HeatCellBox(cell: HeatCell, selected: Boolean, onClick: () -> Unit, 
             cell.label,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (selected || cell.today) FontWeight.Bold else FontWeight.Normal,
-            color = if (cell.quiet) MaterialTheme.colorScheme.onSurfaceVariant else inkOn(fill),
+            color = if (cell.quiet) MaterialTheme.colorScheme.onSurfaceVariant else inkOn(target),
             modifier = Modifier.alpha(if (cell.quiet) QUIET_ALPHA else 1f),
         )
     }
@@ -126,13 +140,11 @@ fun CoShellHeatLegend(lessLabel: String, moreLabel: String, trailing: String, mo
             Box(Modifier.size(Sizes.heatSwatch).background(fill, RoundedCornerShape(Radii.small)).fillEdge(fill, RoundedCornerShape(Radii.small), surface))
         }
         Text(moreLabel, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(
-            trailing,
-            Modifier.weight(1f),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.End,
-        )
+        Box(Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+            AnimatedContent(trailing, transitionSpec = { dataSwap() }, contentAlignment = Alignment.CenterEnd, label = "heatTrailing") {
+                Text(it, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.End)
+            }
+        }
     }
 }
 

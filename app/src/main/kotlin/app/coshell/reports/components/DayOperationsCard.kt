@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.Swap
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,19 +23,20 @@ import app.coshell.transactions.list.components.TransactionRow
  */
 @Composable
 internal fun DayOperationsCard(day: Day?, onTransaction: (String) -> Unit, modifier: Modifier = Modifier) {
-    CoShellCard(modifier.fillMaxWidth()) {
-        if (day == null) {
+    // Another day tapped: its operations rise in where the last day's were (owner 2026-11-27).
+    CoShellCard(modifier.fillMaxWidth()) { Swap(day, Modifier.fillMaxWidth()) { shown ->
+        if (shown == null) {
             Text(
                 stringResource(R.string.reports_calendar_day_empty),
                 Modifier.padding(Spacing.l),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            return@CoShellCard
+            return@Swap
         }
         Column {
-            DayHeader(day, background = Color.Transparent)
-            day.rows.forEach { row -> TransactionRow(row, onClick = onTransaction, background = Color.Transparent) }
+            DayHeader(shown, background = Color.Transparent)
+            shown.rows.forEach { row -> TransactionRow(row, onClick = onTransaction, background = Color.Transparent) }
         }
-    }
+    } }
 }

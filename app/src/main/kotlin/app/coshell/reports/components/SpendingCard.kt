@@ -1,5 +1,8 @@
 package app.coshell.reports.components
 
+import androidx.compose.runtime.key
+import app.coshell.ui.motion.Swap
+import app.coshell.ui.motion.SwapText
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -60,8 +63,9 @@ internal fun SpendingCard(
             }
         }
         // A flow: a currency code never breaks into letters — when it does not fit beside the total, it goes under it.
-        FlowRow(Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
-            Text(shownAmount(spending.total), style = AmountTitleStyle, modifier = Modifier.alignByBaseline())
+        Swap(shownAmount(spending.total) to currency, Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs)) { (total, currency) ->
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+            Text(total, style = AmountTitleStyle, modifier = Modifier.alignByBaseline())
             Text(
                 currency,
                 style = MaterialTheme.typography.labelLarge,
@@ -71,20 +75,22 @@ internal fun SpendingCard(
                 modifier = Modifier.alignByBaseline(),
             )
         }
+        }
         spending.comparison?.let { comparison ->
             val status = LocalStatusPalette.current
-            Text(
+            SwapText(
                 comparisonText(comparison),
                 style = MaterialTheme.typography.bodySmall,
                 color = if (comparison.isMore) status.warning else status.success,
                 modifier = Modifier.padding(horizontal = Spacing.l),
             )
         }
-        spending.bars.forEach { bar -> SpendingBar(bar, Modifier.padding(horizontal = Spacing.l), onClick = { onBar(bar.categoryId) }) }
+        // Keyed by category: the same row stays and its bar moves to the new numbers.
+        spending.bars.forEach { bar -> key(bar.categoryId) { SpendingBar(bar, Modifier.padding(horizontal = Spacing.l), onClick = { onBar(bar.categoryId) }) } }
         spending.other?.let { other ->
             val name = categoryName(other.firstName)
             val head = if (other.more > 0) stringResource(R.string.reports_other_more, name, other.more) else stringResource(R.string.reports_other, name)
-            Text(
+            SwapText(
                 "$head · ${shownAmount(other.value)} · ${other.percent}%",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,7 +44,7 @@ internal fun CushionCard(cushion: Cushion, modifier: Modifier = Modifier) {
                     modifier = Modifier.weight(1f).semantics { heading() },
                 )
                 if (cushion.months != null) {
-                    Text(
+                    SwapText(
                         stringResource(R.string.reports_cushion_caption, shownAmount(cushion.money)),
                         style = MaterialTheme.typography.bodySmall,
                         color = muted,
@@ -58,7 +59,7 @@ internal fun CushionCard(cushion: Cushion, modifier: Modifier = Modifier) {
                     Modifier.padding(top = Spacing.xs).clearAndSetSemantics { contentDescription = described },
                     verticalAlignment = Alignment.Bottom,
                 ) {
-                    Text(stringResource(R.string.reports_cushion_value, months), style = AmountHeadlineStyle, maxLines = 1)
+                    SwapText(stringResource(R.string.reports_cushion_value, months), style = AmountHeadlineStyle, maxLines = 1)
                     Text(
                         " " + stringResource(R.string.reports_cushion_unit),
                         style = MaterialTheme.typography.titleSmall,
@@ -67,7 +68,7 @@ internal fun CushionCard(cushion: Cushion, modifier: Modifier = Modifier) {
                     )
                 }
             }
-            Text(
+            SwapText(
                 gloss(cushion),
                 style = MaterialTheme.typography.bodySmall,
                 color = muted,

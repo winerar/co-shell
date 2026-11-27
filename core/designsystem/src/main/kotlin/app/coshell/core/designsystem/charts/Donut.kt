@@ -14,6 +14,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.animation.core.animate
+import app.coshell.core.designsystem.tokens.Motion
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -55,23 +63,39 @@ fun CoShellDonut(
     val edges = remember(slices, surface) { slices.map { fillEdgeColor(it.color, surface) } }
     val hairline = Sizes.hairline
     val entrance = rememberChartEntrance()
+    val swap = remember { DonutSwap(DonutRing(arcs, slices.map { it.color }, edges)) }
+    LaunchedEffect(arcs, edges) { swap.moveTo(DonutRing(arcs, slices.map { it.color }, edges)) }
     Box(modifier.size(size).semantics { contentDescription = description }, contentAlignment = Alignment.Center) {
         Canvas(Modifier.fillMaxSize()) {
             val stroke = thickness.toPx()
             val inset = stroke / 2
             val arcSize = Size(this.size.width - stroke, this.size.height - stroke)
             val topLeft = Offset(inset, inset)
-            if (arcs.isEmpty()) {
-                drawArc(track, 0f, FULL, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(stroke))
-                return@Canvas
-            }
             // The whole ring opens clockwise: a slice is drawn up to where the sweep has reached.
             val reached = FULL * entrance.value
-            arcs.forEachIndexed { index, arc ->
-                val visible = (reached - arc.start).coerceIn(0f, arc.sweep)
-                if (visible > 0f) {
-                    drawArc(slices[index].color, arc.start + TOP, visible, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(stroke))
-                    edges[index]?.let { drawSliceEdge(it, arc.start + TOP, visible, stroke, hairline.toPx()) }
+            fun ring(ring: DonutRing, arcs: List<DonutArc>, alpha: Float) {
+                if (alpha <= 0f) return
+                if (arcs.none { it.sweep > 0f }) {
+                    drawArc(track, 0f, FULL, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(stroke), alpha = alpha)
+                    return
+                }
+                arcs.forEachIndexed { index, arc ->
+                    val visible = (reached - arc.start).coerceIn(0f, arc.sweep)
+                    if (visible > 0f) {
+                        drawArc(ring.colors[index], arc.start + TOP, visible, useCenter = false, topLeft = topLeft, size = arcSize, style = Stroke(stroke), alpha = alpha)
+                        ring.edges[index]?.let { drawSliceEdge(it.copy(alpha = it.alpha * alpha), arc.start + TOP, visible, stroke, hairline.toPx()) }
+                    }
+                }
+            }
+            // Other numbers (a period, a currency): the same slices turn to their new sizes; other slices — the old ring fades into the new (owner 2026-11-27).
+            val t = swap.progress
+            val leaving = swap.leaving
+            when {
+                leaving == null -> ring(swap.shown, swap.shown.arcs, 1f)
+                leaving.sameSlices(swap.shown) -> ring(swap.shown, lerpArcs(leaving.arcs, swap.shown.arcs, t), 1f)
+                else -> {
+                    ring(leaving, leaving.arcs, 1f - t)
+                    ring(swap.shown, swap.shown.arcs, t)
                 }
             }
         }
@@ -79,6 +103,43 @@ fun CoShellDonut(
         Box(Modifier.size((size - thickness * 2) * HOLE_SHARE), contentAlignment = Alignment.Center, content = content)
     }
 }
+
+/** What one ring draws: its arcs and, per arc, the colour and the hairline. */
+@Immutable
+internal class DonutRing(val arcs: List<DonutArc>, val colors: List<Color>, val edges: List<Color?>) {
+    /** The same categories in the same order — the arcs can turn instead of fading. */
+    fun sameSlices(other: DonutRing): Boolean = arcs.isNotEmpty() && other.arcs.isNotEmpty() && colors == other.colors
+}
+
+/** The ring shown and the one leaving it, with how far the change has gone (0..1). Read in the draw lambda only. */
+@Stable
+internal class DonutSwap(first: DonutRing) {
+    var shown by mutableStateOf(first)
+        private set
+    var leaving by mutableStateOf<DonutRing?>(null)
+        private set
+    var progress by mutableFloatStateOf(1f)
+        private set
+
+    suspend fun moveTo(ring: DonutRing) {
+        if (ring.arcs == shown.arcs && ring.colors == shown.colors && ring.edges == shown.edges) return
+        // Interrupted half way: start from what is on screen now, not from the end of the old move.
+        val before = leaving
+        leaving = if (before != null && before.sameSlices(shown)) DonutRing(lerpArcs(before.arcs, shown.arcs, progress), shown.colors, shown.edges)
+        else if (before != null && progress < HALF) before else shown
+        shown = ring
+        progress = 0f
+        animate(0f, 1f, animationSpec = Motion.spatial()) { value, _ -> progress = value }
+        leaving = null
+    }
+}
+
+/** Pure: arcs on their way from [from] to [to] (same count), [t] 0..1. */
+internal fun lerpArcs(from: List<DonutArc>, to: List<DonutArc>, t: Float): List<DonutArc> =
+    to.mapIndexed { i, arc ->
+        val start = from.getOrNull(i) ?: arc
+        DonutArc(start.start + (arc.start - start.start) * t, start.sweep + (arc.sweep - start.sweep) * t)
+    }
 
 /** Part of the hole's diameter the centre may use: a line of text across the middle keeps clear of the ring. */
 private const val HOLE_SHARE = 0.84f
@@ -122,6 +183,7 @@ fun donutArcs(values: List<Long>, gap: Float = GAP): List<DonutArc> {
 const val DONUT_MAX_SLICES = 6
 
 private const val FULL = 360f
+private const val HALF = 0.5f
 /** Canvas angles start at 3 o'clock; ours at 12. */
 private const val TOP = -90f
 private const val GAP = 2f

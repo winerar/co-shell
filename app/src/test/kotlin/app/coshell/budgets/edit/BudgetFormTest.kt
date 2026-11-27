@@ -64,4 +64,11 @@ class BudgetFormTest {
         val amd = CurrencyCode("AMD")
         assertEquals(listOf("USD", "ARS", "AMD"), limitCurrencies(listOf(usd, ars), listOf(ars, usd), amd))
     }
+
+    @Test
+    fun `usual limit is the average rounded to a figure to remember`() {
+        val usual = usualLimit(Money(37_184_000, ars), format)
+        assertEquals(UsualLimit("370 000 ARS", "370 000"), usual?.copy(shown = usual.shown.replace('\u202F', ' ').replace('\u00A0', ' '), editing = usual.editing.replace('\u202F', ' ').replace('\u00A0', ' ')))
+        assertNull(usualLimit(null, format))
+    }
 }

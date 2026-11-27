@@ -21,8 +21,8 @@ data class BudgetEditUiState(
     val amountError: Boolean = false,
     val currency: String = "",
     val currencies: List<String> = emptyList(),
-    /** «В среднем за 3 месяца — 372 000 ARS» in [currency]; `null` — no history. */
-    val average: String? = null,
+    /** «Обычно уходит ~370 000 ARS в месяц» in [currency] and the figure «Подставить» puts in (#790); `null` — no history. */
+    val usual: UsualLimit? = null,
     /** Subcategories of the chosen folder with their own limits (`BudEdit` «Внутри папки»). */
     val inside: List<Inside> = emptyList(),
     val rollover: Boolean = false,

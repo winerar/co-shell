@@ -60,7 +60,7 @@ class BudgetImportScreenshotTest {
             amount = "400 000",
             currency = "ARS",
             currencies = listOf("ARS", "USD"),
-            average = "372 000 ARS",
+            usual = app.coshell.budgets.edit.UsualLimit("370 000 ARS", "370 000"),
             inside = listOf(
                 BudgetEditUiState.Inside("rent", "Аренда", "home", 0xFF00BCD4, null),
                 BudgetEditUiState.Inside("utilities", "Коммуналка", "bolt", 0xFF00BCD4, "70 000 ARS"),

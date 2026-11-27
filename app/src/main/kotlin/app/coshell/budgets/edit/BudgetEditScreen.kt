@@ -23,7 +23,7 @@ import app.coshell.R
 import app.coshell.budgets.edit.components.BudgetPickers
 import app.coshell.budgets.edit.components.BudgetPicker
 import app.coshell.budgets.edit.components.InsideFolder
-import app.coshell.core.designsystem.amount.shownAmount
+import app.coshell.budgets.edit.components.UsualLimitRow
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellButton
@@ -42,8 +42,7 @@ import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.ScreenTopBar
 
 /**
- * Limit editor (mockup `BudEdit`): «Папка | Категория», what the limit is on, «В месяц» with the currency and the
- * 3-month average, the folder's inner limits, «Переносить остаток», a note, «Сохранить» and «Убрать лимит».
+ * Limit editor (mockup `BudEdit`): «Папка | Категория», what the limit is on, «В месяц» with the currency and «Обычно уходит ~X · Подставить» (#790), the folder's inner limits, «Переносить остаток», a note, «Сохранить» and «Убрать лимит».
  */
 @Composable
 fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
@@ -82,8 +81,8 @@ fun BudgetEditScreen(state: BudgetEditUiState, actions: BudgetEditActions) {
                 label = stringResource(R.string.budget_amount),
                 currency = state.currency,
                 error = stringResource(R.string.budget_amount_error).takeIf { state.amountError },
-                hint = state.average?.let { stringResource(R.string.budget_average, shownAmount(it)) },
             )
+            state.usual?.let { UsualLimitRow(it, state.amount, actions.onUseUsual) }
             if (state.currencies.size > 1) {
                 CoShellFilterChip(selected = false, onClick = { picker = BudgetPicker.CURRENCY }, label = {
                     Text(stringResource(R.string.budget_currency) + " · " + state.currency)

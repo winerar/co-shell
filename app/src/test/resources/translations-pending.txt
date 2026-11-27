@@ -15,6 +15,8 @@ auto_backup_time_hint
 budget_inside
 budget_no_folders
 budget_note
+budget_usual
+budget_usual_use
 budgets_empty_text
 budgets_envelopes
 budgets_first_average

@@ -36,6 +36,10 @@ internal val GestureGroups = listOf(
         ),
     ),
     GestureGroup(
+        R.string.gestures_stories,
+        listOf(Gesture(R.string.gesture_story_back_title, R.string.gesture_story_back_text), Gesture(R.string.gesture_story_next_title, R.string.gesture_story_next_text)),
+    ),
+    GestureGroup(
         R.string.gestures_everywhere,
         listOf(
             Gesture(R.string.gesture_swipe_title, R.string.gesture_swipe_text),

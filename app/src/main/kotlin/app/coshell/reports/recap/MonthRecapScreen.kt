@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.core.designsystem.charts.CoShellMeter
@@ -40,7 +42,7 @@ import app.coshell.ui.top.ScreenTopBar
 
 /**
  * «Итоги октября» as stories (#554, owner poll 2026-11-23, all «А»): a hero card per story, bars on top show where
- * you are, a tap anywhere on the card goes on, the last story ends with an encouraging phrase and «Подробнее».
+ * you are, a tap on the card goes on (on its left third or a swipe right — back), the last story ends with an encouraging phrase and «Подробнее».
  * One card is always on screen; a month with nothing in it has no stories.
  */
 @Composable
@@ -55,6 +57,9 @@ fun MonthRecapScreen(
     var asking by remember { mutableStateOf(false) }
     var sharing by remember { mutableStateOf<Boolean?>(null) }
     var index by rememberSaveable { mutableIntStateOf(startAt) }
+    var dir by remember { mutableIntStateOf(1) }
+    val tap = remember { StoryTap() }
+    val previous = stringResource(R.string.story_previous)
     val shareLabel = stringResource(R.string.recap_share)
     Scaffold(
         topBar = {
@@ -74,6 +79,12 @@ fun MonthRecapScreen(
         }
         val last = state.cards.lastIndex
         val at = index.coerceIn(0, last)
+        val go = { step: Int ->
+            when {
+                step < 0 -> if (at > 0) { dir = -1; index = at - 1 }
+                else -> { dir = 1; index = if (at < last) at + 1 else 0 }
+            }
+        }
         Column(Modifier.fillMaxSize().padding(padding).then(side)) {
             Row(
                 Modifier.fillMaxWidth().semantics { contentDescription = "" },
@@ -85,11 +96,14 @@ fun MonthRecapScreen(
             }
             val description = stringResource(R.string.recap_progress, at + 1, state.cards.size)
             CoShellCard(
-                Modifier.fillMaxWidth().padding(top = Spacing.m).semantics { contentDescription = description },
+                Modifier.fillMaxWidth().padding(top = Spacing.m).storyTaps(tap, go).semantics {
+                    contentDescription = description
+                    if (at > 0) customActions = listOf(CustomAccessibilityAction(previous) { go(-1); true })
+                },
                 tone = CardTone.Story,
-                onClick = { index = if (at < last) at + 1 else 0 },
+                onClick = { go(tap.step) },
             ) {
-                AnimatedContent(at, transitionSpec = { storyTransition(last) }, label = "story") { shown ->
+                AnimatedContent(at, transitionSpec = { storyTransition(dir) }, label = "story") { shown ->
                     Story(state.cards[shown.coerceIn(0, last)], state, onDetails, forPicture = false, Modifier.fillMaxSize().padding(Spacing.l))
                 }
             }

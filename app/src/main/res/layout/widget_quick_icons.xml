@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:id="@+id/w_card_edge" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_card" android:scaleType="fitXY" android:importantForAccessibility="no" />
+    <ImageView android:id="@+id/w_card_fill" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="1dp" android:src="@drawable/widget_shape_card" android:scaleType="fitXY" android:importantForAccessibility="no" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="horizontal">
+        <FrameLayout android:id="@+id/w_expense" android:layout_width="48dp" android:layout_height="48dp" android:foreground="@drawable/widget_press">
+            <ImageView android:id="@+id/w_expense_edge" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:importantForAccessibility="no" />
+            <ImageView android:id="@+id/w_expense_fill" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="2dp" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:importantForAccessibility="no" />
+            <ImageView android:id="@+id/w_expense_icon" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_widget_out" android:importantForAccessibility="no" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/w_income" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginStart="10dp" android:foreground="@drawable/widget_press">
+            <ImageView android:id="@+id/w_income_fill" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:importantForAccessibility="no" />
+            <ImageView android:id="@+id/w_income_icon" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_widget_in" android:importantForAccessibility="no" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget card (tinted at run time, #795): the same 28 dp corners as sheets. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners android:radius="28dp" />
+    <solid android:color="#FFFFFFFF" />
+</shape>

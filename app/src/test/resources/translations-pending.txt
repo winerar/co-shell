@@ -325,6 +325,8 @@ templates_empty
 templates_search
 templates_section_expense
 templates_section_income
+tile_label
+tile_locked
 tour_accounts_text
 tour_accounts_title
 tour_budgets_text
@@ -346,3 +348,12 @@ transaction_categories_all_title
 transactions_changed_many
 update_installing_manual
 update_pill
+widget_locked
+widget_quick_desc
+widget_quick_name
+widget_template_ask
+widget_templates_all
+widget_templates_create
+widget_templates_desc
+widget_templates_empty
+widget_templates_name

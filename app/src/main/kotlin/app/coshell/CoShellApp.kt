@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import app.coshell.shortcuts.LauncherShortcuts
+import app.coshell.widget.WidgetRefresh
 import app.coshell.core.data.family.FamilyService
 import app.coshell.core.domain.SeedDefaultCategoriesUseCase
 import app.coshell.core.domain.tags.EnsureLabelTagsUseCase
@@ -39,6 +40,7 @@ class CoShellApp : Application(), Configuration.Provider {
     @Inject lateinit var crashLog: CrashLog
     @Inject lateinit var reminderWatch: ReminderWatch
     @Inject lateinit var launcherShortcuts: LauncherShortcuts
+    @Inject lateinit var widgetRefresh: WidgetRefresh
     @Inject lateinit var autoBackupSettings: AutoBackupSettings
     @Inject lateinit var autoBackupScheduler: AutoBackupScheduler
 
@@ -76,6 +78,8 @@ class CoShellApp : Application(), Configuration.Provider {
         appScope.launch { reminderWatch.run() }
         // Launcher shortcuts: the three types and the two frequent templates (#555).
         appScope.launch { launcherShortcuts.run() }
+        // Home-screen widgets follow the theme, closed entry and templates (#795).
+        appScope.launch { widgetRefresh.run() }
     }
 }
 

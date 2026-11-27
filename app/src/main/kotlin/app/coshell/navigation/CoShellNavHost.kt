@@ -528,11 +528,18 @@ fun CoShellNavHost(
         val link by shortcutLinks.link.collectAsStateWithLifecycle()
         LaunchedEffect(link) {
             val shortcut = link ?: return@LaunchedEffect
-            val destination = when (shortcut) {
-                is ShortcutLink.NewOperation -> TransactionEditDestination(type = shortcut.type.name)
-                is ShortcutLink.FromTemplate -> TransactionEditDestination(templateId = shortcut.templateId)
+            // Entry closed until the update (#334): a tap from a shortcut, widget or tile gets the same window as «+», not a sheet that cannot save (#795).
+            if (lock.locked) {
+                lock.onBlocked()
+            } else {
+                val destination: Any = when (shortcut) {
+                    is ShortcutLink.NewOperation -> TransactionEditDestination(type = shortcut.type.name)
+                    is ShortcutLink.FromTemplate -> TransactionEditDestination(templateId = shortcut.templateId)
+                    ShortcutLink.Templates -> TemplatesDestination
+                    ShortcutLink.NewTemplate -> TemplateEditDestination()
+                }
+                navController.navigate(destination) { launchSingleTop = true }
             }
-            navController.navigate(destination) { launchSingleTop = true }
             shortcutLinks.consumed()
         }
     }

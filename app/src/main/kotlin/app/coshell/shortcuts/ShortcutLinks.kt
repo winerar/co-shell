@@ -21,11 +21,16 @@ class ShortcutLinks @Inject constructor() {
 
     /** `true` — the intent came from a shortcut. */
     fun offer(intent: Intent?): Boolean {
-        val link = ShortcutLink.of(intent?.getStringExtra(ShortcutLink.EXTRA_TYPE), intent?.getStringExtra(ShortcutLink.EXTRA_TEMPLATE)) ?: return false
+        val link = ShortcutLink.of(
+            intent?.getStringExtra(ShortcutLink.EXTRA_TYPE),
+            intent?.getStringExtra(ShortcutLink.EXTRA_TEMPLATE),
+            intent?.getStringExtra(ShortcutLink.EXTRA_SCREEN),
+        ) ?: return false
         pending.value = link
         // Opened once: a recreated activity sees the same intent again.
         intent?.removeExtra(ShortcutLink.EXTRA_TYPE)
         intent?.removeExtra(ShortcutLink.EXTRA_TEMPLATE)
+        intent?.removeExtra(ShortcutLink.EXTRA_SCREEN)
         return true
     }
 
@@ -37,8 +42,8 @@ class ShortcutLinks @Inject constructor() {
         const val ACTION = "app.coshell.action.SHORTCUT"
 
         /** The intent of a shortcut: a new operation of [type], or the sheet filled from the template [templateId]. */
-        fun intent(context: Context, type: String? = null, templateId: String? = null): Intent =
+        fun intent(context: Context, type: String? = null, templateId: String? = null, screen: String? = null): Intent =
             Intent(context, MainActivity::class.java).setAction(ACTION)
-                .putExtra(ShortcutLink.EXTRA_TYPE, type).putExtra(ShortcutLink.EXTRA_TEMPLATE, templateId)
+                .putExtra(ShortcutLink.EXTRA_TYPE, type).putExtra(ShortcutLink.EXTRA_TEMPLATE, templateId).putExtra(ShortcutLink.EXTRA_SCREEN, screen)
     }
 }

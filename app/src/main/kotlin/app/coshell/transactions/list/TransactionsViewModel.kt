@@ -12,8 +12,8 @@ import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.search.filterTotal
-import app.coshell.core.domain.search.DuplicateDismissals
-import app.coshell.core.domain.search.InMemoryDuplicateDismissals
+import app.coshell.core.domain.settings.SuggestionDismissals
+import app.coshell.core.domain.settings.InMemorySuggestionDismissals
 import app.coshell.core.domain.search.duplicatePairs
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.tags.TagRepository
@@ -64,7 +64,7 @@ class TransactionsViewModel @Inject constructor(
     reportCurrencies: ReportCurrencySettings,
     tags: TagRepository,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
-    private val dismissals: DuplicateDismissals = InMemoryDuplicateDismissals(),
+    private val dismissals: SuggestionDismissals = InMemorySuggestionDismissals(),
 ) : ViewModel() {
 
     private val _selection = MutableStateFlow(Selection())

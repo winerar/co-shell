@@ -7,4 +7,9 @@
     <string name="duplicate_delete">Удалить вторую</string>
     <string name="duplicate_different">Это разные</string>
     <string name="duplicate_open">Открыть операцию</string>
+    <!-- «Сделать регулярным?» (#789) -->
+    <string name="recurring_offer_monthly">Похоже на ежемесячный платёж: «%1$s», ~%2$s, около %3$d-го числа. Сделать регулярным? Приложение напомнит и покажет его в «Скоро».</string>
+    <string name="recurring_offer_weekly">Похоже на еженедельный платёж: «%1$s», ~%2$s. Сделать регулярным? Приложение напомнит и покажет его в «Скоро».</string>
+    <string name="recurring_offer_accept">Сделать регулярным</string>
+    <string name="recurring_offer_later">Не сейчас</string>
 </resources>

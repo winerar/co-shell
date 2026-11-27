@@ -220,7 +220,7 @@ class TransactionsViewModelTest {
         val ars = CurrencyCode("ARS")
         val now = Instant.fromEpochSeconds(1_794_000_000)
         val transactions = FakeTransactionRepository()
-        val dismissals = app.coshell.core.domain.search.InMemoryDuplicateDismissals()
+        val dismissals = app.coshell.core.domain.settings.InMemorySuggestionDismissals()
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,

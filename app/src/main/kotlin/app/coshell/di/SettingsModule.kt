@@ -4,8 +4,8 @@ import app.coshell.core.domain.quickentry.TipSettings
 import app.coshell.core.domain.settings.ConverterSettings
 import app.coshell.core.domain.settings.ListDensitySettings
 import app.coshell.core.domain.settings.ScreenOptionsStore
-import app.coshell.core.domain.search.DuplicateDismissals
-import app.coshell.transactions.duplicates.PrefsDuplicateDismissals
+import app.coshell.core.domain.settings.SuggestionDismissals
+import app.coshell.settings.PrefsSuggestionDismissals
 import app.coshell.settings.PrefsScreenOptions
 import app.coshell.core.domain.settings.MonthReviewSettings
 import app.coshell.core.domain.notices.NoticeSettings
@@ -72,5 +72,5 @@ interface SettingsModule {
     fun bindConverterSettings(impl: PrefsConverterSettings): ConverterSettings
 
     @Binds
-    fun bindDuplicateDismissals(impl: PrefsDuplicateDismissals): DuplicateDismissals
+    fun bindSuggestionDismissals(impl: PrefsSuggestionDismissals): SuggestionDismissals
 }

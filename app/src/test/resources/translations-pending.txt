@@ -181,6 +181,10 @@ recap_unusual_title
 receipt_unread_text
 recurring_list_empty
 recurring_list_search
+recurring_offer_accept
+recurring_offer_later
+recurring_offer_monthly
+recurring_offer_weekly
 release_accounts_text
 release_accounts_title
 release_close

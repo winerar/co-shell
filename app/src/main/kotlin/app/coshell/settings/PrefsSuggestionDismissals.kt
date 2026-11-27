@@ -1,8 +1,8 @@
-package app.coshell.transactions.duplicates
+package app.coshell.settings
 
 import android.content.Context
 import androidx.core.content.edit
-import app.coshell.core.domain.search.DuplicateDismissals
+import app.coshell.core.domain.settings.SuggestionDismissals
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 
-/** [DuplicateDismissals] in its own small SharedPreferences file: «Это разные» stays on this phone (#791), like hints. */
+/** [SuggestionDismissals] in its own small SharedPreferences file: turned-down suggestions stay on this phone (#791, #789), like hints. */
 @Singleton
-class PrefsDuplicateDismissals @Inject constructor(@ApplicationContext context: Context) : DuplicateDismissals {
+class PrefsSuggestionDismissals @Inject constructor(@ApplicationContext context: Context) : SuggestionDismissals {
 
     private val prefs by lazy { context.getSharedPreferences(FILE, Context.MODE_PRIVATE) }
 
@@ -37,7 +37,7 @@ class PrefsDuplicateDismissals @Inject constructor(@ApplicationContext context: 
     private suspend fun <T> io(block: () -> T): T = withContext(Dispatchers.IO) { block() }
 
     private companion object {
-        const val FILE = "duplicates"
-        const val KEY = "different"
+        const val FILE = "suggestions"
+        const val KEY = "dismissed"
     }
 }

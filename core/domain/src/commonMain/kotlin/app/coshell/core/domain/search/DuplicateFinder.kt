@@ -2,9 +2,6 @@ package app.coshell.core.domain.search
 
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
@@ -16,8 +13,8 @@ import kotlin.time.Instant
  * written down by two people. Nothing is deleted by itself: the list only asks.
  */
 data class DuplicatePair(val first: String, val second: String) {
-    /** The same pair whichever row is asked about: «Это разные» remembers it. */
-    val key: String get() = listOf(first, second).sorted().joinToString(KEY_SEPARATOR)
+    /** The same pair whichever row is asked about: «Это разные» remembers it ([app.coshell.core.domain.settings.SuggestionDismissals]). */
+    val key: String get() = KEY_PREFIX + listOf(first, second).sorted().joinToString(KEY_SEPARATOR)
 }
 
 /** How close in time two records must be to look like one purchase. */
@@ -56,19 +53,5 @@ private fun Transaction.looksLike(other: Transaction): Boolean =
     type == other.type && amount == other.amount &&
         (if (categoryId != null || other.categoryId != null) categoryId == other.categoryId else accountId == other.accountId)
 
-/** Pairs the person called different («Это разные»): kept on the phone, not synced — like hints. */
-interface DuplicateDismissals {
-    val dismissed: Flow<Set<String>>
-
-    suspend fun dismiss(key: String)
-}
-
-/** For previews and tests. */
-class InMemoryDuplicateDismissals(initial: Set<String> = emptySet()) : DuplicateDismissals {
-    private val state = MutableStateFlow(initial)
-    override val dismissed: Flow<Set<String>> = state
-
-    override suspend fun dismiss(key: String) = state.update { it + key }
-}
-
 private const val KEY_SEPARATOR = "|"
+private const val KEY_PREFIX = "dup:"

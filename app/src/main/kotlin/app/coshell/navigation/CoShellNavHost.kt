@@ -271,6 +271,7 @@ fun CoShellNavHost(
                     preset = entry.savedStateHandle,
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
+                    onOpenTemplate = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
                 )
             }
         }

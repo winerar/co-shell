@@ -30,6 +30,10 @@ def line(*pts):
     return 'M' + ' L'.join('%g,%g' % p for p in pts)
 
 
+def polygon(*pts):
+    return line(*pts) + 'z'
+
+
 def dashed(x1, x2, y, dash=8, gap=7):
     out, x = [], x1
     step = 1 if x2 > x1 else -1
@@ -80,6 +84,41 @@ STORIES = {
         ('accent', 'fill', rrect(107, 16, 20, 4, 2) + ' ' + rrect(131, 16, 20, 4, 2)),
         ('ink', 'stroke', rrect(155, 16, 20, 4, 2) + ' ' + rrect(179, 16, 14, 4, 2), 1),
         ('ink', 'stroke', 'M232,110 v24 h36 v-24 M250,92 v32 M240,102 l10,-10 10,10', 2.5),
+    ],
+    # Release 2026-11-27 (#794, #789, #785, #154, #555): bulk edit, repeats and duplicates, smart reports, own bottom bar, widgets.
+    'bulk': [
+        ('ink', 'stroke', rrect(30, 15, 240, 40, 12) + ' ' + rrect(30, 70, 240, 40, 12) + ' ' + rrect(30, 125, 240, 40, 12)),
+        ('accent', 'evenodd', ' '.join(rrect(44, y, 20, 20, 5) + ' ' + polygon((47, y + 10), (50, y + 7), (53, y + 10.5), (59, y + 3.5), (62, y + 6.5), (53, y + 16.5))
+                                       for y in (25, 80))),
+        ('ink', 'stroke', rrect(44, 135, 20, 20, 5)),
+        ('ink', 'stroke', ' '.join(rrect(80, y + 17, 100, 6, 3) + ' ' + rrect(222, y + 16, 34, 7, 3.5) for y in (15, 70, 125))),
+    ],
+    'repeat': [
+        ('ink', 'stroke', rrect(20, 36, 150, 44, 12) + ' ' + rrect(34, 54, 70, 7, 3.5) + ' ' + rrect(122, 54, 34, 7, 3.5)),
+        ('accent', 'evenodd', rrect(20, 100, 150, 44, 12) + ' ' + rrect(34, 118, 70, 7, 3.5) + ' ' + rrect(122, 118, 34, 7, 3.5)),
+        ('ink', 'stroke', 'M270,90 A40,40 0 1 1 258.3,61.7 ' + line((246, 60), (258.3, 61.7), (257, 49)), 3),
+        ('accent', 'fill', circle(230, 90, 8)),
+    ],
+    'insights': [
+        ('ink', 'stroke', rrect(40, 100, 30, 60, 8) + ' ' + rrect(85, 80, 30, 80, 8) + ' ' + rrect(130, 110, 30, 50, 8) + ' ' + rrect(220, 90, 30, 70, 8)),
+        ('accent', 'fill', rrect(175, 40, 30, 120, 8)),
+        ('ink', 'stroke', dashed(24, 276, 100), 1.5),
+        ('accent', 'stroke', line((190, 30), (190, 8)) + ' ' + line((182, 16), (190, 8), (198, 16)), 3),
+        ('ink', 'stroke', line((24, 166), (276, 166)), 1.5),
+    ],
+    'bar': [
+        ('ink', 'stroke', rrect(80, 12, 140, 52, 14) + ' ' + circle(106, 38, 10) + ' ' + rrect(126, 34, 76, 7, 3.5)),
+        ('accent', 'stroke', line((106, 72), (106, 100)) + ' ' + line((98, 92), (106, 100), (114, 92)), 3),
+        ('ink', 'stroke', rrect(20, 110, 260, 56, 28) + ' ' + circle(60, 138, 10) + ' ' + circle(195, 138, 10) + ' ' + circle(240, 138, 10)),
+        ('ink', 'stroke', circle(106, 138, 14), 2.5),
+        ('accent', 'evenodd', circle(150, 138, 20) + ' ' + polygon((147, 127), (153, 127), (153, 135), (161, 135), (161, 141), (153, 141),
+                                                                  (153, 149), (147, 149), (147, 141), (139, 141), (139, 135), (147, 135))),
+    ],
+    'widgets': [
+        ('accent', 'evenodd', rrect(30, 20, 150, 70, 18) + ' ' + rrect(44, 36, 56, 38, 12) + ' ' + rrect(110, 36, 56, 38, 12)),
+        ('ink', 'stroke', line((72, 48), (72, 62)) + ' ' + line((65, 55), (79, 55)) + ' ' + line((131, 55), (145, 55)), 2.5),
+        ('ink', 'stroke', ' '.join(rrect(x, y, 32, 32, 10) for x in (200, 240) for y in (20, 58))),
+        ('ink', 'stroke', ' '.join(rrect(x, 122, 32, 32, 10) for x in (30, 75, 120, 165, 210))),
     ],
     # «Знакомство» (#598, owner poll 2026-11-25 «А»; boards Tour598S3, S4, S6): accounts, fan and recap are shared with the release stories.
     'categories': [

@@ -257,6 +257,7 @@
     <string name="transaction_deleted">Операция удалена</string>
     <string name="transactions_deleted_many">Удалено операций: %d</string>
     <string name="entry_saved">Сохранено · %1$s</string>
+    <string name="entry_edited">Изменено</string>
     <string name="entry_undone">Отменено · %1$s</string>
     <string name="action_restore">Вернуть</string>
     <string name="transactions_selected">Выбрано %d</string>

@@ -70,6 +70,7 @@ duplicate_mark
 duplicate_open
 duplicate_text
 duplicate_title
+entry_edited
 export_all_accounts_hint
 export_hint
 family_intro

@@ -49,6 +49,7 @@ import app.coshell.transactions.edit.tip.TipContext
 import app.coshell.transactions.edit.tip.TipUi
 import app.coshell.transactions.edit.tip.refreshed
 import app.coshell.ui.offMain
+import app.coshell.undo.EditedEntries
 import app.coshell.undo.SavedEntries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -92,6 +93,7 @@ class TransactionEditViewModel @Inject constructor(
     private val drafts: DraftRepository = InMemoryDraftRepository(),
     private val entryDrafts: EntryDraftStore = InMemoryEntryDraftStore(),
     private val savedEntries: SavedEntries = SavedEntries { _, _ -> },
+    private val editedEntries: EditedEntries = EditedEntries { _, _ -> },
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -631,8 +633,10 @@ class TransactionEditViewModel @Inject constructor(
                         saveTransaction(operation)
                         entryTip.remember(ui)
                     }
-                    // A new operation (not an edit) gets «Сохранено · Отменить» and the shake window (#325).
-                    if (existing == null) savedEntries.saved(listOfNotNull(transaction, tip?.first), moneyFormat.format(transaction.amount))
+                    // A new operation gets «Сохранено · Отменить» and the shake window (#325); an edit — «Изменено · Отменить» (#798).
+                    val before = existing
+                    if (before == null) savedEntries.saved(listOfNotNull(transaction, tip?.first), moneyFormat.format(transaction.amount))
+                    else editedEntries.edited(before, transaction)
                     templateId?.let { id ->
                         entryTemplates.used(id)
                         paymentDate?.let { entryTemplates.paid(id, it) }

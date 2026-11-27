@@ -20,7 +20,10 @@ object NewFeatures {
     /** «Ещё → О приложении» (#440). */
     const val ABOUT = "more.about"
 
-    val all: List<String> = listOf(RECURRING, DEBTS, GOALS, ABOUT)
+    /** «Ещё → Настройки»: inside — «Экраны → Нижняя панель» (#154) and «Внешний вид → Строки в списках» (#775). */
+    const val SETTINGS = "more.settings"
+
+    val all: List<String> = listOf(RECURRING, DEBTS, GOALS, ABOUT, SETTINGS)
 
     /**
      * Every key `NewMarks` tracks: the rows above and the release stories' card (#693). Both view models pass the whole list,

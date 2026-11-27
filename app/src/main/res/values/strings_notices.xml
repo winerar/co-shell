@@ -56,6 +56,18 @@
     <string name="notice_comeback_switch">С возвращением</string>
     <string name="notice_comeback_hint">после трёх дней без записей, один раз</string>
     <string name="notice_time_title">Когда напоминать</string>
+    <!-- #745: the phone limits the app in the background (Xiaomi «Автозапуск», battery saver). -->
+    <string name="notice_background_section">Телефон</string>
+    <string name="notice_background_title">Работа в фоне</string>
+    <string name="notice_background_xiaomi">Включите «Автозапуск»</string>
+    <string name="notice_background_xiaomi_note">И «Нет ограничений» в «Экономии батареи». Иначе напоминания не придут, пока приложение закрыто.</string>
+    <string name="notice_background_battery">Снимите ограничения батареи</string>
+    <string name="notice_background_note">Иначе напоминания не придут, пока приложение закрыто.</string>
+    <string name="notice_background_ask_title">Разрешить работу в фоне?</string>
+    <string name="notice_background_ask_xiaomi">Иначе напоминания не придут, пока приложение закрыто. Включите «Автозапуск» и «Нет ограничений» в «Экономии батареи».</string>
+    <string name="notice_background_ask_battery">Иначе напоминания не придут, пока приложение закрыто. В «Батарее» выберите «Без ограничений».</string>
+    <string name="notice_background_ask_open">Открыть настройки</string>
+    <string name="notice_background_ask_later">Не сейчас</string>
     <string name="notice_limit_note">Не больше одного напоминания в день.</string>
 
     <!-- The card on «Обзор» after the first entry -->

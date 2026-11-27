@@ -42,4 +42,12 @@ class ClockMinutesTest {
         assertEquals(0, ReminderSettings.stepDays(0, -1))
         assertEquals(ReminderSettings.MAX_DAYS_BEFORE, ReminderSettings.stepDays(ReminderSettings.MAX_DAYS_BEFORE, 1))
     }
+
+    @Test fun `due from a little before the time until midnight`() {
+        val at = ClockMinutes.of(21)
+        assertTrue(ClockMinutes.isDue(ClockMinutes.of(20, 45), at))
+        assertTrue(ClockMinutes.isDue(ClockMinutes.of(23, 59), at))
+        assertFalse(ClockMinutes.isDue(ClockMinutes.of(20, 44), at))
+        assertFalse(ClockMinutes.isDue(ClockMinutes.of(0, 30), at))
+    }
 }

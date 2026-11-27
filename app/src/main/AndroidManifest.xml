@@ -13,6 +13,8 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- Regular payments: «Сегодня платёж» at 9:00 and «Проведено» with «Отменить» (#143). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Reminders come on time after a reboot: the daily alarms are set again (#745, alarm/DailyAlarmReceiver). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".CoShellApp"
@@ -63,6 +65,17 @@
         <receiver
             android:name=".recurring.notify.ReminderActionReceiver"
             android:exported="false" />
+        <!-- The daily alarms of the reminders (#745): fired by AlarmManager, set again after a reboot, an update or a clock change. -->
+        <receiver
+            android:name=".alarm.DailyAlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.updates"

@@ -69,6 +69,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
+2026-11-27, `claude/config-model-nymgzn`: #154 часть 2 — вкладки внизу: опрос владельцу https://claude.ai/artifact/GzBkshDRvsnrNZYrvzA4ac (доски `Tabs154*`, `poll-tabs-154.json`; старая `Fb154Tabs` устарела). После ответа — доска, код или закрытие задачи.
 2026-11-27, `claude/config-model-nymgzn`: #154 — правка «Обзора» по опросу (все «А»): подсказка `edit_home`, строка-пояснение, плашка «Скрыто: N · Вернуть» (шторка), пустые карточки приглушённо в режиме правки; доска `Set1HomeEdit`, `HiddenCardsBarTest`, `HomeLayoutTest`. Не сделано в #154: экран «Вкладки и плитки» (вкладки внизу).
 2026-11-26, `ccr-bc66a3fb-qvcduy`: методики бюджета → задачи #768–#771. #768 «Цели накоплений» сделано по опросу (всё «А», https://claude.ai/artifact/VLNiyUYHuLagu2ZoCHFgAe):
 таблица `goals` v26 + синк `goal` (правило Firestore — публикует CI после мержа в `dev`), экран «Ещё → Цели», шторка, карточка на «Обзоре». Не проверено на телефоне.

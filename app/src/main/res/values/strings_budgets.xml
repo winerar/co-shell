@@ -98,7 +98,8 @@
     <string name="budget_category_error">Выберите, на что лимит</string>
     <string name="budget_amount">В месяц</string>
     <string name="budget_amount_error">Введите сумму цифрами. Можно и 0</string>
-    <string name="budget_average">В среднем за 3 месяца — %1$s</string>
+    <string name="budget_usual">Обычно уходит ~%1$s в месяц</string>
+    <string name="budget_usual_use">Подставить</string>
     <string name="budget_currency">Валюта лимита</string>
     <string name="budget_inside">Подкатегории</string>
     <string name="budget_inside_limit">лимит %1$s</string>

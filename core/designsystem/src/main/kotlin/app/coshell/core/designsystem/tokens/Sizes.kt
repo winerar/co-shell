@@ -68,8 +68,11 @@ object Sizes {
     val searchIcon = 20.dp
     /** Floating bottom bar capsule (poll 2026-11-16 #441 «Б»: 56 high, [panelInset] from the screen edges). */
     val bottomBarHeight = 56.dp
-    /** Active tab's pill inside the bar. */
-    val bottomBarPill = 40.dp
+    /** Active tab's pill inside the bar: 48 high, it holds the icon and the tab's name under it (#796). */
+    val bottomBarPill = 48.dp
+    /** The «+» slot in the middle of the bar never grows past this; a tab never shrinks below [bottomBarTabMin] (#796). */
+    val bottomBarAddSlot = 64.dp
+    val bottomBarTabMin = 48.dp
     /** Top bar capsule (same style as the bottom bar): 56 high, room for 48 dp buttons. */
     val topBarHeight = 56.dp
     /** Side margin of both floating capsules: narrow, the screen's background shows around them. */

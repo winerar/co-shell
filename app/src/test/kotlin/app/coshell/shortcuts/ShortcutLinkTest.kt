@@ -19,6 +19,19 @@ class ShortcutLinkTest {
     }
 
     @Test
+    fun `a screen opens templates and a screen wins over a type`() {
+        assertEquals(ShortcutLink.Templates, ShortcutLink.of(null, null, "templates"))
+        assertEquals(ShortcutLink.NewTemplate, ShortcutLink.of("EXPENSE", "", "new_template"))
+        assertEquals(ShortcutLink.FromTemplate("t1"), ShortcutLink.of(null, "t1", "templates"))
+    }
+
+    @Test
+    fun `an unknown screen falls back to the type`() {
+        assertEquals(ShortcutLink.NewOperation(TransactionType.EXPENSE), ShortcutLink.of("EXPENSE", null, "nowhere"))
+        assertNull(ShortcutLink.of(null, null, "nowhere"))
+    }
+
+    @Test
     fun `unknown or missing values lead nowhere`() {
         assertNull(ShortcutLink.of(null, null))
         assertNull(ShortcutLink.of("SPLIT", null))

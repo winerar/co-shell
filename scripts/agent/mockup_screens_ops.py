@@ -63,7 +63,8 @@ def bar():
 
 def select_bar():
     return ('<div style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; padding: 0 8px; box-sizing: border-box;">'
-            '%s%s</div>' % (PANEL, tap('<span style="{{dupSelStyle}}">%sДублировать</span>' % svg('copy', INK, 20), 'dupSel'),
+            '%s%s%s</div>' % (PANEL, tap('<span aria-label="Дублировать" style="{{dupSelStyle}}">%s</span>' % svg('copy', INK, 22), 'dupSel'),
+                            '<span style="flex: 1; height: 48px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px; color: %s; font-size: 15px; font-weight: 600; box-shadow: inset 0 0 0 1px %s;">%sИзменить</span>' % (INK, LINE2, svg('edit', INK, 20)),
                             tap('<span style="flex: 1; height: 48px; border-radius: 999px; background: %s; color: %s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 600;">%sУдалить · {{selCount}}</span>'
                                 % (PINKBG, PINK, svg('trash', PINK, 20)), 'delSel')))
 
@@ -131,7 +132,7 @@ JS = r'''
       },
       clearSel: () => this.setState({ sel: [] }),
       dupSel: () => { if (s.sel.length === 1) this.duplicate(s.sel[0]); },
-      dupSelStyle: 'flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 999px; font-size: 15px; opacity: ' + (s.sel.length === 1 ? 1 : 0.38) + ';',
+      dupSelStyle: 'width: 48px; flex: none; display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 999px; font-size: 15px; opacity: ' + (s.sel.length === 1 ? 1 : 0.38) + ';',
       delSel: () => this.remove(s.sel.slice()),
       snack: { show: !!s.snack, text: s.snack ? s.snack.text : '' },
       undo: () => { clearTimeout(this.g.sn); this.setState({ gone: s.snack ? s.snack.restore : s.gone, snack: null }); },

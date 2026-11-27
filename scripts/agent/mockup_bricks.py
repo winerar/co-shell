@@ -45,6 +45,7 @@ ICON = {
     'chart': 'M5 20V11M12 20V4M19 20v-6', 'budget': 'M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 3v9h9', 'bolt': 'M13 3L5 13h6l-1 8 8-10h-6z',
     'school': 'M3 9l9-5 9 5-9 5zM7 11v5c3 2 7 2 10 0v-5', 'bus': 'M6 4h12v12H6zM6 11h12M8 19v-3M16 19v-3', 'wifi': 'M5 12a10 10 0 0 1 14 0M8 15a6 6 0 0 1 8 0M12 18h.01',
     'draft': 'M5 4h10l4 4v12H5zM15 4v4h4M8 13h8M8 17h5',
+    'tag': 'M4 12V4h8l8 8-8 8zM8.5 8.5h.01',
     'gear': 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1',
 }
 
@@ -141,13 +142,36 @@ def icon_button(icon, label, color=INK, border=False):
             'background: transparent; display: flex; align-items: center; justify-content: center;">%s</button>' % (label, svg(icon, color)))
 
 
-def nav(active, dot_more=False):
-    """`MainBottomBar`: Обзор · Операции · [+] · Отчёты · Ещё (#140); no dash under the selected tab (#511). `test_mockup_nav.py` keeps it equal to the code."""
-    def tab(key, icon, label):
+def nav_columns(active, width=390):
+    """Column widths (px) of the bottom bar for a screen [width] wide (#796): «+» keeps a fixed slot in the middle, the selected tab takes
+    its half of the bar minus a 48-wide neighbour (`BarWidths`); the other half stays equal. Same numbers as `CoShellBottomBar` (dp)."""
+    inner = width - 2 * 32 - 2 * 6
+    plus = min(64, inner / 5)  # `BarWidths.addSlot`: a tab's share, never above 64
+    half = (inner - plus) / 2
+    tab_min = 48
+    cols = [half / 2] * 2 + [plus] + [half / 2] * 2
+    pos = {'home': 0, 'ops': 1, 'rep': 3, 'more': 4}.get(active)
+    if pos is None:  # an inner screen / a tab not on the bar: nothing is selected, tabs stay equal
+        return cols
+    mate = {0: 1, 1: 0, 3: 4, 4: 3}[pos]
+    cols[pos], cols[mate] = half - tab_min, tab_min
+    return cols
+
+
+def nav(active, dot_more=False, width=390):
+    """`MainBottomBar`: Обзор · Операции · [+] · Отчёты · Ещё (#140); no dash under the selected tab (#511). The selected tab is a pill with its
+    name under the icon (#796 А, owner 2026-11-27): «+» never moves, the pill takes room only from its neighbour in its own half, a name
+    that does not fit (`TAB_LABEL_FIT`, narrow screens) is hidden. `test_mockup_nav.py` keeps it equal to the code."""
+    cols = nav_columns(active, width)
+    def tab(i, key, icon, label):
         on = key == active
         inner = svg(icon, ONLIME if on else MUTED, 24, 1.7)
         if on:
-            inner = '<span style="width: 64px; height: 40px; border-radius: 999px; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>' % (LIME, inner)
+            fits = cols[i] - 4 - 16 >= len(label) * 6.4 + 4  # 11 px bold, ~6.4 px a letter; the code measures the text (`BarWidths.fits`)
+            text = '<span style="font-size: 11px; font-weight: 700; line-height: 13px; white-space: nowrap;">%s</span>' % label if fits else ''
+            size = 22 if fits else 24
+            inner = ('<span style="width: calc(100%% - 8px); height: 48px; border-radius: 999px; background: %s; color: %s; text-decoration: none; display: flex; flex-direction: column; '
+                     'align-items: center; justify-content: center; gap: 1px;">%s%s</span>' % (LIME, ONLIME, svg(icon, ONLIME, size, 1.7), text))
         dot = ('<span style="position: absolute; top: 8px; right: 18px; width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>' % LIME
                if key == 'more' and dot_more else '')
         return ('<a href="#" aria-label="%s" style="position: relative; display: flex; justify-content: center; align-items: center; height: 56px;">%s%s</a>'
@@ -155,8 +179,9 @@ def nav(active, dot_more=False):
     plus = ('<a href="#" aria-label="Новая операция" style="display: flex; justify-content: center;"><span style="width: 48px; height: 48px; '
             'border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span></a>' % (LIME, svg('plus', ONLIME, 26, 2.2)))
     return ('<nav aria-label="Навигация" style="position: absolute; left: 32px; right: 32px; bottom: 18px; height: 56px; border-radius: 999px; '
-            'background: %s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding: 0 6px; box-sizing: border-box;">'
-            % PANEL + tab('home', 'home', 'Обзор') + tab('ops', 'list', 'Операции') + plus + tab('rep', 'chart', 'Отчёты') + tab('more', 'more', 'Ещё') + '</nav>')
+            'background: %s; display: grid; grid-template-columns: %s; align-items: center; padding: 0 6px; box-sizing: border-box;">'
+            % (PANEL, ' '.join('%.1fpx' % c for c in cols)) + tab(0, 'home', 'home', 'Обзор') + tab(1, 'ops', 'list', 'Операции') + plus
+            + tab(3, 'rep', 'chart', 'Отчёты') + tab(4, 'more', 'more', 'Ещё') + '</nav>')
 
 
 def label(text, accent=False, top=18):

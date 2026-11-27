@@ -27,7 +27,7 @@
 | PR в `dev`, иначе | тесты скриптов + `check assembleDebug` одним вызовом, debug APK в артефактах (14 дней) | ~5,5 мин |
 | PR, только `docs/` и `*.md` | только тесты скриптов (шаг «Detect code changes») | <1 мин |
 | `dev` после мержа | Gradle **пропускается**, если дерево merge-коммита = дереву головы PR и там CI зелёный (`scripts/ci/tree-already-checked.sh`); иначе как PR | <1 мин |
-| `dev` ночью (`warm-cache.yml`, 02:23 UTC) | полный `check assembleDebug` на коммите `dev`, если он изменился; пишет кэш Gradle и ключ `nightly-dev-<sha>`; красный → задача «Ночная проверка dev упала» | ~6 мин |
+| `dev` ночью (`warm-cache.yml`, 02:23 UTC) | полный `check assembleDebug` на коммите `dev`, если он изменился; пишет кэш Gradle и ключ `nightly-dev-<sha>`; красный → задача «Ночная проверка dev упала»; зелёный → **канал dev** (#655): debug APK как пре-релиз `dev-N` в `co-shell-releases` (последние 20), указатель — пре-релиз `dev` с `version-dev.json`/`releases-dev.json`; `latest` не трогает | ~6 мин + ~3 |
 | PR в `main` не из `dev` (хотфикс) | `check assembleDebug` + эмулятор параллельно, раздел `whats-new.md`; задача `hotfix` вливает | ~15 мин |
 | `main` (релиз) | без lint и тестов (дерево проверено на `dev`); `assembleDebug assembleRelease` **одним** вызовом Gradle | |
 

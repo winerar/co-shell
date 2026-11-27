@@ -23,6 +23,10 @@ on:
         description: "Выпустить без нового раздела в whats-new.md"
         type: boolean
         default: false
+      allow_no_stories:
+        description: "Выпустить без новых историй релиза (#693)"
+        type: boolean
+        default: false
 
 concurrency:
   group: release
@@ -144,6 +148,15 @@ jobs:
           head -1 notes.txt > title.txt
           tail -n +2 notes.txt > body.md
           cat notes.txt
+
+      # Every release brings its own set of stories (`ReleaseStories.KEY`, #693): the button stops without one, the weekly run only warns.
+      - name: Release stories
+        env:
+          ALLOW: ${{ inputs.allow_no_stories || github.event_name == 'schedule' }}
+        run: |
+          python3 scripts/release_stories.py check --base origin/main --head origin/dev || {
+            if [ "$ALLOW" = true ]; then echo "::warning::Release without new stories (ReleaseStories.KEY is the old one)"
+            else echo "::error::No stories for this release — ask the agent to build them (agent.sh stories brief) or tick «Выпустить без новых историй»"; exit 1; fi; }
 
       - name: Release PR
         id: pr

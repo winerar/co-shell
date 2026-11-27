@@ -64,6 +64,10 @@ data object ReleaseStoriesDestination
 @Serializable
 data object TourDestination
 
+/** «Жесты» (#797): the cheat sheet of every gesture, «Ещё → Настройки → Помощь → Жесты». */
+@Serializable
+data object GesturesDestination
+
 /** «Итог месяца» (#236) of [year]-[month] (the family's month). */
 @Serializable
 data class MonthReviewDestination(val year: Int, val month: Int)
@@ -103,6 +107,10 @@ data object ScreensSettingsDestination
 
 @Serializable
 data object HomeSettingsDestination
+
+/** «Экраны → Нижняя панель» (#154). */
+@Serializable
+data object BarSettingsDestination
 
 @Serializable
 data object HomeDetailsSettingsDestination
@@ -247,9 +255,14 @@ data class TransactionEditDestination(
     }
 }
 
-/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment. */
+/** «Регулярные платежи» (#143, #403): every template with «Повтор» by its next payment; [year] — opens on «За год» (#771). */
 @Serializable
-data object RecurringListDestination
+data class RecurringListDestination(val year: Boolean = false) {
+    companion object {
+        /** SavedStateHandle key of [year]; must match the property name. */
+        const val ARG_YEAR = "year"
+    }
+}
 
 /** «Быстрые заметки» (#586): the lines of expenses; «Обработать» makes drafts of them. */
 @Serializable

@@ -12,6 +12,9 @@ import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.search.filterTotal
+import app.coshell.core.domain.settings.SuggestionDismissals
+import app.coshell.core.domain.settings.InMemorySuggestionDismissals
+import app.coshell.core.domain.search.duplicatePairs
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.tags.TagRepository
 import app.coshell.core.domain.tags.TagUsage
@@ -21,7 +24,11 @@ import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
+import app.coshell.core.domain.bulk.BulkEdit
+import app.coshell.transactions.BulkEditWithUndo
 import app.coshell.transactions.DeleteTransactionWithUndo
+import app.coshell.transactions.list.bulk.BulkEditState
+import app.coshell.transactions.list.bulk.buildBulkEdit
 import app.coshell.ui.offMain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,6 +40,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -49,18 +57,20 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
-    transactions: TransactionRepository,
+    private val transactions: TransactionRepository,
     accounts: AccountRepository,
-    categories: CategoryRepository,
+    private val categories: CategoryRepository,
     otherMembers: OtherMembers,
     private val moneyFormat: MoneyFormat,
     private val clock: Clock,
     private val timeZone: TimeZone,
     private val deleteWithUndo: DeleteTransactionWithUndo,
+    private val bulkEdit: BulkEditWithUndo,
     rates: ExchangeRateRepository,
     reportCurrencies: ReportCurrencySettings,
-    tags: TagRepository,
+    private val tags: TagRepository,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    private val dismissals: SuggestionDismissals = InMemorySuggestionDismissals(),
 ) : ViewModel() {
 
     private val _selection = MutableStateFlow(Selection())
@@ -80,6 +90,42 @@ class TransactionsViewModel @Inject constructor(
         if (ids.isEmpty()) return
         _selection.value = Selection()
         viewModelScope.launch { deleteWithUndo(ids) }
+    }
+
+    private val _bulk = MutableStateFlow<BulkEditState?>(null)
+
+    /** The «Изменить» sheets (#794); null while none is open. Chosen rows stay chosen until the edit is applied. */
+    internal val bulk: StateFlow<BulkEditState?> = _bulk.asStateFlow()
+
+    /** «Изменить»: loads the chosen rows to know which edits fit them, then opens the first sheet. */
+    fun openBulkEdit() {
+        val ids = _selection.value.ids
+        if (ids.isEmpty()) return
+        viewModelScope.launch {
+            val rows = ids.mapNotNull { transactions.getTransaction(it) }
+            if (rows.isEmpty()) return@launch
+            _bulk.value = buildBulkEdit(rows, categories.observeCategories(includeArchived = true).first(), tags.getTags())
+        }
+    }
+
+    internal fun bulkStep(step: BulkEditState.Step) = _bulk.update { it?.copy(step = step) }
+
+    fun closeBulkEdit() {
+        _bulk.value = null
+    }
+
+    fun applyBulkCategory(categoryId: String) = applyBulk(BulkEdit.SetCategory(categoryId))
+
+    fun applyBulkTags(tagIds: List<String>) = applyBulk(BulkEdit.AddTags(tagIds))
+
+    /** Applies [edit] to the chosen rows; the mode ends, one «Отменить» takes everything back. */
+    private fun applyBulk(edit: BulkEdit) {
+        val ids = _selection.value.ids
+        _bulk.value = null
+        _selection.value = Selection()
+        if (ids.isEmpty()) return
+        // The sheets offer only what fits (`BulkEditRules`), so a refusal here means the rows changed under us: nothing is written.
+        viewModelScope.launch { bulkEdit(ids, edit) }
     }
 
     private val window = GrowingWindow()
@@ -176,7 +222,19 @@ class TransactionsViewModel @Inject constructor(
 
     private val amountInMain = screenOptions.options.map { it.opsAmountInMain }.distinctUntilChanged()
 
-    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money, amountInMain) { src, f, limit, (book, currencies), inMain ->
+    /** «Удалить вторую» of «Похоже на дубль» (#791): the newer record goes, with «Отменить» as any delete. */
+    fun deleteDuplicate(id: String) {
+        viewModelScope.launch { deleteWithUndo(setOf(id)) }
+    }
+
+    /** «Это разные»: the pair is not marked again on this phone. */
+    fun dismissDuplicate(key: String) {
+        viewModelScope.launch { dismissals.dismiss(key) }
+    }
+
+    private val view = combine(amountInMain, dismissals.dismissed, ::Pair)
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money, view) { src, f, limit, (book, currencies), (inMain, different) ->
         lastMoney = book to currencies
         val main = currencies.firstOrNull()
         val matching = src.page.items.filter { f.matches(it, src.search) }
@@ -199,7 +257,8 @@ class TransactionsViewModel @Inject constructor(
                 today = today,
                 authors = src.authors,
                 tagsById = src.tags.byId,
-            ).withAmountsInMain(inMain, main, book, moneyFormat),
+            ).withAmountsInMain(inMain, main, book, moneyFormat)
+                .withDuplicates(duplicatePairs(src.page.items, different, clock.now())),
         )
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))
 }

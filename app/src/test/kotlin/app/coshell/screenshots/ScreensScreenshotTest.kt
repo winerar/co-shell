@@ -16,10 +16,12 @@ import app.coshell.export.ExportActions
 import app.coshell.export.ExportScreen
 import app.coshell.export.ExportUiState
 import kotlinx.datetime.LocalDate
+import app.coshell.alarm.BackgroundCheck
 import app.coshell.settings.AccountChoice
 import app.coshell.settings.AccountsSettingsScreen
 import app.coshell.settings.BalanceAccountsScreen
 import app.coshell.core.domain.settings.WeekStart
+import app.coshell.settings.BarSettingsScreen
 import app.coshell.settings.HomeDetailsScreen
 import app.coshell.settings.HomeSettingsScreen
 import app.coshell.core.domain.settings.HomeCard
@@ -408,10 +410,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE, background = BackgroundCheck.Advice.XIAOMI) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE, background = BackgroundCheck.Advice.XIAOMI) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
@@ -447,10 +449,10 @@ class ScreensScreenshotTest {
     }
 
     @Test
-    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}, {}) }
+    fun `settings screens light`() = shot("settings_screens_light") { ScreensSettingsScreen({}, {}, {}, {}, {}, {}) }
 
     @Test
-    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}, {}) }
+    fun `settings screens dark`() = shot("settings_screens_dark", dark = true) { ScreensSettingsScreen({}, {}, {}, {}, {}, {}) }
 
     @Test
     fun `settings ops light`() = shot("settings_ops_light") { OpsSettingsScreen(ScreenOptions(opsShowNote = false), {}, {}) }
@@ -481,6 +483,12 @@ class ScreensScreenshotTest {
 
     @Test
     fun `settings home details dark`() = shot("settings_home_details_dark", dark = true) { HomeDetailsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings bar light`() = shot("settings_bar_light") { BarSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `settings bar dark`() = shot("settings_bar_dark", dark = true) { BarSettingsScreen(ScreenOptions(), {}, {}) }
 
     @Test
     fun `settings balance light`() = shot("settings_balance_light") {

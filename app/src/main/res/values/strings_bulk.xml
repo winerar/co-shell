@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_edit_selected">Изменить</string>
+    <string name="transactions_changed_many">Изменено операций: %d</string>
+    <string name="bulk_edit_title">Изменить</string>
+    <string name="bulk_edit_subtitle">Выбрано операций: %d</string>
+    <string name="bulk_category">Категория</string>
+    <string name="bulk_category_hint">Одна для всех выбранных</string>
+    <string name="bulk_category_off">Нужны только расходы или только доходы</string>
+    <string name="bulk_category_sheet_hint">Для операций: %d</string>
+    <string name="bulk_tags">Теги</string>
+    <string name="bulk_tags_hint">Добавятся ко всем выбранным</string>
+    <string name="bulk_tags_add">Добавить к %d</string>
+    <string name="bulk_tags_empty">Тегов пока нет. Создайте тег при записи операции.</string>
+</resources>

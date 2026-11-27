@@ -1,5 +1,8 @@
 package app.coshell.reports
 
+import app.coshell.core.domain.templates.TemplateRepository
+import app.coshell.core.domain.reports.monthlySeries
+import app.coshell.recurring.fixed.buildFixed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
@@ -17,7 +20,14 @@ import app.coshell.core.domain.budgets.budgetPeriodOf
 import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.reports.BalanceDay
+import app.coshell.core.domain.reports.HISTORY_DAYS
+import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportLedger
+import app.coshell.core.model.Account
+import app.coshell.core.model.TransactionTemplate
+import kotlinx.datetime.minus
+import app.coshell.core.domain.reports.conversionCost
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ReportsStart
@@ -59,6 +69,7 @@ class ReportsViewModel @Inject constructor(
     otherMembers: OtherMembers,
     transactions: TransactionRepository,
     tags: TagRepository,
+    templates: TemplateRepository,
     reportCurrencies: ReportCurrencySettings,
     monthStart: MonthStartSettings,
     private val moneyFormat: MoneyFormat,
@@ -90,18 +101,32 @@ class ReportsViewModel @Inject constructor(
     }.distinctUntilChanged()
 
     /** Accounts and their balance changes by day — «Капитал» (#189); the same for every period. */
-    private val balances = combine(accounts.observeAccounts(includeArchived = true), reports.observeBalanceDays(), ::Pair)
+    private val balances = combine(
+        accounts.observeAccounts(includeArchived = true),
+        reports.observeBalanceDays(),
+        templates.observeTemplates(),
+        // «Прогноз остатка» (#770) looks at the last 90 days before today whatever period is shown.
+        reports.observeDays(today.minus(HISTORY_DAYS, DateTimeUnit.DAY), today),
+        ::Balances,
+    )
+
+    private class Balances(val accounts: List<Account>, val days: List<BalanceDay>, val templates: List<TransactionTemplate>, val history: List<ReportDay>)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
         val (from, to) = s.period.loadRange(s.startDay, today)
+        // «Оплата в другой валюте» (#786) reads its own rows of the period itself, not of the months around it.
+        val days = combine(reports.observeDays(from, to), reports.observeForeignPurchases(s.period.start, s.period.endExclusive), ::Pair)
         combine(
-            reports.observeDays(from, to),
+            days,
             categories.observeCategories(includeArchived = true),
             rates.observeRates(),
             otherMembers.names(),
             balances,
-        ) { days, categoryList, rateList, others, (accountList, balanceDays) ->
+        ) { (days, purchases), categoryList, rateList, others, balancesNow ->
+            val accountList = balancesNow.accounts
+            val balanceDays = balancesNow.days
+            val templateList = balancesNow.templates
             val book = RateBook.of(rateList)
             val input = ReportInput(
                 ledger = ReportLedger(days, categoryList, book, s.currency),
@@ -120,11 +145,19 @@ class ReportsViewModel @Inject constructor(
                 currencies = s.currencies.map { it.value },
                 compare = s.compare,
                 spending = buildSpending(input, format),
+                unusual = buildUnusual(input, format),
+                conversion = buildConversion(conversionCost(purchases, book, s.currency), accountList, format),
+                inflation = buildInflation(input, days, book, s.currencies),
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),
                 capital = worth?.let { buildCapital(it, format) },
                 cushion = worth?.let { buildCushion(input, it, format) },
+                forecast = buildForecast(today, accountList, balanceDays, templateList, ReportLedger(balancesNow.history, categoryList, book, s.currency), balancesNow.history.isNotEmpty(), book, format),
+                fixed = buildFixed(
+                    templateList, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, book, s.currency, today,
+                    monthlySeries(input.ledger, s.period.cushionMonths(s.startDay)), format,
+                ),
                 calendar = buildCalendar(input, format),
             )
         }

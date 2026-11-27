@@ -29,7 +29,7 @@ class NoticesWorker @AssistedInject constructor(
         val enabled = settings.enabled.first()
         if (enabled.isEmpty()) return Result.success()
         val facts = source.collect()
-        val planned = NoticePlanner.next(facts, enabled, log.history()) ?: return Result.success()
+        val planned = NoticePlanner.next(facts, enabled, log.history(), at = settings.time.first()) ?: return Result.success()
         // Without the permission nothing is told and nothing is written: the same case waits for the next day.
         if (posts.show(planned.kind, NoticeTexts.of(applicationContext, planned, facts))) {
             log.record(planned.kind, planned.key, facts.today)

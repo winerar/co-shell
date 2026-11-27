@@ -34,6 +34,8 @@ data class TransactionDraft(
      * leaves the account is counted by the rate in the sheet. Set only when [accountId] is.
      */
     val receipt: Money? = null,
+    /** Tag ids of the template (#296); a tag deleted since is dropped by the sheet. */
+    val labels: List<String> = emptyList(),
 )
 
 /**
@@ -90,5 +92,6 @@ fun draftFrom(
         note = template.note,
         gaps = gaps,
         templateId = template.id,
+        labels = template.labels,
     )
 }

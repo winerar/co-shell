@@ -1,5 +1,6 @@
 package app.coshell.reports
 
+import app.coshell.recurring.fixed.FixedUi
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.transactions.list.TransactionsUiState
@@ -22,6 +23,12 @@ data class ReportsUiState(
     /** «Сравнивать с прошлым периодом»: the grey marks on the bars and the line under the total. */
     val compare: Boolean = true,
     val spending: Spending? = null,
+    /** «Необычное» (#787): folders far above or below usual in a month report, at most three; empty — no card. */
+    val unusual: List<UnusualLine> = emptyList(),
+    /** «Оплата в другой валюте» (#786); `null` — nothing paid in another currency than its price in the period. */
+    val conversion: Conversion? = null,
+    /** «Траты в ARS и в USD» (#788); `null` — fewer than four finished months or one currency only. */
+    val inflation: Inflation? = null,
     val months: Months? = null,
     /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
     val income: Income? = null,
@@ -31,6 +38,10 @@ data class ReportsUiState(
     val capital: Capital? = null,
     /** «Подушка» (#241), next to [capital]; `null` — no account counted into the total. */
     val cushion: Cushion? = null,
+    /** «Прогноз остатка» (#770): one view per horizon of [ForecastHorizons]; `null` — nothing to forecast from or no rate. */
+    val forecast: Forecast? = null,
+    /** «Постоянные траты» (#771): repeating expenses a year, in the shown currency; `null` — none with an amount. */
+    val fixed: FixedUi? = null,
     /** «Календарь трат» (#553) of the period's last month. */
     val calendar: Calendar? = null,
     /** The tapped day of [calendar] and its operations (rows as in «Операции»); `null` — none chosen. */
@@ -205,6 +216,27 @@ data class ReportsUiState(
     )
 
     /** The phrase under the number; the first that fits, in this order. */
+    /** The views of «Прогноз остатка» for 30 and 60 days (the toggle of the card). */
+    data class Forecast(val views: List<ForecastView>)
+
+    /**
+     * One horizon: [past] (days behind, may be empty) and [future] (today first) in minor units; [lowest] — an index into
+     * [future]; [warning] — the money runs out ([belowFrom], [shortfall] say when and by how much). [missing] — currencies without a rate.
+     */
+    data class ForecastView(
+        val past: List<Long>,
+        val future: List<Long>,
+        val lowest: Int,
+        val warning: Boolean,
+        val firstDay: LocalDate,
+        val lastDay: LocalDate,
+        val lowDay: LocalDate,
+        val lowAmount: String,
+        val belowFrom: LocalDate?,
+        val shortfall: String?,
+        val missing: List<String> = emptyList(),
+    )
+
     enum class CushionGloss { NOT_YET, EMPTY, LOW, FEW, NO_RATE, NORMAL }
 
     data class CapitalPoint(val month: YearMonth, val value: String, val minor: Long)

@@ -138,6 +138,7 @@ private fun Transaction.toRow(
             subtitle = accountName,
             account = accountsById[accountId]?.let { RowAccount(it.name, it.color) },
             note = note,
+            payee = payee?.trim()?.ifEmpty { null },
             amount = moneyFormat.format(-amount),
             secondaryAmount = originalAmount?.let(moneyFormat::format),
         )
@@ -150,6 +151,7 @@ private fun Transaction.toRow(
             subtitle = accountName,
             account = accountsById[accountId]?.let { RowAccount(it.name, it.color) },
             note = note,
+            payee = payee?.trim()?.ifEmpty { null },
             amount = "+" + moneyFormat.format(amount),
             secondaryAmount = originalAmount?.let(moneyFormat::format),
             refund = category?.type == CategoryType.EXPENSE,

@@ -127,6 +127,14 @@ class TemplateUseCasesTest {
     // --- apply
 
     @Test
+    fun `tags of an operation go into the template and into its draft`() = runTest {
+        val tagged = groceries.copy(labels = listOf("dom", "family"))
+        assertEquals(Result.Saved, saveAs(tagged, "Продукты", rememberAmount = false))
+        assertEquals(listOf("dom", "family"), templates.getTemplate("tpl-0")?.labels)
+        assertEquals(listOf("dom", "family"), apply("tpl-0")?.labels)
+    }
+
+    @Test
     fun `template fills a draft dated today`() = runTest {
         save(spanish)
         assertEquals(

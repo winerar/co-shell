@@ -11,6 +11,7 @@ import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.transactions.BulkEditWithUndo
 import app.coshell.transactions.DeleteTransactionWithUndo
 import app.coshell.undo.UndoCenter
 import app.coshell.testing.FakeAccountRepository
@@ -45,7 +46,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, accounts, FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         assertEquals(emptyList<TransactionsUiState.Day>(), vm.state.first { !it.isLoading }.days)
@@ -71,7 +72,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         val first = vm.state.first { !it.isLoading }
@@ -93,7 +94,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -122,7 +123,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -150,7 +151,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         vm.state.first { !it.isLoading }
@@ -177,7 +178,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
         )
         vm.state.launchIn(backgroundScope)
         val row = vm.state.first { !it.isLoading }.days.single().rows.first { it.id == "t1" }
@@ -202,7 +203,7 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), rates, FakeReportCurrencySettings(listOf(usd, ars)), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()), rates, FakeReportCurrencySettings(listOf(usd, ars)), tags,
         )
         vm.state.launchIn(backgroundScope)
         val day = vm.state.first { !it.isLoading && it.days.isNotEmpty() }.days.single()
@@ -213,5 +214,28 @@ class TransactionsViewModelTest {
 
         vm.onPeekEnd()
         assertEquals(null, vm.peek.value)
+    }
+
+    @Test
+    fun `two alike records within minutes are marked as a pair until called different`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        val dismissals = app.coshell.core.domain.settings.InMemorySuggestionDismissals()
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()),
+            FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            dismissals = dismissals,
+        )
+        vm.state.launchIn(backgroundScope)
+        transactions.saveTransaction(Transaction("a", TransactionType.EXPENSE, "card", Money(100, ars), Instant.fromEpochSeconds(now.epochSeconds - 300)))
+        transactions.saveTransaction(Transaction("b", TransactionType.EXPENSE, "card", Money(100, ars), Instant.fromEpochSeconds(now.epochSeconds - 120)))
+        val rows = vm.state.first { s -> s.days.sumOf { it.rows.size } == 2 }.days.flatMap { it.rows }
+        assertEquals(listOf("b", "b"), rows.map { it.duplicate?.newer })
+
+        vm.dismissDuplicate(rows.first().duplicate!!.key)
+        assertEquals(listOf(null, null), vm.state.first { s -> s.days.flatMap { it.rows }.all { it.duplicate == null } }.days.flatMap { it.rows }.map { it.duplicate })
     }
 }

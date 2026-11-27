@@ -197,4 +197,45 @@
     <string name="reports_cushion_not_yet">Появится после первого полного месяца записей.</string>
     <string name="reports_cushion_scale_end">6 мес.</string>
     <string name="reports_cushion_description">Подушка: денег хватит примерно на %1$s месяца</string>
+    <!-- «Необычное» (#787) -->
+    <string name="reports_unusual_title">Необычное за %1$s</string>
+    <string name="reports_unusual_note">«Обычно» — в среднем за 3 прошлых месяца к тому же дню, по курсу дня операции.</string>
+    <string name="reports_unusual_more">больше обычного на %1$d %%</string>
+    <string name="reports_unusual_less">меньше обычного на %1$d %% — хорошо идёте</string>
+    <plurals name="reports_unusual_times">
+        <item quantity="one">примерно в %1$d раз больше обычного</item>
+        <item quantity="few">примерно в %1$d раза больше обычного</item>
+        <item quantity="many">примерно в %1$d раз больше обычного</item>
+        <item quantity="other">примерно в %1$d раза больше обычного</item>
+    </plurals>
+    <!-- «Оплата в другой валюте» (#786) -->
+    <string name="reports_conversion_title">Оплата в другой валюте</string>
+    <string name="reports_conversion_more">Подробнее</string>
+    <string name="reports_conversion_purchases">Покупки в %1$s с карты %2$s</string>
+    <string name="reports_conversion_paid">Списано</string>
+    <string name="reports_conversion_official">По официальному курсу</string>
+    <string name="reports_conversion_cost">Конвертация обошлась</string>
+    <string name="reports_conversion_better">Вышло выгоднее на</string>
+    <string name="reports_conversion_rate">средний курс %1$s</string>
+    <string name="reports_conversion_official_rate">официальный %1$s</string>
+    <string name="reports_conversion_worse">хуже на %1$s %%</string>
+    <string name="reports_conversion_better_rate">лучше на %1$s %%</string>
+    <string name="reports_conversion_accounts">По картам</string>
+    <string name="reports_conversion_account" translatable="false">%1$s · %2$s</string>
+    <string name="reports_conversion_worse_short" translatable="false">−%1$s %%</string>
+    <string name="reports_conversion_better_short" translatable="false">+%1$s %%</string>
+    <string name="reports_conversion_gone">Удалённый счёт</string>
+    <string name="reports_conversion_sheet_subtitle">Курс каждой покупки против официального в тот день</string>
+    <string name="reports_conversion_row_title" translatable="false">%1$s · %2$s</string>
+    <!-- «Личная инфляция» (#788) -->
+    <string name="reports_inflation_title">Траты в %1$s и в %2$s</string>
+    <string name="reports_inflation_phrase">Траты %1$s, %2$s.</string>
+    <string name="reports_inflation_up">в %1$s выросли на %2$d %%</string>
+    <string name="reports_inflation_down">в %1$s снизились на %2$d %%</string>
+    <string name="reports_inflation_same">в %1$s почти не изменились</string>
+    <string name="reports_inflation_prices">Почти весь рост — цены и курс, а не новые траты.</string>
+    <string name="reports_inflation_in">в %1$s</string>
+    <string name="reports_inflation_note">Средний месяц второй половины против первой, по курсу дня операции.</string>
+    <string name="reports_inflation_fastest">Быстрее всего росли · в %1$s</string>
+    <string name="reports_inflation_percent" translatable="false">%1$+d %%</string>
 </resources>

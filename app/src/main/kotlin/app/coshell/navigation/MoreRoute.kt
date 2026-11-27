@@ -22,12 +22,14 @@ internal fun MoreRoute(
 ) {
     val drafts by draftsCount.count.collectAsStateWithLifecycle()
     val marks by newMarks.current.collectAsStateWithLifecycle()
+    // A section that is on the bar (#154) opens as that tab.
+    val tabs = LocalBarTabs.current
     MoreScreen(
         actions = MoreActions(
-            onAccounts = { navController.navigate(AccountsDestination) },
+            onAccounts = { navController.openSection(TopLevel.ACCOUNTS, tabs) },
             onCategories = { navController.navigate(CategoriesDestination) },
-            onBudgets = { navController.navigate(BudgetsDestination) },
-            onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
+            onBudgets = { navController.openSection(TopLevel.BUDGETS, tabs) },
+            onRecurring = { navController.navigate(RecurringListDestination()) { launchSingleTop = true } },
             onRates = { navController.navigate(RatesDestination) },
             onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
             onFamily = { navController.navigate(FamilyDestination) },
@@ -38,8 +40,8 @@ internal fun MoreRoute(
             onPrivacy = { navController.navigate(PrivacyDestination) },
             onFeedback = { navController.navigate(FeedbackDestination()) },
             onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
-            onDebts = { navController.navigate(DebtsDestination) { launchSingleTop = true } },
-            onGoals = { navController.navigate(GoalsDestination) { launchSingleTop = true } },
+            onDebts = { navController.openSection(TopLevel.DEBTS, tabs) },
+            onGoals = { navController.openSection(TopLevel.GOALS, tabs) },
             onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
             onOpenUpdate = { navController.navigate(UpdateDestination) },
             onOpenedNew = newMarks::opened,

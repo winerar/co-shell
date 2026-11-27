@@ -73,7 +73,14 @@ data class TransactionsUiState(
         val moreTags: Int = 0,
         /** The operation's own amount, for «hold the amount» (#318); null in previews. */
         val money: Money? = null,
+        /** «похоже на дубль» (#791): this row and another look like one purchase; null — no pair. */
+        val duplicate: RowDuplicate? = null,
+        /** Shop or person (#296): second line of the row after the account; null — none. */
+        val payee: String? = null,
     )
+
+    /** A pair of [TransactionsUiState.Row]s that look alike: [newer] is the one «Удалить вторую» removes; [key] — «Это разные». */
+    data class RowDuplicate(val key: String, val older: String, val newer: String)
 
     /** Name and colour of the account behind the mini badge of a row. */
     data class RowAccount(val name: String, val color: Long?)

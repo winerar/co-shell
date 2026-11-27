@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.catalog.ChartsCatalog
+import app.coshell.core.designsystem.catalog.ForecastCatalog
 import app.coshell.core.designsystem.catalog.HeatCatalog
 import app.coshell.core.designsystem.catalog.CheckMarkSample
 import app.coshell.core.designsystem.catalog.PinSample
@@ -57,6 +58,13 @@ class CatalogScreenshotTest {
 
     @Test
     fun `charts light`() = shot("charts_light") { ChartsCatalog() }
+
+    /** #192, #195, #770: the share bar, the sparkline and the balance line ahead. */
+    @Test
+    fun `forecast dark`() = shot("forecast_dark", dark = true) { ForecastCatalog() }
+
+    @Test
+    fun `forecast light`() = shot("forecast_light") { ForecastCatalog() }
 
     /** #553: the spending calendar. */
     @Test

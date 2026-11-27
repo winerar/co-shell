@@ -50,22 +50,22 @@ internal fun tabDragFraction(current: Int, drag: Float, threshold: Float, count:
  * Swipes between the bar's tabs while [enabled] (on a tab, no selection bar); [current] — the shown tab;
  * [tabDrag] reports the finger's progress to the bar's pill.
  */
-internal fun Modifier.tabSwipe(tabDrag: TabDrag, enabled: Boolean, current: TopLevel?, onTab: (TopLevel) -> Unit): Modifier = composed {
+internal fun Modifier.tabSwipe(tabDrag: TabDrag, enabled: Boolean, tabs: List<TopLevel>, current: TopLevel?, onTab: (TopLevel) -> Unit): Modifier = composed {
     val lean = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     val threshold = with(LocalDensity.current) { Sizes.tabSwipe.toPx() }
     val open by rememberUpdatedState(onTab)
-    val tabs = TopLevel.entries
     // A switch keeps the pill pulled until the new tab is selected; then it is released.
     LaunchedEffect(current) { tabDrag.fraction = 0f }
-    val gesture = if (!enabled || current == null) Modifier else Modifier.pointerInput(current) {
+    val gesture = if (!enabled || current == null) Modifier else Modifier.pointerInput(current, tabs) {
+        val at = tabs.indexOf(current)
         var drag = 0f
         val settle = { scope.launch { lean.animateTo(0f, Motion.spatial()) } }
         detectHorizontalDragGestures(
             onDragStart = { drag = 0f },
             onDragEnd = {
                 settle()
-                val target = tabSwipeTarget(current.ordinal, drag, threshold, tabs.size)
+                val target = tabSwipeTarget(at, drag, threshold, tabs.size)
                 if (target == null) {
                     tabDrag.fraction = 0f
                 } else {
@@ -78,8 +78,8 @@ internal fun Modifier.tabSwipe(tabDrag: TabDrag, enabled: Boolean, current: TopL
         ) { change, dx ->
             change.consume()
             drag += dx
-            val edge = tabSwipeTarget(current.ordinal, drag, 0f, tabs.size) == null
-            tabDrag.fraction = tabDragFraction(current.ordinal, drag, threshold, tabs.size)
+            val edge = tabSwipeTarget(at, drag, 0f, tabs.size) == null
+            tabDrag.fraction = tabDragFraction(at, drag, threshold, tabs.size)
             scope.launch { lean.snapTo(drag * if (edge) FOLLOW_EDGE else FOLLOW) }
         }
     }

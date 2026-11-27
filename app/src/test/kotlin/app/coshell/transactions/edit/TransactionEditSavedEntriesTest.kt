@@ -5,13 +5,14 @@ import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
+import app.coshell.undo.EditedEntries
 import app.coshell.undo.SavedEntries
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** #325: only a **new** operation opens the «Сохранено» / shake window; an edit never does. */
+/** #325: only a **new** operation opens the «Сохранено» / shake window; an edit never does (it gets «Изменено», #798). */
 class TransactionEditSavedEntriesTest : TransactionEditTestBase() {
     private class Recorder : SavedEntries {
         val calls = mutableListOf<Pair<List<Transaction>, String>>()
@@ -46,6 +47,33 @@ class TransactionEditSavedEntriesTest : TransactionEditTestBase() {
 
         assertTrue(vm.state.value.isDone)
         assertEquals(0, recorder.calls.size)
+    }
+
+    @Test
+    fun `editing an existing operation reports the old and the new row`() = runTest {
+        seed()
+        val old = Transaction("old-op", TransactionType.EXPENSE, "card", Money(1_000_00, ars), now, categoryId = "cafe")
+        transactions.saveTransaction(old)
+        val calls = mutableListOf<Pair<Transaction, Transaction>>()
+        val vm = viewModel(transactionId = "old-op", editedEntries = EditedEntries { before, after -> calls += before to after })
+        vm.onAmountChange("2 000")
+        vm.save()
+
+        val (before, after) = calls.single()
+        assertEquals(old, before)
+        assertEquals(Money(2_000_00, ars), after.amount)
+    }
+
+    @Test
+    fun `a new operation does not report an edit`() = runTest {
+        seed()
+        var edits = 0
+        val vm = viewModel(editedEntries = EditedEntries { _, _ -> edits++ })
+        vm.onAmountChange("3 500")
+        vm.onCategorySelect("cafe")
+        vm.save()
+
+        assertEquals(0, edits)
     }
 
     @Test

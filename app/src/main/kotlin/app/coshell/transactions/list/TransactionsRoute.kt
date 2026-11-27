@@ -7,6 +7,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.gate.LocalInputLock
+import app.coshell.transactions.list.bulk.BulkEditSheets
+import app.coshell.transactions.offer.RecurringOfferViewModel
 
 /**
  * Key in the «Операции» tab's SavedStateHandle: `true` shows this month's operations without a category
@@ -23,7 +25,10 @@ fun TransactionsRoute(
     onTransactionClick: (String) -> Unit,
     onDuplicate: (String) -> Unit = {},
     preset: SavedStateHandle? = null,
+    /** The template «Сделать регулярным» just made (#789): open it in the editor. */
+    onOpenTemplate: (String) -> Unit = {},
     viewModel: TransactionsViewModel = hiltViewModel(),
+    offerModel: RecurringOfferViewModel = hiltViewModel(),
 ) {
     if (preset != null) {
         val uncategorized by preset.getStateFlow(PRESET_UNCATEGORIZED, false)
@@ -44,10 +49,14 @@ fun TransactionsRoute(
     val lock = LocalInputLock.current
     val selection by viewModel.selection.collectAsStateWithLifecycle()
     val peek by viewModel.peek.collectAsStateWithLifecycle()
+    val bulk by viewModel.bulk.collectAsStateWithLifecycle()
+    val offer by offerModel.offer.collectAsStateWithLifecycle()
+    LaunchedEffect(offerModel) { offerModel.opened.collect(onOpenTemplate) }
     TransactionsScreen(
         state = state,
         selection = selection,
         peek = peek,
+        offer = offer,
         actions = TransactionsActions(
             onTransactionClick = onTransactionClick,
             onLoadMore = viewModel::loadMore,
@@ -59,9 +68,21 @@ fun TransactionsRoute(
                 viewModel.clearSelection()
                 onDuplicate(id)
             },
+            onEditSelected = lock.guard(viewModel::openBulkEdit),
             onDeleteSelected = lock.guard(viewModel::deleteSelected),
             onPeek = viewModel::onPeek,
             onPeekEnd = viewModel::onPeekEnd,
+            onDeleteDuplicate = lock.guard1(viewModel::deleteDuplicate),
+            onDifferent = viewModel::dismissDuplicate,
+            onOfferAccept = lock.guard(offerModel::accept),
+            onOfferLater = offerModel::later,
         ),
+    )
+    BulkEditSheets(
+        state = bulk,
+        onStep = viewModel::bulkStep,
+        onCategory = lock.guard1(viewModel::applyBulkCategory),
+        onTags = lock.guard1(viewModel::applyBulkTags),
+        onClose = viewModel::closeBulkEdit,
     )
 }

@@ -46,5 +46,28 @@ class ReadHistoryTest(unittest.TestCase):
         self.assertEqual([rel(1)], self.read(json.dumps([rel(1), {"versionName": "x"}, "y"])))
 
 
+class ChannelFilesTest(unittest.TestCase):
+    def run_main(self, *extra):
+        import contextlib, io, sys
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            (root / "a.apk").write_bytes(b"apk")
+            (root / "n.md").write_text("## dev\n- one\n", encoding="utf-8")
+            argv = ["x", str(root / "a.apk"), "7", "dev.7", str(root / "n.md"), "https://h/dev-7", str(root / "out"), *extra]
+            old, sys.argv = sys.argv, argv
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    m.main()
+            finally:
+                sys.argv = old
+            return sorted(f.name for f in (root / "out").iterdir())
+
+    def test_stable_names_by_default(self):
+        self.assertEqual(["co-shell-7.apk", "releases.json", "version.json"], self.run_main())
+
+    def test_dev_suffix_renames_the_json_files_only(self):
+        self.assertEqual(["co-shell-7.apk", "releases-dev.json", "version-dev.json"], self.run_main("--suffix=-dev"))
+
+
 if __name__ == "__main__":
     unittest.main()

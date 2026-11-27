@@ -30,6 +30,13 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.hints.HintId
 import app.coshell.goals.GoalRow
 import app.coshell.goals.GoalRowUi
+import app.coshell.goals.GoalWhatIfUi
+import app.coshell.goals.whatif.WhatIfLine
+import app.coshell.goals.whatif.WhatIfSheet
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import app.coshell.goals.GoalTotalsUi
 import app.coshell.hints.WordHint
 import app.coshell.ui.top.ScreenTopBar
@@ -37,7 +44,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** What the screen can ask for; defaults keep previews short. */
 data class GoalsActions(
-    val onBack: () -> Unit = {},
+    val onBack: (() -> Unit)? = {},
     val onAdd: () -> Unit = {},
     val onOpen: (String) -> Unit = {},
     val onToggleReached: () -> Unit = {},
@@ -45,10 +52,12 @@ data class GoalsActions(
 
 /**
  * «Цели» (#768, boards `GoalListA`, `GoalMany`, `GoalEmpty`): the totals on the theme's hero card, the goals by deadline,
- * reached goals folded at the bottom. The «+» opens the goal sheet.
+ * reached goals folded at the bottom; «Что если» (#792) under a goal opens its sheet. The «+» opens the goal sheet.
  */
 @Composable
 fun GoalsScreen(state: GoalsUiState, actions: GoalsActions) {
+    var whatIfFor by rememberSaveable { mutableStateOf<String?>(null) }
+    whatIfFor?.let { id -> state.whatIf[id]?.let { WhatIfSheet(it, onClosed = { whatIfFor = null }) } }
     Scaffold(
         topBar = { ScreenTopBar(stringResource(R.string.goals_title), onBack = actions.onBack) },
         floatingActionButton = { CoShellAddFab(stringResource(R.string.goals_add), actions.onAdd) },
@@ -68,7 +77,9 @@ fun GoalsScreen(state: GoalsUiState, actions: GoalsActions) {
         ) {
             item(key = "word-hint", contentType = "hint") { WordHint(HintId.GOALS, R.string.hint_goals, Modifier.padding(horizontal = Spacing.l)) }
             item(key = "totals", contentType = "hero") { GoalTotalsCard(state.totals) }
-            if (state.active.isNotEmpty()) item(key = "active", contentType = "card") { GoalsCard(state.active, actions.onOpen) }
+            if (state.active.isNotEmpty()) {
+                item(key = "active", contentType = "card") { GoalsCard(state.active, actions.onOpen, whatIf = state.whatIf, onWhatIf = { whatIfFor = it }) }
+            }
             if (state.reached.isNotEmpty()) {
                 item(key = "reachedToggle", contentType = "link") {
                     Column(Modifier.padding(horizontal = Spacing.xl)) {
@@ -109,12 +120,20 @@ private fun Cell(label: String, amount: String, modifier: Modifier) {
 }
 
 @Composable
-internal fun GoalsCard(rows: List<GoalRowUi>, onOpen: (String) -> Unit, meter: Boolean = rows.size <= MANY) {
+internal fun GoalsCard(
+    rows: List<GoalRowUi>,
+    onOpen: (String) -> Unit,
+    meter: Boolean = rows.size <= MANY,
+    whatIf: Map<String, GoalWhatIfUi> = emptyMap(),
+    onWhatIf: (String) -> Unit = {},
+) {
     CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l)) {
         rows.forEachIndexed { index, row ->
             key(row.id) {
                 if (index > 0) CoShellDivider()
                 GoalRow(row, onClick = { onOpen(row.id) }, meter = meter)
+                // «Что если» (#792) only on «Цели»: the card on «Обзоре» passes none.
+                whatIf[row.id]?.let { WhatIfLine(it, onOpen = { onWhatIf(row.id) }) }
             }
         }
     }

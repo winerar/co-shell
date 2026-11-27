@@ -11,14 +11,14 @@
     <string name="release_done">Готово</string>
     <string name="release_progress">История %1$d из %2$d</string>
 
-    <string name="release_debts_title">Долги</string>
-    <string name="release_debts_text">Ещё → Долги. Баланс счёта меняется, расходы — нет.</string>
-    <string name="release_accounts_title">Новые счета</string>
-    <string name="release_accounts_text">Кредитка, проездной, вклад. «Только у меня» — не видно семье.</string>
-    <string name="release_fan_title">Удерживайте «+»</string>
-    <string name="release_fan_text">QR чека, заметка или шаблон — веером.</string>
-    <string name="release_receipt_title">Чек сам находит счёт</string>
-    <string name="release_receipt_text">По последним цифрам карты.</string>
-    <string name="release_recap_title">Итоги месяца</string>
-    <string name="release_recap_text">Листайте и делитесь картинкой.</string>
+    <string name="release_bulk_title">Изменить сразу несколько</string>
+    <string name="release_bulk_text">Удерживайте операцию, отметьте ещё и нажмите «Изменить».</string>
+    <string name="release_repeat_title">Повторы и дубли</string>
+    <string name="release_repeat_text">«Операции» предложат сделать платёж регулярным и заметят дубль.</string>
+    <string name="release_insights_title">Отчёты стали умнее</string>
+    <string name="release_insights_text">Необычное за месяц, прогноз остатка и цена конвертации.</string>
+    <string name="release_bar_title">Своя нижняя панель</string>
+    <string name="release_bar_text">Ещё → Настройки → Экраны → Нижняя панель.</string>
+    <string name="release_widgets_title">Виджеты</string>
+    <string name="release_widgets_text">Расход, доход и шаблоны — в одно нажатие с рабочего стола.</string>
 </resources>

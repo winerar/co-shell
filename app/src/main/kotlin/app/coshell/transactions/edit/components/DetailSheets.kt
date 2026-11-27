@@ -2,6 +2,7 @@ package app.coshell.transactions.edit.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -34,6 +35,14 @@ internal fun DateSheet(state: TransactionEditUiState, actions: TransactionEditAc
                 close()
             },
         )
+    }
+}
+
+/** «Получатель» tile (#296): the payee of a saved operation, read-only. */
+@Composable
+internal fun PayeeSheet(payee: String, onClosed: () -> Unit) {
+    FormSheet(stringResource(R.string.transaction_payee), onClosed) {
+        Text(payee)
     }
 }
 

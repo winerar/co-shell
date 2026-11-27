@@ -12,6 +12,7 @@ import app.coshell.core.domain.reports.monthRecap
 import app.coshell.core.model.Category
 import app.coshell.core.model.MoneyFormat
 import app.coshell.reports.recap.MonthRecapUiState.NamedCategory
+import app.coshell.reports.unusualLines
 import kotlin.math.abs
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
@@ -27,7 +28,7 @@ internal fun buildMonthRecap(snapshot: BudgetSource.Snapshot, month: YearMonth, 
     val progress = if (snapshot.budgets.isEmpty()) emptyList() else snapshot.calculator().month(month, today)
     val period = snapshot.period(month)
     val before = budgetPeriod(month.minus(1, DateTimeUnit.MONTH), snapshot.startDay)
-    val recap = monthRecap(ledger, categories, period, before, limitsTally(progress))
+    val recap = monthRecap(ledger, categories, period, before, limitsTally(progress), snapshot.startDay)
     if (!recap.spent.isPositive) return MonthRecapUiState(month = month, currency = snapshot.mainCurrency.value)
     val byId = categories.associateBy { it.id }
     val streakStart = period.start.plus(DatePeriod(days = recap.streakStart))
@@ -58,6 +59,7 @@ internal fun buildMonthRecap(snapshot: BudgetSource.Snapshot, month: YearMonth, 
         streakFrom = streakStart.dayOfMonth,
         streakTo = streakEnd.dayOfMonth,
         streakInOneMonth = streakStart.month == streakEnd.month,
+        unusual = unusualLines(recap.unusual, categories, period, period.endExclusive.minus(DatePeriod(days = 1)), format),
     )
 }
 

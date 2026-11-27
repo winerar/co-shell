@@ -96,6 +96,7 @@ internal fun TransactionEditUiState.filledFrom(
     categoryId = draft.categoryId,
     date = today,
     note = draft.note,
+    tagIds = draft.labels.filter { id -> tags.options.any { it.id == id } },
     receiptEnabled = draft.receipt != null,
     receiptCurrency = draft.receipt?.currency?.value ?: receiptCurrency,
     receiptAmount = draft.receipt?.let { moneyFormat.formatForEditing(it) }.orEmpty(),

@@ -10,6 +10,12 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -56,9 +62,9 @@ data class CoShellTab(
 
 /**
  * Bottom bar (design-system.md §«Навигация и жесты», mockups in docs/design/): a floating capsule with
- * icon-only tabs and the round «+» in the middle — the most frequent action is always under the thumb.
- * Active tab: a wide neon pill of the palette's primary that flows from tab to tab (`TabPill.kt`), the
- * icon pops; during a tab swipe [drag] makes it follow the finger. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
+ * icon tabs and the round «+» in the middle — the most frequent action is always under the thumb.
+ * Active tab: a wide neon pill of the palette's primary that flows from tab to tab (`TabPill.kt`) and names the tab under its icon when the word
+ * fits (#796: «+» stays in the middle, the pill takes room only from its neighbour, `BarWidths`); the icon pops; during a tab swipe [drag] makes it follow the finger. Tab labels are read by TalkBack. [onTab] gets the tab's index in [tabs]; [addLabel] is the «+» for TalkBack.
  *
  * When [visible] turns false (an inner screen opened) the bar rides down off the screen and the space under
  * it closes with the same spring, so the screen above never jumps (design-refactor.md, Step 3).
@@ -152,34 +158,52 @@ private fun BottomBarContent(
             .navigationBarsPadding()
             .padding(start = Sizes.panelInset, end = Sizes.panelInset, top = Spacing.s, bottom = gap),
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .height(Sizes.bottomBarHeight)
-                .clip(PillShape)
-                .background(panel)
-                .border(Sizes.hairline, scheme.outlineVariant, PillShape)
-                .tabPill(pill, pillColor, pillEdge)
-                .padding(horizontal = Spacing.xs + Spacing.xxs),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            tabs.forEachIndexed { index, tab ->
-                if (index == tabs.size / 2) {
-                    CoShellActionFan(fan, enabled = !addLocked, modifier = Modifier.weight(1f)) {
-                        AddButton(addLabel, onAdd, addConfirm, addLocked)
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+            val inner = maxWidth - (Spacing.xs + Spacing.xxs) * 2
+            val addSlot = BarWidths.addSlot(inner, tabs.size, Sizes.bottomBarAddSlot)
+            val targets = BarWidths.of(tabs.size, tabs.indexOfFirst { it.selected }, inner, addSlot, Sizes.bottomBarTabMin)
+            // The word under the icon is shown only if it fits the final width, so it never blinks while the pill grows.
+            val measurer = rememberTextMeasurer()
+            val density = LocalDensity.current
+            val style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(Sizes.bottomBarHeight)
+                    .clip(PillShape)
+                    .background(panel)
+                    .border(Sizes.hairline, scheme.outlineVariant, PillShape)
+                    .tabPill(pill, pillColor, pillEdge)
+                    .padding(horizontal = Spacing.xs + Spacing.xxs),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    if (index == tabs.size / 2) {
+                        CoShellActionFan(fan, enabled = !addLocked, modifier = Modifier.width(addSlot)) {
+                            AddButton(addLabel, onAdd, addConfirm, addLocked)
+                        }
                     }
+                    val iconColor = when {
+                        !tab.selected -> scheme.onSurfaceVariant
+                        else -> sel.content
+                    }
+                    val tint by animateColorAsState(iconColor, Motion.effects(), label = "tabIcon")
+                    val width by animateDpAsState(targets[index], Motion.spatial(), label = "tabWidth")
+                    val showLabel = tab.selected && BarWidths.fits(
+                        with(density) { measurer.measure(tab.label, style, maxLines = 1).size.width.toDp() },
+                        targets[index] - Spacing.xxs * 2,
+                        Spacing.s,
+                    )
+                    CoShellBarTab(
+                        label = tab.label,
+                        selected = tab.selected,
+                        showLabel = showLabel,
+                        labelColor = sel.content,
+                        width = width,
+                        onClick = { onTab(index) },
+                        pillModifier = Modifier.tabPillAnchor(pill, index),
+                    ) { TabIcon(tab, tint) }
                 }
-                val iconColor = when {
-                    !tab.selected -> scheme.onSurfaceVariant
-                    else -> sel.content
-                }
-                val tint by animateColorAsState(iconColor, Motion.effects(), label = "tabIcon")
-                CoShellBarTab(
-                    label = tab.label,
-                    selected = tab.selected,
-                    onClick = { onTab(index) },
-                    pillModifier = Modifier.tabPillAnchor(pill, index),
-                ) { TabIcon(tab, tint) }
             }
         }
     }

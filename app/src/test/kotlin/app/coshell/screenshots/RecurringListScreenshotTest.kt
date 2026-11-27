@@ -1,5 +1,13 @@
 package app.coshell.screenshots
 
+import app.coshell.core.designsystem.tokens.Spacing
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import app.coshell.reports.components.FixedCard
+import app.coshell.core.model.MoneyFormat
+import app.coshell.recurring.list.RecurringMode
+import app.coshell.recurring.fixed.FixedUi
+import app.coshell.recurring.fixed.FixedRowUi
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
@@ -50,6 +58,18 @@ class RecurringListScreenshotTest {
 
     @Test
     fun `paused light`() = shot("recurring_list_paused_light") { RecurringListScreen(PAUSED, RecurringListActions()) }
+
+    @Test
+    fun `year dark`() = shot("recurring_year_dark", dark = true) { RecurringListScreen(YEAR, RecurringListActions()) }
+
+    @Test
+    fun `year light`() = shot("recurring_year_light") { RecurringListScreen(YEAR, RecurringListActions()) }
+
+    @Test
+    fun `reports card dark`() = shot("reports_fixed_dark", dark = true) { FixedCard(YEAR.fixed!!, {}, {}, Modifier.padding(Spacing.l)) }
+
+    @Test
+    fun `reports card light`() = shot("reports_fixed_light") { FixedCard(YEAR.fixed!!, {}, {}, Modifier.padding(Spacing.l)) }
 
     @Test
     fun `empty dark`() = shot("recurring_list_empty_dark", dark = true) {
@@ -110,6 +130,32 @@ class RecurringListScreenshotTest {
                 )),
             ),
         )
+        fun fixed(name: String, icon: String, color: Int, recurrence: Recurrence, yearly: String, monthly: String) = FixedRowUi(
+            TemplateItem(name, name, TransactionType.EXPENSE, "Galicia", categoryName = name, categoryIcon = icon, categoryColor = CategoryPalette.colors[color], currency = "USD"),
+            recurrence, "$yearly${MoneyFormat.NBSP}USD", monthly,
+        )
+
+        /** Board `Fixed771Year` (#771): «За год», the dearest first. */
+        val YEAR = STATE.copy(
+            mode = RecurringMode.YEAR,
+            fixed = FixedUi(
+                yearly = "9${MoneyFormat.NARROW_NBSP}336${MoneyFormat.NBSP}USD",
+                monthly = "778${MoneyFormat.NBSP}USD",
+                count = 7,
+                sharePercent = 41,
+                missing = emptyList(),
+                rows = listOf(
+                    fixed("Аренда", "home", 14, Recurrence.Monthly(1), "7${MoneyFormat.NARROW_NBSP}800", "650"),
+                    fixed("Спортзал", "sport", 6, Recurrence.Monthly(5), "480", "40"),
+                    fixed("Страховка", "health", 10, Recurrence.Yearly(3, 12), "360", "30"),
+                    fixed("Интернет", "internet", 4, Recurrence.Monthly(10), "300", "25"),
+                    fixed("Телефон", "phone", 2, Recurrence.Monthly(20), "180", "15"),
+                    fixed("Кино и сериалы", "movies", 8, Recurrence.Monthly(3), "144", "12"),
+                    fixed("Музыка", "music", 12, Recurrence.Monthly(7), "72", "6"),
+                ),
+            ),
+        )
+
         /** Board `Rec143Edge` (#406): an archived account pauses «Аренда». */
         val PAUSED = STATE.copy(paused = listOf(PausedUi("rent", "Аренда", "Наличные")))
     }

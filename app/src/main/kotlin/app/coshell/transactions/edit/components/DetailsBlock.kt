@@ -47,6 +47,12 @@ internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEdi
                     state.note.ifBlank { stringResource(R.string.entry_note_empty) }, { open = DetailSheet.NOTE }, m, empty = state.note.isBlank(),
                 )
             }
+            if (state.payee.isNotBlank()) add { m ->
+                CoShellDetailTile(
+                    painterResource(DesignR.drawable.ic_shopping_bag), stringResource(R.string.transaction_payee), state.payee,
+                    { open = DetailSheet.PAYEE }, m,
+                )
+            }
             if (!state.isTransfer) add { m -> TagsTile(state, m) { open = DetailSheet.TAGS } }
             if (state.type == TransactionType.EXPENSE) {
                 add { m ->
@@ -68,11 +74,12 @@ internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEdi
         DetailSheet.DATE -> DateSheet(state, actions, onClosed = { open = DetailSheet.NONE })
         DetailSheet.NOTE -> NoteSheet(state.note, actions.onNoteChange, onClosed = { open = DetailSheet.NONE })
         DetailSheet.TAGS -> TagPickerSheet(state, actions, onClosed = { open = DetailSheet.NONE })
+        DetailSheet.PAYEE -> PayeeSheet(state.payee, onClosed = { open = DetailSheet.NONE })
         DetailSheet.NONE -> Unit
     }
 }
 
-private enum class DetailSheet { NONE, DATE, NOTE, TAGS }
+private enum class DetailSheet { NONE, DATE, NOTE, TAGS, PAYEE }
 
 /** «Теги» over «Аня, на двоих»; none — «Без тегов». */
 @Composable

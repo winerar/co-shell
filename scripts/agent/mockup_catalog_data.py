@@ -155,7 +155,12 @@ def paired(v):
 
 def lines(v):
     import mockup_screens_picture as pic  # approved on the screen board Rp189NwB (#189, poll Б)
-    return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'))
+    two = ('<svg width="320" height="110"><polyline points="0,100 64,88 128,74 192,58 256,40 316,22" fill="none" stroke="%s" stroke-width="3"/>'
+           '<polyline points="0,100 64,102 128,96 192,98 256,94 316,92" fill="none" stroke="%s" stroke-width="3"/></svg>'
+           '<div style="display: flex; gap: 16px; font-size: 13px; color: %s;"><span><b style="color: %s;">—</b> в ARS</span><span><b style="color: %s;">—</b> в USD</span></div>'
+           % (LIME, VIOLET, MUTED, LIME, VIOLET))
+    return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'),
+               two, cap('second + legend (#788): вторая серия вторым цветом без заливки на той же шкале, подписи серий под месяцами'))
 
 
 def done_marks(v):
@@ -210,6 +215,18 @@ def heat(v):
                cap('Карточка «Календарь трат»: ярче день — больше потрачено (квартили), сегодня — кольцо, выбранный — толще, будущие — тихие'))
 
 
+def shares_spark(v):
+    import mockup_screens_ideas as ideas  # approved on the screen boards Idea5A (#192) and Idea10A (#195), poll #159
+    bar = ('<div style="display: flex; gap: 3px; height: 10px; border-radius: 5px; overflow: hidden;">%s</div>'
+           % ''.join('<span style="width: %d%%; background: %s;"></span>' % (p, c) for _, p, c in ideas.SHARES))
+    legend = ('<div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: %s;">%s</div>' % (MUTED, ''.join(
+        '<span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 50%%; background: %s;"></span>%s <b>%d%%</b></span>' % (c, n, p)
+        for n, p, c in ideas.SHARES)))
+    series = ideas.SERIES['ARS']
+    return col(bar, legend, cap('полоса долей: сегменты по долям, зазор 3 dp, подпись «валюта + %» под ней'),
+               ideas.spark(series[0], series[2]), cap('спарклайн: линия 1,8 dp на шкале ряда (не от нуля), цвет — рост/падение'))
+
+
 DATA = [
     ('Сумма', amounts, 'AmountText(text, style, color, minFontSize)'),
     ('Изменение', changes, 'CoShellChangePill(text, color)'),
@@ -225,5 +242,6 @@ DATA = [
     ('Переворот карточки', flip_card, 'CoShellFlipCard(front, back, flipped, onFlip, flipLabel) — карточка-герой с оборотом (#519), доски Flip519*'),
     ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
     ('Календарь трат', heat, 'CoShellHeatGrid(weekdays, leadingBlanks, cells: HeatCell, selected, onSelect) · CoShellHeatLegend(lessLabel, moreLabel, trailing) — доски CalTabA (#553)'),
-    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
+    ('Доли и тренд', shares_spark, 'CoShellShareBar(shares: List<ShareSlice>, description) — полоса долей валют (#192, доска Idea5A) · CoShellSparkline(points, color, description) — мини-линия курса за 30 дней (#195, доска Idea10A)'),
+    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect, second, legend) — доски Rp189NwB, Smart788Chart · CoShellForecastLine(past, future, lowest, warning, startLabel, todayLabel, endLabel) — линия остатка: сплошная — было, пунктир — ожидаем, нулевая черта, отметка низшей точки (#770, доски Forecast770, Forecast770Low)'),
 ]

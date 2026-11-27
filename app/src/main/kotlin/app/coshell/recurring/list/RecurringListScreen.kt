@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,6 +29,13 @@ import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellDivider
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellSearchField
+import app.coshell.core.designsystem.components.CoShellSegmented
+import app.coshell.core.designsystem.components.CardTone
+import app.coshell.core.designsystem.theme.LocalHeroPalette
+import app.coshell.recurring.fixed.FixedRow
+import app.coshell.recurring.fixed.FixedTotal
+import app.coshell.recurring.fixed.FixedUi
+import app.coshell.recurring.fixed.fixedCount
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.recurring.list.components.MonthAheadCard
 import app.coshell.recurring.list.components.PausedMessage
@@ -67,6 +75,18 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
             verticalArrangement = Arrangement.spacedBy(Spacing.m),
         ) {
             if (hintsOn) item(key = "word-hint") { WordHint(HintId.RECURRING, R.string.hint_recurring, Modifier.padding(horizontal = Spacing.l)) }
+            item(key = "mode") {
+                CoShellSegmented(
+                    listOf(stringResource(R.string.recurring_mode_month), stringResource(R.string.recurring_mode_year)),
+                    state.mode.ordinal,
+                    { actions.onModeChange(RecurringMode.entries[it]) },
+                    Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
+                )
+            }
+            if (state.mode == RecurringMode.YEAR) {
+                yearItems(state.fixed, actions.onEdit)
+                return@LazyColumn
+            }
             if (state.total >= SEARCH_FROM) {
                 item(key = "search") {
                     CoShellSearchField(
@@ -110,6 +130,41 @@ fun RecurringListScreen(state: RecurringListUiState, actions: RecurringListActio
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = Spacing.l),
                     )
+                }
+            }
+        }
+    }
+}
+
+/** «За год» (#771, board `Fixed771Year`): the hero with the year, the month and the share, then every payment, the dearest first. */
+private fun LazyListScope.yearItems(fixed: FixedUi?, onEdit: (String) -> Unit) {
+    if (fixed == null) {
+        item(key = "year-empty") {
+            Text(
+                stringResource(R.string.fixed_year_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = Spacing.l),
+            )
+        }
+        return
+    }
+    item(key = "year-hero") {
+        CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), tone = CardTone.Hero) {
+            Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
+                Text(stringResource(R.string.fixed_year_title, fixedCount(fixed.count)), style = MaterialTheme.typography.labelLarge)
+                FixedTotal(fixed, amountColor = LocalHeroPalette.current.amount)
+            }
+        }
+    }
+    item(key = "year-rows") {
+        CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l)) {
+            Column {
+                fixed.rows.forEachIndexed { index, row ->
+                    key(row.item.id) {
+                        if (index > 0) CoShellDivider()
+                        FixedRow(row) { onEdit(row.item.id) }
+                    }
                 }
             }
         }

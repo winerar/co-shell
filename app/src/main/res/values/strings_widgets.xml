@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_quick_name">Быстрая запись</string>
+    <string name="widget_quick_desc">Расход и доход в одно нажатие</string>
+    <string name="widget_templates_name">Шаблоны</string>
+    <string name="widget_templates_desc">Частые траты — одним нажатием</string>
+    <string name="widget_locked">Обновите приложение, чтобы записывать</string>
+    <string name="widget_templates_empty">Шаблонов пока нет</string>
+    <string name="widget_templates_create">Создать</string>
+    <string name="widget_templates_all">Все шаблоны ›</string>
+    <string name="widget_template_ask">сумма?</string>
+    <string name="tile_label">Расход</string>
+    <string name="tile_subtitle" translatable="false">co-shell</string>
+    <string name="tile_locked">Обновите</string>
+</resources>

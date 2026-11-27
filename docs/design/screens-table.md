@@ -49,6 +49,7 @@
 | Настройки: экраны | Set1Screens | settings_screens | ✓ | ✓ |
 | Настройки: обзор | Set1Home | settings_home | ✓ | ✓ |
 | Настройки: обзор, подробности | Set1HomeMore | settings_home_details | ✓ | ✓ |
+| Настройки: нижняя панель | Set1Bar | settings_bar | ✓ | ✓ |
 | Экспорт в CSV | Fb204Export | export | ✓ | ✓ |
 | Настройки: счета в балансе | Set1Balance | settings_balance | ✓ | ✓ |
 | Настройки: операции | Set1Ops | settings_ops | ✓ | ✓ |
@@ -72,6 +73,7 @@
 | Отчёты: картина | Rp189IeA | reports_picture | ✓ | ✓ |
 | Капитал по месяцам | Rp189NwDrill | capital_month | ✓ | ✓ |
 | Отчёты: подушка | Cush241Edge | reports_cushion | ✓ | ✓ |
+| Отчёты: постоянные траты | Fixed771Reports | reports_fixed | ✓ | ✓ |
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
@@ -89,7 +91,20 @@
 | Обзор: сегодня можно | DailyHome | daily | ✓ | ✓ |
 | Сегодня можно: как посчитано | DailyWhy | — | — | — |
 | Сегодня можно: план потрачен | DailyOver | daily_over | ✓ | ✓ |
+| Отчёты: необычное и оплата в другой валюте | SmartReports | smart_reports | ✓ | ✓ |
+| Оплата в другой валюте: подробнее | SmartConversion | — | — | — |
+| Отчёты: личная инфляция | SmartInflation | smart_reports | ✓ | ✓ |
+| Итоги месяца: не как обычно | SmartRecap | — | — | — |
+| Операции: регулярный платёж и дубль | SmartOps | smart_operations | — | ✓ |
+| Похоже на дубль | SmartDuplicate | — | — | — |
+| Помощь: жесты | Gest797 | gestures | — | — |
+| Отчёты: прогноз остатка | Forecast770 | forecast | — | — |
+| Прогноз остатка: не хватает | Forecast770Low | — | — | — |
+| Новый лимит: обычно уходит | SmartLimit | budget_edit | ✓ | ✓ |
+| Цели: что если | SmartGoal | smart_goals | — | ✓ |
+| Что если | SmartWhatIf | smart_whatif_sheet | ✓ | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
+| Регулярные: за год | Fixed771Year | recurring_year | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
 | Отзыв | Feedback | feedback | ✓ | ✓ |
@@ -112,6 +127,15 @@
 - Цель: новая (нет эталона: light, dark)
 - Обзор: цели (нет эталона: light, dark)
 - Сегодня можно: как посчитано (нет эталона: light, dark)
+- Оплата в другой валюте: подробнее (нет эталона: light, dark)
+- Итоги месяца: не как обычно (нет эталона: light, dark)
+- Операции: регулярный платёж и дубль (smart_operations: light)
+- Похоже на дубль (нет эталона: light, dark)
+- Помощь: жесты (gestures: light, dark)
+- Отчёты: прогноз остатка (forecast: light, dark)
+- Прогноз остатка: не хватает (нет эталона: light, dark)
+- Цели: что если (smart_goals: light)
+- Что если (smart_whatif_sheet: dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

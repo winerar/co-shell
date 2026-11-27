@@ -16,6 +16,7 @@ import app.coshell.core.domain.notices.LimitFact
 import app.coshell.core.domain.notices.NoticeFacts
 import app.coshell.core.model.MoneyFormat
 import javax.inject.Inject
+import app.coshell.core.domain.settings.ClockMinutes
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.first
@@ -26,7 +27,6 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
 
 /** Collects what [app.coshell.core.domain.notices.NoticePlanner] needs from the phone's data (#745): a few small reads, once a day. */
 class NoticeFactsSource @Inject constructor(
@@ -43,7 +43,8 @@ class NoticeFactsSource @Inject constructor(
     private val zone: TimeZone,
 ) {
     suspend fun collect(): NoticeFacts {
-        val today = clock.todayIn(zone)
+        val now = clock.now().toLocalDateTime(zone)
+        val today = now.date
         val recent = transactions.observeTransactions(TransactionFilter(limit = RECENT)).first()
         val days = recent.map { it.date.toLocalDateTime(zone).date }.filter { it <= today }
         val firstOfMonth = LocalDate(today.year, today.month, 1)
@@ -60,6 +61,7 @@ class NoticeFactsSource @Inject constructor(
             limit = limitFact(today),
             lastMonthHadEntries = lastMonth.isNotEmpty(),
             readyDrafts = readyDrafts(),
+            minutesNow = ClockMinutes.of(now.hour, now.minute),
         )
     }
 

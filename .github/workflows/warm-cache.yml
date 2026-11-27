@@ -99,3 +99,73 @@ jobs:
           num=$(gh issue list --state open --search "\"$title\" in:title" --json number -q '.[0].number // empty')
           if [ -n "$num" ]; then gh issue comment "$num" --body-file body.md
           else gh issue create --title "$title" --label type:bug --label status:next --label area:reliability --body-file body.md; fi
+
+  # Channel dev (#655, docs/setup/release.md §«Канал dev»): after a green night (or the button) the debug APK of this dev commit
+  # goes to the public releases repo as pre-release dev-N; version-dev.json / releases-dev.json live in the rolling pre-release `dev`.
+  # `latest` (stable) is not touched. Off until RELEASES_TOKEN is set. No extra build per merge: nightly and button only.
+  publish-dev:
+    needs: [plan, check]
+    if: needs.check.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASES_REPO: ${{ github.repository_owner }}/co-shell-releases
+      GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+      HAVE_TOKEN: ${{ secrets.RELEASES_TOKEN != '' }}
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      FIREBASE_API_KEY: ${{ vars.FIREBASE_API_KEY }}
+      GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+      FIREBASE_DATABASE_URL: ${{ vars.FIREBASE_DATABASE_URL }}
+    steps:
+      - name: No token — channel dev is off
+        if: env.HAVE_TOKEN != 'true'
+        run: echo "RELEASES_TOKEN is not set — dev channel skipped (docs/setup/release.md)" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@v7
+        if: env.HAVE_TOKEN == 'true'
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+          fetch-depth: 15
+      - uses: actions/setup-java@v6
+        if: env.HAVE_TOKEN == 'true'
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+        if: env.HAVE_TOKEN == 'true'
+        with:
+          cache-read-only: true
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+      - name: Build debug APK for the dev channel
+        if: env.HAVE_TOKEN == 'true'
+        env:
+          # versionCode grows with every run of this workflow: debug (app.coshell.debug) has its own number line.
+          BUILD_NUMBER: ${{ github.run_number }}
+          VERSION_NAME: dev.${{ github.run_number }}
+          DEV_UPDATE_BASE_URL: https://github.com/${{ github.repository_owner }}/co-shell-releases/releases/download/dev
+        run: ./gradlew assembleDebug --console=plain
+      - name: Update files
+        if: env.HAVE_TOKEN == 'true'
+        run: |
+          { echo "## dev"; git log -10 --no-merges --format='• %s'; } > dev-notes.md
+          curl -fsSL "https://github.com/$RELEASES_REPO/releases/download/dev/releases-dev.json" -o prev-releases.json \
+            || echo '[]' > prev-releases.json
+          python3 scripts/make-update-files.py app/build/outputs/apk/debug/app-debug.apk \
+            "${{ github.run_number }}" "dev.${{ github.run_number }}" dev-notes.md \
+            "https://github.com/$RELEASES_REPO/releases/download/dev-${{ github.run_number }}" update-files \
+            prev-releases.json --suffix=-dev
+      - name: Publish dev-N and move the dev pointer
+        if: env.HAVE_TOKEN == 'true'
+        run: |
+          n=${{ github.run_number }}
+          gh release create "dev-$n" "update-files/co-shell-$n.apk" --repo "$RELEASES_REPO" --prerelease --latest=false \
+            --title "Dev $n" --notes "Ночная сборка dev ${{ needs.plan.outputs.sha }}. Только для проверки, не стабильная версия."
+          gh release view dev --repo "$RELEASES_REPO" >/dev/null 2>&1 || \
+            gh release create dev --repo "$RELEASES_REPO" --prerelease --latest=false --title "Dev (указатель)" \
+              --notes "Указатель канала dev: version-dev.json и releases-dev.json. Файлы заменяются каждую ночь."
+          gh release upload dev update-files/version-dev.json update-files/releases-dev.json --repo "$RELEASES_REPO" --clobber
+      - name: Keep the last 20 dev builds
+        if: env.HAVE_TOKEN == 'true'
+        run: |
+          gh release list --repo "$RELEASES_REPO" --limit 200 --json tagName,createdAt \
+            -q '[.[] | select(.tagName | test("^dev-[0-9]+$"))] | sort_by(.createdAt) | reverse | .[20:] | .[].tagName' |
+            while read -r tag; do gh release delete "$tag" --repo "$RELEASES_REPO" --yes --cleanup-tag; done

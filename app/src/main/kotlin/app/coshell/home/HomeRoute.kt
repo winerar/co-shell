@@ -5,6 +5,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
 import app.coshell.BuildConfig
+import androidx.compose.runtime.remember
+import app.coshell.alarm.BackgroundAskDialog
+import app.coshell.alarm.BackgroundAskViewModel
+import app.coshell.alarm.BackgroundCheck
 import app.coshell.notices.NoticeOfferViewModel
 import app.coshell.recurring.notify.PaymentNotices
 import app.coshell.release.ReleaseNotice
@@ -43,6 +47,7 @@ fun HomeRoute(
     noticeOffer: NoticeOfferViewModel = hiltViewModel(),
     draftsCount: DraftsCountViewModel = hiltViewModel(),
     releaseNotice: ReleaseNoticeViewModel = hiltViewModel(),
+    backgroundAsk: BackgroundAskViewModel = hiltViewModel(),
     gate: VersionGateBannerState? = null,
     onUpdate: () -> Unit = {},
 ) {
@@ -57,6 +62,11 @@ fun HomeRoute(
     val context = LocalContext.current.applicationContext
     val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
     var stepsOpen by rememberSaveable { mutableStateOf(false) }
+    // #745: «Разрешить работу в фоне?» — once after the update for those whose reminders are on, and on «Включить» in the offer.
+    val background = remember { BackgroundCheck.advice(context) }
+    val askPending by backgroundAsk.pending.collectAsStateWithLifecycle()
+    val anythingOn by backgroundAsk.anythingOn.collectAsStateWithLifecycle()
+    var askNow by rememberSaveable { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val budget by budgetViewModel.state.collectAsStateWithLifecycle()
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
@@ -109,10 +119,14 @@ fun HomeRoute(
         onTourDismiss = hintsViewModel::tourDone,
         noticeOffer = offerVisible,
         onNoticeOfferEnable = {
+            if (BackgroundCheck.askOnEnable(background, anythingOn)) askNow = true
             noticeOffer.enable()
             if (!PaymentNotices.canNotify(context)) askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
         },
         onNoticeOfferLater = noticeOffer::later,
     )
+    if (askNow || (askPending && background != BackgroundCheck.Advice.NONE)) {
+        BackgroundAskDialog(background) { askNow = false; backgroundAsk.answered() }
+    }
     if (stepsOpen) steps?.let { FirstStepsSheet(it, onHide = hintsViewModel::hideSteps, onClosed = { stepsOpen = false }) }
 }

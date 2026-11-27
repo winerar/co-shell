@@ -14,6 +14,7 @@ import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.recurring.paymentsAhead
 import app.coshell.core.domain.recurring.paymentsToRemind
 import app.coshell.core.domain.recurring.remindTotal
+import app.coshell.core.domain.settings.ClockMinutes
 import app.coshell.core.domain.settings.ReminderSettings
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.Money
@@ -56,7 +57,10 @@ class RecurringPaymentsWorker @AssistedInject constructor(
             for (payment in posted) notices.posted(payment)
             SyncScheduler.syncSoon(applicationContext)
         }
-        if (inputData.getBoolean(KEY_REMIND, false) && reminders.enabled.first()) {
+        // A run the phone made late (after midnight) does not remind at night: today's 9:00 one will (#745).
+        val remind = inputData.getBoolean(KEY_REMIND, false) && reminders.enabled.first() &&
+            clock.now().toLocalDateTime(zone).let { ClockMinutes.isDue(ClockMinutes.of(it.hour, it.minute), reminders.time.first()) }
+        if (remind) {
             val today = clock.now().toLocalDateTime(zone).date
             if (!log.remindedOn(today)) {
                 // A paused payment (account archived, #406) is not reminded: «Регулярные платежи» says why.
@@ -66,7 +70,7 @@ class RecurringPaymentsWorker @AssistedInject constructor(
                 log.markReminded(today, due.map { it.id })
             }
         }
-        if (inputData.getBoolean(KEY_REMIND, false) && reminders.enabled.first()) {
+        if (remind) {
             val daysBefore = reminders.daysBefore.first()
             val today = clock.now().toLocalDateTime(zone).date
             if (daysBefore > 0 && !log.aheadDone(today)) {

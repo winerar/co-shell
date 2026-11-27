@@ -22,7 +22,7 @@ QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается пр
 (обёртка всего приложения: ждёт настройки, `LocalAmountsHidden`, флаги окна, «экраном вниз», экран блокировки поверх), `EyeButton` (шапка «Обзора»),
 `HiddenPill`; `pin/` — `PinFlow` (шаги любого экрана PIN), `PinLayout`, `PinSetupRoute`; `lock/` — `LockScreen`, `Biometrics` (`androidx.biometric`);
 `settings/` — «Ещё → Конфиденциальность»; `data/` — `PrefsPrivacySettings` (файл `privacy`, не синк и не копия), `Pbkdf2PinHasher`.
-`notices/` — локальные уведомления (#745): `NoticesWorker` раз в день (`NoticeScheduler`), `NoticeFactsSource` → `core:domain/notices/NoticePlanner` (что показать, не больше одного в день), `NoticePosts`/`NoticeTexts` (каналы, тексты), `NoticeLinks` (нажатие → экран), `NoticeOfferCard` на «Обзоре»; настройки — `data/PrefsNoticeSettings`, экран — `settings/NoticeKindRows`.
+`notices/` — локальные уведомления (#745): `NoticesWorker` раз в день (`NoticeScheduler` + будильник `alarm/DailyAlarm`, строка «Работа в фоне» — `alarm/BackgroundCheck`), `NoticeFactsSource` → `core:domain/notices/NoticePlanner` (что показать, не больше одного в день), `NoticePosts`/`NoticeTexts` (каналы, тексты), `NoticeLinks` (нажатие → экран), `NoticeOfferCard` на «Обзоре»; настройки — `data/PrefsNoticeSettings`, экран — `settings/NoticeKindRows`.
 Чистая логика — `core:domain/privacy/` (`AppLock`, `PinAttempts`, `PinEntry`, `PrivacyOptions`); маскировка сумм — `core:designsystem/amount/HiddenAmounts.kt`.
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.

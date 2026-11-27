@@ -27,6 +27,18 @@ data class ReportAccountDayRow(
     @ColumnInfo(name = "amount_minor") val amountMinor: Long,
 )
 
+/** An expense or refund with «Сумма покупки» in another currency — a row of [ReportDao.observeForeignPurchases] (#786). */
+data class ForeignPurchaseRow(
+    val id: String,
+    val type: String,
+    @ColumnInfo(name = "account_id") val accountId: String,
+    @ColumnInfo(name = "amount_minor") val amountMinor: Long,
+    val currency: String,
+    @ColumnInfo(name = "original_amount_minor") val originalAmountMinor: Long,
+    @ColumnInfo(name = "original_currency") val originalCurrency: String,
+    val date: Long,
+)
+
 /** How one account's balance moved in one day — a row of [ReportDao.observeBalanceDays]; a day may repeat. */
 data class BalanceDayRow(
     @ColumnInfo(name = "epoch_day") val epochDay: Long,
@@ -79,4 +91,16 @@ interface ReportDao {
            FROM debt_events WHERE deleted = 0 AND kind IN ('ISSUE', 'RETURN') AND account_id IS NOT NULL GROUP BY epoch_day, account_id""",
     )
     fun observeBalanceDays(offsetMs: Long): Flow<List<BalanceDayRow>>
+
+    /**
+     * «Оплата в другой валюте» (#786): operations of [fromMs] ..< [toMs] paid in another currency than their price — few rows,
+     * so they are read one by one (the rate of each day matters).
+     */
+    @Query(
+        """SELECT id, type, account_id, amount_minor, currency, original_amount_minor, original_currency, date
+           FROM transactions
+           WHERE deleted = 0 AND type IN ('EXPENSE', 'INCOME') AND original_amount_minor IS NOT NULL AND original_currency IS NOT NULL
+             AND original_currency != currency AND date >= :fromMs AND date < :toMs""",
+    )
+    fun observeForeignPurchases(fromMs: Long, toMs: Long): Flow<List<ForeignPurchaseRow>>
 }

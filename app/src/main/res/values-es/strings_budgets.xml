@@ -72,7 +72,6 @@
     <string name="budget_category_error">Elige para qué es el límite</string>
     <string name="budget_amount">Al mes</string>
     <string name="budget_amount_error">Escribe el importe con números. También vale 0</string>
-    <string name="budget_average">Media de 3 meses — %1$s</string>
     <string name="budget_currency">Moneda del límite</string>
     <string name="budget_inside_limit">límite %1$s</string>
     <string name="budget_inside_none">sin límite propio</string>

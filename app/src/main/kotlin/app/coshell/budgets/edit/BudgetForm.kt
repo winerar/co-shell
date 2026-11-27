@@ -3,6 +3,7 @@ package app.coshell.budgets.edit
 import app.coshell.budgets.edit.BudgetEditUiState.Choice
 import app.coshell.budgets.edit.BudgetEditUiState.Inside
 import app.coshell.core.domain.budgets.forCategory
+import app.coshell.core.domain.budgets.roundedLimit
 import app.coshell.core.model.Budget
 import app.coshell.core.model.Category
 import app.coshell.core.model.CategoryType
@@ -42,3 +43,12 @@ internal fun parseLimit(amount: String, currency: String): Money? {
 /** Currencies a limit can be in: the report currencies first, then those of the accounts and of the current limit. */
 internal fun limitCurrencies(report: List<CurrencyCode>, accounts: List<CurrencyCode>, current: CurrencyCode?): List<String> =
     (report + accounts + listOfNotNull(current)).map { it.value }.distinct()
+
+/**
+ * «Обычно уходит ~420 000 ARS в месяц · Подставить» (#790): the 3-month average rounded to a figure to remember ([roundedLimit]),
+ * shown and ready to fill the field; `null` — no history.
+ */
+data class UsualLimit(val shown: String, val editing: String)
+
+internal fun usualLimit(average: Money?, format: MoneyFormat): UsualLimit? =
+    average?.let(::roundedLimit)?.let { UsualLimit(format.format(it), format.formatForEditing(it)) }

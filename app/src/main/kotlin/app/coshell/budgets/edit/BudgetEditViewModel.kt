@@ -25,8 +25,8 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 
 /**
- * Limit editor (`BudEdit`): what the limit is on, the amount and its currency with the 3-month average,
- * rollover, a note; «Сохранить» and «Убрать лимит». Changes apply from [fromMonth] on (`SaveBudgetUseCase`).
+ * Limit editor (`BudEdit`): what the limit is on, the amount and its currency,
+ * rollover, a note, «Обычно уходит ~X · Подставить» (#790); «Сохранить» and «Убрать лимит». Changes apply from [fromMonth] on (`SaveBudgetUseCase`).
  * Choosing a category that already has a limit fills the form with it. Pure parts — `BudgetForm.kt`.
  */
 @HiltViewModel
@@ -75,12 +75,15 @@ class BudgetEditViewModel @Inject constructor(
     }
 
     fun onKindChange(kind: BudgetKind) = _state.update {
-        if (it.locked || it.kind == kind) it else it.copy(kind = kind, categoryId = null, inside = emptyList(), average = null, hasLimit = false)
+        if (it.locked || it.kind == kind) it else it.copy(kind = kind, categoryId = null, inside = emptyList(), usual = null, hasLimit = false)
     }
 
     fun onCategorySelect(id: String) = _state.update { it.withCategory(id).copy(categoryError = false) }
 
     fun onAmountChange(value: String) = _state.update { it.copy(amount = value, amountError = false) }
+
+    /** «Подставить» (#790): the usual monthly spending becomes the limit. */
+    fun onUseUsual() = _state.update { state -> state.usual?.let { state.copy(amount = it.editing, amountError = false) } ?: state }
 
     fun onCurrencySelect(code: String) = _state.update { it.copy(currency = code, amountError = false).withAverage() }
 
@@ -131,9 +134,9 @@ class BudgetEditViewModel @Inject constructor(
 
     private fun BudgetEditUiState.withAverage(): BudgetEditUiState {
         val data = snapshot ?: return this
-        val id = categoryId ?: return copy(average = null)
-        val code = CurrencyCode.parseOrNull(currency) ?: return copy(average = null)
+        val id = categoryId ?: return copy(usual = null)
+        val code = CurrencyCode.parseOrNull(currency) ?: return copy(usual = null)
         val average = data.ledger.averageSpent(budgetCategoryIds(id, data.categories), fromMonth, code, data.startDay)
-        return copy(average = average?.let(format::format))
+        return copy(usual = usualLimit(average, format))
     }
 }

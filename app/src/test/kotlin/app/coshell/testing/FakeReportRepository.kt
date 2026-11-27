@@ -1,6 +1,7 @@
 package app.coshell.testing
 
 import app.coshell.core.domain.reports.BalanceDay
+import app.coshell.core.domain.reports.ForeignPurchase
 import app.coshell.core.domain.reports.ReportAccountDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportRepository
@@ -22,6 +23,11 @@ class FakeReportRepository(days: List<ReportDay> = emptyList()) : ReportReposito
 
     override fun observeAccountDays(from: LocalDate, toExclusive: LocalDate): Flow<List<ReportAccountDay>> =
         accountDays.map { all -> all.filter { it.day >= from && it.day < toExclusive } }
+
+    val foreignPurchases = MutableStateFlow(emptyList<ForeignPurchase>())
+
+    override fun observeForeignPurchases(from: LocalDate, toExclusive: LocalDate): Flow<List<ForeignPurchase>> =
+        foreignPurchases.map { all -> all.filter { it.day >= from && it.day < toExclusive } }
 
     val balanceDays = MutableStateFlow(emptyList<BalanceDay>())
 

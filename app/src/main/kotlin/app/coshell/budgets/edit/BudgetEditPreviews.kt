@@ -20,7 +20,7 @@ private fun BudgetEditPreview() {
                 amount = "400 000",
                 currency = "ARS",
                 currencies = listOf("USD", "ARS"),
-                average = "372 000 ARS",
+                usual = UsualLimit("370 000 ARS", "370 000"),
                 inside = listOf(
                     Inside("rent", "Аренда", "home", 0xFF00BCD4, null),
                     Inside("utilities", "Коммуналка", "bolt", 0xFF00BCD4, "70 000 ARS"),

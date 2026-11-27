@@ -2,6 +2,8 @@ package app.coshell.reports.recap
 
 import app.coshell.core.domain.reports.RecapCard
 import app.coshell.core.domain.reports.RecapPhrase
+import app.coshell.reports.ReportsUiState
+import app.coshell.reports.UnusualLine
 import kotlinx.datetime.YearMonth
 
 /** October 2026 as on the boards `Rec554*`: spent 1 140 USD against 1 320 in September. */
@@ -40,5 +42,9 @@ internal object MonthRecapSamples {
         streak = 13,
         streakFrom = 7,
         streakTo = 19,
+        unusual = listOf(
+            UnusualLine("cafe", "Кафе", "cafe", 0xFFFFB86B, "182", 0.9f, 0.45f, ReportsUiState.Mark(up = true, percent = 102, expected = "90", byDay = null)),
+            UnusualLine("taxi", "Такси", "taxi", 0xFFE58BD0, "41", 0.2f, 0.29f, ReportsUiState.Mark(up = false, percent = 30, expected = "58", byDay = null)),
+        ),
     )
 }

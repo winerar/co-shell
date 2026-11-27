@@ -25,6 +25,7 @@ import app.coshell.core.designsystem.theme.AmountTitleStyle
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.reports.RecapPhrase
 import app.coshell.reports.categoryName
+import app.coshell.reports.components.UnusualLines
 import app.coshell.ui.format.formatMonthOf
 
 /** The bodies of the stories of [MonthRecapScreen] (boards `RecapS1…S6`); each is a title, one chart or number, a line. */
@@ -89,6 +90,16 @@ internal fun WeeksStory(state: MonthRecapUiState, modifier: Modifier) {
         StoryTitle(stringResource(R.string.recap_weeks_title, state.weeks[busiest].label))
         CoShellColumns(state.weeks.map { ChartColumn(it.label, it.amount, it.fraction) }, selected = busiest)
         Caption(stringResource(R.string.recap_weeks_caption))
+    }
+}
+
+/** «Не как обычно» (#787): the same rows as the card «Необычное» in «Отчётах». */
+@Composable
+internal fun UnusualStory(state: MonthRecapUiState, modifier: Modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        StoryTitle(stringResource(R.string.recap_unusual_title))
+        UnusualLines(state.unusual)
+        Caption(stringResource(R.string.recap_unusual_note))
     }
 }
 

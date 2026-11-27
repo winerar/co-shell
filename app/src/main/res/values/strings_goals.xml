@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Savings goals (#768, poll 2026-11-26 «А»). -->
+    <string name="goals_title">Цели</string>
+    <string name="goals_menu_hint">Копить на отпуск или годовой платёж</string>
+    <string name="goals_add">Новая цель</string>
+    <string name="goals_empty">Целей пока нет. Нажмите «+», чтобы начать копить на отпуск, ремонт или годовой платёж.</string>
+    <string name="goals_saved">Накоплено</string>
+    <string name="goals_per_month">Откладывать в месяц</string>
+    <string name="goals_by_today_rate">по курсу на сегодня</string>
+    <string name="goals_without">по курсу на сегодня · без учёта: %1$s</string>
+    <string name="goals_approx" translatable="false">≈&#160;%1$s</string>
+    <string name="goals_of">из %1$s</string>
+    <string name="goals_reached">Цель достигнута</string>
+    <string name="goals_overdue">Срок прошёл · осталось %1$s</string>
+    <string name="goals_no_deadline">Без срока · осталось %1$s</string>
+    <string name="goals_until">К %1$s · ≈&#160;%2$s в месяц</string>
+    <string name="goals_yearly_until">Каждый год, %1$s · ≈&#160;%2$s в месяц</string>
+    <string name="goals_reached_show">Достигнутые: %1$d · показать</string>
+    <string name="goals_reached_hide">Скрыть достигнутые</string>
+
+    <string name="goals_new_title">Новая цель</string>
+    <string name="goals_edit_title">Цель</string>
+    <string name="goals_field_name">Название</string>
+    <string name="goals_field_target">Сколько нужно</string>
+    <string name="goals_field_deadline">К какому дню</string>
+    <string name="goals_deadline_none">Без срока</string>
+    <string name="goals_field_account">Где копите</string>
+    <string name="goals_yearly">Каждый год</string>
+    <string name="goals_yearly_hint">Для страховки, налогов, годовых подписок</string>
+    <string name="goals_plan">Откладывайте ≈&#160;%1$s в месяц, чтобы успеть к %2$s</string>
+    <string name="goals_plan_reached">На счёте уже достаточно: цель достигнута.</string>
+    <string name="goals_account_hint">Накоплено — баланс этого счёта. Переводите на него деньги, и цель растёт сама.</string>
+    <string name="goals_error_name">Введите название</string>
+    <string name="goals_error_target">Введите сумму больше нуля</string>
+    <string name="goals_error_account">Выберите счёт</string>
+    <string name="goals_error_yearly">Укажите день, чтобы цель повторялась каждый год</string>
+    <string name="goals_progress">%1$s из %2$s · осталось %3$s</string>
+    <string name="goals_top_up">Пополнить</string>
+    <string name="goals_delete">Удалить цель</string>
+    <string name="goals_delete_ask">Удалить цель?</string>
+    <string name="goals_delete_text">Цель удалится, деньги на счёте останутся.</string>
+</resources>

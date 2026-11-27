@@ -4,6 +4,7 @@ import app.coshell.core.data.db.AccountEntity
 import app.coshell.core.data.db.BudgetEntity
 import app.coshell.core.data.db.CategoryEntity
 import app.coshell.core.data.db.DebtEventEntity
+import app.coshell.core.data.db.GoalEntity
 import app.coshell.core.data.db.TagEntity
 import app.coshell.core.data.db.TemplateEntity
 import app.coshell.core.data.db.TransactionEntity
@@ -20,6 +21,7 @@ import app.coshell.core.model.DepositPayout
 import app.coshell.core.model.DepositTerms
 import app.coshell.core.model.DebtEvent
 import app.coshell.core.model.DebtEventKind
+import app.coshell.core.model.Goal
 import app.coshell.core.model.Money
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
@@ -273,3 +275,28 @@ internal fun DebtEvent.toEntity(stamp: Stamp) = DebtEventEntity(
     updatedBy = stamp.by,
 )
 
+
+internal fun GoalEntity.toModel() = Goal(
+    id = id,
+    name = name,
+    target = Money(targetMinor, CurrencyCode(currency)),
+    accountId = accountId,
+    deadline = deadline?.let { runCatching { LocalDate.parse(it) }.getOrNull() },
+    yearly = yearly && deadline != null,
+    icon = icon,
+    color = color,
+)
+
+internal fun Goal.toEntity(stamp: Stamp) = GoalEntity(
+    id = id,
+    name = name,
+    targetMinor = target.amountMinor,
+    currency = target.currency.value,
+    accountId = accountId,
+    deadline = deadline?.toString(),
+    yearly = yearly,
+    icon = icon,
+    color = color,
+    updatedAt = stamp.now,
+    updatedBy = stamp.by,
+)

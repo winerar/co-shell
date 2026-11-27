@@ -65,6 +65,8 @@ data class MoreActions(
     val onDrafts: () -> Unit = {},
     /** «Долги» (#552). */
     val onDebts: () -> Unit = {},
+    /** «Цели» (#768). */
+    val onGoals: () -> Unit = {},
     /** «О приложении»: version, what's new and the update. */
     val onOpenUpdate: () -> Unit = {},
     /** A row with the «новое» pill was opened: the pill goes away. */

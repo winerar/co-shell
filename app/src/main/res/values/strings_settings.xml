@@ -66,6 +66,7 @@
     <string name="settings_home_tiles_hint">траты и бюджет</string>
     <string name="settings_home_hot">Горит в бюджете</string>
     <string name="settings_home_hot_hint">когда лимит под угрозой</string>
+    <string name="settings_home_goals_hint">две ближайшие цели накоплений</string>
     <string name="settings_home_recent">Последние операции</string>
     <string name="settings_home_recent_hint">последних: %1$d</string>
     <string name="settings_home_drag">Перетащить</string>

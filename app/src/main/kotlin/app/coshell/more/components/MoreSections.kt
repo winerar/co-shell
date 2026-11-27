@@ -42,6 +42,7 @@ internal fun moreSections(actions: MoreActions, draftCount: Int = 0, versionName
                 MoreItem(DesignR.drawable.ic_account_balance_wallet, R.string.accounts_title, stringResource(R.string.accounts_menu_hint), actions.onAccounts),
                 MoreItem(DesignR.drawable.ic_category, R.string.categories_title, stringResource(R.string.categories_menu_hint), actions.onCategories),
                 MoreItem(DesignR.drawable.ic_savings, R.string.budgets_title, stringResource(R.string.budgets_menu_hint), actions.onBudgets),
+                MoreItem(DesignR.drawable.ic_flag, R.string.goals_title, stringResource(R.string.goals_menu_hint), actions.onGoals, NewFeatures.GOALS),
                 MoreItem(DesignR.drawable.ic_refresh, R.string.recurring_list_title, stringResource(R.string.recurring_menu_hint), actions.onRecurring, NewFeatures.RECURRING),
                 MoreItem(DesignR.drawable.ic_person_add, R.string.debts_title, stringResource(R.string.debts_menu_hint), actions.onDebts, NewFeatures.DEBTS),
                 MoreItem(DesignR.drawable.ic_edit_note, R.string.notes_title, stringResource(R.string.notes_menu_hint), actions.onNotes),

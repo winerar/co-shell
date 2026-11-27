@@ -230,6 +230,7 @@ private val HomeCard.titleRes: Int
         HomeCard.TILES -> R.string.settings_home_tiles
         HomeCard.CONVERTER -> R.string.settings_home_converter
         HomeCard.HOT -> R.string.settings_home_hot
+        HomeCard.GOALS -> R.string.goals_title
         HomeCard.RECENT -> R.string.settings_home_recent
     }
 
@@ -240,6 +241,7 @@ private val HomeCard.hintRes: Int
         HomeCard.TILES -> R.string.settings_home_tiles_hint
         HomeCard.CONVERTER -> R.string.settings_home_converter_hint
         HomeCard.HOT -> R.string.settings_home_hot_hint
+        HomeCard.GOALS -> R.string.settings_home_goals_hint
         HomeCard.RECENT -> R.string.settings_home_recent_hint
     }
 

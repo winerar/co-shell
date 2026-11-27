@@ -80,6 +80,12 @@
 | Долг: новый | DebtNew | — | — | — |
 | Долг: карточка | DebtDetail | — | — | — |
 | Долг: вернули часть | DebtReturn | — | — | — |
+| Цели | GoalList | goals | ✓ | ✓ |
+| Цели: много | GoalMany | — | — | — |
+| Цели: пусто | GoalEmpty | goals_empty | ✓ | ✓ |
+| Цель: новая | GoalNew | — | — | — |
+| Цель | GoalDetail | goal_edit | ✓ | ✓ |
+| Обзор: цели | GoalHome | — | — | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -99,6 +105,9 @@
 - Долг: новый (нет эталона: light, dark)
 - Долг: карточка (нет эталона: light, dark)
 - Долг: вернули часть (нет эталона: light, dark)
+- Цели: много (нет эталона: light, dark)
+- Цель: новая (нет эталона: light, dark)
+- Обзор: цели (нет эталона: light, dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

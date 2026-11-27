@@ -3,6 +3,10 @@ package app.coshell.core.designsystem.charts
 import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.runtime.getValue
+import app.coshell.core.designsystem.motion.dataSwap
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,13 +74,17 @@ fun CoShellColumns(
 ) {
     val entrance = rememberChartEntrance()
     val lineColor = MaterialTheme.colorScheme.outline
+    // The average moves with the bars; it fades in and out rather than popping (owner 2026-11-27).
+    val averageAt by animateFloatAsState(average?.coerceIn(0f, 1f) ?: 0f, Motion.spatial(), label = "average")
+    val averageShown by animateFloatAsState(if (average == null) 0f else 1f, Motion.effects(), label = "averageShown")
     Row(
         modifier.fillMaxWidth().drawBehind {
-            val at = average?.coerceIn(0f, 1f) ?: return@drawBehind
+            if (averageShown <= 0f) return@drawBehind
+            val at = averageAt
             // The bars' area ends a label row above the bottom; the line marks the average within it.
             val bottom = size.height - LABEL_ROW.toPx()
             val y = bottom - height.toPx() * at * entrance.value
-            drawLine(lineColor, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx(), pathEffect = DASH)
+            drawLine(lineColor, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx(), pathEffect = DASH, alpha = averageShown)
         },
         horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
@@ -102,17 +110,24 @@ fun CoShellColumns(
 private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: () -> Float, modifier: Modifier) {
     // The quiet columns: on the dark card the container tone is lost, the outline tone still reads as a bar.
     val quiet = if (LocalDarkTheme.current) MaterialTheme.colorScheme.outlineVariant else MaterialTheme.colorScheme.surfaceContainerHighest
-    val fill = if (on) progressColors().indicator else quiet
-    val edge = if (on) fillEdge(fill, MaterialTheme.colorScheme.surfaceContainerHighest) else null
+    // Another month picked: the accent passes from bar to bar instead of jumping (owner 2026-11-27).
+    val target = if (on) progressColors().indicator else quiet
+    val fill by animateColorAsState(target, Motion.effects(), label = "columnFill")
+    val edge = if (on) fillEdge(target, MaterialTheme.colorScheme.surfaceContainerHighest) else null
     val ghostColor = secondaryInk() // the past period — the second colour (#442 Б)
-    val ink = if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+    val ink by animateColorAsState(
+        if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+        Motion.effects(),
+        label = "columnInk",
+    )
     val shown = animateFloatAsState(column.fraction.coerceIn(0f, 1f), Motion.spatial(), label = "column")
+    val ghost = animateFloatAsState(column.ghost?.coerceIn(0f, 1f) ?: 0f, Motion.spatial(), label = "columnGhost")
     // The texts are drawn but not read one by one: the column's description on [modifier] says it all.
     Box(modifier) { Column(Modifier.clearAndSetSemantics {}, horizontalAlignment = Alignment.CenterHorizontally) {
         Box(Modifier.fillMaxWidth().height(height + VALUE_ROW), contentAlignment = Alignment.BottomCenter) {
             Canvas(Modifier.fillMaxWidth(BAR_SHARE).height(height)) {
                 val radius = CornerRadius(TOP_RADIUS.toPx())
-                column.ghost?.coerceIn(0f, 1f)?.takeIf { it > 0f }?.let { ghost ->
+                ghost.value.takeIf { it > 0f }?.let { ghost ->
                     val h = size.height * ghost * entrance()
                     drawRoundRect(ghostColor, Offset(0f, size.height - h), Size(size.width, h), radius, style = Stroke(1.dp.toPx(), pathEffect = DASH))
                 }
@@ -121,16 +136,18 @@ private fun ColumnBar(column: ChartColumn, on: Boolean, height: Dp, entrance: ()
                 drawFillEdge(edge, Offset(0f, size.height - h), Size(size.width, h), radius.x)
             }
             // Rides on the bar's top; the offset is read at placement, so a growing bar does not recompose the text.
-            Text(
+            AnimatedContent(
                 shownAmount(column.valueLabel),
-                style = RateTextStyle.copy(fontSize = MaterialTheme.typography.labelSmall.fontSize),
-                color = ink,
-                maxLines = 1,
-                modifier = Modifier.offset {
+                Modifier.offset {
                     val bar = (height.toPx() * shown.value * entrance()).coerceAtLeast(MIN_BAR.toPx())
                     IntOffset(0, -(bar + Spacing.xs.toPx()).toInt())
                 },
-            )
+                transitionSpec = { dataSwap() },
+                contentAlignment = Alignment.BottomCenter,
+                label = "columnValue",
+            ) { value ->
+                Text(value, style = RateTextStyle.copy(fontSize = MaterialTheme.typography.labelSmall.fontSize), color = ink, maxLines = 1)
+            }
         }
         Text(
             column.label,

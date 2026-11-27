@@ -204,8 +204,15 @@ def pills_row(title, options, on, other='Другое…'):
                 '<div style="display: flex; flex-wrap: wrap; gap: 8px;">%s</div></div>' % (title, pills))
 
 
+def background_row():
+    """#745: the phone limits the app in the background (Xiaomi «Автозапуск», battery saver) — reminders would not come while it is closed.
+    Shown only then, above everything; a tap opens the app's page in the phone's settings."""
+    return (label('Телефон', top=4) + group([r('Работа в фоне', 'Включите «Автозапуск»', 'bolt', YELLOW, YELLOWBG)])
+            + '<div style="margin: 10px 4px 0; font-size: 13px; color: %s;">Иначе напоминания не придут, пока приложение закрыто.</div>' % MUTED)
+
+
 def notices_body():
-    return (label('Платежи', top=4) + group([sw('Напоминания о платежах', 'В день платежа', True)])
+    return (background_row() + label('Платежи') + group([sw('Напоминания о платежах', 'В день платежа', True)])
             + '<div style="height: 10px;"></div>' + pills_row('Время напоминания о платежах', ['8:00', '9:00', '12:00', '18:00'], '9:00')
             + '<div style="height: 10px;"></div>' + pills_row('Предупреждать', ['В тот же день', 'За 1 день', 'За 3 дня'], 'За 5 дней', 'За 5 дней')
             + label('Траты') + group([sw('Вечером — записать траты', 'если за день записей нет', True)])
@@ -229,6 +236,22 @@ def counter(value, sub, mono=False, dim_minus=False):
     return ('<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;">%s<div style="flex-grow: 1; text-align: center;"><div style="%s">%s</div>'
             '<div style="font-size: 12px; color: %s;">%s</div></div>%s</div>' % (
                 btn % (CHIP, 'opacity: 0.38;' if dim_minus else '', svg('minus', INK, 22)), font, value, MUTED, sub, btn % (CHIP, '', svg('plus', INK, 22))))
+
+
+def background_ask():
+    """#745: «Разрешить работу в фоне?» — CoShellAlertDialog when a reminder is turned on (on Xiaomi — the first one) and once after
+    the update for those whose reminders are on (over «Обзор»). «Открыть настройки» — the app's page in the phone's settings."""
+    ic = ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: flex; align-items: center; justify-content: center;">%s</span>'
+          % (YELLOWBG, svg('bolt', YELLOW, 24)))
+    pill = ('<span style="flex: 1; height: 48px; border-radius: 999px; %s font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; '
+            'justify-content: center;">%s</span>')
+    btns = ('<div style="display: flex; gap: 8px;">%s%s</div>'
+            % (pill % ('background: %s; color: %s;' % (CHIP, INK), 'Не сейчас'), pill % ('background: %s; color: %s;' % (LIME, ONLIME), 'Открыть настройки')))
+    dlg = ('<div role="dialog" style="position: absolute; left: 20px; right: 20px; top: 50%%; transform: translateY(-50%%); padding: 22px 20px 20px; '
+           'border-radius: 28px; background: %s;">%s<h2 style="margin: 14px 0 0; font-size: 22px;">Разрешить работу в фоне?</h2>'
+           '<p style="margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: %s;">Иначе напоминания не придут, пока приложение закрыто. '
+           'Включите «Автозапуск» и «Нет ограничений» в «Экономии батареи».</p><div style="margin-top: 20px;">%s</div></div>' % (SHEET, ic, INK2, btns))
+    return scrim(inner_screen('Уведомления', notices_body())) + dlg
 
 
 def notices_other():
@@ -272,6 +295,7 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1EntryAcc', 'Ввод операции: всегда этот счёт', entry_account, 1118),
     ('Set1Balance', 'Обзор: счета в общем балансе', balance, 1118),
     ('Set1Notices', 'Уведомления', notices, 1118),
+    ('Set1BackgroundAsk', 'Уведомления: «Разрешить работу в фоне?» — при включении и после обновления (#745)', background_ask, 1118),
     ('Set1NoticesOther', 'Уведомления: «Другое…» — счётчик', notices_other, 1118),
     ('Set1Data', 'Данные и копия', data, 1118),
 ]

@@ -1,6 +1,8 @@
 package app.coshell.reports
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyListScope
+import app.coshell.core.designsystem.motion.listItemMotion
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,13 +30,21 @@ import app.coshell.reports.components.SpendingCard
 import app.coshell.reports.components.UnusualCard
 import app.coshell.ui.format.formatMonth
 
+/**
+ * One card of the feed. It fades and moves into place when the period, the currency or the tab brings other cards
+ * (owner 2026-11-27: switching data in report cards is smooth) — nothing pops in or out.
+ */
+private fun LazyListScope.card(key: String, content: @Composable () -> Unit) {
+    item(key = key) { Box(listItemMotion()) { content() } }
+}
+
 /** The «Обзор» tab of «Отчёты» (boards `RepA`, #140): the cards of the period («Необычное», #787, under the spending), then the note about rates. */
 internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPeriod, actions: ReportsActions) {
     val spending = state.spending
     if (spending == null) {
-        item(key = "empty") { Note(stringResource(R.string.reports_empty, stringResource(R.string.reports_period_title))) }
+        card(key = "empty") { Note(stringResource(R.string.reports_empty, stringResource(R.string.reports_period_title))) }
     } else {
-        item(key = "spending") {
+        card(key = "spending") {
             SpendingCard(
                 spending,
                 state.currency,
@@ -45,21 +55,21 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
         }
     }
     if (state.unusual.isNotEmpty()) {
-        item(key = "unusual") { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
+        card(key = "unusual") { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
     }
-    state.conversion?.let { conversion -> item(key = "conversion") { ConversionCard(conversion) } }
-    state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
+    state.conversion?.let { conversion -> card(key = "conversion") { ConversionCard(conversion) } }
+    state.months?.let { months -> card(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
     state.inflation?.let { inflation ->
-        item(key = "inflation") { InflationCard(inflation) }
-        if (inflation.fastest.isNotEmpty()) item(key = "inflation-growth") { InflationGrowthCard(inflation) }
+        card(key = "inflation") { InflationCard(inflation) }
+        if (inflation.fastest.isNotEmpty()) card(key = "inflation-growth") { InflationGrowthCard(inflation) }
     }
-    state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
-    state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
-    state.cushion?.let { cushion -> item(key = "cushion") { CushionCard(cushion) } }
-    state.forecast?.let { forecast -> item(key = "forecast") { ForecastCard(forecast) } }
-    state.fixed?.let { fixed -> item(key = "fixed") { FixedCard(fixed, actions.onAllFixed, actions.onTemplate) } }
-    if (state.members.isNotEmpty()) item(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
-    item(key = "note") {
+    state.income?.let { income -> card(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
+    state.capital?.let { capital -> card(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
+    state.cushion?.let { cushion -> card(key = "cushion") { CushionCard(cushion) } }
+    state.forecast?.let { forecast -> card(key = "forecast") { ForecastCard(forecast) } }
+    state.fixed?.let { fixed -> card(key = "fixed") { FixedCard(fixed, actions.onAllFixed, actions.onTemplate) } }
+    if (state.members.isNotEmpty()) card(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
+    card(key = "note") {
         val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()
         CoShellHint(
             if (missing.isEmpty()) stringResource(R.string.reports_rate_note, state.currency)
@@ -71,11 +81,11 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
 /** The «Календарь» tab (#553, board `CalTabA`): the month grid, a word for an empty month, the tapped day's operations. */
 internal fun LazyListScope.calendarItems(state: ReportsUiState, actions: ReportsActions) {
     val calendar = state.calendar ?: return
-    item(key = "calendar") { CalendarCard(calendar, state.currency, state.selectedDay, actions.onDay) }
-    if (calendar.isEmpty) item(key = "calendar-empty") { Note(stringResource(R.string.reports_calendar_empty)) }
-    if (state.selectedDay != null) item(key = "day") { DayOperationsCard(state.dayOps, actions.onTransaction) }
+    card(key = "calendar") { CalendarCard(calendar, state.currency, state.selectedDay, actions.onDay) }
+    if (calendar.isEmpty) card(key = "calendar-empty") { Note(stringResource(R.string.reports_calendar_empty)) }
+    if (state.selectedDay != null) card(key = "day") { DayOperationsCard(state.dayOps, actions.onTransaction) }
     if (calendar.missing.isNotEmpty()) {
-        item(key = "calendar-missing") { CoShellHint(stringResource(R.string.reports_missing, calendar.missing.joinToString())) }
+        card(key = "calendar-missing") { CoShellHint(stringResource(R.string.reports_missing, calendar.missing.joinToString())) }
     }
 }
 

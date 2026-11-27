@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.compositeOver
 import app.coshell.core.designsystem.components.drawFillEdge
 import app.coshell.core.designsystem.components.fillEdge
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -64,7 +66,13 @@ fun CoShellPairedColumns(
         pairs.forEachIndexed { index, pair ->
             val on = index == selected
             val click = onSelect?.let { select -> Modifier.tactileClickable(onClick = { select(index) }) } ?: Modifier
-            val plate = if (on) Modifier.clip(RoundedCornerShape(Radii.medium)).background(MaterialTheme.colorScheme.surfaceContainerHighest) else Modifier
+            // Another month picked: the plate and the brighter bars pass over instead of jumping (owner 2026-11-27).
+            val plateColor by animateColorAsState(
+                if (on) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0f),
+                Motion.effects(),
+                label = "pairPlate",
+            )
+            val plate = Modifier.clip(RoundedCornerShape(Radii.medium)).background(plateColor)
             Box(
                 Modifier.weight(1f).then(plate).then(click).semantics(mergeDescendants = true) {
                     contentDescription = pair.description
@@ -86,7 +94,11 @@ fun CoShellPairedColumns(
                     Text(
                         pair.label,
                         style = MaterialTheme.typography.labelMedium,
-                        color = if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = animateColorAsState(
+                            if (on) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                            Motion.effects(),
+                            label = "pairLabel",
+                        ).value,
                         maxLines = 1,
                         modifier = Modifier.padding(top = Spacing.xs),
                     )
@@ -100,7 +112,8 @@ fun CoShellPairedColumns(
 private fun PairBar(fraction: Float, color: Color, on: Boolean, height: Dp, modifier: Modifier, entrance: () -> Float) {
     val shown = animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "pair")
     val over = if (on) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surface
-    val fill = color.copy(alpha = if (on) 1f else QUIET_ALPHA)
+    val alpha by animateFloatAsState(if (on) 1f else QUIET_ALPHA, Motion.effects(), label = "pairAlpha")
+    val fill = color.copy(alpha = alpha)
     val edge = fillEdge(fill.compositeOver(over), over)
     Canvas(modifier.height(height)) {
         val h = (size.height * shown.value * entrance()).coerceAtLeast(MIN_BAR.toPx())

@@ -16,6 +16,7 @@ import app.coshell.export.ExportActions
 import app.coshell.export.ExportScreen
 import app.coshell.export.ExportUiState
 import kotlinx.datetime.LocalDate
+import app.coshell.alarm.BackgroundCheck
 import app.coshell.settings.AccountChoice
 import app.coshell.settings.AccountsSettingsScreen
 import app.coshell.settings.BalanceAccountsScreen
@@ -409,10 +410,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE, background = BackgroundCheck.Advice.XIAOMI) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE, background = BackgroundCheck.Advice.XIAOMI) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }

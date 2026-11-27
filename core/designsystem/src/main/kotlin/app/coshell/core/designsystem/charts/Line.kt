@@ -18,6 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.runtime.getValue
+import app.coshell.core.designsystem.tokens.Motion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
@@ -69,17 +74,20 @@ fun CoShellLine(
     val guide = MaterialTheme.colorScheme.outlineVariant
     val marker = MaterialTheme.colorScheme.outline
     val ring = MaterialTheme.colorScheme.surfaceContainer
+    val all = remember(points, second) { lineFractions(points.map { it.value } + second.orEmpty()) }
+    val morph = rememberChartMorph(all.take(points.size))
+    val secondMorph = rememberChartMorph(if (second == null) emptyList() else all.drop(points.size))
+    val dot = animateFloatAsState(selected.toFloat(), Motion.spatial(), label = "lineDot")
     Column(modifier.fillMaxWidth().semantics { contentDescription = description }) {
         val tap = if (onSelect == null || points.isEmpty()) Modifier else Modifier.pointerInput(points.size, onSelect) {
             detectTapGestures { offset -> onSelect(nearestPoint(offset.x - DOT_RADIUS.toPx(), size.width - 2 * DOT_RADIUS.toPx(), points.size)) }
         }
         Canvas(Modifier.fillMaxWidth().height(height).then(tap).padding(horizontal = DOT_RADIUS)) {
-            if (points.isEmpty()) return@Canvas
-            val all = lineFractions(points.map { it.value } + second.orEmpty())
-            val ys = all.take(points.size)
-            val step = if (points.size > 1) size.width / (points.size - 1) else 0f
-            val at = points.indices.map { Offset(it * step, size.height * (1 - ys[it])) }
-            val secondAt = second?.let { all.drop(points.size).mapIndexed { i, y -> Offset(i * step, size.height * (1 - y)) } }
+            val n = morph.size
+            if (n == 0) return@Canvas
+            val step = if (n > 1) size.width / (n - 1) else 0f
+            val at = (0 until n).map { Offset(it * step, size.height * (1 - morph.at(it))) }
+            val secondAt = if (secondMorph.size == n) (0 until n).map { Offset(it * step, size.height * (1 - secondMorph.at(it))) } else null
             for (g in 1..2) {
                 val y = size.height * g / 3f
                 drawLine(guide, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx(), pathEffect = DOTS)
@@ -99,7 +107,10 @@ fun CoShellLine(
                 if (secondAt == null) drawPath(area, accent.copy(alpha = FILL_ALPHA))
                 edge?.let { drawPath(line, it, style = Stroke(LINE_WIDTH.toPx() + 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)) }
                 drawPath(line, accent, style = Stroke(LINE_WIDTH.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
-                at.getOrNull(selected)?.let { p ->
+                if (selected in points.indices) {
+                    // The marker slides to another month along the line, as the line itself moves (owner 2026-11-27).
+                    val x = dot.value.coerceIn(0f, (n - 1).toFloat())
+                    val p = Offset(x * step, size.height * (1 - morph.atFraction(x)))
                     drawLine(marker, Offset(p.x, 0f), Offset(p.x, size.height), strokeWidth = 1.dp.toPx())
                     drawCircle(ring, DOT_RADIUS.toPx() + 2.dp.toPx(), p)
                     drawCircle(accent, DOT_RADIUS.toPx(), p)
@@ -109,10 +120,15 @@ fun CoShellLine(
         }
         Row(Modifier.fillMaxWidth().padding(top = Spacing.xs)) {
             points.forEachIndexed { i, point ->
+                val ink by animateColorAsState(
+                    if (i == selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                    Motion.effects(),
+                    label = "lineLabel",
+                )
                 Text(
                     point.label,
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (i == selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = ink,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     modifier = Modifier.weight(1f),

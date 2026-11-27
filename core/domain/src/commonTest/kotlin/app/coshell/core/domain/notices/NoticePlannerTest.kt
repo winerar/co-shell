@@ -3,6 +3,7 @@ package app.coshell.core.domain.notices
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import app.coshell.core.domain.settings.ClockMinutes
 import kotlinx.datetime.LocalDate
 
 class NoticePlannerTest {
@@ -115,4 +116,21 @@ class NoticePlannerTest {
     }
 
     @Test fun `keys round trip`() = NoticeKind.entries.forEach { assertEquals(it, NoticeKind.fromKey(it.key)) }
+
+    @Test fun `stays quiet before the chosen time`() {
+        val early = facts().copy(minutesNow = ClockMinutes.of(20, 30))
+        assertNull(NoticePlanner.next(early, all, NoticeHistory(), at = ClockMinutes.of(21)))
+    }
+
+    @Test fun `a check run late after midnight says nothing`() {
+        val night = facts().copy(minutesNow = ClockMinutes.of(1, 10))
+        assertNull(NoticePlanner.next(night, all, NoticeHistory(), at = ClockMinutes.of(21)))
+    }
+
+    @Test fun `speaks at the chosen time and later that evening`() {
+        for (now in listOf(ClockMinutes.of(20, 50), ClockMinutes.of(21), ClockMinutes.of(23, 45))) {
+            val f = facts().copy(minutesNow = now)
+            assertEquals(NoticeKind.EVENING, NoticePlanner.next(f, setOf(NoticeKind.EVENING), NoticeHistory(), at = ClockMinutes.of(21))?.kind)
+        }
+    }
 }

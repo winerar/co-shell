@@ -42,6 +42,9 @@ fun CoShellMeter(
     val halo = MaterialTheme.colorScheme.surface
     val entrance = if (grow) rememberChartEntrance() else null
     val shown by animateFloatAsState(fraction.coerceIn(0f, 1f), Motion.spatial(), label = "meter")
+    // The mark (the past period, the pace) moves with the fill when the numbers change (owner 2026-11-27).
+    val markAt by animateFloatAsState(mark?.coerceIn(0f, 1f) ?: 0f, Motion.spatial(), label = "meterMark")
+    val markShown by animateFloatAsState(if (mark == null) 0f else 1f, Motion.effects(), label = "meterMarkShown")
     val overhang = MARK_OVERHANG
     Canvas(modifier.fillMaxWidth().padding(vertical = overhang).height(Sizes.bullet)) {
         val radius = CornerRadius(size.height / 2)
@@ -53,13 +56,13 @@ fun CoShellMeter(
             drawRoundRect(color, size = fill, cornerRadius = radius)
             drawFillEdge(edge, Offset.Zero, fill, radius.x)
         }
-        mark?.coerceIn(0f, 1f)?.let { at ->
+        if (markShown > 0f) markAt.let { at ->
             val stroke = MARK_WIDTH.toPx()
             val x = (size.width * at).coerceIn(stroke / 2, size.width - stroke / 2)
             val out = overhang.toPx()
             // A halo of the surface keeps the mark visible where the fill of the same ink runs under it.
-            drawLine(halo, Offset(x, -out), Offset(x, size.height + out), strokeWidth = stroke * 2)
-            drawLine(markColor, Offset(x, -out), Offset(x, size.height + out), strokeWidth = stroke)
+            drawLine(halo, Offset(x, -out), Offset(x, size.height + out), strokeWidth = stroke * 2, alpha = markShown)
+            drawLine(markColor, Offset(x, -out), Offset(x, size.height + out), strokeWidth = stroke, alpha = markShown)
         }
     }
 }

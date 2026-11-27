@@ -62,6 +62,8 @@ fun TransactionsRoute(
             onDeleteSelected = lock.guard(viewModel::deleteSelected),
             onPeek = viewModel::onPeek,
             onPeekEnd = viewModel::onPeekEnd,
+            onDeleteDuplicate = lock.guard1(viewModel::deleteDuplicate),
+            onDifferent = viewModel::dismissDuplicate,
         ),
     )
 }

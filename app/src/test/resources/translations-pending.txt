@@ -53,6 +53,12 @@ daily_why_spent
 daily_why_upcoming
 density_hint
 drafts_hint_unready
+duplicate_delete
+duplicate_different
+duplicate_mark
+duplicate_open
+duplicate_text
+duplicate_title
 export_all_accounts_hint
 export_hint
 family_intro

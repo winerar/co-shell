@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- «Похоже на дубль» (#791) -->
+    <string name="duplicate_mark">похоже на дубль</string>
+    <string name="duplicate_title">Похоже на дубль</string>
+    <string name="duplicate_text">Две одинаковые записи почти в одно время. Если это одна покупка, лишнюю можно удалить.</string>
+    <string name="duplicate_delete">Удалить вторую</string>
+    <string name="duplicate_different">Это разные</string>
+    <string name="duplicate_open">Открыть операцию</string>
+</resources>

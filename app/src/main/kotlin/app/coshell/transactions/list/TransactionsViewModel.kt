@@ -12,6 +12,9 @@ import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.settings.ScreenOptionsStore
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.search.filterTotal
+import app.coshell.core.domain.search.DuplicateDismissals
+import app.coshell.core.domain.search.InMemoryDuplicateDismissals
+import app.coshell.core.domain.search.duplicatePairs
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.domain.tags.TagRepository
 import app.coshell.core.domain.tags.TagUsage
@@ -61,6 +64,7 @@ class TransactionsViewModel @Inject constructor(
     reportCurrencies: ReportCurrencySettings,
     tags: TagRepository,
     screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
+    private val dismissals: DuplicateDismissals = InMemoryDuplicateDismissals(),
 ) : ViewModel() {
 
     private val _selection = MutableStateFlow(Selection())
@@ -176,7 +180,19 @@ class TransactionsViewModel @Inject constructor(
 
     private val amountInMain = screenOptions.options.map { it.opsAmountInMain }.distinctUntilChanged()
 
-    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money, amountInMain) { src, f, limit, (book, currencies), inMain ->
+    /** «Удалить вторую» of «Похоже на дубль» (#791): the newer record goes, with «Отменить» as any delete. */
+    fun deleteDuplicate(id: String) {
+        viewModelScope.launch { deleteWithUndo(setOf(id)) }
+    }
+
+    /** «Это разные»: the pair is not marked again on this phone. */
+    fun dismissDuplicate(key: String) {
+        viewModelScope.launch { dismissals.dismiss(key) }
+    }
+
+    private val view = combine(amountInMain, dismissals.dismissed, ::Pair)
+
+    val state: StateFlow<TransactionsUiState> = combine(source, filter, shownLimit, money, view) { src, f, limit, (book, currencies), (inMain, different) ->
         lastMoney = book to currencies
         val main = currencies.firstOrNull()
         val matching = src.page.items.filter { f.matches(it, src.search) }
@@ -199,7 +215,8 @@ class TransactionsViewModel @Inject constructor(
                 today = today,
                 authors = src.authors,
                 tagsById = src.tags.byId,
-            ).withAmountsInMain(inMain, main, book, moneyFormat),
+            ).withAmountsInMain(inMain, main, book, moneyFormat)
+                .withDuplicates(duplicatePairs(src.page.items, different, clock.now())),
         )
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TransactionsUiState(isLoading = true))
 }

@@ -19,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
+import app.coshell.transactions.duplicates.DuplicateSheet
 import app.coshell.core.domain.hints.HintId
 import app.coshell.hints.CoachHint
 import app.coshell.core.designsystem.components.underBars
@@ -80,6 +83,11 @@ fun TransactionsScreen(
         derivedStateOf { dayAt(state, listState.firstVisibleItemIndex) }
     }
     val subtitle = topDay?.let { day -> listOfNotNull(dayLabel(day), day.total).joinToString(SUBTITLE_SEPARATOR) }
+    // The pair asked about (#791) and the row that was tapped; the sheet lives only while the screen does.
+    var duplicate by remember { mutableStateOf<Pair<TransactionsUiState.RowDuplicate, String>?>(null) }
+    duplicate?.let { (pair, tapped) ->
+        DuplicateSheet(pair, tapped, actions.onDeleteDuplicate, actions.onDifferent, actions.onTransactionClick, onClosed = { duplicate = null })
+    }
     Scaffold(
         topBar = {
             TabOrSelectionTopBar(
@@ -133,7 +141,11 @@ fun TransactionsScreen(
                         TransactionRow(
                             row = row,
                             // While choosing, a tap adds or removes the row instead of opening it.
-                            onClick = if (selection.active) actions.onToggle else actions.onTransactionClick,
+                            onClick = when {
+                                selection.active -> actions.onToggle
+                                row.duplicate != null -> { id -> duplicate = row.duplicate to id }
+                                else -> actions.onTransactionClick
+                            },
                             onLongClick = actions.onLongPress,
                             selected = row.id in selection,
                             peek = peek?.takeIf { it.rowId == row.id },
@@ -202,6 +214,9 @@ data class TransactionsActions(
     /** Hold the amount of a row of a day (#318); the text is «нет курса». */
     val onPeek: (TransactionsUiState.Row, LocalDate, String) -> Unit = { _, _, _ -> },
     val onPeekEnd: () -> Unit = {},
+    /** «Похоже на дубль» (#791): «Удалить вторую» (the newer id) and «Это разные» (the pair key). */
+    val onDeleteDuplicate: (String) -> Unit = {},
+    val onDifferent: (String) -> Unit = {},
 )
 
 @Composable

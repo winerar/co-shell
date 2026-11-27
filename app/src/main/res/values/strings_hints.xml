@@ -69,6 +69,7 @@
     <string name="gestures_plus">«+»</string>
     <string name="gestures_operations">«Операции»</string>
     <string name="gestures_everywhere">Везде</string>
+    <string name="gestures_stories">Истории</string>
     <string name="gesture_flip_title">Нажмите на карточку</string>
     <string name="gesture_flip_text">перевернуть: на обороте самое полезное за месяц</string>
     <string name="gesture_edit_home_title">Удерживайте карточку</string>
@@ -83,6 +84,10 @@
     <string name="gesture_select_text">выбрать несколько</string>
     <string name="gesture_amount_title">Удерживайте сумму</string>
     <string name="gesture_amount_text">увидеть её в других валютах</string>
+    <string name="gesture_story_back_title">Нажмите слева</string>
+    <string name="gesture_story_back_text">вернуться к прошлой истории</string>
+    <string name="gesture_story_next_title">Нажмите справа</string>
+    <string name="gesture_story_next_text">дальше</string>
     <string name="gesture_swipe_title">Листайте вбок</string>
     <string name="gesture_swipe_text">сменить вкладку</string>
     <string name="gesture_shake_title">Встряхните телефон</string>

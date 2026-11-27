@@ -90,6 +90,7 @@ def card_row(title, sub, on, fixed=False):
 
 def home_cards():
     g = group([card_row('Баланс', 'всегда сверху', True, fixed=True),
+               card_row('Сегодня можно', 'сколько можно потратить сегодня', True),
                card_row('Итог месяца', 'в первые дни месяца', True),
                card_row('Скоро', 'регулярные платежи', True),
                card_row('Плитки', 'траты и бюджет', True),

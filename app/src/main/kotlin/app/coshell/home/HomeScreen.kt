@@ -46,6 +46,8 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.budget.HomeBudget
 import app.coshell.goals.GoalRowUi
 import app.coshell.home.goals.GoalsHomeCard
+import app.coshell.home.daily.DailyCard
+import app.coshell.home.daily.DailyUi
 import app.coshell.home.components.HomeTiles
 import app.coshell.home.components.HotBudgets
 import app.coshell.home.components.MonthReviewCard
@@ -97,6 +99,7 @@ fun HomeScreen(
     debtDue: List<DebtDueRow> = emptyList(),
     depositEnds: List<DepositEndRow> = emptyList(),
     goals: List<GoalRowUi> = emptyList(),
+    daily: DailyUi? = null,
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
@@ -130,6 +133,7 @@ fun HomeScreen(
             HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty() || depositEnds.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
             HomeCard.GOALS -> goals.isNotEmpty()
+            HomeCard.DAILY -> daily != null
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
     }
@@ -214,6 +218,7 @@ fun HomeScreen(
                         HomeCard.HOT -> budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
                             HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = entrance)
                         }
+                        HomeCard.DAILY -> daily?.let { DailyCard(it, entrance) }
                         HomeCard.GOALS -> if (goals.isNotEmpty()) GoalsHomeCard(goals, actions.onGoals, actions.onOpenGoal, entrance)
                         HomeCard.RECENT -> RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, entrance)
                     }

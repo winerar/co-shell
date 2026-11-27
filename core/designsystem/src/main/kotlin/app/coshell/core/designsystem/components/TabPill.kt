@@ -21,7 +21,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import app.coshell.core.designsystem.tokens.Motion
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -39,35 +41,49 @@ class TabDrag {
     var fraction by mutableFloatStateOf(0f)
 }
 
-/** Where the tabs' pill slots are, and the pill's animated edges, in the bar's coordinates. */
+/**
+ * Where the tabs' pill slots are, and the pill's animated edges, in the bar's coordinates. Slot boxes are kept as state [Rect]s
+ * refreshed on every move or resize: the selected tab grows on a spring (#796), and a stale box left the pill 48 dp wide (#809).
+ */
 @Stable
 internal class TabPillState {
-    private val slots = mutableStateMapOf<Int, LayoutCoordinates>()
-    internal var bar: LayoutCoordinates? by mutableStateOf(null)
+    private val slots = mutableStateMapOf<Int, Rect>()
+    private var barOrigin by mutableStateOf<Offset?>(null)
     internal val left = Animatable(Float.NaN)
     internal val right = Animatable(Float.NaN)
     internal var top by mutableStateOf(Float.NaN)
     internal var bottom by mutableStateOf(Float.NaN)
 
     fun place(index: Int, slot: LayoutCoordinates) {
-        slots[index] = slot
+        place(index, slot.boundsInRoot())
     }
 
-    /** Tab [index]'s pill slot in the bar; read in composition, so it updates once both are placed. */
+    /** Tab [index]'s slot box in root coordinates; a changed box recomposes readers of [boundsOf]. */
+    fun place(index: Int, rootBounds: Rect) {
+        slots[index] = rootBounds
+    }
+
+    fun placeBar(bar: LayoutCoordinates) {
+        placeBar(bar.positionInRoot())
+    }
+
+    fun placeBar(rootOrigin: Offset) {
+        barOrigin = rootOrigin
+    }
+
+    /** Tab [index]'s pill slot in the bar; read in composition, so it follows the slot while it moves or grows. */
     fun boundsOf(index: Int): Rect? {
-        val barCoords = bar?.takeIf { it.isAttached } ?: return null
-        val slot = slots[index]?.takeIf { it.isAttached } ?: return null
-        val local = barCoords.localPositionOf(slot, Offset.Zero)
-        return Rect(local, Size(slot.size.width.toFloat(), slot.size.height.toFloat()))
+        val origin = barOrigin ?: return null
+        return slots[index]?.translate(-origin)
     }
 }
 
 /** Records the box the pill fills under a tab; put it on that box, before any scale. */
-internal fun Modifier.tabPillAnchor(state: TabPillState, index: Int): Modifier = onPlaced { state.place(index, it) }
+internal fun Modifier.tabPillAnchor(state: TabPillState, index: Int): Modifier = onGloballyPositioned { state.place(index, it) }
 
 /** The bar side: remembers its coordinates and draws the pill in the selected tab's slot. */
 internal fun Modifier.tabPill(state: TabPillState, color: Color, edge: BorderStroke? = null): Modifier =
-    onPlaced { state.bar = it }.drawBehind {
+    onGloballyPositioned { state.placeBar(it) }.drawBehind {
         val l = state.left.value
         val r = state.right.value
         if (l.isNaN() || r.isNaN() || state.top.isNaN()) return@drawBehind

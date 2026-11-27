@@ -52,11 +52,11 @@ interface UpdateModule {
 
         /** Empty in local builds: CI sets `UPDATE_BASE_URL` (see build-and-test.md §Самообновление). */
         @Provides
-        fun provideReleaseSource(): ReleaseSource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL)
+        fun provideReleaseSource(): ReleaseSource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL, BuildConfig.UPDATE_CHANNEL_SUFFIX)
 
         /** `releases.json` next to `version.json`: «Прошлые версии» (#284). */
         @Provides
-        fun provideReleaseHistorySource(): ReleaseHistorySource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL)
+        fun provideReleaseHistorySource(): ReleaseHistorySource = HttpReleaseSource(BuildConfig.UPDATE_BASE_URL, BuildConfig.UPDATE_CHANNEL_SUFFIX)
 
         @Provides
         fun provideCheckForUpdate(

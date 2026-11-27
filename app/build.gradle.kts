@@ -22,6 +22,7 @@ android {
         // Release builds: 0.N, N = releases so far (scripts/ci/version_name.py, only on main); others — "0.0".
         versionName = providers.environmentVariable("VERSION_NAME").orNull ?: "0.0"
         buildConfigField("String", "UPDATE_BASE_URL", "\"\"")
+        buildConfigField("String", "UPDATE_CHANNEL_SUFFIX", "\"\"")
         // The invitation gate of the closed test (#666): only release builds with `ACCESS_GATE=true` from CI ask for a code.
         buildConfigField("boolean", "ACCESS_GATE", "false")
         // Feedback form → Firestore (docs/setup/feedback.md). Not secrets: the Web API key is public
@@ -69,6 +70,10 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
+            // Channel dev (#655): only the nightly build from CI sets DEV_UPDATE_BASE_URL; local and PR debug builds stay "not configured".
+            val devUrl = providers.environmentVariable("DEV_UPDATE_BASE_URL").orNull.orEmpty()
+            buildConfigField("String", "UPDATE_BASE_URL", "\"$devUrl\"")
+            buildConfigField("String", "UPDATE_CHANNEL_SUFFIX", "\"-dev\"")
         }
         release {
             isMinifyEnabled = true

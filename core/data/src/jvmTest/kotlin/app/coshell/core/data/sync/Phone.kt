@@ -5,6 +5,7 @@ import app.coshell.core.data.db.createInMemoryCoShellDatabase
 import app.coshell.core.data.repository.RoomAccountRepository
 import app.coshell.core.data.repository.RoomDebtRepository
 import app.coshell.core.data.repository.RoomFamilySettings
+import app.coshell.core.data.repository.RoomGoalRepository
 import app.coshell.core.data.repository.RoomTagRepository
 import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
@@ -26,6 +27,7 @@ class Phone(member: String, server: RemoteStore, startMs: Long) {
     val settings = RoomFamilySettings(db.settingDao(), stamper)
     val tags = RoomTagRepository(db.tagDao(), stamper)
     val debts = RoomDebtRepository(db.debtDao(), stamper)
+    val goals = RoomGoalRepository(db.goalDao(), stamper)
     val engine = SyncEngine(db.syncDao(), server, clock)
 
     fun tick(ms: Long = 1_000) { nowMs += ms }

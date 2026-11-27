@@ -6,8 +6,6 @@ import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
 import app.coshell.core.domain.SaveTransactionUseCase
 import app.coshell.core.domain.TransactionRepository
-import app.coshell.core.domain.ai.LanguageModel
-import app.coshell.core.domain.ai.NoteHints
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.PostDraftsUseCase
 import app.coshell.core.domain.drafts.ProcessQuickNoteUseCase
@@ -38,11 +36,10 @@ object DraftsModule {
         categories: CategoryRepository,
         transactions: TransactionRepository,
         drafts: DraftRepository,
-        model: LanguageModel,
         ids: IdGenerator,
         clock: Clock,
         local: LocalCurrency,
-    ) = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, NoteHints(model), ids, local::current) { clock.now().toEpochMilliseconds() }
+    ) = ProcessQuickNoteUseCase(accounts, categories, transactions, drafts, ids, local::current) { clock.now().toEpochMilliseconds() }
 
     @Provides
     fun provideEntryDraftStore(impl: app.coshell.transactions.edit.PrefsEntryDraftStore): app.coshell.core.domain.quickentry.EntryDraftStore = impl

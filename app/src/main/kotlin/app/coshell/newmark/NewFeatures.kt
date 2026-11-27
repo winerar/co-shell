@@ -14,13 +14,13 @@ object NewFeatures {
     /** «Ещё → Долги» (#552). */
     const val DEBTS = "more.debts"
 
+    /** «Ещё → Цели» (#768). */
+    const val GOALS = "more.goals"
+
     /** «Ещё → О приложении» (#440). */
     const val ABOUT = "more.about"
 
-    /** «Ещё → Настройки»: «Умные функции → Облачный разбор» inside (#635). */
-    const val SETTINGS_CLOUD = "more.settings.cloud"
-
-    val all: List<String> = listOf(RECURRING, DEBTS, ABOUT, SETTINGS_CLOUD)
+    val all: List<String> = listOf(RECURRING, DEBTS, GOALS, ABOUT)
 
     /**
      * Every key `NewMarks` tracks: the rows above and the release stories' card (#693). Both view models pass the whole list,

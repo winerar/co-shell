@@ -194,6 +194,29 @@ def write(root):
     for name, (ls, comment) in files.items():
         open(os.path.join(root, RES, name), 'w', encoding='utf-8').write(vector_xml(ls, comment))
         print(os.path.join(RES, name))
+    tile = os.path.join(RES, 'ic_app_tile.xml')
+    open(os.path.join(root, tile), 'w', encoding='utf-8').write(
+        tile_xml(layers(s, lime, lime, lime, violet), 'App icon as a tile, as the launcher shows it (#755, board AboutLatest); ' + src))
+    print(tile)
+
+
+GRAPHITE = '#FF050805'  # = @color/ic_launcher_background
+SAFE = 72  # the part of the 108 adaptive canvas a launcher shows
+TILE_RADIUS = SAFE * 22 / 84  # board: 84 px tile, 22 px corners
+
+
+def tile_xml(layers, comment):
+    """The icon for screens («О приложении»): the launcher's visible 72 of 108 on a graphite rounded square."""
+    r = _f(TILE_RADIUS)
+    bg = 'M%s,0 H%s A%s,%s 0 0,1 72,%s V%s A%s,%s 0 0,1 %s,72 H%s A%s,%s 0 0,1 0,%s V%s A%s,%s 0 0,1 %s,0 Z' % (
+        r, _f(SAFE - TILE_RADIUS), r, r, r, _f(SAFE - TILE_RADIUS), r, r, _f(SAFE - TILE_RADIUS), r, r, r, _f(SAFE - TILE_RADIUS), r, r, r, r)
+    inner = vector_xml(layers, '').split('android:viewportHeight="108">\n', 1)[1].rsplit('</vector>', 1)[0]
+    inner = ''.join('    ' + line + '\n' for line in inner.splitlines())
+    return ('<?xml version="1.0" encoding="utf-8"?>\n<!-- %s -->\n<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
+            '    android:width="84dp"\n    android:height="84dp"\n    android:viewportWidth="72"\n    android:viewportHeight="72">\n'
+            '    <path\n        android:fillColor="%s"\n        android:pathData="%s" />\n'
+            '    <group\n        android:translateX="-18"\n        android:translateY="-18">\n%s    </group>\n</vector>\n'
+            % (comment, GRAPHITE, bg, inner))
 
 
 if __name__ == '__main__':

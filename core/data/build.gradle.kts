@@ -37,6 +37,8 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.room.testing) // MigrationTestHelper
         }
+        // The rules evaluation (#742, tools/eval): the gold set docs/samples/eval through the app's own code.
+        jvmTest { kotlin.srcDir("../../tools/eval/src") }
     }
 }
 

@@ -111,6 +111,7 @@ class ReportsViewModel @Inject constructor(
                 today = today,
                 compare = s.compare,
             )
+            val worth = capitalWorth(input, accountList, balanceDays, book)
             ReportsUiState(
                 period = s.period,
                 startDay = s.startDay,
@@ -122,7 +123,8 @@ class ReportsViewModel @Inject constructor(
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),
-                capital = buildCapital(input, accountList, balanceDays, book, format),
+                capital = worth?.let { buildCapital(it, format) },
+                cushion = worth?.let { buildCushion(input, it, format) },
                 calendar = buildCalendar(input, format),
             )
         }

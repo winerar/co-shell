@@ -91,11 +91,6 @@ fun DraftsScreen(state: DraftsUiState, actions: DraftsActions) {
             return@Scaffold
         }
         LazyColumn(Modifier.fillMaxSize(), contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Spacing.l))) {
-            if (state.cloudLimited) {
-                item(key = "cloud", contentType = "message") {
-                    CoShellMessage(stringResource(R.string.cloud_limit_message), isError = false, modifier = Modifier.padding(horizontal = Spacing.l, vertical = Spacing.xs))
-                }
-            }
             item(key = "list", contentType = "card") {
                 CoShellCard(Modifier.fillMaxWidth().padding(horizontal = Spacing.l)) {
                     state.rows.forEachIndexed { index, row ->

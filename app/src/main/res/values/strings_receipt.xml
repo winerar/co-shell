@@ -2,6 +2,7 @@
 <resources>
     <!-- Receipt QR in the entry sheet (#526) -->
     <string name="scan_source">Из QR чека · продавец %1$s</string>
+    <string name="scan_source_plain">Из QR чека</string>
     <string name="scan_source_document">Из чека · %1$s</string>
     <string name="scan_dup_title">Этот чек уже записан</string>
     <string name="scan_dup_text">В операциях есть такой же: %1$s.</string>
@@ -26,17 +27,5 @@
     <string name="account_digits_empty">Не заданы</string>
     <string name="account_digits_sheet_title">Цифры карты или счёта</string>
     <string name="account_digits_sheet_sub">По ним чек из банка найдёт этот счёт. Пусто — счёт не привязан.</string>
-    <string name="account_digits_field">Последние цифры</string>
     <string name="account_digits_field_hint">Из чека банка: «4083********3900» → 3900</string>
-    <string name="account_digits_error">Введите четыре цифры.</string>
-    <string name="receipt_ai_read">Прочитать с ИИ</string>
-    <string name="receipt_ai_text_phone">Такого формата мы ещё не знаем. ИИ на телефоне прочитает чек сам, без интернета, а вы проверите поля.</string>
-    <string name="receipt_ai_text_cloud">Такого формата мы ещё не знаем. Облачный ИИ прочитает чек, а вы проверите поля. Текст чека уйдёт на сервер ИИ.</string>
-    <string name="receipt_ai_text_off">Такого формата мы ещё не знаем. Отправьте образец — добавим формат. Или включите ИИ: Ещё → Настройки → Умные функции.</string>
-    <string name="receipt_ai_enable">Включить ИИ</string>
-    <string name="receipt_ai_failed">ИИ не нашёл итог в чеке. Введите сумму вручную или отправьте образец — добавим формат.</string>
-    <string name="receipt_ai_busy_title">Читаю чек…</string>
-    <string name="receipt_ai_busy_phone">Это займёт несколько секунд. Чек не уходит с телефона.</string>
-    <string name="receipt_ai_busy_cloud">Это займёт несколько секунд.</string>
-    <string name="scan_source_ai">Прочитано ИИ · проверьте сумму и дату</string>
 </resources>

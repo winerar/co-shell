@@ -24,7 +24,6 @@
     <string name="drafts_day_today">сегодня</string>
     <string name="drafts_day_yesterday">вчера</string>
     <string name="drafts_untitled">Без названия</string>
-    <string name="drafts_category_ai">предложено ИИ</string>
     <string name="drafts_caption" translatable="false">%1$s · %2$s</string>
     <string name="drafts_row_sub" translatable="false">%1$s · %2$s</string>
     <string name="drafts_empty">Черновиков нет. Запишите траты в «Быстрых заметках» — они появятся здесь.</string>

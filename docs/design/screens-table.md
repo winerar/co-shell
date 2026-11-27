@@ -21,7 +21,6 @@
 | Шторка: возврат | Fb208C | entry_refund | ✓ | ✓ |
 | Шторка: теги | Fb129A | entry_tags | ✓ | ✓ |
 | Шторка: QR чека | Qr526Filled | entry_scan | ✓ | ✓ |
-| Шторка: категория предложена ИИ | EntryGuessAi | — | — | — |
 | Шторка: категория по истории | EntryGuessHist | — | — | — |
 | Шторка: «Провести» | Rec143Post | recurring_post | ✓ | ✓ |
 | Счета | Accounts | accounts | ✓ | ✓ |
@@ -59,18 +58,6 @@
 | Настройки: ввод операции | Set1Entry | settings_input | ✓ | ✓ |
 | Настройки: уведомления | Set1Notices | settings_notices | ✓ | ✓ |
 | Настройки: данные и копия | Set1Data | settings_data | ✓ | ✓ |
-| ИИ на телефоне | AiOff | ai_addon | ✓ | ✓ |
-| ИИ на телефоне: шаги | AiStep2 | ai_addon_loading | ✓ | ✓ |
-| ИИ на телефоне: скачивание дополнения | AiStep1Load | ai_addon_addon_loading | — | ✓ |
-| ИИ на телефоне: включён | AiOn | ai_addon_on | ✓ | ✓ |
-| ИИ на телефоне: слабый телефон | AiWeak | ai_addon_weak | ✓ | ✓ |
-| Облачный разбор | CloudOff | cloud_ai | ✓ | ✓ |
-| Облачный разбор: включён | CloudOn | cloud_ai_on | ✓ | ✓ |
-| Облачный разбор: вопрос | CloudConsent | cloud_ai_consent | ✓ | ✓ |
-| Облачный разбор: нужен вход | CloudNoLogin | cloud_ai_nologin | ✓ | ✓ |
-| Быстрые заметки: облако | CloudNotes | — | — | — |
-| Быстрые заметки: читает облако | CloudBusy | — | — | — |
-| Черновики: лимит облака | CloudLimit | — | — | — |
 | Резервная копия | Backup | backup | ✓ | ✓ |
 | Копия: автоматическая | BackupAuto | backup_auto | ✓ | ✓ |
 | Ещё | More | more | ✓ | ✓ |
@@ -84,6 +71,7 @@
 | Отчёты: тренд | Tr238DrillA | report_category_trend | ✓ | ✓ |
 | Отчёты: картина | Rp189IeA | reports_picture | ✓ | ✓ |
 | Капитал по месяцам | Rp189NwDrill | capital_month | ✓ | ✓ |
+| Отчёты: подушка | Cush241Edge | reports_cushion | ✓ | ✓ |
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
@@ -92,6 +80,12 @@
 | Долг: новый | DebtNew | — | — | — |
 | Долг: карточка | DebtDetail | — | — | — |
 | Долг: вернули часть | DebtReturn | — | — | — |
+| Цели | GoalList | goals | ✓ | ✓ |
+| Цели: много | GoalMany | — | — | — |
+| Цели: пусто | GoalEmpty | goals_empty | ✓ | ✓ |
+| Цель: новая | GoalNew | — | — | — |
+| Цель | GoalDetail | goal_edit | ✓ | ✓ |
+| Обзор: цели | GoalHome | — | — | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -100,7 +94,6 @@
 
 ## Без полного набора эталонов
 
-- Шторка: категория предложена ИИ (нет эталона: light, dark)
 - Шторка: категория по истории (нет эталона: light, dark)
 - Семья: заполнена (10 из 10) (нет эталона: light, dark)
 - Семья: участник (нет эталона: light, dark)
@@ -109,13 +102,12 @@
 - Семья: удалить семью? (нет эталона: light, dark)
 - Семья: удалить аккаунт? (нет эталона: light, dark)
 - Семья: вас убрали (нет эталона: light, dark)
-- ИИ на телефоне: скачивание дополнения (ai_addon_addon_loading: light)
-- Быстрые заметки: облако (нет эталона: light, dark)
-- Быстрые заметки: читает облако (нет эталона: light, dark)
-- Черновики: лимит облака (нет эталона: light, dark)
 - Долг: новый (нет эталона: light, dark)
 - Долг: карточка (нет эталона: light, dark)
 - Долг: вернули часть (нет эталона: light, dark)
+- Цели: много (нет эталона: light, dark)
+- Цель: новая (нет эталона: light, dark)
+- Обзор: цели (нет эталона: light, dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

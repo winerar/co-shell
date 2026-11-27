@@ -4,10 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.transactions.DeleteTransactionWithUndo
-import app.coshell.core.domain.ai.NoLanguageModel
-import app.coshell.core.domain.ai.PayeeCategoryAi
-import app.coshell.core.domain.ai.ReceiptAi
-import app.coshell.receipt.inbox.UnreadReceipts
 import app.coshell.core.domain.categoryguess.CategoryGuess
 import app.coshell.core.domain.drafts.DraftRepository
 import app.coshell.core.domain.drafts.InMemoryDraftRepository
@@ -39,6 +35,7 @@ import app.coshell.core.model.CategoryType
 import app.coshell.core.model.Currencies
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.IdGenerator
+import app.coshell.core.model.Money
 import app.coshell.core.model.MoneyFormat
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionType
@@ -93,11 +90,8 @@ class TransactionEditViewModel @Inject constructor(
     private val entryTip: EntryTip,
     private val screenOptions: ScreenOptionsStore = InMemoryScreenOptions(),
     private val drafts: DraftRepository = InMemoryDraftRepository(),
-    private val categoryAi: PayeeCategoryAi = PayeeCategoryAi(NoLanguageModel),
     private val entryDrafts: EntryDraftStore = InMemoryEntryDraftStore(),
     private val savedEntries: SavedEntries = SavedEntries { _, _ -> },
-    private val receiptAi: ReceiptAi = ReceiptAi(NoLanguageModel),
-    private val unreadReceipts: UnreadReceipts = UnreadReceipts.NONE,
 ) : ViewModel() {
 
     /** The edited operation; `null` for a new one. «Дублировать» in the header copies it. */
@@ -118,6 +112,10 @@ class TransactionEditViewModel @Inject constructor(
 
     /** «Провести» a credit card payment from «Скоро» (#686): a new transfer into this card for the minimum payment. */
     private val creditCardId: String? = savedStateHandle[TransactionEditDestination.ARG_CREDIT_CARD]
+
+    /** «Пополнить» a savings goal (#768): a new transfer into the goal's account for what to put aside this month. */
+    private val topUpAccountId: String? = savedStateHandle[TransactionEditDestination.ARG_TOP_UP_ACCOUNT]
+    private val topUpMinor: Long = savedStateHandle[TransactionEditDestination.ARG_TOP_UP_MINOR] ?: 0L
 
     /** A draft of a quick note from the route (#586): fills a new form once; saved — the draft is gone. */
     private val draftId: String? = savedStateHandle[TransactionEditDestination.ARG_DRAFT_ID]
@@ -145,7 +143,7 @@ class TransactionEditViewModel @Inject constructor(
             isLoading = true,
             isNew = transactionId == null,
             receiptUnread = savedStateHandle[TransactionEditDestination.ARG_RECEIPT_UNREAD] ?: false,
-        ).let { it.copy(receiptAi = if (it.receiptUnread) receiptAiMode() else ReceiptAiMode.NONE) },
+        ),
     )
     val state: StateFlow<TransactionEditUiState> = _state.asStateFlow()
 
@@ -199,7 +197,6 @@ class TransactionEditViewModel @Inject constructor(
             receiptCurrencies = receiptCurrencySuggestions(recent, accountList),
             tags = _state.value.tags,
             receiptUnread = _state.value.receiptUnread,
-            receiptAi = _state.value.receiptAi,
         )
         val loaded = when {
             transaction != null -> entryFormOf(transaction, base, allCategories, moneyFormat, timeZone)
@@ -216,6 +213,10 @@ class TransactionEditViewModel @Inject constructor(
             val card = withBalances.firstOrNull { it.account.id == id } ?: return@let
             val minimum = card.account.credit?.let { CreditCard.status(it, card.balance, today).minPayment } ?: return@let
             _state.update { it.withCreditPayment(card.account, minimum, accountList.filter { a -> !a.archived }, moneyFormat) }
+        }
+        topUpAccountId?.takeIf { transaction == null && template == null }?.let { id ->
+            val target = withBalances.firstOrNull { it.account.id == id }?.account ?: return@let
+            _state.update { it.withGoalTopUp(target, Money(topUpMinor, target.currency), accountList.filter { a -> !a.archived }, moneyFormat) }
         }
         if (transaction == null && template == null) draftId?.let { applyDraft(it) }
         // A plain new sheet offers what the last closed one had (#323).
@@ -236,7 +237,7 @@ class TransactionEditViewModel @Inject constructor(
 
     /** A new operation from nothing: not an edit, a copy, a template, a receipt, a draft of notes or a credit card payment. */
     private fun isPlainNew(transaction: Transaction?, template: Transaction?): Boolean =
-        transactionId == null && transaction == null && copyFromId == null && template == null && templateId == null && scannedQr == null && draftId == null && creditCardId == null &&
+        transactionId == null && transaction == null && copyFromId == null && template == null && templateId == null && scannedQr == null && draftId == null && creditCardId == null && topUpAccountId == null &&
             !_state.value.receiptUnread
 
     /** «Продолжить» on the plate «Не сохранено» (#323): the draft goes back into the form. */
@@ -274,7 +275,6 @@ class TransactionEditViewModel @Inject constructor(
                     .withCategoryOptions(allCategories, recentCategoryIds)
             }
         }
-        if (qr.transfer == null) askAiCategory()
         linkReceiptAccounts(qr)
     }
 
@@ -353,49 +353,6 @@ class TransactionEditViewModel @Inject constructor(
     /** «Ввести вручную» or «Отправить образец» in «Не удалось прочитать чек» (#561): the window closes. */
     fun onReceiptUnreadDismiss() = _state.update { it.copy(receiptUnread = false) }
 
-    private var receiptReadJob: Job? = null
-
-    private fun receiptAiMode(): ReceiptAiMode = when {
-        unreadReceipts.text().isNullOrBlank() -> ReceiptAiMode.NONE
-        !receiptAi.available -> ReceiptAiMode.OFF
-        receiptAi.cloud -> ReceiptAiMode.CLOUD
-        else -> ReceiptAiMode.PHONE
-    }
-
-    /**
-     * «Прочитать с ИИ» (#593): the model reads the receipt no format knew; the total must be printed in it ([ReceiptAi]). Read — the sheet
-     * is filled as from any receipt, with «Прочитано ИИ · проверьте сумму и дату»; nothing found — the window comes back without the button.
-     */
-    fun onReceiptAiRead() {
-        val text = unreadReceipts.text()?.takeIf { it.isNotBlank() } ?: return
-        _state.update { it.copy(receiptUnread = false, receiptReading = true) }
-        receiptReadJob?.cancel()
-        receiptReadJob = viewModelScope.launch {
-            val live = accountsById.values.filter { !it.archived }
-            val fallback = _state.value.accountId?.let { accountsById[it]?.currency } ?: live.firstOrNull()?.currency ?: CurrencyCode("USD")
-            val receipt = receiptAi.read(text, fallback, live.map { it.currency }.toSet(), clock.now().toLocalDateTime(timeZone).date)
-            if (receipt == null) {
-                _state.update { it.copy(receiptReading = false, receiptUnread = true, receiptAiFailed = true) }
-                return@launch
-            }
-            scannedQr = receipt
-            scanAmountTouched = false
-            _state.update { form ->
-                form.copy(receiptReading = false).withReceipt(receipt, moneyFormat)
-                    .withDebitSuggestion(converter, moneyFormat)
-                    .withGuessedCategory()
-                    .withCategoryOptions(allCategories, recentCategoryIds)
-            }
-            askAiCategory()
-        }
-    }
-
-    /** «Отменить» in «Читаю чек…»: the reading stops, the blank sheet stays. */
-    fun onReceiptAiCancel() {
-        receiptReadJob?.cancel()
-        _state.update { it.copy(receiptReading = false) }
-    }
-
     /** «Всё равно записать»: the same receipt once more, on purpose. */
     fun onScanDuplicateAccept() = _state.update { form -> form.copy(scan = form.scan?.copy(duplicate = null)) }
 
@@ -460,7 +417,7 @@ class TransactionEditViewModel @Inject constructor(
     // region Form input
 
     fun onTypeChange(type: TransactionType) = _state.update {
-        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false, categoryGuessSource = null, categoryByAi = false)
+        it.copy(type = type, refund = false, categoryError = false, toAccountError = null, categoryGuessed = false, categoryGuessSource = null)
             .withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds)
     }
 
@@ -470,9 +427,8 @@ class TransactionEditViewModel @Inject constructor(
      */
     private fun TransactionEditUiState.withGuessedCategory(): TransactionEditUiState {
         if (!isNew || isCopy || categoryTouched || (categoryId != null && !categoryGuessed)) return this
-        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key?.takeIf { it.isNotBlank() }, note)
-        if (guess == null && categoryByAi) return this
-        return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source, categoryByAi = false)
+        val guess = CategoryGuess.suggest(history, type, allCategories, scan?.seller, scan?.key?.takeIf { it.isNotBlank() }, note, scan?.mcc)
+        return copy(categoryId = guess?.categoryId, categoryGuessed = guess != null, categoryGuessSource = guess?.source)
     }
 
     /** «↩ Возврат» chip of an expense (#208): the same category, the sign flips. */
@@ -525,7 +481,7 @@ class TransactionEditViewModel @Inject constructor(
     /** Selecting a folder selects the folder itself and opens its subcategories. */
     fun onCategorySelect(id: String) = _state.update {
         categoryTouched = true
-        it.copy(categoryId = id, categoryError = false, categoryGuessed = false, categoryGuessSource = null, categoryByAi = false).withCategoryOptions(allCategories, recentCategoryIds)
+        it.copy(categoryId = id, categoryError = false, categoryGuessed = false, categoryGuessSource = null).withCategoryOptions(allCategories, recentCategoryIds)
     }
 
     fun onDateSelect(date: LocalDate) = updateForm { it.copy(date = date) }
@@ -536,36 +492,6 @@ class TransactionEditViewModel @Inject constructor(
 
     fun onNoteChange(value: String) {
         _state.update { it.copy(note = value).withGuessedCategory().withCategoryOptions(allCategories, recentCategoryIds) }
-        askAiCategory()
-    }
-
-    private var aiJob: Job? = null
-
-    /**
-     * #594: a new expense whose seller or note nothing in the history or the brand dictionary knows asks the model for a category (when the
-     * model is there); the sheet stays usable meanwhile and a manual pick wins. Caption «предложено ИИ» until the person picks.
-     */
-    private fun askAiCategory() {
-        val s = _state.value
-        val text = (s.scan?.seller ?: s.note).trim()
-        val open = s.isNew && !s.isCopy && !categoryTouched && s.type == TransactionType.EXPENSE && (s.categoryId == null || s.categoryByAi)
-        if (!categoryAi.available || !open || text.length < AI_MIN_TEXT) {
-            aiJob?.cancel()
-            return
-        }
-        aiJob?.cancel()
-        aiJob = viewModelScope.launch {
-            delay(AI_DELAY_MS)
-            val options = allCategories.filter { it.type == CategoryType.EXPENSE && !it.archived }
-            val name = categoryAi.suggest(text, options.map { it.name }) ?: return@launch
-            val category = options.firstOrNull { it.name == name } ?: return@launch
-            _state.update { cur ->
-                val same = (cur.scan?.seller ?: cur.note).trim() == text
-                if (categoryTouched || !same || (cur.categoryId != null && !cur.categoryByAi) || cur.categoryGuessed && !cur.categoryByAi) cur
-                else cur.copy(categoryId = category.id, categoryGuessed = true, categoryGuessSource = null, categoryByAi = true, categoryError = false)
-                    .withCategoryOptions(allCategories, recentCategoryIds)
-            }
-        }
     }
 
     /** A pill in the row or a row of the «Теги» sheet: on ↔ off. */
@@ -735,7 +661,5 @@ class TransactionEditViewModel @Inject constructor(
         const val RECENT_OPERATIONS = 500
 
         /** #594: the model is asked for a seller or note of at least this many letters, a moment after the last keystroke. */
-        const val AI_MIN_TEXT = 3
-        const val AI_DELAY_MS = 700L
     }
 }

@@ -6,6 +6,7 @@ import app.coshell.core.designsystem.charts.BulletTone
 import app.coshell.core.domain.budgets.BudgetMonthSummary
 import app.coshell.core.domain.budgets.BudgetProgress
 import app.coshell.core.domain.budgets.BudgetState
+import app.coshell.core.domain.budgets.BudgetSuggestion
 import app.coshell.core.domain.budgets.PACE_TOLERANCE_PERCENT
 import app.coshell.core.model.Category
 import app.coshell.core.model.Currencies
@@ -28,6 +29,16 @@ internal fun buildEnvelopes(progress: List<BudgetProgress>, categories: List<Cat
         val id = item.budget.categoryId
         buildEnvelope(item, byId[id], folderSizes[id], format, innerByFolder[id].orEmpty().map { buildEnvelope(it, byId[it.budget.categoryId], null, format) }.sorted())
     }.sorted()
+}
+
+/** The first-visit rows (#185) from [suggestions], named and coloured as their categories, amounts formatted with the code. */
+internal fun buildOffer(suggestions: List<BudgetSuggestion>, categories: List<Category>, format: MoneyFormat): BudgetsUiState.FirstLimits? {
+    val byId = categories.associateBy { it.id }
+    val rows = suggestions.mapNotNull { suggestion ->
+        val category = byId[suggestion.categoryId] ?: return@mapNotNull null
+        BudgetsUiState.FirstLimits.Row(category.id, category.name, category.icon, category.color, format.format(suggestion.limit), suggestion.limit)
+    }
+    return rows.takeIf { it.isNotEmpty() }?.let(BudgetsUiState::FirstLimits)
 }
 
 /** Number of live subcategories of each folder: «папка · 3 категории». */

@@ -8,6 +8,7 @@ import app.coshell.core.data.repository.RoomCategoryRepository
 import app.coshell.core.data.repository.RoomDataWipeRepository
 import app.coshell.core.data.repository.RoomExchangeRateRepository
 import app.coshell.core.data.repository.RoomFamilySettings
+import app.coshell.core.data.repository.RoomGoalRepository
 import app.coshell.core.data.repository.RoomTagRepository
 import app.coshell.core.data.repository.RoomTemplateRepository
 import app.coshell.core.data.repository.RoomTransactionRepository
@@ -31,6 +32,7 @@ import app.coshell.core.model.Rate
 import app.coshell.core.model.RateOrigin
 import app.coshell.core.model.Recurrence
 import app.coshell.core.model.RecurringSchedule
+import app.coshell.core.model.Goal
 import app.coshell.core.model.Tag
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
@@ -68,6 +70,7 @@ class BackupWipeRestoreTest {
     private val budgets = RoomBudgetRepository(db.budgetDao(), stamper)
     private val templates = RoomTemplateRepository(db.templateDao(), stamper)
     private val tags = RoomTagRepository(db.tagDao(), stamper)
+    private val goals = RoomGoalRepository(db.goalDao(), stamper)
     private val rates = RoomExchangeRateRepository(db.rateDao(), stamper)
     private val settings = RoomFamilySettings(db.settingDao(), stamper)
     private val backup = JsonBackupRepository(db, stamper, clock)
@@ -94,6 +97,7 @@ class BackupWipeRestoreTest {
         val pending = db.syncDao().pending()
         assertEquals(setOf("t-peso", "t-rent", "t-swap"), pending.transactions.filter { !it.deleted }.map { it.id }.toSet())
         assertTrue(pending.accounts.none { it.deleted })
+        assertEquals(setOf("g-trip", "g-ins"), pending.goals.filter { !it.deleted }.map { it.id }.toSet())
         assertTrue(pending.transactions.all { it.updatedAt > Instant.parse("2026-11-15T11:00:00Z").toEpochMilliseconds() })
     }
 
@@ -136,5 +140,7 @@ class BackupWipeRestoreTest {
         rates.saveManualRate(ExchangeRate(LocalDate(2026, 11, 1), usd, ars, Rate.parse("1450"), RateOrigin.MANUAL))
         settings.setCurrencies(listOf(ars, usd))
         settings.setMonthStartDay(5)
+        goals.save(Goal("g-trip", "Отпуск", Money(2_000_00, usd), "cash", LocalDate(2027, 7, 1), icon = "gift", color = 0xFF7FD6A0))
+        goals.save(Goal("g-ins", "Страховка", Money(360_00, usd), "cash", LocalDate(2027, 3, 15), yearly = true))
     }
 }

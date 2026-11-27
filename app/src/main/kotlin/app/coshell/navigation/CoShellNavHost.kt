@@ -34,6 +34,8 @@ import app.coshell.accounts.edit.AccountEditRoute
 import app.coshell.privacy.HiddenPill
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.scan.ReceiptScanRoute
+import app.coshell.notices.NoticeLinks
+import app.coshell.notices.NoticeTarget
 import app.coshell.recurring.notify.PaymentLinks
 import app.coshell.shortcuts.ShortcutLink
 import app.coshell.shortcuts.ShortcutLinks
@@ -68,6 +70,8 @@ import kotlinx.coroutines.flow.collectLatest
 import app.coshell.debts.edit.DebtDetailRoute
 import app.coshell.debts.edit.DebtNewRoute
 import app.coshell.debts.list.DebtsRoute
+import app.coshell.goals.edit.GoalEditRoute
+import app.coshell.goals.list.GoalsRoute
 import app.coshell.drafts.list.DraftsRoute
 import app.coshell.drafts.notes.NotesRoute
 import app.coshell.recurring.list.RecurringListRoute
@@ -105,6 +109,7 @@ fun CoShellNavHost(
     paymentLinks: PaymentLinks? = null,
     receiptLinks: ReceiptLinks? = null,
     shortcutLinks: ShortcutLinks? = null,
+    noticeLinks: NoticeLinks? = null,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
@@ -238,6 +243,8 @@ fun CoShellNavHost(
                     },
                     onOpenAccount = { navController.navigate(AccountEditDestination(it)) { launchSingleTop = true } },
                     onOpenDebt = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
+                    onGoals = { navController.navigate(GoalsDestination) { launchSingleTop = true } },
+                    onOpenGoal = { navController.navigate(GoalEditDestination(it)) { launchSingleTop = true } },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                     onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
@@ -274,7 +281,6 @@ fun CoShellNavHost(
                         onScanReceipt = lock.guard { navController.navigate(ReceiptScanDestination) { launchSingleTop = true } },
                         onNewTemplate = { navController.navigate(TemplateEditDestination()) { launchSingleTop = true } },
                         onSendReceiptSample = { navController.navigate(FeedbackDestination(receiptSample = true)) { launchSingleTop = true } },
-                        onSmartSettings = { navController.navigate(SettingsDestination) { launchSingleTop = true } },
                     )
                 }
                 // New entries only: the words about the sheet sit in the dimmed strip above it (#513, `SheetCoach`).
@@ -346,6 +352,24 @@ fun CoShellNavHost(
                 onAdd = { navController.navigate(DebtNewDestination) { launchSingleTop = true } },
                 onOpen = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
             )
+        }
+        screen<GoalsDestination> {
+            GoalsRoute(
+                onBack = { navController.popBackStack() },
+                onAdd = { navController.navigate(GoalEditDestination()) { launchSingleTop = true } },
+                onOpen = { navController.navigate(GoalEditDestination(it)) { launchSingleTop = true } },
+            )
+        }
+        dialog<GoalEditDestination>(dialogProperties = CoShellSheetDialogProperties) {
+            CoShellSheet(onClosed = { navController.popBackStack() }) { close ->
+                GoalEditRoute(
+                    onDone = close,
+                    onTopUp = { account, minor ->
+                        navController.popBackStack()
+                        navController.navigate(TransactionEditDestination(type = "TRANSFER", topUpAccountId = account, topUpMinor = minor)) { launchSingleTop = true }
+                    },
+                )
+            }
         }
         dialog<DebtNewDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> DebtNewRoute(onDone = close) }
@@ -499,6 +523,33 @@ fun CoShellNavHost(
             }
             navController.navigate(destination) { launchSingleTop = true }
             shortcutLinks.consumed()
+        }
+    }
+
+    // A tap on one of the optional notifications (#745): the screen it is about.
+    if (noticeLinks != null) {
+        val link by noticeLinks.link.collectAsStateWithLifecycle()
+        LaunchedEffect(link) {
+            val open = link ?: return@LaunchedEffect
+            when (open.target) {
+                NoticeTarget.NEW_ENTRY -> navController.navigate(TransactionEditDestination()) { launchSingleTop = true }
+                NoticeTarget.BUDGETS -> {
+                    // A limit notice: «Бюджеты» and that envelope over it — «Назад» lands on the list of limits.
+                    navController.navigate(BudgetsDestination) { launchSingleTop = true }
+                    val category = open.categoryId
+                    val month = open.month
+                    if (category != null && month != null) {
+                        navController.navigate(BudgetDetailDestination(category, month.year, month.month.number)) { launchSingleTop = true }
+                    }
+                }
+                NoticeTarget.DRAFTS -> navController.navigate(DraftsDestination) { launchSingleTop = true }
+                NoticeTarget.BACKUP -> navController.navigate(BackupDestination) { launchSingleTop = true }
+                NoticeTarget.RECAP -> {
+                    val last = java.time.YearMonth.now().minusMonths(1)
+                    navController.navigate(MonthRecapDestination(last.year, last.monthValue)) { launchSingleTop = true }
+                }
+            }
+            noticeLinks.consumed()
         }
     }
 }

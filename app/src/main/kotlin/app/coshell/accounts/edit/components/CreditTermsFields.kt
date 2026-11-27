@@ -3,22 +3,20 @@ package app.coshell.accounts.edit.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditUiState
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSegmented
-import app.coshell.core.designsystem.components.CoShellTextField
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.ai.BetaMark
+import app.coshell.ui.form.AmountSheetField
+import app.coshell.ui.form.DaySheetField
+import app.coshell.ui.form.NumberSheetField
+import app.coshell.ui.beta.BetaMark
 
 /**
  * «Условия карты» (#686, boards `CreditTerms`, `CreditTermsSum`): the limit, the day of the month the payment is due and the minimum
@@ -32,17 +30,16 @@ internal fun CreditTermsFields(state: AccountEditUiState, actions: AccountEditAc
             BetaMark()
             CoShellHint(stringResource(R.string.account_credit_beta_hint), Modifier.weight(1f))
         }
-        CoShellAmountField(
+        AmountSheetField(
             value = state.creditLimit,
             onValueChange = actions.onCreditLimitChange,
             label = stringResource(R.string.account_credit_limit),
             currency = state.currency,
         )
-        CoShellTextField(
+        DaySheetField(
             value = state.creditPayDay,
             onValueChange = actions.onCreditPayDayChange,
             label = stringResource(R.string.account_credit_pay_day),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
         )
         CoShellSegmented(
             labels = listOf(stringResource(R.string.account_credit_min_percent_tab), stringResource(R.string.account_credit_min_sum_tab)),
@@ -50,36 +47,37 @@ internal fun CreditTermsFields(state: AccountEditUiState, actions: AccountEditAc
             onSelect = { actions.onCreditMinSumChange(it == 1) },
         )
         if (state.creditMinSum) {
-            CoShellAmountField(
+            AmountSheetField(
                 value = state.creditMin,
                 onValueChange = actions.onCreditMinChange,
                 label = stringResource(R.string.account_credit_min_label),
                 currency = state.currency,
             )
         } else {
-            CoShellTextField(
+            NumberSheetField(
                 value = state.creditMin,
                 onValueChange = actions.onCreditMinChange,
                 label = stringResource(R.string.account_credit_min_label),
+                maxWhole = PERCENT_WHOLE,
+                fractionDigits = PERCENT_FRACTION,
                 suffix = "%",
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
             )
         }
         CoShellHint(stringResource(R.string.account_credit_min_hint))
         // Grace period (#634, board `CreditTermsGrace`): a reminder of the interest-free day; both fields or none.
-        CoShellTextField(
+        DaySheetField(
             value = state.creditStatementDay,
             onValueChange = actions.onCreditStatementDayChange,
             label = stringResource(R.string.account_credit_statement_day),
             hint = stringResource(R.string.account_credit_optional),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+            clearable = true,
         )
-        CoShellTextField(
+        NumberSheetField(
             value = state.creditGraceDays,
             onValueChange = actions.onCreditGraceDaysChange,
             label = stringResource(R.string.account_credit_grace_days),
+            maxWhole = GRACE_DAYS_WHOLE,
             hint = stringResource(R.string.account_credit_grace_hint),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
         )
     }
 }
@@ -94,3 +92,8 @@ internal fun creditSummary(state: AccountEditUiState): String {
     )
     return stringResource(R.string.account_credit_summary, state.creditLimit, state.creditPayDay.ifBlank { "—" }, min)
 }
+
+/** «100,00 %» at most — what `parsePercentBasisPoints` reads. */
+internal const val PERCENT_WHOLE = 3
+internal const val PERCENT_FRACTION = 2
+private const val GRACE_DAYS_WHOLE = 3

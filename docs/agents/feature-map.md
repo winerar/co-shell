@@ -22,6 +22,7 @@ QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается пр
 (обёртка всего приложения: ждёт настройки, `LocalAmountsHidden`, флаги окна, «экраном вниз», экран блокировки поверх), `EyeButton` (шапка «Обзора»),
 `HiddenPill`; `pin/` — `PinFlow` (шаги любого экрана PIN), `PinLayout`, `PinSetupRoute`; `lock/` — `LockScreen`, `Biometrics` (`androidx.biometric`);
 `settings/` — «Ещё → Конфиденциальность»; `data/` — `PrefsPrivacySettings` (файл `privacy`, не синк и не копия), `Pbkdf2PinHasher`.
+`notices/` — локальные уведомления (#745): `NoticesWorker` раз в день (`NoticeScheduler`), `NoticeFactsSource` → `core:domain/notices/NoticePlanner` (что показать, не больше одного в день), `NoticePosts`/`NoticeTexts` (каналы, тексты), `NoticeLinks` (нажатие → экран), `NoticeOfferCard` на «Обзоре»; настройки — `data/PrefsNoticeSettings`, экран — `settings/NoticeKindRows`.
 Чистая логика — `core:domain/privacy/` (`AppLock`, `PinAttempts`, `PinEntry`, `PrivacyOptions`); маскировка сумм — `core:designsystem/amount/HiddenAmounts.kt`.
 `theme/` — не экран: `ThemeSettingsViewModel` (читают `MainActivity` и «Ещё»), `components/ThemeModePicker`, `PaletteGrid`,
 `data/PrefsThemeSettings`; режим `ThemeMode` — `core:domain/settings/ThemeSettings.kt`.
@@ -36,6 +37,7 @@ QR чека (#526): ссылка `afip.gob.ar/fe/qr` открывается пр
 `list/` («Бюджеты»: `BudgetBoard.kt` — конверты, итог, фильтр; шестерёнка — день начала месяца, #213), `detail/` (экран конверта #183:
 `BudgetDetailBoard.kt` — шапка и категории папки; операции периода — `BudgetSource.observeEnvelope`), `edit/` (редактор лимита,
 `BudgetForm.kt`); вход — «Ещё».
+**Первый визит в «Бюджеты» (#185, доска `BudFirst`, решение 2026-11-24):** пока на месяц нет лимитов, вместо пустого экрана — «Бюджет на месяц»: `core:domain/budgets/BudgetSuggestions.kt` (`suggestBudgetLimits` — по верхним категориям расходов среднее за ≤ 3 месяца с записями в валюте итогов, папка = с подкатегориями; `roundedLimit` — до 1000 целые, дальше две значащие цифры; `BudgetSuggestionsTest`), `BudgetBoard.buildOffer`, блок `list/components/FirstLimits.kt` (галочки, «Создать N лимитов» → `SaveBudgetUseCase` на показанный месяц; `BudgetsViewModelTest`). Все суммы — в валюте итогов (на доске образец смешивал ARS и USD), подпись «в среднем за 3 мес.» стоит и при меньшей истории.
 Теги при вводе (#293): `transactions/edit/EntryTags.kt` (список, недавние, создание, `mergeLabels` — сохранение в `labels`),
 `components/TagPickerSheet` (шторка «Теги», открывается плиткой «Теги»), `NewTagDialog`.
 Шторка ввода без прокрутки (#290, доска `Fb290A`): шаг 2 — `components/DetailsStep` из карточек `AmountBlock` (сумма, строка чека,

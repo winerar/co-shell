@@ -63,13 +63,7 @@ fun TransactionsScreen(
     // Gesture tips: editing by a tap after the first entry, selecting by a hold once there are three; holding a sum (other currencies)
     // from five; the app icon's shortcuts from ten (#513, audit 2026-11-25).
     val rowCount = state.days.sumOf { it.rows.size }
-    val tips = buildMap {
-        if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
-        if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
-        if (state.repeatedSpending && !state.filter.isActive) put(HintId.TEMPLATE, R.string.hint_template)
-        if (rowCount >= HOLD_AMOUNT_ROWS) put(HintId.HOLD_AMOUNT, R.string.hint_hold_amount)
-        if (rowCount >= SHORTCUTS_ROWS && !state.filter.isActive) put(HintId.APP_SHORTCUTS, R.string.hint_app_shortcuts)
-    }
+    val tips = operationTips(rowCount, state.repeatedSpending, state.filter.isActive)
     CoachHint(tips, enabled = !state.isLoading && !selection.active && tips.isNotEmpty())
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -161,6 +155,19 @@ internal const val NOTES_HINT_ROWS = 20
 
 /** «Удерживайте сумму…» (#513): from five rows, when there is something to look at in other currencies. */
 internal const val HOLD_AMOUNT_ROWS = 5
+
+/** The gesture tips of the tab for [rowCount] entries, in the order they are offered (#513, #579). */
+internal fun operationTips(rowCount: Int, repeatedSpending: Boolean, filterActive: Boolean): Map<HintId, Int> = buildMap {
+    if (rowCount >= 1) put(HintId.EDIT_TAP, R.string.hint_edit_tap)
+    if (rowCount >= 3) put(HintId.HOLD_SELECT, R.string.hint_hold_select)
+    if (repeatedSpending && !filterActive) put(HintId.TEMPLATE, R.string.hint_template)
+    if (rowCount >= SHARE_RECEIPT_ROWS && !filterActive) put(HintId.SHARE_RECEIPT, R.string.hint_share_receipt)
+    if (rowCount >= HOLD_AMOUNT_ROWS) put(HintId.HOLD_AMOUNT, R.string.hint_hold_amount)
+    if (rowCount >= SHORTCUTS_ROWS && !filterActive) put(HintId.APP_SHORTCUTS, R.string.hint_app_shortcuts)
+}
+
+/** A receipt can be shared into the app from a bank or a shop: told after the third entry (#579). */
+internal const val SHARE_RECEIPT_ROWS = 3
 
 /** «Удерживайте значок приложения…» (#555 shortcuts): from ten rows — someone who records often. */
 internal const val SHORTCUTS_ROWS = 10

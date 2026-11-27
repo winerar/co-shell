@@ -17,6 +17,7 @@ import app.coshell.backup.auto.AutoBackupSettings
 import app.coshell.family.sync.SyncScheduler
 import app.coshell.language.AppLanguage
 import app.coshell.rates.work.RatesRefreshScheduler
+import app.coshell.notices.NoticeScheduler
 import app.coshell.recurring.notify.RecurringPaymentsScheduler
 import app.coshell.recurring.notify.ReminderWatch
 import dagger.hilt.android.HiltAndroidApp
@@ -67,6 +68,7 @@ class CoShellApp : Application(), Configuration.Provider {
             RatesRefreshScheduler.schedule(this@CoShellApp)
             SyncScheduler.schedulePeriodic(this@CoShellApp)
             RecurringPaymentsScheduler.schedule(this@CoShellApp)
+            NoticeScheduler.schedule(this@CoShellApp)
             // The hourly check of the automatic copy (#606); also moves phones off the old once-a-week job.
             if (autoBackupSettings.config.value.folderUri != null) autoBackupScheduler.ensureChecking()
         }

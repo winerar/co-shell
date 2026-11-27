@@ -47,6 +47,9 @@
   группа, новый прогон отменяет старый. Раньше группы были `refs/heads/…` и `refs/pull/N/merge` и шли параллельно.
 - `automerge.sh` и `release.yml` считают коммит зелёным, если **есть** успешный прогон (отменённые и пустые дубли не мешают).
 
+## Лендинг
+- После релиза — шаг «Publish landing» на `main`; изменили только страницу — «Publish landing (dev)» после мержа в `dev` (`scripts/ci/landing-changed.sh`, данные — `version.json` последнего релиза, `publish-landing.sh`). Подробно — `docs/setup/landing.md`.
+
 ## Правила Firebase
 - Изменение `firebase/{firestore.rules,database.rules.json,firebase.json,rules-test/}` или `scripts/ci/deploy-rules.sh`
   (`scripts/ci/rules-changed.sh`): в PR — `scripts/test-rules.sh` (эмулятор, до шага автомержа), на `dev` после мержа —
@@ -76,6 +79,3 @@
   самообновление); последняя — `https://github.com/winerar/co-shell/releases/latest` (репозиторий приватный).
 - Упавший `check` пишет короткую сводку (`scripts/agent/build-summary.sh --ci`) в summary джоба и одним
   комментарием `<!-- ci-summary -->` в PR (обновляется; после зелёного — «исправлено»).
-- `aibench.yml` — только вручную (Actions → «Замер моделей»): собирает `tools/aibench` и кладёт APK пре-релизом `aibench-N`; в CI приложения и в релиз не входит. Запускается из копии в `main` (после релиза).
-- `ai-addon.yml` — только вручную: собирает `ai-addon` (необязательное дополнение «ИИ на телефоне», #587) и кладёт APK пре-релизом `ai-addon-N`; debug-подпись общим ключом — работает с debug-приложением. В CI приложения и в релиз не входит; release-дополнение для загрузки из приложения — следующий шаг #587.
-- `ai-addon-release.yml` — только вручную (нужны секреты релиза): собирает `ai-addon` **release-ключом приложения** (подпись должна совпадать — разрешение привязки уровня подписи) и публикует в `co-shell-releases` под фиксированным тегом `ai-addon` (пре-релиз, `--latest=false`: `releases/latest` приложения не должен указывать на дополнение) файлы `version.json` + APK; оттуда шаг 1 экрана «ИИ на телефоне» скачивает дополнение. Как любой новый workflow — работает из копии в `main`.

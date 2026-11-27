@@ -4,6 +4,7 @@ import app.coshell.budgets.list.number
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.domain.reports.NET_WORTH_MONTHS
+import app.coshell.core.domain.reports.NetWorth
 import app.coshell.core.domain.reports.monthlySeries
 import app.coshell.core.domain.reports.netWorth
 import app.coshell.core.domain.reports.reportMonths
@@ -17,11 +18,18 @@ import app.coshell.reports.ReportsUiState.WhyRow
  * Pure: «Капитал» (#189) — a year of month ends up to the period's last month; «Почему изменился» for the months the
  * ledger holds (those of «По месяцам»), newest first. `null` — no account in the total or no month started.
  */
-internal fun buildCapital(input: ReportInput, accounts: List<Account>, days: List<BalanceDay>, book: RateBook, format: MoneyFormat): Capital? {
+internal fun buildCapital(input: ReportInput, accounts: List<Account>, days: List<BalanceDay>, book: RateBook, format: MoneyFormat): Capital? =
+    capitalWorth(input, accounts, days, book)?.let { buildCapital(it, format) }
+
+/** The money at each month end of «Капитал» — shared with «Подушка» (#241). */
+internal fun capitalWorth(input: ReportInput, accounts: List<Account>, days: List<BalanceDay>, book: RateBook): NetWorth? {
     val periods = reportMonths(input.period.lastMonth, NET_WORTH_MONTHS, input.startDay)
     val saved = monthlySeries(input.ledger, input.columns).associate { it.period to it.saved }
-    val worth = netWorth(accounts, days, periods, book, input.ledger.currency, input.today, saved) ?: return null
-    return Capital(
+    return netWorth(accounts, days, periods, book, input.ledger.currency, input.today, saved)
+}
+
+internal fun buildCapital(worth: NetWorth, format: MoneyFormat): Capital =
+    Capital(
         value = format.number(worth.now),
         change = format.signed(worth.change),
         falling = worth.change.isNegative,
@@ -41,4 +49,3 @@ internal fun buildCapital(input: ReportInput, accounts: List<Account>, days: Lis
         },
         missing = worth.missing.map { it.value }.sorted(),
     )
-}

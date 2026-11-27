@@ -40,15 +40,6 @@ class TransactionEditDraftTest : TransactionEditTestBase() {
     }
 
     @Test
-    fun `an AI category is shown as chosen, not as a guess`() = runTest {
-        seed()
-        drafts.saveDrafts(listOf(draft(source = DraftCategorySource.AI)))
-        val state = viewModel(draftId = "d1").state.value
-        assertEquals("cafe", state.categoryId)
-        assertFalse(state.categoryGuessed)
-    }
-
-    @Test
     fun `an amount in another currency than the account goes to the purchase amount`() = runTest {
         seed()
         drafts.saveDrafts(listOf(draft(currency = usd, account = "card")))

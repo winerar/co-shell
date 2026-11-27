@@ -27,6 +27,8 @@ import mockup_screens_review as mon_screens  # noqa: E402
 import mockup_screens_recap as recap_screens  # noqa: E402
 import mockup_screens_trend as trend_screens  # noqa: E402
 import mockup_screens_picture as picture_screens  # noqa: E402
+import mockup_screens_cushion as cushion_screens  # noqa: E402
+import mockup_screens_amount as amount_screens  # noqa: E402
 import mockup_screens_recurring as rec_screens  # noqa: E402
 import mockup_screens_notes as notes_screens  # noqa: E402
 import mockup_screens_release as release_screens  # noqa: E402
@@ -42,7 +44,7 @@ import mockup_catalog_style as comp_style  # noqa: E402
 import mockup_theme  # noqa: E402
 from mockup_bricks import board  # noqa: E402
 
-PLAN = (tpl_screens, rec_screens, rec415_screens, bud_screens, rep_screens, mon_screens, recap_screens, trend_screens, picture_screens, notes_screens, release_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
+PLAN = (tpl_screens, rec_screens, rec415_screens, bud_screens, rep_screens, mon_screens, recap_screens, trend_screens, picture_screens, cushion_screens, amount_screens, notes_screens, release_screens)  # rows «Шаблоны», «Бюджеты», «Отчёты», «Итог месяца» (#236) on «Экраны» (picked А, #166)
 
 OUT = os.path.normpath(os.path.join(HERE, '../../docs/design/mockups'))
 
@@ -54,12 +56,9 @@ PAGES = {
     'Colors': ('Цвет счёта: банки + палитра', True), 'Categories': ('Категории (тапайте)', True), 'CategoryEdit': ('Категория: редактор без прокрутки (#290)', False),
     'DepositEdit': ('Вклад: редактор счёта (#634)', False), 'DepositTerms': ('Вклад: условия (#634)', False), 'AccountsDeposit': ('Счета: вклад, ожидаемый доход (#634)', False), 'HomeDepositSoon': ('Обзор: вклад закрывается (#634)', False),
     'DebtList': ('Долги: две вкладки, итог, строки (#552)', False), 'DebtEmpty': ('Долги: пусто (#552)', False), 'DebtNew': ('Долги: новый долг (#552)', False), 'DebtDetail': ('Долг: карточка (#552)', False), 'DebtReturn': ('Долг: «Вернули часть» (#552)', False),
+    'GoalList': ('Цели: накоплено, «в месяц», цели по сроку (#768)', False), 'GoalMany': ('Цели: 12+ целей, строки без полосы (#768)', False), 'GoalEmpty': ('Цели: пусто (#768)', False), 'GoalNew': ('Цели: новая цель (#768)', False), 'GoalDetail': ('Цель: прогресс, «Пополнить» (#768)', False), 'GoalHome': ('Обзор: карточка «Цели» (#768)', False),
     'CreditTermsGrace': ('Кредитка: условия с льготным периодом (#634)', False), 'AccountsCreditGrace': ('Счета: кредитка, «без процентов до» (#634)', False), 'HomeCreditGrace': ('Обзор: платёж и льготный период (#634)', False),
     'AccountEdit': ('Счёт: редактор без прокрутки (#290)', False), 'AccountAdjust': ('Счёт: «Исправить баланс» — «Сохранить баланс» сразу (#581)', False), 'EntryReceiptTransfer': ('Чек «Перевод между своими счетами» → шторка «Перевод»: оба счёта найдены по цифрам (#646, #578)', False), 'ReceiptWhichAccount': ('Цифры чека не знакомы: «Какой это счёт?» — запомним в счёте (#577)', False), 'AccountDigits': ('Счёт: «Последние цифры карты или счёта» (#577)', False), 'AccountPass': ('Проездной (SUBE, «Тройка»): тип «Проездной», «Баланс на карте · Сверить», вне общего баланса (#645)', False), 'AccountPassCheck': ('Проездной: «Сверить баланс» — «Сохранить баланс» сразу (#645)', False), 'AccountsPass': ('Счета: проездной в списке, «не в общем балансе» (#645)', False), 'CreditEdit': ('Кредитка: тип «Кредитка», плитка «Условия карты» (#686)', False), 'CreditTerms': ('Кредитка: «Условия карты» — минимальный платёж процентом (#686)', False), 'CreditTermsSum': ('Кредитка: «Условия карты» — минимальный платёж суммой (#686)', False), 'AccountsCredit': ('Счета: кредитка — платёж до, полоса «Доступно» (#686)', False), 'HomeCreditSoon': ('Обзор: «Скоро» — платёж по кредитке, «Провести» (#686)', False), 'EntryUnsaved': ('Новая операция: плашка «Не сохранено» — «Продолжить» / «✕» (#323)', False), 'HomeHoldFan': ('Обзор: удержали «+» — веер QR чека · Заметка · Шаблон, палец на «Заметке» (#623)', False), 'AccountAdjusted': ('Счёт: баланс исправлен, плашка (#581)', False), 'Rates': ('Курсы валют', False), 'ReportCurrencies': ('Валюты отчётов', True), 'Family': ('Семья: в семье', False),
-    'AiOff': ('ИИ на телефоне: выключен, «Включить»', False), 'AiStep1': ('ИИ на телефоне: шаг 1, установка дополнения', False), 'AiStep1Load': ('ИИ на телефоне: шаг 1, скачивание дополнения', False), 'AiStep2': ('ИИ на телефоне: шаг 2, скачивание модели', False),
-    'AiOn': ('ИИ на телефоне: включён', False), 'AiWeak': ('ИИ на телефоне: слабый телефон (меньше 6 ГБ)', False), 'AiData': ('ИИ на телефоне: вопрос про мобильный интернет', False),
-    'CloudOff': ('Облачный разбор: выключен', False), 'CloudOn': ('Облачный разбор: включён', False), 'CloudConsent': ('Облачный разбор: вопрос перед включением', False), 'CloudNoLogin': ('Облачный разбор: нужен вход в «Семью»', False),
-    'CloudNotes': ('Быстрые заметки: строки прочитает облачный ИИ', False), 'CloudBusy': ('Быстрые заметки: читает облачный ИИ', False), 'CloudLimit': ('Черновики: дневной лимит облака', False),
     'Backup': ('Резервная копия', False), 'Wipe': ('Стереть все данные (тапайте)', True),
     'Components': ('Компоненты: кирпичи макетов → имена в коде', True), 'History': ('История решений', False),
 }
@@ -68,16 +67,16 @@ PAGE_MODULES = (tab_screens, ops_screens, form_screens, set_screens, catalog)
 LAYOUT = [  # (row title, [board names]) on the «Экраны» page
     ('Обзор', ['Home', 'HomeEmpty', 'HomeAttention', 'HomeSync', 'UpdateWhatsNew','HomeCreditSoon', 'HomeCreditGrace', 'HomeHoldFan']),
     ('Операции', ['Operations', 'OpsScrolled', 'OpsSelect', 'OpsUndo', 'OpsEmpty', 'OpsNothing']),
-    ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryReceiptTransfer', 'ReceiptWhichAccount', 'EntryUnsaved', 'EntryGuessHist', 'EntryGuessAi', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
+    ('Новая операция — шторка', ['Main', 'EntryTransfer', 'EntryReceipt', 'EntryReceiptTransfer', 'ReceiptWhichAccount', 'EntryUnsaved', 'EntryGuessHist', 'EntryEdit', 'EntryError', 'EntryNoAccounts', 'EntryAllAccounts']),
     ('Счета и «Ещё»', ['Accounts', 'AccountsSearch', 'AccountsEmpty', 'More', 'UpdatePill', 'Update']),
     ('Счёт и категории', ['AccountEdit', 'AccountAdjust', 'AccountAdjusted', 'AccountDigits', 'AccountPass', 'AccountPassCheck', 'AccountsPass', 'CreditEdit', 'CreditTerms', 'CreditTermsSum', 'AccountsCredit', 'CreditTermsGrace', 'AccountsCreditGrace', 'AccountEditExisting', 'AccountEditLocal', 'AccountBlocked', 'Colors', 'Categories', 'CategoryEdit', 'CategoryBlocked']),
     ('Вклад', ['DepositEdit', 'DepositTerms', 'AccountsDeposit', 'HomeDepositSoon']),
     ('Долги', ['DebtList', 'DebtEmpty', 'DebtNew', 'DebtDetail', 'DebtReturn']),
+    ('Цели', ['GoalList', 'GoalMany', 'GoalEmpty', 'GoalNew', 'GoalDetail', 'GoalHome']),
     ('Курсы и валюты', ['Rates', 'RatesRefreshing', 'RatesFailed', 'RatesEmpty', 'RatesManual', 'ReportCurrencies', 'CurrencyAdd']),
     ('Семья и синхронизация', ['FamilySignedOut', 'FamilyNoAccess', 'FamilyInvited', 'FamilyJoinMode', 'Family', 'FamilyFull', 'FamilyMemberSheet', 'FamilyRemoveConfirm', 'FamilyLeave', 'FamilyDelete', 'FamilyDeleteAccount', 'FamilyRemoved', 'FamilyInviteSent', 'FamilyInviteDialog', 'FamilyOffline', 'FamilyNotConfigured']),
     ('Настройки, копия, стирание, отзыв', ['Settings', 'Backup', 'BackupAuto', 'BackupError', 'BackupRestore', 'Wipe', 'WipeFailed', 'Feedback', 'FeedbackSent', 'FeedbackError', 'Hint602PinForgot']),
     ('Закрытое тестирование', ['AccessGate', 'AccessLocked']),
-    ('ИИ на телефоне и в облаке', ['AiOff', 'AiStep1', 'AiStep1Load', 'AiStep2', 'AiOn', 'AiData', 'AiWeak', 'CloudOff', 'CloudOn', 'CloudConsent', 'CloudNoLogin', 'CloudNotes', 'CloudBusy', 'CloudLimit']),
     ('Импорт из Wallet', ['ImportStart', 'ImportError', 'ImportSummary', 'ImportAccounts', 'ImportCategories', 'ImportTransfers', 'ImportPreview', 'ImportDone']),
 ]
 

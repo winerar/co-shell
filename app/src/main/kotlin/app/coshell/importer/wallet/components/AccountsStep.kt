@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.core.designsystem.components.CoShellAmountField
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
@@ -22,7 +21,7 @@ import app.coshell.core.domain.importer.wallet.AccountChoice
 import app.coshell.core.domain.importer.wallet.WalletAccountInfo
 import app.coshell.core.domain.importer.wallet.WalletAccountMatcher
 import app.coshell.core.model.Account
-import app.coshell.core.model.AmountSign
+import app.coshell.ui.form.AmountSheetField
 import app.coshell.importer.wallet.WalletImportDraft
 
 /**
@@ -82,15 +81,14 @@ private fun WalletAccountCard(
                     )
                 }
             }
-            CoShellAmountField(
+            AmountSheetField(
                 value = balance,
                 onValueChange = onBalance,
                 label = stringResource(R.string.import_wallet_balance),
                 currency = info.currency.value,
                 error = if (balanceInvalid) stringResource(R.string.import_wallet_balance_error) else null,
                 hint = stringResource(R.string.import_wallet_balance_hint),
-                onToggleSign = { onBalance(AmountSign.toggle(balance)) },
-                toggleSignLabel = stringResource(R.string.import_wallet_balance_toggle_sign),
+                signed = true,
             )
         }
     }

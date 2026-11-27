@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertNull
 
-/** Quick notes read by rules (#586): the gold lines of `docs/samples/ai/eval.json` plus the edge cases. */
+/** Quick notes read by rules (#586): the gold lines of `docs/samples/eval/eval.json` plus the edge cases. */
 class QuickNoteParserTest {
     private val ars = CurrencyCode("ARS")
 

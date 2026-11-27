@@ -1,9 +1,8 @@
 package app.coshell.transactions.edit
 
 import app.coshell.core.domain.quickentry.ReceiptPrefills
-import app.coshell.core.domain.ai.ReceiptAi
-import app.coshell.core.domain.receipts.AfipQrFormat
 import app.coshell.core.domain.receipts.Receipt
+import app.coshell.core.domain.receipts.ReceiptFormats
 import app.coshell.core.domain.receipts.ReceiptNote
 import app.coshell.core.model.CurrencyCode
 import app.coshell.core.model.MoneyFormat
@@ -16,7 +15,14 @@ import kotlinx.datetime.LocalDate
  * ([document] — a receipt file or text, «Из чека · Teleshka») for the quiet source line, [key] marks the saved operation,
  * [duplicate] is the live operation of the same receipt (the «Этот чек уже записан» window).
  */
-data class ScanUi(val seller: String, val key: String, val duplicate: ScanDuplicate? = null, val document: Boolean = false, val ai: Boolean = false)
+data class ScanUi(
+    val seller: String,
+    val key: String,
+    val duplicate: ScanDuplicate? = null,
+    val document: Boolean = false,
+    /** The shop's category code of a payment QR: suggests the category of a shop never paid before. */
+    val mcc: String? = null,
+)
 
 /**
  * «Какой это счёт?» (#577): the receipt prints the last [digits] of a card or an account no account has yet; [target] — they are
@@ -30,14 +36,14 @@ data class ScanDuplicate(val date: LocalDate, val amount: String, val category: 
 /**
  * A new expense from the receipt: the amount — or, on an account in another currency, the purchase amount (the debited
  * sum then follows by the rate, as for any receipt) — and the day of the receipt. Line items go to an empty note
- * ([ReceiptNote]); category and tags stay as they are.
+ * ([ReceiptNote]); a refund receipt (Russian QR `n=2`) turns on «Это возврат»; category and tags stay as they are.
  */
 internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: MoneyFormat): TransactionEditUiState {
     val prefill = ReceiptPrefills.of(receipt, account?.currency?.let(::CurrencyCode))
     return copy(
         isNew = true,
         type = TransactionType.EXPENSE,
-        refund = false,
+        refund = receipt.refund,
         amount = prefill.amount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),
         amountSuggested = false,
         suggestedRateDate = null,
@@ -54,8 +60,8 @@ internal fun TransactionEditUiState.withReceipt(receipt: Receipt, moneyFormat: M
             seller = receipt.merchant,
             key = prefill.dedupeKey,
             duplicate = scan?.duplicate,
-            document = receipt.format != AfipQrFormat.id,
-            ai = receipt.format == ReceiptAi.FORMAT,
+            document = receipt.format !in ReceiptFormats.qr,
+            mcc = receipt.mcc,
         ),
     )
 }

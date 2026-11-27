@@ -33,7 +33,7 @@ ICON = {
     'cart': 'M3 4h2l2.4 11h11l2-8H6.5M9 20h.01M17 20h.01', 'cafe': 'M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM17 9h2a2 2 0 0 1 0 4h-2',
     'taxi': 'M5 16h14l-1.5-6h-11zM7 16v2M17 16v2M8 10l1-3h6l1 3', 'salary': 'M4 8h16v11H4zM9 8V5h6v3M4 13h16',
     'transfer': 'M4 8h14l-3-3M20 16H6l3 3', 'pill': 'M8 4h8v16H8zM8 12h8', 'house': 'M4 11l8-6 8 6M6 10v9h12v-9',
-    'phone': 'M8 3h8v18H8zM11 18h2', 'film': 'M4 5h16v14H4zM8 5v14M16 5v14', 'gift': 'M4 10h16v10H4zM12 10v10M4 10l2-4h12l2 4',
+    'phone': 'M8 3h8v18H8zM11 18h2', 'film': 'M4 5h16v14H4zM8 5v14M16 5v14', 'gift': 'M4 10h16v10H4zM12 10v10M4 10l2-4h12l2 4', 'flag': 'M6 21V4M6 4h10l-2 4 2 4H6',
     'cloud': 'M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.5 1.5A3.3 3.3 0 0 0 7 18z', 'refresh': 'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7',
     'trash': 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13', 'copy': 'M8 8h12v12H8zM16 8V4H4v12h4', 'archive': 'M4 5h16v4H4zM6 9v10h12V9M10 13h4',
     'file': 'M6 3h8l4 4v14H6zM14 3v4h4', 'upload': 'M12 16V4M7 9l5-5 5 5M5 20h14', 'download': 'M12 4v12M7 11l5 5 5-5M5 20h14',

@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import app.coshell.R
 import app.coshell.core.designsystem.theme.LocalStatusPalette
-import app.coshell.ai.AiAddonStage
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -29,7 +28,6 @@ import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.MenuIcon
 import app.coshell.core.designsystem.components.RowGroupScope
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.ui.ai.BetaMark
 import app.coshell.core.domain.settings.WeekStart
 import app.coshell.theme.components.ThemeModePicker
 import app.coshell.theme.components.labelRes
@@ -104,26 +102,6 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
         }
     }
 
-/** «Умные функции»: the rows «ИИ на телефоне» (#587) and «Облачный разбор» (#635, when this build has the Worker) with their state (board `Set1Root`); the screens are `ai/AiAddonScreen`, `ai/cloud/CloudAiScreen`. */
-@Composable
-internal fun SmartCard(state: SettingsState, actions: SettingsActions) =
-    GroupCard(DesignR.drawable.ic_spark, 6, R.string.settings_smart_title, onAll = null) {
-        val hint = when (state.ai) {
-            AiAddonStage.OFF, AiAddonStage.UNSUPPORTED -> R.string.ai_settings_off
-            AiAddonStage.STEP_ADDON, AiAddonStage.STEP_MODEL -> R.string.ai_settings_loading
-            AiAddonStage.ON -> R.string.ai_settings_on
-        }
-        row { ValueRow(stringResource(R.string.ai_title), stringResource(hint), actions.onAiAddon, beta = true) }
-        state.cloud?.let { on ->
-            row {
-                ValueRow(
-                    stringResource(R.string.cloud_title), stringResource(if (on) R.string.cloud_settings_on else R.string.cloud_settings_off),
-                    actions.onCloudAi, beta = true,
-                )
-            }
-        }
-    }
-
 /**
  * «Помощь»: hints on/off with «Показать подсказки заново» as an outlined button under it (an action, not a page: #598 poll 2026-11-25 «Б»,
  * board `Help598B`), then «Знакомство с приложением» and the rows below in a second card; no group screen.
@@ -190,11 +168,10 @@ private fun GroupCard(
 
 /** A setting shown by its value: tap opens where it is chosen. */
 @Composable
-private fun ValueRow(title: String, value: String, onClick: () -> Unit, beta: Boolean = false, valueColor: Color = Color.Unspecified) = CoShellListRow(
+private fun ValueRow(title: String, value: String, onClick: () -> Unit, valueColor: Color = Color.Unspecified) = CoShellListRow(
     title = {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s), verticalAlignment = Alignment.CenterVertically) {
             Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
-            if (beta) BetaMark()
         }
     },
     supporting = { Text(value, color = valueColor, maxLines = Int.MAX_VALUE, overflow = TextOverflow.Ellipsis) },

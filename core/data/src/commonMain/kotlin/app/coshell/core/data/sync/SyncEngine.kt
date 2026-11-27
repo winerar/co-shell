@@ -104,7 +104,9 @@ class SyncEngine(
         val tags = pending.tags.map(SyncCodec::encode)
         // Debts (#552) last of all, for the same reason: the rules learn `debtEvent` after `tag`.
         val debts = pending.debtEvents.map(SyncCodec::encode)
-        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK) + debts.chunked(PUSH_CHUNK)).forEach { chunk ->
+        // Goals (#768) after debts: the rules learn `goal` last.
+        val goals = pending.goals.map(SyncCodec::encode)
+        (records.chunked(PUSH_CHUNK) + settings.chunked(PUSH_CHUNK) + tags.chunked(PUSH_CHUNK) + debts.chunked(PUSH_CHUNK) + goals.chunked(PUSH_CHUNK)).forEach { chunk ->
             try {
                 remote.push(chunk.withExtras())
             } catch (e: ApiException) {
@@ -113,7 +115,7 @@ class SyncEngine(
             }
             dao.clearSent(chunk)
         }
-        return records.size + settings.size + tags.size + debts.size
+        return records.size + settings.size + tags.size + debts.size + goals.size
     }
 
     /** Puts back the fields of a newer version this phone saved on pull (#340); own fields win. */
@@ -144,6 +146,7 @@ class SyncEngine(
             settings = of(SyncKind.SETTING, SyncCodec::setting, SyncCodec::encode),
             tags = of(SyncKind.TAG, SyncCodec::tag, SyncCodec::encode),
             debtEvents = of(SyncKind.DEBT_EVENT, SyncCodec::debtEvent, SyncCodec::encode),
+            goals = of(SyncKind.GOAL, SyncCodec::goal, SyncCodec::encode),
             extras = extras,
         )
     }

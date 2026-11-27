@@ -6,9 +6,9 @@ with the button to press outlined. Tone and words — docs/agents/texts.md and g
 
 TEXTS = {
     "ru": {
-        "title": "Co-Shell — семейный бюджет", "h1": "Семейный бюджет на двоих",
-        "lead": "Для нескольких валют, без лишнего. Работает без интернета, общий бюджет — на всех телефонах семьи.",
-        "download": "Скачать", "mb": "МБ", "meta": "Версия {version} · Android 8+ · обновляется само",
+        "title": "Co-Shell — семейный бюджет", "h1": "Общий бюджет семьи",
+        "lead": "Для нескольких валют, без лишнего. Работает без интернета, общий бюджет — на всех телефонах семьи. Только для Android.",
+        "download": "Скачать для Android", "mb": "МБ", "meta": "Версия {version} · Android 8+ · обновляется само",
         "sha": "Контрольная сумма SHA-256", "shot_alt": "Экран «Обзор» в приложении",
         "qr_title": "Открыли на компьютере?", "qr_text": "Наведите камеру телефона на код — страница откроется на телефоне.",
         "points": [
@@ -34,9 +34,9 @@ TEXTS = {
         "footer": "Только для Android. Данные хранятся на вашем телефоне.",
     },
     "en": {
-        "title": "Co-Shell — family budget", "h1": "A budget for two",
-        "lead": "Several currencies, nothing extra. Works offline; a shared budget on every phone in the family.",
-        "download": "Download", "mb": "MB", "meta": "Version {version} · Android 8+ · updates itself",
+        "title": "Co-Shell — family budget", "h1": "A shared family budget",
+        "lead": "Several currencies, nothing extra. Works offline; a shared budget on every phone in the family. Android only.",
+        "download": "Download for Android", "mb": "MB", "meta": "Version {version} · Android 8+ · updates itself",
         "sha": "SHA-256 checksum", "shot_alt": "The Overview screen of the app",
         "qr_title": "On a computer?", "qr_text": "Point your phone’s camera at the code to open this page on the phone.",
         "points": [
@@ -62,9 +62,9 @@ TEXTS = {
         "footer": "Android only. Your data stays on your phone.",
     },
     "es": {
-        "title": "Co-Shell — presupuesto familiar", "h1": "Un presupuesto para dos",
-        "lead": "Varias monedas, sin florituras. Funciona sin internet; un presupuesto compartido en todos los teléfonos de la familia.",
-        "download": "Descargar", "mb": "MB", "meta": "Versión {version} · Android 8+ · se actualiza sola",
+        "title": "Co-Shell — presupuesto familiar", "h1": "Un presupuesto familiar compartido",
+        "lead": "Varias monedas, sin florituras. Funciona sin internet; un presupuesto compartido en todos los teléfonos de la familia. Solo para Android.",
+        "download": "Descargar para Android", "mb": "MB", "meta": "Versión {version} · Android 8+ · se actualiza sola",
         "sha": "Suma de comprobación SHA-256", "shot_alt": "La pantalla Resumen de la app",
         "qr_title": "¿Estás en una computadora?", "qr_text": "Apunta la cámara del teléfono al código para abrir esta página en el teléfono.",
         "points": [

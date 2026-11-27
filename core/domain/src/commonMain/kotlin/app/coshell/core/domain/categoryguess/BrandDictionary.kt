@@ -97,9 +97,29 @@ object BrandDictionary {
     /** «Dia 123» is still the shop: the other words are digits only. */
     private fun onlyWithNumbers(words: List<String>, e: Entry) = words.all { it == e.words[0] || it.all(Char::isDigit) }
 
-    /** The person's expense category with the [icon]; the first in their order, never an archived one. */
-    fun categoryFor(icon: String?, categories: List<Category>): String? =
-        if (icon == null) null else categories.filter { it.type == CategoryType.EXPENSE && !it.archived && it.icon == icon }.minByOrNull { it.sortOrder }?.id
+    /**
+     * The person's expense category for the [icon], never an archived one. A family often has several with one icon — «Супермаркеты»
+     * with hundreds of entries next to an untouched starter «Продукты» (#742, real backup): the one used most in [uses] wins, then the
+     * icon itself before a [RELATED] one, then their order. A related icon counts only when nothing has the icon itself or it is used
+     * more («Общественный транспорт» with a train for the dictionary's «transport»).
+     */
+    fun categoryFor(icon: String?, categories: List<Category>, uses: Map<String, Int> = emptyMap()): String? {
+        if (icon == null) return null
+        val kinds = listOf(icon) + RELATED[icon].orEmpty()
+        val live = categories.filter { it.type == CategoryType.EXPENSE && !it.archived && it.icon in kinds }
+        return live.sortedWith(
+            compareByDescending<Category> { uses[it.id] ?: 0 }.thenBy { kinds.indexOf(it.icon) }.thenBy { it.sortOrder },
+        ).firstOrNull()?.id
+    }
+
+    /** Icons of the icon set that hold the same kind of spending as a dictionary icon. */
+    private val RELATED = mapOf(
+        "transport" to listOf("train", "car"),
+        "home" to listOf("shopping"),
+        "restaurant" to listOf("bakery"),
+        "subscriptions" to listOf("internet", "card"),
+        "fun" to listOf("movies", "games"),
+    )
 
     private const val FUZZY_MIN = 5
     private const val LONG_WORD = 8

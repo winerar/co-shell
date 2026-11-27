@@ -54,6 +54,25 @@ class BrandDictionaryTest {
     }
 
     @Test
+    fun `words of the owner's own notes are known (#742 gold set)`() {
+        assertEquals("transport", icon("Субе"))
+        assertEquals("food", icon("вода"))
+        assertEquals("restaurant", icon("десерты"))
+        assertEquals("utilities", icon("вода за месяц"))
+    }
+
+    @Test
+    fun `everyday services go to other, kindergartens to kids, bike shops to transport (#742)`() {
+        assertEquals("other", icon("стрижка"))
+        assertEquals("other", icon("маникюр"))
+        assertEquals("other", icon("Peluquería Estilo Ana"))
+        assertEquals("other", icon("Veterinaria Patitas"))
+        assertEquals("kids", icon("садик за ноябрь"))
+        assertEquals("transport", icon("Bicicletería Rodando"))
+        assertEquals("restaurant", icon("Panchería El Tano"))
+    }
+
+    @Test
     fun `phrases that are not purchases stay unknown`() {
         assertNull(icon("тест заметки"))
         assertNull(icon("позвонить маме"))
@@ -102,6 +121,21 @@ class BrandDictionaryTest {
         assertNull(BrandDictionary.categoryFor("restaurant", categories))
         assertNull(BrandDictionary.categoryFor(null, categories))
         assertNull(BrandDictionary.categoryFor("taxi", categories))
+    }
+
+    @Test
+    fun `the category the family uses wins over an untouched one with the same or a related icon (#742)`() {
+        val categories = listOf(
+            Category("food", "Продукты", CategoryType.EXPENSE, icon = "food", sortOrder = 1),
+            Category("super", "Супермаркеты", CategoryType.EXPENSE, icon = "food", sortOrder = 5),
+            Category("transport", "Транспорт", CategoryType.EXPENSE, icon = "transport", sortOrder = 2),
+            Category("train", "Общественный транспорт", CategoryType.EXPENSE, icon = "train", sortOrder = 6),
+        )
+        val uses = mapOf("super" to 318, "train" to 55)
+        assertEquals("super", BrandDictionary.categoryFor("food", categories, uses))
+        assertEquals("train", BrandDictionary.categoryFor("transport", categories, uses))
+        assertEquals("transport", BrandDictionary.categoryFor("transport", categories))
+        assertEquals("train", BrandDictionary.categoryFor("transport", categories.filter { it.id != "transport" }))
     }
 
     @Test

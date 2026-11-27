@@ -78,7 +78,8 @@ private fun ConverterSheetContent(state: ConverterUiState, actions: ConverterAct
             title = stringResource(if (side == ConverterSide.FROM) R.string.converter_pick_give else R.string.converter_pick_get),
             options = state.options.map { ChoiceOption(it, it) },
             selected = if (side == ConverterSide.FROM) state.from else state.to,
-            onPick = { actions.onPick(side, it) },
+            // ChoiceSheet does not call onDismiss after a pick: the pick itself must drop the sheet (#730), or its window stays on top and eats the keys.
+            onPick = { actions.onPick(side, it); picking = null },
             onDismiss = { picking = null },
         )
     }

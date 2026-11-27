@@ -44,6 +44,8 @@ import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.home.budget.HomeBudget
+import app.coshell.goals.GoalRowUi
+import app.coshell.home.goals.GoalsHomeCard
 import app.coshell.home.components.HomeTiles
 import app.coshell.home.components.HotBudgets
 import app.coshell.home.components.MonthReviewCard
@@ -61,6 +63,7 @@ import app.coshell.privacy.EyeButton
 import app.coshell.release.ReleaseNotice
 import app.coshell.release.ReleaseNoticeCard
 import app.coshell.hints.TourCard
+import app.coshell.notices.NoticeOfferCard
 import app.coshell.hints.HintSlot
 import app.coshell.hints.hintSlotShown
 import app.coshell.ui.top.rememberTabScrollBehavior
@@ -93,6 +96,7 @@ fun HomeScreen(
     creditPayments: List<CreditPaymentRow> = emptyList(),
     debtDue: List<DebtDueRow> = emptyList(),
     depositEnds: List<DepositEndRow> = emptyList(),
+    goals: List<GoalRowUi> = emptyList(),
     onPostAll: (UpcomingRow) -> Unit = {},
     onSkipAll: (String) -> Unit = {},
     gate: VersionGateBannerState? = null,
@@ -110,6 +114,9 @@ fun HomeScreen(
     tour: Boolean = false,
     onTourOpen: () -> Unit = {},
     onTourDismiss: () -> Unit = {},
+    noticeOffer: Boolean = false,
+    onNoticeOfferEnable: () -> Unit = {},
+    onNoticeOfferLater: () -> Unit = {},
 ) {
     val scroll = rememberTabScrollBehavior()
     val listState = rememberLazyListState()
@@ -122,6 +129,7 @@ fun HomeScreen(
             HomeCard.REVIEW -> review?.month != null
             HomeCard.UPCOMING -> upcoming.isNotEmpty() || creditPayments.isNotEmpty() || debtDue.isNotEmpty() || depositEnds.isNotEmpty()
             HomeCard.HOT -> budget?.hot?.isNotEmpty() == true
+            HomeCard.GOALS -> goals.isNotEmpty()
             HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT -> true
         }
     }
@@ -163,6 +171,7 @@ fun HomeScreen(
             }
             if (tour) item(key = "tour") { TourCard(onTourOpen, onTourDismiss, listItemMotion()) }
             if (showHint) item(key = "hint") { HintSlot(listItemMotion()) }
+            if (noticeOffer) item(key = "notice_offer") { NoticeOfferCard(onNoticeOfferEnable, onNoticeOfferLater, listItemMotion()) }
             if (state.accounts.isEmpty()) {
                 if (state.totals.isNotEmpty()) item(key = "total") { EmptyTotalCard(state.totals.first()) }
                 firstSteps?.takeIf { it.visible }?.let { steps -> item(key = "steps") { FirstStepsRow(steps, onFirstSteps, listItemMotion()) } }
@@ -205,6 +214,7 @@ fun HomeScreen(
                         HomeCard.HOT -> budget?.takeIf { it.hot.isNotEmpty() }?.let { hot ->
                             HotBudgets(hot.hot, onOpen = { actions.onBudget(it, hot.month) }, modifier = entrance)
                         }
+                        HomeCard.GOALS -> if (goals.isNotEmpty()) GoalsHomeCard(goals, actions.onGoals, actions.onOpenGoal, entrance)
                         HomeCard.RECENT -> RecentCard(state.recent, actions.onTransactions, actions.onTransactionClick, entrance)
                     }
                 }

@@ -34,6 +34,7 @@ enum class SyncKind(val wire: String) {
     SETTING("setting"),
     TAG("tag"),
     DEBT_EVENT("debtEvent"),
+    GOAL("goal"),
     ;
 
     companion object {

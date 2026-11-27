@@ -19,6 +19,9 @@ enum class HomeCard {
 
     /** «Последние операции». */
     RECENT,
+
+    /** «Цели»: the two savings goals with the nearest deadline (#768); only when there is a goal. Last: a saved layout gets it at the end too. */
+    GOALS,
 }
 
 /** What a tile of «Обзор» can show («Плитки · две»). The «Внимание» tile (no rate) takes the second place by itself when needed. */

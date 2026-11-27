@@ -6,16 +6,16 @@ package app.coshell.core.domain.categoryguess
  * of [BrandDictionary] («в аптеке» → «аптека»). Words that mean money in general («перевод», «долг») are left out on purpose.
  */
 internal val EVERYDAY_WORDS: Map<String, String> = mapOf(
-    "food" to "продуктов, продуктовые, хлеб, молоко, яйца, сыр, колбаса, курица, рыба, овощей, фруктов, крупы, сахар, чай, вода питьевая, " +
+    "food" to "продуктов, продуктовые, хлеб, молоко, яйца, сыр, колбаса, курица, рыба, овощей, фруктов, крупы, сахар, чай, вода, водичка, вода питьевая, " +
         "магазин продуктов, супермаркета, гипермаркет, рынке, бакалея, " +
         "comida, mercado, super, supermercado, verduras, frutas, carne, pollo, leche, pan, huevos, queso, facturas, yerba, " +
         "groceries, grocery, supermarket, food store",
     "restaurant" to "кофе, кофеек, капучино, латте, раф, обед, ужин, завтрак, ланч, бизнес ланч, перекус, пицца, суши, роллы, бургер, шашлык, хинкали, " +
-        "столовка, кафешка, ресторане, кафе бар, пиво, вино, коктейль, " +
-        "cafe, cafecito, cortado, medialunas, almuerzo, cena, desayuno, merienda, birra, cerveza, vino, helado, lomito, choripan, delivery, " +
+        "десерт, десерты, торт, пирожные, столовка, кафешка, ресторане, кафе бар, пиво, вино, коктейль, " +
+        "cafe, cafecito, cortado, pancho, panchos, pancheria, medialunas, almuerzo, cena, desayuno, merienda, birra, cerveza, vino, helado, lomito, choripan, delivery, " +
         "coffee, lunch, dinner, breakfast, takeaway, takeout",
     "taxi" to "такси, таксист, такса, taxi, remis, remise, cab, ride",
-    "transport" to "бензин, топливо, дизель, заправка, заправился, парковка платная, стоянка, метро проезд, автобус проезд, билет на поезд, поезд, " +
+    "transport" to "субе, велосипед, велосервис, бензин, топливо, дизель, заправка, заправился, парковка платная, стоянка, метро проезд, автобус проезд, билет на поезд, поезд, " +
         "самолет, авиабилет, авиабилеты, каршеринг поездка, самокат кикшеринг, кикшеринг, whoosh, юрент, " +
         "combustible, gasoil, carga sube, boleto, pasaje, pasajes, tren, subte viaje, peaje autopista, " +
         "gas station, fuel, petrol, parking, bus, train, flight, metro card",
@@ -43,7 +43,11 @@ internal val EVERYDAY_WORDS: Map<String, String> = mapOf(
     "education" to "учеба, учебники, урок, уроки, занятие, курсы английского, " +
         "curso, clases, libro, libros, utiles, colegio, facultad, " +
         "course, lesson, lessons, books, school",
-    "kids" to "детям, ребенку, детское, игрушки детям, " +
-        "juguete, juguetes, panales, " +
-        "toys, diapers, kids",
+    "kids" to "детям, ребенку, детское, игрушки детям, детский сад, садик, ясли, " +
+        "juguete, juguetes, panales, jardin de infantes, jardin maternal, " +
+        "toys, diapers, kids, kindergarten, daycare",
+    // Everyday services the starter categories have no place for (#742: the model guessed «Образование» for a haircut): «Другое».
+    "other" to "стрижка, парикмахерская, парикмахер, барбершоп, маникюр, педикюр, салон красоты, ветеринар, ветклиника, комиссия банка, банковская комиссия, " +
+        "peluqueria, barberia, manicura, unas, veterinaria, veterinario, comision bancaria, banco comision, " +
+        "haircut, barber, hairdresser, nail salon, manicure, vet, bank fee",
 )

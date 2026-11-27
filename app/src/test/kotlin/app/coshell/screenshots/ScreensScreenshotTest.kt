@@ -65,6 +65,7 @@ import app.coshell.accounts.list.AccountsScreen
 import app.coshell.accounts.list.accountsPreviewSample
 import app.coshell.budgets.list.BudgetsActions
 import app.coshell.budgets.list.BudgetsScreen
+import app.coshell.budgets.list.budgetsFirstPreviewSample
 import app.coshell.budgets.list.budgetsPreviewSample
 import app.coshell.categories.edit.CategoryEditActions
 import app.coshell.categories.edit.CategoryEditScreen
@@ -273,6 +274,12 @@ class ScreensScreenshotTest {
     fun `budgets dark`() = shot("budgets_dark", dark = true) { BudgetsScreen(budgetsPreviewSample, BudgetsActions()) }
 
     @Test
+    fun `budgets first visit light`() = shot("budgets_first_light") { BudgetsScreen(budgetsFirstPreviewSample, BudgetsActions()) }
+
+    @Test
+    fun `budgets first visit dark`() = shot("budgets_first_dark", dark = true) { BudgetsScreen(budgetsFirstPreviewSample, BudgetsActions()) }
+
+    @Test
     fun `categories light`() = shot("categories_light") { CategoriesScreen(categoriesPreviewSample, CategoriesActions()) }
 
     @Test
@@ -400,10 +407,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
@@ -480,3 +487,9 @@ class ScreensScreenshotTest {
 }
 
 private val backupAutoSample = AutoBackupUiState(enabled = true, folderName = "Google Диск / Co-Shell", lastBackup = "3 ноября", daysLeft = 2, nextDay = "вс, 29 ноября", nextTime = "3:00")
+
+/** Board `Set1Notices`: the evening reminder, limits, the recap and the copy are on; drafts and the welcome-back are off. */
+private val NOTICE_KINDS_SAMPLE = setOf(
+    app.coshell.core.domain.notices.NoticeKind.EVENING, app.coshell.core.domain.notices.NoticeKind.LIMIT,
+    app.coshell.core.domain.notices.NoticeKind.RECAP, app.coshell.core.domain.notices.NoticeKind.BACKUP,
+)

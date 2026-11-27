@@ -4,11 +4,7 @@
 
     <!-- Self-update (version.json, APK) and the daily exchange rates download. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- The optional «ИИ на телефоне» add-on (#587): its service is bound only by apps signed with the same key. -->
-    <uses-permission android:name="app.coshell.ai.permission.BIND" />
-    <queries>
-        <package android:name="app.coshell.ai" />
-    </queries>
+    <!-- Self-update: the downloaded APK is handed to the system installer. -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Short buzz when a shake opens the new-transaction screen. -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -17,9 +13,6 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- Regular payments: «Сегодня платёж» at 9:00 and «Проведено» with «Отменить» (#143). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- «ИИ на телефоне» (#587): the 2,5 GB download goes on with the app closed, with a notification. -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:name=".CoShellApp"
@@ -61,10 +54,6 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".ai.AiDownloadService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
         <receiver
             android:name=".update.install.InstallResultReceiver"
             android:exported="false" />

@@ -4,7 +4,6 @@ import app.coshell.feedback.files.AndroidFeedbackFiles
 import app.coshell.feedback.files.FeedbackFiles
 import app.coshell.receipt.ReceiptLinks
 import app.coshell.receipt.inbox.ReceiptSamples
-import app.coshell.receipt.inbox.UnreadReceipts
 
 import app.coshell.BuildConfig
 import app.coshell.core.domain.feedback.DeviceInfoProvider
@@ -45,8 +44,6 @@ interface FeedbackModule {
     @Binds fun bindFiles(impl: AndroidFeedbackFiles): FeedbackFiles
 
     @Binds fun bindReceiptSamples(impl: ReceiptLinks): ReceiptSamples
-
-    @Binds fun bindUnreadReceipts(impl: ReceiptLinks): UnreadReceipts
 
     companion object {
         /** Empty in local builds: CI sets `FIREBASE_PROJECT_ID` and `FIREBASE_API_KEY`. */

@@ -62,6 +62,7 @@ class HomeLayoutTest {
         val back = hidden.withShown(HomeCard.UPCOMING, true)
         assertEquals(emptyList(), back.hiddenCards)
         assertEquals(hidden.order, back.order)
-        assertEquals(HomeCard.UPCOMING, back.visible[1])
+        assertEquals(back.order, back.visible)
+        assertEquals(hidden.order.indexOf(HomeCard.UPCOMING), back.visible.indexOf(HomeCard.UPCOMING))
     }
 }

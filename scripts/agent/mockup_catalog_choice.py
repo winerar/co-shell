@@ -147,11 +147,25 @@ def action_fan(v):
                cap('удержали «+» — три кнопки веером; не отпуская, ведут палец к нужной и отпускают; мимо — закроется; короткое нажатие — новая операция'))
 
 
+def counter(v):
+    """CoShellCounter (#777, poll 2026-11-27 «А»): «− value +», round 48 buttons on the track; holding a button keeps stepping."""
+    def one(value, sub, mono, dim_minus=False):
+        btn = ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: inline-flex; align-items: center; justify-content: center; flex: none; %s">%s</span>')
+        font = MONO + ' font-size: 22px;' if mono else 'font-size: 22px; font-weight: 600;'
+        return ('<div style="display: flex; align-items: center; gap: 12px; width: 100%%;">%s<div style="flex-grow: 1; text-align: center;"><div style="%s">%s</div>'
+                '<div style="font-size: 12px; color: %s;">%s</div></div>%s</div>' % (
+                    btn % (CHIP, 'opacity: 0.38;' if dim_minus else '', svg('minus', INK, 22)), font, value, MUTED, sub, btn % (CHIP, '', svg('plus', INK, 22))))
+    return col(labeled(one('7:30', 'шаг 15 минут', True), 'время — шаг 15 минут, через полночь по кругу'),
+               labeled(one('В тот же день', 'до платежа', False, dim_minus=True), 'на краю — кнопка 38 %'),
+               cap('нажатие — шаг, удержание — листает быстрее; шторка «Другое…» в «Уведомлениях»'))
+
+
 CHOICE = [
     ('Веер над «+»', action_fan, 'CoShellActionFan(actions, enabled) { «+» } · FanAction(icon, label, onSelect)'),
     ('Лента счетов', account_ribbon, 'CoShellAccountRibbon(accounts, selectedId, onSelect, onAll)'),
     ('Сегменты', segments, 'CoShellSegmented(labels, selected, enabled, icons) · CoShellStepper(label, onEarlier, onLater) — «‹ Октябрь 2026 ›»'),
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
+    ('Счётчик', counter, 'CoShellCounter(value, onStep, minusLabel, plusLabel, caption, canMinus, canPlus, mono)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),
     ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty)'),
     ('Строка-переключатель', switch_lines, 'CoShellSwitchLine(title, subtitle, checked)'),

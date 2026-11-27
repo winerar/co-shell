@@ -43,6 +43,7 @@ import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellSearchField
 import app.coshell.core.designsystem.components.CoShellSection
 import app.coshell.core.designsystem.components.CoShellSectionLabel
+import app.coshell.core.designsystem.components.CoShellCounter
 import app.coshell.core.designsystem.components.CoShellSegmented
 import app.coshell.core.designsystem.components.CoShellSheetLayout
 import app.coshell.core.designsystem.components.CoShellSwitchRow
@@ -75,6 +76,7 @@ fun ComponentsCatalog() {
                 CoShellButton(onClick = {}, tone = ButtonTone.Tonal) { Text("Провести") }
             }
             SegmentedSample()
+            CounterSample()
             MembersSample()
         }
         CoShellCard(Modifier.padding(horizontal = Spacing.l)) {
@@ -138,6 +140,15 @@ fun SegmentedSample() {
             listOf("Расход", "Доход", "Перевод"), selected = 0, onSelect = {}, modifier = Modifier.width(Sizes.tileMinHeight),
             icons = listOf(R.drawable.ic_call_made, R.drawable.ic_call_received, R.drawable.ic_swap_horiz),
         )
+    }
+}
+
+/** #777: the counter of «Другое…» in «Уведомления» — time in the amount font, days with the lower end reached. */
+@Composable
+fun CounterSample() {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
+        CoShellCounter("7:30", onStep = {}, minusLabel = "Раньше", plusLabel = "Позже", caption = "шаг 15 минут", mono = true)
+        CoShellCounter("В тот же день", onStep = {}, minusLabel = "Меньше", plusLabel = "Больше", caption = "до платежа", canMinus = false)
     }
 }
 

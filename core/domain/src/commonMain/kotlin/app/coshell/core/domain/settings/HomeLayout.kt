@@ -2,6 +2,9 @@ package app.coshell.core.domain.settings
 
 /** The cards of «Обзор» below the balance (which is always first and cannot be hidden). */
 enum class HomeCard {
+    /** «Сегодня можно» (#769): what may be spent today; first, right under the balance (a saved layout gets it at the end). */
+    DAILY,
+
     /** «Итог месяца» in the first days of a month. */
     REVIEW,
 
@@ -46,6 +49,9 @@ data class HomeLayout(
 ) {
     /** The cards to draw, in order. */
     val visible: List<HomeCard> get() = order.filter { it !in hidden }
+
+    /** The hidden cards, in [order]: «Скрыто: N · Вернуть» in the editing mode. */
+    val hiddenCards: List<HomeCard> get() = order.filter { it in hidden }
 
     fun isShown(card: HomeCard): Boolean = card !in hidden
 

@@ -16,10 +16,10 @@
     <string name="settings_data_items">Копия · импорт · Wi-Fi · стереть</string>
     <string name="settings_data_section">Данные</string>
     <string name="settings_data_careful">Осторожно</string>
-    <string name="density_section">Списки</string>
-    <string name="density_comfortable">Обычная</string>
-    <string name="density_compact">Компактная</string>
-    <string name="density_hint">Компактная — больше строк на экране в «Операциях» и «Счетах».</string>
+    <string name="density_section">Строки в списках</string>
+    <string name="density_comfortable">Свободно</string>
+    <string name="density_compact">Плотно</string>
+    <string name="density_hint">Так будут выглядеть строки в «Операциях» и «Счетах».</string>
     <string name="settings_screens_title">Экраны</string>
     <string name="settings_screens_items">Обзор · операции · счета</string>
     <string name="settings_ops_items">Счёт, теги и заметка в строке</string>
@@ -53,7 +53,6 @@
     <string name="settings_data_network">Сеть</string>
     <string name="settings_data_wifi">Синхронизировать только по Wi-Fi</string>
     <string name="settings_notices_time">Время напоминания о платежах</string>
-    <string name="settings_notices_hour">%1$d:00</string>
     <string name="settings_home_intro">Удерживайте ⠿ и тяните, чтобы поменять порядок.</string>
     <string name="settings_home_cards">Карточки</string>
     <string name="settings_home_balance">Баланс</string>
@@ -97,9 +96,21 @@
     <string name="settings_balance_all">Все</string>
     <string name="settings_balance_except">Все, кроме %1$d</string>
     <string name="settings_home_balance_section">Баланс</string>
-    <string name="settings_notices_before">Предупреждать за</string>
-    <string name="settings_notices_same_day">В день</string>
-    <string name="settings_notices_days">%1$d дн.</string>
+    <string name="settings_notices_before">Предупреждать</string>
+    <string name="settings_notices_other">Другое…</string>
+    <string name="settings_notices_time_step">шаг 15 минут</string>
+    <string name="settings_notices_days_caption">до платежа</string>
+    <string name="settings_notices_earlier">Раньше</string>
+    <string name="settings_notices_later">Позже</string>
+    <string name="settings_notices_fewer">Меньше дней</string>
+    <string name="settings_notices_more">Больше дней</string>
+    <string name="settings_notices_same_day">В тот же день</string>
+    <plurals name="settings_notices_days">
+        <item quantity="one">За %1$d день</item>
+        <item quantity="few">За %1$d дня</item>
+        <item quantity="many">За %1$d дней</item>
+        <item quantity="other">За %1$d дня</item>
+    </plurals>
     <string name="settings_ops_amount_section">Сумма</string>
     <string name="settings_ops_amount_title">Показывать в строке</string>
     <string name="settings_ops_amount_account">В валюте счёта</string>
@@ -152,6 +163,12 @@
     <string name="settings_home_tile_uncategorized">Без категории</string>
     <string name="settings_home_tiles_note">Нет курса — на втором месте сама появится «Внимание». Пока лимитов нет, вместо «Бюджета» — «Без категории».</string>
     <string name="home_edit_hide">Скрыть</string>
+    <string name="home_edit_help">Тяните ⠿, чтобы переставить. ✕ — скрыть. Баланс остаётся сверху.</string>
+    <string name="home_edit_hidden">Скрыто: %1$d</string>
+    <string name="home_edit_restore">Вернуть</string>
+    <string name="home_edit_hidden_title">Скрытые карточки</string>
+    <string name="home_edit_show">Показать</string>
+    <string name="home_edit_empty">Пока пусто — карточка появится, когда будет что показать.</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
     <string name="settings_group_all">Все ›</string>
     <string name="settings_palette">Палитра</string>

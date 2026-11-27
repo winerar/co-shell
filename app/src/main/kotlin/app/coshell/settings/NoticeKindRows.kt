@@ -14,22 +14,15 @@ import app.coshell.core.domain.notices.NoticeSettings
 import app.coshell.ui.list.SectionTitle
 import app.coshell.core.designsystem.R as DesignR
 
-/** The groups of optional notifications in «Уведомления» (#745, board `Set1Notices`): a switch per kind, one hour for the evening one. */
+/** The groups of optional notifications in «Уведомления» (#745, board `Set1Notices`): a switch per kind, one time for the evening one. */
 internal fun LazyListScope.noticeKindGroups(
     kinds: Set<NoticeKind>,
     onKind: (NoticeKind, Boolean) -> Unit,
-    hour: Int,
-    onHour: (Int) -> Unit,
+    time: Int,
+    onTime: (Int) -> Unit,
 ) {
     group(R.string.notice_group_spend, listOf(NoticeKind.EVENING), kinds, onKind)
-    item(key = "notice_hour") {
-        PickCard(
-            title = stringResource(R.string.notice_time_title),
-            labels = NoticeSettings.HOURS.map { stringResource(R.string.settings_notices_hour, it) },
-            selected = NoticeSettings.HOURS.indexOf(hour).coerceAtLeast(0),
-            onSelect = { onHour(NoticeSettings.HOURS[it]) },
-        )
-    }
+    item(key = "notice_time") { TimePickCard(stringResource(R.string.notice_time_title), time, NoticeSettings.TIMES, onTime) }
     group(R.string.notice_group_budget, listOf(NoticeKind.LIMIT, NoticeKind.RECAP), kinds, onKind)
     group(R.string.notice_group_order, listOf(NoticeKind.BACKUP, NoticeKind.DRAFTS, NoticeKind.COMEBACK), kinds, onKind)
 }

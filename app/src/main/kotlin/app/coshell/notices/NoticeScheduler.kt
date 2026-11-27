@@ -8,18 +8,19 @@ import app.coshell.notices.data.PrefsNoticeSettings
 import app.coshell.recurring.notify.ReminderTime
 import java.util.concurrent.TimeUnit
 import kotlin.time.Clock
+import app.coshell.core.domain.settings.ClockMinutes
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 
 /**
- * When [NoticesWorker] runs (#745): every day at the chosen evening hour (21:00 by default). No network needed. [replace] — the hour
+ * When [NoticesWorker] runs (#745): every day at the chosen evening time (21:00 by default). No network needed. [replace] — the hour
  * changed: the daily job starts again from the new time (otherwise the first schedule keeps its phase), like `RecurringPaymentsScheduler`.
  */
 object NoticeScheduler {
     private const val DAILY = "notices-daily"
 
     fun schedule(context: Context, clock: Clock = Clock.System, zone: TimeZone = TimeZone.currentSystemDefault(), replace: Boolean = false) {
-        val delay = ReminderTime.untilNext(clock.now(), zone, LocalTime(PrefsNoticeSettings.readHour(context), 0)).inWholeMinutes
+        val delay = ReminderTime.untilNext(clock.now(), zone, PrefsNoticeSettings.readTime(context).let { LocalTime(ClockMinutes.hour(it), ClockMinutes.minute(it)) }).inWholeMinutes
         val daily = PeriodicWorkRequestBuilder<NoticesWorker>(1, TimeUnit.DAYS).setInitialDelay(delay, TimeUnit.MINUTES).build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             DAILY, if (replace) ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE else ExistingPeriodicWorkPolicy.KEEP, daily,

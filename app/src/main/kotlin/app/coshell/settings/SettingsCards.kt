@@ -74,7 +74,7 @@ internal fun NoticesCard(state: SettingsState, actions: SettingsActions) =
                 checked = state.reminders, onCheckedChange = actions.onReminders,
             )
         }
-        row { ValueRow(stringResource(R.string.settings_notices_time), stringResource(R.string.settings_notices_hour, state.reminderHour), actions.onNotices) }
+        row { ValueRow(stringResource(R.string.settings_notices_time), clockText(state.reminderTime), actions.onNotices) }
     }
 
 @Composable

@@ -22,6 +22,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.home.budget.HomeBudgetViewModel
 import app.coshell.home.goals.HomeGoalsViewModel
+import app.coshell.home.daily.HomeDailyViewModel
 import app.coshell.home.components.VersionGateBannerState
 import app.coshell.gate.LocalInputLock
 import app.coshell.home.components.SyncBannerActions
@@ -36,6 +37,7 @@ fun HomeRoute(
     budgetViewModel: HomeBudgetViewModel = hiltViewModel(),
     upcomingViewModel: UpcomingViewModel = hiltViewModel(),
     goalsViewModel: HomeGoalsViewModel = hiltViewModel(),
+    dailyViewModel: HomeDailyViewModel = hiltViewModel(),
     screenOptions: ScreenOptionsViewModel = hiltViewModel(),
     hintsViewModel: HintsViewModel = hiltViewModel(),
     noticeOffer: NoticeOfferViewModel = hiltViewModel(),
@@ -65,6 +67,7 @@ fun HomeRoute(
     val debtDue by upcomingViewModel.debtDue.collectAsStateWithLifecycle()
     val depositEnds by upcomingViewModel.deposits.collectAsStateWithLifecycle()
     val goals by goalsViewModel.rows.collectAsStateWithLifecycle()
+    val daily by dailyViewModel.state.collectAsStateWithLifecycle()
     val syncActions = SyncBannerActions(
         onRetry = syncViewModel::retry,
         onSignIn = actions.onFamily,
@@ -86,6 +89,7 @@ fun HomeRoute(
         debtDue = debtDue,
         depositEnds = depositEnds,
         goals = goals,
+        daily = daily,
         onPostAll = lock.guard1 { row -> upcomingViewModel.postAll(row.item.id) { actions.onPostPayment(row.item.id, row.date) } },
         onSkipAll = lock.guard1(upcomingViewModel::skipAll),
         gate = gate,

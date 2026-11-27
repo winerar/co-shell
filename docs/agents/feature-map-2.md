@@ -55,3 +55,7 @@
 `core:domain/goals/` (`GoalPlan` — «в месяц» с округлением вверх, годовой круг; `GoalBook` — баланс счёта делится между целями по сроку; `GoalRepository`), `core:data` `GoalEntity` + `GoalDao` + `RoomGoalRepository`.
 Экраны — `goals/` (`GoalsSource` — цели + балансы + курсы + валюта итогов, `GoalRowUi`/`GoalRow` — одна строка для списка и «Обзора»), `goals/list/` (герой «Накоплено · Откладывать в месяц», достигнутые свёрнуты, от 10 целей без полосок),
 `goals/edit/` (шторка: прогресс, «Пополнить» → перевод `TransactionEditDestination(topUpAccountId, topUpMinor)`, форма, «Каждый год», удаление с вопросом). Вход — «Ещё → Деньги → Цели»; карточка `HomeCard.GOALS` (`home/goals/`) — две ближайшие, только когда есть цель.
+
+«Сегодня можно» (#769, опрос 2026-11-27 «А·Б·А»; доски `DailyHome`, `DailyWhy`, `DailyOver` в `mockup_screens_daily.py`): `core:domain/budgets/DailyAllowance` (на день от утра, округление вниз, «0» при перерасходе)
+и `DailyPlanner` (лимиты месяца против трат в лимитных категориях, без лимитов — доход месяца против всех трат; минус регулярные расходы до конца бюджетного месяца и «в месяц» целей).
+Карточка `HomeCard.DAILY` (первая по умолчанию) — `home/daily/` (`HomeDailyViewModel` над `BudgetSource` + шаблоны + `GoalsSource`, `DailyCard` со шторкой «Как посчитано»).

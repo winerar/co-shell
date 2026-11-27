@@ -23,6 +23,7 @@
 - **Галочка** — `CoShellCheckMark(ToggleableState)` (#141): квадрат 22 dp — рамка outline / неон + рамка цветом текста с галкой или чертой
   («часть папки»); только показывает — переключает строка (`CoShellListRow(onClick)`). Шторки фильтров «Операций».
 - **Радио** — `CoShellRadioMark(selected)` (#352): кольцо 22 dp outline, выбранное — неон + рамка цветом текста с точкой; один из списка (язык).
+- **Счётчик** — `CoShellCounter(value, onStep(±1), minusLabel, plusLabel, caption, canMinus, canPlus, mono)` (#777, доска `CompChoice`): «− значение +», круглые 48 на дорожке, удержание листает быстрее; диапазон и шаг решает вызывающий (`ClockMinutes.step`, `ReminderSettings.stepDays`). Не путать с `CoShellStepper` («‹ Октябрь 2026 ›»).
 - **Сегменты** — `CoShellSegmented(labels, selected, onSelect, enabled)` (К3, #202; Style1): залитая дорожка-пилюля, сегменты 36
   (ячейка 44), одна пилюля скользит к выбранному на `Motion.spatial()` (`drawBehind` — только перерисовка); пилюля — неон + рамка 2 dp + жирный
   везде, и для «как показать» (фиолетовый `SegmentTone.View` убран опросом «Единый стиль»).

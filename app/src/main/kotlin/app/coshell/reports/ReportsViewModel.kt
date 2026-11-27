@@ -18,6 +18,7 @@ import app.coshell.core.domain.family.OtherMembers
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
 import app.coshell.core.domain.reports.ReportLedger
+import app.coshell.core.domain.reports.conversionCost
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.settings.InMemoryScreenOptions
 import app.coshell.core.domain.settings.ReportsStart
@@ -95,13 +96,15 @@ class ReportsViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
         val (from, to) = s.period.loadRange(s.startDay, today)
+        // «Оплата в другой валюте» (#786) reads its own rows of the period itself, not of the months around it.
+        val days = combine(reports.observeDays(from, to), reports.observeForeignPurchases(s.period.start, s.period.endExclusive), ::Pair)
         combine(
-            reports.observeDays(from, to),
+            days,
             categories.observeCategories(includeArchived = true),
             rates.observeRates(),
             otherMembers.names(),
             balances,
-        ) { days, categoryList, rateList, others, (accountList, balanceDays) ->
+        ) { (days, purchases), categoryList, rateList, others, (accountList, balanceDays) ->
             val book = RateBook.of(rateList)
             val input = ReportInput(
                 ledger = ReportLedger(days, categoryList, book, s.currency),
@@ -121,6 +124,7 @@ class ReportsViewModel @Inject constructor(
                 compare = s.compare,
                 spending = buildSpending(input, format),
                 unusual = buildUnusual(input, format),
+                conversion = buildConversion(conversionCost(purchases, book, s.currency), accountList, format),
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),

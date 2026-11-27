@@ -14,6 +14,7 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.reports.components.CalendarCard
 import app.coshell.reports.components.CapitalCard
+import app.coshell.reports.components.ConversionCard
 import app.coshell.reports.components.CushionCard
 import app.coshell.reports.components.DayOperationsCard
 import app.coshell.reports.components.IncomeCard
@@ -42,6 +43,7 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
     if (state.unusual.isNotEmpty()) {
         item(key = "unusual") { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
     }
+    state.conversion?.let { conversion -> item(key = "conversion") { ConversionCard(conversion) } }
     state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
     state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
     state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }

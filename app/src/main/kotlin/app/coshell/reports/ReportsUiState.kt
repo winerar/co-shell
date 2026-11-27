@@ -24,6 +24,8 @@ data class ReportsUiState(
     val spending: Spending? = null,
     /** «Необычное» (#787): folders far above or below usual in a month report, at most three; empty — no card. */
     val unusual: List<UnusualLine> = emptyList(),
+    /** «Оплата в другой валюте» (#786); `null` — nothing paid in another currency than its price in the period. */
+    val conversion: Conversion? = null,
     val months: Months? = null,
     /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
     val income: Income? = null,

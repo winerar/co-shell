@@ -27,6 +27,8 @@ import app.coshell.core.designsystem.amount.AmountText
 import app.coshell.core.designsystem.category.CategoryBadge
 import app.coshell.core.designsystem.category.IconBadge
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellStatusChip
+import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.LocalCompactLists
 import app.coshell.settings.LocalScreenOptions
 import app.coshell.core.designsystem.components.CoShellPeekBubble
@@ -99,6 +101,10 @@ internal fun TransactionRow(
                     Text(subtitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 if (row.tags.isNotEmpty() && options.opsShowTags) RowTags(row)
+                // «похоже на дубль» (#791): a tap on the row asks what to do with the pair.
+                if (row.duplicate != null) {
+                    CoShellStatusChip(stringResource(R.string.duplicate_mark), StatusTone.Work, Modifier.padding(top = Spacing.xs))
+                }
             }
         },
         leading = {

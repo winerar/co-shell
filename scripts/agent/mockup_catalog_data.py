@@ -155,7 +155,12 @@ def paired(v):
 
 def lines(v):
     import mockup_screens_picture as pic  # approved on the screen board Rp189NwB (#189, poll Б)
-    return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'))
+    two = ('<svg width="320" height="110"><polyline points="0,100 64,88 128,74 192,58 256,40 316,22" fill="none" stroke="%s" stroke-width="3"/>'
+           '<polyline points="0,100 64,102 128,96 192,98 256,94 316,92" fill="none" stroke="%s" stroke-width="3"/></svg>'
+           '<div style="display: flex; gap: 16px; font-size: 13px; color: %s;"><span><b style="color: %s;">—</b> в ARS</span><span><b style="color: %s;">—</b> в USD</span></div>'
+           % (LIME, VIOLET, MUTED, LIME, VIOLET))
+    return col(pic.line(320), cap('линия акцентом с бледной заливкой, шкала по значениям (не от нуля); точка — выбранный месяц; тап — ближайшая точка'),
+               two, cap('second + legend (#788): вторая серия вторым цветом без заливки на той же шкале, подписи серий под месяцами'))
 
 
 def done_marks(v):
@@ -225,5 +230,5 @@ DATA = [
     ('Переворот карточки', flip_card, 'CoShellFlipCard(front, back, flipped, onFlip, flipLabel) — карточка-герой с оборотом (#519), доски Flip519*'),
     ('Рамка сканера', scan_frame, 'CoShellScanFrame() — углы видоискателя над камерой (#526), доска QrScan'),
     ('Календарь трат', heat, 'CoShellHeatGrid(weekdays, leadingBlanks, cells: HeatCell, selected, onSelect) · CoShellHeatLegend(lessLabel, moreLabel, trailing) — доски CalTabA (#553)'),
-    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect) — доска Rp189NwB'),
+    ('Линия', lines, 'CoShellLine(points, selected, description, onSelect, second, legend) — доски Rp189NwB, Smart788Chart'),
 ]

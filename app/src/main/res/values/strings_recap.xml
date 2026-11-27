@@ -45,4 +45,6 @@
     <string name="recap_share_hidden_hint">Проценты и слова — безопаснее для чата</string>
     <string name="recap_share_shown">С суммами</string>
     <string name="recap_share_shown_hint">Как на экране</string>
+    <string name="recap_unusual_title">Не как обычно</string>
+    <string name="recap_unusual_note">Сравнили с тремя прошлыми месяцами.</string>
 </resources>

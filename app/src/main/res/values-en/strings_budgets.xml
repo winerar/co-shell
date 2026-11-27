@@ -68,7 +68,6 @@
     <string name="budget_category_error">Choose what the limit is for</string>
     <string name="budget_amount">Per month</string>
     <string name="budget_amount_error">Enter the amount in digits. 0 works too</string>
-    <string name="budget_average">3-month average — %1$s</string>
     <string name="budget_currency">Limit currency</string>
     <string name="budget_inside_limit">limit %1$s</string>
     <string name="budget_inside_none">no limit of its own</string>

@@ -29,6 +29,9 @@ interface ReportRepository {
     /** Live day sums of [from] ..< [toExclusive] by account, for «Чем платили» (#242) — a separate query, so [observeDays] stays small. */
     fun observeAccountDays(from: LocalDate, toExclusive: LocalDate): Flow<List<ReportAccountDay>>
 
+    /** Live purchases of [from] ..< [toExclusive] paid in another currency than their price — «Оплата в другой валюте» (#786). */
+    fun observeForeignPurchases(from: LocalDate, toExclusive: LocalDate): Flow<List<ForeignPurchase>>
+
     /** Live balance changes of every account by day, the whole history — «Капитал» (#189). */
     fun observeBalanceDays(): Flow<List<BalanceDay>>
 }

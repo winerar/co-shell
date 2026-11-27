@@ -2,6 +2,7 @@ package app.coshell.core.data.repository
 
 import app.coshell.core.data.db.ReportDao
 import app.coshell.core.domain.reports.BalanceDay
+import app.coshell.core.domain.reports.ForeignPurchase
 import app.coshell.core.domain.reports.ReportAccountDay
 import app.coshell.core.domain.reports.ReportDay
 import app.coshell.core.domain.reports.ReportRepository
@@ -14,6 +15,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.offsetAt
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.Instant
 
@@ -46,6 +48,21 @@ class RoomReportRepository(
             }
         }
     }
+
+    override fun observeForeignPurchases(from: LocalDate, toExclusive: LocalDate): Flow<List<ForeignPurchase>> =
+        reports.observeForeignPurchases(from.atStartOfDayIn(timeZone).toEpochMilliseconds(), toExclusive.atStartOfDayIn(timeZone).toEpochMilliseconds())
+            .map { rows ->
+                rows.map {
+                    ForeignPurchase(
+                        id = it.id,
+                        day = Instant.fromEpochMilliseconds(it.date).toLocalDateTime(timeZone).date,
+                        accountId = it.accountId,
+                        type = TransactionType.valueOf(it.type),
+                        paid = Money(it.amountMinor, CurrencyCode(it.currency)),
+                        price = Money(it.originalAmountMinor, CurrencyCode(it.originalCurrency)),
+                    )
+                }
+            }
 
     override fun observeBalanceDays(): Flow<List<BalanceDay>> =
         reports.observeBalanceDays(offsetMs(clock.now())).map { rows ->

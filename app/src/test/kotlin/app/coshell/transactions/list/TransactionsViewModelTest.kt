@@ -214,4 +214,26 @@ class TransactionsViewModelTest {
         vm.onPeekEnd()
         assertEquals(null, vm.peek.value)
     }
+
+    @Test
+    fun `two alike records within minutes are marked as a pair until called different`() = runTest {
+        val ars = CurrencyCode("ARS")
+        val now = Instant.fromEpochSeconds(1_794_000_000)
+        val transactions = FakeTransactionRepository()
+        val dismissals = app.coshell.core.domain.settings.InMemorySuggestionDismissals()
+        val vm = TransactionsViewModel(
+            transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
+            object : Clock { override fun now() = now }, TimeZone.UTC,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            dismissals = dismissals,
+        )
+        vm.state.launchIn(backgroundScope)
+        transactions.saveTransaction(Transaction("a", TransactionType.EXPENSE, "card", Money(100, ars), Instant.fromEpochSeconds(now.epochSeconds - 300)))
+        transactions.saveTransaction(Transaction("b", TransactionType.EXPENSE, "card", Money(100, ars), Instant.fromEpochSeconds(now.epochSeconds - 120)))
+        val rows = vm.state.first { s -> s.days.sumOf { it.rows.size } == 2 }.days.flatMap { it.rows }
+        assertEquals(listOf("b", "b"), rows.map { it.duplicate?.newer })
+
+        vm.dismissDuplicate(rows.first().duplicate!!.key)
+        assertEquals(listOf(null, null), vm.state.first { s -> s.days.flatMap { it.rows }.all { it.duplicate == null } }.days.flatMap { it.rows }.map { it.duplicate })
+    }
 }

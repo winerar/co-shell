@@ -130,4 +130,26 @@ class ReportDataTest {
             days.toSet(),
         )
     }
+
+    @Test
+    fun `purchases with a price in another currency are read one by one, deleted and plain ones are not`() = runTest {
+        val usdt = CurrencyCode("USDT")
+        val date = LocalDateTime(2026, 11, 3, 23, 30).toInstant(tz)
+        fun purchase(id: String, original: Money?) = Transaction(
+            id = id, type = TransactionType.EXPENSE, accountId = "lemon", amount = Money(10_200, usdt),
+            date = date, categoryId = "food", originalAmount = original,
+        )
+        transactions.saveTransaction(purchase("p", Money(10_000_000, ars)))
+        transactions.saveTransaction(purchase("plain", null))
+        transactions.saveTransaction(purchase("gone", Money(1_000, ars)))
+        transactions.deleteTransaction("gone")
+
+        val rows = reports.observeForeignPurchases(LocalDate(2026, 11, 1), LocalDate(2026, 12, 1)).first()
+
+        assertEquals(listOf("p"), rows.map { it.id })
+        val p = rows.single()
+        assertEquals(LocalDate(2026, 11, 3), p.day)
+        assertEquals(Money(10_200, usdt), p.paid)
+        assertEquals(Money(10_000_000, ars), p.price)
+    }
 }

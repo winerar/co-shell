@@ -1,5 +1,7 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.Swap
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -61,7 +63,7 @@ internal fun ConversionCard(conversion: Conversion, modifier: Modifier = Modifie
                 conversion.total,
                 strong = true,
             )
-            Text(rateLine(pair), style = MaterialTheme.typography.bodySmall, color = muted)
+            SwapText(rateLine(pair), style = MaterialTheme.typography.bodySmall, color = muted)
             if (conversion.accounts.size > 1) {
                 CoShellSectionLabel(stringResource(R.string.reports_conversion_accounts), tone = SectionTone.Accent, modifier = Modifier.padding(top = Spacing.s))
                 conversion.accounts.forEach { account ->
@@ -98,7 +100,7 @@ private fun Line(label: String, value: String, strong: Boolean = false) {
     ) {
         Text(label, style = if (strong) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium)
         Row(Modifier.weight(1f), horizontalArrangement = Arrangement.End) {
-            AmountText(value, if (strong) AmountTitleStyle else AmountTextStyle)
+            Swap(value, contentAlignment = Alignment.TopEnd) { AmountText(it, if (strong) AmountTitleStyle else AmountTextStyle) }
         }
     }
 }

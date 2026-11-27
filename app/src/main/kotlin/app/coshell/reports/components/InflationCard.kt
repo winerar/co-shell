@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +40,7 @@ internal fun InflationCard(inflation: Inflation, modifier: Modifier = Modifier) 
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.semantics { heading() },
             )
-            Text(phrase, style = MaterialTheme.typography.bodyMedium)
+            SwapText(phrase, style = MaterialTheme.typography.bodyMedium)
             if (inflation.pricesNotSpending) Text(stringResource(R.string.reports_inflation_prices), style = MaterialTheme.typography.bodySmall, color = muted)
             CoShellLine(
                 points = inflation.months.mapIndexed { i, m -> LinePoint(formatMonthShort(m), inflation.localIndex[i]) },
@@ -67,7 +68,7 @@ internal fun InflationGrowthCard(inflation: Inflation, modifier: Modifier = Modi
                 CoShellListRow(
                     title = categoryName(g.name),
                     leading = { CategoryBadge(g.icon, g.color, size = Sizes.badgeSmall) },
-                    trailing = { Text(stringResource(R.string.reports_inflation_percent, g.percent), style = AmountTextStyle) },
+                    trailing = { SwapText(stringResource(R.string.reports_inflation_percent, g.percent), style = AmountTextStyle) },
                     dense = true,
                 )
             }

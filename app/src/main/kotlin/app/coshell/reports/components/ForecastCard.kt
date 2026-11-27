@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,7 +45,7 @@ internal fun ForecastCard(forecast: Forecast, modifier: Modifier = Modifier) {
             } else {
                 stringResource(R.string.reports_forecast_low, formatDayMonth(view.lowDay), shownAmount(view.lowAmount))
             }
-            Text(
+            SwapText(
                 verdict,
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (view.warning) LocalStatusPalette.current.warning else muted,

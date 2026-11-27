@@ -1,5 +1,7 @@
 package app.coshell.reports.components
 
+import androidx.compose.runtime.key
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -70,7 +72,7 @@ private fun Head(capital: Capital, currency: String) {
     val line = if (capital.months >= YEAR) stringResource(R.string.reports_capital_year, change)
     else stringResource(R.string.reports_capital_months, change, capital.months)
     Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.Bottom) {
-        Text(
+        SwapText(
             shownAmount(capital.value),
             style = AmountHeadlineStyle,
             maxLines = 1,
@@ -81,7 +83,7 @@ private fun Head(capital: Capital, currency: String) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(end = Spacing.s, bottom = Spacing.xxs),
         )
-        Text(
+        SwapText(
             line,
             style = MaterialTheme.typography.bodySmall,
             color = signColor(capital.falling),
@@ -101,7 +103,7 @@ private fun Why(rows: List<WhyRow>) {
         Cell(stringResource(R.string.reports_capital_rates), muted, label = true)
         Cell(stringResource(R.string.reports_capital_total), muted, label = true)
     }
-    rows.forEachIndexed { i, row ->
+    rows.forEachIndexed { i, row -> key(row.month) {
         if (i > 0) CoShellDivider(faint = true)
         Row(Modifier.padding(vertical = Spacing.s).semantics(mergeDescendants = true) {}, verticalAlignment = Alignment.CenterVertically) {
             val month = formatMonth(row.month.firstDay).replaceFirstChar { it.uppercase() } +
@@ -111,7 +113,7 @@ private fun Why(rows: List<WhyRow>) {
             Cell(row.rates, muted)
             Cell(row.total, signColor(row.totalNegative), bold = true)
         }
-    }
+    } }
     Text(
         stringResource(R.string.reports_capital_rates_note),
         style = MaterialTheme.typography.bodySmall,
@@ -122,7 +124,7 @@ private fun Why(rows: List<WhyRow>) {
 
 @Composable
 private fun RowScope.Cell(text: String, color: Color, label: Boolean = false, bold: Boolean = false) {
-    Text(
+    SwapText(
         if (label) text else shownAmount(text),
         style = if (label) MaterialTheme.typography.labelSmall
         else if (bold) AmountCellStrongStyle else AmountCellStyle,

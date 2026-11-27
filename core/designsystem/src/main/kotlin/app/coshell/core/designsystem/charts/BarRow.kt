@@ -1,5 +1,8 @@
 package app.coshell.core.designsystem.charts
 
+import androidx.compose.animation.AnimatedContent
+import app.coshell.core.designsystem.motion.dataSwap
+
 import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.amount.shownAmount
 import androidx.compose.foundation.layout.Arrangement
@@ -80,14 +83,16 @@ fun CoShellBarRow(
                 },
             )
             ChartBar(fraction, color, ghost, Modifier.padding(top = Spacing.xs))
-            caption?.let {
-                Text(
-                    it,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+            caption?.let { words ->
+                AnimatedContent(words, transitionSpec = { dataSwap() }, label = "barCaption") {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
         }
     }
@@ -127,16 +132,18 @@ private fun LabelAndValue(label: @Composable () -> Unit, trailing: @Composable (
 @Composable
 private fun ValueAndShare(value: String, share: String?) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
-    val shown = shownAmount(value)
-    Text(
-        buildAnnotatedString {
-            append(shown)
-            share?.let { withStyle(SpanStyle(color = muted)) { append(" · $it") } }
-        },
-        style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
-        maxLines = 1,
-        softWrap = false,
-    )
+    // Other numbers in the same row (a period, a currency): the old ones lift away, the new rise in (owner 2026-11-27).
+    AnimatedContent(shownAmount(value) to share, transitionSpec = { dataSwap() }, contentAlignment = Alignment.CenterEnd, label = "barValue") { (shown, part) ->
+        Text(
+            buildAnnotatedString {
+                append(shown)
+                part?.let { withStyle(SpanStyle(color = muted)) { append(" · $it") } }
+            },
+            style = RateTextStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+            maxLines = 1,
+            softWrap = false,
+        )
+    }
 }
 
 /** The bar itself: the shared [CoShellMeter] on its track; the ghost (past period) is its mark, in the second colour (#442 Б). */

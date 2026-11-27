@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,8 +91,8 @@ private fun Stats(income: Income) {
 @Composable
 private fun Stat(label: String, value: String, color: Color, modifier: Modifier) {
     Column(modifier.semantics(mergeDescendants = true) {}) {
-        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
-        Text(shownAmount(value), style = AmountStatStyle, color = color, maxLines = 1)
+        SwapText(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+        SwapText(shownAmount(value), style = AmountStatStyle, color = color, maxLines = 1)
     }
 }
 
@@ -104,7 +105,7 @@ private fun RateLine(income: Income) {
         else -> stringResource(R.string.reports_income_rate, rate)
     }
     val average = income.averageRate?.let { stringResource(R.string.reports_income_average, income.averageMonths, it) }
-    Text(
+    SwapText(
         listOfNotNull(text, average).joinToString(" · "),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,

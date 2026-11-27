@@ -1,5 +1,6 @@
 package app.coshell.reports.components
 
+import androidx.compose.runtime.key
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +37,7 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
             val me = stringResource(R.string.reports_members_me)
             val deleted = stringResource(R.string.reports_deleted_category)
             Column(Modifier.padding(top = Spacing.xs)) {
-                members.forEach { row ->
+                members.forEach { row -> key(row.memberId) {
                     val name = row.name ?: me
                     val color = categoryColor(CategoryPalette.forKey(row.memberId ?: ME_KEY))
                     CoShellBarRow(
@@ -49,7 +50,7 @@ internal fun MembersCard(members: List<MemberRow>, modifier: Modifier = Modifier
                         caption = row.top.map { "${it.name ?: deleted} ${shownAmount(it.value)}" }.joinToString(" · "),
                         onClick = onMember?.let { open -> { open(row.memberId) } },
                     )
-                }
+                } }
             }
             Text(
                 stringResource(R.string.reports_members_note),

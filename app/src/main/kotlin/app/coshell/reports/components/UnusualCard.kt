@@ -1,5 +1,7 @@
 package app.coshell.reports.components
 
+import androidx.compose.runtime.key
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +34,7 @@ import app.coshell.reports.categoryName
 internal fun UnusualCard(lines: List<UnusualLine>, month: String, onCategory: (String) -> Unit, modifier: Modifier = Modifier) {
     CoShellCard(modifier.fillMaxWidth()) {
         Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
-            Text(
+            SwapText(
                 stringResource(R.string.reports_unusual_title, month),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.semantics { heading() },
@@ -51,7 +53,7 @@ internal fun UnusualCard(lines: List<UnusualLine>, month: String, onCategory: (S
 @Composable
 internal fun UnusualLines(lines: List<UnusualLine>, onCategory: ((String) -> Unit)? = null) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
-        lines.forEach { line ->
+        lines.forEach { line -> key(line.categoryId) {
             CoShellBarRow(
                 label = categoryName(line.name),
                 value = line.value,
@@ -63,7 +65,7 @@ internal fun UnusualLines(lines: List<UnusualLine>, onCategory: ((String) -> Uni
                 caption = unusualCaption(line.mark),
                 onClick = onCategory?.let { { it(line.categoryId) } },
             )
-        }
+        } }
     }
 }
 

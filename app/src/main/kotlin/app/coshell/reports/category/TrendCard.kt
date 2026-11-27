@@ -1,5 +1,6 @@
 package app.coshell.reports.category
 
+import app.coshell.ui.motion.SwapText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -65,7 +66,7 @@ internal fun TrendCard(trend: Trend, onMonth: (YearMonth) -> Unit, modifier: Mod
             },
         )
         if (averages.isNotEmpty()) {
-            Text(
+            SwapText(
                 averages.joinToString("   "),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

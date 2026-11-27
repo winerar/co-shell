@@ -45,8 +45,7 @@ import kotlin.math.roundToInt
 import app.coshell.core.designsystem.R as DesignR
 
 // «Настройки → Экраны → Обзор» (boards Set1Home, Set1HomeMore): which cards «Обзор» shows and in what order, how far «Скоро»
-// looks and how many «Последние» show. The balance stays on top. Editing right on «Обзор» (hold a card) and the choice of
-// the two tiles are still to come.
+// looks and how many «Последние» show. The balance stays on top. Editing right on «Обзор» (hold a card) lives in `home/HomeEdit.kt`.
 
 @Composable
 fun HomeSettingsRoute(

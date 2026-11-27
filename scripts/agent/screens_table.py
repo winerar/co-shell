@@ -53,6 +53,7 @@ ROWS = [
     ('Отчёты: необычное и оплата в другой валюте', 'SmartReports', 'smart_reports'), ('Оплата в другой валюте: подробнее', 'SmartConversion', None),
     ('Отчёты: личная инфляция', 'SmartInflation', 'smart_reports'), ('Итоги месяца: не как обычно', 'SmartRecap', None),
     ('Операции: регулярный платёж и дубль', 'SmartOps', 'smart_operations'), ('Похоже на дубль', 'SmartDuplicate', None),
+    ('Помощь: жесты', 'Gest797', 'gestures'), ('Отчёты: прогноз остатка', 'Forecast770', 'forecast'), ('Прогноз остатка: не хватает', 'Forecast770Low', None),
     ('Новый лимит: обычно уходит', 'SmartLimit', 'budget_edit'), ('Цели: что если', 'SmartGoal', 'smart_goals'), ('Что если', 'SmartWhatIf', 'smart_whatif_sheet'),
     ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Регулярные: за год', 'Fixed771Year', 'recurring_year'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
     ('Импорт из Wallet', 'ImportStart', 'import_start'), ('Отзыв', 'Feedback', 'feedback'), ('Стереть всё', 'Wipe', 'wipe'),

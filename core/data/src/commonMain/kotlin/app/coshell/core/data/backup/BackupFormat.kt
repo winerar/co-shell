@@ -236,17 +236,19 @@ internal data class TemplateDto(
     /** Since schema v13: «Повтор» (#143) as `ScheduleCodec` text. */
     val schedule: String? = null,
     val accountCurrency: String? = null,
+    /** Since schema v27: tag ids the template remembers (#296). */
+    val labels: List<String> = emptyList(),
 ) {
     fun toModel() = TransactionTemplate(
         id, name, TransactionType.valueOf(type), accountId, CurrencyCode(accountCurrency ?: currency),
         amountMinor?.let { Money(it, CurrencyCode(currency)) }, categoryId, toAccountId, note, sortOrder,
-        ScheduleCodec.decode(schedule),
+        ScheduleCodec.decode(schedule), labels,
     )
 }
 
 internal fun TransactionTemplate.toDto() = TemplateDto(
     id, name, type.name, accountId, (amount?.currency ?: currency).value, amount?.amountMinor, categoryId, toAccountId,
-    note, sortOrder, schedule?.let(ScheduleCodec::encode), accountCurrency = currency.value.takeIf { isForeign },
+    note, sortOrder, schedule?.let(ScheduleCodec::encode), accountCurrency = currency.value.takeIf { isForeign }, labels = labels,
 )
 
 /** One family setting; [key] and [value] as `RoomFamilySettings` stores them (parsed on read). */

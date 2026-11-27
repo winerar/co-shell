@@ -64,6 +64,7 @@ internal fun entryFormOf(
         categoryId = transaction.categoryId,
         date = transaction.date.toLocalDateTime(timeZone).date,
         note = transaction.note,
+        payee = transaction.payee.orEmpty(),
         receiptEnabled = transaction.originalAmount != null,
         receiptCurrency = transaction.originalAmount?.currency?.value.orEmpty(),
         receiptAmount = transaction.originalAmount?.let { moneyFormat.formatForEditing(it) }.orEmpty(),

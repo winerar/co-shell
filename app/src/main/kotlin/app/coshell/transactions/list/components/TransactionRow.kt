@@ -80,6 +80,7 @@ internal fun TransactionRow(
             append(
                 listOfNotNull(
                     row.subtitle.takeIf { options.opsShowAccount },
+                    row.payee,
                     row.author,
                     row.note.ifBlank { null }.takeIf { options.opsShowNote },
                 ).joinToString(" · "),

@@ -19,6 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import app.coshell.core.designsystem.category.CategoryPalette
+import app.coshell.core.designsystem.charts.CoShellShareBar
+import app.coshell.core.designsystem.charts.ShareSlice
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
@@ -151,6 +155,7 @@ private fun Header(state: AccountsUiState, actions: AccountsActions, grouping: G
                 AmountText(total, style = AmountTitleStyle, minFontSize = 14.sp)  // shrinks, never cut (#431)
             }
         }
+        if (state.shares.isNotEmpty()) CurrencySharesBar(state.shares)
         if (grouping.visible) {
             CoShellSegmented(
                 labels = grouping.options.map { stringResource(it.second) },
@@ -175,4 +180,16 @@ private fun groupingOptions(state: AccountsUiState): List<Pair<AccountGrouping, 
     add(AccountGrouping.TYPE to R.string.accounts_grouping_type)
     add(AccountGrouping.CURRENCY to R.string.accounts_grouping_currency)
     if (state.canGroupByOwner) add(AccountGrouping.OWNER to R.string.accounts_grouping_owner)
+}
+
+/** The total's currencies as a bar with a legend under the total (#192, board `Idea5A`). */
+@Composable
+private fun CurrencySharesBar(shares: List<AccountsUiState.Share>) {
+    val other = stringResource(R.string.accounts_share_other)
+    val slices = shares.map { s ->
+        val label = s.currency ?: other
+        ShareSlice(label, stringResource(R.string.accounts_share_percent, s.percent), s.percent / 100f, CategoryPalette.forKey(label).let(::Color))
+    }
+    val words = shares.joinToString(", ") { (it.currency ?: other) + " " + it.percent + "%" }
+    CoShellShareBar(slices, stringResource(R.string.accounts_shares_description, words))
 }

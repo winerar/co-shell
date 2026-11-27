@@ -4,7 +4,15 @@ import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.theme.RateChipStyle
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import app.coshell.core.designsystem.charts.CoShellSparkline
+import app.coshell.core.designsystem.theme.LocalAmountPalette
+import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.rates.list.RateTrendUi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,7 +50,24 @@ internal fun CurrentRateRow(item: CurrentRateItem, base: String, onClick: () -> 
             }
         },
         leading = { CoShellStatusChip(item.currency, StatusTone.Work) },
+        trailing = item.trend?.let { trend -> { TrendBlock(trend) } },
         onClick = onClick,
     )
 }
 
+
+/** Sparkline and «−6,1 % за 30 дн.» at the end of the row (#195, board `Idea10A`): a fall in the expense colour, a rise in the income colour. */
+@Composable
+private fun TrendBlock(trend: RateTrendUi) {
+    val palette = LocalAmountPalette.current
+    val color = when {
+        trend.direction < 0 -> palette.expense
+        trend.direction > 0 -> palette.income
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val words = stringResource(R.string.rates_change_30d, trend.change)
+    Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
+        CoShellSparkline(trend.points, color, words)
+        Text(words, style = MaterialTheme.typography.labelSmall, color = color, maxLines = 1)
+    }
+}

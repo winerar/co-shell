@@ -40,6 +40,8 @@ data class TemplateEditUiState(
     /** Optional: without it the entry sheet asks for the category. Never set for a transfer. */
     val categoryId: String? = null,
     val note: String = "",
+    /** Tag ids the template remembers (#296): kept as they are, the editor does not change them. */
+    val labels: List<String> = emptyList(),
     /** «Повтор» (#143) as it will be saved; `null` — an ordinary template. Built by [withRepeat]. */
     val schedule: RecurringSchedule? = null,
     /** The rule the template had when opened: a changed day counts from its last handled payment. */

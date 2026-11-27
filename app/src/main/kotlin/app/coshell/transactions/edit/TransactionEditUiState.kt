@@ -41,6 +41,8 @@ data class TransactionEditUiState(
     val date: LocalDate = LocalDate(1970, 1, 1),
     val today: LocalDate = LocalDate(1970, 1, 1),
     val note: String = "",
+    /** Payee of a saved operation (#296), shown read-only in «Детали»; empty — none. */
+    val payee: String = "",
     /** Paid in another currency than the account's: the receipt amount is asked too (not for transfers). */
     val receiptEnabled: Boolean = false,
     val receiptCurrency: String = "",

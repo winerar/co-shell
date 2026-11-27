@@ -29,7 +29,12 @@ data class CurrentRateItem(
     val isManual: Boolean,
     /** Computed through USD (cross rate). */
     val viaPivot: Boolean,
+    /** The rate over the last 30 days as a sparkline and «−6,1 %» (#195); `null` — no history to draw. */
+    val trend: RateTrendUi? = null,
 )
+
+/** [points] oldest first on their own scale; [change] — `+1,2 %` / `−6,1 %`; [direction] — the sign of the change. */
+class RateTrendUi(val points: List<Float>, val change: String, val direction: Int)
 
 /** A rate typed by a family member, e.g. "1 USD = 1 450 ARS" from 5 Nov. */
 data class ManualRateItem(val rate: ExchangeRate, val rateText: String)

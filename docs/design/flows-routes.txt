@@ -11,6 +11,7 @@ CapitalMonthDestination	Rp189NwDrill
 MonthRecapDestination	Rec554Top
 ReleaseStoriesDestination	Rel693S1
 TourDestination	Tour598S1
+GesturesDestination	Gest797
 MonthReviewDestination	Mon236Screen
 MonthReviewLimitsDestination	Mon236Limits
 AccountEditDestination	AccountEdit

@@ -112,6 +112,7 @@ internal fun DataCard(state: SettingsState, actions: SettingsActions) =
 internal fun HelpCard(state: SettingsState, actions: SettingsActions) =
     GroupCard(DesignR.drawable.ic_lightbulb, 13, R.string.settings_help_title, onAll = null, more = {
         row { ValueRow(stringResource(R.string.tour_title), stringResource(R.string.tour_hint), actions.onTour) }
+        row { ValueRow(stringResource(R.string.gestures_title), stringResource(R.string.gestures_hint), actions.onGestures) }
         state.invite?.let { invite ->
             row {
                 ValueRow(

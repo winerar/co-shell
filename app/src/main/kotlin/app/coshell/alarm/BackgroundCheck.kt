@@ -34,6 +34,18 @@ object BackgroundCheck {
         Advice.NONE -> false
     }
 
+    /**
+     * The one-time question on «Обзоре» is for people who updated with reminders already on; a fresh install is never asked there
+     * (payment reminders are on by default, so it would greet every new person) — it is asked when they turn a reminder on.
+     */
+    fun askOnHome(answered: Boolean, wasUpdated: Boolean, anythingOn: Boolean): Boolean = !answered && wasUpdated && anythingOn
+
+    /** Android installed the package earlier than its last update; unknown counts as a fresh install (as `NewMarkModule`). */
+    fun wasUpdated(context: Context): Boolean {
+        val info = runCatching { context.packageManager.getPackageInfo(context.packageName, 0) }.getOrNull()
+        return info != null && info.firstInstallTime > 0 && info.lastUpdateTime > info.firstInstallTime
+    }
+
     fun advice(context: Context): Advice = advice(
         Build.MANUFACTURER.orEmpty(),
         context.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(context.packageName) ?: true,

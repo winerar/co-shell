@@ -1,98 +1,227 @@
 #!/usr/bin/env python3
-"""Release stories gate and brief (#693): every release brings its own set of stories (`release/ReleaseStories`, new `KEY`).
+"""Release stories (#693, owner 2026-11-27): every feature of a release gets its own story, the set is built from docs/whats-new.md.
 
-    python3 scripts/release_stories.py check [--base origin/main] [--head HEAD]   exit 3: a release is pending but the set is the old one
-    python3 scripts/release_stories.py brief [--head HEAD]                        the top whats-new section as numbered items + how to build the set
-    python3 scripts/release_stories.py set-key <release.2026-12-01>               write the new KEY into ReleaseStories.kt
+    python3 scripts/release_stories.py check [--base origin/main] [--head REF]   exit 3 on any problem (CI, release.yml, agent.sh stories)
+    python3 scripts/release_stories.py write                                    rebuild ReleaseStories.kt from the top whats-new section
+    python3 scripts/release_stories.py brief                                    the top section, its markers and what is still missing
 
-`check` is used by .github/workflows/release.yml (a warning on the weekly run, an error on the button unless «без историй») and by
-`agent.sh stories`. A release is pending when the top section of docs/whats-new.md differs from the base's.
+Each bullet of the unreleased sections ends with a marker: `• … <!-- story: debts -->` (several: `story: goals, goals_whatif`;
+none: `story: none`). Bullets starting with «Исправлено:» need no marker. A story `<id>` = strings `release_<id>_title`/`_text`
+(strings_release.xml) + a scheme `'<id>'` in scripts/agent/story_art_693.py (drawables story_<id>_{ink,accent,edge}).
+Rules and the layout sample — docs/agents/release-stories.md. Without --head the working tree is read; checks run only while
+the sections are not released yet (from the top down to the first heading the base has).
 """
 import argparse
+import hashlib
 import os
 import re
 import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from release_notes import top_section  # noqa: E402
+from release_notes import top_section as notes_section  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WHATS_NEW = "docs/whats-new.md"
 STORIES = "app/src/main/kotlin/app/coshell/release/ReleaseStories.kt"
+STRINGS = "app/src/main/res/values/strings_release.xml"
 ART = "scripts/agent/story_art_693.py"
-KEY = re.compile(r'const val KEY = "([^"]+)"')
-MAX = 5
+DRAWABLE = "app/src/main/res/drawable/story_%s_%s.xml"
+LAYERS = ("ink", "accent", "edge")
+FIX = "Исправлено:"
+MARKER = re.compile(r"<!--\s*story:\s*([^>]*?)\s*-->")
+ID = re.compile(r"[a-z][a-z0-9_]*\Z")
+BEGIN, END = "    // stories:begin", "    // stories:end"
+TITLE_MAX, TEXT_MAX = 24, 80
 
 
-def story_key(kotlin):
-    match = KEY.search(kotlin)
-    return match.group(1) if match else None
-
-
-def release_pending(base_whats_new, head_whats_new):
-    """True when dev has a whats-new section that main has not shipped yet."""
-    head = top_section(head_whats_new)[0]
-    return head is not None and head != top_section(base_whats_new)[0]
-
-
-def check(base_whats_new, head_whats_new, base_kotlin, head_kotlin):
-    """(ok, message): the set must change together with the release."""
-    if not release_pending(base_whats_new, head_whats_new):
-        return True, "no new release: stories unchanged"
-    old, new = story_key(base_kotlin), story_key(head_kotlin)
-    if old is None or new is None:
-        return False, "ReleaseStories.KEY not found"
-    if old == new:
-        return False, ("release «%s» has no stories yet: KEY is still %s. Build the set — `agent.sh stories` (brief), "
-                       "then `story_art_693.py --write` and a new KEY" % (top_section(head_whats_new)[0], new))
-    return True, "stories ready: %s → %s" % (old, new)
+def top_section(text):
+    """(heading, body) of the top whats-new section with its story markers."""
+    return notes_section(text or "", keep_markers=True)
 
 
 def items(section_body):
-    """The bullets («• …») of a whats-new section."""
+    """The bullets («• …») of a whats-new section, markers included."""
     return [line[1:].strip() for line in section_body.splitlines() if line.startswith("•")]
 
 
+def strip_markers(text):
+    """whats-new text as people see it: without `<!-- … -->` (app, releases, landing)."""
+    return re.sub(r"[ \t]*<!--.*?-->", "", text, flags=re.S)
+
+
+def bullet_ids(bullet):
+    """Story ids of one bullet: a list (empty for `none` and fixes) or None when the marker is missing."""
+    match = MARKER.search(bullet)
+    if match is None:
+        return [] if bullet.startswith(FIX) else None
+    ids = [part.strip() for part in match.group(1).split(",") if part.strip()]
+    return [] if ids == ["none"] else ids
+
+
+def story_ids(section_body):
+    """Story ids of a section in the order of its bullets, without repeats."""
+    out = []
+    for bullet in items(section_body):
+        for story in bullet_ids(bullet) or []:
+            if story not in out:
+                out.append(story)
+    return out
+
+
+def key_for(heading):
+    """The «новое» key of the set: stable for one section, new for the next one."""
+    date = re.search(r"\d{4}-\d{2}-\d{2}", heading or "")
+    return "release.%s-%s" % (date.group(0) if date else "x", hashlib.sha1((heading or "").encode()).hexdigest()[:4])
+
+
+def render(ids, key):
+    lines = [BEGIN, "    // Generated by `scripts/release_stories.py write` from docs/whats-new.md — do not edit by hand.",
+             '    const val KEY = "%s"' % key, "", "    val current: List<ReleaseStory> = listOf("]
+    lines += ["        ReleaseStory(R.string.release_%s_title, R.string.release_%s_text, %s)," % (i, i, ", ".join(
+        "R.drawable.story_%s_%s" % (i, layer) for layer in LAYERS)) for i in ids]
+    return "\n".join(lines + ["    )", END])
+
+
+def region(kotlin):
+    start, end = kotlin.find(BEGIN), kotlin.find(END)
+    return kotlin[start:end + len(END)] if 0 <= start < end else None
+
+
 def art_names(art_source):
-    """Names of the schemes already drawn in story_art_693.py (reuse before drawing new ones)."""
+    """Names of the schemes drawn in story_art_693.py (reuse before drawing new ones)."""
     start = art_source.find("STORIES = {")
     return re.findall(r"^    '(\w+)': \[", art_source[start:], re.M) if start >= 0 else []
 
 
+def string_value(strings_xml, name):
+    match = re.search(r'<string name="%s">(.*?)</string>' % re.escape(name), strings_xml, re.S)
+    return match.group(1) if match else None
+
+
+def released_headings(base_whats_new):
+    return {line[3:].strip() for line in (base_whats_new or "").splitlines() if line.startswith("## ")}
+
+
+def pending(base_whats_new, head_whats_new):
+    """(top heading, bodies joined) of the sections not released yet — from the top down to the first heading the base has.
+    Several may pile up (a hotfix section on main, or a new dated section on top of an unreleased one); a release ships them all."""
+    released, heading, lines, top = released_headings(base_whats_new), None, [], None
+    for line in (head_whats_new or "").splitlines():
+        if line.startswith("## "):
+            heading = line[3:].strip()
+            if heading in released:
+                break
+            top = top or heading
+        elif heading is not None:
+            lines.append(line)
+    return top, "\n".join(lines).strip()
+
+
+def release_pending(base_whats_new, head_whats_new):
+    """True when the top whats-new section has not been released yet: its heading is nowhere in the base (a hotfix section
+    on top of main does not make dev's already released one pending again)."""
+    return pending(base_whats_new, head_whats_new)[0] is not None
+
+
+def problems(base_whats_new, read):
+    """Everything that stops the release; `read(path)` gives a file of the head or None."""
+    head_whats_new = read(WHATS_NEW)
+    if not release_pending(base_whats_new, head_whats_new):
+        return []
+    heading, body = pending(base_whats_new, head_whats_new)
+    out = []
+    for bullet in items(body):
+        ids = bullet_ids(bullet)
+        if ids is None:
+            out.append("no story marker: «%s…» — add `<!-- story: <id> -->` (or `story: none` if nothing new to see)" % bullet[:60])
+            continue
+        out += ["bad story id «%s» in «%s…» (latin, snake_case)" % (i, bullet[:40]) for i in ids if not ID.match(i)]
+    ids = [i for i in story_ids(body) if ID.match(i)]
+    strings, art = read(STRINGS) or "", read(ART) or ""
+    drawn = art_names(art)
+    for story in ids:
+        title, text = string_value(strings, "release_%s_title" % story), string_value(strings, "release_%s_text" % story)
+        if title is None or text is None:
+            out.append("story %s: strings release_%s_title/_text missing in %s" % (story, story, STRINGS))
+        else:
+            if len(title) > TITLE_MAX:
+                out.append("story %s: title is %d chars, max %d" % (story, len(title), TITLE_MAX))
+            if len(text) > TEXT_MAX:
+                out.append("story %s: text is %d chars, max %d" % (story, len(text), TEXT_MAX))
+        if story not in drawn:
+            out.append("story %s: no scheme '%s' in %s STORIES" % (story, story, ART))
+        out += ["story %s: %s missing — story_art_693.py --write" % (story, DRAWABLE % (story, layer))
+                for layer in LAYERS if story in drawn and read(DRAWABLE % (story, layer)) is None]
+    if ids:
+        kotlin = read(STORIES) or ""
+        if region(kotlin) != render(ids, key_for(heading)):
+            out.append("ReleaseStories.kt is not built from «%s» — run `python3 scripts/release_stories.py write`" % heading)
+    return out
+
+
 def git_show(ref, path):
-    return subprocess.run(["git", "show", "%s:%s" % (ref, path)], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    done = subprocess.run(["git", "show", "%s:%s" % (ref, path)], cwd=ROOT, capture_output=True, text=True)
+    return done.stdout if done.returncode == 0 else None
+
+
+def reader(ref):
+    if ref:
+        return lambda path: git_show(ref, path)
+
+    def read(path):
+        full = os.path.join(ROOT, path)
+        return open(full, encoding="utf-8").read() if os.path.exists(full) else None
+    return read
+
+
+def write(base):
+    read = reader(None)
+    heading, body = pending(base, read(WHATS_NEW))
+    ids = [i for i in story_ids(body) if ID.match(i)]
+    if not ids:
+        print("No stories in the unreleased sections (%s): ReleaseStories.kt unchanged" % heading)
+        return 0
+    path = os.path.join(ROOT, STORIES)
+    kotlin = read(STORIES)
+    old = region(kotlin)
+    if old is None:
+        sys.exit("✗ %s has no `// stories:begin … // stories:end` block" % STORIES)
+    open(path, "w", encoding="utf-8").write(kotlin.replace(old, render(ids, key_for(heading))))
+    print("ReleaseStories: %s · %s" % (key_for(heading), ", ".join(ids)))
+    return 0
 
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["check", "brief", "set-key"])
-    parser.add_argument("key", nargs="?")
+    parser.add_argument("mode", choices=["check", "write", "brief"])
     parser.add_argument("--base", default="origin/main")
-    parser.add_argument("--head", default="HEAD")
+    parser.add_argument("--head", default=None, help="a git ref; the working tree when omitted")
     args = parser.parse_args(argv)
-    if args.mode == "set-key":
-        if not args.key or not re.fullmatch(r"release\.[\w-]+", args.key):
-            sys.exit("usage: set-key release.YYYY-MM-DD")
-        path = os.path.join(ROOT, STORIES)
-        text = open(path, encoding="utf-8").read()
-        open(path, "w", encoding="utf-8").write(KEY.sub('const val KEY = "%s"' % args.key, text, count=1))
-        print("KEY = %s" % args.key)
-        return 0
-    head_whats, head_kt = git_show(args.head, WHATS_NEW), git_show(args.head, STORIES)
+    base = git_show(args.base, WHATS_NEW) or ""
+    if args.mode == "write":
+        return write(base)
+    read = reader(args.head)
+    found = problems(base, read)
     if args.mode == "check":
-        ok, message = check(git_show(args.base, WHATS_NEW), head_whats, git_show(args.base, STORIES), head_kt)
-        print(("OK: " if ok else "✗ ") + message)
-        return 0 if ok else 3
-    heading, body = top_section(head_whats)
-    print("Top section: %s · KEY now %s · pending release: %s" % (heading, story_key(head_kt),
-                                                                 release_pending(git_show(args.base, WHATS_NEW), head_whats)))
-    for number, item in enumerate(items(body), 1):
-        print("%2d. %s" % (number, item[:150]))
-    print("\nSchemes already drawn (reuse): %s" % ", ".join(art_names(git_show(args.head, ART))))
-    print("Pick up to %d main changes. Per story: strings release_<name>_title/_text (strings_release.xml, Russian only),"
-          " a scheme in story_art_693.py STORIES, a row in ReleaseStories.current + board Rel693S<N>." % MAX)
-    print("Then: python3 scripts/agent/story_art_693.py --write; python3 scripts/release_stories.py set-key release.<date>; agent.sh l10n --write")
+        if not release_pending(base, read(WHATS_NEW)):
+            print("OK: top whats-new section already released — no stories needed")
+        elif not found:
+            print("OK: stories ready — %s" % (", ".join(story_ids(pending(base, read(WHATS_NEW))[1])) or "nothing new to show"))
+        for line in found:
+            print("✗ " + line)
+        return 3 if found else 0
+    heading, body = pending(base, read(WHATS_NEW))
+    if heading is None:
+        heading, body = top_section(read(WHATS_NEW))
+    print("Unreleased from: %s · pending release: %s · KEY %s" % (heading, release_pending(base, read(WHATS_NEW)), key_for(heading)))
+    for number, bullet in enumerate(items(body), 1):
+        ids = bullet_ids(bullet)
+        print("%2d. [%s] %s" % (number, "?" if ids is None else (", ".join(ids) or "—"), strip_markers(bullet)[:140]))
+    print("\nSchemes already drawn (reuse): %s" % ", ".join(art_names(read(ART) or "")))
+    for line in found:
+        print("✗ " + line)
+    print("Rules and the layout sample: docs/agents/release-stories.md. Then: story_art_693.py --write; release_stories.py write; agent.sh l10n --write")
     return 0
 
 

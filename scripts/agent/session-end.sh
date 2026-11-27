@@ -61,6 +61,8 @@ done
 
 # #382: the «screen → board → reference» table is generated from files on disk — it may not go stale.
 out=$(python3 scripts/agent/screens_table.py --check 2>&1) || bad "$out"
+# Every feature of a pending release has its own story (#693, release-stories.md); the CI step «Release stories» is the same call.
+out=$(python3 scripts/release_stories.py check --base origin/main 2>&1) || bad "$out"
 
 # #474: the live canvas is the source of the look; boards changed here must be published there (environment.md).
 [ $pre -eq 0 ] && [ -n "$(git diff --name-only origin/dev...HEAD -- 'docs/design/mockups/*.dc.html' 2>/dev/null)" ] &&

@@ -60,7 +60,7 @@
 | `wallet [строк]` (`gen-wallet-export.py`) | синтетическая выгрузка Wallet (10 000 строк) в scratchpad (#131) |
 | `scale` | замер на 10 тыс. операций: импорт, список, синк, размер БД |
 | `l10n [--write]` (`l10n.py`) | непереведённые тексты (пауза переводов до публикации, 2026-11-24): ключи есть в `values`, нет в `values-en`/`values-es`; `--write` обновляет `translations-pending.txt` — делать после добавления русской строки |
-| `stories [brief\|set-key K]` (`scripts/release_stories.py`) | **истории релиза (#693):** без аргументов — ✗, если в `dev` новый раздел `whats-new.md`, а `ReleaseStories.KEY` прежний (тот же вызов — шаг в `release.yml`: на кнопке — ошибка, в понедельник — предупреждение); `brief` — пункты верхнего раздела, уже нарисованные схемы и шаги сборки набора; `set-key release.ГГГГ-ММ-ДД` — новый ключ; тест `scripts/test_release_stories.py` |
+| `stories [brief\|write]` (`scripts/release_stories.py`) | **истории релиза (#693, `release-stories.md`):** без аргументов — ✗, пока у пункта невыпущенного верхнего раздела `whats-new.md` нет метки `<!-- story: id -->`, у `id` — строк нужной длины, схемы и слоёв или `ReleaseStories.kt` не собран из меток (тот же вызов — `end --pre`, шаг CI в каждом PR и в `release.yml`: без историй релиз не выходит); `brief` — пункты с метками и нарисованные схемы; `write` — собрать `ReleaseStories.current` и `KEY`; тест `scripts/test_release_stories.py` |
 | `stability` (`compose-stability.py`) | отчёты компилятора Compose для `app` (`--rerun`, ~1,5 мин) → падает на нестабильном классе состояния (`*UiState*`, `*State`) (#383) |
 
 Скрипты CI и для владельца — в `scripts/` (`feedback_to_issues.py`, `make-update-files.py`,

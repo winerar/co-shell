@@ -7,7 +7,7 @@ import app.coshell.core.designsystem.theme.CoShellTheme
 @Preview(showBackground = true)
 @Composable
 private fun ReleaseStoriesPreview() {
-    CoShellTheme(darkTheme = true) { ReleaseStoriesScreen("26.12.1", ReleaseStories.current) }
+    CoShellTheme(darkTheme = true) { ReleaseStoriesScreen("26.12.1", ReleaseStories.sample) }
 }
 
 @Preview(showBackground = true)

@@ -15,6 +15,7 @@ import datetime
 import hashlib
 import json
 import pathlib
+import re
 import shutil
 import sys
 
@@ -22,6 +23,7 @@ HISTORY_SIZE = 20
 
 
 def latest_notes(path: pathlib.Path) -> str:
+    """The newest section without `<!-- story: … -->` markers (docs/agents/release-stories.md): people never see them."""
     lines, inside = [], False
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.startswith("## "):
@@ -30,7 +32,7 @@ def latest_notes(path: pathlib.Path) -> str:
             inside = True
             continue
         if inside:
-            lines.append(line)
+            lines.append(re.sub(r"[ \t]*<!--.*?-->", "", line))
     return "\n".join(lines).strip()
 
 

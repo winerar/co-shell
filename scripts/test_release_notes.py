@@ -21,6 +21,11 @@ class TopSectionTest(unittest.TestCase):
         self.assertEqual("2026-11-10 · новое", heading)
         self.assertEqual("• Пункт один.\n• Пункт два.", body)
 
+    def test_drops_story_markers_unless_asked(self):
+        text = "## 2026-12-01\n• Долги <!-- story: debts -->\n"
+        self.assertEqual(("2026-12-01", "• Долги"), top_section(text))
+        self.assertEqual(("2026-12-01", "• Долги <!-- story: debts -->"), top_section(text, keep_markers=True))
+
     def test_no_sections(self):
         self.assertEqual((None, ""), top_section("# Что нового\n"))
 

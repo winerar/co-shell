@@ -106,6 +106,15 @@ jobs:
           python3 -m unittest discover -s scripts/ci -p 'test_*.py'
           python3 -m unittest discover -s scripts/agent -p 'test_*.py'
 
+      # Every feature of a pending release brings its own story (#693, docs/agents/release-stories.md): markers in
+      # whats-new, strings, schemes and a ReleaseStories.kt built from them. Cheap, so it runs even when Gradle is skipped.
+      - name: Release stories
+        if: github.event_name == 'pull_request' || github.ref_name == 'dev'
+        run: |
+          git fetch -q origin main
+          python3 scripts/release_stories.py check --base origin/main --head HEAD || {
+            echo "::error::Release stories are not ready — python3 scripts/release_stories.py brief (docs/agents/release-stories.md)"; exit 1; }
+
       # Before the automerge step below: a PR with broken rules is not merged.
       # Hotfix = a PR into main from anything but dev (docs/agents/hotfix.md). The app shows the top whats-new
       # section, so a hotfix brings its own («## <date> · исправление», «• Исправлено: …»).

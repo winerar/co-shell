@@ -32,7 +32,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** What the screen can ask for; defaults keep previews short. */
 data class DebtsActions(
-    val onBack: () -> Unit = {},
+    val onBack: (() -> Unit)? = {},
     val onTab: (Int) -> Unit = {},
     val onAdd: () -> Unit = {},
     val onOpen: (String) -> Unit = {},

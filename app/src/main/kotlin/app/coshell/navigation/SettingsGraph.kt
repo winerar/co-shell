@@ -14,6 +14,7 @@ import app.coshell.settings.HomeSettingsRoute
 import app.coshell.settings.InputSettingsRoute
 import app.coshell.settings.MoneySettingsRoute
 import app.coshell.settings.NoticeSettingsRoute
+import app.coshell.settings.BarSettingsRoute
 import app.coshell.settings.OpsSettingsRoute
 import app.coshell.settings.ReportsSettingsRoute
 import app.coshell.settings.ScreensSettingsScreen
@@ -54,6 +55,7 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     screen<ScreensSettingsDestination> {
         ScreensSettingsScreen(
             onHome = { navController.navigate(HomeSettingsDestination) },
+            onBar = { navController.navigate(BarSettingsDestination) },
             onOps = { navController.navigate(OpsSettingsDestination) },
             onReports = { navController.navigate(ReportsSettingsDestination) },
             onAccounts = { navController.navigate(AccountsSettingsDestination) },
@@ -71,6 +73,7 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
         BalanceAccountsRoute(onBack = { navController.popBackStack() })
     }
     screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
+    screen<BarSettingsDestination> { BarSettingsRoute(onBack = { navController.popBackStack() }) }
     screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
     screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
     screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }

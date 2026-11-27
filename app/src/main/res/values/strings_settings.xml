@@ -156,6 +156,13 @@
     <string name="export_type_income">Доход</string>
     <string name="export_type_transfer">Перевод</string>
     <string name="settings_home_tiles_section">Плитки</string>
+    <string name="settings_bar">Нижняя панель</string>
+    <string name="settings_bar_items">Вторая и третья вкладки</string>
+    <string name="settings_bar_title">Нижняя панель</string>
+    <string name="settings_bar_section">Вкладки</string>
+    <string name="settings_bar_second">Вторая вкладка</string>
+    <string name="settings_bar_third">Третья вкладка</string>
+    <string name="settings_bar_note">«Обзор», «+» и «Ещё» всегда на своих местах. Остальные разделы — в «Ещё».</string>
     <string name="settings_home_tile_first">Первая</string>
     <string name="settings_home_tile_second">Вторая</string>
     <string name="settings_home_tile_spending">Траты за месяц</string>

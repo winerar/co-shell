@@ -55,4 +55,22 @@ class ScreenOptionsTest {
         assertEquals(HomeTile.SPENDING to HomeTile.UNCATEGORIZED, third.tileFirst to third.tileSecond)
         assertEquals(HomeTile.UNCATEGORIZED to HomeTile.SPENDING, third.withSecond(HomeTile.SPENDING).let { it.tileFirst to it.tileSecond })
     }
+
+    @Test
+    fun `bar tabs swap instead of repeating`() {
+        val o = ScreenOptions()
+        assertEquals(BarTab.TRANSACTIONS to BarTab.REPORTS, o.barSecond to o.barThird)
+        val swapped = o.withBarSecond(BarTab.REPORTS)
+        assertEquals(BarTab.REPORTS to BarTab.TRANSACTIONS, swapped.barSecond to swapped.barThird)
+        val accounts = o.withBarThird(BarTab.ACCOUNTS)
+        assertEquals(BarTab.TRANSACTIONS to BarTab.ACCOUNTS, accounts.barSecond to accounts.barThird)
+        assertEquals(BarTab.ACCOUNTS to BarTab.TRANSACTIONS, accounts.withBarSecond(BarTab.ACCOUNTS).let { it.barSecond to it.barThird })
+    }
+
+    @Test
+    fun `a stored bar tab reads back and an unknown one falls back`() {
+        assertEquals(BarTab.GOALS, BarTab.parse("GOALS", BarTab.REPORTS))
+        assertEquals(BarTab.REPORTS, BarTab.parse("CALENDAR", BarTab.REPORTS))
+        assertEquals(BarTab.TRANSACTIONS, BarTab.parse(null, BarTab.TRANSACTIONS))
+    }
 }

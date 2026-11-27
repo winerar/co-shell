@@ -21,6 +21,7 @@ PrivacyDestination	Priv145Settings
 PinSetupDestination	Priv145Set1
 ScreensSettingsDestination	Set1Screens
 HomeSettingsDestination	Set1Home
+BarSettingsDestination	Set1Bar
 HomeDetailsSettingsDestination	Set1HomeMore
 BalanceAccountsDestination	Set1Balance
 OpsSettingsDestination	Set1Ops

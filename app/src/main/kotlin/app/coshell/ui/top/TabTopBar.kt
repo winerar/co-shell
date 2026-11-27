@@ -1,5 +1,7 @@
 package app.coshell.ui.top
 
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Row
 import androidx.compose.animation.AnimatedContent
 import app.coshell.core.designsystem.theme.ScreenTitleStyle
 import androidx.compose.animation.core.Animatable
@@ -77,7 +79,17 @@ fun TabTopBar(
                     else TitleBlock(title, subtitle, scrolled, { enter.value }, onTitleClick)
                 }
             },
-            navigationIcon = navigation,
+            navigationIcon = {
+                val back = LocalTabBack.current
+                if (back == null) {
+                    navigation()
+                } else {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        BackButton(back)
+                        navigation()
+                    }
+                }
+            },
             actions = {
                 TopBarActions {
                     if (search != null) {

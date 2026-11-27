@@ -12,7 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 /** Connects [AccountsScreen] to its ViewModel. */
 @Composable
 fun AccountsRoute(
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onAccountClick: (String) -> Unit,
     onAddAccount: () -> Unit,
     viewModel: AccountsViewModel = hiltViewModel(),

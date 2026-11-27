@@ -51,13 +51,15 @@ internal fun MainShell(
     reportsBadge: Boolean = false,
     inputLock: InputLock = InputLock(),
     overBar: @Composable BoxScope.(onTab: Boolean) -> Unit = {},
+    /** The bar's tabs (#154, «Настройки → Экраны → Нижняя панель»). */
+    tabs: BarTabs = BarTabs(),
     graph: NavGraphBuilder.() -> Unit,
 ) {
     // A sheet (dialog destination) opens over a screen: the bar under it stays as it was.
     val visible by navController.visibleEntries.collectAsStateWithLifecycle()
     val screen = visible.lastOrNull { it.destination !is DialogNavigator.Destination && it.destination !is NavGraph }
         ?.destination
-    val showBottomBar = TopLevel.entries.any { screen.isOn(it) }
+    val showBottomBar = tabs.of(screen) != null
     // While the bar rides away under an inner screen it keeps showing the tab it was opened from.
     var barScreen by remember { mutableStateOf(screen) }
     if (showBottomBar) barScreen = screen
@@ -71,8 +73,8 @@ internal fun MainShell(
     // How far a tab swipe has gone: the bar's pill follows the finger (poll 2026-11-16 «В»).
     val tabDrag = remember { TabDrag() }
 
-    CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot, LocalInputLock provides inputLock) {
-        Shell(navController, snackbar, onAdd, onFan, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked, reportsBadge), origins, tabDrag, overBar)
+    CompositionLocalProvider(LocalAddConfirm provides addConfirm, LocalBottomBarSlot provides slot, LocalInputLock provides inputLock, LocalBarTabs provides tabs) {
+        Shell(navController, snackbar, onAdd, onFan, graph, BarState(barScreen, showBottomBar, moreBadge, slot, inputLock.locked, reportsBadge, tabs), origins, tabDrag, overBar)
     }
 }
 
@@ -103,7 +105,8 @@ private fun Shell(
                 .tabSwipe(
                     tabDrag = tabDrag,
                     enabled = bar.visible && bar.slot.content == null,
-                    current = TopLevel.entries.firstOrNull { bar.screen.isOn(it) },
+                    tabs = bar.tabs.all,
+                    current = bar.tabs.of(bar.screen),
                     onTab = { navController.navigateToTab(it) },
                 ),
         ) {
@@ -111,10 +114,10 @@ private fun Shell(
                 NavHost(
                     navController = navController,
                     startDestination = HomeDestination,
-                    enterTransition = { enter(origins) },
-                    exitTransition = { exit(origins) },
-                    popEnterTransition = { popEnter(origins) },
-                    popExitTransition = { popExit(origins) },
+                    enterTransition = { enter(origins, bar.tabs) },
+                    exitTransition = { exit(origins, bar.tabs) },
+                    popEnterTransition = { popEnter(origins, bar.tabs) },
+                    popExitTransition = { popExit(origins, bar.tabs) },
                     builder = graph,
                 )
             }
@@ -134,7 +137,7 @@ private fun Bar(bar: BarState, drag: TabDrag, onTab: (TopLevel) -> Unit, onAdd: 
     var shown by remember { mutableStateOf(buttons) }
     if (buttons != null) shown = buttons
     Box {
-        MainBottomBar(current = bar.screen, onTab = onTab, onAdd = onAdd, onFan = onFan, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, reportsBadge = bar.reportsBadge, addLocked = bar.addLocked, drag = drag)
+        MainBottomBar(current = bar.screen, tabs = bar.tabs, onTab = onTab, onAdd = onAdd, onFan = onFan, visible = bar.visible && buttons == null, moreBadge = bar.moreBadge, reportsBadge = bar.reportsBadge, addLocked = bar.addLocked, drag = drag)
         CoShellActionBar(visible = bar.visible && buttons != null) { shown?.invoke(this) }
     }
 }
@@ -147,7 +150,20 @@ private data class BarState(
     val slot: BottomBarSlot,
     val addLocked: Boolean = false,
     val reportsBadge: Boolean = false,
+    val tabs: BarTabs = BarTabs(),
 )
+
+/**
+ * Opens a section that may be a tab (#154): on the bar — [navigateToTab], otherwise an ordinary screen on top. «Назад» of
+ * the section's screen — [sectionBack].
+ */
+internal fun NavHostController.openSection(tab: TopLevel, tabs: BarTabs) {
+    if (tab in tabs) navigateToTab(tab) else navigate(tab.route) { launchSingleTop = true }
+}
+
+/** «Назад» of a section's screen: none while it is a tab of the bar, otherwise back to where it was opened from. */
+internal fun NavHostController.sectionBack(tab: TopLevel, tabs: BarTabs): (() -> Unit)? =
+    if (tab in tabs) null else ({ popBackStack() })
 
 /** Opens a tab like the bottom bar does: one copy of each tab, each keeps its scroll and state. */
 internal fun NavHostController.navigateToTab(tab: TopLevel) {

@@ -71,10 +71,21 @@ def look():
 
 def screens():
     g = group([r('Обзор', '5 карточек · «Скоро» на 7 дней', 'home', LIME, LIMEBG),
+               r('Нижняя панель', 'Вторая и третья вкладки', 'more', LIME, LIMEBG),
                r('Операции', 'Счёт и теги в строке · сумма в валюте счёта', 'list', CYAN, CYANBG),
                r('Отчёты', 'Месяц · сравнение с прошлым', 'chart', VIOLET, VIOLETBG),
                r('Счета', 'По типу · архивные скрыты', 'wallet', YELLOW, YELLOWBG)])
     return inner_screen('Экраны', label('Экраны', top=10) + g)
+
+
+def bar_settings():
+    """#154 (poll 2026-11-27 «А · А»): a sample of the bar, the two places that change; a tap — the six sections in `ChoiceSheet`."""
+    sample = nav('home').replace('position: absolute; left: 32px; right: 32px; bottom: 18px;', 'position: relative; margin: 8px 32px 16px;')
+    body = (sample + label('Вкладки')
+            + group([r('Вторая вкладка', 'Операции', 'list', LIME, LIMEBG), r('Третья вкладка', 'Отчёты', 'chart', LIME, LIMEBG)])
+            + note('«Обзор», «+» и «Ещё» всегда на своих местах. Остальные разделы — в «Ещё».', 8)
+            + label('Выбор: Операции · Отчёты · Счета · Бюджеты · Цели · Долги', top=18))
+    return inner_screen('Нижняя панель', body)
 
 
 def card_row(title, sub, on, fixed=False):
@@ -249,6 +260,7 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1More', 'Ещё: «Внешний вид» → «Настройки»', more_row, 1118),
     ('Set1Look', 'Внешний вид: язык, тема, палитра, плотность списков', look, 1118),
     ('Set1Screens', 'Экраны: Обзор, Операции, Отчёты, Счета', screens, 1118),
+    ('Set1Bar', 'Нижняя панель: вторая и третья вкладки (#154)', bar_settings, 1118),
     ('Set1Home', 'Обзор: карточки — показать/скрыть и порядок', home_cards, 1118),
     ('Set1HomeMore', 'Обзор: «Скоро», «Последние», плитки', home_horizon, 1118),
     ('Set1HomeEdit', 'Обзор: режим правки на экране (удержание; пояснение, «Скрыто: N», пустые карточки — опрос #154)', home_edit, 1118),

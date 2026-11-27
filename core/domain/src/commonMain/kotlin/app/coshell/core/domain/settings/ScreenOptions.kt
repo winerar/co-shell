@@ -76,11 +76,19 @@ data class ScreenOptions(
     /** «Уведомления → Трата партнёра»: tell about the other member's expenses from [partnerSpendMin] whole units of the main currency. */
     val partnerSpend: Boolean = false,
     val partnerSpendMin: Int = 50,
+    /** «Экраны → Нижняя панель» (#154): the second and the third tab; never the same one twice. */
+    val barSecond: BarTab = BarTab.TRANSACTIONS,
+    val barThird: BarTab = BarTab.REPORTS,
 ) {
     /** [tile] goes to the first place; if it was the second one, the two swap. */
     fun withFirst(tile: HomeTile): ScreenOptions = if (tile == tileSecond) copy(tileFirst = tile, tileSecond = tileFirst) else copy(tileFirst = tile)
 
     fun withSecond(tile: HomeTile): ScreenOptions = if (tile == tileFirst) copy(tileSecond = tile, tileFirst = tileSecond) else copy(tileSecond = tile)
+
+    /** [tab] goes to the second place of the bar; if it was the third one, the two swap. */
+    fun withBarSecond(tab: BarTab): ScreenOptions = if (tab == barThird) copy(barSecond = tab, barThird = barSecond) else copy(barSecond = tab)
+
+    fun withBarThird(tab: BarTab): ScreenOptions = if (tab == barSecond) copy(barThird = tab, barSecond = barThird) else copy(barThird = tab)
 
     companion object {
         /** What «Скоро» and «Последние» offer. */

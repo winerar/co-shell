@@ -32,34 +32,35 @@ private const val STEP_BACK = 0.94f
 private typealias NavScope = AnimatedContentTransitionScope<NavBackStackEntry>
 
 // The NavHost's four lambdas. Forward ones ask for the target's origin first: the tap is taken once, even for tabs.
-internal fun NavScope.enter(origins: ScreenOrigins): EnterTransition {
+internal fun NavScope.enter(origins: ScreenOrigins, tabs: BarTabs = BarTabs()): EnterTransition {
     val origin = origins.forEnter(targetState.id)
-    val dir = tabDirection()
+    val dir = tabDirection(tabs)
     return if (dir != null) tabEnter(dir) else screenEnter(origin)
 }
 
-internal fun NavScope.exit(origins: ScreenOrigins): ExitTransition {
+internal fun NavScope.exit(origins: ScreenOrigins, tabs: BarTabs = BarTabs()): ExitTransition {
     val origin = origins.forEnter(targetState.id)
-    val dir = tabDirection()
+    val dir = tabDirection(tabs)
     return if (dir != null) tabExit(dir) else screenExit(newHasOrigin = origin != null)
 }
 
-internal fun NavScope.popEnter(origins: ScreenOrigins): EnterTransition {
-    val dir = tabDirection()
+internal fun NavScope.popEnter(origins: ScreenOrigins, tabs: BarTabs = BarTabs()): EnterTransition {
+    val dir = tabDirection(tabs)
     return if (dir != null) tabEnter(dir) else screenPopEnter(closingHasOrigin = origins.forPop(initialState.id) != null)
 }
 
-internal fun NavScope.popExit(origins: ScreenOrigins): ExitTransition {
-    val dir = tabDirection()
+internal fun NavScope.popExit(origins: ScreenOrigins, tabs: BarTabs = BarTabs()): ExitTransition {
+    val dir = tabDirection(tabs)
     return if (dir != null) tabExit(dir) else screenPopExit(origins.forPop(initialState.id))
 }
 
 /** Both sides are tabs of the bottom bar → +1 (moving right along the bar), −1 (left); otherwise null. */
-private fun NavScope.tabDirection(): Int? =
-    tabDirection(tabIndex(initialState.destination), tabIndex(targetState.destination))
+private fun NavScope.tabDirection(tabs: BarTabs): Int? =
+    tabDirection(tabIndex(initialState.destination, tabs), tabIndex(targetState.destination, tabs))
 
-private fun tabIndex(destination: NavDestination): Int? =
-    TopLevel.entries.indexOfFirst { destination.isOn(it) }.takeIf { it >= 0 }
+/** The place of [destination] along the bar; a section not on the bar (#154) is an ordinary screen. */
+private fun tabIndex(destination: NavDestination, tabs: BarTabs): Int? =
+    tabs.all.indexOfFirst { destination.isOn(it) }.takeIf { it >= 0 }
 
 /** Direction of a switch between bar tabs [from] → [to] (indices along the bar); null if either is not a tab. Pure. */
 internal fun tabDirection(from: Int?, to: Int?): Int? {

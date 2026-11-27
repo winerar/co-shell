@@ -30,7 +30,7 @@ ROWS = [
     ('Семья: удалить аккаунт?', 'FamilyDeleteAccount', None), ('Семья: вас убрали', 'FamilyRemoved', None),
     ('Код приглашения', 'AccessGate', 'access_code'), ('Доступ закрыт', 'AccessLocked', 'access_locked'), ('Настройки', 'Set1Root', 'settings'), ('Внешний вид', 'Set1Look', 'appearance'),
     ('Конфиденциальность', 'Priv145Settings', 'privacy'), ('Вход по PIN', 'Priv145LockA', 'lock'),
-    ('Настройки: экраны', 'Set1Screens', 'settings_screens'), ('Настройки: обзор', 'Set1Home', 'settings_home'), ('Настройки: обзор, подробности', 'Set1HomeMore', 'settings_home_details'),
+    ('Настройки: экраны', 'Set1Screens', 'settings_screens'), ('Настройки: обзор', 'Set1Home', 'settings_home'), ('Настройки: обзор, подробности', 'Set1HomeMore', 'settings_home_details'), ('Настройки: нижняя панель', 'Set1Bar', 'settings_bar'),
     ('Экспорт в CSV', 'Fb204Export', 'export'), ('Настройки: счета в балансе', 'Set1Balance', 'settings_balance'),
     ('Настройки: операции', 'Set1Ops', 'settings_ops'),
     ('Настройки: отчёты', 'Set1Reports', 'settings_reports'), ('Настройки: счета', 'Set1Accounts', 'settings_accounts'),

@@ -12,23 +12,28 @@ interface ReminderSettings {
 
     suspend fun setEnabled(enabled: Boolean)
 
-    /** The hour of the reminder on the phone's clock («Уведомления → Время напоминания»); [DEFAULT_HOUR] by default. */
-    val hour: Flow<Int>
+    /** The time of the reminder on the phone's clock, minutes since midnight («Уведомления → Время напоминания»); [DEFAULT_TIME] by default. */
+    val time: Flow<Int>
 
-    suspend fun setHour(hour: Int)
+    suspend fun setTime(minutes: Int)
 
-    /** «Предупреждать за»: 0 — only on the day, 1 or 3 — one more reminder that many days before. */
+    /** «Предупреждать»: 0 — only on the day, 1…[MAX_DAYS_BEFORE] — one more reminder that many days before. */
     val daysBefore: Flow<Int>
 
     suspend fun setDaysBefore(days: Int)
 
     companion object {
-        const val DEFAULT_HOUR = 9
+        val DEFAULT_TIME = ClockMinutes.of(9)
 
-        /** The hours «Время напоминания» offers. */
-        val HOURS = listOf(8, 9, 12, 18)
+        /** The times «Время напоминания» offers as buttons; any other — «Другое…» (#777). */
+        val TIMES = listOf(8, 9, 12, 18).map { ClockMinutes.of(it) }
 
-        /** The values «Предупреждать за» offers. */
+        /** The values «Предупреждать» offers as buttons; any other up to [MAX_DAYS_BEFORE] — «Другое…» (#777). */
         val DAYS_BEFORE = listOf(0, 1, 3)
+
+        const val MAX_DAYS_BEFORE = 30
+
+        /** [steps] counter presses away from [days], kept in 0…[MAX_DAYS_BEFORE]. */
+        fun stepDays(days: Int, steps: Int): Int = (days + steps).coerceIn(0, MAX_DAYS_BEFORE)
     }
 }

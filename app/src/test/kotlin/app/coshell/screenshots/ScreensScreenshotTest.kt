@@ -37,6 +37,7 @@ import app.coshell.settings.SettingsPreviewState
 import app.coshell.settings.SettingsScreen
 import app.coshell.appearance.AppearanceScreen
 import app.coshell.appearance.AppearanceState
+import app.coshell.appearance.DensitySample
 import app.coshell.language.LanguageChoice
 import app.coshell.language.LanguageChoices
 import app.coshell.language.components.LanguageList
@@ -407,10 +408,10 @@ class ScreensScreenshotTest {
     fun `settings input dark`() = shot("settings_input_dark", dark = true) { InputSettingsScreen(true, {}, ScreenOptions(entryAccountId = "a"), {}, listOf(AccountChoice("a", "Galicia", "ARS")), {}) }
 
     @Test
-    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices light`() = shot("settings_notices_light") { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
-    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
+    fun `settings notices dark`() = shot("settings_notices_dark", dark = true) { NoticeSettingsScreen(true, {}, 9 * 60, {}, 1, {}, true, {}, 50, {}, "USD", {}, kinds = NOTICE_KINDS_SAMPLE) }
 
     @Test
     fun `settings data light`() = shot("settings_data_light") { DataSettingsScreen(false, {}, {}, {}, {}, {}, {}) }
@@ -422,6 +423,22 @@ class ScreensScreenshotTest {
     @Test
     fun `accounts compact light`() = shot("accounts_compact_light") {
         CompositionLocalProvider(LocalCompactLists provides true) { AccountsScreen(accountsPreviewSample, AccountsActions(onBack = {})) }
+    }
+
+    @Test
+    fun `density sample dark`() = shot("density_sample_dark", dark = true) {
+        androidx.compose.foundation.layout.Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(app.coshell.core.designsystem.tokens.Spacing.l)) {
+            DensitySample(compact = false)
+            DensitySample(compact = true)
+        }
+    }
+
+    @Test
+    fun `density sample light`() = shot("density_sample_light") {
+        androidx.compose.foundation.layout.Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(app.coshell.core.designsystem.tokens.Spacing.l)) {
+            DensitySample(compact = false)
+            DensitySample(compact = true)
+        }
     }
 
     @Test

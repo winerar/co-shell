@@ -21,12 +21,12 @@ class NoticeKindsViewModel @Inject constructor(private val settings: NoticeSetti
         viewModelScope.launch { settings.setEnabled(kind, on) }
     }
 
-    val hour: StateFlow<Int> = settings.hour.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), NoticeSettings.DEFAULT_HOUR)
+    val time: StateFlow<Int> = settings.time.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), NoticeSettings.DEFAULT_TIME)
 
-    /** Saves the hour; [after] runs once it is written (the daily job is planned again from the saved file). */
-    fun setHour(hour: Int, after: () -> Unit = {}) {
+    /** Saves the time; [after] runs once it is written (the daily job is planned again from the saved file). */
+    fun setTime(minutes: Int, after: () -> Unit = {}) {
         viewModelScope.launch {
-            settings.setHour(hour)
+            settings.setTime(minutes)
             after()
         }
     }

@@ -68,7 +68,7 @@ data class SettingsState(
     val shake: Boolean = false,
     val haptics: Boolean = true,
     val reminders: Boolean = true,
-    val reminderHour: Int = ReminderSettings.DEFAULT_HOUR,
+    val reminderTime: Int = ReminderSettings.DEFAULT_TIME,
     val currencies: String = "",
     val weekStart: WeekStart = WeekStart.SYSTEM,
     val wifiOnly: Boolean = false,
@@ -96,7 +96,7 @@ fun SettingsRoute(
     val palette by theme.palette.collectAsStateWithLifecycle()
     val shakeOn by shake.enabled.collectAsStateWithLifecycle()
     val remindersOn by reminders.enabled.collectAsStateWithLifecycle()
-    val hour by reminders.hour.collectAsStateWithLifecycle()
+    val reminderTime by reminders.time.collectAsStateWithLifecycle()
     val options by screens.options.collectAsStateWithLifecycle()
     val codes by accounts.currencies.collectAsStateWithLifecycle()
     val joined = codes.fold("") { acc, c -> if (acc.isEmpty()) c else stringResource(R.string.settings_join, acc, c) }
@@ -106,7 +106,7 @@ fun SettingsRoute(
     val policyUrl = remember { PolicyLink.of(BuildConfig.SITE_URL, AppLanguage.current()) }
     SettingsScreen(
         SettingsState(
-            mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, hour, joined,
+            mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, shakeOn, options.haptics, remindersOn, reminderTime, joined,
             options.weekStart, options.syncWifiOnly, hintsOn,
             invite = accessState.inviteRow(),
             policy = policyUrl != null,

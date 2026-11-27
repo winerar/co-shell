@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2344 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v26.
+- Тесты: всего 2367 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v26.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,6 +69,9 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
+2026-11-27, `ccr-b1cb6d81-pq817q`: отзывы #775–#777 (опрос https://claude.ai/artifact/EhKdFZhXC9T1bwh2o4zYWv, всё «А»). #776 — подписи «Предупреждать».
+#775 — «Строки в списках: Свободно · Плотно» + пример настоящими строками (`DensitySample`). #777 — «Другое…» со счётчиком (`CoShellCounter`), время в минутах (`ClockMinutes`, ключи `*_time`).
+Не проверено на телефоне: удержание «+/−» в счётчике, напоминание в 7:30. Закрытый тест ждёт владельца: #669, #670, #657.
 2026-11-27, `claude/config-model-nymgzn`: #154 часть 2 — вкладки внизу: опрос владельцу https://claude.ai/artifact/GzBkshDRvsnrNZYrvzA4ac (доски `Tabs154*`, `poll-tabs-154.json`; старая `Fb154Tabs` устарела). После ответа — доска, код или закрытие задачи.
 2026-11-27, `claude/config-model-nymgzn`: #154 — правка «Обзора» по опросу (все «А»): подсказка `edit_home`, строка-пояснение, плашка «Скрыто: N · Вернуть» (шторка), пустые карточки приглушённо в режиме правки; доска `Set1HomeEdit`, `HiddenCardsBarTest`, `HomeLayoutTest`. Не сделано в #154: экран «Вкладки и плитки» (вкладки внизу).
 2026-11-26, `ccr-bc66a3fb-qvcduy`: методики бюджета → задачи #768–#771. #768 «Цели накоплений» сделано по опросу (всё «А», https://claude.ai/artifact/VLNiyUYHuLagu2ZoCHFgAe):

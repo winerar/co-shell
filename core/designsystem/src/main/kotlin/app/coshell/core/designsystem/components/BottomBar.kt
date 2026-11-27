@@ -14,6 +14,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.foundation.background
@@ -146,7 +149,6 @@ private fun BottomBarContent(
     val pillColor = sel.fill
     val pillEdge = fillEdge(pillColor, panel)
     val pill = rememberTabPillState()
-    AnimateTabPill(pill, tabs.indexOfFirst { it.selected }, drag)
     // A floating capsule over the screen's background, clear of the system navigation bar.
     // Never fillMaxHeight here: the Scaffold measures the bar with the whole screen as its max height,
     // so the bar would take the screen and leave screens 0 px tall (releases #52/#56).
@@ -161,10 +163,26 @@ private fun BottomBarContent(
         BoxWithConstraints(Modifier.fillMaxWidth()) {
             val inner = maxWidth - (Spacing.xs + Spacing.xxs) * 2
             val addSlot = BarWidths.addSlot(inner, tabs.size, Sizes.bottomBarAddSlot)
-            val targets = BarWidths.of(tabs.size, tabs.indexOfFirst { it.selected }, inner, addSlot, Sizes.bottomBarTabMin)
+            val selectedIndex = tabs.indexOfFirst { it.selected }
+            val targets = BarWidths.of(tabs.size, selectedIndex, inner, addSlot, Sizes.bottomBarTabMin)
+            val density = LocalDensity.current
+            val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+            val barWidth = constraints.maxWidth.toFloat()
+            val spans = remember(targets, addSlot, density, rtl, barWidth) {
+                with(density) {
+                    val start = (Spacing.xs + Spacing.xxs).roundToPx()
+                    BarWidths.spans(
+                        targets.map { it.roundToPx() }, addSlot.roundToPx(), Spacing.xxs.roundToPx(), constraints.maxWidth - start * 2,
+                    ).map { (l, r) ->
+                        val left = (start + l).toFloat()
+                        val right = (start + r).toFloat()
+                        if (rtl) (barWidth - right) to (barWidth - left) else left to right
+                    }
+                }
+            }
+            AnimateTabPill(pill, selectedIndex, drag, spans)
             // The word under the icon is shown only if it fits the final width, so it never blinks while the pill grows.
             val measurer = rememberTextMeasurer()
-            val density = LocalDensity.current
             val style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
             Row(
                 Modifier

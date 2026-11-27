@@ -97,10 +97,17 @@ internal fun Modifier.tabPill(state: TabPillState, color: Color, edge: BorderStr
         drawFillEdge(edge, Offset(l, state.top), Size(r - l, h), h / 2f)
     }
 
-/** Moves the pill to [selected]'s slot: the first time it just appears there, later it flows; while [drag] pulls, it follows the finger. */
+/**
+ * Moves the pill to [selected]'s slot: the first time it just appears there, later it flows; while [drag] pulls, it follows the finger.
+ * [spans] — final left/right edge of each slot in the bar (px), known before the tabs finish growing: the pill flies there at once. Aiming at
+ * the measured slot while it grew restarted the flow every frame, and the pill stood still until the tab settled (#808); without [spans]
+ * the measured slot is used.
+ */
 @Composable
-internal fun AnimateTabPill(state: TabPillState, selected: Int, drag: TabDrag? = null) {
-    val target = state.boundsOf(selected)
+internal fun AnimateTabPill(state: TabPillState, selected: Int, drag: TabDrag? = null, spans: List<Pair<Float, Float>>? = null) {
+    val measured = state.boundsOf(selected)
+    val span = spans?.getOrNull(selected)
+    val target = if (measured == null || span == null) measured else Rect(span.first, measured.top, span.second, measured.bottom)
     LaunchedEffect(target) {
         val slot = target ?: return@LaunchedEffect
         state.top = slot.top

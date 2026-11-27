@@ -12,19 +12,20 @@ import kotlinx.coroutines.withContext
 /**
  * Reads `version.json` (and `releases.json` for «Прошлые версии», #284) from [baseUrl] (latest release of the public releases repo, set at build time).
  * GitHub answers with a redirect to its file storage; [HttpURLConnection] follows it (https → https).
+ * [channelSuffix] — `-dev` for the dev channel (`version-dev.json`, #655); empty — stable.
  * A blank [baseUrl] means updates are not configured for this build.
  */
-class HttpReleaseSource(private val baseUrl: String) : ReleaseSource, ReleaseHistorySource {
+class HttpReleaseSource(private val baseUrl: String, private val channelSuffix: String = "") : ReleaseSource, ReleaseHistorySource {
 
     override suspend fun latestRelease(): AppRelease? {
         if (baseUrl.isBlank()) return null
-        val url = baseUrl.trimEnd('/') + "/version.json"
+        val url = baseUrl.trimEnd('/') + "/version$channelSuffix.json"
         return parseReleaseManifest(fetch(url), url)
     }
 
     override suspend fun history(): List<ReleaseNote> {
         if (baseUrl.isBlank()) return emptyList()
-        return parseReleaseHistory(fetch(baseUrl.trimEnd('/') + "/releases.json"))
+        return parseReleaseHistory(fetch(baseUrl.trimEnd('/') + "/releases$channelSuffix.json"))
     }
 
     private suspend fun fetch(url: String): String =

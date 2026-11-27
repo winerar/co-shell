@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prepares the self-update files that CI attaches to a release of the public releases repo.
 
-Usage: make-update-files.py <apk> <versionCode> <versionName> <whats-new.md> <apk-base-url> <out-dir> [previous-releases.json]
+Usage: make-update-files.py <apk> <versionCode> <versionName> <whats-new.md> <apk-base-url> <out-dir> [previous-releases.json] [--suffix=-dev]
 
 Copies the APK as co-shell-<versionCode>.apk and writes version.json next to it
 (format: app/.../update/data/ReleaseManifest.kt). "apk" in version.json is
@@ -9,6 +9,7 @@ Copies the APK as co-shell-<versionCode>.apk and writes version.json next to it
 in between cannot break a download. Notes are the newest "## " section of whats-new.md.
 releases.json — this release plus the previous history (the releases.json of the latest release, when CI got one),
 newest first, at most HISTORY_SIZE: «Прошлые версии» on the update screen (#284, ReleaseHistory.kt).
+--suffix=-dev (channel dev, #655): version-dev.json / releases-dev.json, so both channels can live side by side.
 """
 import datetime
 import hashlib
@@ -51,8 +52,10 @@ def history(entry: dict, previous: list) -> list:
 
 
 def main() -> None:
-    apk, code, name, notes_file, base_url, out = sys.argv[1:7]
-    previous = sys.argv[7] if len(sys.argv) > 7 else None
+    suffix = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--suffix=")), "")
+    args = [a for a in sys.argv[1:] if not a.startswith("--suffix=")]
+    apk, code, name, notes_file, base_url, out = args[:6]
+    previous = args[6] if len(args) > 6 else None
     out_dir = pathlib.Path(out)
     out_dir.mkdir(parents=True, exist_ok=True)
     apk_name = f"co-shell-{code}.apk"
@@ -67,7 +70,7 @@ def main() -> None:
         "size": len(data),
         "notes": latest_notes(pathlib.Path(notes_file)),
     }
-    (out_dir / "version.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / f"version{suffix}.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     entry = {
         "versionCode": manifest["versionCode"],
         "versionName": name,
@@ -75,7 +78,7 @@ def main() -> None:
         "notes": manifest["notes"],
     }
     releases = history(entry, read_history(previous))
-    (out_dir / "releases.json").write_text(json.dumps(releases, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / f"releases{suffix}.json").write_text(json.dumps(releases, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({k: v for k, v in manifest.items() if k != "notes"}))
 
 

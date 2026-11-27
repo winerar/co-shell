@@ -86,6 +86,9 @@
 | Цель: новая | GoalNew | — | — | — |
 | Цель | GoalDetail | goal_edit | ✓ | ✓ |
 | Обзор: цели | GoalHome | — | — | — |
+| Обзор: сегодня можно | DailyHome | daily | ✓ | ✓ |
+| Сегодня можно: как посчитано | DailyWhy | — | — | — |
+| Сегодня можно: план потрачен | DailyOver | daily_over | ✓ | ✓ |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -108,6 +111,7 @@
 - Цели: много (нет эталона: light, dark)
 - Цель: новая (нет эталона: light, dark)
 - Обзор: цели (нет эталона: light, dark)
+- Сегодня можно: как посчитано (нет эталона: light, dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

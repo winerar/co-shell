@@ -51,6 +51,14 @@ class BudgetCalculator(
      * part of the folder's and is not added twice. Limits are converted at today's rate (the last day
      * for a past month, the first for a future one), spending — at the rate of each operation's day.
      */
+    /** Every category the limits of [month] cover (folders with their subcategories), counted once — what [summary] spends against. */
+    fun limitedCategoryIds(month: YearMonth): Set<String> {
+        val inMonth = budgets.inMonth(month)
+        val limited = inMonth.map { it.categoryId }.toSet()
+        val parents = categories.associate { it.id to it.parentId }
+        return inMonth.filter { parents[it.categoryId] !in limited }.flatMapTo(mutableSetOf()) { covered(it) }
+    }
+
     fun summary(month: YearMonth, today: LocalDate, currency: CurrencyCode): BudgetMonthSummary {
         val period = budgetPeriod(month, startDay)
         val inMonth = budgets.inMonth(month)

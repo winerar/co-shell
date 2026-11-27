@@ -1,6 +1,20 @@
 package app.coshell.recurring.list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
+import app.coshell.core.domain.budgets.budgetPeriodOf
+import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.recurring.SHARE_MONTHS
+import app.coshell.core.domain.reports.ReportLedger
+import app.coshell.core.domain.reports.ReportRepository
+import app.coshell.core.domain.reports.monthlySeries
+import app.coshell.core.domain.reports.reportMonths
+import app.coshell.core.domain.settings.MonthStartSettings
+import app.coshell.navigation.RecurringListDestination
+import app.coshell.recurring.fixed.buildFixed
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
 import app.coshell.core.domain.CategoryRepository
@@ -41,11 +55,40 @@ class RecurringListViewModel @Inject constructor(
     private val moneyFormat: MoneyFormat,
     clock: Clock,
     timeZone: TimeZone,
+    reports: ReportRepository,
+    monthStart: MonthStartSettings,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val today = clock.todayIn(timeZone)
     private val query = MutableStateFlow("")
     private val filter = MutableStateFlow(PaymentFilter.ALL)
+    /** «До конца месяца · За год» (#771); «Все ›» of «Постоянные траты» in «Отчётах» opens on the year. */
+    private val mode = MutableStateFlow(
+        if (savedStateHandle.get<Boolean>(RecurringListDestination.ARG_YEAR) == true) RecurringMode.YEAR else RecurringMode.MONTH,
+    )
+    private val format = moneyFormat.copy(trimZeroFraction = true)
+
+    /** Spending of the last months for the share of «За год»: the current family month and [SHARE_MONTHS] before it, by day. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val spending = monthStart.monthStartDay.flatMapLatest { startDay ->
+        val months = reportMonths(budgetPeriodOf(today, startDay).month, SHARE_MONTHS + 1, startDay)
+        reports.observeDays(months.first().start, months.last().endExclusive).map { days -> months to days }
+    }
+
+    /** «За год»: the repeating expenses a year in the main report currency (#771). */
+    private val fixed = combine(
+        templates.observeTemplates(),
+        accounts.observeAccounts(includeArchived = true),
+        categories.observeCategories(includeArchived = true),
+        combine(rates.observeRates(), reportCurrencies.currencies, ::Pair),
+        spending,
+    ) { list, accountList, categoryList, (rateList, currencies), (months, days) ->
+        val book = RateBook.of(rateList)
+        val main = currencies.firstOrNull() ?: ReportCurrencySettings.DEFAULT.first()
+        val series = monthlySeries(ReportLedger(days, categoryList, book, main), months)
+        buildFixed(list, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, book, main, today, series, format)
+    }
 
     private val content = combine(
         templates.observeTemplates(),
@@ -65,13 +108,17 @@ class RecurringListViewModel @Inject constructor(
         )
     }
 
-    val state: StateFlow<RecurringListUiState> = combine(content, query, filter) { c, q, f -> recurringList(c.payments, c.items, c.ahead, q, f, c.paused) }
+    val state: StateFlow<RecurringListUiState> = combine(content, query, filter, mode, fixed) { c, q, f, m, y ->
+        recurringList(c.payments, c.items, c.ahead, q, f, c.paused).copy(mode = m, fixed = y)
+    }
         .offMain()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), RecurringListUiState(isLoading = true))
 
     fun onQueryChange(value: String) { query.value = value }
 
     fun onFilterChange(value: PaymentFilter) { filter.value = value }
+
+    fun onModeChange(value: RecurringMode) { mode.value = value }
 
     private data class Content(
         val payments: List<ScheduledPayment>,

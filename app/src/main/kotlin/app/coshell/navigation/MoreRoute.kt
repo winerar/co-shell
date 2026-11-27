@@ -29,7 +29,7 @@ internal fun MoreRoute(
             onAccounts = { navController.openSection(TopLevel.ACCOUNTS, tabs) },
             onCategories = { navController.navigate(CategoriesDestination) },
             onBudgets = { navController.openSection(TopLevel.BUDGETS, tabs) },
-            onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
+            onRecurring = { navController.navigate(RecurringListDestination()) { launchSingleTop = true } },
             onRates = { navController.navigate(RatesDestination) },
             onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
             onFamily = { navController.navigate(FamilyDestination) },

@@ -45,12 +45,12 @@ ROWS = [
     ('Отчёты', 'RepA', 'reports'), ('Отчёты: все категории', 'RepAll', 'report_categories'),
     ('Отчёты: категория', 'RepDrill', 'report_category'), ('Отчёты: тренд', 'Tr238DrillA', 'report_category_trend'),
     ('Отчёты: картина', 'Rp189IeA', 'reports_picture'), ('Капитал по месяцам', 'Rp189NwDrill', 'capital_month'),
-    ('Отчёты: подушка', 'Cush241Edge', 'reports_cushion'),
+    ('Отчёты: подушка', 'Cush241Edge', 'reports_cushion'), ('Отчёты: постоянные траты', 'Fixed771Reports', 'reports_fixed'),
     ('Быстрые заметки', 'Notes586Input', 'notes'), ('Черновики', 'Notes586Drafts', 'drafts'), ('Черновики: пусто', 'Notes586Empty2', 'drafts_empty'),
     ('Долги', 'DebtList', 'debts'), ('Долги: пусто', 'DebtEmpty', 'debts_empty'), ('Долг: новый', 'DebtNew', None), ('Долг: карточка', 'DebtDetail', None), ('Долг: вернули часть', 'DebtReturn', None),
     ('Цели', 'GoalList', 'goals'), ('Цели: много', 'GoalMany', None), ('Цели: пусто', 'GoalEmpty', 'goals_empty'), ('Цель: новая', 'GoalNew', None), ('Цель', 'GoalDetail', 'goal_edit'), ('Обзор: цели', 'GoalHome', None),
     ('Обзор: сегодня можно', 'DailyHome', 'daily'), ('Сегодня можно: как посчитано', 'DailyWhy', None), ('Сегодня можно: план потрачен', 'DailyOver', 'daily_over'),
-    ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
+    ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Регулярные: за год', 'Fixed771Year', 'recurring_year'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
     ('Импорт из Wallet', 'ImportStart', 'import_start'), ('Отзыв', 'Feedback', 'feedback'), ('Стереть всё', 'Wipe', 'wipe'),
 ]
 

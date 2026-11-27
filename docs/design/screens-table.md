@@ -73,6 +73,7 @@
 | Отчёты: картина | Rp189IeA | reports_picture | ✓ | ✓ |
 | Капитал по месяцам | Rp189NwDrill | capital_month | ✓ | ✓ |
 | Отчёты: подушка | Cush241Edge | reports_cushion | ✓ | ✓ |
+| Отчёты: постоянные траты | Fixed771Reports | reports_fixed | ✓ | ✓ |
 | Быстрые заметки | Notes586Input | notes | ✓ | ✓ |
 | Черновики | Notes586Drafts | drafts | ✓ | ✓ |
 | Черновики: пусто | Notes586Empty2 | drafts_empty | ✓ | ✓ |
@@ -91,6 +92,7 @@
 | Сегодня можно: как посчитано | DailyWhy | — | — | — |
 | Сегодня можно: план потрачен | DailyOver | daily_over | ✓ | ✓ |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
+| Регулярные: за год | Fixed771Year | recurring_year | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
 | Отзыв | Feedback | feedback | ✓ | ✓ |

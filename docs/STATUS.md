@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2377 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v26.
+- Тесты: всего 2386 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v26.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,6 +69,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
+2026-11-27, `ccr-4f38129c-r62cog`: #771 постоянные траты — по опросу «В · А» (https://claude.ai/artifact/WmtQpeK2YWTCvJTxupc4gW): карточка в «Отчётах» (год, месяц, доля трат, 3 самых дорогих) → «Регулярные» в режиме «За год»; доски `Fixed771Reports`, `Fixed771Year`. Не сделано: «Похоже на подписку» (повторы без шаблона). Не проверено на телефоне.
 2026-11-27, `ccr-46db6aa5-hulufd`: умная аналитика без ИИ — история #785 и задачи #786–#792 (конвертация, необычные траты, личная инфляция, поиск регулярных, лимит из истории, дубли, «что если» для целей). Опрос https://claude.ai/artifact/3Ss8RHt2XbyciaBMZkboAo (`poll-smart-785.json`, доски `mockup_poll_smart785.py`) — ждёт ответов; кода нет.
 2026-11-27, `ccr-b1cb6d81-pq817q`: отзывы #775–#777 (опрос https://claude.ai/artifact/EhKdFZhXC9T1bwh2o4zYWv, всё «А»). #776 — подписи «Предупреждать».
 #775 — «Строки в списках: Свободно · Плотно» + пример настоящими строками (`DensitySample`). #777 — «Другое…» со счётчиком (`CoShellCounter`), время в минутах (`ClockMinutes`, ключи `*_time`).

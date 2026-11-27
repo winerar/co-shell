@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Постоянные траты» (#771): the card in «Отчёты» and «Регулярные → За год». -->
+<resources>
+    <string name="fixed_title">Постоянные траты</string>
+    <string name="fixed_all">Все %1$d ›</string>
+    <string name="fixed_per_year">в год</string>
+    <string name="fixed_monthly">%1$s в месяц</string>
+    <string name="fixed_monthly_share">%1$s в месяц · %2$d %% ваших трат</string>
+    <string name="fixed_row_sub">в год · %1$s в месяц</string>
+    <string name="fixed_year_title">Расходы за год · %1$s</string>
+    <plurals name="fixed_count">
+        <item quantity="one">%1$d платёж</item>
+        <item quantity="few">%1$d платежа</item>
+        <item quantity="many">%1$d платежей</item>
+        <item quantity="other">%1$d платежа</item>
+    </plurals>
+    <string name="recurring_mode_month">До конца месяца</string>
+    <string name="recurring_mode_year">За год</string>
+    <string name="fixed_year_empty">Расходов с суммой и «Повтором» пока нет. Укажите сумму в шаблоне — и здесь появится, сколько он стоит за год.</string>
+</resources>

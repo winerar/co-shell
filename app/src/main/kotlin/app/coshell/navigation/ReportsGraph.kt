@@ -29,6 +29,8 @@ internal fun NavGraphBuilder.reportsGraph(navController: NavHostController, tabs
             },
             onCapital = { navController.navigate(it) { launchSingleTop = true } },
             onTransaction = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+            onAllFixed = { navController.navigate(RecurringListDestination(year = true)) { launchSingleTop = true } },
+            onTemplate = { navController.navigate(TemplateEditDestination(it)) { launchSingleTop = true } },
         ) }
     }
     screen<CapitalMonthDestination> {

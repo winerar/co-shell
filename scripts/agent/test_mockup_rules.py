@@ -1,6 +1,6 @@
 """Design-board rules that must hold on the canvas (`docs/design/mockups/*.dc.html`), checked in CI.
 
-- The bottom bar on every board is the app's bar: the tabs of `MainBottomBar.kt` (`TopLevel`) in the same order (#140, #511).
+- The bottom bar on every board is the app's default bar: `BarTabs()` of `MainBottomBar.kt` in the same order (#140, #511, #154).
 - No shadows on boards, as in the code (`NoShadowsTest`, #477): `box-shadow` only as a ring (offset and blur 0), no `drop-shadow`.
 Run after `agent.sh mockups`: `python3 -m unittest discover -s scripts/agent -p 'test_mockup_rules.py'`.
 """
@@ -17,9 +17,12 @@ ADD = 'Новая операция'
 
 
 def app_tabs():
-    """Russian labels of `TopLevel` in order, from the string resources."""
+    """Russian labels of the default bar (`BarTabs()`: Обзор, the default second and third, Ещё; #154), from the string resources."""
     text = read(BAR)
-    keys = re.findall(r'^\s+[A-Z_]+\(.*?R\.string\.(\w+)', text, re.S | re.M)
+    enum = text[text.index('enum class TopLevel'):text.index('/** The section of a chosen')]
+    label = dict(re.findall(r'^\s+([A-Z_]+)\(.*?R\.string\.(\w+)', enum, re.S | re.M))
+    second, third = re.search(r'BarTabs\(val second: TopLevel = TopLevel\.(\w+), val third: TopLevel = TopLevel\.(\w+)\)', text).groups()
+    keys = [label[k] for k in ('HOME', second, third, 'MORE')]
     res = {}
     for f in glob.glob(os.path.join(STRINGS, 'strings*.xml')):
         for k, v in re.findall(r'<string name="(\w+)"[^>]*>([^<]*)</string>', read(f)):

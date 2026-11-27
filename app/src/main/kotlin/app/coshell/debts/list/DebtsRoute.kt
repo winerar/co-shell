@@ -8,7 +8,7 @@ import app.coshell.gate.LocalInputLock
 
 /** Connects [DebtsScreen] to [DebtsViewModel]; the sheets open through navigation ([onAdd], [onOpen]). */
 @Composable
-fun DebtsRoute(onBack: () -> Unit, onAdd: () -> Unit, onOpen: (String) -> Unit, viewModel: DebtsViewModel = hiltViewModel()) {
+fun DebtsRoute(onBack: (() -> Unit)?, onAdd: () -> Unit, onOpen: (String) -> Unit, viewModel: DebtsViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lock = LocalInputLock.current
     DebtsScreen(

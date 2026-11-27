@@ -2,6 +2,7 @@ package app.coshell.settings
 
 import android.content.Context
 import androidx.core.content.edit
+import app.coshell.core.domain.settings.BarTab
 import app.coshell.core.domain.settings.HomeLayout
 import app.coshell.core.domain.settings.HomeTile
 import app.coshell.core.domain.settings.ReportsStart
@@ -60,8 +61,12 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             tileFirst = tile(TILE_FIRST, d.tileFirst),
             tileSecond = tile(TILE_SECOND, d.tileSecond),
             recentCount = prefs.getInt(RECENT_COUNT, d.recentCount).takeIf { it in ScreenOptions.RECENT_COUNTS } ?: d.recentCount,
-        )
+        ).bar(BarTab.parse(prefs.getString(BAR_SECOND, null), d.barSecond), BarTab.parse(prefs.getString(BAR_THIRD, null), d.barThird))
     }
+
+    /** Two equal tabs (a hand-edited file) — the defaults. */
+    private fun ScreenOptions.bar(second: BarTab, third: BarTab): ScreenOptions =
+        if (second == third) this else copy(barSecond = second, barThird = third)
 
     private fun tile(key: String, default: HomeTile): HomeTile = HomeTile.entries.firstOrNull { it.name == prefs.getString(key, null) } ?: default
 
@@ -79,6 +84,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putString(HOME, o.home.encode())
         putInt(SOON_DAYS, o.soonDays)
         putInt(RECENT_COUNT, o.recentCount)
+        putString(BAR_SECOND, o.barSecond.name)
+        putString(BAR_THIRD, o.barThird.name)
         putString(TILE_FIRST, o.tileFirst.name)
         putString(TILE_SECOND, o.tileSecond.name)
         putString(WEEK_START, o.weekStart.name)
@@ -111,6 +118,8 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val HOME = "home_layout"
         private const val SOON_DAYS = "home_soon_days"
         private const val RECENT_COUNT = "home_recent_count"
+        private const val BAR_SECOND = "bar_second"
+        private const val BAR_THIRD = "bar_third"
         private const val HAPTICS = "haptics"
         private const val SYNC_WIFI = KEY_SYNC_WIFI
     }

@@ -207,6 +207,13 @@ review_no_history
 scan_source_plain
 settings_balance_all
 settings_balance_except
+settings_bar
+settings_bar_items
+settings_bar_note
+settings_bar_second
+settings_bar_section
+settings_bar_third
+settings_bar_title
 settings_home_converter_hint
 settings_home_daily_hint
 settings_home_goals_hint

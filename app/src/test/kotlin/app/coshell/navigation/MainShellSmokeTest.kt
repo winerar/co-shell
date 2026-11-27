@@ -70,6 +70,7 @@ class MainShellSmokeTest {
 
     private var adds = 0
     private var pillTaps = 0
+    private var barTabs by mutableStateOf(BarTabs())
 
     @Before
     fun setUp() {
@@ -81,6 +82,7 @@ class MainShellSmokeTest {
                     SnackbarHostState(),
                     onAdd = { adds++ },
                     moreBadge = true,
+                    tabs = barTabs,
                     overBar = { onBar ->
                         UpdatePill(release(43), visible = onBar, onOpen = { pillTaps++ }, onDismiss = {})
                     },
@@ -102,6 +104,7 @@ class MainShellSmokeTest {
                     composable<MoreDestination> {
                         MoreScreen(MoreActions(onSettings = { nav.navigate(SettingsDestination) }))
                     }
+                    composable<AccountsDestination> { Text(ACCOUNTS_TAB) }
                     composable<SettingsDestination> { Text(INNER, Modifier.clickable { nav.popBackStack() }) }
                 }
             }
@@ -180,6 +183,18 @@ class MainShellSmokeTest {
     }
 
     @Test
+    fun `a chosen section takes the third tab and keeps the bar`() {
+        barTabs = BarTabs(TopLevel.TRANSACTIONS, TopLevel.ACCOUNTS)
+        compose.waitForIdle()
+        compose.onNodeWithContentDescription(string(R.string.nav_reports)).assertDoesNotExist()
+        tab(R.string.nav_accounts)
+        compose.onNodeWithText(ACCOUNTS_TAB).assertIsDisplayed()
+        compose.onNodeWithContentDescription(string(R.string.transaction_add)).assertIsDisplayed()
+        tab(R.string.nav_home)
+        compose.onNodeWithText(HOME_TILE).assertIsDisplayed()
+    }
+
+    @Test
     fun `swipe flips tabs`() {
         compose.onRoot().performTouchInput { swipeLeft() }
         compose.waitForIdle()
@@ -214,6 +229,7 @@ class MainShellSmokeTest {
         const val HOME_TILE = "Без категории"
         const val TRANSACTION_CATEGORY = "Кафе"
         const val INNER = "Внутренний экран"
+        const val ACCOUNTS_TAB = "Accounts tab"
 
         val HOME = HomeUiState(
             totals = listOf("1 310,50 USD"),

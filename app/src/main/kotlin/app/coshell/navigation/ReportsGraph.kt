@@ -1,5 +1,7 @@
 package app.coshell.navigation
 
+import androidx.compose.runtime.CompositionLocalProvider
+import app.coshell.ui.top.LocalTabBack
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -15,19 +17,19 @@ import app.coshell.reports.review.MonthReviewRoute
 import app.coshell.transactions.list.PRESET_MEMBER
 
 /** Destinations of «Отчёты»: the tab, «Все категории», months, recaps (split out of `CoShellNavHost`). */
-internal fun NavGraphBuilder.reportsGraph(navController: NavHostController) {
+internal fun NavGraphBuilder.reportsGraph(navController: NavHostController, tabs: BarTabs) {
     screen<ReportsDestination> {
-        ReportsRoute(
+        CompositionLocalProvider(LocalTabBack provides navController.sectionBack(TopLevel.REPORTS, tabs)) { ReportsRoute(
             onAllCategories = { navController.navigate(ReportCategoriesDestination) { launchSingleTop = true } },
             onCategory = { navController.navigate(it) { launchSingleTop = true } },
             onMember = { preset ->
-                navController.navigateToTab(TopLevel.TRANSACTIONS)
+                navController.openSection(TopLevel.TRANSACTIONS, tabs)
                 navController.getBackStackEntry<TransactionsDestination>()
                     .savedStateHandle[PRESET_MEMBER] = preset.encode()
             },
             onCapital = { navController.navigate(it) { launchSingleTop = true } },
             onTransaction = { navController.navigate(TransactionEditDestination(transactionId = it)) },
-        )
+        ) }
     }
     screen<CapitalMonthDestination> {
         CapitalMonthRoute(

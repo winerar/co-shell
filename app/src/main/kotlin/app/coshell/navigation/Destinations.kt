@@ -104,6 +104,10 @@ data object ScreensSettingsDestination
 @Serializable
 data object HomeSettingsDestination
 
+/** «Экраны → Нижняя панель» (#154). */
+@Serializable
+data object BarSettingsDestination
+
 @Serializable
 data object HomeDetailsSettingsDestination
 

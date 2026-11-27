@@ -1,5 +1,8 @@
 package app.coshell.navigation
 
+import androidx.compose.runtime.CompositionLocalProvider
+import app.coshell.ui.top.LocalTabBack
+import app.coshell.settings.ScreenOptionsViewModel
 import app.coshell.hints.SheetCoach
 import app.coshell.core.domain.hints.HintId
 import app.coshell.R
@@ -110,9 +113,13 @@ fun CoShellNavHost(
     receiptLinks: ReceiptLinks? = null,
     shortcutLinks: ShortcutLinks? = null,
     noticeLinks: NoticeLinks? = null,
+    screenOptions: ScreenOptionsViewModel = hiltViewModel(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val onTab = TopLevel.entries.any { backStackEntry?.destination.isOn(it) }
+    // «Настройки → Экраны → Нижняя панель» (#154): which two sections sit between «Обзор» and «Ещё».
+    val options by screenOptions.options.collectAsStateWithLifecycle()
+    val tabs = remember(options.barSecond, options.barThird) { BarTabs.of(options.barSecond, options.barThird) }
+    val onTab = tabs.of(backStackEntry?.destination) != null
     val snackbar = remember { SnackbarHostState() }
     UndoSnackbarEffect(snackbar)
 
@@ -197,6 +204,7 @@ fun CoShellNavHost(
         moreBadge = updateAvailable != null,
         reportsBadge = reportsDot && !onReports,
         inputLock = lock,
+        tabs = tabs,
         overBar = { onBar ->
             UpdatePill(
                 release = updatePill,
@@ -215,20 +223,20 @@ fun CoShellNavHost(
         screen<HomeDestination> {
             HomeRoute(
                 HomeActions(
-                    onTransactions = { navController.navigateToTab(TopLevel.TRANSACTIONS) },
+                    onTransactions = { navController.openSection(TopLevel.TRANSACTIONS, tabs) },
                     onRates = { navController.navigate(RatesDestination) { launchSingleTop = true } },
                     onConverter = { navController.navigate(ConverterDestination) { launchSingleTop = true } },
                     onUncategorized = {
-                        navController.navigateToTab(TopLevel.TRANSACTIONS)
+                        navController.openSection(TopLevel.TRANSACTIONS, tabs)
                         navController.getBackStackEntry<TransactionsDestination>()
                             .savedStateHandle[PRESET_UNCATEGORIZED] = true
                     },
                     onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
                     onAddAccount = { navController.navigate(AccountEditDestination()) },
-                    onAccounts = { navController.navigate(AccountsDestination) { launchSingleTop = true } },
+                    onAccounts = { navController.openSection(TopLevel.ACCOUNTS, tabs) },
                     onFamily = { navController.navigate(FamilyDestination) { launchSingleTop = true } },
                     onFeedback = { navController.navigate(FeedbackDestination(prefill = it)) { launchSingleTop = true } },
-                    onBudgets = { navController.navigate(BudgetsDestination) { launchSingleTop = true } },
+                    onBudgets = { navController.openSection(TopLevel.BUDGETS, tabs) },
                     onBudget = { id, month ->
                         navController.navigate(BudgetDetailDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                     },
@@ -243,7 +251,7 @@ fun CoShellNavHost(
                     },
                     onOpenAccount = { navController.navigate(AccountEditDestination(it)) { launchSingleTop = true } },
                     onOpenDebt = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
-                    onGoals = { navController.navigate(GoalsDestination) { launchSingleTop = true } },
+                    onGoals = { navController.openSection(TopLevel.GOALS, tabs) },
                     onOpenGoal = { navController.navigate(GoalEditDestination(it)) { launchSingleTop = true } },
                     onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
@@ -258,11 +266,13 @@ fun CoShellNavHost(
             )
         }
         screen<TransactionsDestination> { entry ->
-            TransactionsRoute(
-                preset = entry.savedStateHandle,
-                onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
-                onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
-            )
+            CompositionLocalProvider(LocalTabBack provides navController.sectionBack(TopLevel.TRANSACTIONS, tabs)) {
+                TransactionsRoute(
+                    preset = entry.savedStateHandle,
+                    onTransactionClick = { navController.navigate(TransactionEditDestination(transactionId = it)) },
+                    onDuplicate = { navController.navigate(TransactionEditDestination(copyFrom = it)) { launchSingleTop = true } },
+                )
+            }
         }
         dialog<TransactionEditDestination>(dialogProperties = CoShellSheetDialogProperties) { entry ->
             Box(Modifier.fillMaxSize()) {
@@ -348,14 +358,14 @@ fun CoShellNavHost(
         }
         screen<DebtsDestination> {
             DebtsRoute(
-                onBack = { navController.popBackStack() },
+                onBack = navController.sectionBack(TopLevel.DEBTS, tabs),
                 onAdd = { navController.navigate(DebtNewDestination) { launchSingleTop = true } },
                 onOpen = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
             )
         }
         screen<GoalsDestination> {
             GoalsRoute(
-                onBack = { navController.popBackStack() },
+                onBack = navController.sectionBack(TopLevel.GOALS, tabs),
                 onAdd = { navController.navigate(GoalEditDestination()) { launchSingleTop = true } },
                 onOpen = { navController.navigate(GoalEditDestination(it)) { launchSingleTop = true } },
             )
@@ -389,7 +399,7 @@ fun CoShellNavHost(
         }
         screen<BudgetsDestination> {
             BudgetsRoute(
-                onBack = { navController.popBackStack() },
+                onBack = navController.sectionBack(TopLevel.BUDGETS, tabs),
                 onEdit = { id, month ->
                     navController.navigate(BudgetEditDestination(id, month.year, month.month.number)) { launchSingleTop = true }
                 },
@@ -416,12 +426,12 @@ fun CoShellNavHost(
         }
         screen<AccountsDestination> {
             AccountsRoute(
-                onBack = { navController.popBackStack() },
+                onBack = navController.sectionBack(TopLevel.ACCOUNTS, tabs),
                 onAccountClick = { navController.navigate(AccountEditDestination(it)) },
                 onAddAccount = { navController.navigate(AccountEditDestination()) },
             )
         }
-        reportsGraph(navController)
+        reportsGraph(navController, tabs)
         dialog<ConverterDestination>(dialogProperties = CoShellSheetDialogProperties) {
             CoShellSheet(onClosed = { navController.popBackStack() }) { close -> ConverterRoute(onClose = close) }
         }
@@ -535,7 +545,7 @@ fun CoShellNavHost(
                 NoticeTarget.NEW_ENTRY -> navController.navigate(TransactionEditDestination()) { launchSingleTop = true }
                 NoticeTarget.BUDGETS -> {
                     // A limit notice: «Бюджеты» and that envelope over it — «Назад» lands on the list of limits.
-                    navController.navigate(BudgetsDestination) { launchSingleTop = true }
+                    navController.openSection(TopLevel.BUDGETS, tabs)
                     val category = open.categoryId
                     val month = open.month
                     if (category != null && month != null) {

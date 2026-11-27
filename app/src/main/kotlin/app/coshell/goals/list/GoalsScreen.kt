@@ -37,7 +37,7 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** What the screen can ask for; defaults keep previews short. */
 data class GoalsActions(
-    val onBack: () -> Unit = {},
+    val onBack: (() -> Unit)? = {},
     val onAdd: () -> Unit = {},
     val onOpen: (String) -> Unit = {},
     val onToggleReached: () -> Unit = {},

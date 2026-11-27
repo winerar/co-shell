@@ -36,6 +36,7 @@ permissions:
   contents: write
   pull-requests: write
   actions: write
+  issues: write
 
 jobs:
   plan:
@@ -149,14 +150,28 @@ jobs:
           tail -n +2 notes.txt > body.md
           cat notes.txt
 
-      # Every release brings its own set of stories (`ReleaseStories.KEY`, #693): the button stops without one, the weekly run only warns.
+      # Every feature brings its own story (#693, owner 2026-11-27; docs/agents/release-stories.md). They come with the feature PRs,
+      # a Sunday-evening Claude task fills the gaps; still missing — no release: the weekly run opens a task, the button stops
+      # (unless «Выпустить без новых историй»).
       - name: Release stories
         env:
-          ALLOW: ${{ inputs.allow_no_stories || github.event_name == 'schedule' }}
+          ALLOW: ${{ inputs.allow_no_stories || false }}
         run: |
-          python3 scripts/release_stories.py check --base origin/main --head origin/dev || {
-            if [ "$ALLOW" = true ]; then echo "::warning::Release without new stories (ReleaseStories.KEY is the old one)"
-            else echo "::error::No stories for this release — ask the agent to build them (agent.sh stories brief) or tick «Выпустить без новых историй»"; exit 1; fi; }
+          python3 scripts/release_stories.py check --base origin/main --head origin/dev > stories.txt && { cat stories.txt; exit 0; }
+          cat stories.txt
+          if [ "$ALLOW" = true ]; then echo "::warning::Release without the missing stories"; exit 0; fi
+          echo "::error::Stories are not ready — ask the agent: python3 scripts/release_stories.py brief"
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            title="Релиз недели не вышел: нет историй"
+            { echo "Еженедельный релиз остановлен: не все новые функции верхнего раздела \`docs/whats-new.md\` получили историю."
+              echo; echo '```'; cat stories.txt; echo '```'
+              echo; echo "Агенту: \`python3 scripts/release_stories.py brief\`, правила — \`docs/agents/release-stories.md\`; после мержа — кнопка релиза."
+              echo; echo "Прогон: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; } > issue.md
+            num=$(gh issue list --state open --search "\"$title\" in:title" --json number -q '.[0].number // empty')
+            if [ -n "$num" ]; then gh issue comment "$num" --body-file issue.md
+            else gh issue create --title "$title" --label status:next --label area:delivery --body-file issue.md; fi
+          fi
+          exit 1
 
       - name: Release PR
         id: pr

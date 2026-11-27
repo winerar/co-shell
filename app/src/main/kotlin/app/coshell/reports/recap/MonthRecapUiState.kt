@@ -2,6 +2,7 @@ package app.coshell.reports.recap
 
 import app.coshell.core.domain.reports.RecapCard
 import app.coshell.core.domain.reports.RecapPhrase
+import app.coshell.reports.UnusualLine
 import kotlinx.datetime.YearMonth
 
 /** «Итоги октября» (#554): the stories of a finished month, numbers already formatted. */
@@ -34,6 +35,8 @@ data class MonthRecapUiState(
     val streakFrom: Int = 0,
     val streakTo: Int = 0,
     val streakInOneMonth: Boolean = true,
+    /** «Не как обычно» (#787): the rows of «Необычное» for the finished month. */
+    val unusual: List<UnusualLine> = emptyList(),
 ) {
     data class NamedCategory(val id: String, /** `null` — deleted on another phone. */ val name: String?, val color: Long)
 

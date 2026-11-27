@@ -22,6 +22,8 @@ data class ReportsUiState(
     /** «Сравнивать с прошлым периодом»: the grey marks on the bars and the line under the total. */
     val compare: Boolean = true,
     val spending: Spending? = null,
+    /** «Необычное» (#787): folders far above or below usual in a month report, at most three; empty — no card. */
+    val unusual: List<UnusualLine> = emptyList(),
     val months: Months? = null,
     /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
     val income: Income? = null,

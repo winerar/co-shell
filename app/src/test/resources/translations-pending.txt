@@ -168,7 +168,10 @@ plural:notice_backup_text_last
 plural:notice_limit_text
 plural:reports_cushion_few
 plural:reports_cushion_low
+plural:reports_unusual_times
 rates_manual_hint
+recap_unusual_note
+recap_unusual_title
 receipt_unread_text
 recurring_list_empty
 recurring_list_search
@@ -205,6 +208,10 @@ reports_cushion_title
 reports_cushion_unit
 reports_cushion_value
 reports_income_caption
+reports_unusual_less
+reports_unusual_more
+reports_unusual_note
+reports_unusual_title
 review_no_history
 scan_source_plain
 settings_balance_all

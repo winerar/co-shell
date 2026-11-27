@@ -102,6 +102,7 @@ fun MonthRecapScreen(
 internal fun Story(card: RecapCard, state: MonthRecapUiState, onDetails: () -> Unit, forPicture: Boolean, modifier: Modifier) = when (card) {
     RecapCard.TOP_CATEGORIES -> TopStory(state, modifier)
     RecapCard.VS_PREVIOUS -> VsStory(state, modifier)
+    RecapCard.UNUSUAL -> UnusualStory(state, modifier)
     RecapCard.WEEKS -> WeeksStory(state, modifier)
     RecapCard.NEW_CATEGORY -> NewStory(state, modifier)
     RecapCard.WEEKEND -> WeekendStory(state, modifier)

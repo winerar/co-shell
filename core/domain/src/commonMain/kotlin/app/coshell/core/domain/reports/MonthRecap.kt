@@ -7,6 +7,7 @@ import app.coshell.core.model.Money
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
 /**
@@ -37,6 +38,8 @@ data class MonthRecap(
     val limits: LimitsTally?,
     val earned: Money,
     val missing: Set<CurrencyCode> = emptySet(),
+    /** «Не как обычно» (#787): folders that spent noticeably more or less than usual, at most [UNUSUAL_TOP]. */
+    val unusual: List<UnusualRow> = emptyList(),
 ) {
     /** Change against the previous month in whole percents, negative — lighter; `null` — no comparison. */
     val changePercent: Int? get() = previousSpent?.let { percentOf(spent - it, it) }
@@ -54,6 +57,7 @@ data class MonthRecap(
         get() = buildList {
             if (top.isNotEmpty()) add(RecapCard.TOP_CATEGORIES)
             if (previousSpent != null && previousSpent.isPositive) add(RecapCard.VS_PREVIOUS)
+            if (unusual.isNotEmpty()) add(RecapCard.UNUSUAL)
             if (busiestWeek != null) add(RecapCard.WEEKS)
             if (newCategoryIds.isNotEmpty()) add(RecapCard.NEW_CATEGORY)
             if (weekdayAverage != null && weekendAverage != null) add(RecapCard.WEEKEND)
@@ -62,17 +66,21 @@ data class MonthRecap(
         }
 }
 
-enum class RecapCard { TOP_CATEGORIES, VS_PREVIOUS, WEEKS, NEW_CATEGORY, WEEKEND, STREAK, FINAL }
+enum class RecapCard { TOP_CATEGORIES, VS_PREVIOUS, UNUSUAL, WEEKS, NEW_CATEGORY, WEEKEND, STREAK, FINAL }
 
 data class CategoryShare(val categoryId: String, val amount: Money, val percent: Int)
 
-/** The recap of [month] against [previous] (`null` — no history). The ledger must hold both periods. */
+/**
+ * The recap of [month] against [previous] (`null` — no history). The ledger must hold both periods; with [startDay] it also
+ * counts «Не как обычно» ([unusualSpending]) and then must hold the [USUAL_MONTHS] before [month].
+ */
 fun monthRecap(
     ledger: ReportLedger,
     categories: List<Category>,
     month: BudgetPeriod,
     previous: BudgetPeriod?,
     limits: LimitsTally? = null,
+    startDay: Int? = null,
 ): MonthRecap {
     val currency = ledger.currency
     val sums = ledger.spent(month)
@@ -105,6 +113,7 @@ fun monthRecap(
         limits = limits,
         earned = ledger.earned(month).total(currency),
         missing = sums.missing,
+        unusual = startDay?.let { unusualSpending(usualMarks(ledger, categories, month, it, month.endExclusive.minus(DatePeriod(days = 1)))) }.orEmpty(),
     )
 }
 

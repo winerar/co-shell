@@ -20,8 +20,10 @@ import app.coshell.reports.components.IncomeCard
 import app.coshell.reports.components.MembersCard
 import app.coshell.reports.components.MonthsCard
 import app.coshell.reports.components.SpendingCard
+import app.coshell.reports.components.UnusualCard
+import app.coshell.ui.format.formatMonth
 
-/** The «Обзор» tab of «Отчёты» (boards `RepA`, #140): the cards of the period, then the note about rates. */
+/** The «Обзор» tab of «Отчёты» (boards `RepA`, #140): the cards of the period («Необычное», #787, under the spending), then the note about rates. */
 internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPeriod, actions: ReportsActions) {
     val spending = state.spending
     if (spending == null) {
@@ -36,6 +38,9 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
                 onBar = actions.onCategory,
             )
         }
+    }
+    if (state.unusual.isNotEmpty()) {
+        item(key = "unusual") { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
     }
     state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
     state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }

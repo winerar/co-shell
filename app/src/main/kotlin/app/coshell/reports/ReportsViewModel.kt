@@ -120,6 +120,7 @@ class ReportsViewModel @Inject constructor(
                 currencies = s.currencies.map { it.value },
                 compare = s.compare,
                 spending = buildSpending(input, format),
+                unusual = buildUnusual(input, format),
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),

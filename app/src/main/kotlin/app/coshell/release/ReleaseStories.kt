@@ -22,13 +22,13 @@ object ReleaseStories {
     const val MAX = 5
 
     /** The «новое» key of this set (`NewMarks`): shown after an update, put away on a fresh install, gone once opened or closed. */
-    const val KEY = "release.2026-11-25"
+    const val KEY = "release.2026-11-27"
 
     val current: List<ReleaseStory> = listOf(
-        ReleaseStory(R.string.release_debts_title, R.string.release_debts_text, R.drawable.story_debts_ink, R.drawable.story_debts_accent, R.drawable.story_debts_edge),
-        ReleaseStory(R.string.release_accounts_title, R.string.release_accounts_text, R.drawable.story_accounts_ink, R.drawable.story_accounts_accent, R.drawable.story_accounts_edge),
-        ReleaseStory(R.string.release_fan_title, R.string.release_fan_text, R.drawable.story_fan_ink, R.drawable.story_fan_accent, R.drawable.story_fan_edge),
-        ReleaseStory(R.string.release_receipt_title, R.string.release_receipt_text, R.drawable.story_receipt_ink, R.drawable.story_receipt_accent, R.drawable.story_receipt_edge),
-        ReleaseStory(R.string.release_recap_title, R.string.release_recap_text, R.drawable.story_recap_ink, R.drawable.story_recap_accent, R.drawable.story_recap_edge),
+        ReleaseStory(R.string.release_bulk_title, R.string.release_bulk_text, R.drawable.story_bulk_ink, R.drawable.story_bulk_accent, R.drawable.story_bulk_edge),
+        ReleaseStory(R.string.release_repeat_title, R.string.release_repeat_text, R.drawable.story_repeat_ink, R.drawable.story_repeat_accent, R.drawable.story_repeat_edge),
+        ReleaseStory(R.string.release_insights_title, R.string.release_insights_text, R.drawable.story_insights_ink, R.drawable.story_insights_accent, R.drawable.story_insights_edge),
+        ReleaseStory(R.string.release_bar_title, R.string.release_bar_text, R.drawable.story_bar_ink, R.drawable.story_bar_accent, R.drawable.story_bar_edge),
+        ReleaseStory(R.string.release_widgets_title, R.string.release_widgets_text, R.drawable.story_widgets_ink, R.drawable.story_widgets_accent, R.drawable.story_widgets_edge),
     )
 }

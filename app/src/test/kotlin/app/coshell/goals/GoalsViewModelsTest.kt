@@ -2,6 +2,16 @@ package app.coshell.goals
 
 import androidx.lifecycle.SavedStateHandle
 import app.coshell.core.domain.goals.InMemoryGoalRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import app.coshell.testing.FakeTemplateRepository
+import app.coshell.testing.FakeReportRepository
+import app.coshell.testing.FakeCategoryRepository
+import app.coshell.core.model.TransactionType
+import app.coshell.core.model.CategoryType
+import app.coshell.core.model.Category
+import app.coshell.core.domain.settings.MonthStartSettings
+import app.coshell.core.domain.reports.ReportDay
+import app.coshell.core.domain.reports.BalanceDay
 import app.coshell.core.model.Account
 import app.coshell.core.model.AccountType
 import app.coshell.core.model.CurrencyCode
@@ -45,12 +55,24 @@ class GoalsViewModelsTest {
 
     private fun source() = GoalsSource(goals, accounts, FakeExchangeRateRepository(), FakeReportCurrencySettings(listOf(usd)), clock, TimeZone.UTC)
 
+    private val reports = FakeReportRepository()
+    private val categories = FakeCategoryRepository()
+
+    private fun whatIf() = GoalWhatIfSource(
+        reports, categories, FakeTemplateRepository(), FakeExchangeRateRepository(),
+        object : MonthStartSettings {
+            override val monthStartDay = MutableStateFlow(1)
+            override suspend fun setMonthStartDay(day: Int) = Unit
+        },
+        clock, TimeZone.UTC,
+    )
+
     @Test
     fun `lists goals with what is saved, the plan a month and the totals`() = runTest {
         seed()
         goals.save(Goal("trip", "Отпуск", Money(2_000_00, usd), "box", LocalDate(2027, 6, 26)))
         goals.save(Goal("pillow", "Подушка", Money(100_00, usd), "box"))
-        val vm = GoalsViewModel(source(), MoneyFormat.RU)
+        val vm = GoalsViewModel(source(), whatIf(), MoneyFormat.RU)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.state.collect {} }
 
         val s = vm.state.value
@@ -98,5 +120,23 @@ class GoalsViewModelsTest {
         assertEquals(75_000L, vm.state.value.topUpMinor)
         vm.delete()
         assertTrue(goals.observe().first().isEmpty())
+    }
+
+    @Test
+    fun `a goal gets what spending less on its biggest category would change`() = runTest {
+        seed()
+        categories.saveCategory(Category("cafe", "Кафе", CategoryType.EXPENSE))
+        goals.save(Goal("trip", "Отпуск", Money(3_000_00, usd), "box", LocalDate(2027, 12, 1)))
+        // 160 a month into the box over the last three months; 450 a month on cafe in August–October.
+        reports.balanceDays.value = (9..11).map { BalanceDay(LocalDate(2026, it, 2), "box", 160_00) }
+        reports.days.value = (8..10).map { ReportDay(LocalDate(2026, it, 5), "cafe", TransactionType.EXPENSE, Money(450_00, usd)) }
+        val vm = GoalsViewModel(source(), whatIf(), MoneyFormat.RU)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.state.collect {} }
+
+        val line = vm.state.first { it.whatIf.isNotEmpty() }.whatIf.getValue("trip").line
+        assertEquals("cafe", line.categoryId)
+        assertEquals(20, line.share)
+        // 1 750 left: 11 months at 160, 7 at 250.
+        assertEquals(4, line.earlier)
     }
 }

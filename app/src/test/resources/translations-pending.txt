@@ -69,6 +69,16 @@ filter_tags_all
 form_colors_count
 form_icons_count
 gate_banner_text
+goal_whatif_category
+goal_whatif_not_closer
+goal_whatif_note
+goal_whatif_nothing
+goal_whatif_now
+goal_whatif_open
+goal_whatif_saved
+goal_whatif_share
+goal_whatif_title
+goal_whatif_with
 goals_account_hint
 goals_add
 goals_by_today_rate
@@ -170,6 +180,8 @@ notice_recap_title
 notice_time_title
 plural:budgets_first_create
 plural:daily_left
+plural:goal_whatif_earlier
+plural:goal_whatif_reach
 plural:notice_backup_text_last
 plural:notice_limit_text
 plural:reports_cushion_few

@@ -12,4 +12,29 @@
     <string name="recurring_offer_weekly">Похоже на еженедельный платёж: «%1$s», ~%2$s. Сделать регулярным? Приложение напомнит и покажет его в «Скоро».</string>
     <string name="recurring_offer_accept">Сделать регулярным</string>
     <string name="recurring_offer_later">Не сейчас</string>
+    <!-- «Что если» для целей (#792) -->
+    <plurals name="goal_whatif_earlier">
+        <item quantity="one">Если тратить на «%1$s» на %2$d %% меньше, цель будет на %3$d месяц раньше.</item>
+        <item quantity="few">Если тратить на «%1$s» на %2$d %% меньше, цель будет на %3$d месяца раньше.</item>
+        <item quantity="many">Если тратить на «%1$s» на %2$d %% меньше, цель будет на %3$d месяцев раньше.</item>
+        <item quantity="other">Если тратить на «%1$s» на %2$d %% меньше, цель будет на %3$d месяца раньше.</item>
+    </plurals>
+    <plurals name="goal_whatif_reach">
+        <item quantity="one">Сейчас цель не приближается. Если тратить на «%1$s» на %2$d %% меньше, накопите за %3$d месяц.</item>
+        <item quantity="few">Сейчас цель не приближается. Если тратить на «%1$s» на %2$d %% меньше, накопите за %3$d месяца.</item>
+        <item quantity="many">Сейчас цель не приближается. Если тратить на «%1$s» на %2$d %% меньше, накопите за %3$d месяцев.</item>
+        <item quantity="other">Сейчас цель не приближается. Если тратить на «%1$s» на %2$d %% меньше, накопите за %3$d месяца.</item>
+    </plurals>
+    <string name="goal_whatif_open">Что если</string>
+    <string name="goal_whatif_title">Что если</string>
+    <string name="goal_whatif_subtitle" translatable="false">%1$s · %2$s</string>
+    <string name="goal_whatif_category">На какой категории сэкономить</string>
+    <string name="goal_whatif_share">Насколько меньше тратить</string>
+    <string name="goal_whatif_percent" translatable="false">%1$d %%</string>
+    <string name="goal_whatif_saved">Сэкономите в месяц</string>
+    <string name="goal_whatif_now">Сейчас</string>
+    <string name="goal_whatif_with">С экономией</string>
+    <string name="goal_whatif_not_closer">не приближается</string>
+    <string name="goal_whatif_nothing">Так цель не придвинется даже на месяц. Попробуйте другую категорию или долю.</string>
+    <string name="goal_whatif_note">Считаем по среднему за 3 месяца. Это прикидка: ничего не сохраняется и не меняется.</string>
 </resources>

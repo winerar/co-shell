@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.gate.LocalInputLock
+import app.coshell.transactions.list.bulk.BulkEditSheets
 
 /**
  * Key in the «Операции» tab's SavedStateHandle: `true` shows this month's operations without a category
@@ -44,6 +45,7 @@ fun TransactionsRoute(
     val lock = LocalInputLock.current
     val selection by viewModel.selection.collectAsStateWithLifecycle()
     val peek by viewModel.peek.collectAsStateWithLifecycle()
+    val bulk by viewModel.bulk.collectAsStateWithLifecycle()
     TransactionsScreen(
         state = state,
         selection = selection,
@@ -59,9 +61,17 @@ fun TransactionsRoute(
                 viewModel.clearSelection()
                 onDuplicate(id)
             },
+            onEditSelected = lock.guard(viewModel::openBulkEdit),
             onDeleteSelected = lock.guard(viewModel::deleteSelected),
             onPeek = viewModel::onPeek,
             onPeekEnd = viewModel::onPeekEnd,
         ),
+    )
+    BulkEditSheets(
+        state = bulk,
+        onStep = viewModel::bulkStep,
+        onCategory = lock.guard1(viewModel::applyBulkCategory),
+        onTags = lock.guard1(viewModel::applyBulkTags),
+        onClose = viewModel::closeBulkEdit,
     )
 }

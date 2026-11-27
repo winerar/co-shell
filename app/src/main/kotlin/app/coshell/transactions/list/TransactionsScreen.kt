@@ -47,7 +47,7 @@ import kotlinx.datetime.LocalDate
 /**
  * «Операции»: a loupe in the header (#394 Б) and filter chips on top, days with their net on the right. Rows have no swipes — a
  * horizontal swipe flips tabs (issue #112); a long press chooses rows (mockup 19В): the header counts them,
- * the bottom bar turns into «Дублировать · Удалить · N», back or «✕» leaves the mode.
+ * the bottom bar turns into «⧉ · Изменить · Удалить · N», back or «✕» leaves the mode.
  * Older pages load while scrolling ([LoadMoreEffect]); once scrolled, the header's second line names the day at
  * the top with its net (header poll А, 2026-11-15) — so day titles no longer stick. Holding an amount shows
  * it in the report currencies at the operation's day ([peek], #318).
@@ -73,6 +73,7 @@ fun TransactionsScreen(
         SelectionActions(
             count = selection.count,
             onDuplicate = { selection.single?.let(actions.onDuplicate) },
+            onEdit = actions.onEditSelected,
             onDelete = actions.onDeleteSelected,
         )
     }
@@ -198,6 +199,7 @@ data class TransactionsActions(
     val onToggle: (String) -> Unit = {},
     val onClearSelection: () -> Unit = {},
     val onDuplicate: (String) -> Unit = {},
+    val onEditSelected: () -> Unit = {},
     val onDeleteSelected: () -> Unit = {},
     /** Hold the amount of a row of a day (#318); the text is «нет курса». */
     val onPeek: (TransactionsUiState.Row, LocalDate, String) -> Unit = { _, _, _ -> },

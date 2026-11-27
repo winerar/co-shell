@@ -8,6 +8,7 @@ access_where_text
 account_deleted
 account_local_only_short
 action_clear_value
+action_edit_selected
 amount_sign_minus
 amount_sign_plus
 auto_backup_off
@@ -24,6 +25,16 @@ budgets_first_text
 budgets_first_title
 budgets_menu_hint
 budgets_start_subtitle
+bulk_category
+bulk_category_hint
+bulk_category_off
+bulk_category_sheet_hint
+bulk_edit_subtitle
+bulk_edit_title
+bulk_tags
+bulk_tags_add
+bulk_tags_empty
+bulk_tags_hint
 capital_month_search
 capital_month_tap
 categories_menu_hint
@@ -277,5 +288,6 @@ tour_start
 tour_step
 tour_title
 transaction_categories_all_title
+transactions_changed_many
 update_installing_manual
 update_pill

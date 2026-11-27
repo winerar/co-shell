@@ -67,7 +67,8 @@ class ReportCategoryViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = period.flatMapLatest { period ->
-        val (from, to) = drillRange(period, route.startDay)
+        val chartEnd = trendChartEnd(period, route.startDay, today)
+        val (from, to) = drillRange(period, route.startDay, chartEnd)
         val operations = transactions.observeTransactions(
             TransactionFilter(from = period.start.atStartOfDayIn(timeZone), to = period.endExclusive.atStartOfDayIn(timeZone)),
         )
@@ -90,6 +91,7 @@ class ReportCategoryViewModel @Inject constructor(
                     authors = authors,
                     timeZone = timeZone,
                     today = today,
+                    chartEnd = chartEnd,
                 ),
                 format,
                 moneyFormat,

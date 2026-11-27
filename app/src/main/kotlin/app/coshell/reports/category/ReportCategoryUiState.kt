@@ -34,7 +34,7 @@ data class ReportCategoryUiState(
 }
 
 /**
- * A year of one category: the months of its history up to the shown one ([selected], the last), [average] — the long
+ * A year of one category: the months of its history up to the current one, as on the Reports tab, [selected] — the shown one (#808), [average] — the long
  * average as a share of the scale (the dashed line), «За 3 мес.: 62 · За год: 65» — [recent] over [recentMonths] and
  * [long] over [longMonths] (`null` — no months before to average).
  */

@@ -50,6 +50,10 @@ ROWS = [
     ('Долги', 'DebtList', 'debts'), ('Долги: пусто', 'DebtEmpty', 'debts_empty'), ('Долг: новый', 'DebtNew', None), ('Долг: карточка', 'DebtDetail', None), ('Долг: вернули часть', 'DebtReturn', None),
     ('Цели', 'GoalList', 'goals'), ('Цели: много', 'GoalMany', None), ('Цели: пусто', 'GoalEmpty', 'goals_empty'), ('Цель: новая', 'GoalNew', None), ('Цель', 'GoalDetail', 'goal_edit'), ('Обзор: цели', 'GoalHome', None),
     ('Обзор: сегодня можно', 'DailyHome', 'daily'), ('Сегодня можно: как посчитано', 'DailyWhy', None), ('Сегодня можно: план потрачен', 'DailyOver', 'daily_over'),
+    ('Отчёты: необычное и оплата в другой валюте', 'SmartReports', 'smart_reports'), ('Оплата в другой валюте: подробнее', 'SmartConversion', None),
+    ('Отчёты: личная инфляция', 'SmartInflation', 'smart_reports'), ('Итоги месяца: не как обычно', 'SmartRecap', None),
+    ('Операции: регулярный платёж и дубль', 'SmartOps', 'smart_operations'), ('Похоже на дубль', 'SmartDuplicate', None),
+    ('Новый лимит: обычно уходит', 'SmartLimit', 'budget_edit'), ('Цели: что если', 'SmartGoal', 'smart_goals'), ('Что если', 'SmartWhatIf', 'smart_whatif_sheet'),
     ('Регулярные платежи', 'Rec143List', 'recurring_list'), ('Шаблон: повтор', 'Rec143EditA', 'recurring_template'),
     ('Импорт из Wallet', 'ImportStart', 'import_start'), ('Отзыв', 'Feedback', 'feedback'), ('Стереть всё', 'Wipe', 'wipe'),
 ]

@@ -90,6 +90,15 @@
 | Обзор: сегодня можно | DailyHome | daily | ✓ | ✓ |
 | Сегодня можно: как посчитано | DailyWhy | — | — | — |
 | Сегодня можно: план потрачен | DailyOver | daily_over | ✓ | ✓ |
+| Отчёты: необычное и оплата в другой валюте | SmartReports | smart_reports | ✓ | ✓ |
+| Оплата в другой валюте: подробнее | SmartConversion | — | — | — |
+| Отчёты: личная инфляция | SmartInflation | smart_reports | ✓ | ✓ |
+| Итоги месяца: не как обычно | SmartRecap | — | — | — |
+| Операции: регулярный платёж и дубль | SmartOps | smart_operations | — | ✓ |
+| Похоже на дубль | SmartDuplicate | — | — | — |
+| Новый лимит: обычно уходит | SmartLimit | budget_edit | ✓ | ✓ |
+| Цели: что если | SmartGoal | smart_goals | — | ✓ |
+| Что если | SmartWhatIf | smart_whatif_sheet | ✓ | — |
 | Регулярные платежи | Rec143List | recurring_list | ✓ | ✓ |
 | Шаблон: повтор | Rec143EditA | recurring_template | ✓ | ✓ |
 | Импорт из Wallet | ImportStart | import_start | ✓ | ✓ |
@@ -113,6 +122,12 @@
 - Цель: новая (нет эталона: light, dark)
 - Обзор: цели (нет эталона: light, dark)
 - Сегодня можно: как посчитано (нет эталона: light, dark)
+- Оплата в другой валюте: подробнее (нет эталона: light, dark)
+- Итоги месяца: не как обычно (нет эталона: light, dark)
+- Операции: регулярный платёж и дубль (smart_operations: light)
+- Похоже на дубль (нет эталона: light, dark)
+- Цели: что если (smart_goals: light)
+- Что если (smart_whatif_sheet: dark)
 
 ## Сверка 1 в 1 (2026-11-16)
 

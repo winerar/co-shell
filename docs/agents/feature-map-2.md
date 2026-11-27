@@ -59,3 +59,11 @@
 «Сегодня можно» (#769, опрос 2026-11-27 «А·Б·А»; доски `DailyHome`, `DailyWhy`, `DailyOver` в `mockup_screens_daily.py`): `core:domain/budgets/DailyAllowance` (на день от утра, округление вниз, «0» при перерасходе)
 и `DailyPlanner` (лимиты месяца против трат в лимитных категориях, без лимитов — доход месяца против всех трат; минус регулярные расходы до конца бюджетного месяца и «в месяц» целей).
 Карточка `HomeCard.DAILY` (первая по умолчанию) — `home/daily/` (`HomeDailyViewModel` над `BudgetSource` + шаблоны + `GoalsSource`, `DailyCard` со шторкой «Как посчитано»).
+
+Умная аналитика без ИИ (#785, опрос 2026-11-27 — всё «А»; доски `Smart*` в `mockup_screens_smart.py`, эталоны `smart_*`): всё считается на телефоне по истории, офлайн.
+«Необычное» (#787) — `core:domain/reports/UnusualSpending` поверх `usualMarks` (до 3 папок, от ±30 %), карточка `reports/components/UnusualCard` + история `RecapCard.UNUSUAL` в «Итогах месяца»;
+«Оплата в другой валюте» (#786) — `ReportDao.observeForeignPurchases` → `core:domain/reports/ConversionCost` (цена по официальному курсу дня против списанного), `ConversionCard` + шторка «Подробнее»;
+«Траты в ARS и в USD» (#788) — `core:domain/reports/PersonalInflation` (вторая половина законченных месяцев «По месяцам» против первой; местная валюта — где больше дней с тратами), `InflationCard`/`InflationGrowthCard`, `CoShellLine(second, legend)`;
+«Похоже на дубль» (#791) — `core:domain/search/DuplicateFinder` (сумма, тип, категория, ≤ 10 мин, 30 дней), метка в `TransactionRow`, `transactions/duplicates/DuplicateSheet`; «Это разные» и «Не сейчас» — `SuggestionDismissals` (на устройстве, `PrefsSuggestionDismissals`);
+«Сделать регулярным?» (#789) — `core:domain/recurring/RecurringDetector` (≥ 3 раза раз в месяц/неделю, ±10 %), `transactions/offer/` (карточка над «Операциями», сохраняет шаблон с «Повтором» и открывает его); лимит из истории (#790) — `budgets/edit/components/UsualLimitRow` (`roundedLimit`);
+«Что если» (#792) — `core:domain/goals/GoalWhatIf` (темп счёта цели за 90 дней + доля средней траты «гибкой» папки), `goals/GoalWhatIfSource`, строка `goals/whatif/WhatIfLine` и шторка `WhatIfSheet`.

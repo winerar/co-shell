@@ -9,20 +9,20 @@ class HomeLayoutTest {
     fun `by default every card is shown in the order of the app`() {
         val layout = HomeLayout()
         assertEquals(HomeCard.entries, layout.visible)
-        assertEquals(7, layout.shownCount)
+        assertEquals(8, layout.shownCount)
     }
 
     @Test
     fun `a hidden card is not drawn, shown again it comes back to its place`() {
         val hidden = HomeLayout().withShown(HomeCard.HOT, false)
-        assertEquals(listOf(HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT, HomeCard.GOALS), hidden.visible)
+        assertEquals(listOf(HomeCard.DAILY, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT, HomeCard.GOALS), hidden.visible)
         assertEquals(HomeCard.entries, hidden.withShown(HomeCard.HOT, true).visible)
     }
 
     @Test
     fun `a card moves to a new place and the others keep their order`() {
-        val moved = HomeLayout().move(from = 5, to = 0)
-        assertEquals(listOf(HomeCard.RECENT, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.HOT, HomeCard.GOALS), moved.order)
+        val moved = HomeLayout().move(from = 6, to = 0)
+        assertEquals(listOf(HomeCard.RECENT, HomeCard.DAILY, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.HOT, HomeCard.GOALS), moved.order)
         assertEquals(HomeLayout(), HomeLayout().move(2, 2))
         assertEquals(HomeLayout(), HomeLayout().move(2, 9))
     }
@@ -38,7 +38,7 @@ class HomeLayoutTest {
         assertEquals(HomeLayout(), HomeLayout.parse(null))
         assertEquals(HomeLayout(), HomeLayout.parse("garbage"))
         val old = HomeLayout.parse("RECENT,TILES|REVIEW,GONE")
-        assertEquals(listOf(HomeCard.RECENT, HomeCard.TILES, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.CONVERTER, HomeCard.HOT, HomeCard.GOALS), old.order)
+        assertEquals(listOf(HomeCard.RECENT, HomeCard.TILES, HomeCard.DAILY, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.CONVERTER, HomeCard.HOT, HomeCard.GOALS), old.order)
         assertEquals(setOf(HomeCard.REVIEW), old.hidden)
         assertTrue(HomeCard.RECENT in old.visible)
     }

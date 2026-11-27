@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- «Сегодня можно» on «Обзоре» (#769, poll 2026-11-27 «А·Б·А»). -->
+    <string name="daily_title">Сегодня можно</string>
+    <string name="daily_amount" translatable="false">≈&#160;%1$s</string>
+    <plurals name="daily_left">
+        <item quantity="one">до конца месяца %1$d день · осталось %2$s</item>
+        <item quantity="few">до конца месяца %1$d дня · осталось %2$s</item>
+        <item quantity="many">до конца месяца %1$d дней · осталось %2$s</item>
+        <item quantity="other">до конца месяца %1$d дня · осталось %2$s</item>
+    </plurals>
+    <string name="daily_over">план месяца потрачен · сверх него %1$s</string>
+    <string name="daily_today">сегодня уже %1$s</string>
+    <string name="daily_open">Как посчитано</string>
+    <string name="daily_why_period">%1$s, по курсу на сегодня</string>
+    <string name="daily_why_limits">Лимиты на месяц</string>
+    <string name="daily_why_income">Пришло за месяц</string>
+    <string name="daily_why_spent">Уже потрачено</string>
+    <string name="daily_why_upcoming">Впереди регулярные</string>
+    <string name="daily_why_goals">Отложить на цели</string>
+    <string name="daily_why_left">Осталось</string>
+    <string name="daily_why_over">Сверх плана</string>
+    <string name="daily_why_days">Дней до конца месяца</string>
+    <string name="daily_why_per_day">Можно в день</string>
+    <string name="daily_minus" translatable="false">−&#160;%1$s</string>
+    <string name="daily_why_note">Это ориентир, а не запрет. Цифра пересчитывается после каждой операции.</string>
+    <string name="daily_why_income_note">Лимитов в этом месяце нет, поэтому считаем от дохода. Задайте лимиты в «Бюджетах» — и цифра станет точнее.</string>
+    <string name="daily_why_missing">Без учёта: %1$s — нет курса.</string>
+    <string name="settings_home_daily_hint">сколько можно потратить сегодня</string>
+</resources>

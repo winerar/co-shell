@@ -19,4 +19,11 @@ class BackgroundCheckTest {
         assertEquals(false, BackgroundCheck.askOnEnable(BackgroundCheck.Advice.XIAOMI, anythingOnBefore = true))
         assertEquals(false, BackgroundCheck.askOnEnable(BackgroundCheck.Advice.NONE, anythingOnBefore = false))
     }
+
+    @Test fun `home asks only after an update with something on and never on a fresh install`() {
+        assertEquals(true, BackgroundCheck.askOnHome(answered = false, wasUpdated = true, anythingOn = true))
+        assertEquals(false, BackgroundCheck.askOnHome(answered = false, wasUpdated = false, anythingOn = true))
+        assertEquals(false, BackgroundCheck.askOnHome(answered = true, wasUpdated = true, anythingOn = true))
+        assertEquals(false, BackgroundCheck.askOnHome(answered = false, wasUpdated = true, anythingOn = false))
+    }
 }

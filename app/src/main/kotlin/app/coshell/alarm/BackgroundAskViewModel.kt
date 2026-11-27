@@ -18,7 +18,8 @@ import kotlinx.coroutines.flow.stateIn
 
 /**
  * «Разрешить работу в фоне?» once on «Обзоре» for people whose reminders were already on before the alarms came (#745):
- * any payment reminder, optional notice or «Трата партнёра» is on and the question was never answered. Asked also when a
+ * the app was updated (not a fresh install), any payment reminder, optional notice or «Трата партнёра» is on and the question
+ * was never answered. Asked also when a
  * reminder is turned on (`BackgroundCheck.askOnEnable`); any answer there counts too. Phone-only, like the notice settings.
  */
 @HiltViewModel
@@ -30,14 +31,15 @@ class BackgroundAskViewModel @Inject constructor(
 ) : ViewModel() {
     private val prefs = context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
     private val asked = MutableStateFlow(prefs.getBoolean(KEY_ASKED, false))
+    private val wasUpdated = BackgroundCheck.wasUpdated(context)
 
     /** Some reminder is on: a payment reminder, an optional notice or «Трата партнёра». */
     val anythingOn: StateFlow<Boolean> = combine(reminders.enabled, notices.enabled, screens.options) { payments, kinds, options ->
         payments || kinds.isNotEmpty() || options.partnerSpend
     }.offMain().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
-    /** Something reminds and the question was not answered yet; `false` until read. */
-    val pending: StateFlow<Boolean> = combine(asked, anythingOn) { done, on -> !done && on }
+    /** Updated, something reminds and the question was not answered yet; never on a fresh install; `false` until read. */
+    val pending: StateFlow<Boolean> = combine(asked, anythingOn) { done, on -> BackgroundCheck.askOnHome(done, wasUpdated, on) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     fun answered() {

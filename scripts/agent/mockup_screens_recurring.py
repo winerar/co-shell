@@ -154,10 +154,43 @@ def list_screen():
                      '<span style="font-size: 12px; color: %s;">≈ USD, без «сумма при вводе» · 3</span></div>' % (amount_text('−410', 'USD', 28, LIME), HERO_HINT), extra='margin-top: 4px;')
     flt = '<div style="display: flex; gap: 8px; margin-top: 12px; overflow: hidden;">%s</div>' % ''.join(
         chip(t, t.startswith('Все')) for t in ['Все · 24', 'Расходы · 20', 'Доходы · 4', 'Само · 7'])
-    body = (search('Найти платёж') + hero + flt
+    body = (seg('A', ['До конца месяца', 'За год'], 0) + '<div style="height: 12px;"></div>' + search('Найти платёж') + hero + flt
             + label('Ноябрь · по дате', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[:9])))
             + label('Декабрь', top=14) + card(''.join(list_row(r, i > 0) for i, r in enumerate(RULES[9:20]))))
     return inner_screen('Регулярные платежи', body) + fab('Новый платёж')  # the one add button is the round «+» (#464)
+
+
+# ---- #771 «Постоянные траты» (poll 2026-11-27 «В · А»): the card in «Отчёты» → «Регулярные» on «За год» -------------------------
+FIXED = [('Аренда', 'Дом', '7 800', '650', 'каждый месяц, 1-го'), ('Спортзал', 'Спорт', '480', '40', 'каждый месяц, 5-го'),
+         ('Страховка', 'Врачи', '360', '30', 'каждый год, 12 марта'), ('Интернет', 'Связь', '300', '25', 'каждый месяц, 10-го'),
+         ('Телефон', 'Связь', '180', '15', 'каждый месяц, 20-го'), ('Кино и сериалы', 'Кино', '144', '12', 'каждый месяц, 3-го'),
+         ('Музыка', 'Подписки', '72', '6', 'каждый месяц, 7-го')]
+
+
+def fixed_row(r, div=True):
+    name, cat, year, month, rule = r
+    return ('<div style="display: flex; align-items: center; gap: 12px; padding: 6px 14px; min-height: 56px; box-sizing: border-box; %s">%s%s'
+            '<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px;">%s<span style="font-size: 12px; color: %s;">в год · %s в месяц</span></span></div>'
+            % ('border-top: 1px solid %s;' % DIV if div else '', rule_icon(cat, 32), two_lines(name, rule[0].upper() + rule[1:]), amount('−' + year, 'USD', INK, 14), MUTED, month))
+
+
+def fixed_total(color=INK):
+    return ('<div style="display: flex; align-items: baseline; gap: 6px;">%s<span style="font-size: 14px; color: %s;">в год</span></div>'
+            '<div style="font-size: 13px; color: %s; margin-top: 2px;">778 USD в месяц · 41 %% ваших трат</div>%s'
+            % (amount_text('9 336', 'USD', 26, color), MUTED, MUTED, progress(0.41, 10)))
+
+
+def fixed_reports():
+    head = ('<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 14px 4px;"><span style="font-size: 15px; font-weight: 600;">Постоянные траты</span>'
+            '<span style="font-size: 14px; font-weight: 600; color: %s;">Все 7 ›</span></div>' % VIOLET)
+    c = card(head + '<div style="padding: 4px 14px 10px;">%s</div>' % fixed_total() + ''.join(fixed_row(r) for r in FIXED[:3]))
+    return tab_screen('Отчёты', label('Ниже «Подушки»', top=6) + c, 'rep')
+
+
+def fixed_year():
+    hero = hero_card('<div style="font-size: 13px;">Расходы за год · 7 платежей</div><div style="margin-top: 4px;">%s</div>' % fixed_total(LIME), extra='margin-top: 12px;')
+    body = seg('A', ['До конца месяца', 'За год'], 1) + hero + '<div style="height: 12px;"></div>' + card(''.join(fixed_row(r, i > 0) for i, r in enumerate(FIXED)))
+    return inner_screen('Регулярные платежи', body) + fab('Новый платёж')
 
 
 def cat_pick(name, on=False):
@@ -218,6 +251,8 @@ def edge_cases():
 
 
 BOARDS = [  # name, title, fn, row key
+    ('Fixed771Reports', '«Отчёты»: карточка «Постоянные траты» (#771)', fixed_reports, 'rec'),
+    ('Fixed771Year', '«Регулярные» → «За год» (#771)', fixed_year, 'rec'),
     ('Rec143HomeA', 'Выбрано (А): «Скоро · 7 дней» на «Обзоре»', home_a, 'rec'),
     ('Rec143EditA', 'Выбрано (А): плитка «Повтор» в шаблоне', edit_a, 'rec'),
     ('Rec143RepeatA', 'Выбрано (А): шторка «Повтор»', repeat_sheet, 'rec'),

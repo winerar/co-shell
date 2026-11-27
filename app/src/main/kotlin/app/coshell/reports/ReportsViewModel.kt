@@ -1,5 +1,8 @@
 package app.coshell.reports
 
+import app.coshell.core.domain.templates.TemplateRepository
+import app.coshell.core.domain.reports.monthlySeries
+import app.coshell.recurring.fixed.buildFixed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.AccountRepository
@@ -60,6 +63,7 @@ class ReportsViewModel @Inject constructor(
     otherMembers: OtherMembers,
     transactions: TransactionRepository,
     tags: TagRepository,
+    templates: TemplateRepository,
     reportCurrencies: ReportCurrencySettings,
     monthStart: MonthStartSettings,
     private val moneyFormat: MoneyFormat,
@@ -91,7 +95,7 @@ class ReportsViewModel @Inject constructor(
     }.distinctUntilChanged()
 
     /** Accounts and their balance changes by day — «Капитал» (#189); the same for every period. */
-    private val balances = combine(accounts.observeAccounts(includeArchived = true), reports.observeBalanceDays(), ::Pair)
+    private val balances = combine(accounts.observeAccounts(includeArchived = true), reports.observeBalanceDays(), templates.observeTemplates(), ::Triple)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val data = settings.flatMapLatest { s ->
@@ -104,7 +108,7 @@ class ReportsViewModel @Inject constructor(
             rates.observeRates(),
             otherMembers.names(),
             balances,
-        ) { (days, purchases), categoryList, rateList, others, (accountList, balanceDays) ->
+        ) { (days, purchases), categoryList, rateList, others, (accountList, balanceDays, templateList) ->
             val book = RateBook.of(rateList)
             val input = ReportInput(
                 ledger = ReportLedger(days, categoryList, book, s.currency),
@@ -131,6 +135,10 @@ class ReportsViewModel @Inject constructor(
                 members = buildMembers(input, others, format),
                 capital = worth?.let { buildCapital(it, format) },
                 cushion = worth?.let { buildCushion(input, it, format) },
+                fixed = buildFixed(
+                    templateList, accountList.associateBy { it.id }, categoryList.associateBy { it.id }, book, s.currency, today,
+                    monthlySeries(input.ledger, s.period.cushionMonths(s.startDay)), format,
+                ),
                 calendar = buildCalendar(input, format),
             )
         }

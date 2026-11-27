@@ -253,7 +253,7 @@ fun CoShellNavHost(
                     onOpenDebt = { navController.navigate(DebtDetailDestination(it)) { launchSingleTop = true } },
                     onGoals = { navController.openSection(TopLevel.GOALS, tabs) },
                     onOpenGoal = { navController.navigate(GoalEditDestination(it)) { launchSingleTop = true } },
-                    onRecurring = { navController.navigate(RecurringListDestination) { launchSingleTop = true } },
+                    onRecurring = { navController.navigate(RecurringListDestination()) { launchSingleTop = true } },
                     onDrafts = { navController.navigate(DraftsDestination) { launchSingleTop = true } },
                     onNotes = { navController.navigate(NotesDestination) { launchSingleTop = true } },
                 ),

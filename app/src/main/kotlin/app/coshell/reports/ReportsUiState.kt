@@ -1,5 +1,6 @@
 package app.coshell.reports
 
+import app.coshell.recurring.fixed.FixedUi
 import app.coshell.core.domain.reports.ReportPeriod
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.transactions.list.TransactionsUiState
@@ -37,6 +38,8 @@ data class ReportsUiState(
     val capital: Capital? = null,
     /** «Подушка» (#241), next to [capital]; `null` — no account counted into the total. */
     val cushion: Cushion? = null,
+    /** «Постоянные траты» (#771): repeating expenses a year, in the shown currency; `null` — none with an amount. */
+    val fixed: FixedUi? = null,
     /** «Календарь трат» (#553) of the period's last month. */
     val calendar: Calendar? = null,
     /** The tapped day of [calendar] and its operations (rows as in «Операции»); `null` — none chosen. */

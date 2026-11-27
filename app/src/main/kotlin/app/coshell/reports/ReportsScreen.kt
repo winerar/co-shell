@@ -165,4 +165,8 @@ data class ReportsActions(
     val onDay: (LocalDate) -> Unit = {},
     /** A row of the tapped day: the operation's id. */
     val onTransaction: (String) -> Unit = {},
+    /** «Все N ›» of «Постоянные траты» (#771): «Регулярные» on «За год». */
+    val onAllFixed: () -> Unit = {},
+    /** A row of «Постоянные траты»: the template's id. */
+    val onTemplate: (String) -> Unit = {},
 )

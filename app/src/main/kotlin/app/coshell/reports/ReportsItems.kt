@@ -16,6 +16,7 @@ import app.coshell.reports.components.CalendarCard
 import app.coshell.reports.components.CapitalCard
 import app.coshell.reports.components.ConversionCard
 import app.coshell.reports.components.CushionCard
+import app.coshell.reports.components.FixedCard
 import app.coshell.reports.components.DayOperationsCard
 import app.coshell.reports.components.IncomeCard
 import app.coshell.reports.components.InflationCard
@@ -54,6 +55,7 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
     state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
     state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
     state.cushion?.let { cushion -> item(key = "cushion") { CushionCard(cushion) } }
+    state.fixed?.let { fixed -> item(key = "fixed") { FixedCard(fixed, actions.onAllFixed, actions.onTemplate) } }
     if (state.members.isNotEmpty()) item(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
     item(key = "note") {
         val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()

@@ -1,5 +1,6 @@
 package app.coshell.recurring.list
 
+import app.coshell.recurring.fixed.FixedUi
 import app.coshell.core.domain.recurring.PaymentState
 import app.coshell.core.domain.recurring.ScheduledPayment
 import app.coshell.core.model.Recurrence
@@ -7,6 +8,9 @@ import app.coshell.core.model.TransactionType
 import app.coshell.templates.TemplateItem
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
+
+/** «До конца месяца · За год» (#771): the payments by date, or the repeating expenses by what they cost a year. */
+enum class RecurringMode { MONTH, YEAR }
 
 /** Chips of «Регулярные платежи»: «Все · Расходы · Доходы · Переводы · Само». */
 enum class PaymentFilter { ALL, EXPENSE, INCOME, TRANSFER, AUTO }
@@ -58,6 +62,9 @@ data class RecurringListUiState(
     val months: List<RecurringMonth> = emptyList(),
     /** Payments on pause (account archived), above the hero. */
     val paused: List<PausedUi> = emptyList(),
+    val mode: RecurringMode = RecurringMode.MONTH,
+    /** «За год» (#771); `null` — no expense with «Повтор» and an amount. */
+    val fixed: FixedUi? = null,
 ) {
     val isEmpty: Boolean get() = !isLoading && total == 0
     val nothingFound: Boolean get() = !isLoading && total > 0 && months.isEmpty()

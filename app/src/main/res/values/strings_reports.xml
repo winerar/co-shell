@@ -227,4 +227,15 @@
     <string name="reports_conversion_gone">Удалённый счёт</string>
     <string name="reports_conversion_sheet_subtitle">Курс каждой покупки против официального в тот день</string>
     <string name="reports_conversion_row_title" translatable="false">%1$s · %2$s</string>
+    <!-- «Личная инфляция» (#788) -->
+    <string name="reports_inflation_title">Траты в %1$s и в %2$s</string>
+    <string name="reports_inflation_phrase">Траты %1$s, %2$s.</string>
+    <string name="reports_inflation_up">в %1$s выросли на %2$d %%</string>
+    <string name="reports_inflation_down">в %1$s снизились на %2$d %%</string>
+    <string name="reports_inflation_same">в %1$s почти не изменились</string>
+    <string name="reports_inflation_prices">Почти весь рост — цены и курс, а не новые траты.</string>
+    <string name="reports_inflation_in">в %1$s</string>
+    <string name="reports_inflation_note">Средний месяц второй половины против первой, по курсу дня операции.</string>
+    <string name="reports_inflation_fastest">Быстрее всего росли · в %1$s</string>
+    <string name="reports_inflation_percent" translatable="false">%1$+d %%</string>
 </resources>

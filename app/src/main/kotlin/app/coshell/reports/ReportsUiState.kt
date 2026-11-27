@@ -26,6 +26,8 @@ data class ReportsUiState(
     val unusual: List<UnusualLine> = emptyList(),
     /** «Оплата в другой валюте» (#786); `null` — nothing paid in another currency than its price in the period. */
     val conversion: Conversion? = null,
+    /** «Траты в ARS и в USD» (#788); `null` — fewer than four finished months or one currency only. */
+    val inflation: Inflation? = null,
     val months: Months? = null,
     /** «Доходы и расходы» (#189); `null` — nothing came in or went out in the shown months. */
     val income: Income? = null,

@@ -2,7 +2,14 @@ package app.coshell.core.designsystem.charts
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.coshell.core.designsystem.components.fillEdge
 import app.coshell.core.designsystem.theme.progressColors
+import app.coshell.core.designsystem.theme.secondaryInk
 import app.coshell.core.designsystem.tokens.Spacing
 import kotlin.math.roundToInt
 
@@ -39,6 +47,8 @@ data class LinePoint(val label: String, val value: Long)
  * guides and a dot on the [selected] point. The scale is fitted to the values (not from zero: the change matters, not
  * the level); [description] — what TalkBack says for the whole chart. The line draws from the left the first time.
  * [onSelect] — a tap picks the nearest point (#373, «тап — другой месяц»); `null` — the line is a picture.
+ * [second] — a second series under the first, one value per point, on the same scale, in the second colour and without a fill
+ * («Траты в песо и в долларах», #788); [legend] — the names of the first and the second series, drawn under the labels.
  */
 @Composable
 fun CoShellLine(
@@ -48,7 +58,11 @@ fun CoShellLine(
     selected: Int = points.lastIndex,
     height: Dp = LINE_HEIGHT,
     onSelect: ((Int) -> Unit)? = null,
+    second: List<Long>? = null,
+    legend: Pair<String, String>? = null,
 ) {
+    require(second == null || second.size == points.size) { "One second value per point" }
+    val secondColor = secondaryInk()
     val entrance = rememberChartEntrance()
     val accent = progressColors().indicator
     val edge = fillEdge(accent)?.brush
@@ -61,9 +75,11 @@ fun CoShellLine(
         }
         Canvas(Modifier.fillMaxWidth().height(height).then(tap).padding(horizontal = DOT_RADIUS)) {
             if (points.isEmpty()) return@Canvas
-            val ys = lineFractions(points.map { it.value })
+            val all = lineFractions(points.map { it.value } + second.orEmpty())
+            val ys = all.take(points.size)
             val step = if (points.size > 1) size.width / (points.size - 1) else 0f
             val at = points.indices.map { Offset(it * step, size.height * (1 - ys[it])) }
+            val secondAt = second?.let { all.drop(points.size).mapIndexed { i, y -> Offset(i * step, size.height * (1 - y)) } }
             for (g in 1..2) {
                 val y = size.height * g / 3f
                 drawLine(guide, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx(), pathEffect = DOTS)
@@ -76,7 +92,11 @@ fun CoShellLine(
                 close()
             }
             clipRect(right = size.width * entrance.value + DOT_RADIUS.toPx()) {
-                drawPath(area, accent.copy(alpha = FILL_ALPHA))
+                secondAt?.let { pts ->
+                    val path = Path().apply { pts.forEachIndexed { i, p -> if (i == 0) moveTo(p.x, p.y) else lineTo(p.x, p.y) } }
+                    drawPath(path, secondColor, style = Stroke(LINE_WIDTH.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+                }
+                if (secondAt == null) drawPath(area, accent.copy(alpha = FILL_ALPHA))
                 edge?.let { drawPath(line, it, style = Stroke(LINE_WIDTH.toPx() + 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)) }
                 drawPath(line, accent, style = Stroke(LINE_WIDTH.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
                 at.getOrNull(selected)?.let { p ->
@@ -99,6 +119,20 @@ fun CoShellLine(
                 )
             }
         }
+        legend?.let { (first, last) ->
+            Row(Modifier.padding(top = Spacing.s), horizontalArrangement = Arrangement.spacedBy(Spacing.l), verticalAlignment = Alignment.CenterVertically) {
+                LegendItem(accent, first)
+                LegendItem(secondColor, last)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LegendItem(color: Color, label: String) {
+    Row(horizontalArrangement = Arrangement.spacedBy(Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(LEGEND_WIDTH, LINE_WIDTH).background(color, CircleShape))
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -126,6 +160,7 @@ fun lineFractions(values: List<Long>): List<Float> {
 private val LINE_HEIGHT = 100.dp
 private val LINE_WIDTH = 2.5.dp
 private val DOT_RADIUS = 5.dp
+private val LEGEND_WIDTH = 14.dp
 private const val FILL_ALPHA = 0.12f
 private const val BELOW = 0.15
 private const val ABOVE = 0.10

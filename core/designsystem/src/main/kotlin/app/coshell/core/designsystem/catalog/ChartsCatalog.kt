@@ -19,6 +19,8 @@ import app.coshell.core.designsystem.charts.CoShellBarRow
 import app.coshell.core.designsystem.charts.CoShellBullet
 import app.coshell.core.designsystem.charts.CoShellColumns
 import app.coshell.core.designsystem.charts.CoShellDonut
+import app.coshell.core.designsystem.charts.CoShellLine
+import app.coshell.core.designsystem.charts.LinePoint
 import app.coshell.core.designsystem.charts.DonutSlice
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -34,6 +36,8 @@ private val structure = listOf(
     Triple("Аптека", 70L to 40L, 12),
 )
 private val months = listOf("июн" to 1180L, "июл" to 1320L, "авг" to 1090L, "сен" to 1410L, "окт" to 1350L, "ноя" to 760L)
+
+private val inflation = listOf(100L, 106L, 113L, 121L, 129L, 138L)
 
 /** Showcase of the chart components (#168): bars with the past period, columns by month, the ring, bullets. */
 @Composable
@@ -80,13 +84,20 @@ fun ChartsCatalog() {
         CoShellBullet(0.3f, BulletTone.NORMAL, mark = 0.37f)
         CoShellBullet(0.75f, BulletTone.WARNING, mark = 0.37f)
         CoShellBullet(1.2f, BulletTone.DANGER, mark = 0.37f)
+        CoShellSectionLabel("Линия · две серии: в песо и в долларах (#788)")
+        CoShellLine(
+            points = inflation.mapIndexed { i, v -> LinePoint(months[i].first, v) },
+            description = "В песо +38 %, в долларах +4 %",
+            second = listOf(100L, 99L, 102L, 101L, 103L, 104L),
+            legend = "в ARS" to "в USD",
+        )
     }
 }
 
-@Preview(name = "Charts · dark", showBackground = true, heightDp = 1100)
+@Preview(name = "Charts · dark", showBackground = true, heightDp = 1350)
 @Composable
 private fun ChartsCatalogDarkPreview() = CoShellTheme(darkTheme = true) { Surface { ChartsCatalog() } }
 
-@Preview(name = "Charts · light", showBackground = true, heightDp = 1100)
+@Preview(name = "Charts · light", showBackground = true, heightDp = 1350)
 @Composable
 private fun ChartsCatalogLightPreview() = CoShellTheme(darkTheme = false) { Surface { ChartsCatalog() } }

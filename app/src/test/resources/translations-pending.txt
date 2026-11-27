@@ -222,6 +222,15 @@ reports_cushion_title
 reports_cushion_unit
 reports_cushion_value
 reports_income_caption
+reports_inflation_down
+reports_inflation_fastest
+reports_inflation_in
+reports_inflation_note
+reports_inflation_phrase
+reports_inflation_prices
+reports_inflation_same
+reports_inflation_title
+reports_inflation_up
 reports_unusual_less
 reports_unusual_more
 reports_unusual_note

@@ -18,6 +18,8 @@ import app.coshell.reports.components.ConversionCard
 import app.coshell.reports.components.CushionCard
 import app.coshell.reports.components.DayOperationsCard
 import app.coshell.reports.components.IncomeCard
+import app.coshell.reports.components.InflationCard
+import app.coshell.reports.components.InflationGrowthCard
 import app.coshell.reports.components.MembersCard
 import app.coshell.reports.components.MonthsCard
 import app.coshell.reports.components.SpendingCard
@@ -45,6 +47,10 @@ internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPe
     }
     state.conversion?.let { conversion -> item(key = "conversion") { ConversionCard(conversion) } }
     state.months?.let { months -> item(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
+    state.inflation?.let { inflation ->
+        item(key = "inflation") { InflationCard(inflation) }
+        if (inflation.fastest.isNotEmpty()) item(key = "inflation-growth") { InflationGrowthCard(inflation) }
+    }
     state.income?.let { income -> item(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
     state.capital?.let { capital -> item(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
     state.cushion?.let { cushion -> item(key = "cushion") { CushionCard(cushion) } }

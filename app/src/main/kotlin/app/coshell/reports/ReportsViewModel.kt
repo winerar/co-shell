@@ -125,6 +125,7 @@ class ReportsViewModel @Inject constructor(
                 spending = buildSpending(input, format),
                 unusual = buildUnusual(input, format),
                 conversion = buildConversion(conversionCost(purchases, book, s.currency), accountList, format),
+                inflation = buildInflation(input, days, book, s.currencies),
                 months = buildMonths(input, format),
                 income = buildIncome(input, format),
                 members = buildMembers(input, others, format),

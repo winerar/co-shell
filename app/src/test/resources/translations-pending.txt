@@ -7,6 +7,8 @@ about_credits_ideas
 access_where_text
 account_deleted
 account_local_only_short
+accounts_share_other
+accounts_shares_description
 action_clear_value
 action_edit_selected
 amount_sign_minus
@@ -208,6 +210,7 @@ plural:notice_limit_text
 plural:reports_cushion_few
 plural:reports_cushion_low
 plural:reports_unusual_times
+rates_change_30d
 rates_manual_hint
 recap_unusual_note
 recap_unusual_title
@@ -343,6 +346,7 @@ tour_start
 tour_step
 tour_title
 transaction_categories_all_title
+transaction_payee
 transactions_changed_many
 update_installing_manual
 update_pill

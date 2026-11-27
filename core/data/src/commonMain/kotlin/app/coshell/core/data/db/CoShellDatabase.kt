@@ -21,7 +21,7 @@ import kotlinx.coroutines.IO
         SettingEntity::class, TagEntity::class, SyncExtraEntity::class, DraftEntity::class, DebtEventEntity::class,
         GoalEntity::class,
     ],
-    version = 26,
+    version = 27,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2), // v2: manual_rates, downloaded_rates
@@ -49,6 +49,7 @@ import kotlinx.coroutines.IO
         AutoMigration(from = 21, to = 22), // v22: accounts.credit_statement_day, credit_grace_days — grace period of a credit card (#634)
         AutoMigration(from = 24, to = 25), // v25: accounts.local_only — «Только у меня» (#558)
         AutoMigration(from = 25, to = 26), // v26: goals — savings goals (#768)
+        AutoMigration(from = 26, to = 27), // v27: templates.labels — tags a template remembers (#296)
     ],
 )
 @ConstructedBy(CoShellDatabaseConstructor::class)

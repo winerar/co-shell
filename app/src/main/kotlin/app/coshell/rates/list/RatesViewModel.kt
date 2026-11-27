@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import app.coshell.core.domain.rates.DownloadInfo
 import app.coshell.core.domain.rates.ExchangeRateRepository
 import app.coshell.core.domain.rates.RateBook
+import app.coshell.core.domain.rates.RateTrends
+import kotlin.math.sign
 import app.coshell.core.domain.rates.currentRates
 import app.coshell.core.domain.settings.ReportCurrencySettings
 import app.coshell.core.model.CurrencyCode
@@ -89,6 +91,9 @@ class RatesViewModel @Inject constructor(
                 date = row.found?.date,
                 isManual = row.found?.origin == RateOrigin.MANUAL,
                 viaPivot = row.found?.viaPivot == true,
+                trend = RateTrends.of(book, base, row.currency, today)?.let { t ->
+                    RateTrendUi(t.values.map { it.toFloat() }, formatChangeBp(t.changeBp), t.changeBp.sign)
+                },
             )
         }
         return RatesUiState(

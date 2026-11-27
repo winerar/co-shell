@@ -3,6 +3,7 @@ package app.coshell.core.domain.templates
 import app.coshell.core.model.IdGenerator
 import app.coshell.core.model.Transaction
 import app.coshell.core.model.TransactionTemplate
+import app.coshell.core.model.tagIds
 
 /**
  * «Сохранить как шаблон» in the operation editor: remembers the type, account, category and note of
@@ -36,4 +37,5 @@ fun templateFrom(
     toAccountId = transaction.toAccountId,
     note = transaction.note,
     sortOrder = sortOrder,
+    labels = transaction.tagIds,
 )

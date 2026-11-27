@@ -23,6 +23,8 @@ data class TransactionTemplate(
     val sortOrder: Int = 0,
     /** «Повтор» — a regular payment (#143); `null` — an ordinary template. */
     val schedule: RecurringSchedule? = null,
+    /** Tag ids the operation gets (#296), in the order they were picked; as in `Transaction.labels`. */
+    val labels: List<String> = emptyList(),
 ) {
     init {
         require(name.isNotBlank()) { "Template name must not be blank" }

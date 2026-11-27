@@ -217,6 +217,7 @@ internal fun TemplateEntity.toModel() = TransactionTemplate(
     note = note,
     sortOrder = sortOrder,
     schedule = ScheduleCodec.decode(schedule),
+    labels = decodeLabels(labels),
 )
 
 internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
@@ -232,6 +233,7 @@ internal fun TransactionTemplate.toEntity(stamp: Stamp) = TemplateEntity(
     note = note,
     sortOrder = sortOrder,
     schedule = schedule?.let(ScheduleCodec::encode),
+    labels = Json.encodeToString(labelsSerializer, labels),
     updatedAt = stamp.now,
     updatedBy = stamp.by,
 )

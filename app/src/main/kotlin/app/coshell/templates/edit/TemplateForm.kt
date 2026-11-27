@@ -58,6 +58,7 @@ internal fun buildTemplate(
             note = form.note.trim(),
             sortOrder = sortOrder,
             schedule = form.schedule?.copy(mode = form.postMode),
+            labels = form.labels,
         ),
     )
 }

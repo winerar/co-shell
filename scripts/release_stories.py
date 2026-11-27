@@ -5,11 +5,11 @@
     python3 scripts/release_stories.py write                                    rebuild ReleaseStories.kt from the top whats-new section
     python3 scripts/release_stories.py brief                                    the top section, its markers and what is still missing
 
-Each bullet of the top section ends with a marker: `• … <!-- story: debts -->` (several: `story: goals, goals_whatif`;
+Each bullet of the unreleased sections ends with a marker: `• … <!-- story: debts -->` (several: `story: goals, goals_whatif`;
 none: `story: none`). Bullets starting with «Исправлено:» need no marker. A story `<id>` = strings `release_<id>_title`/`_text`
 (strings_release.xml) + a scheme `'<id>'` in scripts/agent/story_art_693.py (drawables story_<id>_{ink,accent,edge}).
 Rules and the layout sample — docs/agents/release-stories.md. Without --head the working tree is read; checks run only while
-the top section is not released yet (differs from the base's).
+the sections are not released yet (from the top down to the first heading the base has).
 """
 import argparse
 import hashlib
@@ -99,12 +99,29 @@ def string_value(strings_xml, name):
     return match.group(1) if match else None
 
 
+def released_headings(base_whats_new):
+    return {line[3:].strip() for line in (base_whats_new or "").splitlines() if line.startswith("## ")}
+
+
+def pending(base_whats_new, head_whats_new):
+    """(top heading, bodies joined) of the sections not released yet — from the top down to the first heading the base has.
+    Several may pile up (a hotfix section on main, or a new dated section on top of an unreleased one); a release ships them all."""
+    released, heading, lines, top = released_headings(base_whats_new), None, [], None
+    for line in (head_whats_new or "").splitlines():
+        if line.startswith("## "):
+            heading = line[3:].strip()
+            if heading in released:
+                break
+            top = top or heading
+        elif heading is not None:
+            lines.append(line)
+    return top, "\n".join(lines).strip()
+
+
 def release_pending(base_whats_new, head_whats_new):
     """True when the top whats-new section has not been released yet: its heading is nowhere in the base (a hotfix section
     on top of main does not make dev's already released one pending again)."""
-    head = top_section(head_whats_new)[0]
-    released = {line[3:].strip() for line in (base_whats_new or "").splitlines() if line.startswith("## ")}
-    return head is not None and head not in released
+    return pending(base_whats_new, head_whats_new)[0] is not None
 
 
 def problems(base_whats_new, read):
@@ -112,7 +129,7 @@ def problems(base_whats_new, read):
     head_whats_new = read(WHATS_NEW)
     if not release_pending(base_whats_new, head_whats_new):
         return []
-    heading, body = top_section(head_whats_new)
+    heading, body = pending(base_whats_new, head_whats_new)
     out = []
     for bullet in items(body):
         ids = bullet_ids(bullet)
@@ -158,12 +175,12 @@ def reader(ref):
     return read
 
 
-def write():
+def write(base):
     read = reader(None)
-    heading, body = top_section(read(WHATS_NEW))
+    heading, body = pending(base, read(WHATS_NEW))
     ids = [i for i in story_ids(body) if ID.match(i)]
     if not ids:
-        print("No stories in «%s»: ReleaseStories.kt unchanged" % heading)
+        print("No stories in the unreleased sections (%s): ReleaseStories.kt unchanged" % heading)
         return 0
     path = os.path.join(ROOT, STORIES)
     kotlin = read(STORIES)
@@ -181,21 +198,23 @@ def main(argv):
     parser.add_argument("--base", default="origin/main")
     parser.add_argument("--head", default=None, help="a git ref; the working tree when omitted")
     args = parser.parse_args(argv)
-    if args.mode == "write":
-        return write()
-    read = reader(args.head)
     base = git_show(args.base, WHATS_NEW) or ""
+    if args.mode == "write":
+        return write(base)
+    read = reader(args.head)
     found = problems(base, read)
     if args.mode == "check":
         if not release_pending(base, read(WHATS_NEW)):
             print("OK: top whats-new section already released — no stories needed")
         elif not found:
-            print("OK: stories ready — %s" % (", ".join(story_ids(top_section(read(WHATS_NEW))[1])) or "nothing new to show"))
+            print("OK: stories ready — %s" % (", ".join(story_ids(pending(base, read(WHATS_NEW))[1])) or "nothing new to show"))
         for line in found:
             print("✗ " + line)
         return 3 if found else 0
-    heading, body = top_section(read(WHATS_NEW))
-    print("Top section: %s · pending release: %s · KEY %s" % (heading, release_pending(base, read(WHATS_NEW)), key_for(heading)))
+    heading, body = pending(base, read(WHATS_NEW))
+    if heading is None:
+        heading, body = top_section(read(WHATS_NEW))
+    print("Unreleased from: %s · pending release: %s · KEY %s" % (heading, release_pending(base, read(WHATS_NEW)), key_for(heading)))
     for number, bullet in enumerate(items(body), 1):
         ids = bullet_ids(bullet)
         print("%2d. [%s] %s" % (number, "?" if ids is None else (", ".join(ids) or "—"), strip_markers(bullet)[:140]))

@@ -21,5 +21,7 @@
     <string name="release_bar_title">Своя нижняя панель</string>
     <string name="release_bar_text">Ещё → Настройки → Экраны → Нижняя панель.</string>
     <string name="release_widgets_title">Виджеты</string>
+    <string name="release_stories_back_title">Листайте назад</string>
+    <string name="release_stories_back_text">Нажмите на левый край истории или проведите вправо.</string>
     <string name="release_widgets_text">Расход, доход и шаблоны — в одно нажатие с рабочего стола.</string>
 </resources>

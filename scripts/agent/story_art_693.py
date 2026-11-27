@@ -120,6 +120,13 @@ STORIES = {
         ('ink', 'stroke', ' '.join(rrect(x, y, 32, 32, 10) for x in (200, 240) for y in (20, 58))),
         ('ink', 'stroke', ' '.join(rrect(x, 122, 32, 32, 10) for x in (30, 75, 120, 165, 210))),
     ],
+    'stories_back': [  # 2026-11-28: a tap on the left part of a story card and an arrow back to the previous one
+        ('ink', 'stroke', rrect(30, 25, 60, 130, 14) + ' ' + rrect(130, 10, 110, 160, 18)),
+        ('ink', 'stroke', rrect(142, 22, 40, 4, 2) + ' ' + rrect(188, 22, 40, 4, 2), 1),
+        ('ink', 'stroke', circle(168, 90, 24), 1.5),
+        ('accent', 'fill', circle(168, 90, 13)),
+        ('accent', 'stroke', line((122, 90), (98, 90)) + ' ' + line((108, 80), (98, 90), (108, 100)), 3),
+    ],
     # «Знакомство» (#598, owner poll 2026-11-25 «А»; boards Tour598S3, S4, S6): accounts, fan and recap are shared with the release stories.
     'categories': [
         ('accent', 'fill', circle(70, 50, 26)),

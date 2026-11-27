@@ -30,6 +30,10 @@ class ReleaseStoriesTest(unittest.TestCase):
         hotfix = "# Что нового\n\n## 2026-11-26 · исправление\n• Исправлено: x\n\n## 2026-11-25\n• А\n"
         self.assertFalse(rs.release_pending(hotfix, OLD))
 
+    def test_all_unreleased_sections_count(self):
+        two = NEW.replace("## 2026-11-25", "## 2026-11-30\n• Назад <!-- story: back -->\n\n## 2026-11-25")
+        self.assertEqual(("2026-12-01", ["debts", "goals", "back"]), (rs.pending(OLD, two)[0], rs.story_ids(rs.pending(OLD, two)[1])))
+
     def test_ready_set_passes(self):
         self.assertEqual([], rs.problems(OLD, files()))
 

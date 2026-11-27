@@ -20,7 +20,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** Release stories (#693; boards Rel693NoticeB, Rel693S1…S5): the card on «Обзор» and every story, same setup as [NotesScreenshotTest]. */
+/** Release stories (#693; boards Rel693NoticeB, Rel693S1…S5): the card on «Обзор» and the layout sample ([ReleaseStories.sample]), same setup as [NotesScreenshotTest]. */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [36], qualifiers = "ru-w411dp-h891dp-xhdpi", application = Application::class)
@@ -46,7 +46,7 @@ class ReleaseStoriesScreenshotTest {
     @Test fun `story 2 light`() = story(1, dark = false)
 
     private fun story(index: Int, dark: Boolean) = shot("release_story_${index + 1}_${if (dark) "dark" else "light"}", dark) {
-        ReleaseStoriesScreen("26.12.1", ReleaseStories.current, startAt = index)
+        ReleaseStoriesScreen("26.12.1", ReleaseStories.sample, startAt = index)
     }
 
     private fun shot(name: String, dark: Boolean = false, content: @Composable () -> Unit) {

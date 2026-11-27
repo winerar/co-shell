@@ -19,8 +19,8 @@ FIXES = re.compile(r"\b(?:fix(?:es|ed)?|close[sd]?|resolve[sd]?)\s+#(\d+)", re.I
 MERGED_PR = re.compile(r"^Merge pull request #(\d+) from \S+")
 
 
-def top_section(text):
-    """(heading, body) of the first `## ` section of whats-new, or (None, "")."""
+def top_section(text, keep_markers=False):
+    """(heading, body) of the first `## ` section of whats-new, or (None, ""); story markers dropped unless `keep_markers`."""
     heading, lines = None, []
     for line in text.splitlines():
         if line.startswith("## "):
@@ -28,7 +28,7 @@ def top_section(text):
                 break
             heading = line[3:].strip()
         elif heading is not None:
-            lines.append(line)
+            lines.append(line if keep_markers else re.sub(r"[ \t]*<!--.*?-->", "", line))  # story markers: release-stories.md
     return heading, "\n".join(lines).strip()
 
 

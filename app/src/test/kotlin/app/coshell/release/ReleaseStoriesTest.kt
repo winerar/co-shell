@@ -5,16 +5,18 @@ import java.io.File
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** The release-stories rule (#693): at most five, a key of their own, schemes made by the script. */
+/** The release-stories rule (#693): a story per feature, a key of their own, schemes made by the script (the rest — `release_stories.py check`). */
 class ReleaseStoriesTest {
     @Test
-    fun `a release has one to five stories`() {
-        assertTrue(ReleaseStories.current.size in 1..ReleaseStories.MAX)
+    fun `a release has stories and the layout sample has five`() {
+        assertTrue(ReleaseStories.current.isNotEmpty())
+        assertTrue(ReleaseStories.sample.size == 5)
     }
 
     @Test
     fun `stories are different`() {
         assertTrue(ReleaseStories.current.map { it.title }.toSet().size == ReleaseStories.current.size)
+        assertTrue(ReleaseStories.sample.map { it.title }.toSet().size == ReleaseStories.sample.size)
     }
 
     @Test

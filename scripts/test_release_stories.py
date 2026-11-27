@@ -26,6 +26,10 @@ class ReleaseStoriesTest(unittest.TestCase):
     def test_released_section_needs_nothing(self):
         self.assertEqual([], rs.problems(OLD, files(whats_new=OLD, kotlin="")))
 
+    def test_hotfix_section_on_top_of_main_does_not_reopen_dev(self):
+        hotfix = "# Что нового\n\n## 2026-11-26 · исправление\n• Исправлено: x\n\n## 2026-11-25\n• А\n"
+        self.assertFalse(rs.release_pending(hotfix, OLD))
+
     def test_ready_set_passes(self):
         self.assertEqual([], rs.problems(OLD, files()))
 

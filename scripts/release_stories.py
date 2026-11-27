@@ -100,9 +100,11 @@ def string_value(strings_xml, name):
 
 
 def release_pending(base_whats_new, head_whats_new):
-    """True when the top whats-new section has not been released yet."""
+    """True when the top whats-new section has not been released yet: its heading is nowhere in the base (a hotfix section
+    on top of main does not make dev's already released one pending again)."""
     head = top_section(head_whats_new)[0]
-    return head is not None and head != top_section(base_whats_new)[0]
+    released = {line[3:].strip() for line in (base_whats_new or "").splitlines() if line.startswith("## ")}
+    return head is not None and head not in released
 
 
 def problems(base_whats_new, read):

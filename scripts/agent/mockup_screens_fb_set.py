@@ -57,8 +57,13 @@ def look():
     body = (label('Язык', top=4) + group([r('Язык', 'Русский · как в телефоне', 'user', CYAN, CYANBG)])
             + label('Тема') + segmented(['Система', 'Тёмная', 'Светлая'], 'Тёмная')
             + label('Палитра') + group([r('Лайм', 'Девять цветовых тем', 'spark', LIME, LIMEBG)])
-            + label('Списки') + pick_row('Плотность строк в «Операциях» и «Счетах»', ['Обычная', 'Компактная'], 'Обычная')
-            + note('Компактная — больше строк на экране в «Операциях» и «Счетах».', 8))
+            # #775 (poll «А», names — owner 2026-11-27): the switch and an example drawn by the real operation row
+            + label('Строки в списках') + segmented(['Свободно', 'Плотно'], 'Свободно')
+            + '<div style="height: 10px;"></div>'
+            + group([tx('Продукты', 'Карта', '−32 000', 'ARS', 'e', 'cart', LIME, acc='#F26E22'),
+                     tx('Рестораны и кафе', 'Наличные', '−4 500', 'ARS', 'e', 'cafe', WARN, acc='#C9D3C2'),
+                     tx('Зарплата', 'Карта', '+1 200', 'USD', 'i', 'salary', CYAN, acc='#F26E22')])
+            + note('Так будут выглядеть строки в «Операциях» и «Счетах».', 8))
     return inner_screen('Внешний вид', body)
 
 
@@ -176,19 +181,45 @@ def balance():
     return inner_screen('Счета в общем балансе', note('Что входит в «Общий баланс» на «Обзоре». Общая для всей семьи.', 4) + label('Счета', top=10) + g)
 
 
-def notices():
-    """Payments as before, then the optional ones (#745, poll 2026-11-25: groups «А», all off until turned on): one hour for the evening reminder."""
-    body = (label('Платежи', top=4) + group([sw('Напоминания о платежах', 'В день платежа', True)])
-            + '<div style="height: 10px;"></div>' + pick_row('Время напоминания о платежах', ['8:00', '9:00', '12:00', '18:00'], '9:00')
-            + '<div style="height: 10px;"></div>' + pick_row('Предупреждать за', ['В день', '1 день', '3 дня'], '1 день')
+def pills_row(title, options, on, other='Другое…'):
+    """A time or «Предупреждать» (#777, poll «А»): pill buttons, «Другое…» last; a value that is not a button stands in its place, chosen."""
+    pills = ''.join(chip(o, o == on) for o in options) + chip(other, other == on)
+    return card('<div style="padding: 12px 16px;"><div style="font-size: 15px; margin-bottom: 10px;">%s</div>'
+                '<div style="display: flex; flex-wrap: wrap; gap: 8px;">%s</div></div>' % (title, pills))
+
+
+def notices_body():
+    return (label('Платежи', top=4) + group([sw('Напоминания о платежах', 'В день платежа', True)])
+            + '<div style="height: 10px;"></div>' + pills_row('Время напоминания о платежах', ['8:00', '9:00', '12:00', '18:00'], '9:00')
+            + '<div style="height: 10px;"></div>' + pills_row('Предупреждать', ['В тот же день', 'За 1 день', 'За 3 дня'], 'За 5 дней', 'За 5 дней')
             + label('Траты') + group([sw('Вечером — записать траты', 'если за день записей нет', True)])
-            + '<div style="height: 10px;"></div>' + pick_row('Когда напоминать', ['19:00', '20:00', '21:00', '22:00'], '21:00')
+            + '<div style="height: 10px;"></div>' + pills_row('Когда напоминать', ['19:00', '20:00', '21:00', '22:00'], '21:00')
             + label('Бюджет') + group([sw('Лимиты', '80 % лимита или траты быстрее плана', True), sw('Итоги месяца', 'в первые дни нового месяца', True)])
             + label('Порядок') + group([sw('Резервная копия', 'раз в две недели, если давно не сохраняли', True),
                                         sw('Черновики', 'когда накопилось три готовых', False), sw('С возвращением', 'после трёх дней без записей, один раз', False)])
             + '<div style="margin: 10px 4px 0; font-size: 13px; color: %s;">Не больше одного напоминания в день.</div>' % MUTED
             + label('Семья') + group([sw('Трата партнёра', 'уведомление, когда внесли операцию', True), r('Только от суммы', '50 USD', 'cart', YELLOW, YELLOWBG)]))
-    return inner_screen('Уведомления', body)
+
+
+def notices():
+    """Payments as before, then the optional ones (#745, poll 2026-11-25: groups «А», all off until turned on): one time for the evening reminder."""
+    return inner_screen('Уведомления', notices_body())
+
+
+def counter(value, sub, mono=False, dim_minus=False):
+    """CoShellCounter (#777): «− value +»."""
+    btn = ('<span style="width: 48px; height: 48px; border-radius: 50%%; background: %s; display: inline-flex; align-items: center; justify-content: center; flex: none; %s">%s</span>')
+    font = MONO + ' font-size: 22px;' if mono else 'font-size: 22px; font-weight: 600;'
+    return ('<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;">%s<div style="flex-grow: 1; text-align: center;"><div style="%s">%s</div>'
+            '<div style="font-size: 12px; color: %s;">%s</div></div>%s</div>' % (
+                btn % (CHIP, 'opacity: 0.38;' if dim_minus else '', svg('minus', INK, 22)), font, value, MUTED, sub, btn % (CHIP, '', svg('plus', INK, 22))))
+
+
+def notices_other():
+    """«Другое…» (#777): a small sheet with the counter and «Готово»; days 0–30, time — 15-minute steps."""
+    body = ('<div style="padding: 8px 20px 20px;"><div style="font-size: 20px; font-weight: 700;">Предупреждать</div>%s%s</div>'
+            % (counter('За 5 дней', 'до платежа'), button('Готово', mt=8)))
+    return inner_screen('Уведомления', notices_body()) + '<div style="position: absolute; inset: 0; background: rgba(0,0,0,.45);"></div>' + sheet(body, top=560)
 
 
 def data():
@@ -224,5 +255,6 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1EntryAcc', 'Ввод операции: всегда этот счёт', entry_account, 1118),
     ('Set1Balance', 'Обзор: счета в общем балансе', balance, 1118),
     ('Set1Notices', 'Уведомления', notices, 1118),
+    ('Set1NoticesOther', 'Уведомления: «Другое…» — счётчик', notices_other, 1118),
     ('Set1Data', 'Данные и копия', data, 1118),
 ]

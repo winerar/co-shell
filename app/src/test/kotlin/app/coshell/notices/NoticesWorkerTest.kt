@@ -91,8 +91,8 @@ class NoticesWorkerTest {
         val kinds = MutableStateFlow<Set<NoticeKind>>(emptySet())
         override val enabled: Flow<Set<NoticeKind>> = kinds
         override suspend fun setEnabled(kind: NoticeKind, on: Boolean) { kinds.value = if (on) kinds.value + kind else kinds.value - kind }
-        override val hour = MutableStateFlow(21)
-        override suspend fun setHour(hour: Int) = Unit
+        override val time = MutableStateFlow(21 * 60)
+        override suspend fun setTime(minutes: Int) = Unit
         override val offerAnswered = MutableStateFlow(false)
         override suspend fun setOfferAnswered() { offerAnswered.value = true }
     }

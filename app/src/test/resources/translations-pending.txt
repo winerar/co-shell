@@ -191,9 +191,16 @@ settings_input_account_hint
 settings_invite_for
 settings_invite_revoked
 settings_invite_title
+settings_notices_days_caption
+settings_notices_earlier
+settings_notices_fewer
 settings_notices_items
+settings_notices_later
+settings_notices_more
+settings_notices_other
 settings_notices_partner_note
 settings_notices_time
+settings_notices_time_step
 settings_ops_amount_hint
 settings_policy_hint
 settings_policy_title

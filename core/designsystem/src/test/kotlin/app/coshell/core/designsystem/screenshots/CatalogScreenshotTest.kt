@@ -15,6 +15,7 @@ import app.coshell.core.designsystem.catalog.PinSample
 import app.coshell.core.designsystem.catalog.ComponentsCatalog
 import app.coshell.core.designsystem.catalog.ConfirmStackCatalog
 import app.coshell.core.designsystem.catalog.ModalsCatalog
+import app.coshell.core.designsystem.catalog.CounterSample
 import app.coshell.core.designsystem.catalog.SegmentedSample
 import app.coshell.core.designsystem.catalog.TokensCatalog
 import app.coshell.core.designsystem.components.CoShellBottomBar
@@ -105,6 +106,12 @@ class CatalogScreenshotTest {
 
     @Test
     fun `segmented light`() = shot("segmented_light") { Column(Modifier.padding(Spacing.l)) { SegmentedSample() } }
+
+    @Test
+    fun `counter dark`() = shot("counter_dark", dark = true) { Column(Modifier.padding(Spacing.l)) { CounterSample() } }
+
+    @Test
+    fun `counter light`() = shot("counter_light") { Column(Modifier.padding(Spacing.l)) { CounterSample() } }
 
     @Test
     fun `row group dark`() = shot("row_group_dark", dark = true) { RowGroupSample() }

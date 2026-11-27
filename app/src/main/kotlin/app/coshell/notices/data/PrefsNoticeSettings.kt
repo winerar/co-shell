@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.content.edit
 import app.coshell.core.domain.notices.NoticeKind
 import app.coshell.core.domain.notices.NoticeSettings
+import app.coshell.core.domain.settings.ClockMinutes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,7 +23,7 @@ class PrefsNoticeSettings @Inject constructor(@ApplicationContext context: Conte
 
     /** In-memory copies; `null` until the file is read once off the main thread. */
     private val kindsState = MutableStateFlow<Set<NoticeKind>?>(null)
-    private val hourState = MutableStateFlow<Int?>(null)
+    private val timeState = MutableStateFlow<Int?>(null)
     private val offerState = MutableStateFlow<Boolean?>(null)
 
     override val enabled: Flow<Set<NoticeKind>> = kindsState
@@ -35,13 +36,13 @@ class PrefsNoticeSettings @Inject constructor(@ApplicationContext context: Conte
         io { prefs.edit { putStringSet(KEY_KINDS, now.map { it.key }.toSet()) } }
     }
 
-    override val hour: Flow<Int> = hourState
-        .onStart { if (hourState.value == null) hourState.compareAndSet(null, io { storedHour(prefs) }) }
+    override val time: Flow<Int> = timeState
+        .onStart { if (timeState.value == null) timeState.compareAndSet(null, io { storedTime(prefs) }) }
         .filterNotNull()
 
-    override suspend fun setHour(hour: Int) {
-        hourState.value = hour
-        io { prefs.edit { putInt(KEY_HOUR, hour) } }
+    override suspend fun setTime(minutes: Int) {
+        timeState.value = minutes
+        io { prefs.edit { putInt(KEY_TIME, minutes) } }
     }
 
     override val offerAnswered: Flow<Boolean> = offerState
@@ -58,16 +59,20 @@ class PrefsNoticeSettings @Inject constructor(@ApplicationContext context: Conte
     companion object {
         private const val FILE = "settings"
         private const val KEY_KINDS = "notice_kinds"
+        /** Before #777 only whole hours: read once as a fallback for [KEY_TIME]. */
         private const val KEY_HOUR = "notice_hour"
+        private const val KEY_TIME = "notice_time"
         private const val KEY_OFFER = "notice_offer_answered"
 
         private fun storedKinds(prefs: android.content.SharedPreferences): Set<NoticeKind> =
             prefs.getStringSet(KEY_KINDS, null).orEmpty().mapNotNull { NoticeKind.fromKey(it) }.toSet()
 
-        private fun storedHour(prefs: android.content.SharedPreferences): Int =
-            prefs.getInt(KEY_HOUR, NoticeSettings.DEFAULT_HOUR).takeIf { it in 0..23 } ?: NoticeSettings.DEFAULT_HOUR
+        private fun storedTime(prefs: android.content.SharedPreferences): Int =
+            prefs.getInt(KEY_TIME, -1).takeIf { ClockMinutes.isValid(it) }
+                ?: prefs.getInt(KEY_HOUR, -1).takeIf { it in 0..23 }?.let { ClockMinutes.of(it) }
+                ?: NoticeSettings.DEFAULT_TIME
 
-        /** The hour for the scheduler, which starts without Hilt. */
-        fun readHour(context: Context): Int = storedHour(context.getSharedPreferences(FILE, Context.MODE_PRIVATE))
+        /** The time for the scheduler, which starts without Hilt. */
+        fun readTime(context: Context): Int = storedTime(context.getSharedPreferences(FILE, Context.MODE_PRIVATE))
     }
 }

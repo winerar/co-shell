@@ -109,6 +109,7 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
                     modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
                 )
             }
+            item { DensitySample(state.compactLists, Modifier.padding(top = Spacing.m)) }
             item { CoShellHint(stringResource(R.string.density_hint), Modifier.padding(horizontal = Spacing.l, vertical = Spacing.m)) }
         }
     }

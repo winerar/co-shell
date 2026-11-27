@@ -2,6 +2,7 @@ package app.coshell.recurring.notify.data
 
 import android.content.Context
 import androidx.core.content.edit
+import app.coshell.core.domain.settings.ClockMinutes
 import app.coshell.core.domain.settings.ReminderSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -31,21 +32,21 @@ class PrefsReminderSettings @Inject constructor(@ApplicationContext context: Con
         io { prefs.edit { putBoolean(KEY_ENABLED, enabled) } }
     }
 
-    private val hourState = MutableStateFlow<Int?>(null)
+    private val timeState = MutableStateFlow<Int?>(null)
 
-    override val hour: Flow<Int> = hourState
-        .onStart { if (hourState.value == null) hourState.compareAndSet(null, io { storedHour(prefs) }) }
+    override val time: Flow<Int> = timeState
+        .onStart { if (timeState.value == null) timeState.compareAndSet(null, io { storedTime(prefs) }) }
         .filterNotNull()
 
-    override suspend fun setHour(hour: Int) {
-        hourState.value = hour
-        io { prefs.edit { putInt(KEY_HOUR, hour) } }
+    override suspend fun setTime(minutes: Int) {
+        timeState.value = minutes
+        io { prefs.edit { putInt(KEY_TIME, minutes) } }
     }
 
     private val daysState = MutableStateFlow<Int?>(null)
 
     override val daysBefore: Flow<Int> = daysState
-        .onStart { if (daysState.value == null) daysState.compareAndSet(null, io { prefs.getInt(KEY_DAYS, 0).takeIf { it in ReminderSettings.DAYS_BEFORE } ?: 0 }) }
+        .onStart { if (daysState.value == null) daysState.compareAndSet(null, io { prefs.getInt(KEY_DAYS, 0).takeIf { it in 0..ReminderSettings.MAX_DAYS_BEFORE } ?: 0 }) }
         .filterNotNull()
 
     override suspend fun setDaysBefore(days: Int) {
@@ -57,13 +58,17 @@ class PrefsReminderSettings @Inject constructor(@ApplicationContext context: Con
 
     companion object {
         private const val KEY_ENABLED = "payment_reminders"
+        /** Before #777 only whole hours: read once as a fallback for [KEY_TIME]. */
         private const val KEY_HOUR = "reminder_hour"
+        private const val KEY_TIME = "reminder_time"
         private const val KEY_DAYS = "reminder_days_before"
 
-        private fun storedHour(prefs: android.content.SharedPreferences): Int =
-            prefs.getInt(KEY_HOUR, ReminderSettings.DEFAULT_HOUR).takeIf { it in 0..23 } ?: ReminderSettings.DEFAULT_HOUR
+        private fun storedTime(prefs: android.content.SharedPreferences): Int =
+            prefs.getInt(KEY_TIME, -1).takeIf { ClockMinutes.isValid(it) }
+                ?: prefs.getInt(KEY_HOUR, -1).takeIf { it in 0..23 }?.let { ClockMinutes.of(it) }
+                ?: ReminderSettings.DEFAULT_TIME
 
-        /** The hour for the scheduler, which starts without Hilt. */
-        fun readHour(context: Context): Int = storedHour(context.getSharedPreferences("settings", Context.MODE_PRIVATE))
+        /** The time for the scheduler, which starts without Hilt. */
+        fun readTime(context: Context): Int = storedTime(context.getSharedPreferences("settings", Context.MODE_PRIVATE))
     }
 }

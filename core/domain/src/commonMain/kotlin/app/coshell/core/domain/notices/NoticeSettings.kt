@@ -1,5 +1,6 @@
 package app.coshell.core.domain.notices
 
+import app.coshell.core.domain.settings.ClockMinutes
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -12,10 +13,10 @@ interface NoticeSettings {
 
     suspend fun setEnabled(kind: NoticeKind, on: Boolean)
 
-    /** The hour of the daily check on the phone's clock; [DEFAULT_HOUR] by default. One for all kinds. */
-    val hour: Flow<Int>
+    /** The time of the daily check on the phone's clock, minutes since midnight; [DEFAULT_TIME] by default. One for all kinds. */
+    val time: Flow<Int>
 
-    suspend fun setHour(hour: Int)
+    suspend fun setTime(minutes: Int)
 
     /** The card «Напоминать вечером о тратах?» on «Обзоре» was answered («Включить» or «Не сейчас»): it never comes back by itself. */
     val offerAnswered: Flow<Boolean>
@@ -23,9 +24,9 @@ interface NoticeSettings {
     suspend fun setOfferAnswered()
 
     companion object {
-        const val DEFAULT_HOUR = 21
+        val DEFAULT_TIME = ClockMinutes.of(21)
 
-        /** The hours the settings offer. */
-        val HOURS = listOf(19, 20, 21, 22)
+        /** The times the settings offer as buttons; any other — «Другое…» (#777). */
+        val TIMES = listOf(19, 20, 21, 22).map { ClockMinutes.of(it) }
     }
 }

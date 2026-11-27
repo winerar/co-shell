@@ -83,6 +83,39 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+        <!-- Home-screen widgets and the quick-settings tile for a fast entry (#795): taps go through the shortcut path of MainActivity. -->
+        <receiver
+            android:name=".widget.QuickEntryWidget"
+            android:exported="true"
+            android:label="@string/widget_quick_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_quick_info" />
+        </receiver>
+        <receiver
+            android:name=".widget.TemplatesWidget"
+            android:exported="true"
+            android:label="@string/widget_templates_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_templates_info" />
+        </receiver>
+        <service
+            android:name=".widget.QuickTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_widget_out"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

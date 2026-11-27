@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Шаблоны» (#795): 4×1 (three templates and «+») or 4×2 (three and «Все шаблоны ›»). -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_templates_strip"
+    android:minWidth="250dp"
+    android:minHeight="74dp"
+    android:minResizeWidth="250dp"
+    android:minResizeHeight="74dp"
+    android:previewImage="@drawable/widget_preview_templates"
+    android:resizeMode="vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

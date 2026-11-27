@@ -62,6 +62,9 @@
   https://claude.ai/artifact/8mf6ECQP7sb8128EkeKRur) — **выбрано Б и Б**: поиск лупой в шапке (`OpsNothing` — раскрытый), линия у внутренних
   экранов при прокрутке; доски `Hdr394*` (`mockup_screens_fb_headers.py`), кирпичи `search_head`, `inner_head`.
 
+- Виджеты и плитка быстрой записи (#795, 2026-11-27, **все рекомендованные**): https://claude.ai/artifact/Gi69GtwAgtg7SDYgkuBkke — утверждённые картинки в `widgets-795/`
+  (вид «Капсулы», «ввод закрыт», размеры 2×1–4×1, «Шаблоны», плитка, названия в списке виджетов); генератор — `scripts/agent/mockup_poll_widget795.py`. Это не доски холста (виджеты рисует система, не Compose): картинки — источник истины вида до кода.
+
 ## Ранние страницы (до холста)
 - Новый облик (пружины, палитры, вёрстка): https://claude.ai/artifact/WqocoPvC6g6mLRt31WvcCW
 - Выбор дизайна (#62–#66): https://claude.ai/artifact/DHcu66PAJq6rZwJL7uhhbo

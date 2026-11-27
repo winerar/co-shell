@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Быстрая запись» (#795): 2×1 to 4×1; the layout (icons or words) is chosen by the width at run time. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_quick_words"
+    android:minWidth="110dp"
+    android:minHeight="74dp"
+    android:minResizeWidth="110dp"
+    android:minResizeHeight="74dp"
+    android:maxResizeHeight="120dp"
+    android:previewImage="@drawable/widget_preview_quick"
+    android:resizeMode="horizontal"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

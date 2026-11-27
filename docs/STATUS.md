@@ -69,6 +69,7 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
+2026-11-27, `ccr-4f38129c-r62cog`: #771 постоянные траты за год — опрос https://claude.ai/artifact/WmtQpeK2YWTCvJTxupc4gW (доски `Subs771*`, `poll-subs-771.json`, `mockup_poll_subs771.py`). После ответа — доски на холст, код.
 2026-11-27, `ccr-b1cb6d81-pq817q`: отзывы #775–#777 (опрос https://claude.ai/artifact/EhKdFZhXC9T1bwh2o4zYWv, всё «А»). #776 — подписи «Предупреждать».
 #775 — «Строки в списках: Свободно · Плотно» + пример настоящими строками (`DensitySample`). #777 — «Другое…» со счётчиком (`CoShellCounter`), время в минутах (`ClockMinutes`, ключи `*_time`).
 Не проверено на телефоне: удержание «+/−» в счётчике, напоминание в 7:30. Закрытый тест ждёт владельца: #669, #670, #657.

@@ -16,13 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import app.coshell.R
 import app.coshell.core.designsystem.charts.CoShellMeter
@@ -31,13 +34,15 @@ import app.coshell.core.designsystem.components.CoShellButton
 import app.coshell.core.designsystem.components.CoShellCard
 import app.coshell.core.designsystem.components.fillEdgeColor
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.reports.recap.StoryTap
+import app.coshell.reports.recap.storyTaps
 import app.coshell.reports.recap.storyTransition
 import app.coshell.ui.bar.aboveBottomBars
 import app.coshell.ui.top.ScreenTopBar
 
 /**
  * «Что нового · 26.12.1» as stories (#693, boards `Rel693S1…S5`; the card look of #598 «А»): bars on top, a scheme, a title and one or two
- * sentences per story; a tap on the card or «Дальше» goes on, «Готово» on the last one closes. The same springs as «Итоги месяца».
+ * sentences per story; a tap on the card or «Дальше» goes on, a tap on its left third or a swipe right goes back, «Готово» on the last one closes. The same springs as «Итоги месяца».
  */
 @Composable
 fun ReleaseStoriesScreen(versionName: String, stories: List<ReleaseStory>, onClose: () -> Unit = {}, startAt: Int = 0) =
@@ -59,7 +64,17 @@ fun StoriesScreen(
     var index by rememberSaveable { mutableIntStateOf(startAt) }
     val last = stories.lastIndex
     val at = index.coerceIn(0, maxOf(last, 0))
-    val next = { if (at < last) index = at + 1 else onClose() }
+    var dir by remember { mutableIntStateOf(1) }
+    val go = { step: Int ->
+        when {
+            step < 0 -> if (at > 0) { dir = -1; index = at - 1 }
+            at < last -> { dir = 1; index = at + 1 }
+            else -> onClose()
+        }
+    }
+    val next = { go(1) }
+    val tap = remember { StoryTap() }
+    val previous = stringResource(R.string.story_previous)
     Scaffold(
         topBar = { ScreenTopBar(header, onBack = onClose) },
         bottomBar = {
@@ -77,11 +92,14 @@ fun StoriesScreen(
             }
             val description = stringResource(R.string.release_progress, at + 1, stories.size)
             CoShellCard(
-                Modifier.fillMaxWidth().weight(1f).padding(top = Spacing.m).semantics { contentDescription = description },
+                Modifier.fillMaxWidth().weight(1f).padding(top = Spacing.m).storyTaps(tap, go).semantics {
+                    contentDescription = description
+                    if (at > 0) customActions = listOf(CustomAccessibilityAction(previous) { go(-1); true })
+                },
                 tone = CardTone.Story,
-                onClick = next,
+                onClick = { go(tap.step) },
             ) {
-                AnimatedContent(at, transitionSpec = { storyTransition(last) }, label = "release-story") { shown ->
+                AnimatedContent(at, transitionSpec = { storyTransition(dir) }, label = "release-story") { shown ->
                     val i = shown.coerceIn(0, last)
                     StoryBody(stories[i], if (steps) stringResource(R.string.tour_step, i + 1, stories.size) else null, Modifier.fillMaxSize().padding(Spacing.l))
                 }

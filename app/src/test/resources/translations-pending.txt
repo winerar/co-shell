@@ -109,6 +109,10 @@ gesture_shake_text
 gesture_shake_title
 gesture_shortcuts_text
 gesture_shortcuts_title
+gesture_story_back_text
+gesture_story_back_title
+gesture_story_next_text
+gesture_story_next_title
 gesture_swipe_text
 gesture_swipe_title
 gestures_everywhere
@@ -116,6 +120,7 @@ gestures_hint
 gestures_home
 gestures_operations
 gestures_plus
+gestures_stories
 gestures_title
 goal_whatif_category
 goal_whatif_not_closer
@@ -362,6 +367,7 @@ settings_ops_amount_hint
 settings_policy_hint
 settings_policy_title
 steps_family_hint
+story_previous
 sync_dot_ok
 sync_dot_pending
 tags_all_by_name

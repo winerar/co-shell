@@ -225,7 +225,8 @@ class TransactionsViewModelTest {
         val vm = TransactionsViewModel(
             transactions, FakeAccountRepository(), FakeCategoryRepository(), { flowOf(emptyMap()) }, MoneyFormat.RU,
             object : Clock { override fun now() = now }, TimeZone.UTC,
-            DeleteTransactionWithUndo(transactions, UndoCenter()), FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
+            DeleteTransactionWithUndo(transactions, UndoCenter()), BulkEditWithUndo(transactions, FakeCategoryRepository(), UndoCenter()),
+            FakeExchangeRateRepository(), FakeReportCurrencySettings(), tags,
             dismissals = dismissals,
         )
         vm.state.launchIn(backgroundScope)

@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.gate.LocalInputLock
+import app.coshell.transactions.list.bulk.BulkEditSheets
 import app.coshell.transactions.offer.RecurringOfferViewModel
 
 /**
@@ -48,6 +49,7 @@ fun TransactionsRoute(
     val lock = LocalInputLock.current
     val selection by viewModel.selection.collectAsStateWithLifecycle()
     val peek by viewModel.peek.collectAsStateWithLifecycle()
+    val bulk by viewModel.bulk.collectAsStateWithLifecycle()
     val offer by offerModel.offer.collectAsStateWithLifecycle()
     LaunchedEffect(offerModel) { offerModel.opened.collect(onOpenTemplate) }
     TransactionsScreen(
@@ -66,6 +68,7 @@ fun TransactionsRoute(
                 viewModel.clearSelection()
                 onDuplicate(id)
             },
+            onEditSelected = lock.guard(viewModel::openBulkEdit),
             onDeleteSelected = lock.guard(viewModel::deleteSelected),
             onPeek = viewModel::onPeek,
             onPeekEnd = viewModel::onPeekEnd,
@@ -74,5 +77,12 @@ fun TransactionsRoute(
             onOfferAccept = lock.guard(offerModel::accept),
             onOfferLater = offerModel::later,
         ),
+    )
+    BulkEditSheets(
+        state = bulk,
+        onStep = viewModel::bulkStep,
+        onCategory = lock.guard1(viewModel::applyBulkCategory),
+        onTags = lock.guard1(viewModel::applyBulkTags),
+        onClose = viewModel::closeBulkEdit,
     )
 }

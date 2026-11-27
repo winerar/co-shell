@@ -75,6 +75,8 @@ data class TransactionsUiState(
         val money: Money? = null,
         /** «похоже на дубль» (#791): this row and another look like one purchase; null — no pair. */
         val duplicate: RowDuplicate? = null,
+        /** Shop or person (#296): second line of the row after the account; null — none. */
+        val payee: String? = null,
     )
 
     /** A pair of [TransactionsUiState.Row]s that look alike: [newer] is the one «Удалить вторую» removes; [key] — «Это разные». */

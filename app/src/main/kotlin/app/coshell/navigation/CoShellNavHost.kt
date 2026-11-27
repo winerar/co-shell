@@ -4,6 +4,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import app.coshell.ui.top.LocalTabBack
 import app.coshell.settings.ScreenOptionsViewModel
 import app.coshell.hints.SheetCoach
+import app.coshell.hints.gestures.GesturesScreen
 import app.coshell.core.domain.hints.HintId
 import app.coshell.R
 import androidx.compose.ui.res.stringResource
@@ -338,6 +339,7 @@ fun CoShellNavHost(
                 onClose = { navController.popBackStack() }, steps = true,
             )
         }
+        screen<GesturesDestination> { GesturesScreen(onBack = { navController.popBackStack() }) }
         screen<NotesDestination> {
             NotesRoute(
                 onBack = { navController.popBackStack() },

@@ -144,11 +144,21 @@ class AccountsViewModel @Inject constructor(
         val shown = if (view.query.isBlank()) activeRows else activeRows.filter { it.name.contains(view.query.trim(), ignoreCase = true) }
         val grouping = if (view.grouping == AccountGrouping.OWNER && others.isEmpty()) AccountGrouping.TYPE else view.grouping
         val inTotal = { rows: List<AccountsUiState.Row> -> rows.filter { !it.excludedFromTotal }.mapNotNull { it.money } }
+        val shares = conversion?.let { c ->
+            val byCurrency = activeRows.filter { !it.excludedFromTotal }.mapNotNull { it.money }.groupBy { it.currency }
+            val parts = byCurrency.map { (currency, list) ->
+                val sum = list.reduce { x, y -> x + y }
+                val inMain = c.book.balanceTotals(listOf(sum), listOf(c.main), c.today).first().takeIf { it.missing.isEmpty() }?.sum
+                inMain?.let { currency.value to it.amountMinor }
+            }
+            if (parts.any { it == null }) emptyList() else currencyShares(parts.filterNotNull())
+        }.orEmpty()
         return AccountsUiState(
             active = activeRows,
             archived = archived.map(toRow),
             showArchived = showArchived,
             total = convert(inTotal(activeRows)),
+            shares = shares,
             grouping = grouping,
             canGroupByOwner = others.isNotEmpty(),
             groups = buildAccountGroups(shown, grouping, view.collapsed) { rows -> convert(inTotal(rows)) },

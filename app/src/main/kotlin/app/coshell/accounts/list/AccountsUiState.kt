@@ -12,6 +12,8 @@ data class AccountsUiState(
     val showArchived: Boolean = false,
     /** Accounts in the total, in the main report currency: «≈ 9 640 USD»; `null` — no rates yet. */
     val total: String? = null,
+    /** Currencies of the total as shares (#192); empty — one currency, no rates or nothing to show. */
+    val shares: List<Share> = emptyList(),
     val grouping: AccountGrouping = AccountGrouping.TYPE,
     /** «Чьи» makes sense only with other family members. */
     val canGroupByOwner: Boolean = false,
@@ -50,6 +52,9 @@ data class AccountsUiState(
         /** [used] is the share of the limit spent (0–1) for the meter; [due] — `null` while there is no debt. */
         data class Credit(val available: String, val limit: String, val used: Float, val due: LocalDate?, val graceUntil: LocalDate? = null)
     }
+
+    /** One currency's [percent] of the total; `currency == null` — the rest («Другие»). */
+    data class Share(val currency: String?, val percent: Int)
 
     /** A foldable group of the list with its total; [key] is stable across recompositions. */
     data class Group(

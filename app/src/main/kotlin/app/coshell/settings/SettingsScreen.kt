@@ -59,6 +59,7 @@ data class SettingsActions(
     val onPolicy: () -> Unit = {},
     /** «Знакомство с приложением» (#598). */
     val onTour: () -> Unit = {},
+    val onGestures: () -> Unit = {},
 )
 
 /** The main settings of each group, shown right on its card; [currencies] — totals currencies, main first. */

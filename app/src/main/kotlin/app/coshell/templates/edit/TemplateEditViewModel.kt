@@ -85,6 +85,7 @@ class TemplateEditViewModel @Inject constructor(
                 amountCurrency = template.amount?.takeIf { template.isForeign }?.currency?.value,
                 categoryId = template.categoryId?.takeIf { id -> base.categories.any { it.id == id } },
                 note = template.note,
+                labels = template.labels,
             )
         }
     }

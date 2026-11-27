@@ -20,6 +20,7 @@
     <string name="hints_off">Выключены</string>
     <string name="hints_reset_title">Показать подсказки заново</string>
     <string name="hint_flip_card">Нажмите на карточку, чтобы перевернуть: на обороте самое полезное за месяц.</string>
+    <string name="hint_edit_home">Удерживайте карточку, чтобы переставить или скрыть её.</string>
     <string name="hint_swipe_tabs">Листайте вбок, чтобы сменить вкладку.</string>
     <string name="hint_hold_plus">Удерживайте «+»: QR чека, заметка и шаблон — веером.</string>
     <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>

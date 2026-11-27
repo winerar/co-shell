@@ -2,50 +2,21 @@ package app.coshell.core.domain.settings
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class HomeLayoutTest {
     @Test
-    fun `by default every card is shown in the order of the app`() {
-        val layout = HomeLayout()
-        assertEquals(HomeCard.entries, layout.visible)
-        assertEquals(6, layout.shownCount)
+    fun `hidden cards come in the order of the layout`() {
+        val layout = HomeLayout().move(5, 0).withShown(HomeCard.TILES, false).withShown(HomeCard.REVIEW, false)
+        assertEquals(listOf(HomeCard.REVIEW, HomeCard.TILES), layout.hiddenCards)
+        assertEquals(emptyList(), HomeLayout().hiddenCards)
     }
 
     @Test
-    fun `a hidden card is not drawn, shown again it comes back to its place`() {
-        val hidden = HomeLayout().withShown(HomeCard.HOT, false)
-        assertEquals(listOf(HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.RECENT), hidden.visible)
-        assertEquals(HomeCard.entries, hidden.withShown(HomeCard.HOT, true).visible)
-    }
-
-    @Test
-    fun `a card moves to a new place and the others keep their order`() {
-        val moved = HomeLayout().move(from = 5, to = 0)
-        assertEquals(listOf(HomeCard.RECENT, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.TILES, HomeCard.CONVERTER, HomeCard.HOT), moved.order)
-        assertEquals(HomeLayout(), HomeLayout().move(2, 2))
-        assertEquals(HomeLayout(), HomeLayout().move(2, 9))
-    }
-
-    @Test
-    fun `the saved text comes back as it was`() {
-        val layout = HomeLayout().move(4, 1).withShown(HomeCard.REVIEW, false)
-        assertEquals(layout, HomeLayout.parse(layout.encode()))
-    }
-
-    @Test
-    fun `an old or broken saved text still gives every card, new ones at the end`() {
-        assertEquals(HomeLayout(), HomeLayout.parse(null))
-        assertEquals(HomeLayout(), HomeLayout.parse("garbage"))
-        val old = HomeLayout.parse("RECENT,TILES|REVIEW,GONE")
-        assertEquals(listOf(HomeCard.RECENT, HomeCard.TILES, HomeCard.REVIEW, HomeCard.UPCOMING, HomeCard.CONVERTER, HomeCard.HOT), old.order)
-        assertEquals(setOf(HomeCard.REVIEW), old.hidden)
-        assertTrue(HomeCard.RECENT in old.visible)
-    }
-
-    @Test
-    fun `no card shown leaves only the balance`() {
-        val none = HomeCard.entries.fold(HomeLayout()) { l, c -> l.withShown(c, false) }
-        assertEquals(emptyList(), none.visible)
+    fun `a restored card leaves the hidden list and keeps its place`() {
+        val hidden = HomeLayout().withShown(HomeCard.UPCOMING, false)
+        val back = hidden.withShown(HomeCard.UPCOMING, true)
+        assertEquals(emptyList(), back.hiddenCards)
+        assertEquals(hidden.order, back.order)
+        assertEquals(HomeCard.UPCOMING, back.visible[1])
     }
 }

@@ -145,6 +145,41 @@ class ReportCategoryBoardTest {
     }
 
     @Test
+    fun `an earlier month keeps the later columns so the chart can go forward again`() {
+        // Opened on November, tapped September: the columns still run to November, September is chosen and labelled.
+        val history = (8..10).flatMap { listOf(day(it, 4, "cafe", 300), day(it, 5, "rent", 250)) }
+        val september = ReportPeriod.month(YearMonth(2026, 9), 1)
+        val base = input(history + day(11, 4, "cafe", 600), emptyList(), categoryId = "cafe")
+        val tapped = DrillInput(
+            base.categoryId, base.ledger, base.categories, september, 1, true, base.operations, base.accounts, base.authors, tz, today,
+            chartEnd = trendChartEnd(september, 1, today),
+        )
+        val trend = buildCategoryDrill(tapped, format, format).trend!!
+
+        assertEquals(listOf(8, 9, 10, 11), trend.columns.map { it.month.month.ordinal + 1 })
+        assertEquals(1, trend.selected)
+        assertEquals(listOf("", "300", "", ""), trend.columns.map { it.value })
+        // The averages are those of September: one month before it.
+        assertEquals(1, trend.recentMonths)
+    }
+
+    @Test
+    fun `the chart ends with the current month like the Reports tab`() {
+        // Today is November: September and November end with November; a month over a year back ends 11 months after it.
+        assertEquals(november, trendChartEnd(ReportPeriod.month(YearMonth(2026, 9), 1), 1, today))
+        assertEquals(november, trendChartEnd(november, 1, today))
+        assertEquals(ReportPeriod.month(YearMonth(2026, 1), 1), trendChartEnd(ReportPeriod.month(YearMonth(2025, 2), 1), 1, today))
+        val quarter = ReportPeriod.quarter(YearMonth(2026, 9))
+        assertEquals(quarter, trendChartEnd(quarter, 1, today))
+    }
+
+    @Test
+    fun `the drill of an earlier month reads up to the end of the chart`() {
+        val september = ReportPeriod.month(YearMonth(2026, 9), 1)
+        assertEquals(LocalDate(2025, 9, 1) to LocalDate(2026, 12, 1), drillRange(september, 1, november))
+    }
+
+    @Test
     fun `a quarter has neither trend nor mark`() {
         val quarter = input(days, emptyList()).let {
             DrillInput(it.categoryId, it.ledger, it.categories, ReportPeriod.quarter(YearMonth(2026, 11)), 1, true, it.operations, it.accounts, it.authors, tz, today)

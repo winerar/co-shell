@@ -100,7 +100,7 @@ internal fun Modifier.tabPill(state: TabPillState, color: Color, edge: BorderStr
 /**
  * Moves the pill to [selected]'s slot: the first time it just appears there, later it flows; while [drag] pulls, it follows the finger.
  * [spans] — final left/right edge of each slot in the bar (px), known before the tabs finish growing: the pill flies there at once. Aiming at
- * the measured slot while it grew restarted the flow every frame, and the pill stood still until the tab settled (#808); without [spans]
+ * the measured slot while it grew restarted the flow every frame, and the pill stood still until the tab settled (after #809); without [spans]
  * the measured slot is used.
  */
 @Composable

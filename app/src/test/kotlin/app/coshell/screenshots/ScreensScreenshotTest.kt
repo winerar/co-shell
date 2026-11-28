@@ -113,6 +113,10 @@ import app.coshell.ui.top.ScreenScrollHost
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
+import app.coshell.core.domain.settings.ReportCard
+import app.coshell.core.domain.settings.ReportLayout
+import app.coshell.reports.edit.ReportsEditDone
+import app.coshell.reports.edit.ReportsEditList
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -477,6 +481,12 @@ class ScreensScreenshotTest {
 
     @Test
     fun `settings reports dark`() = shot("settings_reports_dark", dark = true) { ReportsSettingsScreen(ScreenOptions(), {}, {}) }
+
+    @Test
+    fun `reports edit dark`() = shot("reports_edit_dark", dark = true) {
+        val layout = ReportLayout().withShown(ReportCard.CONVERSION, false).withShown(ReportCard.MEMBERS, false)
+        androidx.compose.material3.Scaffold(bottomBar = { ReportsEditDone {} }) { padding -> ReportsEditList(layout, padding, {}, {}) }
+    }
 
     @Test
     fun `settings accounts light`() = shot("settings_accounts_light") { AccountsSettingsScreen(ScreenOptions(), {}, {}) }

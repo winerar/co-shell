@@ -10,6 +10,7 @@ import app.coshell.reports.capital.capitalMonthDestination
 import app.coshell.core.domain.reports.ReportPeriodKind
 import app.coshell.core.domain.search.PeriodRange
 import app.coshell.reports.category.reportCategoryDestination
+import app.coshell.settings.ScreenOptionsViewModel
 import app.coshell.transactions.list.MemberPreset
 
 /** Connects [ReportsScreen] to [ReportsViewModel]; «Все категории» shares the same ViewModel (the tab's entry). */
@@ -28,6 +29,7 @@ fun ReportsRoute(
     onAllFixed: () -> Unit = {},
     onTemplate: (String) -> Unit = {},
     viewModel: ReportsViewModel = hiltViewModel(),
+    screenOptions: ScreenOptionsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     ReportsScreen(
@@ -40,6 +42,7 @@ fun ReportsRoute(
             onTransaction = onTransaction,
             onAllFixed = onAllFixed,
             onTemplate = onTemplate,
+            onLayoutChange = { layout -> screenOptions.change { it.copy(reports = layout) } },
             onAllCategories = onAllCategories,
             onCategory = { id -> state.drillTo(id)?.let(onCategory) },
             onMember = { id -> state.membersOperations(id)?.let(onMember) },

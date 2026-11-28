@@ -29,52 +29,74 @@ import app.coshell.reports.components.MonthsCard
 import app.coshell.reports.components.SpendingCard
 import app.coshell.reports.components.UnusualCard
 import app.coshell.ui.format.formatMonth
+import app.coshell.ui.edit.longPressToEdit
+import app.coshell.core.domain.settings.ReportCard
+import app.coshell.core.domain.settings.ReportLayout
 
 /**
  * One card of the feed. It fades and moves into place when the period, the currency or the tab brings other cards
- * (owner 2026-11-27: switching data in report cards is smooth) — nothing pops in or out.
+ * (owner 2026-11-27: switching data in report cards is smooth) — nothing pops in or out. [onEdit] — holding it starts the
+ * editing of the feed (#826); `null` — not a card that can be edited.
  */
-private fun LazyListScope.card(key: String, content: @Composable () -> Unit) {
-    item(key = key) { Box(listItemMotion()) { content() } }
+private fun LazyListScope.card(key: String, onEdit: (() -> Unit)? = null, content: @Composable () -> Unit) {
+    item(key = key) {
+        Box(listItemMotion().longPressToEdit(enabled = onEdit != null) { onEdit?.invoke() }) { content() }
+    }
 }
 
-/** The «Обзор» tab of «Отчёты» (boards `RepA`, #140): the cards of the period («Необычное», #787, under the spending), then the note about rates. */
-internal fun LazyListScope.overviewItems(state: ReportsUiState, period: ReportPeriod, actions: ReportsActions) {
+/**
+ * The «Обзор» tab of «Отчёты» (boards `RepA`, #140): the cards of the period in the order of [layout] (#826: moved and hidden
+ * on this phone), then the note about rates. A card with nothing to say now is simply absent.
+ */
+internal fun LazyListScope.overviewItems(
+    state: ReportsUiState,
+    period: ReportPeriod,
+    actions: ReportsActions,
+    layout: ReportLayout = ReportLayout(),
+    onEdit: () -> Unit = {},
+) {
     val spending = state.spending
     if (spending == null) {
         card(key = "empty") { Note(stringResource(R.string.reports_empty, stringResource(R.string.reports_period_title))) }
-    } else {
-        card(key = "spending") {
-            SpendingCard(
-                spending,
-                state.currency,
-                ghostCaption = if (state.compare) ghostCaption(period, state.startDay) else null,
-                onAll = actions.onAllCategories,
-                onBar = actions.onCategory,
-            )
-        }
     }
-    if (state.unusual.isNotEmpty()) {
-        card(key = "unusual") { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
-    }
-    state.conversion?.let { conversion -> card(key = "conversion") { ConversionCard(conversion) } }
-    state.months?.let { months -> card(key = "months") { MonthsCard(months, onMonth = actions.onMonth) } }
-    state.inflation?.let { inflation ->
-        card(key = "inflation") { InflationCard(inflation) }
-        if (inflation.fastest.isNotEmpty()) card(key = "inflation-growth") { InflationGrowthCard(inflation) }
-    }
-    state.income?.let { income -> card(key = "income") { IncomeCard(income, onMonth = actions.onMonth) } }
-    state.capital?.let { capital -> card(key = "capital") { CapitalCard(capital, state.currency, onPoint = actions.onCapital) } }
-    state.cushion?.let { cushion -> card(key = "cushion") { CushionCard(cushion) } }
-    state.forecast?.let { forecast -> card(key = "forecast") { ForecastCard(forecast) } }
-    state.fixed?.let { fixed -> card(key = "fixed") { FixedCard(fixed, actions.onAllFixed, actions.onTemplate) } }
-    if (state.members.isNotEmpty()) card(key = "members") { MembersCard(state.members, onMember = actions.onMember) }
+    layout.visible.forEach { reportCard(it, state, period, actions, onEdit) }
     card(key = "note") {
         val missing = (spending?.missing.orEmpty() + state.capital?.missing.orEmpty()).distinct().sorted()
         CoShellHint(
             if (missing.isEmpty()) stringResource(R.string.reports_rate_note, state.currency)
             else stringResource(R.string.reports_rate_note, state.currency) + ". " + stringResource(R.string.reports_missing, missing.joinToString()),
         )
+    }
+}
+
+/** One card of [overviewItems], if it has something to show. */
+private fun LazyListScope.reportCard(which: ReportCard, state: ReportsUiState, period: ReportPeriod, actions: ReportsActions, onEdit: () -> Unit) {
+    val key = which.name
+    when (which) {
+        ReportCard.SPENDING -> state.spending?.let { spending ->
+            card(key, onEdit) {
+                SpendingCard(
+                    spending,
+                    state.currency,
+                    ghostCaption = if (state.compare) ghostCaption(period, state.startDay) else null,
+                    onAll = actions.onAllCategories,
+                    onBar = actions.onCategory,
+                )
+            }
+        }
+        ReportCard.UNUSUAL -> if (state.unusual.isNotEmpty()) {
+            card(key, onEdit) { UnusualCard(state.unusual, formatMonth(period.firstMonth.firstDay), onCategory = actions.onCategory) }
+        }
+        ReportCard.CONVERSION -> state.conversion?.let { card(key, onEdit) { ConversionCard(it) } }
+        ReportCard.MONTHS -> state.months?.let { card(key, onEdit) { MonthsCard(it, onMonth = actions.onMonth) } }
+        ReportCard.INFLATION -> state.inflation?.let { card(key, onEdit) { InflationCard(it) } }
+        ReportCard.INFLATION_GROWTH -> state.inflation?.takeIf { it.fastest.isNotEmpty() }?.let { card(key, onEdit) { InflationGrowthCard(it) } }
+        ReportCard.INCOME -> state.income?.let { card(key, onEdit) { IncomeCard(it, onMonth = actions.onMonth) } }
+        ReportCard.CAPITAL -> state.capital?.let { card(key, onEdit) { CapitalCard(it, state.currency, onPoint = actions.onCapital) } }
+        ReportCard.CUSHION -> state.cushion?.let { card(key, onEdit) { CushionCard(it) } }
+        ReportCard.FORECAST -> state.forecast?.let { card(key, onEdit) { ForecastCard(it) } }
+        ReportCard.FIXED -> state.fixed?.let { card(key, onEdit) { FixedCard(it, actions.onAllFixed, actions.onTemplate) } }
+        ReportCard.MEMBERS -> if (state.members.isNotEmpty()) card(key, onEdit) { MembersCard(state.members, onMember = actions.onMember) }
     }
 }
 

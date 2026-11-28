@@ -146,6 +146,12 @@ STORIES = {
         ('ink', 'stroke', rrect(40, 100, 120, 6, 3) + ' ' + rrect(40, 116, 80, 5, 2.5) + ' ' + line((250, 104), (258, 112), (250, 120)), 1.5),
         ('ink', 'stroke', dashed(30, 270, 162), 1.5),
     ],
+    'report_cards': [  # #826: the cards of «Отчёты» as a list — one lifted with ⠿ moving up, the last one hidden with ✕
+        ('ink', 'stroke', rrect(30, 14, 240, 38, 12) + ' ' + rrect(30, 128, 240, 38, 12)),
+        ('accent', 'evenodd', rrect(42, 66, 240, 44, 14) + ' ' + ' '.join(circle(x, y, 2.4) for x in (60, 68) for y in (80, 88, 96))),
+        ('ink', 'stroke', ' '.join(rrect(58, y, 110, 6, 3) for y in (30, 144)) + ' ' + line((252, 140), (262, 150)) + ' ' + line((262, 140), (252, 150)), 1.8),
+        ('ink', 'stroke', line((14, 96), (14, 60)) + ' ' + line((8, 68), (14, 60), (20, 68)), 2.5),
+    ],
     # «Знакомство» (#598, owner poll 2026-11-25 «А»; boards Tour598S3, S4, S6): accounts, fan and recap are shared with the release stories.
     'categories': [
         ('accent', 'fill', circle(70, 50, 26)),

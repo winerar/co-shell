@@ -23,6 +23,15 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ReportsStart
 import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.ui.list.SectionTitle
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import app.coshell.core.designsystem.components.CoShellReorderColumn
+import app.coshell.core.designsystem.components.rememberReorderState
+import app.coshell.core.designsystem.components.underBars
+import app.coshell.core.domain.settings.ReportCard
+import app.coshell.core.domain.settings.ReportLayout
+import app.coshell.reports.edit.ReportCardRows
+import app.coshell.ui.top.ScreenTopBar
 import app.coshell.core.designsystem.R as DesignR
 
 // «Настройки → Экраны» (boards Set1Screens, Set1Ops, Set1Reports, Set1Accounts): what each screen shows and how it opens.
@@ -111,18 +120,25 @@ fun ReportsSettingsRoute(onBack: () -> Unit, viewModel: ScreenOptionsViewModel =
 @Composable
 fun ReportsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> ScreenOptions) -> Unit, onBack: () -> Unit) {
     val starts = ReportsStart.entries
-    GroupScaffold(R.string.reports_title, onBack) {
-        item { SectionTitle(stringResource(R.string.settings_reports_period)) }
-        item {
+    val layout = options.reports
+    val reorder = rememberReorderState()
+    // One scrolling column, not GroupScaffold: the cards are dragged right here (#826), and a drag list can't live in a LazyColumn.
+    Scaffold(topBar = { ScreenTopBar(stringResource(R.string.reports_title), onBack = onBack) }) { padding ->
+        CoShellReorderColumn(
+            state = reorder,
+            keys = layout.visible,
+            onDrop = { drop -> (drop.key as? ReportCard)?.let { card -> change { it.copy(reports = it.reports.moveShown(card, drop.index)) } } },
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = underBars(padding),
+        ) {
+            SectionTitle(stringResource(R.string.settings_reports_period))
             PickCard(
                 title = stringResource(R.string.settings_reports_open_on),
                 labels = listOf(R.string.settings_reports_month, R.string.settings_reports_quarter, R.string.settings_reports_year).map { stringResource(it) },
                 selected = starts.indexOf(options.reportsStart),
                 onSelect = { i -> change { it.copy(reportsStart = starts[i]) } },
             )
-        }
-        item { SectionTitle(stringResource(R.string.settings_reports_compare_section)) }
-        item {
+            SectionTitle(stringResource(R.string.settings_reports_compare_section))
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row {
                     CoShellSwitchRow(
@@ -131,6 +147,10 @@ fun ReportsSettingsScreen(options: ScreenOptions, change: ((ScreenOptions) -> Sc
                     )
                 }
             }
+            SectionTitle(stringResource(R.string.report_cards_section))
+            CoShellHint(stringResource(R.string.report_cards_help), Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.s))
+            ReportCardRows(layout, reorder, onChange = { l -> change { it.copy(reports = l) } }, rowModifier = Modifier.padding(horizontal = Spacing.l))
+            ResetLink(enabled = layout != ReportLayout()) { change { it.copy(reports = ReportLayout()) } }
         }
     }
 }

@@ -58,6 +58,8 @@ data class ScreenOptions(
     /** «Отчёты»: the period they open on and whether the previous period is compared. */
     val reportsStart: ReportsStart = ReportsStart.MONTH,
     val reportsCompare: Boolean = true,
+    /** «Отчёты» (#826): the cards of the feed and their order. */
+    val reports: ReportLayout = ReportLayout(),
     /** «Ввод операции → Отклик»: vibration on taps and on a saved transaction. */
     val haptics: Boolean = true,
     /** «Данные и копия → Сеть»: sync only on Wi-Fi (or another unmetered network), not on mobile data. */

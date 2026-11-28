@@ -33,6 +33,7 @@ val SETTINGS_ENTRIES: List<SettingsEntry> = listOf(
     SettingsEntry(R.string.settings_bar_title, R.string.settings_screens_title, SettingsTarget.BAR),
     SettingsEntry(R.string.nav_transactions, R.string.settings_screens_title, SettingsTarget.OPS),
     SettingsEntry(R.string.reports_title, R.string.settings_screens_title, SettingsTarget.REPORTS),
+    SettingsEntry(R.string.report_cards_search, R.string.settings_screens_title, SettingsTarget.REPORTS),
     SettingsEntry(R.string.nav_accounts, R.string.settings_screens_title, SettingsTarget.ACCOUNTS),
     SettingsEntry(R.string.privacy_pin, R.string.privacy_title, SettingsTarget.PRIVACY),
     SettingsEntry(R.string.privacy_biometric, R.string.privacy_title, SettingsTarget.PRIVACY),

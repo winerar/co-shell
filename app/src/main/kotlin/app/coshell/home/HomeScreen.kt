@@ -1,5 +1,7 @@
 package app.coshell.home
 
+import app.coshell.ui.edit.longPressToEdit
+
 import app.coshell.converter.ConverterEntry
 import app.coshell.core.domain.hints.FirstStepsState
 import app.coshell.core.domain.hints.HintId

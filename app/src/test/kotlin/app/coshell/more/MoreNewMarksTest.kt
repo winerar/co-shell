@@ -27,9 +27,9 @@ class MoreNewMarksTest {
 
     @Test
     fun `every new feature key shows the pill on its place`() {
-        compose.setContent { CoShellTheme { MoreScreen(MoreActions(), MoreState(newMarks = NewFeatures.all.toSet())) } }
+        compose.setContent { CoShellTheme { MoreScreen(MoreActions(), MoreState(newMarks = NewFeatures.more.toSet())) } }
         val pill = compose.activity.getString(R.string.new_mark)
-        assertEquals(NewFeatures.all.size, compose.onAllNodesWithText(pill).fetchSemanticsNodes().size)
+        assertEquals(NewFeatures.more.size, compose.onAllNodesWithText(pill).fetchSemanticsNodes().size)
     }
 
     @Test

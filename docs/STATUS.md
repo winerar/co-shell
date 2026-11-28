@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2524 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v27.
+- Тесты: всего 2542 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v27.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,5 +69,5 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-28, `ccr-9e2b9224-k2ojup`: «Ещё» и «Настройки» компактнее (опрос https://claude.ai/artifact/CwiNDsY8Kvw9gP1CyDtPtK — А·А, объединение — по рекомендации).
-«Ещё» — сетки значков `CoShellMenuGrid` (новый компонент) + 3 строки, без прокрутки; «Данные» = копия/импорт/экспорт; «Настройки» — оглавление с поиском `SettingsSearch.kt`, «Помощь» — свой экран, «Конфиденциальность» — в «Настройках». Доски `More`, `MoreTiles*`, `Set1Root`, `Set1RootSearch`, `Set1Help`; истории `more_tiles`, `settings_search`. Не проверено на телефоне.
+2026-11-28, `ccr-9e2b9224-k2ojup` (ч. 2, после PR #819): метка «новое» ведёт до пункта — «Ещё → Настройки» → «Экраны»/«Внешний вид» → «Нижняя панель»/«Строки в списках».
+Ключи пунктов — `NewFeatures.deeper` + путь `inside` (`NewMarkTree`), одно состояние на приложение — `NewMarkCenter`; телефон, уже открывший «Настройки», нового внутри не видит (`inherits`). Не проверено на телефоне.

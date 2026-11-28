@@ -3,6 +3,8 @@ package app.coshell.release
 import app.coshell.core.domain.newmark.NewMarks
 import app.coshell.newmark.MemoryStore
 import app.coshell.newmark.NewFeatures
+import app.coshell.newmark.NewMarkCenter
+import app.coshell.newmark.EVERYWHERE
 import app.coshell.newmark.NewMarksViewModel
 import app.coshell.testing.MainDispatcherRule
 import kotlin.time.Clock
@@ -35,7 +37,7 @@ class ReleaseNoticeViewModelTest {
 
     @Test
     fun `a fresh install that opened More first still has no card`() {
-        NewMarksViewModel(marks(wasUpdated = false))
+        NewMarksViewModel(NewMarkCenter(marks(wasUpdated = false)))
         assertFalse(ReleaseNoticeViewModel(marks(wasUpdated = false)).visible.value)
     }
 
@@ -50,6 +52,6 @@ class ReleaseNoticeViewModelTest {
     @Test
     fun `the release key does not mark a row of More`() {
         ReleaseNoticeViewModel(marks())
-        assertEquals(NewFeatures.all.toSet(), NewMarksViewModel(marks()).current.value)
+        assertEquals(EVERYWHERE, NewMarksViewModel(NewMarkCenter(marks())).current.value)
     }
 }

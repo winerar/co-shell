@@ -23,7 +23,7 @@ class ReleaseNoticeViewModel @Inject constructor(private val marks: NewMarks) : 
 
     init {
         viewModelScope.launch {
-            _visible.value = ReleaseStories.current.isNotEmpty() && ReleaseStories.KEY in marks.current(NewFeatures.tracked)
+            _visible.value = ReleaseStories.current.isNotEmpty() && ReleaseStories.KEY in marks.current(NewFeatures.tracked, NewFeatures.inherits)
         }
     }
 

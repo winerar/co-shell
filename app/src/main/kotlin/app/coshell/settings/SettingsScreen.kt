@@ -26,6 +26,9 @@ import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.ReminderSettings
 import app.coshell.core.domain.settings.ThemeMode
 import app.coshell.core.domain.settings.ThemePalette
+import app.coshell.newmark.NewFeatures
+import app.coshell.newmark.newMarkPill
+import app.coshell.newmark.newMarks
 import app.coshell.recurring.notify.ReminderSettingsViewModel
 import app.coshell.theme.ThemeSettingsViewModel
 import app.coshell.theme.components.labelRes
@@ -46,6 +49,8 @@ data class SettingsState(
     val reminders: Boolean = true,
     val reminderTime: Int = ReminderSettings.DEFAULT_TIME,
     val currencies: String = "",
+    /** Places wearing «новое» (`NewMarkCenter`): a group shows the pill while something inside it is new. */
+    val newMarks: Set<String> = emptySet(),
 )
 
 @Composable
@@ -62,7 +67,7 @@ fun SettingsRoute(
     val codes by accounts.currencies.collectAsStateWithLifecycle()
     val joined = codes.fold("") { acc, c -> if (acc.isEmpty()) c else stringResource(R.string.settings_join, acc, c) }
     SettingsScreen(
-        SettingsState(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, remindersOn, reminderTime, joined),
+        SettingsState(mode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, remindersOn, reminderTime, joined, newMarks()),
         actions,
     )
 }
@@ -99,6 +104,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.index(state: Settings
                 GroupRow(
                     DesignR.drawable.ic_contrast, R.string.appearance_title,
                     stringResource(R.string.settings_join, stringResource(state.themeMode.labelRes), stringResource(state.palette.labelRes)),
+                    isNew = NewFeatures.SETTINGS_LOOK in state.newMarks,
                 ) { actions.onOpen(SettingsTarget.LOOK) }
             }
             row { GroupRow(DesignR.drawable.ic_add, R.string.settings_input_title, stringResource(R.string.settings_index_input)) { actions.onOpen(SettingsTarget.INPUT) } }
@@ -108,7 +114,12 @@ private fun androidx.compose.foundation.lazy.LazyListScope.index(state: Settings
                     if (state.reminders) stringResource(R.string.settings_index_notices_on, clockText(state.reminderTime)) else stringResource(R.string.settings_index_notices_off),
                 ) { actions.onOpen(SettingsTarget.NOTICES) }
             }
-            row { GroupRow(DesignR.drawable.ic_home, R.string.settings_screens_title, stringResource(R.string.settings_index_screens)) { actions.onOpen(SettingsTarget.SCREENS) } }
+            row {
+                GroupRow(
+                    DesignR.drawable.ic_home, R.string.settings_screens_title, stringResource(R.string.settings_index_screens),
+                    isNew = NewFeatures.SETTINGS_SCREENS in state.newMarks,
+                ) { actions.onOpen(SettingsTarget.SCREENS) }
+            }
             row { GroupRow(DesignR.drawable.ic_shield_lock, R.string.privacy_title, stringResource(R.string.privacy_menu_hint)) { actions.onOpen(SettingsTarget.PRIVACY) } }
             row { GroupRow(DesignR.drawable.ic_lightbulb, R.string.settings_help_title, stringResource(R.string.settings_index_help)) { actions.onOpen(SettingsTarget.HELP) } }
         }
@@ -150,7 +161,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.results(query: String
     }
 }
 
-/** A group of the index: its icon, name, and what is set now (or what is inside). */
+/** A group of the index: its icon, name, and what is set now (or what is inside); «новое» while something inside is new. */
 @Composable
-private fun GroupRow(@DrawableRes icon: Int, @StringRes title: Int, value: String, onClick: () -> Unit) =
-    CoShellMenuRow(icon, stringResource(title), onClick, subtitle = value)
+private fun GroupRow(@DrawableRes icon: Int, @StringRes title: Int, value: String, isNew: Boolean = false, onClick: () -> Unit) =
+    CoShellMenuRow(icon, stringResource(title), onClick, subtitle = value, mark = newMarkPill(isNew))

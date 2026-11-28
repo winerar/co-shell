@@ -22,6 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.newmark.NewFeatures
+import app.coshell.newmark.newMarkPill
+import app.coshell.newmark.seenMark
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellSegmented
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,7 +61,7 @@ fun AppearanceRoute(
     var languageOpen by rememberSaveable { mutableStateOf(false) }
     val language = remember(languageOpen) { LanguageRow(AppLanguage.chosen(context), AppLanguage.current()) }
     AppearanceScreen(
-        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, language, compactLists),
+        state = AppearanceState(themeMode ?: ThemeMode.SYSTEM, palette ?: ThemePalette.LIME, language, compactLists, seenMark(NewFeatures.SETTINGS_DENSITY)),
         actions = AppearanceActions(
             onBack = onBack,
             onLanguageClick = { languageOpen = true },
@@ -79,6 +82,8 @@ data class AppearanceState(
     val language: LanguageRow = LanguageRow(),
     /** «Плотность списков»: compact rows in «Операциях» and «Счетах». */
     val compactLists: Boolean = false,
+    /** «Строки в списках» wears «новое» on this visit (#775; the mark leads here from «Ещё → Настройки»). */
+    val densityNew: Boolean = false,
 )
 
 data class AppearanceActions(
@@ -100,7 +105,7 @@ fun AppearanceScreen(state: AppearanceState, actions: AppearanceActions) {
             item { SectionTitle(stringResource(R.string.theme_title)) }
             item { ThemeModePicker(selected = state.themeMode, onSelect = actions.onThemeModeChange) }
             item { PaletteGrid(selected = state.palette, onSelect = actions.onPaletteChange, modifier = Modifier.padding(bottom = Spacing.l)) }
-            item { SectionTitle(stringResource(R.string.density_section)) }
+            item { SectionTitle(stringResource(R.string.density_section), newMarkPill(state.densityNew)) }
             item {
                 CoShellSegmented(
                     labels = listOf(stringResource(R.string.density_comfortable), stringResource(R.string.density_compact)),

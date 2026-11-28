@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.coshell.R
+import app.coshell.newmark.newMarkPill
 import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellMenuRow
@@ -29,14 +30,23 @@ import app.coshell.core.designsystem.R as DesignR
 
 /** «Экраны»: the list of screens that have options. */
 @Composable
-fun ScreensSettingsScreen(onHome: () -> Unit, onBar: () -> Unit, onOps: () -> Unit, onReports: () -> Unit, onAccounts: () -> Unit, onBack: () -> Unit) {
+fun ScreensSettingsScreen(
+    onHome: () -> Unit,
+    onBar: () -> Unit,
+    onOps: () -> Unit,
+    onReports: () -> Unit,
+    onAccounts: () -> Unit,
+    onBack: () -> Unit,
+    /** «Нижняя панель» wears «новое» (#154; the mark leads here from «Ещё → Настройки»). */
+    barNew: Boolean = false,
+) {
     val c = CategoryPalette.colors
     GroupScaffold(R.string.settings_screens_title, onBack) {
         item { SectionTitle(stringResource(R.string.settings_screens_title)) }
         item {
             CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).padding(bottom = Spacing.l)) {
                 row { CoShellMenuRow(DesignR.drawable.ic_home, stringResource(R.string.nav_home), onHome, subtitle = stringResource(R.string.settings_home_items)) }
-                row { CoShellMenuRow(DesignR.drawable.ic_more_horiz, stringResource(R.string.settings_bar), onBar, subtitle = stringResource(R.string.settings_bar_items)) }
+                row { CoShellMenuRow(DesignR.drawable.ic_more_horiz, stringResource(R.string.settings_bar), onBar, subtitle = stringResource(R.string.settings_bar_items), mark = newMarkPill(barNew)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_receipt_long, stringResource(R.string.nav_transactions), onOps, subtitle = stringResource(R.string.settings_ops_items)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_bar_chart, stringResource(R.string.reports_title), onReports, subtitle = stringResource(R.string.settings_reports_items)) }
                 row { CoShellMenuRow(DesignR.drawable.ic_account_balance_wallet, stringResource(R.string.nav_accounts), onAccounts, subtitle = stringResource(R.string.settings_accounts_items)) }

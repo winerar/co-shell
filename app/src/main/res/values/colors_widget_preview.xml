@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widgets' picker preview (#821): drawn by the launcher before the app runs, so the default Lime theme is fixed here (WidgetColors). -->
+<resources>
+    <color name="widget_preview_card">#FFF4FFE6</color>
+    <color name="widget_preview_card_edge">#FF779749</color>
+    <color name="widget_preview_main">#FFB8FF2E</color>
+    <color name="widget_preview_main_ink">#FF0B0B0B</color>
+    <color name="widget_preview_main_edge">#FF587E05</color>
+    <color name="widget_preview_quiet">#FFF1E3FF</color>
+    <color name="widget_preview_quiet_ink">#FF0B0B0B</color>
+</resources>

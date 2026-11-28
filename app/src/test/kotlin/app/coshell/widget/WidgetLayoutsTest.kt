@@ -6,6 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
 class WidgetLayoutsTest {
     private fun item(id: String, amount: String = "") = TemplateItem(id = id, name = "T$id", type = TransactionType.EXPENSE, accountName = "A", amount = amount)
@@ -38,5 +39,17 @@ class WidgetLayoutsTest {
     fun `a chip shows the amount or asks for it`() {
         assertEquals("3 500 ARS", WidgetLayouts.amountLine(item("1", "3 500 ARS"), "ask"))
         assertEquals("ask", WidgetLayouts.amountLine(item("2"), "ask"))
+    }
+
+    @Test
+    fun `both widgets ask the launcher for a single row and the coded widths`() {
+        // #821: minHeight 74 dp made launchers place 2x2 and 4x2 instead of one row.
+        for ((file, width) in listOf("widget_quick_info.xml" to WidgetLayouts.QUICK_MIN_WIDTH_DP, "widget_templates_info.xml" to WidgetLayouts.TEMPLATES_MIN_WIDTH_DP)) {
+            val xml = File("src/main/res/xml/$file").readText()
+            assertTrue(file, xml.contains("android:minHeight=\"${WidgetLayouts.ONE_ROW_DP}dp\""))
+            assertTrue(file, xml.contains("android:minResizeHeight=\"${WidgetLayouts.ONE_ROW_DP}dp\""))
+            assertTrue(file, xml.contains("android:minWidth=\"${width}dp\""))
+            assertTrue(file, xml.contains("android:targetCellHeight=\"1\""))
+        }
     }
 }

@@ -425,6 +425,9 @@ transactions_changed_many
 update_installing_manual
 update_pill
 widget_locked
+widget_preview_bus
+widget_preview_coffee
+widget_preview_rent
 widget_quick_desc
 widget_quick_name
 widget_template_ask

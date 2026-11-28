@@ -13,6 +13,13 @@ object WidgetLayouts {
     /** A cell is ≈ 74 dp: 3×1 is ≈ 220 dp, 2×1 ≈ 146 dp; the two words need about 180 dp. */
     const val WORDS_MIN_DP = 180
 
+    /** One launcher row: Android's `70 × n − 30` for n = 1; a larger minimum made launchers place 2×2 and 4×2 (#821). */
+    const val ONE_ROW_DP = 40
+
+    /** The smallest widths, as in `widget_*_info.xml`: 2×1 and 4×1. */
+    const val QUICK_MIN_WIDTH_DP = 110
+    const val TEMPLATES_MIN_WIDTH_DP = 250
+
     /** Two rows of chips need about 110 dp; one row fits in a single cell. */
     const val GRID_MIN_HEIGHT_DP = 110
 

@@ -21,6 +21,8 @@ internal object TemplatesWidgetViews {
     private fun strip(context: Context, c: WidgetColors, items: List<TemplateItem>): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_templates_strip).apply {
             paintCard(c.card, c.cardEdge)
+            // Launchers reapply new views onto the old ones: without clearing, every update appended the chips again (#821).
+            removeAllViews(R.id.t_row)
             items.forEachIndexed { i, item -> addView(R.id.t_row, chip(context, c, item, main = i == 0)) }
             addView(R.id.t_row, plus(context, c))
         }
@@ -28,6 +30,8 @@ internal object TemplatesWidgetViews {
     private fun grid(context: Context, c: WidgetColors, items: List<TemplateItem>): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_templates_grid).apply {
             paintCard(c.card, c.cardEdge)
+            removeAllViews(R.id.t_row1)
+            removeAllViews(R.id.t_row2)
             // Cells: the templates, then «Все шаблоны ›»; two per row.
             val cells = items.mapIndexed { i, item -> chip(context, c, item, main = i == 0) } + all(context, c)
             cells.forEachIndexed { i, cell -> addView(if (i < 2) R.id.t_row1 else R.id.t_row2, cell) }

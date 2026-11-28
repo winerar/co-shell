@@ -57,6 +57,31 @@ class NewMarksTest {
         marks.opened("recurring")
         assertEquals(setOf("reports"), marks.current(listOf("recurring", "reports")))
     }
+
+    @Test
+    fun `a place split out of an opened one is not new`() = runTest {
+        marks().current(listOf("settings"))
+        marks().opened("settings")
+        assertEquals(emptySet(), marks().current(listOf("settings", "settings.bar"), mapOf("settings.bar" to "settings")))
+    }
+
+    @Test
+    fun `a place split out of a marked one keeps its days`() = runTest {
+        marks().current(listOf("settings"))
+        clock.now += 5.days
+        val inherits = mapOf("settings.bar" to "settings")
+        assertEquals(setOf("settings", "settings.bar"), marks().current(listOf("settings", "settings.bar"), inherits))
+        clock.now += 2.days
+        assertEquals(emptySet(), marks().current(listOf("settings", "settings.bar"), inherits))
+    }
+
+    @Test
+    fun `a split place has its own mark once seen`() = runTest {
+        val inherits = mapOf("settings.bar" to "settings", "settings.density" to "settings")
+        marks().current(listOf("settings", "settings.bar", "settings.density"), inherits)
+        marks().opened("settings.bar")
+        assertEquals(setOf("settings", "settings.density"), marks().current(listOf("settings", "settings.bar", "settings.density"), inherits))
+    }
 }
 
 private class MutableClock(var now: Instant) : Clock {

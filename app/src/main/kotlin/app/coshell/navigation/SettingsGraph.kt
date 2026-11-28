@@ -4,6 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import app.coshell.appearance.AppearanceRoute
 import app.coshell.export.ExportRoute
+import app.coshell.newmark.NewFeatures
+import app.coshell.newmark.newMarks
+import app.coshell.newmark.seenMark
 import app.coshell.privacy.pin.PinSetupRoute
 import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.settings.AccountsSettingsRoute
@@ -61,6 +64,7 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
             onReports = { navController.navigate(ReportsSettingsDestination) },
             onAccounts = { navController.navigate(AccountsSettingsDestination) },
             onBack = { navController.popBackStack() },
+            barNew = NewFeatures.SETTINGS_BAR in newMarks(),
         )
     }
     screen<HomeSettingsDestination> {
@@ -74,7 +78,10 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
         BalanceAccountsRoute(onBack = { navController.popBackStack() })
     }
     screen<HomeDetailsSettingsDestination> { HomeDetailsRoute(onBack = { navController.popBackStack() }) }
-    screen<BarSettingsDestination> { BarSettingsRoute(onBack = { navController.popBackStack() }) }
+    screen<BarSettingsDestination> {
+        seenMark(NewFeatures.SETTINGS_BAR)
+        BarSettingsRoute(onBack = { navController.popBackStack() })
+    }
     screen<OpsSettingsDestination> { OpsSettingsRoute(onBack = { navController.popBackStack() }) }
     screen<ReportsSettingsDestination> { ReportsSettingsRoute(onBack = { navController.popBackStack() }) }
     screen<AccountsSettingsDestination> { AccountsSettingsRoute(onBack = { navController.popBackStack() }) }

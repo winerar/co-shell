@@ -3,10 +3,13 @@ package app.coshell.settings
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
+import app.coshell.newmark.NewFeatures
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -67,5 +70,11 @@ class SettingsSearchTest {
         compose.onNodeWithText(compose.activity.getString(R.string.privacy_title)).performClick()
         compose.waitForIdle()
         assertEquals(listOf(SettingsTarget.PRIVACY), opened)
+    }
+
+    @Test
+    fun `a group with something new inside wears the pill`() {
+        compose.setContent { CoShellTheme { SettingsScreen(SettingsState(newMarks = setOf(NewFeatures.SETTINGS_SCREENS)), SettingsActions()) } }
+        compose.onAllNodesWithText(compose.activity.getString(R.string.new_mark)).assertCountEquals(1)
     }
 }

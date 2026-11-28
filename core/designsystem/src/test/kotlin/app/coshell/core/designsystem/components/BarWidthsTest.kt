@@ -60,4 +60,15 @@ class BarWidthsTest {
         assertTrue(BarWidths.fits(50.dp, 77.dp, 8.dp))
         assertTrue(!BarWidths.fits(50.dp, 49.dp, 8.dp))
     }
+
+    @Test
+    fun `spans put the pill in each final slot with the plus between the halves`() {
+        val spans = BarWidths.spans(listOf(100, 48, 74, 74), 64, 2)
+        assertEquals(listOf(2 to 98, 102 to 146, 214 to 284, 288 to 358), spans)
+    }
+
+    @Test
+    fun `spans stop where a row that rounded past the bar squeezes its last cell`() {
+        assertEquals(288 to 357, BarWidths.spans(listOf(100, 48, 74, 75), 64, 2, total = 359).last())
+    }
 }

@@ -69,5 +69,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-28, `ccr-01faf5ef-4o5gow`: подготовка к приватному репо (#252) — артефакты только по делу и на 3 дня (лимит 500 МБ), автослияние — шагом CI (без `workflow_run`), отзывы и доска — раз в 12 ч (`ci.md` §«Артефакты»).
-Оценка расхода при нынешнем темпе (5–10 PR в день) — около 2000 мин/мес и выше: следить за billing после 1 декабря.
+2026-11-28, `ccr-2187f357-jpif0x`: #826 «Отчёты» — порядок и скрытие карточек, свои отчёты: опрос https://claude.ai/artifact/HjjfRZxRtXrhuThg7b8P5o (доски `scripts/agent/mockup_poll_reports826.py`, `docs/design/poll-reports-826.json`); код — после ответа.

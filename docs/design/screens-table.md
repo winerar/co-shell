@@ -59,8 +59,8 @@
 | Настройки: ввод операции | Set1Entry | settings_input | ✓ | ✓ |
 | Настройки: уведомления | Set1Notices | settings_notices | ✓ | ✓ |
 | Настройки: данные и копия | Set1Data | settings_data | ✓ | ✓ |
-| Настройки: поиск | Set1RootSearch | settings_search | — | — |
-| Настройки: помощь | Set1Help | settings_help | — | — |
+| Настройки: поиск | Set1RootSearch | settings_search | — | ✓ |
+| Настройки: помощь | Set1Help | settings_help | ✓ | ✓ |
 | Резервная копия | Backup | backup | ✓ | ✓ |
 | Копия: автоматическая | BackupAuto | backup_auto | ✓ | ✓ |
 | Ещё | More | more | ✓ | ✓ |
@@ -122,8 +122,7 @@
 - Семья: удалить семью? (нет эталона: light, dark)
 - Семья: удалить аккаунт? (нет эталона: light, dark)
 - Семья: вас убрали (нет эталона: light, dark)
-- Настройки: поиск (settings_search: light, dark)
-- Настройки: помощь (settings_help: light, dark)
+- Настройки: поиск (settings_search: light)
 - Долг: новый (нет эталона: light, dark)
 - Долг: карточка (нет эталона: light, dark)
 - Долг: вернули часть (нет эталона: light, dark)

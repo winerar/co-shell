@@ -64,9 +64,18 @@ def detail(v, icon, lbl, value, empty_=False):
                 '<span style="font-size: 14px; color: %s;">%s</span></span>' % (MUTED, lbl, MUTED if empty_ else INK, value))
 
 
+def detail_chip(icon, text=''):
+    """CoShellDetailChip (#818): pill 40 — icon + one line; empty detail — icon only (a circle 40)."""
+    pad = 'padding: 0 14px 0 12px;' if text else 'width: 40px; justify-content: center;'
+    word = '<span style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">%s</span>' % text if text else ''
+    return ('<span style="height: 40px; box-sizing: border-box; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; min-width: 0; %s%s">%s%s</span>'
+            % (KEY, pad, 'flex: 1;' if len(text) > 10 else 'flex: none;', svg(icon, MUTED, 18), word))
+
+
 def tiles(v):
     return col(tile(v, check(v, 'off') + two_lines('Это возврат', 'деньги вернули')), tile(v, check(v, 'on') + two_lines('Это возврат', 'деньги вернули')),
-               '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">%s%s</div>' % (detail(v, 'calendar', 'Дата', 'Сегодня, 15 ноя'), detail(v, 'note', 'Заметка', 'Нет', True)))
+               '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">%s%s</div>' % (detail(v, 'calendar', 'Дата', 'Сегодня, 15 ноя'), detail(v, 'note', 'Заметка', 'Нет', True)),
+               '<div style="display: flex; gap: 6px;">%s%s%s%s</div>' % (detail_chip('calendar', 'Сегодня'), detail_chip('cart', 'Кофейня «Зерно»'), detail_chip('note'), detail_chip('tag')))
 
 
 def sw(v, on):
@@ -167,7 +176,7 @@ CHOICE = [
     ('Пилюли выбора', pills, 'CoShellChoicePill(text, selected)'),
     ('Счётчик', counter, 'CoShellCounter(value, onStep, minusLabel, plusLabel, caption, canMinus, canPlus, mono)'),
     ('Отметки', marks, 'CoShellCheckMark(state) · CoShellRadioMark(selected)'),
-    ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty)'),
+    ('Плитки формы', tiles, 'CoShellCheckTile · CoShellDetailTile(icon, label, value, empty) · CoShellDetailChip(icon, text?, label) — строка «Деталей» шторки ввода (#818)'),
     ('Строка-переключатель', switch_lines, 'CoShellSwitchLine(title, subtitle, checked)'),
     ('Раскрытие', expands, 'CoShellExpandIcon(expanded)'),
     ('Сетка дней', days, 'CoShellDayGrid(selected, days, markedDay)'),

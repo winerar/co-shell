@@ -169,8 +169,12 @@ def amount_slot(v):
              '<span style="height: 36px; padding: 0 14px; border-radius: 999px; background: %s; display: inline-flex; align-items: center; font-size: 14px;">%s</span></div>'
              % (FIELD, w, frame, '<span style="font-size: 12px; color: %s;">%s</span>' % (MUTED, label) if label else '', MONO, num, CHIP, cur))
         return f + ('<div style="font-size: 12px; color: %s; padding: 0 16px;">%s</div>' % (msg_color, msg) if msg else '')
-    return col(slot('', '1 250,00', 'USD', INK, 2), slot('Чек', '13 300', 'ARS', OUTLINE, 1, '1 USDT = 1 015 ARS'), slot('', '0', 'USD', PINK, 2, 'Введите сумму', PINK),
-               cap('CoShellAmountSlot: в покое — рамка outline 1 dp; клавиатура пишет сюда — рамка цветом текста 2 dp; ошибка — красная; валюта — плашка'))
+    compact = ('<div style="display: flex; align-items: center; gap: 8px;"><span style="height: 40px; padding: 0 4px 0 14px; border-radius: 999px; background: %s; box-shadow: inset 0 0 0 1px %s; '
+               'display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;"><span style="font-size: 12px; color: %s;">Покупка</span><b style="%s font-size: 17px;">13 300</b>'
+               '<span style="height: 32px; padding: 0 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px %s; display: inline-flex; align-items: center; font-size: 14px;">ARS ▾</span></span>'
+               '<span style="font-size: 12px; color: %s; %s">1 USDT = 1 015,27 ARS</span></div>' % (FIELD, OUTLINE, MUTED, MONO, OUTLINE, MUTED, MONO))
+    return col(slot('', '1 250,00', 'USD', INK, 2), slot('Чек', '13 300', 'ARS', OUTLINE, 1, '1 USDT = 1 015 ARS'), slot('', '0', 'USD', PINK, 2, 'Введите сумму', PINK), compact,
+               cap('compact (#818) — пилюля 40 «Покупка 13 300 ARS ▾», курс рядом серым · ' 'CoShellAmountSlot: в покое — рамка outline 1 dp; клавиатура пишет сюда — рамка цветом текста 2 dp; ошибка — красная; валюта — плашка'))
 
 
 NEW = [
@@ -181,7 +185,7 @@ NEW = [
     ('Разделитель и загрузка', divider_loading, 'HorizontalDivider → CoShellDivider · CircularProgressIndicator → CoShellLoading(size)'),
     ('Аватар участника', avatars, 'CoShellAvatar(size, you, online) · CoShellAvatarStack'),
     ('Точка и статус', dots_status, 'CoShellDot(tone) · CoShellStatusChip(tone) · CoShellTimelineDot(reached, lineReached)'),
-    ('Сумма на клавиатуре', amount_slot, 'AmountSlot → CoShellAmountSlot(label, currency | trailing, active, isError, main)'),
+    ('Сумма на клавиатуре', amount_slot, 'AmountSlot → CoShellAmountSlot(label, currency | trailing, active, isError, main, compact)'),
     ('Выбор иконки и цвета', strips, 'CoShellIconStrip · CoShellColorStrip'),
     ('Превью карточки счёта', acc_cards, 'CoShellAccountCard (цвет банка, чернила по контрасту)'),
     ('Кнопки: оттенки', buttons, 'CoShellButton(tone = Primary | Outline | Danger | Tonal | Text, enabled)'),

@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.core.designsystem.R
@@ -23,6 +24,8 @@ import app.coshell.core.designsystem.category.CategoryPalette
 import app.coshell.core.designsystem.category.categoryColor
 import app.coshell.core.designsystem.components.CoShellAlertDialog
 import app.coshell.core.designsystem.components.CoShellAmountField
+import app.coshell.core.designsystem.components.CoShellAmountSlot
+import app.coshell.core.designsystem.components.CoShellDetailChip
 import app.coshell.core.designsystem.components.CoShellAvatar
 import app.coshell.core.designsystem.components.CoShellBottomBar
 import app.coshell.core.designsystem.components.CoShellButton
@@ -158,6 +161,21 @@ fun CounterSample() {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.m)) {
         CoShellCounter("7:30", onStep = {}, minusLabel = "Раньше", plusLabel = "Позже", caption = "шаг 15 минут", mono = true)
         CoShellCounter("В тот же день", onStep = {}, minusLabel = "Меньше", plusLabel = "Больше", caption = "до платежа", canMinus = false)
+    }
+}
+
+/** #818: a row of details (words or an icon alone) and the compact amount «Покупка 13 300 ARS». */
+@Composable
+fun DetailsSample() {
+    Column(verticalArrangement = Arrangement.spacedBy(Spacing.s)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+            CoShellDetailChip(painterResource(R.drawable.ic_calendar_today), "Сегодня", "Дата", onClick = {})
+            CoShellDetailChip(painterResource(R.drawable.ic_shopping_bag), "Кофейня «Зерно»", "Получатель", onClick = {}, modifier = Modifier.weight(1f, fill = false))
+            CoShellDetailChip(painterResource(R.drawable.ic_description), null, "Заметка", onClick = {})
+            CoShellDetailChip(painterResource(R.drawable.ic_sell), null, "Теги", onClick = {})
+        }
+        CoShellAmountSlot("13300", onClick = {}, label = "Покупка", currency = "ARS", compact = true)
+        CoShellAmountSlot("0", onClick = {}, label = "Покупка", currency = "ARS", compact = true, active = true)
     }
 }
 

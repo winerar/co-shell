@@ -45,7 +45,6 @@
     <string name="hint_month_end">El mes terminó. Mira el resumen.</string>
     <string name="hint_entry_minimal">Solo hacen falta el importe y la cuenta. Lo demás se puede omitir.</string>
     <string name="hint_keypad_math">Puedes sumar y restar: 300 + 150.</string>
-    <string name="hint_entry_refund">¿Te devolvieron dinero? Marca «Es una devolución».</string>
     <string name="hint_pin_forgot">PIN activado. Si lo olvidas, pulsa «¿Olvidaste el PIN?» al entrar.</string>
     <string name="hint_currency_receipt">Indica el importe de la compra y el tipo de cambio se calcula solo.</string>
 </resources>

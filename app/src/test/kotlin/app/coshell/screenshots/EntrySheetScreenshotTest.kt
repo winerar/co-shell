@@ -49,6 +49,11 @@ class EntrySheetScreenshotTest {
     @Test
     fun `entry sheet light`() = shot("entry_sheet_light") { sheet() }
 
+    /** A short phone (#818, poll «А»): one row of frequent categories and keys of 48 dp — the details still above the keypad. */
+    @Test
+    @Config(qualifiers = "ru-w360dp-h740dp-xhdpi")
+    fun `entry sheet short phone dark`() = shot("entry_sheet_short_dark", dark = true) { sheet() }
+
     /** A saved operation: the type switch next to «Дублировать» and «Удалить» (#509, board `EntryEdit`). */
     @Test
     fun `edit sheet dark`() = shot("entry_edit_dark", dark = true) { sheet(entrySheetSample.copy(isNew = false)) }

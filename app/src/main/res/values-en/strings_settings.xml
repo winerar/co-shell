@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Settings</string>
-    <string name="settings_intro">Settings of this phone. Totals currencies are shared by the family.</string>
     <string name="settings_look_items">Language · theme · palette · list density</string>
     <string name="settings_money_title">Money and dates</string>
     <string name="settings_money_items">Totals currencies · week start</string>
@@ -141,10 +140,6 @@
     <string name="settings_home_tile_uncategorized">Uncategorized</string>
     <string name="home_edit_hide">Hide</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
-    <string name="settings_group_all">All ›</string>
     <string name="settings_palette">Palette</string>
-    <string name="settings_screens_row">Overview, transactions, reports, accounts</string>
-    <string name="settings_screens_row_hint">what to show and in what order</string>
-    <string name="settings_menu_hint">Theme, input, notifications, screens</string>
     <string name="settings_help_title">Help</string>
 </resources>

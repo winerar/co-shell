@@ -36,6 +36,7 @@ ROWS = [
     ('Настройки: отчёты', 'Set1Reports', 'settings_reports'), ('Настройки: счета', 'Set1Accounts', 'settings_accounts'),
     ('Настройки: деньги и даты', 'Set1Money', 'settings_money'), ('Настройки: ввод операции', 'Set1Entry', 'settings_input'),
     ('Настройки: уведомления', 'Set1Notices', 'settings_notices'), ('Настройки: данные и копия', 'Set1Data', 'settings_data'),
+    ('Настройки: поиск', 'Set1RootSearch', 'settings_search'), ('Настройки: помощь', 'Set1Help', 'settings_help'),
    
    
 

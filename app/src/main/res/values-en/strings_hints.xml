@@ -39,7 +39,6 @@
     <string name="steps_done_text">You are already keeping a budget — and that is the hardest part.</string>
     <string name="hint_first_week">A week of entries. Order in your money starts with this.</string>
     <string name="hint_welcome_back">Welcome back. You can add what you spent in these days: pick the date in the transaction.</string>
-    <string name="hint_backup">You have plenty of entries now. Save a backup so nothing is lost: More → Backup.</string>
     <string name="hint_theme">You can make the app your own: More → Settings → Appearance.</string>
     <string name="hint_template">Spending repeats? Save a template and it goes in with one tap.</string>
     <string name="hint_open">Open</string>

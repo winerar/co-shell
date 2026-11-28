@@ -130,4 +130,4 @@ def stress(t, body):
     return '<div style="%s">%s</div>' % (STRESS, body)
 
 
-BOARDS = []  # picked В: now boards Set1Root, Set1RootMore, Set1RootEs (mockup_screens_fb_set.py)
+BOARDS = []  # picked В (2026-11-20); replaced by the index with search 2026-11-28: boards Set1Root, Set1RootSearch, Set1Help

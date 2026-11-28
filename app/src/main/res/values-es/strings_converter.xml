@@ -11,7 +11,6 @@
     <string name="converter_pick_get">Moneda que recibes</string>
     <string name="converter_pick_source">Convertir desde</string>
     <string name="converter_rows_hint">Toca una moneda para calcular desde ella</string>
-    <string name="converter_no_rate">Sin tipo de cambio. Añádelo: Más → Tipos de cambio</string>
     <string name="converter_row_no_rate">sin tipo</string>
     <string name="settings_home_converter">Conversor</string>
 </resources>

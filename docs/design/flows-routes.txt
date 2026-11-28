@@ -32,6 +32,7 @@ MoneySettingsDestination	Set1Money
 InputSettingsDestination	Set1Entry
 NoticeSettingsDestination	Set1Notices
 DataSettingsDestination	Set1Data
+HelpSettingsDestination	Set1Help
 CategoriesDestination	Categories
 BackupDestination	Backup
 WalletImportDestination	ImportStart

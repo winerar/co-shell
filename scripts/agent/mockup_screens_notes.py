@@ -161,13 +161,9 @@ def home_drafts():
 
 
 def more_drafts():
-    cnt = ('<span style="display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 999px; background: %s; font-size: 12px;">'
-           '<span style="width: 6px; height: 6px; border-radius: 50%%; background: %s;"></span>5</span>' % (mix(LIME, 18), LIME))
-    money = group([menu.r('Счета', 'Карты, наличные, вклады', 'wallet', PINK), menu.r('Категории', 'На что уходят деньги', 'folder', LIME),
-                   menu.r('Бюджеты', 'Лимиты на месяц', 'wallet', PINK), menu.r('Регулярные платежи', 'Аренда, подписки, зарплата', 'refresh', CYAN),
-                   menu.r('Быстрые заметки', 'Траты строками: кофе 3500', 'note', VIOLET), menu.r('Черновики', 'Из заметок: проверьте и запишите', 'draft', CYAN, cnt)])
-    body = label('Деньги', top=6) + money + label('Валюты', top=14) + menu.new_rates()
-    return tab_screen('Ещё', body, 'more')
+    """«Ещё»: «Заметки» and «Черновики» with the count on its icon (grid of poll 2026-11-28 «А»)."""
+    items = [(i, n, '5' if n == 'Черновики' else None) for i, n, _ in menu.MONEY]
+    return tab_screen('Ещё', label('Деньги', top=6) + menu_grid(items) + label('Валюты и семья', top=14) + menu_grid(menu.REST), 'more')
 
 
 BOARDS = [  # name, title, fn, row key (the functions already return a whole board)

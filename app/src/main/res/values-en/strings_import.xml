@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="import_title">Import from Wallet</string>
-    <string name="import_menu_hint">Bring in transactions from a CSV export</string>
     <string name="import_next">Next</string>
     <string name="import_do">Import</string>
     <string name="import_step_of">Step %1$d of %2$d</string>

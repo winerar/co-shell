@@ -38,17 +38,37 @@ def sw(title, sub='', on=True):
 
 # ---- root ------------------------------------------------------------------------------------------------------------
 
+def gr(title, sub, icon):
+    """A group of the index: `CoShellMenuRow` — icon on the second colour's tone, name, what is set now."""
+    return row(title, sub, tile_icon(icon, VIOLET), chevron(), min_h=56)
+
+
+SHIELD = 'M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6zM9 12l2 2 4-4'
+
+
 def root():
-    """Group cards (poll 2026-11-20, В): the main settings of each group inside its card, «Все ›» — the group screen."""
-    return inner_screen(sc.RU['title'], sc.cards_top(sc.RU))
+    """Index with search (poll 2026-11-28 «А», poll-more-settings.json): «Этот телефон» and «Для всей семьи», what is set now under
+    each group; every setting is one tap further on its group's screen. Code — `settings/SettingsScreen.kt`."""
+    phone = group([gr('Внешний вид', 'Тёмная · Лайм', 'spark'), gr('Ввод операции', 'Встряхивание, вибрация, счёт', 'plus'),
+                   gr('Уведомления', 'Платежи в 9:00', 'refresh'), gr('Экраны', 'Обзор, нижняя панель, списки', 'home'),
+                   gr('Конфиденциальность', 'PIN, отпечаток, скрытие сумм', SHIELD), gr('Помощь', 'Подсказки, знакомство, жесты', 'bulb')])
+    family = group([gr('Деньги и даты', 'USD · ARS · AMD', 'rate'), gr('Данные и копия', 'Копия, импорт, экспорт', 'archive')])
+    return inner_screen('Настройки', search('Найти настройку') + label('Этот телефон', top=14) + phone + label('Для всей семьи', top=14) + family)
 
 
-def root_more():
-    return inner_screen(sc.RU['title'], sc.cards_rest(sc.RU))
+def root_search():
+    """«Найти настройку»: names that match, under each — the screen it is on; a tap opens that screen (`SettingsSearch.kt`)."""
+    found = group([row('Вибрация', 'Ввод операции', '', chevron(), min_h=52)])
+    return inner_screen('Настройки', search('Найти настройку', 'вибр') + '<div style="height: 8px;"></div>' + found)
 
 
-def root_es():
-    return inner_screen(sc.ES['title'], sc.stress(sc.ES, sc.cards_top(sc.ES)))
+def help_screen():
+    """«Настройки → Помощь» — a group screen like the others (was the last card of «Настройки»): `settings/HelpSettings.kt`."""
+    hints = card(sw('Подсказки', 'Показываются', True).replace('{{div}}', '')
+                 + '<div style="padding: 0 16px 12px;">%s</div>' % button('Показать подсказки заново', 'outline', icon='refresh', mt=0))
+    more = group([gr('Знакомство с приложением', 'Шесть коротких историй', 'bulb'), gr('Жесты', 'Где удерживать и листать', 'info'),
+                  gr('Код приглашения', 'Выдан: Алекс', 'lock'), gr('Политика конфиденциальности', 'Что хранится и как удалить данные', 'file')])
+    return inner_screen('Помощь', label('Подсказки', top=6) + hints + label('Как пользоваться', top=14) + more)
 
 
 # ---- look ------------------------------------------------------------------------------------------------------------
@@ -270,17 +290,10 @@ def data():
     return inner_screen('Данные и копия', body)
 
 
-def more_row():
-    """«Ещё»: «Внешний вид» becomes «Настройки»."""
-    g = group([r('Настройки', 'Тёмная · Лайм', 'gear', VIOLET, VIOLETBG), r('Обратная связь', '1 ответ: сделано в 1.44', 'mail', LIME, LIMEBG)])
-    return tab_screen('Ещё', label('Приложение', top=6) + g, 'more')
-
-
 BOARDS = [  # name, title, fn, issue number
-    ('Set1Root', 'Настройки: карточки групп', root, 1118),
-    ('Set1RootMore', 'Настройки: прокрутка', root_more, 1118),
-    ('Set1RootEs', 'Настройки: es, 320 dp, ×1,3', root_es, 1118),
-    ('Set1More', 'Ещё: «Внешний вид» → «Настройки»', more_row, 1118),
+    ('Set1Root', 'Настройки: оглавление и поиск (опрос 2026-11-28 «А»)', root, 1118),
+    ('Set1RootSearch', 'Настройки: «Найти настройку» — «вибр»', root_search, 1118),
+    ('Set1Help', 'Помощь: подсказки, знакомство, жесты, код, политика', help_screen, 1118),
     ('Set1Look', 'Внешний вид: язык, тема, палитра, плотность списков', look, 1118),
     ('Set1Screens', 'Экраны: Обзор, Операции, Отчёты, Счета', screens, 1118),
     ('Set1Bar', 'Нижняя панель: вторая и третья вкладки (#154)', bar_settings, 1118),

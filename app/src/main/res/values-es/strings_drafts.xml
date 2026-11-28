@@ -11,7 +11,6 @@
     <string name="notes_menu_hint">Gastos en líneas: café 3500</string>
     <string name="drafts_title">Borradores</string>
     <string name="drafts_title_count">Borradores · %1$d</string>
-    <string name="drafts_menu_hint">De las notas: revisa y registra</string>
     <string name="drafts_hint_ready">Toca una fila para corregirla.</string>
     <string name="drafts_post">Registrar · %1$d</string>
     <string name="drafts_post_none">Registrar</string>

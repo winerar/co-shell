@@ -34,6 +34,9 @@ import app.coshell.core.domain.settings.ScreenOptions
 import app.coshell.settings.InputSettingsScreen
 import app.coshell.settings.MoneySettingsScreen
 import app.coshell.settings.NoticeSettingsScreen
+import app.coshell.settings.HelpActions
+import app.coshell.settings.HelpPreviewState
+import app.coshell.settings.HelpSettingsScreen
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsPreviewState
 import app.coshell.settings.SettingsScreen
@@ -396,6 +399,15 @@ class ScreensScreenshotTest {
 
     @Test
     fun `settings dark`() = shot("settings_dark", dark = true) { SettingsScreen(SettingsPreviewState, SettingsActions()) }
+
+    @Test
+    fun `settings search dark`() = shot("settings_search_dark", dark = true) { SettingsScreen(SettingsPreviewState, SettingsActions(), initialQuery = "вибр") }
+
+    @Test
+    fun `settings help light`() = shot("settings_help_light") { HelpSettingsScreen(HelpPreviewState, HelpActions()) }
+
+    @Test
+    fun `settings help dark`() = shot("settings_help_dark", dark = true) { HelpSettingsScreen(HelpPreviewState, HelpActions()) }
 
     @Test
     fun `settings money light`() = shot("settings_money_light") { MoneySettingsScreen(WeekStart.MONDAY, {}, {}, {}) }

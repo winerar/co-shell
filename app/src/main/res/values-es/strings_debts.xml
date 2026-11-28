@@ -51,7 +51,6 @@
     <string name="debts_close_text">Lo que queda, %1$s, se da por saldado; el dinero de las cuentas no se mueve.</string>
     <string name="debts_delete_title">¿Eliminar la deuda?</string>
     <string name="debts_delete_text">Se eliminan la deuda y todas las devoluciones; los saldos vuelven a como estaban.</string>
-    <string name="debts_menu_hint">Quién te debe y a quién debes</string>
     <string name="debts_soon_lent">%1$s devolverá</string>
     <string name="debts_soon_borrowed">Devuelves a %1$s</string>
     <string name="debts_soon_amount_in" translatable="false">+%1$s</string>

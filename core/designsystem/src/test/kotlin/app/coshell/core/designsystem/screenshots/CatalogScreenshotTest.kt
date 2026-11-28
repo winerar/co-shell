@@ -26,7 +26,9 @@ import app.coshell.core.designsystem.theme.CoShellPalette
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.tokens.Spacing
 import androidx.compose.foundation.layout.Column
+import app.coshell.core.designsystem.components.CoShellMenuGrid
 import app.coshell.core.designsystem.components.CoShellRowGroup
+import app.coshell.core.designsystem.components.MenuTile
 import app.coshell.core.designsystem.components.CoShellListRow
 import app.coshell.core.designsystem.components.CoShellSwitchRow
 import app.coshell.core.designsystem.components.CoShellSectionLabel
@@ -127,6 +129,12 @@ class CatalogScreenshotTest {
     @Test
     fun `row group light`() = shot("row_group_light") { RowGroupSample() }
 
+    @Test
+    fun `menu grid dark`() = shot("menu_grid_dark", dark = true) { Column(Modifier.padding(Spacing.l)) { MenuGridSample() } }
+
+    @Test
+    fun `menu grid light`() = shot("menu_grid_light") { Column(Modifier.padding(Spacing.l)) { MenuGridSample() } }
+
     /** #345: the question card and the sheet with the day grid. */
     @Test
     fun `modals dark`() = shot("modals_dark", dark = true) { ModalsCatalog() }
@@ -178,6 +186,20 @@ class CatalogScreenshotTest {
 }
 
 /** К5: a settings-like group — label, three rows with lines between them, a one-row danger group. */
+@Composable
+private fun MenuGridSample() {
+    CoShellMenuGrid(
+        listOf(
+            MenuTile(R.drawable.ic_account_balance_wallet, "Счета", {}),
+            MenuTile(R.drawable.ic_category, "Категории", {}),
+            MenuTile(R.drawable.ic_savings, "Бюджеты", {}),
+            MenuTile(R.drawable.ic_flag, "Цели", {}, mark = "новое"),
+            MenuTile(R.drawable.ic_refresh, "Регулярные", {}),
+            MenuTile(R.drawable.ic_draft, "Черновики", {}, mark = "3"),
+        ),
+    )
+}
+
 @Composable
 private fun RowGroupSample() {
     Column(Modifier.padding(Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.s)) {

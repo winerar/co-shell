@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.core.designsystem.theme.secondaryInk
@@ -56,17 +57,17 @@ fun CoShellMenuRow(
 }
 
 /**
- * The section's icon in a [Sizes.badgeSmall] circle (board Style3): the glyph in the theme's second colour on its 18 % tone —
+ * The section's icon in a [size] circle ([Sizes.badgeSmall] in rows, [Sizes.badge] in [CoShellMenuGrid]) (board Style3): the glyph in the theme's second colour on its 18 % tone —
  * menus speak in the second colour, the primary is kept for «now and action» (owner's poll 2026-11-23, #442 Б).
  */
 @Composable
-fun MenuIcon(@DrawableRes icon: Int, modifier: Modifier = Modifier) {
+fun MenuIcon(@DrawableRes icon: Int, modifier: Modifier = Modifier, size: Dp = Sizes.badgeSmall) {
     val ink = secondaryInk()
     Box(
-        modifier.size(Sizes.badgeSmall).background(lerp(MaterialTheme.colorScheme.surface, ink, MENU_TONE), CircleShape),
+        modifier.size(size).background(lerp(MaterialTheme.colorScheme.surface, ink, MENU_TONE), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(painterResource(icon), contentDescription = null, tint = ink, modifier = Modifier.size(Sizes.badgeSmall * MENU_GLYPH))
+        Icon(painterResource(icon), contentDescription = null, tint = ink, modifier = Modifier.size(size * MENU_GLYPH))
     }
 }
 

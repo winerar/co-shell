@@ -250,6 +250,17 @@ def tile_icon(icon, color=LIME, bg=None):
     return dot_icon(icon, color, 40)
 
 
+def menu_grid(items, cols=4):
+    """CoShellMenuGrid (poll 2026-11-28 «А»): sections as icons four in a row in one card; `items` — (icon, name, mark or None)."""
+    cells = ''
+    for icon, name, mark in items:
+        m = ('<span style="position: absolute; top: 2px; left: calc(50%% + 8px); height: 20px; padding: 0 7px; border-radius: 999px; background: %s; '
+             'color: %s; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;">%s</span>' % (LIME, ONLIME, mark)) if mark else ''
+        cells += ('<div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 2px; min-height: 48px;">%s'
+                  '<span style="font-size: 12px; line-height: 1.25; text-align: center; color: %s;">%s</span>%s</div>' % (dot_icon(icon, VIOLET, 40), INK, name, m))
+    return card('<div style="display: grid; grid-template-columns: repeat(%d, 1fr); padding: 8px 4px;">%s</div>' % (cols, cells))
+
+
 def amount(text, cur='', color=INK, size=15):
     c = ' <span style="color: %s; font-size: %dpx;">%s</span>' % (MUTED, size - 3, cur) if cur else ''
     return '<span style="%s font-size: %dpx; color: %s; white-space: nowrap;">%s%s</span>' % (MONO, size, color, text, c)

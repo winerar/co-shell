@@ -16,7 +16,7 @@
     <string name="converter_rate" translatable="false">1 %1$s = %2$s %3$s</string>
     <string name="converter_currency" translatable="false">%1$s ▾</string>
     <string name="converter_rows_hint">Нажмите на валюту — посчитаем из неё</string>
-    <string name="converter_no_rate">Нет курса. Добавьте его: Ещё → Курсы валют</string>
+    <string name="converter_no_rate">Нет курса. Добавьте его: Ещё → Курсы</string>
     <string name="converter_row_no_rate">нет курса</string>
     <string name="settings_home_converter">Конвертер</string>
     <string name="settings_home_converter_hint">Сколько это в других валютах</string>

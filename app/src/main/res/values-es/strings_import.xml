@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="import_title">Importar desde Wallet</string>
-    <string name="import_menu_hint">Traer movimientos de una exportación CSV</string>
     <string name="import_next">Siguiente</string>
     <string name="import_do">Importar</string>
     <string name="import_step_of">Paso %1$d de %2$d</string>

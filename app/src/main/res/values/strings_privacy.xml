@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- «Ещё → Конфиденциальность», lock screen, hidden amounts (#145). -->
+<!-- «Ещё → Настройки → Конфиденциальность», lock screen, hidden amounts (#145). -->
 <resources>
     <string name="privacy_title">Конфиденциальность</string>
     <string name="privacy_menu_hint">PIN, отпечаток, скрытие сумм</string>

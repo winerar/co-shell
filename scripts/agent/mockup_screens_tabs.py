@@ -61,10 +61,9 @@ def accounts():
 # ---- «Ещё» -------------------------------------------------------------------------------------------------------
 
 def more_body():
-    """«Ещё» as in the app (poll 2026-11-20, Б): four groups — Деньги, Валюты, Семья и данные, Приложение; the version — a quiet
-    line at the bottom (a card on top only while an update is out, board MoreBUpdate). Same rows — `mockup_screens_fb_menu.py`."""
+    """«Ещё» as in the app (poll 2026-11-28 «А»): two grids of icons and three rows of «Приложение» — `mockup_screens_fb_menu.py`."""
     import mockup_screens_fb_menu as menu
-    return menu.new_top() + menu.new_rest()
+    return menu.body()
 
 
 def more():

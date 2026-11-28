@@ -17,5 +17,5 @@
     <string name="tour_reports_title">Отчёты и итоги</string>
     <string name="tour_reports_text">Куда уходят деньги — по категориям, месяцам и в календаре. В начале месяца — «Итоги».</string>
     <string name="tour_family_title">Вместе и в сохранности</string>
-    <string name="tour_family_text">Позовите близкого — записи соберутся вместе: Ещё → Семья. Резервная копия — в «Ещё → Резервная копия».</string>
+    <string name="tour_family_text">Позовите близкого — записи соберутся вместе: Ещё → Семья. Резервная копия — в «Ещё → Данные».</string>
 </resources>

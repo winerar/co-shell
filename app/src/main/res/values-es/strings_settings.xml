@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Ajustes</string>
-    <string name="settings_intro">Ajustes de este teléfono. Las monedas de los totales son comunes a la familia.</string>
     <string name="settings_look_items">Idioma · tema · paleta · densidad de listas</string>
     <string name="settings_money_title">Dinero y fechas</string>
     <string name="settings_money_items">Monedas de los totales · inicio de semana</string>
@@ -142,10 +141,6 @@
     <string name="settings_home_tile_uncategorized">Sin categoría</string>
     <string name="home_edit_hide">Ocultar</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
-    <string name="settings_group_all">Todo ›</string>
     <string name="settings_palette">Paleta</string>
-    <string name="settings_screens_row">Resumen, movimientos, informes, cuentas</string>
-    <string name="settings_screens_row_hint">qué mostrar y en qué orden</string>
-    <string name="settings_menu_hint">Tema, entrada, notificaciones, pantallas</string>
     <string name="settings_help_title">Ayuda</string>
 </resources>

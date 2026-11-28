@@ -179,9 +179,9 @@ def settings_off():
 
 
 def more_row():
-    """Where it lives: «Ещё» → «Приложение» → «Конфиденциальность» (the «Ещё» of poll 2026-11-20 «Б», scrolled down)."""
-    import mockup_screens_fb_menu as menu
-    return tab_screen('Ещё', menu.new_rest(), 'more', sub='Приложение')
+    """Where it lives: «Ещё → Настройки → Конфиденциальность» (moved from «Ещё», poll 2026-11-28 «А»): the settings index."""
+    import mockup_screens_fb_set as st
+    return st.root()
 
 
 def recents():
@@ -209,8 +209,8 @@ BOARDS = [  # name, title, fn, issue number
     ('Priv145Shown', '#145 · «Обзор»: суммы видны, «глаз» в шапке', home_visible, 145),
     ('Priv145HideA', '#145 · скрыто: «•••• USD», «глаз» в шапке', lambda: home_hidden('A'), 145),
     ('Priv145Flipped', '#145 · перевернули телефон: плашка «Суммы скрыты»', flipped_pill, 145),
-    ('Priv145Settings', '#145 · Ещё → Конфиденциальность', settings, 145),
+    ('Priv145Settings', '#145 · Настройки → Конфиденциальность', settings, 145),
     ('Priv145SettingsOff', '#145 · Конфиденциальность: PIN выключен', settings_off, 145),
-    ('Priv145More', '#145 · «Ещё»: строка «Конфиденциальность»', more_row, 145),
+    ('Priv145More', '#145 · «Настройки»: строка «Конфиденциальность»', more_row, 145),
     ('Priv145Recents', '#145 · недавние приложения: пустая карточка', recents, 145),
 ]

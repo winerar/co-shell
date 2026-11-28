@@ -12,9 +12,9 @@ import app.coshell.access.AccessError
 import app.coshell.access.AccessLockedDialog
 import app.coshell.access.AccessScreen
 import app.coshell.access.InviteRow
-import app.coshell.settings.HelpCard
-import app.coshell.settings.SettingsActions
-import app.coshell.settings.SettingsState
+import app.coshell.settings.HelpActions
+import app.coshell.settings.HelpSettingsScreen
+import app.coshell.settings.HelpState
 import app.coshell.core.designsystem.theme.CoShellTheme
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
@@ -56,7 +56,7 @@ class AccessScreenshotTest {
 
     @Test fun `settings policy light`() = shot("settings_policy_light") { help(InviteRow("Алекс", revoked = false), policy = true) }
 
-    @Composable private fun help(invite: InviteRow, policy: Boolean = false) = HelpCard(SettingsState(invite = invite, policy = policy), SettingsActions())
+    @Composable private fun help(invite: InviteRow, policy: Boolean = false) = HelpSettingsScreen(HelpState(invite = invite, policy = policy), HelpActions())
 
     private fun shot(name: String, dark: Boolean = false, dialog: Boolean = false, content: @Composable () -> Unit) {
         compose.mainClock.autoAdvance = false

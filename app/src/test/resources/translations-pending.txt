@@ -27,7 +27,6 @@ budgets_first_label
 budgets_first_note
 budgets_first_text
 budgets_first_title
-budgets_menu_hint
 budgets_start_subtitle
 bulk_category
 bulk_category_hint
@@ -41,9 +40,9 @@ bulk_tags_empty
 bulk_tags_hint
 capital_month_search
 capital_month_tap
-categories_menu_hint
 categories_order_hint
 category_deleted
+converter_no_rate
 converter_subtitle_all
 converter_subtitle_pair
 converter_tap
@@ -149,7 +148,6 @@ goals_field_account
 goals_field_deadline
 goals_field_name
 goals_field_target
-goals_menu_hint
 goals_new_title
 goals_no_deadline
 goals_of
@@ -170,6 +168,7 @@ goals_yearly
 goals_yearly_hint
 goals_yearly_until
 hint_app_shortcuts
+hint_backup
 hint_clipboard
 hint_currency_account
 hint_edit_home
@@ -187,6 +186,11 @@ home_edit_hidden_title
 home_edit_restore
 home_edit_show
 import_undo_confirm_text
+more_section_rates_family
+more_tile_data
+more_tile_notes
+more_tile_rates
+more_tile_recurring
 notes_hint
 notes_strip_drafts
 notice_action_open
@@ -274,6 +278,8 @@ release_done
 release_header
 release_insights_text
 release_insights_title
+release_more_tiles_text
+release_more_tiles_title
 release_next
 release_notice_dismiss
 release_notice_open
@@ -282,6 +288,8 @@ release_notice_version
 release_progress
 release_repeat_text
 release_repeat_title
+release_settings_search_text
+release_settings_search_title
 release_stories_back_text
 release_stories_back_title
 release_widgets_text
@@ -345,12 +353,20 @@ settings_bar_second
 settings_bar_section
 settings_bar_third
 settings_bar_title
+settings_help_more
 settings_home_converter_hint
 settings_home_daily_hint
 settings_home_goals_hint
 settings_home_intro
 settings_home_tiles_note
 settings_home_tiles_section
+settings_index_data
+settings_index_help
+settings_index_input
+settings_index_money
+settings_index_notices_off
+settings_index_notices_on
+settings_index_screens
 settings_input_account_hint
 settings_invite_for
 settings_invite_revoked
@@ -368,6 +384,10 @@ settings_notices_time_step
 settings_ops_amount_hint
 settings_policy_hint
 settings_policy_title
+settings_search
+settings_search_none
+settings_section_family
+settings_section_phone
 steps_family_hint
 story_previous
 sync_dot_ok
@@ -413,3 +433,4 @@ widget_templates_create
 widget_templates_desc
 widget_templates_empty
 widget_templates_name
+wipe_backup_hint

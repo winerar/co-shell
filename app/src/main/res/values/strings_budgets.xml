@@ -2,7 +2,6 @@
 <!-- Бюджеты (#103): экран «Бюджеты» (budgets/list) и редактор лимита (budgets/edit). -->
 <resources>
     <string name="budgets_title">Бюджеты</string>
-    <string name="budgets_menu_hint">Лимиты на месяц</string>
     <string name="budgets_new">Новый лимит</string>
     <string name="budgets_previous_month">Прошлый месяц</string>
     <string name="budgets_next_month">Следующий месяц</string>

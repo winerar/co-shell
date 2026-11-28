@@ -36,7 +36,9 @@ import app.coshell.core.designsystem.components.ButtonTone
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.designsystem.components.CoShellListRow
+import app.coshell.core.designsystem.components.CoShellMenuGrid
 import app.coshell.core.designsystem.components.CoShellMenuRow
+import app.coshell.core.designsystem.components.MenuTile
 import app.coshell.core.designsystem.components.CoShellMessage
 import app.coshell.core.designsystem.components.CoShellPaletteSwatch
 import app.coshell.core.designsystem.components.CoShellRowGroup
@@ -103,6 +105,13 @@ fun ComponentsCatalog() {
                 row { CoShellMenuRow(R.drawable.ic_category, "Категории", {}, subtitle = "Подкатегории, иконки и цвета") }
                 row { CoShellMenuRow(R.drawable.ic_currency_exchange, "Курсы валют", {}, subtitle = "Обновляются сами раз в день") }
             }
+            CoShellMenuGrid(
+                listOf(
+                    MenuTile(R.drawable.ic_account_balance_wallet, "Счета", {}),
+                    MenuTile(R.drawable.ic_savings, "Бюджеты", {}),
+                    MenuTile(R.drawable.ic_draft, "Черновики", {}, mark = "3"),
+                ),
+            )
         }
     }
 }

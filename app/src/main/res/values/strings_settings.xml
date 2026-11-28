@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Настройки</string>
-    <string name="settings_intro">Настройки этого телефона. Валюты итогов — общие для семьи.</string>
     <string name="settings_look_items">Язык · тема · палитра · плотность списков</string>
     <string name="settings_money_title">Деньги и даты</string>
     <string name="settings_money_items">Валюты итогов · начало недели</string>
@@ -177,11 +176,7 @@
     <string name="home_edit_show">Показать</string>
     <string name="home_edit_empty">Пока пусто — карточка появится, когда будет что показать.</string>
     <!-- «Настройки»: group cards (poll 2026-11-20, В) -->
-    <string name="settings_group_all">Все ›</string>
     <string name="settings_palette">Палитра</string>
-    <string name="settings_screens_row">Обзор, операции, отчёты, счета</string>
-    <string name="settings_screens_row_hint">что показывать и в каком порядке</string>
-    <string name="settings_menu_hint">Тема, ввод, уведомления, экраны</string>
     <string name="settings_help_title">Помощь</string>
     <!-- «Помощь → Код приглашения» (#671): only in builds with invitation codes -->
     <string name="settings_invite_title">Код приглашения</string>
@@ -189,4 +184,17 @@
     <string name="settings_invite_revoked">Больше не действует</string>
     <string name="settings_policy_title">Политика конфиденциальности</string>
     <string name="settings_policy_hint">Что хранится и как удалить данные</string>
+    <!-- «Настройки» as an index with search (poll 2026-11-28 «А») -->
+    <string name="settings_search">Найти настройку</string>
+    <string name="settings_search_none">Ничего не нашлось. Попробуйте другое слово.</string>
+    <string name="settings_section_phone">Этот телефон</string>
+    <string name="settings_section_family">Для всей семьи</string>
+    <string name="settings_index_input">Встряхивание, вибрация, счёт</string>
+    <string name="settings_index_notices_on">Платежи в %1$s</string>
+    <string name="settings_index_notices_off">Напоминания выключены</string>
+    <string name="settings_index_screens">Обзор, нижняя панель, списки</string>
+    <string name="settings_index_help">Подсказки, знакомство, жесты</string>
+    <string name="settings_index_money">Валюты итогов и неделя</string>
+    <string name="settings_index_data">Копия, импорт, экспорт</string>
+    <string name="settings_help_more">Как пользоваться</string>
 </resources>

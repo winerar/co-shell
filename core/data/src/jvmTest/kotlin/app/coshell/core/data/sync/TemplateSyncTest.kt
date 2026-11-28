@@ -83,4 +83,32 @@ class TemplateSyncTest {
         b.engine.sync()
         assertEquals(readBefore, server.recordsRead, "the full re-read happens once")
     }
+
+    @Test
+    fun `edit on another phone does not bring a posted payment back`() = runTest {
+        a.templates.saveTemplate(coffee)
+        a.engine.sync(); b.engine.sync()
+        // A posts November; B renames the template before it has seen that.
+        a.tick(); a.templates.saveTemplate(coffee.copy(schedule = coffee.schedule?.copy(handledThrough = LocalDate(2026, 11, 30))))
+        b.tick(2_000); b.templates.saveTemplate(coffee.copy(name = "Кофе в Havanna"))
+
+        a.engine.sync(); b.engine.sync(); a.engine.sync(); b.engine.sync()
+
+        for (phone in listOf(a, b)) {
+            val t = phone.templates.getTemplate("coffee")
+            assertEquals("Кофе в Havanna", t?.name, phone.toString())
+            assertEquals(LocalDate(2026, 11, 30), t?.schedule?.handledThrough, phone.toString())
+            assertEquals(0, phone.db.syncDao().observePendingCount().first(), "converged, nothing left to send")
+        }
+    }
+
+    @Test
+    fun `later handled date keeps the winner rule and skips unreadable schedules`() {
+        val winner = "M5;2026-12-01;REMIND;"
+        assertEquals("M5;2026-12-01;REMIND;2026-11-30", TemplateHandledMerge.laterHandled(winner, "M31;2026-11-01;REMIND;2026-11-30"))
+        assertEquals("M5;2026-12-01;REMIND;2026-12-05", TemplateHandledMerge.laterHandled("M5;2026-12-01;REMIND;2026-12-05", "M31;2026-11-01;REMIND;2026-11-30"))
+        assertEquals(winner, TemplateHandledMerge.laterHandled(winner, "Z9;future"))
+        assertEquals(null, TemplateHandledMerge.laterHandled(null, "M31;2026-11-01;REMIND;2026-11-30"), "«no repeat» stays")
+        assertEquals("Q1;x", TemplateHandledMerge.laterHandled("Q1;x", "M31;2026-11-01;REMIND;2026-11-30"), "a newer kind is left as is")
+    }
 }

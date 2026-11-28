@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import app.coshell.core.data.sync.SyncKind
 import app.coshell.core.data.sync.SyncRecord
+import app.coshell.core.data.sync.TemplateHandledMerge
 import app.coshell.core.data.sync.Version
 import app.coshell.core.data.sync.remoteWins
 import kotlinx.coroutines.flow.Flow
@@ -196,7 +197,9 @@ abstract class SyncDao {
         upsertTransactions(winners(SyncKind.TRANSACTION, rows.transactions, transactions(rows.transactions.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertBudgets(winners(SyncKind.BUDGET, rows.budgets, budgets(rows.budgets.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertManualRates(winners(SyncKind.MANUAL_RATE, rows.manualRates, manualRates(rows.manualRates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
-        upsertTemplates(winners(SyncKind.TEMPLATE, rows.templates, templates(rows.templates.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
+        val localTemplates = templates(rows.templates.map { it.id })
+        val wonTemplates = winners(SyncKind.TEMPLATE, rows.templates, localTemplates, { it.id }) { Version(it.updatedAt, it.updatedBy) }
+        upsertTemplates(TemplateHandledMerge.rowsToWrite(wonTemplates, rows.templates, localTemplates))
         upsertSettings(winners(SyncKind.SETTING, rows.settings, settings(rows.settings.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertTags(winners(SyncKind.TAG, rows.tags, tags(rows.tags.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })
         upsertDebtEvents(winners(SyncKind.DEBT_EVENT, rows.debtEvents, debtEvents(rows.debtEvents.map { it.id }), { it.id }) { Version(it.updatedAt, it.updatedBy) })

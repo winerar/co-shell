@@ -23,7 +23,7 @@ import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.transactions.edit.TransactionEditUiState.CategoryItem
 
-private const val COLUMNS = 4
+internal const val GRID_COLUMNS = 4
 
 /** Something to put in a grid place: a category or the dashed «Все 24». */
 internal sealed interface GridPlace {
@@ -39,7 +39,7 @@ internal sealed interface GridPlace {
 @Composable
 internal fun CategoryGrid(places: List<GridPlace>, selectedId: String?, onSelect: (String) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
-        places.chunked(COLUMNS).forEach { line ->
+        places.chunked(GRID_COLUMNS).forEach { line ->
             Row {
                 line.forEach { place ->
                     val cell = Modifier.weight(1f)
@@ -48,7 +48,7 @@ internal fun CategoryGrid(places: List<GridPlace>, selectedId: String?, onSelect
                         is GridPlace.All -> AllCell(place, cell)
                     }
                 }
-                repeat(COLUMNS - line.size) { Box(Modifier.weight(1f)) }
+                repeat(GRID_COLUMNS - line.size) { Box(Modifier.weight(1f)) }
             }
         }
     }

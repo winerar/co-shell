@@ -26,7 +26,7 @@ import app.coshell.ui.sheet.FormSheet
 import app.coshell.core.designsystem.R as DesignR
 
 /**
- * «Деньги» (#290, board `AccountEdit`): «Валюта» and «Начальный баланс» as two tiles, each opening its own small sheet;
+ * «Деньги» (#290, board `AccountEdit`): «Валюта» and «Начальный баланс» as two tiles, «Тип» and «Для чеков» under them (#818), each opening its own small sheet;
  * a saved account also gets «Баланс сейчас» — the real balance; «Сохранить баланс» in its sheet records the adjustment at once (#581).
  * A locked currency says so on the tile; an error is said under the tiles, so a bad value is seen without opening.
  */
@@ -93,6 +93,14 @@ internal fun MoneySection(state: AccountEditUiState, actions: AccountEditActions
                 modifier = Modifier.fillMaxWidth(),
                 empty = state.depositRate.isBlank(),
             )
+        }
+        // «Тип» and «Для чеков» (#818, poll «А»): tiles here instead of their own cards — the sheet fits without scrolling.
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+            AccountTypeTile(
+                state.type, state.prepaid, state.credit, actions.onTypeChange, actions.onPrepaidSelect, actions.onCreditSelect,
+                Modifier.weight(1f),
+            )
+            ReceiptDigitsTile(state, actions, Modifier.weight(1f))
         }
         moneyError(state)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
     }

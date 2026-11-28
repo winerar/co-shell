@@ -50,6 +50,20 @@ class EditorsScreenshotTest {
     @Test
     fun `account editor light`() = shot("editor_account_light") { account() }
 
+    /** The tallest account since #818: a credit card with its terms in a family — «Баланс» above «Сохранить». */
+    @Test
+    fun `credit account editor dark`() = shot("editor_account_credit_dark", dark = true) {
+        Column(Modifier.padding(top = SHEET_TOP)) {
+            AccountEditScreen(
+                accountEditPreviewSample.copy(
+                    name = "Galicia · карта", type = AccountType.OTHER, credit = true, showSharing = true, color = null,
+                    creditLimit = "500 000", creditPayDay = "10", creditMin = "5", creditStatementDay = "25", creditGraceDays = "20",
+                ),
+                AccountEditActions(),
+            )
+        }
+    }
+
     @Test
     fun `icon and colour sheet dark`() = shot("editor_icon_color_dark", dark = true) { iconColor() }
 

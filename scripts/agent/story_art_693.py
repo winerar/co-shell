@@ -133,6 +133,12 @@ STORIES = {
         ('ink', 'stroke', ' '.join(rrect(46 + 59 * c, 76 + 62 * r, 32, 5, 2.5) for r in range(2) for c in range(4)), 1.5),
         ('accent', 'fill', circle(180, 50, 16)),
     ],
+    'entry_compact': [  # #818: the entry sheet on one screen — amount, categories, the details as one line of chips, the keypad
+        ('ink', 'stroke', rrect(80, 6, 140, 168, 18)),
+        ('ink', 'stroke', rrect(94, 20, 112, 26, 9) + ' ' + ' '.join(circle(106 + 29 * c, 62, 7) for c in range(4))),
+        ('accent', 'fill', rrect(94, 78, 40, 13, 6.5) + ' ' + rrect(139, 78, 40, 13, 6.5) + ' ' + circle(193, 84.5, 6.5)),
+        ('ink', 'stroke', ' '.join(rrect(94 + 29 * c, 100 + 17 * r, 24, 12, 5) for r in range(4) for c in range(4)), 1.5),
+    ],
     'settings_search': [  # 2026-11-28: «Найти настройку» — a search pill and the one row it found
         ('ink', 'stroke', rrect(20, 16, 260, 44, 22) + ' ' + circle(48, 36, 8) + ' ' + line((54, 42), (60, 48))),
         ('ink', 'stroke', rrect(76, 34, 70, 5, 2.5), 1.5),

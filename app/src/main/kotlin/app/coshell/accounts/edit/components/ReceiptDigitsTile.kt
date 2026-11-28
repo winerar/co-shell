@@ -1,6 +1,5 @@
 package app.coshell.accounts.edit.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,30 +11,27 @@ import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.accounts.edit.AccountEditActions
 import app.coshell.accounts.edit.AccountEditUiState
+import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellDetailTile
-import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellHint
 import app.coshell.core.model.Account
 import app.coshell.ui.form.NumberSheet
-import app.coshell.core.designsystem.R as DesignR
 
 /**
- * «Для чеков» (#577, board `AccountEdit` + `AccountDigits`): the last digits of the card or account as a bank receipt prints them.
- * A receipt with these digits chooses this account by itself; «Какой это счёт?» in the entry sheet fills them too.
+ * «Для чеков» (#577; a tile in «Деньги» since #818, poll «А»): the last digits of the card or account as a bank receipt
+ * prints them. A receipt with these digits chooses this account by itself; «Какой это счёт?» in the entry sheet fills them too.
  */
 @Composable
-internal fun ReceiptDigitsSection(state: AccountEditUiState, actions: AccountEditActions) {
+internal fun ReceiptDigitsTile(state: AccountEditUiState, actions: AccountEditActions, modifier: Modifier = Modifier) {
     var open by rememberSaveable { mutableStateOf(false) }
-    CoShellFormSection(stringResource(R.string.account_digits_section)) {
-        CoShellDetailTile(
-            icon = painterResource(DesignR.drawable.ic_account_balance_wallet),
-            label = stringResource(R.string.account_digits_tile),
-            value = if (state.cardDigits.isBlank()) stringResource(R.string.account_digits_empty) else "…${state.cardDigits}",
-            onClick = { open = true },
-            modifier = Modifier.fillMaxWidth(),
-            empty = state.cardDigits.isBlank(),
-        )
-    }
+    CoShellDetailTile(
+        icon = painterResource(DesignR.drawable.ic_receipt_long),
+        label = stringResource(R.string.account_digits_section),
+        value = if (state.cardDigits.isBlank()) stringResource(R.string.account_digits_empty) else "…${state.cardDigits}",
+        onClick = { open = true },
+        modifier = modifier,
+        empty = state.cardDigits.isBlank(),
+    )
     if (open) {
         NumberSheet(
             title = stringResource(R.string.account_digits_sheet_title),

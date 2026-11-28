@@ -12,7 +12,7 @@ import mockup_screens_entry as e
 def entry_body(t, typed):
     color = dict((k, c) for k, _, c in e.TYPES)[t]
     accs = e.ribbon(0, 'Откуда') + e.ribbon(2, 'Куда') if t == 'tr' else e.ribbon(0)
-    amount = e.amount_card('4 500' if typed else '0', 'ARS', color if typed else MUTED2, links='' if t == 'tr' else '+ Сумма покупки')
+    amount = e.amount_card('4 500' if typed else '0', 'ARS', color if typed else MUTED2, links='' if t == 'tr' else '+ Сумма покупки', refund=t == 'exp')
     cats = '' if t == 'tr' else e.categories('Продукты' if typed else None)
     keys = go('st', 'saved', m.keypad()) if typed else go('st', 'typed', m.keypad(done=False))
     return e.type_bar(t, taps=True) + accs + amount + cats + e.details(refund=t == 'exp') + '<div style="flex-grow: 1;"></div>' + keys

@@ -53,6 +53,8 @@ object Sizes {
     val miniBarMin = 2.dp
     /** Key of the amount keypad in the entry sheet: big enough to hit with a thumb without looking. */
     val keypadKey = 56.dp
+    /** A phone lower than this is «short» for the entry sheet (#818, 360×740): one row of frequent categories, keys of [button]. */
+    val shortScreen = 780.dp
     /** A dot of the PIN (CoShellPinDots, #145) and the width of its empty ring. */
     val pinDot = 16.dp
     val pinDotStroke = 2.dp
@@ -128,6 +130,8 @@ object Sizes {
     /** Amount typed on the keypad ([app.coshell.core.designsystem.components.CoShellAmountSlot]): with a label / the main one. */
     val amountSlot = 64.dp
     val amountSlotMain = 72.dp
+    /** One-line pill of a form (#818): a detail chip, the compact amount slot «Покупка 13 300 ARS». */
+    val detailPill = 40.dp
     /** Dot of a vertical timeline (feedback card, #157); the line between dots is [selectionRing] wide. */
     val timelineDot = 12.dp
     /** Every bar — budget bullet, bar row, progress (board Style7: one bar 8 dp with a mark). */

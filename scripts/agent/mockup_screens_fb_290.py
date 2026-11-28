@@ -169,13 +169,14 @@ def acc_form_a():
                      % (HERO_HINT, MONO, LIME), pad='12px 14px')
     money = ('<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s%s</div>'
              % (detail('lock', 'Валюта', 'ARS · заблок.'), detail('wallet', 'Нач. баланс', '120 000,00'))
-             + '<div style="height: 6px;"></div>' + detail('refresh', 'Баланс сейчас · Исправить', '245 300,00 ARS'))  # balance adjustment
-    types = ''.join(chip(t, t == 'Карта').replace('height: 36px', 'height: 32px') for t in ('Наличные', 'Карта', 'Вклад', 'Крипто', 'Другое'))
+             + '<div style="height: 6px;"></div>' + detail('refresh', 'Баланс сейчас · Исправить', '245 300,00 ARS')  # balance adjustment
+             # #818 (poll «А»): «Тип» (a list sheet on tap) and «Для чеков» are tiles here; the colour — a tap on the badge
+             + '<div style="height: 6px;"></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s%s</div>'
+             % (detail('folder', 'Тип', 'Карта'), detail('wallet', 'Для чеков', '…3900')))
     sw = ('<div style="display: flex; align-items: center; gap: 10px;"><span style="flex-grow: 1; font-size: 14px;">Учитывать в общем балансе'
           '<span style="display: block; font-size: 11px; color: %s;">Выключите для долга или чужих денег</span></span>%s</div>' % (MUTED, switch(True)))
     body = (hero + name_line('Галисия · карта', 'wallet', '#F26E22')
-            + block('Деньги', money) + block('Тип', '<div style="display: flex; flex-wrap: wrap; gap: 6px;">%s</div>' % types)
-            + block('Для чеков', detail('wallet', 'Последние цифры карты или счёта', '…3900')) + block('Цвет', color_row('#FF8A3D'), right=small_link('Как у Galicia')) + block('Баланс', sw))
+            + block('Деньги', money) + block('Баланс', sw))
     return page('Счёт', body)
 
 

@@ -2,7 +2,7 @@ package app.coshell.transactions.edit.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,61 +13,43 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
 import app.coshell.core.designsystem.R as DesignR
-import app.coshell.core.designsystem.components.CoShellCheckTile
-import app.coshell.core.designsystem.components.CoShellDetailTile
-import app.coshell.core.designsystem.components.CoShellFormSection
-import app.coshell.core.designsystem.components.CoShellSectionLink
+import app.coshell.core.designsystem.components.CoShellDetailChip
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.core.model.TransactionType
 import app.coshell.transactions.edit.TransactionEditActions
 import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.ui.format.formatDayMonth
 
 /**
- * «Детали» (#290, board `Fb290A`) — tiles two by two: «Дата», «Заметка», «Теги» and, on an expense, the «Это возврат»
- * check box (owner 2026-11-13). A tile opens its own small sheet; the sheet itself never scrolls. A saved operation
- * gets «Сохранить как шаблон» on the right of the caption.
+ * «Детали» of the entry sheet in one line (#818, poll «А», board `EntryReceipt`): no card, chips [CoShellDetailChip] —
+ * the date and the payee in words; the note and the tags as an icon alone while empty, in words once filled. A chip
+ * opens its own small sheet; «Это возврат» moved to the «Сумма» caption, «В шаблон» — to the top row of a saved one.
  */
 @Composable
-internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEditActions, onSaveAsTemplate: () -> Unit) {
+internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEditActions) {
     var open by rememberSaveable { mutableStateOf(DetailSheet.NONE) }
-    val saveAs: (@Composable () -> Unit)? = if (!state.isNew && state.savedTemplateName == null) {
-        { CoShellSectionLink(stringResource(R.string.template_save_as_chip), onClick = onSaveAsTemplate) }
-    } else {
-        null
-    }
-    CoShellFormSection(title = stringResource(R.string.entry_section_details), trailing = saveAs) {
-        val tiles = buildList<@Composable (Modifier) -> Unit> {
-            add { m ->
-                CoShellDetailTile(painterResource(DesignR.drawable.ic_calendar_today), stringResource(R.string.transaction_date), dateText(state), { open = DetailSheet.DATE }, m)
-            }
-            add { m ->
-                CoShellDetailTile(
-                    painterResource(DesignR.drawable.ic_description), stringResource(R.string.transaction_note),
-                    state.note.ifBlank { stringResource(R.string.entry_note_empty) }, { open = DetailSheet.NOTE }, m, empty = state.note.isBlank(),
-                )
-            }
-            if (state.payee.isNotBlank()) add { m ->
-                CoShellDetailTile(
-                    painterResource(DesignR.drawable.ic_shopping_bag), stringResource(R.string.transaction_payee), state.payee,
-                    { open = DetailSheet.PAYEE }, m,
-                )
-            }
-            if (!state.isTransfer) add { m -> TagsTile(state, m) { open = DetailSheet.TAGS } }
-            if (state.type == TransactionType.EXPENSE) {
-                add { m ->
-                    CoShellCheckTile(
-                        state.refund, stringResource(R.string.entry_refund_title), stringResource(R.string.entry_refund_subtitle),
-                        actions.onRefundToggle, m,
-                    )
-                }
-            }
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+        CoShellDetailChip(
+            painterResource(DesignR.drawable.ic_calendar_today), dateText(state), stringResource(R.string.transaction_date),
+            onClick = { open = DetailSheet.DATE },
+        )
+        if (state.payee.isNotBlank()) {
+            CoShellDetailChip(
+                painterResource(DesignR.drawable.ic_shopping_bag), state.payee, stringResource(R.string.transaction_payee),
+                onClick = { open = DetailSheet.PAYEE }, modifier = Modifier.weight(1f, fill = false),
+            )
         }
-        tiles.chunked(2).forEach { line ->
-            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
-                line.forEach { tile -> tile(Modifier.weight(1f)) }
-                if (line.size == 1) Spacer(Modifier.weight(1f))
-            }
+        val note = state.note.trim().lineSequence().firstOrNull()?.takeIf { it.isNotBlank() }
+        CoShellDetailChip(
+            painterResource(DesignR.drawable.ic_description), note, stringResource(R.string.transaction_note),
+            onClick = { open = DetailSheet.NOTE }, modifier = if (note != null) Modifier.weight(1f, fill = false) else Modifier,
+        )
+        if (!state.isTransfer) {
+            val byId = state.tags.options.associateBy { it.id }
+            val tags = state.tagIds.mapNotNull { byId[it]?.name }.joinToString().ifEmpty { null }
+            CoShellDetailChip(
+                painterResource(DesignR.drawable.ic_sell), tags, stringResource(R.string.entry_tags),
+                onClick = { open = DetailSheet.TAGS }, modifier = if (tags != null) Modifier.weight(1f, fill = false) else Modifier,
+            )
         }
     }
     when (open) {
@@ -81,28 +63,10 @@ internal fun DetailsBlock(state: TransactionEditUiState, actions: TransactionEdi
 
 private enum class DetailSheet { NONE, DATE, NOTE, TAGS, PAYEE }
 
-/** «Теги» over «Аня, на двоих»; none — «Без тегов». */
+/** «Сегодня» / «Вчера» / «3 нояб.»: short, the chip shares its line with three others. */
 @Composable
-private fun TagsTile(state: TransactionEditUiState, modifier: Modifier, onClick: () -> Unit) {
-    val byId = state.tags.options.associateBy { it.id }
-    val chosen = state.tagIds.mapNotNull { byId[it]?.name }
-    CoShellDetailTile(
-        painterResource(DesignR.drawable.ic_sell),
-        stringResource(R.string.entry_tags),
-        chosen.joinToString().ifEmpty { stringResource(R.string.entry_tags_empty) },
-        onClick,
-        modifier,
-        empty = chosen.isEmpty(),
-    )
-}
-
-/** «Сегодня, 13 ноября» / «Вчера, 12 ноября» / «3 ноября». */
-@Composable
-private fun dateText(state: TransactionEditUiState): String {
-    val day = formatDayMonth(state.date)
-    return when {
-        state.isToday -> stringResource(R.string.entry_date_today, day)
-        state.isYesterday -> stringResource(R.string.entry_date_yesterday, day)
-        else -> day
-    }
+private fun dateText(state: TransactionEditUiState): String = when {
+    state.isToday -> stringResource(R.string.transaction_date_today)
+    state.isYesterday -> stringResource(R.string.transaction_date_yesterday)
+    else -> formatDayMonth(state.date)
 }

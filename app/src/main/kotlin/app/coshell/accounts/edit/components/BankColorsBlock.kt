@@ -6,29 +6,20 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.ui.form.rememberColorLabel
 import app.coshell.core.designsystem.category.BankColors
-import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellSectionLink
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.designsystem.components.CoShellBankDot
-import app.coshell.core.designsystem.components.CoShellColorStrip
 import app.coshell.ui.form.SheetCaption
 
 /**
- * «Цвет» of an account (#290, board `Fb290FAAcc`): one line of swatches with «Без цвета» first; when the name looks
- * like a bank, «Как у Galicia» on the right takes its colour. «+N» calls [onOpenAll] — the colour sheet with
- * [BankPresets] under the palette.
+ * «Как у Galicia» (#290): when the name looks like a bank, a link that takes its colour. Since #818 (poll «А») the colour is
+ * picked from the badge beside the name — the link sits at the top of that sheet, over [BankPresets].
  */
 @Composable
-internal fun AccountColorSection(name: String, color: Long?, onSelect: (Long?) -> Unit, onOpenAll: () -> Unit) {
-    val suggestion = BankColors.suggest(name)?.takeIf { it.color != color }
-    CoShellFormSection(
-        stringResource(R.string.category_color),
-        trailing = suggestion?.let { bank -> { CoShellSectionLink(stringResource(R.string.account_bank_like, bank.name), { onSelect(bank.color) }) } },
-    ) {
-        CoShellColorStrip(color, onSelect, onAll = onOpenAll, noneLabel = stringResource(R.string.color_none), colorLabel = rememberColorLabel(), allowNone = true)
-    }
+internal fun BankSuggestion(name: String, color: Long?, onSelect: (Long?) -> Unit) {
+    val bank = BankColors.suggest(name)?.takeIf { it.color != color } ?: return
+    CoShellSectionLink(stringResource(R.string.account_bank_like, bank.name), { onSelect(bank.color) })
 }
 
 /** Bank and payment-app colours as small badges with their initials, all groups in one block. */

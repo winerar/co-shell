@@ -16,13 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
-import app.coshell.accounts.edit.components.AccountColorSection
 import app.coshell.accounts.edit.components.AccountPreviewCard
-import app.coshell.accounts.edit.components.AccountTypeSection
 import app.coshell.accounts.edit.components.BalanceSavedPill
 import app.coshell.accounts.edit.components.BankPresets
+import app.coshell.accounts.edit.components.BankSuggestion
 import app.coshell.accounts.edit.components.MoneySection
-import app.coshell.accounts.edit.components.ReceiptDigitsSection
 import app.coshell.core.designsystem.category.AccountBadge
 import app.coshell.core.designsystem.components.CoShellFormSection
 import app.coshell.core.designsystem.components.CoShellHint
@@ -36,8 +34,9 @@ import app.coshell.ui.form.IconColorSheet
 import app.coshell.ui.sheet.EditSheetLayout
 
 /**
- * Account editor without scrolling (#290, board `Fb290FAAcc`): the live card, the badge beside the name, then one card
- * per entity — «Деньги», «Тип», «Цвет», «Баланс»; archive and delete sit beside the title.
+ * Account editor without scrolling (#290, board `Fb290FAAcc`; #818, poll «А»): the live card, the badge beside the name —
+ * a tap picks the colour —, then «Деньги» (currency, balances, terms, «Тип», «Для чеков») and «Баланс»; archive and delete
+ * sit beside the title.
  */
 @Composable
 fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
@@ -72,9 +71,6 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
                     )
                 }
                 MoneySection(state, actions)
-                AccountTypeSection(state.type, state.prepaid, state.credit, actions.onTypeChange, actions.onPrepaidSelect, actions.onCreditSelect)
-                ReceiptDigitsSection(state, actions)
-                AccountColorSection(state.name, state.color, actions.onColorChange, onOpenAll = { colorsOpen = true })
                 CoShellFormSection(stringResource(R.string.account_section_balance)) {
                     CoShellSwitchLine(
                         title = stringResource(R.string.account_included_in_total),
@@ -114,7 +110,10 @@ fun AccountEditScreen(state: AccountEditUiState, actions: AccountEditActions) {
             onClosed = { colorsOpen = false },
             showIcons = false,
             allowNone = true,
-            extra = { BankPresets(state.color, actions.onColorChange) },
+            extra = {
+                BankSuggestion(state.name, state.color, actions.onColorChange)
+                BankPresets(state.color, actions.onColorChange)
+            },
         )
     }
     if (state.deleteBlocked) {

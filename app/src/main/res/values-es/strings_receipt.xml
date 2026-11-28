@@ -21,7 +21,6 @@
     <string name="receipt_account_hint">El ticket muestra la tarjeta …%1$s. Elige una cuenta y la próxima vez el ticket la encontrará solo.</string>
     <string name="receipt_account_hint_to">El ticket muestra la cuenta de destino …%1$s. Elige una cuenta y la próxima vez el ticket la encontrará solo.</string>
     <string name="account_digits_section">Para tickets</string>
-    <string name="account_digits_tile">Últimos dígitos de la tarjeta o la cuenta</string>
     <string name="account_digits_empty">Sin definir</string>
     <string name="account_digits_sheet_title">Dígitos de la tarjeta o la cuenta</string>
     <string name="account_digits_sheet_sub">Con ellos, el ticket del banco encontrará esta cuenta. Vacío: la cuenta no está vinculada.</string>

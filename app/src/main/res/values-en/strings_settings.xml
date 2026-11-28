@@ -20,7 +20,6 @@
     <string name="settings_screens_title">Screens</string>
     <string name="settings_screens_items">Overview · transactions · accounts</string>
     <string name="settings_ops_items">Account, tags and note in the row</string>
-    <string name="settings_reports_items">Period · comparison with the previous one</string>
     <string name="settings_accounts_items">Grouping · archived</string>
     <string name="settings_ops_in_row">In the row</string>
     <string name="settings_ops_account">Account</string>

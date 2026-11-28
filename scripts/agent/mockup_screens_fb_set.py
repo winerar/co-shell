@@ -172,10 +172,41 @@ def ops():
     return inner_screen('Операции', body)
 
 
+REPORT_CARDS = [('На что ушли деньги', 'категории за период'), ('Необычное', 'что выбилось из обычного'),
+                ('Оплата в другой валюте', 'сколько стоит конвертация'), ('По месяцам', 'траты месяц за месяцем'),
+                ('Траты в двух валютах', 'личная инфляция'), ('Быстрее всего росли', 'категории с самым большим ростом'),
+                ('Доходы и расходы', 'по месяцам'), ('Капитал', 'все счета на конец месяца'), ('Подушка', 'на сколько месяцев хватит денег'),
+                ('Прогноз остатка', 'сколько останется на счетах'), ('Постоянные траты', 'регулярные платежи за год'), ('Кто сколько потратил', 'участники семьи')]
+
+
+def report_card_rows(count=10, hidden=('Оплата в другой валюте', 'Кто сколько потратил')):
+    """#826 (poll 2026-11-28 «А»): shown cards — ⠿, name, what it shows, ✕; then «Скрыты» with «+». Rows, no card around them."""
+    def btn(icon, name):
+        return ('<span aria-label="%s" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">%s</span>' % (name, svg(icon, INK, 22)))
+
+    def r_(title, sub, lead, trail, dim=False):
+        return ('<div style="display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 0 4px 0 16px; box-sizing: border-box;%s">%s'
+                '<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px;">%s</span>'
+                '<span style="font-size: 13px; color: %s;">%s</span></span>%s</div>' % (' opacity: .9;' if dim else '', lead, title, MUTED, sub, trail))
+    shown = [c for c in REPORT_CARDS if c[0] not in hidden][:count]
+    rest = [c for c in REPORT_CARDS if c[0] in hidden]
+    out = ''.join(r_(t, s_, handle(), btn('close', 'Скрыть')) for t, s_ in shown)
+    if rest:
+        out += label('Скрыты', top=8) + ''.join(r_(t, s_, '', btn('plus', 'Показать'), True) for t, s_ in rest)
+    return out
+
+
 def reports():
     body = (label('Период', top=4) + pick_row('При открытии «Отчётов»', ['Месяц', 'Квартал', 'Год'], 'Месяц')
-            + label('Сравнение') + group([sw('Сравнивать с прошлым периодом', 'пилюли «↑ 45 %» и черта прошлого', True)]))
+            + label('Сравнение') + group([sw('Сравнивать с прошлым периодом', 'пилюли «↑ 45 %» и черта прошлого', True)])
+            + label('Карточки') + note('Тяните ⠿, чтобы переставить. ✕ — скрыть.', 4) + report_card_rows(4) + reset_link())
     return inner_screen('Отчёты', body)
+
+
+def reports_edit():
+    """#826: held a card of «Отчёты» — the feed folds into the list of cards; «Готово» unfolds it."""
+    body = note('Тяните ⠿, чтобы переставить. ✕ — скрыть.', 4) + report_card_rows(8) + button('Готово', 'primary', None, 16)
+    return tab_screen('Отчёты', body, 'rep')
 
 
 def accounts():
@@ -301,7 +332,8 @@ BOARDS = [  # name, title, fn, issue number
     ('Set1HomeMore', 'Обзор: «Скоро», «Последние», плитки', home_horizon, 1118),
     ('Set1HomeEdit', 'Обзор: режим правки на экране (удержание; пояснение, «Скрыто: N», пустые карточки — опрос #154)', home_edit, 1118),
     ('Set1Ops', 'Операции: что в строке, в какой валюте сумма', ops, 1118),
-    ('Set1Reports', 'Отчёты: период и сравнение', reports, 1118),
+    ('Set1Reports', 'Отчёты: период, сравнение, карточки (#826)', reports, 1118),
+    ('Rep826Edit', 'Отчёты: правка ленты — удержали карточку, список с ⠿ и ✕ (#826, опрос «А»)', reports_edit, 1118),
     ('Set1Accounts', 'Счета: группировка и архив', accounts, 1118),
     ('Set1Money', 'Деньги и даты', money, 1118),
     ('Set1Entry', 'Ввод операции', entry, 1118),

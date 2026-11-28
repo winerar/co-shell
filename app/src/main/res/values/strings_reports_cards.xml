@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Отчёты»: order and hiding of the feed cards (#826, board Rep826Compact). -->
+<resources>
+    <string name="report_cards_help">Тяните ⠿, чтобы переставить. ✕ — скрыть.</string>
+    <string name="report_cards_hidden">Скрыты</string>
+    <string name="report_cards_section">Карточки</string>
+    <string name="report_cards_search">Карточки отчётов</string>
+    <string name="report_card_spending">На что ушли деньги</string>
+    <string name="report_card_spending_hint">категории за период</string>
+    <string name="report_card_unusual">Необычное</string>
+    <string name="report_card_unusual_hint">что выбилось из обычного</string>
+    <string name="report_card_conversion">Оплата в другой валюте</string>
+    <string name="report_card_conversion_hint">сколько стоит конвертация</string>
+    <string name="report_card_months">По месяцам</string>
+    <string name="report_card_months_hint">траты месяц за месяцем</string>
+    <string name="report_card_inflation">Траты в двух валютах</string>
+    <string name="report_card_inflation_hint">личная инфляция</string>
+    <string name="report_card_growth">Быстрее всего росли</string>
+    <string name="report_card_growth_hint">категории с самым большим ростом</string>
+    <string name="report_card_income">Доходы и расходы</string>
+    <string name="report_card_income_hint">по месяцам</string>
+    <string name="report_card_capital">Капитал</string>
+    <string name="report_card_capital_hint">все счета на конец месяца</string>
+    <string name="report_card_cushion">Подушка</string>
+    <string name="report_card_cushion_hint">на сколько месяцев хватит денег</string>
+    <string name="report_card_forecast">Прогноз остатка</string>
+    <string name="report_card_forecast_hint">сколько останется на счетах</string>
+    <string name="report_card_fixed">Постоянные траты</string>
+    <string name="report_card_fixed_hint">регулярные платежи за год</string>
+    <string name="report_card_members">Кто сколько потратил</string>
+    <string name="report_card_members_hint">участники семьи</string>
+</resources>

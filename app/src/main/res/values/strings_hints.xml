@@ -21,6 +21,7 @@
     <string name="hints_reset_title">Показать подсказки заново</string>
     <string name="hint_flip_card">Нажмите на карточку, чтобы перевернуть: на обороте самое полезное за месяц.</string>
     <string name="hint_edit_home">Удерживайте карточку, чтобы переставить или скрыть её.</string>
+    <string name="hint_edit_reports">Удерживайте карточку, чтобы переставить или скрыть её.</string>
     <string name="hint_swipe_tabs">Листайте вбок, чтобы сменить вкладку.</string>
     <string name="hint_hold_plus">Удерживайте «+»: QR чека, заметка и шаблон — веером.</string>
     <string name="hint_overview_empty">Операций пока нет. Нажмите «+», чтобы записать первую.</string>
@@ -74,6 +75,8 @@
     <string name="gesture_flip_text">перевернуть: на обороте самое полезное за месяц</string>
     <string name="gesture_edit_home_title">Удерживайте карточку</string>
     <string name="gesture_edit_home_text">переставить или скрыть</string>
+    <string name="gestures_reports">«Отчёты»</string>
+    <string name="gesture_edit_reports_text">поменять порядок или убрать лишнее</string>
     <string name="gesture_plus_tap_title">Нажмите</string>
     <string name="gesture_plus_tap_text">новая операция</string>
     <string name="gesture_plus_hold_title">Удерживайте</string>

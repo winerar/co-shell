@@ -24,6 +24,8 @@
     <string name="release_stories_back_title">Листайте назад</string>
     <string name="release_stories_back_text">Нажмите на левый край истории или проведите вправо.</string>
     <string name="release_widgets_text">Расход, доход и шаблоны — в одно нажатие с рабочего стола.</string>
+    <string name="release_report_cards_title">Карточки отчётов</string>
+    <string name="release_report_cards_text">Удерживайте карточку в «Отчётах», чтобы переставить или скрыть её.</string>
     <string name="release_more_tiles_title">«Ещё» на одном экране</string>
     <string name="release_more_tiles_text">Разделы — значками. Копия, импорт и экспорт — в «Данных».</string>
     <string name="release_settings_search_title">Поиск в настройках</string>

@@ -57,7 +57,7 @@
 ## Опоры
 - Ветки: работа — от `origin/dev`, PR в `dev` (автомерж); `main` — только релизы (`workflow.md` §«Git»).
 - Репозиторий **временно публичный** (лимиты GitHub), лицензия PolyForm Strict 1.0.0 (#369); приватность — #252.
-- Тесты: всего 2542 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v27.
+- Тесты: всего 2550 (+ Python-скрипты), `check assembleDebug` зелёный; Room — схема v27.
 - CI, релиз, секреты — `docs/agents/ci.md`; синк и Firebase — `docs/agents/notes-sync.md`, `docs/setup/sync.md`.
 - Риск (из #406): шаблон синкается целиком (LWW) — одновременная правка на втором телефоне может откатить `handledThrough`.
 
@@ -69,4 +69,4 @@
   Room 2.8.5, Navigation 2.10.2, kotlinx-datetime 0.8.0, WorkManager 2.12.0, androidx.hilt 1.4.0 (`hilt-work`).
 
 ## Последняя сессия
-2026-11-28, `ccr-2187f357-jpif0x`: #826 «Отчёты» — порядок и скрытие карточек, свои отчёты: опрос https://claude.ai/artifact/HjjfRZxRtXrhuThg7b8P5o (доски `scripts/agent/mockup_poll_reports826.py`, `docs/design/poll-reports-826.json`); код — после ответа.
+2026-11-28, `ccr-2187f357-jpif0x`: #826 «Отчёты» — опрос (оба «А»): сделаны порядок и скрытие карточек (удержание → список, «Настройки → Экраны → Отчёты», подсказка, история релиза). Осталось: свои отчёты (вариант «А», карточка в ленте) — следующим PR.

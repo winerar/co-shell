@@ -18,16 +18,19 @@ import app.coshell.transactions.edit.TransactionEditUiState
 import app.coshell.transactions.edit.leafCount
 
 /**
- * «Категория · частые» (#290, board `Fb290A`): seven categories one tap away and «Все 24» — the «Все категории»
+ * «Категория · частые» (#290, board `Fb290A`): seven categories (three on a short phone, #818) one tap away and «Все 24» — the «Все категории»
  * sheet by folder. The chosen one is named on the right of the caption («Кафе ✓»), so a pick from «Все» is seen;
  * an automatic guess (#584) shows [GuessCaption] there instead until a manual pick.
  */
 @Composable
-internal fun CategoryBlock(state: TransactionEditUiState, actions: TransactionEditActions) {
+internal fun CategoryBlock(state: TransactionEditUiState, actions: TransactionEditActions, rows: Int = 2) {
     var allOpen by rememberSaveable { mutableStateOf(false) }
     val total = state.categories.leafCount
-    val hasMore = total > state.frequentCategories.size
-    val places = state.frequentCategories.map { GridPlace.Category(it) } +
+    // [rows] of four places, the last one «Все» when something is left out (a short phone — one row, #818).
+    val room = rows * GRID_COLUMNS
+    val frequent = if (total > room) state.frequentCategories.take(room - 1) else state.frequentCategories.take(room)
+    val hasMore = total > frequent.size
+    val places = frequent.map { GridPlace.Category(it) } +
         if (hasMore) listOf(GridPlace.All(total, stringResource(R.string.transaction_categories_all)) { allOpen = true }) else emptyList()
     CoShellFormSection(
         title = stringResource(if (hasMore) R.string.entry_section_category_frequent else R.string.entry_section_category),

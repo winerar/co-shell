@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import app.coshell.core.designsystem.R
 import app.coshell.core.designsystem.components.fillEdge
@@ -47,17 +48,21 @@ fun CoShellKeypad(
     doneEnabled: Boolean = true,
     showDecimal: Boolean = true,
     showPlus: Boolean = true,
+    compact: Boolean = false,
 ) {
     val haptics = LocalHapticFeedback.current
     val press = { key: KeypadKey ->
         haptics.performHapticFeedback(if (key == KeypadKey.Done) HapticFeedbackType.Confirm else HapticFeedbackType.KeyboardTap)
         onKey(key)
     }
-    val rows = Sizes.keypadKey * 4 + Spacing.s * 3
-    Row(modifier.fillMaxWidth().height(rows), horizontalArrangement = Arrangement.spacedBy(Spacing.s)) {
+    // [compact] — a short phone (#818, 360×740): keys 48 dp, 6 dp apart, so the entry sheet still fits without scrolling.
+    val key = if (compact) Sizes.button else Sizes.keypadKey
+    val gap = if (compact) Spacing.s - Spacing.xxs else Spacing.s
+    val rows = key * 4 + gap * 3
+    Row(modifier.fillMaxWidth().height(rows), horizontalArrangement = Arrangement.spacedBy(gap)) {
         listOf("789", "456", "123").let { lines ->
             for (col in 0..2) {
-                KeyColumn {
+                KeyColumn(gap) {
                     lines.forEach { line -> DigitKey(line[col]) { press(KeypadKey.Digit(line[col])) } }
                     when (col) {
                         0 -> if (showDecimal) TextKey(",") { press(KeypadKey.Decimal) } else Spacer()
@@ -67,7 +72,7 @@ fun CoShellKeypad(
                 }
             }
         }
-        KeyColumn {
+        KeyColumn(gap) {
             Key(onClick = { press(KeypadKey.Backspace) }, container = MaterialTheme.colorScheme.surfaceContainerHighest) {
                 Icon(painterResource(R.drawable.ic_backspace), contentDescription = backspaceLabel)
             }
@@ -119,8 +124,8 @@ private fun DoneLabel(label: String, inRow: Boolean) {
 }
 
 @Composable
-internal fun androidx.compose.foundation.layout.RowScope.KeyColumn(content: @Composable ColumnScope.() -> Unit) =
-    Column(Modifier.weight(1f).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(Spacing.s), content = content)
+internal fun androidx.compose.foundation.layout.RowScope.KeyColumn(gap: Dp = Spacing.s, content: @Composable ColumnScope.() -> Unit) =
+    Column(Modifier.weight(1f).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(gap), content = content)
 
 @Composable
 private fun ColumnScope.DigitKey(digit: Char, onClick: () -> Unit) = TextKey(digit.toString(), onClick)

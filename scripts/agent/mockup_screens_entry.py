@@ -74,11 +74,19 @@ def categories(selected=None, error=False, caption=''):
     return p.block(title, p.grid4(cells) + err, right=caption or (p.small_link(selected + ' ✓') if selected else ''))
 
 
-def details(day='Сегодня, 19 нояб.', note=None, refund=True, save_as=False):
-    tiles = (p.detail('calendar', 'Дата', day) + p.detail('note', 'Заметка', note or 'Без заметки', bool(note))
-             + p.detail('spark', 'Теги', '—', False) + (p.refund_check() if refund else ''))
-    return p.block('Детали', '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">%s</div>' % tiles,
-                   right=p.small_link('В шаблон') if save_as else '')
+def detail_chip(icon, text='', fixed=False):
+    """CoShellDetailChip (#818): pill 40 — icon + one line; an empty detail is the icon alone."""
+    pad = 'padding: 0 14px 0 12px;' if text else 'width: 40px; justify-content: center;'
+    word = ('<span style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: %s;">%s</span>' % (INK, text)) if text else ''
+    return ('<span style="height: 40px; box-sizing: border-box; border-radius: 999px; background: %s; display: flex; align-items: center; gap: 8px; min-width: 0; %s%s">%s%s</span>'
+            % (CHIP, pad, 'flex: 0 1 auto;' if text and not fixed else 'flex: none;', svg(icon, MUTED, 18), word))
+
+
+def details(day='Сегодня', note=None, refund=True, save_as=False, payee=None, tags=None):
+    """«Детали» in one line of chips, no card (#818, poll «А»): date and payee in words, empty note and tags as icons.
+    `refund`/`save_as` stay for the callers: «Возврат» is in the «Сумма» caption, «В шаблон» — in the top row of a saved one."""
+    chips = detail_chip('calendar', day, fixed=True) + (detail_chip('cart', payee) if payee else '') + detail_chip('note', note or '') + detail_chip('tag', tags or '')
+    return '<div style="display: flex; gap: 6px;">%s</div>' % chips
 
 
 def sheet(top, *cards, keys=None):
@@ -87,21 +95,33 @@ def sheet(top, *cards, keys=None):
     return p.frame(top + middle + (keys or m.keypad()))
 
 
-def amount_card(value, cur, color, extra='', debited=False, links='+ Сумма покупки'):
-    return p.block('Сумма · списано' if debited else 'Сумма', big(value, cur, color) + extra, right=p.small_link(links) if links else '')
+def amount_card(value, cur, color, extra='', debited=False, links='+ Сумма покупки', refund=None):
+    """`refund` — «Возврат» of an expense on the left of the links (#818); by default — whenever there are links (not a transfer)."""
+    ref = bool(links) if refund is None else refund
+    words = ('Возврат' + ('&nbsp;&nbsp;&nbsp;' if links else '') if ref else '') + links
+    return p.block('Сумма · списано' if debited else 'Сумма', big(value, cur, color) + extra, right=p.small_link(words) if words else '')
+
+
+def receipt_line(value='13 300', cur='ARS', rate='1 USDT = 1 015 ARS'):
+    """«Покупка 13 300 ARS ▾ · курс · ✕» in one line (#818): CoShellAmountSlot(compact) + the rate + ✕."""
+    pill = ('<span style="height: 40px; padding: 0 4px 0 14px; border-radius: 999px; background: %s; box-shadow: inset 0 0 0 1px %s; display: inline-flex; align-items: center; gap: 8px; '
+            'white-space: nowrap; flex: none;"><span style="font-size: 12px; color: %s;">Покупка</span><b style="%s font-size: 16px;">%s</b><span style="height: 32px; padding: 0 12px; '
+            'border-radius: 999px; box-shadow: inset 0 0 0 1px %s; display: inline-flex; align-items: center; font-size: 13px;">%s ▾</span></span>' % (FIELD, LINE2, MUTED, MONO, value, LINE2, cur))
+    return ('<div style="display: flex; align-items: center; gap: 4px; margin-top: 8px;">%s<span style="flex: 1; font-size: 11px; color: %s; padding-left: 4px;">%s</span>%s</div>'
+            % (pill, MUTED, rate, icon_button('close', 'Убрать сумму покупки', INK)))
 
 
 # ---- static boards ------------------------------------------------------------------------------------------------
 
 def transfer():
     return sheet(type_bar('tr') + ribbon(2, 'Откуда') + ribbon(0, 'Куда'),
-                 amount_card('500', 'USD', INK, slot('Сумма зачисления', '512 000', 'ARS', 'Сколько пришло на «Galicia». Курс посчитается сам.'), links=''),
+                 amount_card('500', 'USD', INK, slot('Сумма зачисления', '512 000', 'ARS', 'Сколько пришло на «Galicia». Курс посчитается сам.'), links='', refund=False),
                  details(refund=False))
 
 
 def receipt():
-    line = slot('Сумма покупки', '13 300', 'ARS ▾', '1 USDT = 1 015 ARS')
-    return sheet(type_bar('exp') + ribbon(3), amount_card('13,10', 'USDT', PINK, line, debited=True, links=''), categories('Кафе'), details())
+    return sheet(type_bar('exp') + ribbon(3), amount_card('13,10', 'USDT', PINK, receipt_line(), debited=True, links='+ Чаевые'), categories('Кафе'),
+                 details(payee='Кофейня «Зерно»'))
 
 
 def guess(source):
@@ -124,8 +144,8 @@ def edit_types(cur='exp'):
 
 def edit():
     """A saved operation: its type switch next to «Дублировать» and «Удалить» (#509); amount, account and date stay on a change."""
-    head = ('<div style="display: flex; align-items: center; gap: 4px;">%s%s%s</div>'
-            % (edit_types(), icon_button('copy', 'Дублировать', INK, True), icon_button('trash', 'Удалить', PINK, True)))
+    head = ('<div style="display: flex; align-items: center; gap: 4px;">%s%s%s%s</div>'
+            % (edit_types(), icon_button('bookmark_add', 'Сохранить как шаблон', INK, True), icon_button('copy', 'Дублировать', INK, True), icon_button('trash', 'Удалить', PINK, True)))
     return sheet(head + ribbon(0), amount_card('32 000', 'ARS', PINK), categories('Продукты'), details('10 нояб.', 'Coto, на неделю', save_as=True))
 
 

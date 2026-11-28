@@ -30,6 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import app.coshell.R
+import app.coshell.core.designsystem.tokens.Sizes
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import app.coshell.core.designsystem.R as DesignR
 import app.coshell.core.designsystem.components.CoShellFilterChip
 import app.coshell.core.designsystem.components.CoShellIconButton
@@ -57,19 +60,23 @@ import app.coshell.ui.format.formatDayMonth
 @Composable
 internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEditActions, modifier: Modifier = Modifier) {
     var saveAsOpen by rememberSaveable { mutableStateOf(false) }
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs)) {
+    // A short phone (#818, poll «А»: 360×740) — one row of frequent categories and keys of 48 dp: still no scrolling.
+    val short = LocalConfiguration.current.screenHeightDp.dp < Sizes.shortScreen
+    val gap = if (short) Spacing.xxs else Spacing.s - Spacing.xxs
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
         state.unsaved?.takeIf { state.isNew }?.let { UnsavedPlate(it, actions.onUnsavedContinue, actions.onUnsavedDiscard) }
         if (state.showsTypeSwitch) TypeBar(state, actions)
-        Header(state, actions)
+        // An empty header would still take a gap of the column: only when it shows something.
+        if (state.hasHeader) Header(state, actions, onSaveAsTemplate = { saveAsOpen = true })
         AccountRibbonBlock(state, actions)
         Column(
             Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()).padding(horizontal = Spacing.m),
-            verticalArrangement = Arrangement.spacedBy(Spacing.s - Spacing.xxs),
+            verticalArrangement = Arrangement.spacedBy(gap),
         ) {
             AmountBlock(state, actions, amountColor(state.type, state.refund))
             state.scan?.let { ScanSourceLine(it) }
-            CoShellExpandable(!state.isTransfer) { CategoryBlock(state, actions) }
-            DetailsBlock(state, actions, onSaveAsTemplate = { saveAsOpen = true })
+            CoShellExpandable(!state.isTransfer) { CategoryBlock(state, actions, rows = if (short) 1 else 2) }
+            DetailsBlock(state, actions)
         }
         CoShellKeypad(
             onKey = actions.onKey,
@@ -78,7 +85,8 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
             doneLabel = stringResource(if (state.payment != null) R.string.recurring_post else R.string.keypad_done),
             backspaceLabel = stringResource(R.string.keypad_backspace),
             showDecimal = fractionOf(state) > 0,
-            modifier = Modifier.padding(horizontal = Spacing.m).padding(bottom = Spacing.m),
+            compact = short,
+            modifier = Modifier.padding(horizontal = Spacing.m).padding(bottom = if (short) Spacing.xs else Spacing.m),
         )
     }
     state.tip?.let { TipSheet(state, it, actions) }
@@ -96,42 +104,44 @@ internal fun DetailsStep(state: TransactionEditUiState, actions: TransactionEdit
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Header(state: TransactionEditUiState, actions: TransactionEditActions) {
-    // A flow: when the chips and the words on the right do not fit one line (narrow screen, big font), the words drop
-    // to the next line whole — «Расход» is never broken into letters.
-    FlowRow(
-        Modifier.fillMaxWidth().padding(horizontal = Spacing.l),
-        itemVerticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.s),
-    ) {
-        // A saved operation changes its type here, next to «Дублировать» and «Удалить» (#509, poll «А», board `EntryEdit`):
-        // the amount, account, date and note stay; the category stays only when it fits the new type.
-        if (state.showsEditTypeSwitch) TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f)) else Spacer(Modifier.weight(1f))
-        if (state.refund) {
-            Text(
-                stringResource(R.string.transaction_refund_label),
-                style = MaterialTheme.typography.labelLarge,
-                color = amountColor(state.type, state.refund),
-                maxLines = 1,
-                softWrap = false,
-            )
-        }
+private fun Header(state: TransactionEditUiState, actions: TransactionEditActions, onSaveAsTemplate: () -> Unit) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = Spacing.l), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+        // A saved operation changes its type here, next to «В шаблон», «Дублировать» and «Удалить» (#509, poll «А», board
+        // `EntryEdit`): one row — the switch shows icons when the words do not fit. Amount, account, date and note stay.
         if (!state.isNew) {
-            CoShellIconButton(onClick = actions.onDuplicate) {
-                Icon(painterResource(DesignR.drawable.ic_content_copy), contentDescription = stringResource(R.string.action_duplicate))
-            }
-            CoShellIconButton(onClick = actions.onDelete) {
-                Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = stringResource(R.string.action_delete))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
+                if (state.showsEditTypeSwitch) TypeSelector(state.type, actions.onTypeChange, Modifier.weight(1f)) else Spacer(Modifier.weight(1f))
+                // «В шаблон» (#818): was a link over the «Детали» tiles, which are one line of chips now.
+                if (state.savedTemplateName == null) {
+                    CoShellIconButton(onClick = onSaveAsTemplate) {
+                        Icon(painterResource(DesignR.drawable.ic_bookmark_add), contentDescription = stringResource(R.string.template_save_as_title))
+                    }
+                }
+                CoShellIconButton(onClick = actions.onDuplicate) {
+                    Icon(painterResource(DesignR.drawable.ic_content_copy), contentDescription = stringResource(R.string.action_duplicate))
+                }
+                CoShellIconButton(onClick = actions.onDelete) {
+                    Icon(painterResource(DesignR.drawable.ic_delete), contentDescription = stringResource(R.string.action_delete))
+                }
             }
         }
-        if (state.isCopy) CopyLabel()
         val payment = state.payment
-        if (payment != null) {
-            TemplatePill(stringResource(R.string.payment_pill, payment.name, formatDayMonthShort(payment.date)), onClear = null, icon = DesignR.drawable.ic_refresh)
-        } else {
-            state.templateName?.let { TemplatePill(it, onClear = actions.onTemplateClear) }
+        if (state.isCopy || payment != null || state.templateName != null || state.savedTemplateName != null) {
+            // A flow: on a narrow screen or a big font the labels drop to the next line whole — never broken into letters.
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                itemVerticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s, Alignment.End),
+            ) {
+                if (state.isCopy) CopyLabel()
+                if (payment != null) {
+                    TemplatePill(stringResource(R.string.payment_pill, payment.name, formatDayMonthShort(payment.date)), onClear = null, icon = DesignR.drawable.ic_refresh)
+                } else {
+                    state.templateName?.let { TemplatePill(it, onClear = actions.onTemplateClear) }
+                }
+                state.savedTemplateName?.let { TemplatePill(it, onClear = null) }
+            }
         }
-        state.savedTemplateName?.let { TemplatePill(it, onClear = null) }
     }
 }
 
@@ -175,6 +185,10 @@ private fun amountColor(type: TransactionType, refund: Boolean = false) = when (
     TransactionType.INCOME -> LocalAmountPalette.current.income
     TransactionType.TRANSFER -> MaterialTheme.colorScheme.onSurface
 }
+
+/** The header row has something: the switch and buttons of a saved one, a copy, a payment or a template. */
+private val TransactionEditUiState.hasHeader: Boolean
+    get() = !isNew || isCopy || payment != null || templateName != null || savedTemplateName != null
 
 /** «Готово» is quiet until the amount being typed is not empty (#505); other fields keep it on. */
 internal val TransactionEditUiState.canPost: Boolean

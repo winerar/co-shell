@@ -53,7 +53,7 @@
     <string name="hint_month_end">Месяц закончился. Посмотрите итоги.</string>
     <string name="hint_entry_minimal">Нужны только сумма и счёт. Остальное можно пропустить.</string>
     <string name="hint_keypad_math">Можно складывать и вычитать: 300 + 150.</string>
-    <string name="hint_entry_refund">Вернули деньги? Отметьте «Это возврат».</string>
+    <string name="hint_entry_refund">Вернули деньги? Нажмите «Возврат» над суммой.</string>
     <string name="hint_currency_account">Деньги в другой валюте? В итоги они войдут по курсу, он подставится сам.</string>
     <string name="hint_pin_forgot">PIN включён. Забудете — на экране входа нажмите «Забыли PIN?».</string>
     <string name="hint_currency_receipt">Укажите сумму покупки, и курс посчитается сам.</string>

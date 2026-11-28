@@ -339,7 +339,6 @@
         <item quantity="other">+%1$d compilaciones</item>
     </plurals>
     <string name="update_version_installed_on">instalada el\n%1$s</string>
-    <string name="transaction_refund_label">Gasto → devolución</string>
     <string name="transaction_refund_hint">Devolución: el dinero volvió a la cuenta, los gastos de «%1$s» bajarán</string>
     <string name="transaction_refund_hint_pick">Devolución: elige la categoría de la compra — sus gastos bajarán</string>
     <string name="transaction_refund_row">↩ devolución</string>
@@ -590,7 +589,6 @@
     <string name="template_clear">Quitar plantilla</string>
     <string name="template_hint_amount">De una plantilla · puedes ajustar el importe</string>
     <string name="template_hint_enter_amount">De una plantilla · escribe el importe</string>
-    <string name="template_save_as_chip">A plantilla</string>
     <string name="template_save_as_title">Guardar como plantilla</string>
     <string name="template_name">Nombre</string>
     <string name="template_name_error">Escribe un nombre</string>
@@ -621,13 +619,7 @@
     <string name="entry_receipt_add">+ Importe de la compra</string>
     <string name="entry_receipt">Importe de la compra</string>
     <string name="entry_receipt_remove">Quitar el importe de la compra</string>
-    <string name="entry_note_empty">Sin nota</string>
     <string name="entry_tags">Etiquetas</string>
-    <string name="entry_tags_empty">Sin etiquetas</string>
-    <string name="entry_refund_title">Es una devolución</string>
-    <string name="entry_refund_subtitle">devuelto a la cuenta</string>
-    <string name="entry_date_today">Hoy, %1$s</string>
-    <string name="entry_date_yesterday">Ayer, %1$s</string>
     <string name="transaction_categories_all">Todas</string>
     <string name="transaction_categories_search">Buscar categoría</string>
     <string name="transaction_categories_nothing">No se ha encontrado nada</string>

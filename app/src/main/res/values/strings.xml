@@ -376,7 +376,6 @@
         <item quantity="other">+%1$d сборки</item>
     </plurals>
     <string name="update_version_installed_on">установлена\n%1$s</string>
-    <string name="transaction_refund_label">Расход → возврат</string>
     <string name="transaction_refund_hint">Возврат: деньги пришли на счёт, траты «%1$s» уменьшатся</string>
     <string name="transaction_refund_hint_pick">Возврат: выберите категорию покупки — её траты уменьшатся</string>
     <string name="transaction_refund_row">↩ возврат</string>
@@ -657,7 +656,6 @@
     <string name="template_clear">Убрать шаблон</string>
     <string name="template_hint_amount">Из шаблона · сумму можно поправить</string>
     <string name="template_hint_enter_amount">Из шаблона · введите сумму</string>
-    <string name="template_save_as_chip">В шаблон</string>
     <string name="template_save_as_title">Сохранить как шаблон</string>
     <string name="template_name">Название</string>
     <string name="template_name_error">Введите название</string>
@@ -689,14 +687,11 @@
     <string name="entry_section_details">Детали</string>
     <string name="entry_receipt_add">+ Сумма покупки</string>
     <string name="entry_receipt">Сумма покупки</string>
+    <string name="entry_receipt_short">Покупка</string>
+    <string name="entry_refund_link">Возврат</string>
+    <string name="entry_refund_on">✓ Возврат</string>
     <string name="entry_receipt_remove">Убрать сумму покупки</string>
-    <string name="entry_note_empty">Без заметки</string>
     <string name="entry_tags">Теги</string>
-    <string name="entry_tags_empty">Без тегов</string>
-    <string name="entry_refund_title">Это возврат</string>
-    <string name="entry_refund_subtitle">вернули на счёт</string>
-    <string name="entry_date_today">Сегодня, %1$s</string>
-    <string name="entry_date_yesterday">Вчера, %1$s</string>
     <string name="transaction_categories_all">Все</string>
     <string name="transaction_categories_all_title">Все категории</string>
     <string name="transaction_categories_search">Найти категорию</string>

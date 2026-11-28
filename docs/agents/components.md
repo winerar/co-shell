@@ -9,14 +9,14 @@
 - **Поля** — `CoShellTextField` (К6 = 8А, #200: заливка `surfaceContainer`, рамка 1 dp `outline` (≥ 3:1, Style8) → ink в фокусе,
   радиус 16, подпись внутри; `BasicTextField` + `TextFieldDefaults.DecorationBox`, рамка только вокруг поля; `error` краснит поле и заменяет `hint` под ним, `prefix`/`suffix`,
   на всю ширину своего места), `CoShellAmountField` (десятичная клавиатура, шрифт сумм, «0», код валюты
-  после числа).
+  после числа). `CoShellAmountSlot(compact = true)` (#818) — пилюля 40 «Покупка 13 300 ARS ▾»: подпись в строку (на узком экране с крупным шрифтом убирается), число ужимается.
   Сумма в редакторе — [`components-keypad.md`](components-keypad.md). Клавиатуры: `TextKeyboard` (с заглавной, «Далее»), `CodeKeyboard` (коды валют).
 - **Поиск над списком** — `CoShellSearchField` (К2, #198): пилюля 48 dp на `surfaceContainer`, лупа, подсказка внутри,
   «✕» очищает (`clearLabel` — для TalkBack, в app — `R.string.search_clear`); «Поиск» на клавиатуре прячет её.
   Везде, где ищут по списку (Операции, Счета, «Найти счёт» в шторке, «Все шаблоны»), — только он.
 - **Секции форм** (#290) — `CoShellFormSection(title, trailing)`: карточка-сущность с подписью капсом; справа — `CoShellSectionLink`
   («+ Чек», «В шаблон») или текст. Внутри — `CoShellDetailTile(icon, label, value, empty)` (плитка 40 dp) и `CoShellCheckTile` (галочка словами),
-  `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
+  `CoShellDetailChip(icon, text?, label)` (#818: пилюля 40 — значок + слово, пустое — один значок; «Детали» шторки ввода строкой), `CoShellSwitchLine` (переключатель в одну строку с подписью), `CoShellChoicePill` (мелкие пилюли выбора — 5 в строку, «Тип» счёта).
   В app (`ui/form`, `ui/sheet`): `IconStrip`/`ColorStrip` (одна строка + «Все 52»/«+29»), `IconColorSheet` (все иконки и цвета,
   `extra` — банки), `EditTitleActions` (архив и удаление у заголовка), `FormSheet` (маленькая шторка «…· Готово» поверх формы; `actionLabel`/`onAction` — своё действие вместо «Готово», «Сохранить баланс» #581).
 - **Лента счетов** — `CoShellAccountRibbon(accounts: List<RibbonAccount>, selectedId, onSelect, onAll, allLabel)` (#505, доска `CompChoice`): значки 44 в ячейках 48, выбранный — кольцо `themeEdge()`, в конце «Все ›».

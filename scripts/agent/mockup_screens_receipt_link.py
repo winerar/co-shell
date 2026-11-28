@@ -33,7 +33,7 @@ def choice_row(name):
 def which_account():
     """ChoiceSheet (`ReceiptAccountSheet`): a tap on an account chooses it and saves the digits in it — no extra button."""
     rows = '<div>%s%s%s</div>' % (choice_row('Ameria · карта'), choice_row('Ameria · накопительный'), choice_row('Galicia'))
-    under = e.sheet(e.type_bar('exp') + e.ribbon(0), e.amount_card('3 000', 'AMD', PINK, source_line(), links=''), e.categories(), e.details())
+    under = e.sheet(e.type_bar('exp') + e.ribbon(0), e.amount_card('3 000', 'AMD', PINK, source_line(), links='', refund=True), e.categories(), e.details())
     return board('Какой это счёт?', md.modal_sheet(under, 'Какой это счёт?', rows,
                                                      'В чеке карта …3900. Выберите счёт, и в следующий раз чек найдёт его сам.', top=350))
 

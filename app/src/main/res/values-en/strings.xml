@@ -335,7 +335,6 @@
         <item quantity="other">+%1$d builds</item>
     </plurals>
     <string name="update_version_installed_on">installed\n%1$s</string>
-    <string name="transaction_refund_label">Expense → refund</string>
     <string name="transaction_refund_hint">Refund: money came back to the account, spending in “%1$s” goes down</string>
     <string name="transaction_refund_hint_pick">Refund: choose the purchase category — its spending goes down</string>
     <string name="transaction_refund_row">↩ refund</string>
@@ -583,7 +582,6 @@
     <string name="template_clear">Remove template</string>
     <string name="template_hint_amount">From a template · you can adjust the amount</string>
     <string name="template_hint_enter_amount">From a template · enter the amount</string>
-    <string name="template_save_as_chip">To template</string>
     <string name="template_save_as_title">Save as template</string>
     <string name="template_name">Name</string>
     <string name="template_name_error">Enter a name</string>
@@ -614,13 +612,7 @@
     <string name="entry_receipt_add">+ Purchase amount</string>
     <string name="entry_receipt">Purchase amount</string>
     <string name="entry_receipt_remove">Remove purchase amount</string>
-    <string name="entry_note_empty">No note</string>
     <string name="entry_tags">Tags</string>
-    <string name="entry_tags_empty">No tags</string>
-    <string name="entry_refund_title">This is a refund</string>
-    <string name="entry_refund_subtitle">returned to the account</string>
-    <string name="entry_date_today">Today, %1$s</string>
-    <string name="entry_date_yesterday">Yesterday, %1$s</string>
     <string name="transaction_categories_all">All</string>
     <string name="transaction_categories_search">Find a category</string>
     <string name="transaction_categories_nothing">Nothing found</string>

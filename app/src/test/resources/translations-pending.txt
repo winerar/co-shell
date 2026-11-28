@@ -72,6 +72,9 @@ duplicate_open
 duplicate_text
 duplicate_title
 entry_edited
+entry_receipt_short
+entry_refund_link
+entry_refund_on
 export_all_accounts_hint
 export_hint
 family_intro
@@ -172,6 +175,7 @@ hint_backup
 hint_clipboard
 hint_currency_account
 hint_edit_home
+hint_entry_refund
 hint_family
 hint_goals
 hint_hold_amount
@@ -275,6 +279,8 @@ release_bulk_text
 release_bulk_title
 release_close
 release_done
+release_entry_compact_text
+release_entry_compact_title
 release_header
 release_insights_text
 release_insights_title

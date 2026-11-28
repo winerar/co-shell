@@ -13,24 +13,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.coshell.R
 import app.coshell.core.designsystem.components.underBars
+import app.coshell.core.designsystem.components.CoShellMenuGrid
 import app.coshell.core.designsystem.components.CoShellMenuRow
+import app.coshell.core.designsystem.components.MenuTile
 import app.coshell.core.designsystem.components.CoShellRowGroup
 import app.coshell.core.designsystem.components.CoShellStatusChip
 import app.coshell.core.designsystem.components.StatusTone
 import app.coshell.core.designsystem.motion.staggeredEntrance
 import app.coshell.core.designsystem.theme.CoShellTheme
-import app.coshell.core.designsystem.tokens.Sizes
+
 import app.coshell.core.designsystem.tokens.Spacing
-import app.coshell.more.components.moreSections
+import app.coshell.more.components.moreAppRows
+import app.coshell.more.components.moreGrids
 import app.coshell.newmark.NewFeatures
 import app.coshell.ui.list.SectionTitle
 import app.coshell.ui.top.TabTopBar
 import app.coshell.ui.top.rememberTabScrollBehavior
 import app.coshell.ui.top.tabScroll
 
-// Menu tab (poll 2026-11-20, Б; boards MoreB, MoreBEnd, MoreBUpdate): rarely used sections as rows in four groups
-// (Деньги · Валюты · Семья и данные · Приложение); the version lives in the row «О приложении»
-// The former «Настройки» screen is gone: its items live in the groups.
+// Menu tab (poll 2026-11-28 «А», boards More, MoreTiles): the sections as two grids of icons (Деньги · Валюты и семья) and three
+// rows of «Приложение» — the whole menu on one screen. Backup, import and export are one place «Данные» (= «Настройки → Данные»);
+// «Конфиденциальность» lives in «Настройки». Sections — `components/MoreSections.kt`.
 
 /** What the rows say about their sections; defaults make previews short. */
 data class MoreState(
@@ -53,12 +56,9 @@ data class MoreActions(
     val onRates: () -> Unit = {},
     val onConverter: () -> Unit = {},
     val onFamily: () -> Unit = {},
-    val onBackup: () -> Unit = {},
-    val onImport: () -> Unit = {},
-    val onExport: () -> Unit = {},
+    /** «Данные»: backup, import, export, wiping (`DataSettingsScreen`). */
+    val onData: () -> Unit = {},
     val onSettings: () -> Unit = {},
-    /** «Конфиденциальность» (#145). */
-    val onPrivacy: () -> Unit = {},
     val onFeedback: () -> Unit = {},
     /** «Быстрые заметки» and «Черновики» (#586). */
     val onNotes: () -> Unit = {},
@@ -80,16 +80,38 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
         topBar = { TabTopBar(stringResource(R.string.nav_more), scroll) },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
-        val sections = moreSections(actions, state.draftCount, state.versionName, state.build, state.availableVersion)
+        val grids = moreGrids(actions, state.draftCount)
+        val app = moreAppRows(actions, state.versionName, state.build, state.availableVersion)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Sizes.fabClearance)),
+            contentPadding = underBars(padding, PaddingValues(top = Spacing.s, bottom = Spacing.l)),
         ) {
             item(key = "hint") { HintSlot(Modifier.padding(horizontal = Spacing.l)) }
-            itemsIndexed(sections, key = { _, section -> section.title }) { index, section ->
-                SectionTitle(stringResource(section.title))
-                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index)) {
-                    section.items.forEach { item ->
+            itemsIndexed(grids, key = { _, grid -> grid.title }) { index, grid ->
+                SectionTitle(stringResource(grid.title))
+                CoShellMenuGrid(
+                    grid.items.map { item ->
+                        val isNew = item.newKey != null && item.newKey in state.newMarks
+                        MenuTile(
+                            icon = item.icon,
+                            label = stringResource(item.title),
+                            onClick = {
+                                if (isNew) actions.onOpenedNew(item.newKey!!)
+                                item.onClick()
+                            },
+                            mark = when {
+                                isNew -> stringResource(R.string.new_mark)
+                                else -> item.count?.toString()
+                            },
+                        )
+                    },
+                    Modifier.padding(horizontal = Spacing.l).staggeredEntrance(index),
+                )
+            }
+            item(key = "app") {
+                SectionTitle(stringResource(R.string.more_section_app))
+                CoShellRowGroup(Modifier.padding(horizontal = Spacing.l).staggeredEntrance(grids.size)) {
+                    app.forEach { item ->
                         val isNew = item.newKey != null && item.newKey in state.newMarks
                         row {
                             CoShellMenuRow(
@@ -100,14 +122,10 @@ fun MoreScreen(actions: MoreActions, state: MoreState = MoreState()) {
                                     if (isNew) actions.onOpenedNew(item.newKey!!)
                                     item.onClick()
                                 },
-                                mark = when {
-                                    isNew || item.fresh -> {
-                                        { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
-                                    }
-                                    item.count != null -> {
-                                        { CoShellStatusChip(item.count.toString(), StatusTone.Fresh) }
-                                    }
-                                    else -> null
+                                mark = if (isNew || item.fresh) {
+                                    { CoShellStatusChip(stringResource(R.string.new_mark), StatusTone.Fresh) }
+                                } else {
+                                    null
                                 },
                             )
                         }

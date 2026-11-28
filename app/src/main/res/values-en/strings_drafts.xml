@@ -11,7 +11,6 @@
     <string name="notes_menu_hint">Expenses as lines: coffee 3500</string>
     <string name="drafts_title">Drafts</string>
     <string name="drafts_title_count">Drafts · %1$d</string>
-    <string name="drafts_menu_hint">From notes: check and add</string>
     <string name="drafts_hint_ready">Tap a row to edit it.</string>
     <string name="drafts_post">Add · %1$d</string>
     <string name="drafts_post_none">Add</string>

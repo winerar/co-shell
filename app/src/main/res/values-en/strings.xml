@@ -43,7 +43,6 @@
     <string name="transactions_no_category">No category</string>
 
     <string name="accounts_title">Accounts</string>
-    <string name="accounts_menu_hint">Cards, cash, savings</string>
     <string name="home_all_accounts">All accounts ›</string>
     <string name="accounts_add">Add account</string>
     <string name="accounts_empty">No accounts yet. Tap “+” to add your first one.</string>
@@ -233,7 +232,6 @@
     <string name="backup_error_write">Couldn\'t save the file. Choose another folder.</string>
     <string name="backup_error_read">Couldn\'t read the file.</string>
     <string name="feedback_title">Feedback</string>
-    <string name="backup_menu_hint">Save or restore your data</string>
     <string name="feedback_menu_hint">A problem or an idea</string>
     <string name="shake_to_add_title">Shake to scan a QR</string>
     <string name="shake_to_add_hint">While the app is open</string>
@@ -251,10 +249,7 @@
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">new</string>
     <string name="more_section_money">Money</string>
-    <string name="more_section_rates">Currencies</string>
-    <string name="more_export_hint">Transactions for a period as CSV</string>
     <string name="more_version_quiet">Version %1$s · build %2$d · up to date</string>
-    <string name="more_section_family_data">Family and data</string>
     <string name="more_section_app">App</string>
     <string name="more_version_available">Version %1$s is out</string>
     <string name="theme_title">Theme</string>
@@ -380,7 +375,6 @@
     <string name="update_whats_new_title">What\'s new in %1$s</string>
     <string name="update_whats_new_ok">Got it</string>
     <string name="rates_title">Exchange rates</string>
-    <string name="rates_menu_hint">Updated automatically once a day</string>
 
     <string name="report_currencies_title">Totals currencies</string>
     <string name="report_currencies_hint">The total balance is shown in each of these currencies. Tap one to make it the main one.</string>
@@ -453,7 +447,6 @@
     </plurals>
 
     <string name="family_title">Family</string>
-    <string name="family_menu_hint">A shared budget with your family</string>
     <string name="family_not_configured">Sync isn\'t set up in this build — the app works on this phone only.</string>
     <string name="family_sign_in">Sign in with Google</string>
     <string name="family_checking">Signed in as %1$s. Checking access…</string>
@@ -563,7 +556,6 @@
     <string name="wipe_count_rates">manual rates</string>
     <string name="wipe_kept">The family, settings and theme stay. Default categories will be created again.</string>
     <string name="wipe_backup_title">We\'ll save a backup first</string>
-    <string name="wipe_backup_hint">The file co-shell-before-wipe-….json in “Downloads”. To bring it back: “More → Backup”.</string>
     <string name="wipe_word_prompt">To confirm, type %1$s</string>
     <string name="wipe_word_label">Word</string>
     <string name="wipe_confirm_word">DELETE</string>

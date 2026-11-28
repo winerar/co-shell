@@ -66,12 +66,8 @@ def about_update():
 
 
 def more_app(update=False):
-    info = row('О приложении', 'Вышла версия 1.3' if update else 'Версия 1.2 · актуальная', tile_icon('info', LIME),
-               '<span style="flex: none; height: 22px; padding: 0 8px; border-radius: 999px; background: %s; color: %s; font-size: 11px; font-weight: 600; line-height: 22px;">Новое</span>'
-               % (LIME, ONLIME) if update else chevron(), min_h=56)
-    app = group([menu.r('Настройки', 'Тема, ввод, уведомления, экраны', 'gear', VIOLET), menu.r('Конфиденциальность', 'PIN, отпечаток, скрытие сумм', SHIELD, CYAN),
-                 menu.r('Обратная связь', 'Ошибка или идея', 'mail', PINK), info])
-    return tab_screen('Ещё', label('Семья и данные', top=6) + menu.new_data() + label('Приложение', top=14) + app, 'more')
+    """«Ещё»: the row «О приложении» with the version (or «новое» when a release is out) — the grid of poll 2026-11-28 «А»."""
+    return tab_screen('Ещё', menu.body('1.3' if update else None), 'more')
 
 
 BOARDS = [

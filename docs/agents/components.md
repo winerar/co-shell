@@ -49,6 +49,7 @@
   `dense = true` — плотность меню (≥ 52 dp, подпись `bodySmall`). **Строка меню** — `CoShellMenuRow(icon, title, onClick, subtitle)`
   (#155): иконка второго цвета в круге его тона 18 % (`MenuIcon`, #442 Б — у всех строк один цвет), шеврон; группы «Ещё»;
   `mark` — сразу за заголовком: метка «новое» = `CoShellStatusChip(…, StatusTone.Fresh)` (неон палитры в точке, доска Style2, #335).
+- **Сетка разделов** — `CoShellMenuGrid(tiles: List<MenuTile>, columns = 4)`, `MenuTile(icon, label, onClick, mark)` (опрос 2026-11-28 «А», доски `MoreTiles`, кирпич `menu_grid`): одна карточка, значок `MenuIcon` 40 dp и короткое название до 2 строк; `mark` — число или «новое» на углу значка. «Ещё»; длинные и редкие пункты — строками `CoShellMenuRow` рядом.
 - **Модальные окна (#345, вариант В)** — вопрос: `CoShellAlertDialog` — карточка по центру (иконка в квадрате, вопрос,
   последствия, пилюли «Отмена · Действие»; `destructive` — красные иконка-корзина и кнопка; без окна — `CoShellConfirmCard`; длинный текст прокручивается над кнопками, кнопки не сжимаются — `ConfirmCardOverflowTest`).
   Форма или выбор — только шторка `CoShellModalSheet` (в app — `ui/sheet/ModalSheet`): заголовок + подзаголовок + × (`headerAction` — ещё одна кнопка-значок перед ×, так режим конвертера),

@@ -127,6 +127,19 @@ STORIES = {
         ('accent', 'fill', circle(168, 90, 13)),
         ('accent', 'stroke', line((122, 90), (98, 90)) + ' ' + line((108, 80), (98, 90), (108, 100)), 3),
     ],
+    'more_tiles': [  # 2026-11-28: «Ещё» as a grid of icons four in a row, one of them picked
+        ('ink', 'stroke', rrect(20, 14, 260, 152, 24)),
+        ('ink', 'stroke', ' '.join(circle(62 + 59 * c, 50 + 62 * r, 16) for r in range(2) for c in range(4) if (r, c) != (0, 2))),
+        ('ink', 'stroke', ' '.join(rrect(46 + 59 * c, 76 + 62 * r, 32, 5, 2.5) for r in range(2) for c in range(4)), 1.5),
+        ('accent', 'fill', circle(180, 50, 16)),
+    ],
+    'settings_search': [  # 2026-11-28: «Найти настройку» — a search pill and the one row it found
+        ('ink', 'stroke', rrect(20, 16, 260, 44, 22) + ' ' + circle(48, 36, 8) + ' ' + line((54, 42), (60, 48))),
+        ('ink', 'stroke', rrect(76, 34, 70, 5, 2.5), 1.5),
+        ('accent', 'fill', rrect(20, 84, 260, 56, 18)),
+        ('ink', 'stroke', rrect(40, 100, 120, 6, 3) + ' ' + rrect(40, 116, 80, 5, 2.5) + ' ' + line((250, 104), (258, 112), (250, 120)), 1.5),
+        ('ink', 'stroke', dashed(30, 270, 162), 1.5),
+    ],
     # «Знакомство» (#598, owner poll 2026-11-25 «А»; boards Tour598S3, S4, S6): accounts, fan and recap are shared with the release stories.
     'categories': [
         ('accent', 'fill', circle(70, 50, 26)),

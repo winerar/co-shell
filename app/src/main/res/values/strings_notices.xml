@@ -35,7 +35,7 @@
         <item quantity="many">Последняя — %1$d дней назад.</item>
         <item quantity="other">Последняя — %1$d дня назад.</item>
     </plurals>
-    <string name="notice_backup_text_never">Копии пока нет. Ещё → Резервная копия.</string>
+    <string name="notice_backup_text_never">Копии пока нет. Ещё → Данные → Резервная копия.</string>
     <string name="notice_drafts_title">Черновики ждут</string>
     <string name="notice_drafts_text">Готово к записи: %1$d. Проверьте и запишите.</string>
 

@@ -11,7 +11,6 @@
     <string name="converter_pick_get">Currency you get</string>
     <string name="converter_pick_source">Convert from</string>
     <string name="converter_rows_hint">Tap a currency to count from it</string>
-    <string name="converter_no_rate">No rate. Add one: More → Exchange rates</string>
     <string name="converter_row_no_rate">no rate</string>
     <string name="settings_home_converter">Converter</string>
 </resources>

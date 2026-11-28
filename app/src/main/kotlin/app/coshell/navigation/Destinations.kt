@@ -139,6 +139,10 @@ data object NoticeSettingsDestination
 @Serializable
 data object DataSettingsDestination
 
+/** «Настройки → Помощь»: hints, the tour, gestures, invite code, privacy policy (poll 2026-11-28 «А»). */
+@Serializable
+data object HelpSettingsDestination
+
 @Serializable
 data object CategoriesDestination
 

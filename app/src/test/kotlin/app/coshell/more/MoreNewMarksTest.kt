@@ -2,13 +2,10 @@ package app.coshell.more
 
 import android.app.Application
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.hasScrollAction
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
 import app.coshell.newmark.NewFeatures
@@ -29,14 +26,14 @@ class MoreNewMarksTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun `every new feature key shows the pill on its row`() {
+    fun `every new feature key shows the pill on its place`() {
         compose.setContent { CoShellTheme { MoreScreen(MoreActions(), MoreState(newMarks = NewFeatures.all.toSet())) } }
         val pill = compose.activity.getString(R.string.new_mark)
         assertEquals(NewFeatures.all.size, compose.onAllNodesWithText(pill).fetchSemanticsNodes().size)
     }
 
     @Test
-    fun `opening a marked row takes its mark away`() {
+    fun `opening a marked tile takes its mark away`() {
         val opened = mutableListOf<String>()
         var debts = 0
         compose.setContent {
@@ -45,10 +42,10 @@ class MoreNewMarksTest {
             }
         }
         val title = compose.activity.getString(R.string.debts_title)
-        compose.onNode(hasScrollAction()).performScrollToNode(hasText(title))
         compose.onNodeWithText(title).performClick()
         compose.waitForIdle()
         assertEquals(listOf(NewFeatures.DEBTS), opened)
         assertEquals(1, debts)
     }
 }
+

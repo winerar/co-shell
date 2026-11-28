@@ -25,8 +25,8 @@ def hints_rows():
 
 
 def settings(rows):
-    """The bottom of «Настройки» (as board Set1RootMore): «Помощь» with the new rows."""
-    return inner_screen(sc.RU['title'], help_section(hints_rows() + rows))
+    """«Настройки → Помощь» (its own screen since 2026-11-28, board Set1Help) with the new rows."""
+    return inner_screen('Помощь', help_section(hints_rows() + rows))
 
 
 def a_row(revoked=False):

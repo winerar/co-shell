@@ -2,7 +2,6 @@
 <!-- «Ещё → Импорт из Wallet» (ROADMAP 5c). Counts use «Записей: N» — no plural forms needed. -->
 <resources>
     <string name="import_title">Импорт из Wallet</string>
-    <string name="import_menu_hint">Перенести операции из выгрузки CSV</string>
     <string name="import_next">Далее</string>
     <string name="import_do">Импортировать</string>
     <string name="import_step_of">Шаг %1$d из %2$d</string>

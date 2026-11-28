@@ -53,7 +53,6 @@
     <string name="debts_close_text">Остаток %1$s спишется, деньги по счетам не двигаются.</string>
     <string name="debts_delete_title">Удалить долг?</string>
     <string name="debts_delete_text">Долг и все возвраты удалятся, балансы счетов вернутся как были.</string>
-    <string name="debts_menu_hint">Кто вам должен и кому должны вы</string>
     <string name="debts_soon_lent">%1$s вернёт</string>
     <string name="debts_soon_borrowed">Вы вернёте: %1$s</string>
     <string name="debts_soon_amount_in" translatable="false">+%1$s</string>

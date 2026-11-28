@@ -49,7 +49,6 @@
     <string name="transactions_no_category">Без категории</string>
 
     <string name="accounts_title">Счета</string>
-    <string name="accounts_menu_hint">Карты, наличные, вклады</string>
     <string name="home_all_accounts">Все счета ›</string>
     <string name="accounts_add">Добавить счёт</string>
     <string name="accounts_empty">Счетов пока нет. Нажмите «+», чтобы добавить первый.</string>
@@ -261,8 +260,6 @@
     <string name="backup_error_write">Не удалось сохранить файл. Выберите другую папку.</string>
     <string name="backup_error_read">Не удалось прочитать файл.</string>
     <string name="feedback_title">Обратная связь</string>
-    <string name="categories_menu_hint">На что уходят деньги</string>
-    <string name="backup_menu_hint">Сохранить или восстановить данные</string>
     <string name="feedback_menu_hint">Ошибка или идея</string>
     <string name="shake_to_add_title">Встряхнуть — сканер QR</string>
     <string name="shake_to_add_hint">Когда приложение открыто</string>
@@ -282,10 +279,13 @@
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">новое</string>
     <string name="more_section_money">Деньги</string>
-    <string name="more_section_rates">Валюты</string>
-    <string name="more_export_hint">Операции за период в CSV</string>
+    <string name="more_section_rates_family">Валюты и семья</string>
+    <!-- Short names under the icons of «Ещё» (poll 2026-11-28 «А»): fit a cell of a four-in-a-row grid. -->
+    <string name="more_tile_recurring">Регулярные</string>
+    <string name="more_tile_notes">Заметки</string>
+    <string name="more_tile_rates">Курсы</string>
+    <string name="more_tile_data">Данные</string>
     <string name="more_version_quiet">Версия %1$s · сборка %2$d · актуальная</string>
-    <string name="more_section_family_data">Семья и данные</string>
     <string name="more_section_app">Приложение</string>
     <string name="more_version_available">Вышла версия %1$s</string>
     <string name="theme_title">Тема</string>
@@ -419,7 +419,6 @@
     <string name="update_whats_new_ok">Понятно</string>
     <!-- More → Rates -->
     <string name="rates_title">Курсы валют</string>
-    <string name="rates_menu_hint">Обновляются сами раз в день</string>
 
     <string name="report_currencies_title">Валюты итогов</string>
     <string name="report_currencies_hint">Общий баланс показывается в каждой из этих валют. Нажмите, чтобы сделать основной.</string>
@@ -504,7 +503,6 @@
 
     <!-- Family and sync (Ещё → Семья и синхронизация) -->
     <string name="family_title">Семья</string>
-    <string name="family_menu_hint">Общий бюджет с близкими</string>
     <string name="family_not_configured">Синхронизация в этой сборке не настроена — приложение работает только на этом телефоне.</string>
     <string name="family_intro">Войдите через Google, чтобы вести бюджет вместе. Без интернета всё тоже работает. Вступить можно только по приглашению.</string>
     <string name="family_sign_in">Войти через Google</string>
@@ -623,7 +621,7 @@
     <string name="wipe_count_rates">ручных курсов</string>
     <string name="wipe_kept">Останутся семья, настройки и тема. Стандартные категории появятся заново.</string>
     <string name="wipe_backup_title">Сначала сохраним копию</string>
-    <string name="wipe_backup_hint">Файл co-shell-before-wipe-….json в «Загрузках». Вернуть — «Ещё → Резервная копия».</string>
+    <string name="wipe_backup_hint">Файл co-shell-before-wipe-….json в «Загрузках». Вернуть — «Ещё → Данные → Резервная копия».</string>
     <string name="wipe_word_prompt">Чтобы подтвердить, введите %1$s</string>
     <!-- The word the user types to confirm; the check ignores case. -->
     <string name="wipe_confirm_word">СТЕРЕТЬ</string>

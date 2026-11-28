@@ -45,7 +45,6 @@
     <string name="transactions_no_category">Sin categoría</string>
 
     <string name="accounts_title">Cuentas</string>
-    <string name="accounts_menu_hint">Tarjetas, efectivo, ahorros</string>
     <string name="home_all_accounts">Todas las cuentas ›</string>
     <string name="accounts_add">Añadir cuenta</string>
     <string name="accounts_empty">Aún no hay cuentas. Pulsa «+» para añadir la primera.</string>
@@ -236,7 +235,6 @@
     <string name="backup_error_write">No se pudo guardar el archivo. Elige otra carpeta.</string>
     <string name="backup_error_read">No se pudo leer el archivo.</string>
     <string name="feedback_title">Comentarios</string>
-    <string name="backup_menu_hint">Guardar o restaurar tus datos</string>
     <string name="feedback_menu_hint">Un error o una idea</string>
     <string name="shake_to_add_title">Agitar — escáner QR</string>
     <string name="shake_to_add_hint">Con la app abierta</string>
@@ -254,10 +252,7 @@
     <!-- The pill next to a place with something new in this version (#335) -->
     <string name="new_mark">nuevo</string>
     <string name="more_section_money">Dinero</string>
-    <string name="more_section_rates">Monedas</string>
-    <string name="more_export_hint">Movimientos de un periodo en CSV</string>
     <string name="more_version_quiet">Versión %1$s · compilación %2$d · al día</string>
-    <string name="more_section_family_data">Familia y datos</string>
     <string name="more_section_app">Aplicación</string>
     <string name="more_version_available">Ya está la versión %1$s</string>
     <string name="theme_title">Tema</string>
@@ -384,7 +379,6 @@
     <string name="update_whats_new_title">Novedades de %1$s</string>
     <string name="update_whats_new_ok">Entendido</string>
     <string name="rates_title">Tipos de cambio</string>
-    <string name="rates_menu_hint">Se actualizan solos una vez al día</string>
 
     <string name="report_currencies_title">Monedas de los totales</string>
     <string name="report_currencies_hint">El saldo total se muestra en cada una de estas monedas. Pulsa una para hacerla principal.</string>
@@ -459,7 +453,6 @@
     </plurals>
 
     <string name="family_title">Familia</string>
-    <string name="family_menu_hint">Presupuesto común con los tuyos</string>
     <string name="family_not_configured">La sincronización no está configurada en esta compilación — la app funciona solo en este teléfono.</string>
     <string name="family_sign_in">Iniciar sesión con Google</string>
     <string name="family_checking">Has iniciado sesión como %1$s. Comprobando el acceso…</string>
@@ -570,7 +563,6 @@
     <string name="wipe_count_rates">cambios manuales</string>
     <string name="wipe_kept">Se conservan la familia, los ajustes y el tema. Las categorías estándar se crearán de nuevo.</string>
     <string name="wipe_backup_title">Antes guardaremos una copia</string>
-    <string name="wipe_backup_hint">El archivo co-shell-before-wipe-….json en «Descargas». Para recuperarlo: «Más → Copia de seguridad».</string>
     <string name="wipe_word_prompt">Para confirmar, escribe %1$s</string>
     <string name="wipe_word_label">Palabra</string>
     <string name="wipe_confirm_word">BORRAR</string>

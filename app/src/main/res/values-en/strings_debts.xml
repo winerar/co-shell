@@ -49,7 +49,6 @@
     <string name="debts_close_text">The remaining %1$s is written off; no money moves between accounts.</string>
     <string name="debts_delete_title">Delete the debt?</string>
     <string name="debts_delete_text">The debt and all returns are deleted; account balances go back as they were.</string>
-    <string name="debts_menu_hint">Who owes you and whom you owe</string>
     <string name="debts_soon_lent">%1$s will return</string>
     <string name="debts_soon_borrowed">You return to %1$s</string>
     <string name="debts_soon_amount_in" translatable="false">+%1$s</string>

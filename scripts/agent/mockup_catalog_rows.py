@@ -129,7 +129,15 @@ def reorder(v):
                cap('удерживайте строку и перетащите; на середину строки — внутрь'))
 
 
+def menu_grid_card(v):
+    """CoShellMenuGrid (poll 2026-11-28 «А»): «Ещё» as icons; a count or «новое» on the icon's corner."""
+    items = [('wallet', 'Счета', None), ('folder', 'Категории', None), ('budget', 'Бюджеты', None), ('flag', 'Цели', 'новое'),
+             ('refresh', 'Регулярные', None), ('user', 'Долги', None), ('note', 'Заметки', None), ('draft', 'Черновики', '3')]
+    return col(menu_grid(items), cap('4 в ряд, короткое название до 2 строк; длинные и редкие — строками меню'))
+
+
 ROWS = [
+    ('Сетка разделов', menu_grid_card, 'CoShellMenuGrid(tiles, columns) · MenuTile(icon, label, onClick, mark)'),
     ('Строка меню', menu_rows, 'CoShellMenuRow(icon, color, title, subtitle, trailing) · MenuIcon'),
     ('Карточка формы', forms, 'CoShellFormSection(title, trailing) · CoShellSectionLink'),
     ('Поле, ошибка, подсказка', fields, 'CoShellTextField · CoShellSection(title, error) · CoShellHint'),

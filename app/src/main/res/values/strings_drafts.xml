@@ -12,7 +12,6 @@
     <string name="notes_menu_hint">Траты строками: кофе 3500</string>
     <string name="drafts_title">Черновики</string>
     <string name="drafts_title_count">Черновики · %1$d</string>
-    <string name="drafts_menu_hint">Из заметок: проверьте и запишите</string>
     <string name="drafts_hint_ready">Нажмите на строку, чтобы поправить.</string>
     <string name="drafts_hint_unready">Нажмите на строку, чтобы дописать.</string>
     <string name="drafts_post">Записать · %1$d</string>

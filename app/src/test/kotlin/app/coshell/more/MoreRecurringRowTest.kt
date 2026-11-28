@@ -2,12 +2,10 @@ package app.coshell.more
 
 import android.app.Application
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.hasScrollAction
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import app.coshell.R
 import app.coshell.core.designsystem.theme.CoShellTheme
 import org.junit.Assert.assertEquals
@@ -27,14 +25,20 @@ class MoreRecurringRowTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun `recurring payments row opens the list`() {
+    fun `recurring payments tile opens the list without scrolling`() {
         var opened = 0
         compose.setContent { CoShellTheme { MoreScreen(MoreActions(onRecurring = { opened++ })) } }
-        val title = compose.activity.getString(R.string.recurring_list_title)
-        compose.onNode(hasScrollAction()).performScrollToNode(hasText(title))
-        compose.onNodeWithText(compose.activity.getString(R.string.recurring_menu_hint)).assertExists()
+        val title = compose.activity.getString(R.string.more_tile_recurring)
         compose.onNodeWithText(title).performClick()
         compose.waitForIdle()
         assertEquals(1, opened)
+    }
+
+    /** Poll 2026-11-28 «А»: the whole menu on one screen of a usual phone — the last row is seen without scrolling. */
+    @Test
+    fun `whole menu fits one screen`() {
+        compose.setContent { CoShellTheme { MoreScreen(MoreActions(), MoreState("0.37", 400)) } }
+        compose.onNodeWithText(compose.activity.getString(R.string.about_title)).assertIsDisplayed()
+        compose.onNodeWithText(compose.activity.getString(R.string.drafts_title)).assertIsDisplayed()
     }
 }

@@ -2,7 +2,6 @@
 <resources>
     <!-- Savings goals (#768, poll 2026-11-26 «А»). -->
     <string name="goals_title">Цели</string>
-    <string name="goals_menu_hint">Копить на отпуск или годовой платёж</string>
     <string name="goals_add">Новая цель</string>
     <string name="goals_empty">Целей пока нет. Нажмите «+», чтобы начать копить на отпуск, ремонт или годовой платёж.</string>
     <string name="goals_saved">Накоплено</string>

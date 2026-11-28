@@ -9,6 +9,7 @@ import app.coshell.privacy.settings.PrivacyRoute
 import app.coshell.settings.AccountsSettingsRoute
 import app.coshell.settings.BalanceAccountsRoute
 import app.coshell.settings.DataSettingsRoute
+import app.coshell.settings.HelpSettingsRoute
 import app.coshell.settings.HomeDetailsRoute
 import app.coshell.settings.HomeSettingsRoute
 import app.coshell.settings.InputSettingsRoute
@@ -20,6 +21,7 @@ import app.coshell.settings.ReportsSettingsRoute
 import app.coshell.settings.ScreensSettingsScreen
 import app.coshell.settings.SettingsActions
 import app.coshell.settings.SettingsRoute
+import app.coshell.settings.SettingsTarget
 import app.coshell.wipe.WipeDataRoute
 
 /** «Ещё → Настройки» and its pages, export, wipe (split out of `CoShellNavHost`). */
@@ -28,17 +30,15 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
         SettingsRoute(
             SettingsActions(
                 onBack = { navController.popBackStack() },
-                onLook = { navController.navigate(AppearanceDestination) },
-                onScreens = { navController.navigate(ScreensSettingsDestination) },
-                onMoney = { navController.navigate(MoneySettingsDestination) },
-                onInput = { navController.navigate(InputSettingsDestination) },
-                onNotices = { navController.navigate(NoticeSettingsDestination) },
-                onData = { navController.navigate(DataSettingsDestination) },
-                onCurrencies = { navController.navigate(ReportCurrenciesDestination) },
-                onBackup = { navController.navigate(BackupDestination) },
-                onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
-                onGestures = { navController.navigate(GesturesDestination) { launchSingleTop = true } },
+                onOpen = { target -> navController.openSettings(target) },
             ),
+        )
+    }
+    screen<HelpSettingsDestination> {
+        HelpSettingsRoute(
+            onBack = { navController.popBackStack() },
+            onTour = { navController.navigate(TourDestination) { launchSingleTop = true } },
+            onGestures = { navController.navigate(GesturesDestination) { launchSingleTop = true } },
         )
     }
     screen<AppearanceDestination> {
@@ -108,4 +108,32 @@ internal fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
             },
         )
     }
+}
+
+/** A place of «Настройки» (a group of the index or a setting the search found) → its screen. */
+private fun NavHostController.openSettings(target: SettingsTarget) {
+    val destination: Any = when (target) {
+        SettingsTarget.LOOK -> AppearanceDestination
+        SettingsTarget.INPUT -> InputSettingsDestination
+        SettingsTarget.NOTICES -> NoticeSettingsDestination
+        SettingsTarget.SCREENS -> ScreensSettingsDestination
+        SettingsTarget.PRIVACY -> PrivacyDestination
+        SettingsTarget.HELP -> HelpSettingsDestination
+        SettingsTarget.MONEY -> MoneySettingsDestination
+        SettingsTarget.DATA -> DataSettingsDestination
+        SettingsTarget.CURRENCIES -> ReportCurrenciesDestination
+        SettingsTarget.HOME -> HomeSettingsDestination
+        SettingsTarget.BAR -> BarSettingsDestination
+        SettingsTarget.OPS -> OpsSettingsDestination
+        SettingsTarget.REPORTS -> ReportsSettingsDestination
+        SettingsTarget.ACCOUNTS -> AccountsSettingsDestination
+        SettingsTarget.BALANCE -> BalanceAccountsDestination
+        SettingsTarget.BACKUP -> BackupDestination
+        SettingsTarget.IMPORT -> WalletImportDestination
+        SettingsTarget.EXPORT -> ExportDestination
+        SettingsTarget.WIPE -> WipeDataDestination
+        SettingsTarget.TOUR -> TourDestination
+        SettingsTarget.GESTURES -> GesturesDestination
+    }
+    navigate(destination) { launchSingleTop = true }
 }

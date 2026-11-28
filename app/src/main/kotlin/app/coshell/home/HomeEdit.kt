@@ -1,7 +1,5 @@
 package app.coshell.home
 
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,12 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.changedToUpIgnoreConsumed
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import app.coshell.R
@@ -32,36 +26,10 @@ import app.coshell.core.designsystem.components.CoShellIconButton
 import app.coshell.core.designsystem.tokens.Spacing
 import app.coshell.core.domain.settings.HomeCard
 import app.coshell.core.domain.settings.HomeLayout
-import kotlinx.coroutines.withTimeoutOrNull
 import app.coshell.core.designsystem.R as DesignR
 
 // Editing «Обзор» right on the screen (board Set1HomeEdit): hold a card, then ⠿ drags it and ✕ hides it; «Готово» ends it.
 // The same order and visibility as «Настройки → Экраны → Обзор» (`HomeLayout`).
-
-/**
- * A long press anywhere on the card starts the editing; the card itself still gets its taps (the press is only watched).
- * Only a finger that stays still for the whole timeout counts: a scroll or a drag (the pointer moves, or another
- * gesture takes it) never starts the editing — that was the «editing is always on» bug.
- */
-internal fun Modifier.longPressToEdit(enabled: Boolean, onLongPress: () -> Unit): Modifier = if (!enabled) this else composed {
-    val timeout = LocalViewConfiguration.current.longPressTimeoutMillis
-    pointerInput(Unit) {
-        awaitEachGesture {
-            val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-            val slop = viewConfiguration.touchSlop
-            // null only when the timeout ran out with the finger still; any lift, move or other gesture ends the wait.
-            val ended = withTimeoutOrNull(timeout) {
-                var still = true
-                while (still) {
-                    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id }
-                    still = change != null && !change.changedToUpIgnoreConsumed() && !change.isConsumed &&
-                        (change.position - down.position).getDistance() <= slop
-                }
-            }
-            if (ended == null) onLongPress()
-        }
-    }
-}
 
 /** The line over a card in the editing mode: its name, ⠿ to drag, ✕ to hide. */
 @Composable

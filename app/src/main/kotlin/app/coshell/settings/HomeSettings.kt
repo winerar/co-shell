@@ -249,7 +249,7 @@ private val HomeCard.hintRes: Int
 
 /** «Вернуть стандартные»: the cards and details of «Обзор» as the app ships them. */
 @Composable
-private fun ResetLink(enabled: Boolean, onClick: () -> Unit) {
+internal fun ResetLink(enabled: Boolean, onClick: () -> Unit) {
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         CoShellTextButton(onClick = onClick, enabled = enabled) { Text(stringResource(R.string.settings_reset)) }
     }

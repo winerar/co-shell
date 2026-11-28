@@ -3,6 +3,7 @@ package app.coshell.reports
 import app.coshell.core.designsystem.motion.listItemMotion
 import app.coshell.hints.hintSlotShown
 import app.coshell.hints.HintSlot
+import app.coshell.hints.CoachHint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,7 +43,11 @@ import app.coshell.hints.WordHint
 import app.coshell.core.designsystem.components.underBars
 import app.coshell.core.designsystem.tokens.Sizes
 import app.coshell.core.designsystem.tokens.Spacing
+import app.coshell.core.domain.settings.ReportLayout
 import app.coshell.reports.components.PeriodSwitch
+import app.coshell.reports.edit.ReportsEditDone
+import app.coshell.reports.edit.ReportsEditList
+import app.coshell.settings.LocalScreenOptions
 import app.coshell.reports.components.ReportChoice
 import app.coshell.reports.components.ReportPeriodSheet
 import app.coshell.ui.top.TabTopBar
@@ -77,6 +82,9 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
     val list = rememberLazyListState()
     // The period row went under the header: its title and arrows move into the capsule (#568, poll «Б»).
     val periodGone by remember { derivedStateOf { list.periodGone() } }
+    // Hold a card — the feed folds into the list of cards: ⠿ drags, ✕ hides, «Готово» ends (#826, board Rep826Compact).
+    var editing by rememberSaveable { mutableStateOf(false) }
+    val layout = LocalScreenOptions.current.reports
     Scaffold(
         topBar = {
             val inBar = periodGone && period != null
@@ -89,9 +97,15 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
                 actions = { BarArrow(inBar, next = true) { actions.onShift(1) } },
             )
         },
+        bottomBar = { if (editing) ReportsEditDone { editing = false } },
         modifier = Modifier.tabScroll(scroll),
     ) { padding ->
+        if (editing) {
+            ReportsEditList(layout, padding, actions.onLayoutChange, onDone = { editing = false })
+            return@Scaffold
+        }
         val hintsOn = LocalHintHost.current != null
+        CoachHint(mapOf(HintId.EDIT_REPORTS to R.string.hint_edit_reports), enabled = tab == 0 && state.spending != null)
         val showHint = hintSlotShown()
         LazyColumn(
             Modifier.fillMaxSize().segmentSwipe(swipe, tab, 2, onSelect = { tab = it }),
@@ -119,7 +133,7 @@ fun ReportsScreen(state: ReportsUiState, actions: ReportsActions) {
                     onOpenSheet = { sheetOpen = true },
                 )
             }
-            if (tab == 1) calendarItems(state, actions) else overviewItems(state, period, actions)
+            if (tab == 1) calendarItems(state, actions) else overviewItems(state, period, actions, layout, onEdit = { editing = true })
         }
     }
 }
@@ -169,4 +183,6 @@ data class ReportsActions(
     val onAllFixed: () -> Unit = {},
     /** A row of «Постоянные траты»: the template's id. */
     val onTemplate: (String) -> Unit = {},
+    /** The editing mode changed the cards (#826): their order or what is hidden. */
+    val onLayoutChange: (ReportLayout) -> Unit = {},
 )

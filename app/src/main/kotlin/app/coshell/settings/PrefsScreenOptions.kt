@@ -5,6 +5,7 @@ import androidx.core.content.edit
 import app.coshell.core.domain.settings.BarTab
 import app.coshell.core.domain.settings.HomeLayout
 import app.coshell.core.domain.settings.HomeTile
+import app.coshell.core.domain.settings.ReportLayout
 import app.coshell.core.domain.settings.ReportsStart
 import app.coshell.core.domain.settings.WeekStart
 import app.coshell.core.domain.settings.ScreenOptions
@@ -53,6 +54,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
             haptics = prefs.getBoolean(HAPTICS, d.haptics),
             syncWifiOnly = prefs.getBoolean(SYNC_WIFI, d.syncWifiOnly),
             home = HomeLayout.parse(prefs.getString(HOME, null)),
+            reports = ReportLayout.parse(prefs.getString(REPORTS, null)),
             soonDays = prefs.getInt(SOON_DAYS, d.soonDays).takeIf { it in ScreenOptions.SOON_DAYS } ?: d.soonDays,
             entryAccountId = prefs.getString(ENTRY_ACCOUNT, null)?.takeIf { it.isNotEmpty() },
             partnerSpend = prefs.getBoolean(PARTNER, d.partnerSpend),
@@ -82,6 +84,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         putBoolean(HAPTICS, o.haptics)
         putBoolean(SYNC_WIFI, o.syncWifiOnly)
         putString(HOME, o.home.encode())
+        putString(REPORTS, o.reports.encode())
         putInt(SOON_DAYS, o.soonDays)
         putInt(RECENT_COUNT, o.recentCount)
         putString(BAR_SECOND, o.barSecond.name)
@@ -116,6 +119,7 @@ class PrefsScreenOptions @Inject constructor(@ApplicationContext context: Contex
         private const val TILE_FIRST = "home_tile_first"
         private const val TILE_SECOND = "home_tile_second"
         private const val HOME = "home_layout"
+        private const val REPORTS = "reports_layout"
         private const val SOON_DAYS = "home_soon_days"
         private const val RECENT_COUNT = "home_recent_count"
         private const val BAR_SECOND = "bar_second"

@@ -20,7 +20,6 @@
     <string name="settings_screens_title">Pantallas</string>
     <string name="settings_screens_items">Resumen · movimientos · cuentas</string>
     <string name="settings_ops_items">Cuenta, etiquetas y nota en la fila</string>
-    <string name="settings_reports_items">Periodo · comparación con el anterior</string>
     <string name="settings_accounts_items">Agrupación · archivadas</string>
     <string name="settings_ops_in_row">En la fila</string>
     <string name="settings_ops_account">Cuenta</string>

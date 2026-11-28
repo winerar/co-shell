@@ -1,5 +1,7 @@
 package app.coshell.home
 
+import app.coshell.ui.edit.longPressToEdit
+
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box

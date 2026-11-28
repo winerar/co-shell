@@ -64,7 +64,7 @@ object WidgetUpdater {
                 // The launcher picks the layout by the real size: the old height option said «two rows» for one row on some phones (#821).
                 responsive(context, data, templates)
             } else if (templates) {
-                TemplatesWidgetViews.build(context, data, WidgetLayouts.isGrid(height))
+                TemplatesWidgetViews.build(context, data, WidgetLayouts.isGrid(height), width)
             } else {
                 QuickWidgetViews.build(context, data, WidgetLayouts.quickMode(width))
             }
@@ -78,10 +78,13 @@ object WidgetUpdater {
 private fun responsive(context: Context, data: WidgetData, templates: Boolean): RemoteViews {
     val oneRow = WidgetLayouts.ONE_ROW_DP.toFloat()
     val sizes = if (templates) {
-        mapOf(
-            SizeF(WidgetLayouts.TEMPLATES_MIN_WIDTH_DP.toFloat(), oneRow) to TemplatesWidgetViews.build(context, data, grid = false),
-            SizeF(WidgetLayouts.TEMPLATES_MIN_WIDTH_DP.toFloat(), WidgetLayouts.GRID_MIN_HEIGHT_DP.toFloat()) to TemplatesWidgetViews.build(context, data, grid = true),
-        )
+        val grid = WidgetLayouts.GRID_MIN_HEIGHT_DP.toFloat()
+        WidgetLayouts.chipWidthsDp.flatMap { w ->
+            listOf(
+                SizeF(w.toFloat(), oneRow) to TemplatesWidgetViews.build(context, data, grid = false, widthDp = w),
+                SizeF(w.toFloat(), grid) to TemplatesWidgetViews.build(context, data, grid = true, widthDp = w),
+            )
+        }.toMap()
     } else {
         mapOf(
             SizeF(WidgetLayouts.QUICK_MIN_WIDTH_DP.toFloat(), oneRow) to QuickWidgetViews.build(context, data, QuickMode.ICONS),

@@ -28,11 +28,30 @@ class WidgetLayoutsTest {
     }
 
     @Test
-    fun `three templates at most in the app order`() {
-        val items = listOf(item("1"), item("2"), item("3"), item("4"))
-        assertEquals(listOf("1", "2", "3"), WidgetLayouts.chips(items).map { it.id })
-        assertEquals(listOf("1"), WidgetLayouts.chips(listOf(item("1"))).map { it.id })
-        assertTrue(WidgetLayouts.chips(emptyList()).isEmpty())
+    fun `as many templates as fit the width, in the app order`() {
+        val items = (1..6).map { item("$it") }
+        assertEquals(listOf("1"), WidgetLayouts.chips(items, 110).map { it.id })
+        assertEquals(listOf("1"), WidgetLayouts.chips(items, 179).map { it.id })
+        assertEquals(listOf("1", "2"), WidgetLayouts.chips(items, 180).map { it.id })
+        assertEquals(listOf("1", "2", "3"), WidgetLayouts.chips(items, 250).map { it.id })
+        assertEquals(listOf("1", "2", "3", "4"), WidgetLayouts.chips(items, 320).map { it.id })
+        assertEquals(WidgetLayouts.CHIPS, WidgetLayouts.chips(items, 500).size)
+        assertEquals(listOf("1"), WidgetLayouts.chips(listOf(item("1")), 320).map { it.id })
+        assertTrue(WidgetLayouts.chips(emptyList(), 320).isEmpty())
+    }
+
+    @Test
+    fun `size ranges start at each width where the count changes`() {
+        assertEquals(listOf(1, 2, 3, 4), WidgetLayouts.chipWidthsDp.map { WidgetLayouts.chipCount(it) })
+        assertEquals(WidgetLayouts.QUICK_MIN_WIDTH_DP, WidgetLayouts.chipWidthsDp.first())
+    }
+
+    @Test
+    fun `the grid puts the larger half on top`() {
+        assertEquals(1, WidgetLayouts.firstRow(2))
+        assertEquals(2, WidgetLayouts.firstRow(3))
+        assertEquals(2, WidgetLayouts.firstRow(4))
+        assertEquals(3, WidgetLayouts.firstRow(5))
     }
 
     @Test
@@ -50,6 +69,7 @@ class WidgetLayoutsTest {
             assertTrue(file, xml.contains("android:minResizeHeight=\"${WidgetLayouts.ONE_ROW_DP}dp\""))
             assertTrue(file, xml.contains("android:minWidth=\"${width}dp\""))
             assertTrue(file, xml.contains("android:targetCellHeight=\"1\""))
+            assertTrue(file, xml.contains("android:minResizeWidth=\"${WidgetLayouts.QUICK_MIN_WIDTH_DP}dp\""))
         }
     }
 }

@@ -28,8 +28,8 @@ class TemplatesWidgetReapplyTest {
 
     private fun childrenAfterUpdates(grid: Boolean, row: Int): Int {
         val parent = FrameLayout(context)
-        val view = TemplatesWidgetViews.build(context, data, grid).apply(context, parent)
-        repeat(3) { TemplatesWidgetViews.build(context, data, grid).reapply(context, view) }
+        val view = TemplatesWidgetViews.build(context, data, grid, widthDp = 300).apply(context, parent)
+        repeat(3) { TemplatesWidgetViews.build(context, data, grid, widthDp = 300).reapply(context, view) }
         return view.findViewById<ViewGroup>(row).childCount
     }
 

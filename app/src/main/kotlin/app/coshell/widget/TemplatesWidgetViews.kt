@@ -6,11 +6,11 @@ import app.coshell.R
 import app.coshell.core.designsystem.theme.WidgetColors
 import app.coshell.templates.TemplateItem
 
-/** «Шаблоны» (#795): up to three templates and «+» (4×1) or «Все шаблоны ›» (4×2); no templates yet — «Создать». */
+/** «Шаблоны» (#795, #821): as many templates as fit the width and «+» (one row) or «Все шаблоны ›» (two rows); no templates yet — «Создать». */
 internal object TemplatesWidgetViews {
-    fun build(context: Context, data: WidgetData, grid: Boolean): RemoteViews {
+    fun build(context: Context, data: WidgetData, grid: Boolean, widthDp: Int): RemoteViews {
         val c = data.colors
-        val chips = WidgetLayouts.chips(data.templates)
+        val chips = WidgetLayouts.chips(data.templates, widthDp)
         return when {
             chips.isEmpty() -> empty(context, c)
             grid -> grid(context, c, chips)
@@ -21,6 +21,8 @@ internal object TemplatesWidgetViews {
     private fun strip(context: Context, c: WidgetColors, items: List<TemplateItem>): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_templates_strip).apply {
             paintCard(c.card, c.cardEdge)
+            // Launchers reapply new views onto the old ones: without clearing, every update appended the chips again (#821).
+            removeAllViews(R.id.t_row)
             items.forEachIndexed { i, item -> addView(R.id.t_row, chip(context, c, item, main = i == 0)) }
             addView(R.id.t_row, plus(context, c))
         }
@@ -28,9 +30,12 @@ internal object TemplatesWidgetViews {
     private fun grid(context: Context, c: WidgetColors, items: List<TemplateItem>): RemoteViews =
         RemoteViews(context.packageName, R.layout.widget_templates_grid).apply {
             paintCard(c.card, c.cardEdge)
-            // Cells: the templates, then «Все шаблоны ›»; two per row.
+            removeAllViews(R.id.t_row1)
+            removeAllViews(R.id.t_row2)
+            // Cells: the templates, then «Все шаблоны ›»; the larger half on the first row.
             val cells = items.mapIndexed { i, item -> chip(context, c, item, main = i == 0) } + all(context, c)
-            cells.forEachIndexed { i, cell -> addView(if (i < 2) R.id.t_row1 else R.id.t_row2, cell) }
+            val top = WidgetLayouts.firstRow(cells.size)
+            cells.forEachIndexed { i, cell -> addView(if (i < top) R.id.t_row1 else R.id.t_row2, cell) }
         }
 
     private fun empty(context: Context, c: WidgetColors): RemoteViews =

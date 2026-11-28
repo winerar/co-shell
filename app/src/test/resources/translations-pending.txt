@@ -303,6 +303,8 @@ release_settings_search_text
 release_settings_search_title
 release_stories_back_text
 release_stories_back_title
+release_widget_width_text
+release_widget_width_title
 release_widgets_text
 release_widgets_title
 report_card_capital
@@ -465,6 +467,9 @@ transactions_changed_many
 update_installing_manual
 update_pill
 widget_locked
+widget_preview_bus
+widget_preview_coffee
+widget_preview_rent
 widget_quick_desc
 widget_quick_name
 widget_template_ask

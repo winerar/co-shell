@@ -26,3 +26,8 @@
   остальное в 5,5 мин — компиляция и lint: память/форки Robolectric не трогать.
 - (11-19) Экономия минут: CI в PR доверяет полному `check` агента (`Agent-Check: full`, `agent-checked.sh`), сеть — ночная проверка `dev` + релиз ждёт её.
   Отметка «коммит проверен» — ключ кэша Actions `nightly-dev-<sha>` (`gh cache list`): расписание идёт на `main`, `headSha` прогона — не `dev`.
+
+## Виджеты (`RemoteViews`)
+- (11-28, #821) Лаунчер накладывает новые `RemoteViews` на старые (`reapply`), и `addView` **дописывает** детей к прошлым: «Шаблоны» показывали 4 набора кнопок. Перед `addView` — `removeAllViews(контейнер)`; тест — `TemplatesWidgetReapplyTest` (Robolectric умеет `apply`/`reapply`).
+- (11-28, #821) Высота виджета: `minHeight` по формуле `70 × n − 30` (одна строка — 40 dp), иначе MIUI ставит 2×2 / 4×2; плюс `targetCellWidth/Height`. На Android 12+ вид по размеру выбирает сам лаунчер — `RemoteViews(Map<SizeF, RemoteViews>)`, опции высоты врут. Превью в списке — `previewLayout` со своими цветами (`colors_widget_preview.xml`, день/ночь), без кода приложения.
+

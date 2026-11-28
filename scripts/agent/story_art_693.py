@@ -120,6 +120,12 @@ STORIES = {
         ('ink', 'stroke', ' '.join(rrect(x, y, 32, 32, 10) for x in (200, 240) for y in (20, 58))),
         ('ink', 'stroke', ' '.join(rrect(x, 122, 32, 32, 10) for x in (30, 75, 120, 165, 210))),
     ],
+    'widget_width': [  # 2026-11-28 (#821): a narrow «Шаблоны» widget stretched wide, two more templates appear
+        ('ink', 'stroke', rrect(20, 20, 130, 56, 18) + ' ' + rrect(32, 32, 70, 32, 16) + ' ' + circle(124, 48, 13)),
+        ('ink', 'stroke', line((162, 48), (266, 48)) + ' ' + line((256, 40), (266, 48), (256, 56)), 2),
+        ('ink', 'stroke', rrect(20, 104, 260, 56, 18) + ' ' + rrect(32, 116, 45, 32, 16) + ' ' + rrect(83, 116, 45, 32, 16) + ' ' + circle(249, 132, 13)),
+        ('accent', 'fill', rrect(134, 116, 45, 32, 16) + ' ' + rrect(185, 116, 45, 32, 16)),
+    ],
     'stories_back': [  # 2026-11-28: a tap on the left part of a story card and an arrow back to the previous one
         ('ink', 'stroke', rrect(30, 25, 60, 130, 14) + ' ' + rrect(130, 10, 110, 160, 18)),
         ('ink', 'stroke', rrect(142, 22, 40, 4, 2) + ' ' + rrect(188, 22, 40, 4, 2), 1),

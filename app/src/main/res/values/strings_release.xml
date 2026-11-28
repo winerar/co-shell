@@ -32,4 +32,6 @@
     <string name="release_more_tiles_text">Разделы — значками. Копия, импорт и экспорт — в «Данных».</string>
     <string name="release_settings_search_title">Поиск в настройках</string>
     <string name="release_settings_search_text">Ещё → Настройки → «Найти настройку»: слово — и нужный экран.</string>
+    <string name="release_widget_width_title">Шаблоны вширь</string>
+    <string name="release_widget_width_text">Растяните виджет «Шаблоны»: чем шире, тем больше шаблонов.</string>
 </resources>

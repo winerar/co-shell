@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- «Шаблоны» in the widget picker (Android 12+, #821; android:tint — RemoteViews have no AppCompat): the real look with sample templates, as on the board Wid795Picker. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="UseAppTint" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_card" android:scaleType="fitXY" android:tint="@color/widget_preview_card_edge" android:importantForAccessibility="no" />
+    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="1dp" android:src="@drawable/widget_shape_card" android:scaleType="fitXY" android:tint="@color/widget_preview_card" android:importantForAccessibility="no" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="12dp">
+        <FrameLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_marginStart="0dp" android:layout_weight="1">
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:tint="@color/widget_preview_main_edge" android:importantForAccessibility="no" />
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="2dp" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:tint="@color/widget_preview_main" android:importantForAccessibility="no" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:paddingHorizontal="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="@string/widget_preview_coffee" android:textColor="@color/widget_preview_main_ink" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:fontFamily="monospace" android:maxLines="1" android:text="@string/widget_preview_coffee_amount" android:textColor="@color/widget_preview_main_ink" android:textSize="11sp" />
+            </LinearLayout>
+        </FrameLayout>
+        <FrameLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_marginStart="8dp" android:layout_weight="1">
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:tint="@color/widget_preview_quiet" android:importantForAccessibility="no" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:paddingHorizontal="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="@string/widget_preview_bus" android:textColor="@color/widget_preview_quiet_ink" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:fontFamily="monospace" android:maxLines="1" android:text="@string/widget_preview_bus_amount" android:textColor="@color/widget_preview_quiet_ink" android:textSize="11sp" />
+            </LinearLayout>
+        </FrameLayout>
+        <FrameLayout android:layout_width="0dp" android:layout_height="48dp" android:layout_marginStart="8dp" android:layout_weight="1">
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/widget_shape_pill" android:scaleType="fitXY" android:tint="@color/widget_preview_quiet" android:importantForAccessibility="no" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:paddingHorizontal="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:text="@string/widget_preview_rent" android:textColor="@color/widget_preview_quiet_ink" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:ellipsize="end" android:fontFamily="monospace" android:maxLines="1" android:text="@string/widget_preview_rent_amount" android:textColor="@color/widget_preview_quiet_ink" android:textSize="11sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -5,7 +5,11 @@ import android.appwidget.AppWidgetProvider
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.SizeF
+import android.widget.RemoteViews
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -55,12 +59,37 @@ object WidgetUpdater {
             val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0)
             val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0)
             val provider = manager.getAppWidgetInfo(id)?.provider?.className
-            val views = if (provider == TemplatesWidget::class.java.name) {
-                TemplatesWidgetViews.build(context, data, WidgetLayouts.isGrid(height))
+            val templates = provider == TemplatesWidget::class.java.name
+            val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // The launcher picks the layout by the real size: the old height option said «two rows» for one row on some phones (#821).
+                responsive(context, data, templates)
+            } else if (templates) {
+                TemplatesWidgetViews.build(context, data, WidgetLayouts.isGrid(height), width)
             } else {
                 QuickWidgetViews.build(context, data, WidgetLayouts.quickMode(width))
             }
             manager.updateAppWidget(id, views)
         }
     }
+}
+
+/** Android 12+: one `RemoteViews` per size range, the launcher shows the largest that fits (#821). */
+@RequiresApi(Build.VERSION_CODES.S)
+private fun responsive(context: Context, data: WidgetData, templates: Boolean): RemoteViews {
+    val oneRow = WidgetLayouts.ONE_ROW_DP.toFloat()
+    val sizes = if (templates) {
+        val grid = WidgetLayouts.GRID_MIN_HEIGHT_DP.toFloat()
+        WidgetLayouts.chipWidthsDp.flatMap { w ->
+            listOf(
+                SizeF(w.toFloat(), oneRow) to TemplatesWidgetViews.build(context, data, grid = false, widthDp = w),
+                SizeF(w.toFloat(), grid) to TemplatesWidgetViews.build(context, data, grid = true, widthDp = w),
+            )
+        }.toMap()
+    } else {
+        mapOf(
+            SizeF(WidgetLayouts.QUICK_MIN_WIDTH_DP.toFloat(), oneRow) to QuickWidgetViews.build(context, data, QuickMode.ICONS),
+            SizeF(WidgetLayouts.WORDS_MIN_DP.toFloat(), oneRow) to QuickWidgetViews.build(context, data, QuickMode.WORDS),
+        )
+    }
+    return RemoteViews(sizes)
 }

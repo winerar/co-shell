@@ -35,6 +35,21 @@ internal object BarWidths {
         }
     }
 
+    /**
+     * Final left and right edge of every tab's pill slot, from the bar's inner start: tabs in a row with the «+» slot between the halves,
+     * each slot [inset] in from its cell; all in whole pixels, rounded per cell as the layout does; a row
+     * that rounds past [total] squeezes its last cell, so the edges stop there too. The pill flies to these at once instead of chasing a cell that still grows on its spring (after #809).
+     */
+    fun spans(widths: List<Int>, addSlot: Int, inset: Int, total: Int = Int.MAX_VALUE): List<Pair<Int, Int>> {
+        var x = 0
+        return widths.mapIndexed { index, width ->
+            if (index == widths.size / 2) x += addSlot
+            val span = (minOf(x, total) + inset) to (minOf(x + width, total) - inset)
+            x += width
+            span
+        }
+    }
+
     /** Whether [label] fits the selected tab's pill: its measured width plus a margin on each side. */
     fun fits(labelWidth: Dp, pill: Dp, margin: Dp): Boolean = labelWidth + margin * 2 <= pill
 }

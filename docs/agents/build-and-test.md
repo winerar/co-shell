@@ -75,7 +75,7 @@ echo "sdk.dir=/opt/android-sdk" > <repo>/local.properties
 
 ## Обратная связь
 - CI передаёт сборке переменные репозитория `FIREBASE_PROJECT_ID`, `FIREBASE_API_KEY` (Variables, не
-  секреты) → `BuildConfig`; локально пусто → форма «не настроено». `feedback.yml` раз в 6 ч создаёт
+  секреты) → `BuildConfig`; локально пусто → форма «не настроено». `feedback.yml` раз в 12 ч создаёт
   issue из Firestore `feedback` (секрет `FIREBASE_SERVICE_ACCOUNT`). Настройка — `docs/setup/feedback.md`.
 
 ## Самообновление (release)

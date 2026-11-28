@@ -30,6 +30,7 @@ object ReleaseStories {
         ReleaseStory(R.string.release_settings_search_title, R.string.release_settings_search_text, R.drawable.story_settings_search_ink, R.drawable.story_settings_search_accent, R.drawable.story_settings_search_edge),
         ReleaseStory(R.string.release_stories_back_title, R.string.release_stories_back_text, R.drawable.story_stories_back_ink, R.drawable.story_stories_back_accent, R.drawable.story_stories_back_edge),
         ReleaseStory(R.string.release_widget_width_title, R.string.release_widget_width_text, R.drawable.story_widget_width_ink, R.drawable.story_widget_width_accent, R.drawable.story_widget_width_edge),
+        ReleaseStory(R.string.release_report_cards_title, R.string.release_report_cards_text, R.drawable.story_report_cards_ink, R.drawable.story_report_cards_accent, R.drawable.story_report_cards_edge),
     )
     // stories:end
 

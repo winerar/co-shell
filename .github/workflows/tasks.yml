@@ -13,7 +13,7 @@ on:
   issues:
     types: [reopened, closed, labeled, unlabeled]
   schedule:
-    - cron: "41 */6 * * *" # picks up cards the owner moved (board moves send no events to the repo)
+    - cron: "41 */12 * * *" # picks up cards the owner moved (board moves send no events to the repo)
   workflow_dispatch:
 
 concurrency:

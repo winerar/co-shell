@@ -85,6 +85,10 @@ jobs:
           if [ "$GITHUB_REF" = refs/heads/dev ] && scripts/ci/landing-changed.sh HEAD^1; then landing=true; fi
           echo "landing=$landing" >> "$GITHUB_OUTPUT"
           echo "Landing changed: $landing"
+          # Screenshot references changed in a PR (a visible change): upload the palette contact sheets.
+          shots=false
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] && git diff --name-only "$BASE...HEAD" | grep -q '/src/test/screenshots/'; then shots=true; fi
+          echo "shots=$shots" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-java@v6
         if: steps.changes.outputs.code == 'true'
@@ -189,13 +193,16 @@ jobs:
           rm -f "$RUNNER_TEMP/release.jks"
           exit "$status"
 
+      # Artifact storage of a private repo on the free plan is 500 MB (2026-11-28): ~47 MB per full run × 14 days
+      # overflowed it. The APK only where someone installs it by hand: a hotfix PR into main or a run started by hand (not the bot's dispatch after a merge);
+      # agent PRs reach the phone through the nightly dev channel (warm-cache.yml).
       - name: Upload debug APK
-        if: steps.changes.outputs.code == 'true'
+        if: steps.changes.outputs.code == 'true' && ((github.event_name == 'workflow_dispatch' && github.triggering_actor != 'github-actions[bot]') || github.base_ref == 'main')
         uses: actions/upload-artifact@v7
         with:
           name: co-shell-debug
           path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
+          retention-days: 3
 
       - name: Update files
         if: env.SELF_UPDATE == 'true'
@@ -303,8 +310,9 @@ jobs:
         run: bash scripts/ci/automerge.sh "${{ github.head_ref || github.ref_name }}" || echo "::warning::automerge failed"
 
       # #381: contact sheets of the catalogs and main screens in every palette × light / dark (not references).
+      # 21 MB each: only for a PR that changes screenshot references (a visible change), a manual run or a failure.
       - name: Upload palette contact sheets
-        if: always() && steps.changes.outputs.code == 'true'
+        if: always() && steps.changes.outputs.code == 'true' && (failure() || steps.changes.outputs.shots == 'true' || (github.event_name == 'workflow_dispatch' && github.triggering_actor != 'github-actions[bot]'))
         uses: actions/upload-artifact@v7
         with:
           name: palette-sheets
@@ -312,7 +320,7 @@ jobs:
             core/designsystem/build/palette-sheets/
             app/build/palette-sheets/
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 3
 
       - name: Upload reports on failure
         if: failure()
@@ -323,6 +331,7 @@ jobs:
             **/build/reports/
             **/build/test-results/
             **/build/outputs/roborazzi/
+          retention-days: 3
 
   # Hotfix (docs/agents/hotfix.md): the R8 release build on an emulator, side by side with `build`.
   emulator:

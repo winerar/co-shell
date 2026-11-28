@@ -105,4 +105,4 @@ jobs:
             ui-fail.xml
             ui-fail.png
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 3

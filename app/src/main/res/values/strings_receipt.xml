@@ -23,7 +23,6 @@
     <string name="receipt_account_hint">В чеке карта …%1$s. Выберите счёт, и в следующий раз чек найдёт его сам.</string>
     <string name="receipt_account_hint_to">В чеке счёт зачисления …%1$s. Выберите счёт, и в следующий раз чек найдёт его сам.</string>
     <string name="account_digits_section">Для чеков</string>
-    <string name="account_digits_tile">Последние цифры карты или счёта</string>
     <string name="account_digits_empty">Не заданы</string>
     <string name="account_digits_sheet_title">Цифры карты или счёта</string>
     <string name="account_digits_sheet_sub">По ним чек из банка найдёт этот счёт. Пусто — счёт не привязан.</string>
